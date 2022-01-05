@@ -133,6 +133,8 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
       window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/tx/${_hash}`, "_blank");
     } else if (selectedChain.name === "ETHEREUM") {
       window.open(`https://${!isProd ? "rinkeby." : ""}etherscan.io/tx/${_hash}`, "_blank");
+    } else {
+      window.open(`https://${!isProd ? "testnet." : ""}bscscan.com/tx/${_hash}`, "_blank");
     }
   };
 
@@ -259,7 +261,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                                   src={
                                     selectedChain.name === "POLYGON"
                                       ? require("assets/icons/polygon_scan.png")
-                                      : require("assets/tokenImages/BSC.png")
+                                      : require("assets/icons/icon_bscscan.ico")
                                   }
                                   onClick={() => {
                                     handleClickLink(item.hash);
@@ -346,7 +348,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                             src={
                               selectedChain.name === "POLYGON"
                                 ? require("assets/icons/polygon_scan.png")
-                                : require("assets/icons/icon_ethscan.png")
+                                : require("assets/icons/icon_bscscan.ico")
                             }
                           />
                         </div>
