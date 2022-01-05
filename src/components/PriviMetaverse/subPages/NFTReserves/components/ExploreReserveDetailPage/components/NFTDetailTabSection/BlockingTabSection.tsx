@@ -266,6 +266,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                                   onClick={() => {
                                     handleClickLink(item.hash);
                                   }}
+                                  width={24}
                                 />
                                 {isOwnership && (
                                   <PrimaryButton
@@ -350,6 +351,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                                 ? require("assets/icons/polygon_scan.png")
                                 : require("assets/icons/icon_bscscan.ico")
                             }
+                            width={24}
                           />
                         </div>
                       ),
