@@ -124,7 +124,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
         await acceptRentOffer({
           mode: isProd ? "main" : "test",
           rentalOfferId: offer.id,
-          collection: newOffer.collection,
+          collection: collection_id,
           tokenId: newOffer.tokenId,
           rentalTime: newOffer.rentalTime,
           pricePerSecond: newOffer.pricePerSecond,
