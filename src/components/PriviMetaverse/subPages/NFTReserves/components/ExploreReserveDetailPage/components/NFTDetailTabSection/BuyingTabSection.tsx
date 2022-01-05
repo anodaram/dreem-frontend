@@ -221,7 +221,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                                       ? require("assets/icons/polygon_scan.png")
                                       : require("assets/icons/icon_bscscan.ico")
                                   }
-                                  width={25}
+                                  width={24}
                                   onClick={() => {
                                     handleClickLink(item.hash);
                                   }}
@@ -305,7 +305,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                                       ? require("assets/icons/polygon_scan.png")
                                       : require("assets/icons/icon_bscscan.ico")
                                   }
-                                  width={25}
+                                  width={24}
                                   onClick={() => {
                                     handleClickLink(item.hash);
                                   }}
