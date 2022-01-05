@@ -1,0 +1,2398 @@
+{
+  "metadataVersion": "0.1.0",
+  "source": {
+    "hash": "0x281c812e7c7ede04fafed09a8399d3576cada1e693d35e88a532669e854593b0",
+    "language": "ink! 3.0.0-rc3",
+    "compiler": "rustc 1.54.0-nightly"
+  },
+  "contract": {
+    "name": "media",
+    "version": "3.0.0-rc3",
+    "authors": [
+      "Privi"
+    ]
+  },
+  "spec": {
+    "constructors": [
+      {
+        "args": [
+          {
+            "name": "substrate_erc_token_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 1
+            }
+          }
+        ],
+        "docs": [
+          "Create a new contract."
+        ],
+        "name": [
+          "new"
+        ],
+        "selector": "0x9bae9d5e"
+      }
+    ],
+    "docs": [],
+    "events": [
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": false,
+            "name": "response",
+            "type": {
+              "displayName": [
+                "Response"
+              ],
+              "type": 44
+            }
+          }
+        ],
+        "docs": [
+          " Event emitted a Media event is emitted"
+        ],
+        "name": "MediaEvent"
+      }
+    ],
+    "messages": [
+      {
+        "args": [
+          {
+            "name": "create_media_request",
+            "type": {
+              "displayName": [
+                "CreateMediaRequest"
+              ],
+              "type": 28
+            }
+          }
+        ],
+        "docs": [
+          " CreateMedia creates a new Media and mints the NFT token for it.",
+          " Params:",
+          " media_name: Name of the Media.",
+          " media_symbol:  Symbol of the Media.",
+          " media_type: Type of the Media.",
+          " view_conditions: View info of the media.",
+          " royalty: Royalties that goes to the creators.",
+          " collabs: Collaborators of the media + the allocation"
+        ],
+        "mutates": true,
+        "name": [
+          "create_media"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 31
+        },
+        "selector": "0x143f1ee9"
+      },
+      {
+        "args": [
+          {
+            "name": "share_media_request",
+            "type": {
+              "displayName": [
+                "ShareMediaRequest"
+              ],
+              "type": 34
+            }
+          }
+        ],
+        "docs": [
+          " ShareMedia is called when a media is being shared",
+          " ParentId  - Id of last vertex of the sharing chain",
+          " MediaSymbol\t-\tSymbol of the Media",
+          " Address -\tAddress sharing the media"
+        ],
+        "mutates": false,
+        "name": [
+          "share_media"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 31
+        },
+        "selector": "0x63de8746"
+      },
+      {
+        "args": [
+          {
+            "name": "buy_media_request",
+            "type": {
+              "displayName": [
+                "BuyMediaRequest"
+              ],
+              "type": 36
+            }
+          }
+        ],
+        "docs": [
+          " Buy Media",
+          " media_symbol:  Symbol of the Media.",
+          " address: Address of the buyer of the Media."
+        ],
+        "mutates": true,
+        "name": [
+          "buy_media"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 31
+        },
+        "selector": "0x0c77e067"
+      },
+      {
+        "args": [
+          {
+            "name": "media_symbol",
+            "type": {
+              "displayName": [
+                "String"
+              ],
+              "type": 7
+            }
+          }
+        ],
+        "docs": [
+          " Returns a Media.",
+          " Params:",
+          " media_symbol: id of the Media"
+        ],
+        "mutates": false,
+        "name": [
+          "get_media"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Option"
+          ],
+          "type": 39
+        },
+        "selector": "0x35cb156f"
+      },
+      {
+        "args": [
+          {
+            "name": "open_media_request",
+            "type": {
+              "displayName": [
+                "OpenMediaRequest"
+              ],
+              "type": 40
+            }
+          }
+        ],
+        "docs": [
+          " OpenMedia is called when a media is being viewed",
+          " Address\t\tstring\tAddress aiming to consume the media",
+          " MediaSymbol\tstring\tSymbol of the Media",
+          " SharingId\tstring\tIf this is consumed consumed by a sharing"
+        ],
+        "mutates": false,
+        "name": [
+          "open_media"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 31
+        },
+        "selector": "0xf3996fa2"
+      },
+      {
+        "args": [
+          {
+            "name": "media",
+            "type": {
+              "displayName": [
+                "CloseMediaRequest"
+              ],
+              "type": 43
+            }
+          }
+        ],
+        "docs": [
+          " CloseMediaRequest - request entity used when calling CloseMedia"
+        ],
+        "mutates": false,
+        "name": [
+          "close_media"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 31
+        },
+        "selector": "0x8914994e"
+      },
+      {
+        "args": [
+          {
+            "name": "tip_media_request",
+            "type": {
+              "displayName": [
+                "OpenMediaRequest"
+              ],
+              "type": 40
+            }
+          }
+        ],
+        "docs": [
+          " TipMedia is called when a media is being viewed",
+          " MediaSymbol\tstring\tSymbol of the Media",
+          " Address\t\tstring\tAddress of the person which want to give a tip",
+          " Amount\t\tstring\tAmount of the token of the tip",
+          " TokenAddress\tstring\tAddress of the token of the tip"
+        ],
+        "mutates": false,
+        "name": [
+          "tip_media"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 31
+        },
+        "selector": "0x8d9ad07c"
+      }
+    ]
+  },
+  "storage": {
+    "struct": {
+      "fields": [
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "ty": 1
+            }
+          },
+          "name": "contract_owner"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+                              "ty": 4
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
+                                      "ty": 5
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0200000001000000000000000000000000000000000000000000000000000000",
+                                          "ty": 6
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0300000000000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0300000001000000000000000000000000000000000000000000000000000000",
+                          "ty": 9
+                        }
+                      },
+                      "offset": "0x0200000001000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "medias"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0300000001000000000000000000000000000000000000000000000000000000",
+                              "ty": 4
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0400000001000000000000000000000000000000000000000000000000000000",
+                                      "ty": 5
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0400000002000000000000000000000000000000000000000000000000000000",
+                                          "ty": 6
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0500000001000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0500000002000000000000000000000000000000000000000000000000000000",
+                          "ty": 20
+                        }
+                      },
+                      "offset": "0x0400000002000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "media_sharings"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0500000002000000000000000000000000000000000000000000000000000000",
+                              "ty": 4
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0600000002000000000000000000000000000000000000000000000000000000",
+                                      "ty": 5
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0600000003000000000000000000000000000000000000000000000000000000",
+                                          "ty": 6
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0700000002000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0700000003000000000000000000000000000000000000000000000000000000",
+                          "ty": 22
+                        }
+                      },
+                      "offset": "0x0600000003000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "tokens"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0700000003000000000000000000000000000000000000000000000000000000",
+                              "ty": 4
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0800000003000000000000000000000000000000000000000000000000000000",
+                                      "ty": 5
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0800000004000000000000000000000000000000000000000000000000000000",
+                                          "ty": 6
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0900000003000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0900000004000000000000000000000000000000000000000000000000000000",
+                          "ty": 24
+                        }
+                      },
+                      "offset": "0x0800000004000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "transactions"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "cell": {
+                              "key": "0x0900000004000000000000000000000000000000000000000000000000000000",
+                              "ty": 4
+                            }
+                          },
+                          "name": "header"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x0a00000004000000000000000000000000000000000000000000000000000000",
+                                      "ty": 5
+                                    }
+                                  },
+                                  "name": "len"
+                                },
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "cellsPerElem": 1,
+                                      "layout": {
+                                        "cell": {
+                                          "key": "0x0a00000005000000000000000000000000000000000000000000000000000000",
+                                          "ty": 26
+                                        }
+                                      },
+                                      "len": 4294967295,
+                                      "offset": "0x0b00000004000000000000000000000000000000000000000000000000000000"
+                                    }
+                                  },
+                                  "name": "elems"
+                                }
+                              ]
+                            }
+                          },
+                          "name": "entries"
+                        }
+                      ]
+                    }
+                  },
+                  "name": "keys"
+                },
+                {
+                  "layout": {
+                    "hash": {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0b00000005000000000000000000000000000000000000000000000000000000",
+                          "ty": 27
+                        }
+                      },
+                      "offset": "0x0a00000005000000000000000000000000000000000000000000000000000000",
+                      "strategy": {
+                        "hasher": "Blake2x256",
+                        "postfix": "",
+                        "prefix": "0x696e6b20686173686d6170"
+                      }
+                    }
+                  },
+                  "name": "values"
+                }
+              ]
+            }
+          },
+          "name": "media_boughts"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0b00000005000000000000000000000000000000000000000000000000000000",
+              "ty": 13
+            }
+          },
+          "name": "next_txn_id"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0c00000005000000000000000000000000000000000000000000000000000000",
+              "ty": 1
+            }
+          },
+          "name": "substrate_erc_token_address"
+        }
+      ]
+    }
+  },
+  "types": [
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "type": 2,
+              "typeName": "[u8; 32]"
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_env",
+        "types",
+        "AccountId"
+      ]
+    },
+    {
+      "def": {
+        "array": {
+          "len": 32,
+          "type": 3
+        }
+      }
+    },
+    {
+      "def": {
+        "primitive": "u8"
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "last_vacant",
+              "type": 5,
+              "typeName": "Index"
+            },
+            {
+              "name": "len",
+              "type": 5,
+              "typeName": "u32"
+            },
+            {
+              "name": "len_entries",
+              "type": 5,
+              "typeName": "u32"
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Header"
+      ]
+    },
+    {
+      "def": {
+        "primitive": "u32"
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 8,
+                  "typeName": "VacantEntry"
+                }
+              ],
+              "name": "Vacant"
+            },
+            {
+              "fields": [
+                {
+                  "type": 7,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Occupied"
+            }
+          ]
+        }
+      },
+      "params": [
+        7
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
+      ]
+    },
+    {
+      "def": {
+        "primitive": "str"
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "next",
+              "type": 5,
+              "typeName": "Index"
+            },
+            {
+              "name": "prev",
+              "type": 5,
+              "typeName": "Index"
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "VacantEntry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 10,
+              "typeName": "V"
+            },
+            {
+              "name": "key_index",
+              "type": 5,
+              "typeName": "KeyIndex"
+            }
+          ]
+        }
+      },
+      "params": [
+        10
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "creator_address",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "media_name",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "media_symbol",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "pod_address",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "media_type",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "release_date",
+              "type": 11,
+              "typeName": "u64"
+            },
+            {
+              "name": "view_conditions",
+              "type": 12,
+              "typeName": "ViewInfo"
+            },
+            {
+              "name": "nft_conditions",
+              "type": 17,
+              "typeName": "NftInfo"
+            },
+            {
+              "name": "is_registered",
+              "type": 14,
+              "typeName": "bool"
+            },
+            {
+              "name": "is_uploaded",
+              "type": 14,
+              "typeName": "bool"
+            },
+            {
+              "name": "royalty",
+              "type": 11,
+              "typeName": "Royalty"
+            },
+            {
+              "name": "collabs",
+              "type": 18,
+              "typeName": "Vec<(AccountId, u32)>"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "MediaObject"
+      ]
+    },
+    {
+      "def": {
+        "primitive": "u64"
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "viewing_type",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "viewing_token",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "price",
+              "type": 13,
+              "typeName": "Balance"
+            },
+            {
+              "name": "sharing_percent",
+              "type": 5,
+              "typeName": "u32"
+            },
+            {
+              "name": "is_streaming_live",
+              "type": 14,
+              "typeName": "bool"
+            },
+            {
+              "name": "streaming_proportions",
+              "type": 15,
+              "typeName": "Vec<(String, u32)>"
+            },
+            {
+              "name": "token_reward",
+              "type": 15,
+              "typeName": "Vec<(String, u32)>"
+            },
+            {
+              "name": "token_entry",
+              "type": 15,
+              "typeName": "Vec<(String, u32)>"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "ViewInfo"
+      ]
+    },
+    {
+      "def": {
+        "primitive": "u128"
+      }
+    },
+    {
+      "def": {
+        "primitive": "bool"
+      }
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 16
+        }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          7,
+          5
+        ]
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "funding_token",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "price",
+              "type": 13,
+              "typeName": "Balance"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "NftInfo"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 19
+        }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          1,
+          5
+        ]
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 21,
+              "typeName": "V"
+            },
+            {
+              "name": "key_index",
+              "type": 5,
+              "typeName": "KeyIndex"
+            }
+          ]
+        }
+      },
+      "params": [
+        21
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "media_symbol",
+              "type": 7,
+              "typeName": "MediaSymbolString"
+            },
+            {
+              "name": "address",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "sharing_id",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "id",
+              "type": 7,
+              "typeName": "String"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "ShareMediaRequestPayload"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 23,
+              "typeName": "V"
+            },
+            {
+              "name": "key_index",
+              "type": 5,
+              "typeName": "KeyIndex"
+            }
+          ]
+        }
+      },
+      "params": [
+        23
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "name",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "token_type",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "symbol",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "supply",
+              "type": 13,
+              "typeName": "Balance"
+            },
+            {
+              "name": "lockup_date",
+              "type": 11,
+              "typeName": "u64"
+            },
+            {
+              "name": "creator_address",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "doc_type",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "action",
+              "type": 7,
+              "typeName": "String"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "Token"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 25,
+              "typeName": "V"
+            },
+            {
+              "name": "key_index",
+              "type": 5,
+              "typeName": "KeyIndex"
+            }
+          ]
+        }
+      },
+      "params": [
+        25
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "transfer_type",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "token",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "from",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "To",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "amount",
+              "type": 13,
+              "typeName": "Balance"
+            },
+            {
+              "name": "id",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "date",
+              "type": 11,
+              "typeName": "u64"
+            },
+            {
+              "name": "from_date",
+              "type": 11,
+              "typeName": "u64"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "Transfer"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 8,
+                  "typeName": "VacantEntry"
+                }
+              ],
+              "name": "Vacant"
+            },
+            {
+              "fields": [
+                {
+                  "type": 1,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Occupied"
+            }
+          ]
+        }
+      },
+      "params": [
+        1
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "value",
+              "type": 7,
+              "typeName": "V"
+            },
+            {
+              "name": "key_index",
+              "type": 5,
+              "typeName": "KeyIndex"
+            }
+          ]
+        }
+      },
+      "params": [
+        7
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "data",
+              "type": 29,
+              "typeName": "CreateMediaRequestData"
+            },
+            {
+              "name": "caller",
+              "type": 7,
+              "typeName": "String"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "CreateMediaRequest"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "function",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "address",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "signature",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "payload",
+              "type": 30,
+              "typeName": "CreateMediaRequestPayload"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "CreateMediaRequestData"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "media_name",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "media_symbol",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "viewing_conditions",
+              "type": 12,
+              "typeName": "ViewInfo"
+            },
+            {
+              "name": "nft_conditions",
+              "type": 17,
+              "typeName": "NftInfo"
+            },
+            {
+              "name": "media_type",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "release_date",
+              "type": 11,
+              "typeName": "u64"
+            },
+            {
+              "name": "sharing_pct",
+              "type": 11,
+              "typeName": "Royalty"
+            },
+            {
+              "name": "creator_address",
+              "type": 1,
+              "typeName": "AccountId"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "CreateMediaRequestPayload"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 32,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Ok"
+            },
+            {
+              "fields": [
+                {
+                  "type": 33,
+                  "typeName": "E"
+                }
+              ],
+              "name": "Err"
+            }
+          ]
+        }
+      },
+      "params": [
+        32,
+        33
+      ],
+      "path": [
+        "Result"
+      ]
+    },
+    {
+      "def": {
+        "tuple": []
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "discriminant": 0,
+              "name": "MediaIdOverflow"
+            },
+            {
+              "discriminant": 1,
+              "name": "MediaNotFound"
+            },
+            {
+              "discriminant": 2,
+              "name": "MediaAlreadyCreated"
+            },
+            {
+              "discriminant": 3,
+              "name": "BalanceNotFound"
+            },
+            {
+              "discriminant": 4,
+              "name": "UnsufficientBalance"
+            },
+            {
+              "discriminant": 5,
+              "name": "InvalidMediaSharingParent"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "Error"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "data",
+              "type": 35,
+              "typeName": "ShareMediaRequestData"
+            },
+            {
+              "name": "caller",
+              "type": 7,
+              "typeName": "String"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "ShareMediaRequest"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "function",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "address",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "signature",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "payload",
+              "type": 21,
+              "typeName": "ShareMediaRequestPayload"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "ShareMediaRequestData"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "data",
+              "type": 37,
+              "typeName": "BuyMediaRequestData"
+            },
+            {
+              "name": "caller",
+              "type": 7,
+              "typeName": "String"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "BuyMediaRequest"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "function",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "address",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "signature",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "payload",
+              "type": 38,
+              "typeName": "BuyMediaRequestPayload"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "BuyMediaRequestData"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "media_symbol",
+              "type": 7,
+              "typeName": "MediaSymbolString"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "BuyMediaRequestPayload"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "name": "None"
+            },
+            {
+              "fields": [
+                {
+                  "type": 10,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Some"
+            }
+          ]
+        }
+      },
+      "params": [
+        10
+      ],
+      "path": [
+        "Option"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "data",
+              "type": 41,
+              "typeName": "OpenMediaRequestData"
+            },
+            {
+              "name": "caller",
+              "type": 7,
+              "typeName": "String"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "OpenMediaRequest"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "function",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "address",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "signature",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "payload",
+              "type": 42,
+              "typeName": "OpenMediaRequestPayload"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "OpenMediaRequestData"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "media_symbol",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "address",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "sharing_id",
+              "type": 7,
+              "typeName": "String"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "OpenMediaRequestPayload"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "media_symbol",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "address",
+              "type": 7,
+              "typeName": "String"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "CloseMediaRequest"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "event_name",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "success",
+              "type": 14,
+              "typeName": "bool"
+            },
+            {
+              "name": "output",
+              "type": 45,
+              "typeName": "Option<Output>"
+            },
+            {
+              "name": "message",
+              "type": 73,
+              "typeName": "Option<String>"
+            },
+            {
+              "name": "hash",
+              "type": 73,
+              "typeName": "Option<String>"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "Response"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "name": "None"
+            },
+            {
+              "fields": [
+                {
+                  "type": 46,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Some"
+            }
+          ]
+        }
+      },
+      "params": [
+        46
+      ],
+      "path": [
+        "Option"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "update_medias",
+              "type": 47,
+              "typeName": "Option<Vec<(MediaSymbolString, MediaObject)>>"
+            },
+            {
+              "name": "media_update_proposals",
+              "type": 50,
+              "typeName": "Option<Vec<(u64, UpdateMediaProposal)>>"
+            },
+            {
+              "name": "update_sharings",
+              "type": 61,
+              "typeName": "Option<Vec<(String, ShareMediaRequestPayload)>>"
+            },
+            {
+              "name": "update_streamings",
+              "type": 64,
+              "typeName": "Option<Vec<(String, Streaming)>>"
+            },
+            {
+              "name": "update_tokens",
+              "type": 68,
+              "typeName": "Option<Vec<(MediaSymbolString, Token)>>"
+            },
+            {
+              "name": "transactions",
+              "type": 71,
+              "typeName": "Option<Vec<Transfer>>"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "Output"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "name": "None"
+            },
+            {
+              "fields": [
+                {
+                  "type": 48,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Some"
+            }
+          ]
+        }
+      },
+      "params": [
+        48
+      ],
+      "path": [
+        "Option"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 49
+        }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          7,
+          10
+        ]
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "name": "None"
+            },
+            {
+              "fields": [
+                {
+                  "type": 51,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Some"
+            }
+          ]
+        }
+      },
+      "params": [
+        51
+      ],
+      "path": [
+        "Option"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 52
+        }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          11,
+          53
+        ]
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "media_symbol",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "requester_address",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "update_request",
+              "type": 54,
+              "typeName": "UpdateMediaRequest"
+            },
+            {
+              "name": "community",
+              "type": 57,
+              "typeName": "Vec<(String, u64)>"
+            },
+            {
+              "name": "votes",
+              "type": 59,
+              "typeName": "Vec<(String, bool)>"
+            },
+            {
+              "name": "state",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "min_approvals",
+              "type": 11,
+              "typeName": "u64"
+            },
+            {
+              "name": "max_denials",
+              "type": 11,
+              "typeName": "u64"
+            },
+            {
+              "name": "duration",
+              "type": 11,
+              "typeName": "u64"
+            },
+            {
+              "name": "date",
+              "type": 11,
+              "typeName": "u64"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "UpdateMediaProposal"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "media_symbol",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "creator_address",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "requester_address",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "media_name",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "media_type",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "view_conditions",
+              "type": 12,
+              "typeName": "ViewInfo"
+            },
+            {
+              "name": "nft_conditions",
+              "type": 17,
+              "typeName": "NftInfo"
+            },
+            {
+              "name": "royalty",
+              "type": 11,
+              "typeName": "Royalty"
+            },
+            {
+              "name": "collabs",
+              "type": 55,
+              "typeName": "Vec<Collab>"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "UpdateMediaRequest"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 56
+        }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          1,
+          11
+        ]
+      }
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 58
+        }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          7,
+          11
+        ]
+      }
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 60
+        }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          7,
+          14
+        ]
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "name": "None"
+            },
+            {
+              "fields": [
+                {
+                  "type": 62,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Some"
+            }
+          ]
+        }
+      },
+      "params": [
+        62
+      ],
+      "path": [
+        "Option"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 63
+        }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          7,
+          21
+        ]
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "name": "None"
+            },
+            {
+              "fields": [
+                {
+                  "type": 65,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Some"
+            }
+          ]
+        }
+      },
+      "params": [
+        65
+      ],
+      "path": [
+        "Option"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 66
+        }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          7,
+          67
+        ]
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "id",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "streaming_type",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "sender_address",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "receiver_address",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "token",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "frequency",
+              "type": 11,
+              "typeName": "u64"
+            },
+            {
+              "name": "amount",
+              "type": 11,
+              "typeName": "u64"
+            },
+            {
+              "name": "starting_date",
+              "type": 11,
+              "typeName": "u64"
+            },
+            {
+              "name": "ending_date",
+              "type": 11,
+              "typeName": "u64"
+            },
+            {
+              "name": "doc_type",
+              "type": 7,
+              "typeName": "String"
+            },
+            {
+              "name": "action",
+              "type": 7,
+              "typeName": "String"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "Streaming"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "name": "None"
+            },
+            {
+              "fields": [
+                {
+                  "type": 69,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Some"
+            }
+          ]
+        }
+      },
+      "params": [
+        69
+      ],
+      "path": [
+        "Option"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 70
+        }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          7,
+          23
+        ]
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "name": "None"
+            },
+            {
+              "fields": [
+                {
+                  "type": 72,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Some"
+            }
+          ]
+        }
+      },
+      "params": [
+        72
+      ],
+      "path": [
+        "Option"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 25
+        }
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "name": "None"
+            },
+            {
+              "fields": [
+                {
+                  "type": 7,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Some"
+            }
+          ]
+        }
+      },
+      "params": [
+        7
+      ],
+      "path": [
+        "Option"
+      ]
+    }
+  ]
+}

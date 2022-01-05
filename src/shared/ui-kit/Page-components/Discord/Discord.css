@@ -1,0 +1,730 @@
+.discordFullPage {
+  width: 100%;
+  height: 70vh;
+  background-color: white;
+  border-radius: 20px;
+  margin-bottom: 30px;
+}
+.discordHeader {
+  margin-bottom: 25px;
+}
+.discordGrid.selected .discordChatGrid {
+  display: block;
+}
+.discordGrid.selected .discordRoomList {
+  max-width: 380px !important;
+  border-right: 1px solid #e7e7e7;
+}
+.discordGrid .discordRoomList .discordRoom {
+  border-bottom: 1px solid #e7e7e7;
+}
+.discordGrid.selected .discordRoomList .discordRoom {
+  border-bottom: none;
+}
+
+.discordGrid.selected .discussion-sidebar {
+  display: block;
+  height: fit-content;
+}
+.discordGrid .discussion-sidebar {
+  display: none;
+}
+.discordRoomList {
+  background-color: white;
+  height: 100% !important;
+  width: 100%;
+  max-width: 100% !important;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.discordChatGrid {
+  display: none;
+  width: 100%;
+  max-width: 740px;
+  border-right: 1px solid #e7e7e7;
+}
+.groupDiscordRoom {
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  width: calc(100% - 40px);
+  display: flex;
+}
+
+.groupDiscordRoom .discordRoom:last-child .discordRoomContent {
+  border-bottom: none;
+}
+
+.groupDiscordRoom .discordRoom .discordRoomContent .arrow-down img {
+  width: 7px;
+  height: 14px;
+}
+
+.discordRoom {
+  display: flex;
+  cursor: pointer;
+  padding: 10px 20px;
+  padding-bottom: 0;
+  width: 100%;
+  margin-left: -20px;
+}
+.discordRoom .discordRoomContent {
+  display: flex;
+  cursor: pointer;
+  width: 100%;
+  padding-bottom: 10px;
+  align-items: center;
+}
+.discordRoom.selected {
+  background: #eff2f8;
+  border-left: 3px solid rgba(100, 200, 158, 1);
+  padding-left: 17px;
+}
+.discordRoomHeader {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 28px;
+  color: #5a5a5a;
+  margin-bottom: 10px;
+}
+.discordGrid.selected .discordRoom .members-bubbles {
+  display: none;
+}
+.discordGrid .user-admin-bubble {
+  width: 64px;
+  height: 64px;
+  margin-right: 20px;
+}
+.discordRoom .members-bubbles .user-bubble {
+  width: 30px;
+  height: 30px;
+  margin-left: -10px;
+  border: 2px solid white;
+  background-color: #b1b1b1;
+}
+.discordRoom .members-bubbles .user-more-count {
+  background-color: #fff;
+  color: #6b6b6b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: normal;
+  padding: 4px 8px;
+  margin-left: -10px;
+  border-radius: 8px;
+  font-size: 11px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+}
+.discordGrid.selected .discordRoom .discordRoomInfo {
+  padding-left: 0px;
+  border-left: none;
+}
+.discordGrid .discordRoom .discordRoomInfo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.discordRoomName time {
+  margin-left: 5px;
+  color: #b1b1b1;
+  font-size: 14px;
+  font-weight: normal;
+  text-align: right;
+}
+.discordRoom .discordRoomInfo .last-message p {
+  font-size: 14px;
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+  line-height: 20px;
+}
+.selectedDiscordRoomName {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 28px;
+  color: rgb(8, 24, 49);
+  width: 100%;
+  border-radius: 20px;
+  background-color: rgba(137, 153, 184, 0.2);
+  padding-left: 10px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.discordChat {
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  padding-bottom: 0 !important;
+}
+.messagesDiscordChat {
+  height: calc(100% - 35px) !important;
+  width: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.inputDiscordChat {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.iconsDiscordMessage {
+  width: 100px;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.iconImgDiscordMessage {
+  width: calc(100% / 3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.sendDiscordMessage {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: calc(100% - 110px);
+  position: relative;
+}
+
+.sendDiscordMessage input {
+  outline: none;
+  width: calc(100%);
+  height: 35px;
+  border: 0;
+  padding: 5px 10px;
+  padding-left: 20px;
+  border-radius: 20px;
+  box-shadow: 1px 1px 16px #ccc;
+}
+.sendDiscordMessage button {
+  margin: 0;
+  margin-left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 7px 9px;
+  color: #fff;
+  background-color: #181818;
+  outline: none;
+  height: 34px;
+}
+.sendDiscordMessage button:hover {
+  background-color: rgb(207 208 226);
+}
+.sendDiscordMessage button svg {
+  color: rgb(79, 159, 233);
+  width: 18px;
+  height: 18px;
+}
+.discordChatGrid {
+  height: 100%;
+}
+.headerDiscordSideBar {
+  display: flex;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.bodyDiscordSideBar {
+  height: calc(100% - 60px);
+}
+.peopleSideBar {
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.selectedItemDiscordSideBar {
+  font-weight: 700;
+  font-size: 18px;
+  color: rgb(8, 24, 49);
+  margin-right: 15px;
+}
+.itemDiscordSideBar {
+  font-weight: 700;
+  font-size: 18px;
+  color: rgba(8, 24, 49, 0.5);
+  margin-right: 15px;
+  cursor: pointer;
+}
+.discordSideBarGrid {
+  height: 100%;
+}
+.discordSideBar {
+  height: 100%;
+  max-height: calc(100% - 30px);
+  padding: 20px 0 20px 60px;
+  background-color: white;
+}
+.messageDiscordChatContainer {
+  padding: 10px 0px;
+  width: calc(100% - 10px);
+  display: flex;
+  flex-direction: column;
+}
+.messageDiscordChat {
+  display: flex;
+}
+.messageDiscordChat.mine {
+  justify-content: flex-end !important;
+  margin-right: 0;
+}
+.messageRowDiscordChat {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+.messageRowDiscordChat .userPhoto {
+  margin-right: 10px;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  margin-right: -40px;
+  border-radius: 50%;
+  background-color: #5a5a5a;
+  position: relative;
+}
+.messageDiscordChat.mine .userPhoto {
+  margin-right: 0;
+  margin-left: -40px;
+}
+.messageRowDiscordChat .userPhoto .online {
+  color: green;
+  font-size: 30px;
+  position: absolute;
+  right: -6px;
+  bottom: -13px;
+  -webkit-text-strokeWidth: 2px;
+  -webkit-text-stroke-color: #fff;
+}
+.messageRowDiscordChat .userPhoto .offline {
+  color: gray;
+  font-size: 30px;
+  position: absolute;
+  right: -6px;
+  bottom: -13px;
+  -webkit-text-strokeWidth: 2px;
+  -webkit-text-stroke-color: #fff;
+}
+.messageRowDiscordChat .bubble {
+  border-radius: 25px;
+  padding: 15px;
+  padding-bottom: 10px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: 1px 1px 8px rgba(221, 221, 221, 0.5);
+  word-break: break-word;
+  max-width: 600px;
+}
+.messageDiscordChat.mine .messageRowDiscordChat {
+  flex-direction: row-reverse;
+}
+.messageDiscordChat.mine .messageRowDiscordChat .bubble {
+  background-color: rgb(242, 107, 164);
+  color: white;
+  align-self: flex-end;
+  width: fit-content;
+  margin-left: 50px;
+  align-items: flex-end;
+}
+.messageDiscordChat.notmine .messageRowDiscordChat .bubble {
+  background-color: white;
+  color: #081831;
+  align-self: flex-start;
+  width: fit-content;
+  border-bottom-left-radius: 0;
+}
+.messageDiscordChat.notmine .messageRowDiscordChat .bubble .messageInfo {
+  color: white;
+}
+.messageDiscordChat.mine .messageRowDiscordChat .bubble {
+  border-bottom-right-radius: 0px;
+}
+.messageColumnInfoDiscordChat {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start;
+}
+.mine .messageColumnInfoDiscordChat {
+  align-items: flex-end;
+}
+.notmine .messageColumnInfoDiscordChat .actionsRow {
+  align-self: flex-end;
+}
+.mine .messageColumnInfoDiscordChat .actionsRow {
+  align-self: flex-start;
+}
+.messageColumnInfoDiscordChat .actionsRow {
+  margin-left: 50px;
+  z-index: 1;
+  margin-bottom: -25px;
+  margin-top: -6.5px;
+  background-color: #b1b1b1;
+  border-radius: 10px;
+  width: fit-content;
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: white;
+}
+.messageRowInfoDiscordChat .actionsRow svg {
+  margin: 0;
+}
+.messageInfoDiscordChat .userInfo {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: rgb(29, 83, 164);
+}
+.messageInfoDiscordChat .messageInfo {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: rgb(8, 24, 49);
+}
+.messageInfoDiscordChat .messageInfoPhoto {
+  cursor: pointer;
+  width: 180px;
+  height: 180px;
+  border-radius: 20px;
+  background-color: rgba(219, 223, 224, 0.4);
+}
+.messageInfoDiscordChat .messageInfoVideo {
+  height: 180px;
+  width: 180px !important;
+  max-width: 180px;
+  color: white;
+  border-radius: 20px;
+  background-color: rgba(219, 223, 224, 0.4);
+  position: relative;
+  cursor: pointer;
+}
+
+.messageInfoDiscordChat .messageInfoVideo .iconVideoWrapperJarr {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  background-color: rgba(128, 128, 128, 0.4);
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.messageInfoDiscordChat .messageInfoVideo .iconVideoWrapperJarr .playIconVideoJarr {
+  width: 32px;
+  height: 32px;
+}
+
+.messageInfoDiscordChat .messageInfoVideo .react-player {
+  height: 180px !important;
+  border-radius: 20px;
+  transform: none;
+  width: 180px !important;
+}
+
+.messageInfoDiscordChat .messageInfoVideo .react-player video {
+  border-radius: 20px;
+  object-fit: cover;
+  width: 180px !important;
+}
+
+.messageInfoDiscordChat .messageInfoAudio {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.messageInfoDiscordChat .created {
+  font-size: 10px;
+  margin-top: 5px;
+  color: #5a5a5a;
+}
+.mine .messageInfoDiscordChat .created {
+  color: white;
+}
+.iconCenterFlex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.spanInfoDiscordChat {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: white;
+}
+.infoMessageDiscordChat {
+  width: calc(100% - 50px);
+}
+.typeUserLabelSideBar {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgb(101, 110, 126);
+}
+.userRowSideBar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.userImgSideBar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 15px;
+  background-color: #5a5a5a;
+}
+.userLabelSideBar {
+  width: calc(100% - 45px);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgb(101, 110, 126);
+}
+.loaderDivDiscordChat {
+  height: 50px !important;
+  margin: 20px 0px;
+  display: flex;
+  justify-content: center !important;
+}
+
+.rowSettingsDiscord {
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+  padding-right: 50px;
+}
+.buttonSettingsDiscord {
+  background-color: #181818;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 25px;
+}
+.messageAudioRow {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+.progressBarAudioRow {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+.progressBarAudio {
+  width: calc(100% - 120px);
+  height: 10px;
+  background-color: #b1b1b1;
+  z-index: 0;
+}
+.progressBarAudioLoaded {
+  height: 10px;
+  background-color: #5a5a5a;
+  z-index: 10;
+}
+.progressBarAudioPlayed {
+  background-color: #323232;
+  height: 10px;
+  z-index: 20;
+  margin-top: -10px;
+}
+
+.sendDiscordMessage textarea {
+  display: none;
+  outline: none;
+  width: calc(100%);
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #727f9a;
+  background: #f7f9fe;
+  box-shadow: 1px 1px 16px #ccc;
+}
+.discordChat .inputDiscordChat button.emoji-mart-search-icon {
+  height: unset;
+  border-radius: 0px;
+}
+
+.messageInfo .item-file {
+  display: flex;
+  align-items: center;
+}
+.messageInfo .item-file .item-file-name {
+  width: calc(100% - 30px);
+  font-size: 12px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+}
+.messageInfo .item-file .item-file-icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 767px) {
+  .discordGrid {
+    padding: 0;
+  }
+
+  .discordChatGrid {
+    width: 40%;
+  }
+
+  .messageDiscordChat.mine {
+    width: 100%;
+  }
+
+  .messageDiscordChat.mine .messageRowDiscordChat {
+    width: 100%;
+  }
+
+  .mine .messageInfoDiscordChat {
+    width: 100%;
+  }
+
+  .messageDiscordChat.mine .messageRowDiscordChat .bubble {
+    width: 100%;
+  }
+
+  .messageDiscordChat.mine .messageRowDiscordChat .bubble audio {
+    width: 100%;
+  }
+
+  .groupDiscordRoom {
+    margin: 0 24px 0 0;
+    width: 100%;
+  }
+
+  .discordGrid.selected .discordRoomList .discordRoom {
+    padding: 0;
+    margin-left: 0;
+  }
+
+  .discordGrid .user-admin-bubble {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+  }
+
+  .discordGrid.selected .discordRoom .discordRoomInfo {
+    max-width: calc(100% - 60px);
+  }
+
+  .groupDiscordRoom .discordRoom .discordRoomContent {
+    margin-bottom: 0;
+    padding: 12px 8px !important;
+  }
+
+  .discordRoomName p {
+    font-size: 14px;
+  }
+
+  .discordRoomHeader {
+    margin: 0;
+  }
+
+  .discordSideBar {
+    padding: 0 0 0 24px;
+  }
+
+  .sideBarSelectedImage .sideBarSelectedImageImg {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .community-page .discordSideBar .row {
+    margin-bottom: 12px !important;
+  }
+
+  .sideBarRowFlexRoundUser {
+    height: 50px !important;
+  }
+
+  .messageRowDiscordChat .userPhoto {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    margin-right: -16px;
+  }
+
+  .messageRowDiscordChat .userPhoto .offline {
+    display: none;
+  }
+
+  .notmine .messageInfoDiscordChat {
+    padding-right: 30px;
+  }
+
+  .messageRowDiscordChat,
+  .notmine .messageInfoDiscordChat,
+  .messageDiscordChat.notmine .messageRowDiscordChat .bubble,
+  .messageDiscordChat.notmine .messageRowDiscordChat .bubble audio {
+    width: 100%;
+  }
+
+  .notmine .messageInfoDiscordChat {
+    margin-left: 25px;
+  }
+
+  .iconsDiscordMessage {
+    width: 50px;
+    margin-bottom: 8px;
+  }
+
+  .iconImgDiscordMessage img {
+    width: 15px;
+    height: 15px;
+    margin-top: 8px;
+  }
+
+  .sendDiscordMessage {
+    width: 100% !important;
+    height: 100%;
+    align-items: flex-end;
+  }
+
+  .sendDiscordMessage textarea {
+    display: block;
+  }
+
+  .sendDiscordMessage input {
+    display: none;
+  }
+
+  .inputDiscordChat {
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .messageDiscordChat.mine .userPhoto {
+    display: none;
+  }
+
+  .messageInfoDiscordChat .messageInfoPhoto {
+    width: 100% !important;
+  }
+}

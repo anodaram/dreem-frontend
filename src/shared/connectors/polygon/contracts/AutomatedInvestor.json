@@ -1,0 +1,203 @@
+{
+  "contractName": "AutomatedInvestor",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.6+commit.11564f7e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"author\":\"Eric Nordelo\",\"kind\":\"dev\",\"methods\":{},\"title\":\"Automated investor for stake values\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/AutomatedInvestor.sol\":\"AutomatedInvestor\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/AutomatedInvestor.sol\":{\"keccak256\":\"0xe6827684773e3bb467632660b1414cfcffb950dd84f474e4c234a23867d95616\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5ab0519c6c684d4068c6e1c60d9027176b631dd9b1b05a1e82a4dec2a5c2d6b5\",\"dweb:/ipfs/QmaNJDp5nw6UnioGjdLy8XNvA29Yzh3F5pfUk57WAWrNar\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212203e2041b04e5ed10a2fea5a984d01574aae91981651232545050f88ba71d3697364736f6c63430008060033",
+  "deployedBytecode": "0x6080604052600080fdfea26469706673582212203e2041b04e5ed10a2fea5a984d01574aae91981651232545050f88ba71d3697364736f6c63430008060033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "135:84:15:-:0;;;201:16;;;;;;;;;;135:84;;;;;;",
+  "deployedSourceMap": "135:84:15:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.5;\n\n/**\n * @title Automated investor for stake values\n * @author Eric Nordelo\n */\ncontract AutomatedInvestor {\n    // solhint-disable-next-line\n    constructor() {}\n}\n",
+  "sourcePath": "/home/ericng/Documents/PRIVI/privi-trax-app/contracts/AutomatedInvestor.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/AutomatedInvestor.sol",
+    "exportedSymbols": {
+      "AutomatedInvestor": [
+        2292
+      ]
+    },
+    "id": 2293,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2286,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".5"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:15"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 2287,
+          "nodeType": "StructuredDocumentation",
+          "src": "57:77:15",
+          "text": " @title Automated investor for stake values\n @author Eric Nordelo"
+        },
+        "fullyImplemented": true,
+        "id": 2292,
+        "linearizedBaseContracts": [
+          2292
+        ],
+        "name": "AutomatedInvestor",
+        "nameLocation": "144:17:15",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 2290,
+              "nodeType": "Block",
+              "src": "215:2:15",
+              "statements": []
+            },
+            "id": 2291,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2288,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "212:2:15"
+            },
+            "returnParameters": {
+              "id": 2289,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "215:0:15"
+            },
+            "scope": 2292,
+            "src": "201:16:15",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 2293,
+        "src": "135:84:15",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:188:15"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/AutomatedInvestor.sol",
+    "exportedSymbols": {
+      "AutomatedInvestor": [
+        2292
+      ]
+    },
+    "id": 2293,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2286,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".5"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:15"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 2287,
+          "nodeType": "StructuredDocumentation",
+          "src": "57:77:15",
+          "text": " @title Automated investor for stake values\n @author Eric Nordelo"
+        },
+        "fullyImplemented": true,
+        "id": 2292,
+        "linearizedBaseContracts": [
+          2292
+        ],
+        "name": "AutomatedInvestor",
+        "nameLocation": "144:17:15",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 2290,
+              "nodeType": "Block",
+              "src": "215:2:15",
+              "statements": []
+            },
+            "id": 2291,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2288,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "212:2:15"
+            },
+            "returnParameters": {
+              "id": 2289,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "215:0:15"
+            },
+            "scope": 2292,
+            "src": "201:16:15",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 2293,
+        "src": "135:84:15",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:188:15"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.6+commit.11564f7e.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.2",
+  "updatedAt": "2021-08-24T13:44:30.221Z",
+  "devdoc": {
+    "author": "Eric Nordelo",
+    "kind": "dev",
+    "methods": {},
+    "title": "Automated investor for stake values",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

@@ -1,0 +1,173 @@
+.discussion-posts {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  max-height: calc(100% - 43px - 18px);
+}
+
+.discussion-posts .loaderDiv {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+
+.discussion-posts .discussion-headers {
+  display: flex;
+  flex-direction: column;
+  width: calc(30% - 14px);
+  height: 100%;
+  margin-right: 14px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.discussion-posts .discussion-headers .discussion-header {
+  background: #ffffff;
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-bottom: 7px;
+  padding: 14px;
+  /*display: flex;
+  align-items: center;*/
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 104.5%;
+  color: #707582;
+  cursor: pointer;
+  min-height: 46px;
+}
+.discussion-posts .discussion-headers .discussion-header.selected {
+  border: 2px solid #23d0c6;
+  padding: 12px;
+}
+
+.discussion-posts .selected-discussion {
+  width: 70%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 25px;
+}
+
+.discussion-posts .selected-discussion .discussions-content {
+  padding-right: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: none;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Handle */
+.discussions-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(97.4deg, #ff79d1 14.43%, #db00ff 79.45%);
+}
+
+.discussion-posts .selected-discussion .discussions-content .discussion-item {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.discussion-posts .selected-discussion .discussions-content .discussion-item .avatar {
+  border: 1.5px solid #ffffff;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  margin-right: 10px;
+  margin-left: 5px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+}
+
+.discussion-posts .selected-discussion .discussions-content .discussion-item .bubble {
+  background: #eff2f8;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 120%;
+  color: #707582;
+}
+
+.discussion-posts .selected-discussion .discussions-content .discussion-item.mine {
+  justify-content: flex-end;
+}
+
+.discussion-posts .selected-discussion .discussions-content .discussion-item.mine .bubble {
+  border: 1px solid #eff2f8;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.discussion-posts .selected-discussion form {
+  display: flex;
+  align-items: center;
+}
+
+.discussion-posts .selected-discussion form .comment {
+  background: #f7f9fe;
+  border: 1px solid #707582;
+  box-sizing: border-box;
+  border-radius: 11.36px;
+  height: 40px;
+  font-family: Agrandir;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 120%;
+  color: #99a1b3;
+  padding: 11.5px 15px;
+  width: 100%;
+  outline: none;
+}
+
+.discussion-posts .selected-discussion form button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  height: 40px;
+  width: 40px;
+  margin-left: 8px;
+}
+
+.discussion-posts .selected-discussion form button img {
+  width: 17px;
+  height: 17px;
+}
+
+.discussion-posts .no-comments {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.discussion-posts .no-comments span:first-child {
+  font-size: 30px;
+  text-align: center;
+}
+
+.discussion-posts .no-comments span:last-child {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 104.5%;
+  margin-top: 10px;
+  text-align: center;
+  color: #181818;
+}

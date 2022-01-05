@@ -1,0 +1,17 @@
+.smoke-screen {
+  margin: 15% 20px 20px 20px;
+}
+
+.smoke-screen button {
+  align-self: center;
+  width: 150px;
+}
+
+.smoke-screen input {
+  background-color: white;
+}
+
+.error {
+  color: red;
+  align-self: center;
+}

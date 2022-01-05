@@ -1,0 +1,1276 @@
+{
+  "metadataVersion": "0.1.0",
+  "source": {
+    "hash": "0x01e22084a44ad58d971fdb74e18df8255239bda72d55a0cd0fe63c11710c053c",
+    "language": "ink! 3.0.0-rc3",
+    "compiler": "rustc 1.55.0-nightly"
+  },
+  "contract": {
+    "name": "pod-media-investing",
+    "version": "0.1.0",
+    "authors": [
+      "[your_name] <[your_email]>"
+    ]
+  },
+  "spec": {
+    "constructors": [
+      {
+        "args": [
+          {
+            "name": "request",
+            "type": {
+              "displayName": [
+                "CreateInvestingPodRequest"
+              ],
+              "type": 7
+            }
+          }
+        ],
+        "docs": [
+          "Create a new InvestingPod. Note that this constructor performs validations and will panic",
+          "if `CreateInvestingPodRequest` is invalid. (Constructors cannot return Result<Self>)."
+        ],
+        "name": [
+          "new"
+        ],
+        "selector": "0x9bae9d5e"
+      }
+    ],
+    "docs": [],
+    "events": [],
+    "messages": [
+      {
+        "args": [
+          {
+            "name": "request",
+            "type": {
+              "displayName": [
+                "RegisterMediaRequest"
+              ],
+              "type": 25
+            }
+          }
+        ],
+        "docs": [
+          " Sets the parameters of a media object. May only be called once, which then registers the",
+          " media."
+        ],
+        "mutates": true,
+        "name": [
+          "register_media"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 26
+        },
+        "selector": "0xbd47a011"
+      },
+      {
+        "args": [
+          {
+            "name": "media_id",
+            "type": {
+              "displayName": [
+                "MediaId"
+              ],
+              "type": 6
+            }
+          }
+        ],
+        "docs": [
+          " Sets the media.is_uploaded field to true.",
+          "",
+          " # Restrictions",
+          "",
+          " * May only be called by the media creator.",
+          " * Only registered media may be uploaded."
+        ],
+        "mutates": true,
+        "name": [
+          "upload_media"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 26
+        },
+        "selector": "0xad6b6fac"
+      },
+      {
+        "args": [
+          {
+            "name": "amount",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 5
+            }
+          }
+        ],
+        "docs": [
+          " Purchases tokens from the pod for the funding price. Once the pods reaches the funding",
+          " target, it will transition to trading state."
+        ],
+        "mutates": true,
+        "name": [
+          "invest_pod"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 26
+        },
+        "selector": "0x76adfa92"
+      },
+      {
+        "args": [
+          {
+            "name": "amount",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 5
+            }
+          }
+        ],
+        "docs": [
+          " Buys pod tokens using the pod's AMM."
+        ],
+        "mutates": true,
+        "name": [
+          "buy_pod_tokens"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 26
+        },
+        "selector": "0x93217544"
+      },
+      {
+        "args": [
+          {
+            "name": "amount",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 5
+            }
+          }
+        ],
+        "docs": [
+          " Sells pod tokens using the pod's AMM."
+        ],
+        "mutates": true,
+        "name": [
+          "sell_pod_tokens"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "Result"
+          ],
+          "type": 26
+        },
+        "selector": "0xd93be351"
+      },
+      {
+        "args": [],
+        "docs": [
+          " AccountId of the pod creator."
+        ],
+        "mutates": false,
+        "name": [
+          "creator"
+        ],
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "AccountId"
+          ],
+          "type": 1
+        },
+        "selector": "0xbf73316b"
+      }
+    ]
+  },
+  "storage": {
+    "struct": {
+      "fields": [
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "ty": 1
+            }
+          },
+          "name": "creator"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+              "ty": 1
+            }
+          },
+          "name": "amm_address"
+        },
+        {
+          "layout": {
+            "enum": {
+              "dispatchKey": "0x0200000000000000000000000000000000000000000000000000000000000000",
+              "variants": {
+                "0": {
+                  "fields": []
+                },
+                "1": {
+                  "fields": []
+                }
+              }
+            }
+          },
+          "name": "amm_curve"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
+              "ty": 4
+            }
+          },
+          "name": "spread"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
+              "ty": 5
+            }
+          },
+          "name": "funding_token_price"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "cell": {
+                      "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
+                      "ty": 1
+                    }
+                  },
+                  "name": "account_id"
+                }
+              ]
+            }
+          },
+          "name": "funding_token"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "cell": {
+                      "key": "0x0600000000000000000000000000000000000000000000000000000000000000",
+                      "ty": 1
+                    }
+                  },
+                  "name": "account_id"
+                }
+              ]
+            }
+          },
+          "name": "pod_token"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0700000000000000000000000000000000000000000000000000000000000000",
+              "ty": 5
+            }
+          },
+          "name": "funding_target"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0800000000000000000000000000000000000000000000000000000000000000",
+              "ty": 5
+            }
+          },
+          "name": "max_price"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0900000000000000000000000000000000000000000000000000000000000000",
+              "ty": 5
+            }
+          },
+          "name": "max_supply"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0a00000000000000000000000000000000000000000000000000000000000000",
+              "ty": 6
+            }
+          },
+          "name": "created_at"
+        },
+        {
+          "layout": {
+            "cell": {
+              "key": "0x0b00000000000000000000000000000000000000000000000000000000000000",
+              "ty": 6
+            }
+          },
+          "name": "funding_date"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "cell": {
+                      "key": "0x0c00000000000000000000000000000000000000000000000000000000000000",
+                      "ty": 4
+                    }
+                  },
+                  "name": "len"
+                },
+                {
+                  "layout": {
+                    "array": {
+                      "cellsPerElem": 1,
+                      "layout": {
+                        "cell": {
+                          "key": "0x0c00000001000000000000000000000000000000000000000000000000000000",
+                          "ty": 6
+                        }
+                      },
+                      "len": 4294967295,
+                      "offset": "0x0d00000000000000000000000000000000000000000000000000000000000000"
+                    }
+                  },
+                  "name": "elems"
+                }
+              ]
+            }
+          },
+          "name": "media_ids"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "enum": {
+                      "dispatchKey": "0x0c00000001000000000000000000000000000000000000000000000000000000",
+                      "variants": {
+                        "0": {
+                          "fields": []
+                        },
+                        "1": {
+                          "fields": []
+                        },
+                        "2": {
+                          "fields": []
+                        }
+                      }
+                    }
+                  },
+                  "name": "status"
+                },
+                {
+                  "layout": {
+                    "cell": {
+                      "key": "0x0d00000001000000000000000000000000000000000000000000000000000000",
+                      "ty": 4
+                    }
+                  },
+                  "name": "registered_media"
+                },
+                {
+                  "layout": {
+                    "cell": {
+                      "key": "0x0e00000001000000000000000000000000000000000000000000000000000000",
+                      "ty": 4
+                    }
+                  },
+                  "name": "total_media"
+                },
+                {
+                  "layout": {
+                    "cell": {
+                      "key": "0x0f00000001000000000000000000000000000000000000000000000000000000",
+                      "ty": 5
+                    }
+                  },
+                  "name": "supply_released"
+                },
+                {
+                  "layout": {
+                    "cell": {
+                      "key": "0x1000000001000000000000000000000000000000000000000000000000000000",
+                      "ty": 5
+                    }
+                  },
+                  "name": "raised_funds"
+                }
+              ]
+            }
+          },
+          "name": "state"
+        },
+        {
+          "layout": {
+            "struct": {
+              "fields": [
+                {
+                  "layout": {
+                    "cell": {
+                      "key": "0x1100000001000000000000000000000000000000000000000000000000000000",
+                      "ty": 1
+                    }
+                  },
+                  "name": "account_id"
+                }
+              ]
+            }
+          },
+          "name": "media"
+        }
+      ]
+    }
+  },
+  "types": [
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "type": 2,
+              "typeName": "[u8; 32]"
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_env",
+        "types",
+        "AccountId"
+      ]
+    },
+    {
+      "def": {
+        "array": {
+          "len": 32,
+          "type": 3
+        }
+      }
+    },
+    {
+      "def": {
+        "primitive": "u8"
+      }
+    },
+    {
+      "def": {
+        "primitive": "u32"
+      }
+    },
+    {
+      "def": {
+        "primitive": "u128"
+      }
+    },
+    {
+      "def": {
+        "primitive": "u64"
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "pod_token_symbol",
+              "type": 8,
+              "typeName": "String"
+            },
+            {
+              "name": "pod_token_name",
+              "type": 8,
+              "typeName": "String"
+            },
+            {
+              "name": "funding_token",
+              "type": 9,
+              "typeName": "Erc20"
+            },
+            {
+              "name": "funding_token_price",
+              "type": 5,
+              "typeName": "Balance"
+            },
+            {
+              "name": "funding_target",
+              "type": 5,
+              "typeName": "Balance"
+            },
+            {
+              "name": "amm",
+              "type": 10,
+              "typeName": "amm::Curve"
+            },
+            {
+              "name": "spread",
+              "type": 4,
+              "typeName": "u32"
+            },
+            {
+              "name": "max_price",
+              "type": 5,
+              "typeName": "Balance"
+            },
+            {
+              "name": "max_supply",
+              "type": 5,
+              "typeName": "Balance"
+            },
+            {
+              "name": "funding_date",
+              "type": 6,
+              "typeName": "Timestamp"
+            },
+            {
+              "name": "erc20_code_hash",
+              "type": 11,
+              "typeName": "Hash"
+            },
+            {
+              "name": "media_contract",
+              "type": 12,
+              "typeName": "MediaStorage"
+            },
+            {
+              "name": "medias",
+              "type": 13,
+              "typeName": "Vec<CreateMediaRequest>"
+            }
+          ]
+        }
+      },
+      "path": [
+        "pod_media_investing",
+        "models",
+        "CreateInvestingPodRequest"
+      ]
+    },
+    {
+      "def": {
+        "primitive": "str"
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "account_id",
+              "type": 1,
+              "typeName": "AccountId"
+            }
+          ]
+        }
+      },
+      "path": [
+        "erc20",
+        "contract",
+        "Erc20"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "discriminant": 0,
+              "name": "Quadratic"
+            },
+            {
+              "discriminant": 1,
+              "name": "Linear"
+            }
+          ]
+        }
+      },
+      "path": [
+        "amm",
+        "Curve"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "type": 2,
+              "typeName": "[u8; 32]"
+            }
+          ]
+        }
+      },
+      "path": [
+        "ink_env",
+        "types",
+        "Hash"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "account_id",
+              "type": 1,
+              "typeName": "AccountId"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "media",
+        "MediaStorage"
+      ]
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 14
+        }
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "name",
+              "type": 8,
+              "typeName": "String"
+            },
+            {
+              "name": "r#type",
+              "type": 15,
+              "typeName": "MediaType"
+            },
+            {
+              "name": "view_conditions",
+              "type": 16,
+              "typeName": "ViewInfo"
+            },
+            {
+              "name": "nft_conditions",
+              "type": 24,
+              "typeName": "NftInfo"
+            },
+            {
+              "name": "royalty",
+              "type": 5,
+              "typeName": "Balance"
+            },
+            {
+              "name": "collabs",
+              "type": 23,
+              "typeName": "Collabs"
+            }
+          ]
+        }
+      },
+      "path": [
+        "pod_media_regular",
+        "models",
+        "CreateMediaRequest"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "discriminant": 0,
+              "name": "Audio"
+            },
+            {
+              "discriminant": 1,
+              "name": "Video"
+            },
+            {
+              "discriminant": 2,
+              "name": "LiveAudio"
+            },
+            {
+              "discriminant": 3,
+              "name": "LiveVideo"
+            },
+            {
+              "discriminant": 4,
+              "name": "Blog"
+            },
+            {
+              "discriminant": 5,
+              "name": "BlogSnap"
+            },
+            {
+              "discriminant": 6,
+              "name": "DigitalArt"
+            },
+            {
+              "discriminant": 7,
+              "name": "Claimable"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "models",
+        "other",
+        "MediaType"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "viewing_type",
+              "type": 17,
+              "typeName": "ViewingType"
+            },
+            {
+              "name": "viewing_token",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "price",
+              "type": 5,
+              "typeName": "Balance"
+            },
+            {
+              "name": "sharing_percent",
+              "type": 5,
+              "typeName": "u128"
+            },
+            {
+              "name": "is_streaming_live",
+              "type": 18,
+              "typeName": "bool"
+            },
+            {
+              "name": "streaming_proportions",
+              "type": 19,
+              "typeName": "Vec<(String, Balance)>"
+            },
+            {
+              "name": "token_reward",
+              "type": 21,
+              "typeName": "Vec<(AccountId, Balance)>"
+            },
+            {
+              "name": "token_entry",
+              "type": 23,
+              "typeName": "BTreeMap<AccountId, Balance>"
+            },
+            {
+              "name": "duration",
+              "type": 6,
+              "typeName": "u64"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "models",
+        "other",
+        "ViewInfo"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "discriminant": 0,
+              "name": "Dynamic"
+            },
+            {
+              "discriminant": 1,
+              "name": "Fixed"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "models",
+        "other",
+        "ViewingType"
+      ]
+    },
+    {
+      "def": {
+        "primitive": "bool"
+      }
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 20
+        }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          8,
+          5
+        ]
+      }
+    },
+    {
+      "def": {
+        "sequence": {
+          "type": 22
+        }
+      }
+    },
+    {
+      "def": {
+        "tuple": [
+          1,
+          5
+        ]
+      }
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "type": 21,
+              "typeName": "[(K, V)]"
+            }
+          ]
+        }
+      },
+      "params": [
+        22
+      ],
+      "path": [
+        "BTreeMap"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "funding_token",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "price",
+              "type": 5,
+              "typeName": "Balance"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "models",
+        "other",
+        "NftInfo"
+      ]
+    },
+    {
+      "def": {
+        "composite": {
+          "fields": [
+            {
+              "name": "media_id",
+              "type": 6,
+              "typeName": "MediaId"
+            },
+            {
+              "name": "funding_token",
+              "type": 1,
+              "typeName": "AccountId"
+            },
+            {
+              "name": "price",
+              "type": 5,
+              "typeName": "Balance"
+            },
+            {
+              "name": "release_date",
+              "type": 6,
+              "typeName": "Timestamp"
+            },
+            {
+              "name": "payment_type",
+              "type": 17,
+              "typeName": "ViewingType"
+            },
+            {
+              "name": "royalty",
+              "type": 5,
+              "typeName": "Balance"
+            },
+            {
+              "name": "collabs",
+              "type": 23,
+              "typeName": "Collabs"
+            }
+          ]
+        }
+      },
+      "path": [
+        "pod_media_regular",
+        "models",
+        "RegisterMediaRequest"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "fields": [
+                {
+                  "type": 27,
+                  "typeName": "T"
+                }
+              ],
+              "name": "Ok"
+            },
+            {
+              "fields": [
+                {
+                  "type": 28,
+                  "typeName": "E"
+                }
+              ],
+              "name": "Err"
+            }
+          ]
+        }
+      },
+      "params": [
+        27,
+        28
+      ],
+      "path": [
+        "Result"
+      ]
+    },
+    {
+      "def": {
+        "tuple": []
+      }
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "name": "FundingClosed"
+            },
+            {
+              "name": "MediaAlreadyRegistered"
+            },
+            {
+              "name": "MediaNotRegistered"
+            },
+            {
+              "name": "MediaNotFound"
+            },
+            {
+              "name": "PodNotInInvestState"
+            },
+            {
+              "fields": [
+                {
+                  "type": 29,
+                  "typeName": "erc20::Error"
+                }
+              ],
+              "name": "Erc20"
+            },
+            {
+              "fields": [
+                {
+                  "type": 30,
+                  "typeName": "media::Error"
+                }
+              ],
+              "name": "CreateMedia"
+            },
+            {
+              "name": "Unauthorized"
+            },
+            {
+              "name": "ReleaseDateMustBeInFuture"
+            }
+          ]
+        }
+      },
+      "path": [
+        "pod_media_investing",
+        "errors",
+        "Error"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "discriminant": 0,
+              "name": "InsufficientBalance"
+            },
+            {
+              "discriminant": 1,
+              "name": "InsufficientAllowance"
+            },
+            {
+              "discriminant": 2,
+              "name": "ZeroAddressNotAllowed"
+            },
+            {
+              "discriminant": 3,
+              "name": "MissingRole"
+            },
+            {
+              "discriminant": 4,
+              "name": "TransfersPaused"
+            }
+          ]
+        }
+      },
+      "path": [
+        "erc20",
+        "Error"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "name": "InvalidSumOfCollabShares"
+            },
+            {
+              "name": "CollabShareOutOfRange"
+            },
+            {
+              "name": "Overflow"
+            },
+            {
+              "name": "OwnerRequired"
+            },
+            {
+              "name": "CollaboratorsNotFound"
+            },
+            {
+              "name": "MediaNotFound"
+            },
+            {
+              "name": "InvalidMediaSharingParentId"
+            },
+            {
+              "name": "MediaSharingParentNotFound"
+            },
+            {
+              "name": "MediaSharingNotFound"
+            },
+            {
+              "name": "CommunityNotFound"
+            },
+            {
+              "name": "ProposalNotFound"
+            },
+            {
+              "name": "RequiresCollaborator"
+            },
+            {
+              "name": "VoteNotAllowed"
+            },
+            {
+              "name": "InsufficientBalance"
+            },
+            {
+              "fields": [
+                {
+                  "type": 31,
+                  "typeName": "erc1620::Error"
+                }
+              ],
+              "name": "Erc1620"
+            },
+            {
+              "fields": [
+                {
+                  "type": 29,
+                  "typeName": "erc20::Error"
+                }
+              ],
+              "name": "Erc20"
+            },
+            {
+              "fields": [
+                {
+                  "type": 32,
+                  "typeName": "erc721::Error"
+                }
+              ],
+              "name": "Erc721"
+            },
+            {
+              "name": "PodAddressRequired"
+            }
+          ]
+        }
+      },
+      "path": [
+        "media",
+        "errors",
+        "Error"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "name": "OnlyCallableBySenderOrRecipient"
+            },
+            {
+              "name": "InsufficientBalance"
+            },
+            {
+              "name": "AmountCannotBeZero"
+            },
+            {
+              "name": "StreamNotFound"
+            },
+            {
+              "name": "DepositNotMultipleOfZero"
+            },
+            {
+              "name": "DepositSmallerThanTimeDelta"
+            },
+            {
+              "name": "InvalidRecipient"
+            },
+            {
+              "name": "InvalidStartTime"
+            },
+            {
+              "name": "InvalidStopTime"
+            },
+            {
+              "fields": [
+                {
+                  "type": 29,
+                  "typeName": "erc20::Error"
+                }
+              ],
+              "name": "Erc20"
+            },
+            {
+              "name": "StreamsNotFound"
+            }
+          ]
+        }
+      },
+      "path": [
+        "erc1620",
+        "Error"
+      ]
+    },
+    {
+      "def": {
+        "variant": {
+          "variants": [
+            {
+              "discriminant": 0,
+              "name": "CannotFetchValue"
+            },
+            {
+              "discriminant": 1,
+              "name": "TokenIdOverflow"
+            },
+            {
+              "discriminant": 2,
+              "name": "TokenNotFound"
+            },
+            {
+              "discriminant": 3,
+              "name": "NotOwner"
+            },
+            {
+              "discriminant": 4,
+              "name": "TokenExists"
+            },
+            {
+              "discriminant": 5,
+              "name": "NotAllowed"
+            },
+            {
+              "discriminant": 6,
+              "name": "NotApproved"
+            },
+            {
+              "discriminant": 7,
+              "name": "CannotInsert"
+            },
+            {
+              "discriminant": 8,
+              "name": "CannotRemove"
+            }
+          ]
+        }
+      },
+      "path": [
+        "erc721",
+        "erc721",
+        "Error"
+      ]
+    }
+  ]
+}

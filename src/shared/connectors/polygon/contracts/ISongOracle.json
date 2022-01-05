@@ -1,0 +1,351 @@
+{
+  "contractName": "ISongOracle",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_requestId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getSongId",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.6+commit.11564f7e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_requestId\",\"type\":\"bytes32\"}],\"name\":\"getSongId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"getSongId(bytes32)\":{\"details\":\"returns the matching Song Id from the oracle\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/oracles/ISongOracle.sol\":\"ISongOracle\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/oracles/ISongOracle.sol\":{\"keccak256\":\"0x434ccf64160d9c4d18087319fc36ad5ae92e7bf2f35e78b30d9f29505da957ea\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1abfb775f6d333e50dc116952180c7381f99cd4b94e529d0d75113e766d8dcdc\",\"dweb:/ipfs/QmSxM3Ezt65T3BP9jAKmLqfMJb4LzjvEPr5JuumSt9ZEJ8\"]},\"project:/contracts/oracles/SongOracleStructs.sol\":{\"keccak256\":\"0x13311be9e3d547d9a73409e463657c75d1d8549ae0ce5d93a87adb12594c9aa6\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a0f938cc3ae0c9acbd484f0616e25049f9742e9c20d54b99f7d59ee58788686f\",\"dweb:/ipfs/QmdsgnyJMpEXbkjGS5ETHiakqsLuFpaeVzgER1omofcEdc\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\nimport \"./SongOracleStructs.sol\";\n\ninterface ISongOracle {\n    /**\n     * @dev returns the matching Song Id from the oracle\n     */\n    // solhint-disable-next-line\n    function getSongId(bytes32 _requestId) external view returns (uint256);\n}\n",
+  "sourcePath": "/Users/angelsatorresalmenara/Desktop/privi-trax-smart-contracts/contracts/oracles/ISongOracle.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/oracles/ISongOracle.sol",
+    "exportedSymbols": {
+      "ISongOracle": [
+        8209
+      ],
+      "SongOracleInfo": [
+        8599
+      ]
+    },
+    "id": 8210,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 8199,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:41"
+      },
+      {
+        "absolutePath": "project:/contracts/oracles/SongOracleStructs.sol",
+        "file": "./SongOracleStructs.sol",
+        "id": 8200,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 8210,
+        "sourceUnit": 8600,
+        "src": "57:33:41",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 8209,
+        "linearizedBaseContracts": [
+          8209
+        ],
+        "name": "ISongOracle",
+        "nameLocation": "102:11:41",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 8201,
+              "nodeType": "StructuredDocumentation",
+              "src": "120:68:41",
+              "text": " @dev returns the matching Song Id from the oracle"
+            },
+            "functionSelector": "aa58e8ec",
+            "id": 8208,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getSongId",
+            "nameLocation": "235:9:41",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8204,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8203,
+                  "mutability": "mutable",
+                  "name": "_requestId",
+                  "nameLocation": "253:10:41",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8208,
+                  "src": "245:18:41",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 8202,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "245:7:41",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "244:20:41"
+            },
+            "returnParameters": {
+              "id": 8207,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8206,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8208,
+                  "src": "288:7:41",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8205,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "288:7:41",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "287:9:41"
+            },
+            "scope": 8209,
+            "src": "226:71:41",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 8210,
+        "src": "92:207:41",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:268:41"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/oracles/ISongOracle.sol",
+    "exportedSymbols": {
+      "ISongOracle": [
+        8209
+      ],
+      "SongOracleInfo": [
+        8599
+      ]
+    },
+    "id": 8210,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 8199,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:41"
+      },
+      {
+        "absolutePath": "project:/contracts/oracles/SongOracleStructs.sol",
+        "file": "./SongOracleStructs.sol",
+        "id": 8200,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 8210,
+        "sourceUnit": 8600,
+        "src": "57:33:41",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 8209,
+        "linearizedBaseContracts": [
+          8209
+        ],
+        "name": "ISongOracle",
+        "nameLocation": "102:11:41",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 8201,
+              "nodeType": "StructuredDocumentation",
+              "src": "120:68:41",
+              "text": " @dev returns the matching Song Id from the oracle"
+            },
+            "functionSelector": "aa58e8ec",
+            "id": 8208,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getSongId",
+            "nameLocation": "235:9:41",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8204,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8203,
+                  "mutability": "mutable",
+                  "name": "_requestId",
+                  "nameLocation": "253:10:41",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8208,
+                  "src": "245:18:41",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 8202,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "245:7:41",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "244:20:41"
+            },
+            "returnParameters": {
+              "id": 8207,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 8206,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 8208,
+                  "src": "288:7:41",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8205,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "288:7:41",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "287:9:41"
+            },
+            "scope": 8209,
+            "src": "226:71:41",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 8210,
+        "src": "92:207:41",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:268:41"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.6+commit.11564f7e.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.2",
+  "updatedAt": "2021-09-02T15:27:50.323Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "getSongId(bytes32)": {
+        "details": "returns the matching Song Id from the oracle"
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

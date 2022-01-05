@@ -1,0 +1,13 @@
+.chat-modal-container {
+  display: flex;
+  position: fixed;
+  bottom: 0px;
+  right: 40px;
+  z-index: 1000;
+}
+
+@media screen and (max-width: 430px) {
+  .chat-modal-container {
+    right: 0;
+  }
+}

@@ -1,0 +1,160 @@
+import { makeStyles } from "@material-ui/core/styles";
+
+export const mediaDetailModalStyles = makeStyles(() => ({
+  mediaDetailsModalContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContents: {
+    backgroundColor: "#ffffff",
+    padding: 32,
+    width: 892,
+    borderRadius: 16,
+    maxWidth: "85vw",
+    maxHeight: "85vh",
+    overflow: "auto",
+    outline: "none",
+  },
+  header: {
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    marginBottom: 32,
+    fontSize: "1.5rem",
+    fontWeight: 800,
+  },
+  exit: {
+    cursor: "pointer",
+    marginTop: -16,
+  },
+  userBox: {
+    display: "flex",
+    alignItems: "flex-start",
+    paddingBottom: 16,
+    borderBottom: "1px solid #eff2f8",
+  },
+  creatorBox: {
+    display: "flex",
+    alignItems: "center",
+    marginTop: 16,
+    paddingLeft: 16,
+  },
+  avatarBox: {
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    width: 48,
+    height: 48,
+    border: "2px solid white",
+    borderRadius: "100%",
+    boxShadow: "0px 2px 8px rgba($color: #000000, $alpha: 0.2)",
+  },
+  name: {
+    fontSize: 18,
+  },
+  codeBox: {
+    background: "linear-gradient(97.4deg, #ff79d1 14.43%, #db00ff 79.45%)",
+    backgroundClip: "text",
+    "-webkit-background-clip": "text",
+    "-webkit-text-fill-color": "transparent",
+    fontSize: 14,
+  },
+  ownerBox: {
+    marginLeft: -16,
+  },
+  descriptionBox: {
+    display: "flex",
+    alignItems: "flex-start",
+    marginTop: 24,
+
+    "& img,video": {
+      height: 250,
+      objectFit: "contain",
+      minWidth: 200,
+    },
+  },
+  description: {
+    display: "-webkit-box",
+    "-webkit-line-clamp": 5,
+    "-webkit-box-orient": "vertical",
+  },
+  ratingBox: {
+    display: "flex",
+    alignItems: "center",
+  },
+  feedBack: {
+    color: "black",
+    fontWeight: 800,
+    fontFamily: "Agrandir",
+    fontSize: "0.875rem",
+    marginBottom: 8,
+  },
+  valueBox: {
+    fontSize: 20,
+  },
+  rateIcon: {
+    marginRight: 4,
+    background: "linear-gradient(97.4deg, #ff79d1 14.43%, #db00ff 79.45%)",
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  emptyRateIcon: {
+    marginRight: 4,
+    background: "#eff2f8",
+    border: "1px solid #707582",
+    boxSizing: "border-box",
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  tagContainer: {
+    display: "flex",
+    alignItems: "center",
+    marginTop: 16,
+  },
+  tagBox: {
+    padding: "4px 16px",
+    border: "1px solid grey",
+    borderRadius: 16,
+  },
+  likeContainer: {
+    borderRadius: 16,
+    boxShadow: "0px 2px 8px rgba($color: #000000, $alpha: 0.2)",
+    padding: 24,
+    marginTop: 24,
+  },
+  likeBox: {
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    paddingBottom: 16,
+    borderBottom: "1px solid #eff2f8",
+  },
+  likeItem: {
+    width: "100%",
+  },
+  likeItemBorder: {
+    width: "100%",
+    paddingLeft: 24,
+    borderLeft: "1px solid #eff2f8",
+  },
+  rolaytyBox: {
+    display: "flex",
+    alignItems: "center",
+    marginTop: 16,
+  },
+  buttonBox: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 24,
+    background: "black",
+    borderRadius: 8,
+    color: "white",
+    padding: 8,
+    fontWeight: 800,
+    cursor: "pointer",
+  },
+}));

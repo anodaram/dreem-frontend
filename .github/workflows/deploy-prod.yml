@@ -1,0 +1,65 @@
+# This is the build and deploy Prod branch CI
+name: Deploy prod CI
+# Controls when the action will run.
+on:
+ # Triggers the workflow on push or pull request events
+  push:
+    branches: [ prod ]
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: macos-10.15
+    #runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        node-version: [14.18]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          **/node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+        # personal access token with repo scope on repo A and B
+        #token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.API_TOKEN_GITHUB_DEV }}
+
+    - name: Build Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: export NODE_OPTIONS=--max_old_space_size=8192
+    - run: yarn
+    - run: yarn build
+      env:
+          NODE_OPTIONS: '--max_old_space_size=8192'
+          REACT_APP_PRIVI_BACKEND_URL: 'https://backend-prod.privi.store/backend'
+          REACT_APP_PRIVI_METAVERSE_URL: 'https://web.dreem.xyz'
+          CI: false
+    - run: ls -a
+    - run: rm -fr .git/
+
+
+    - name: clone repo B, build output, and push to repo B
+      run: |
+        # API_TOKEN_GITHUB_DEV (should be PROD but the user is the same)
+        git clone https://${{ secrets.API_TOKEN_GITHUB_DEV }}@github.com/Cache2020/Privi-Metaverse-Prod-Build.git
+        cd Privi-Metaverse-Prod-Build/
+        git rm -r  .
+        git add . && git commit -m 'remove all'
+        git push
+        cd ../
+        cp -r build/* Privi-Metaverse-Prod-Build/
+        cd Privi-Metaverse-Prod-Build/
+        date > date.txt
+        ls -a
+        #git checkout prod
+        git add . && git commit -m "Add changes and Deploy Prod"
+        git push

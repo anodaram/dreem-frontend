@@ -1,0 +1,977 @@
+{
+  "contractName": "IPriviAMM",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_fundingToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_fundingTokenPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_maxPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_maxSupply",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_ammType",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_precision",
+          "type": "uint256"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_buyer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_ammTokenAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "buyTokens",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_seller",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_ammTokenAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "sellTokens",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.6+commit.11564f7e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_buyer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_ammTokenAmount\",\"type\":\"uint256\"}],\"name\":\"buyTokens\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_fundingToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_fundingTokenPrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_maxPrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_maxSupply\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_ammType\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_precision\",\"type\":\"uint256\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_seller\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_ammTokenAmount\",\"type\":\"uint256\"}],\"name\":\"sellTokens\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"buyTokens(address,uint256)\":{\"params\":{\"_ammTokenAmount\":\"the amount of funding token to exchange\",\"_buyer\":\"address of the buyer\"}},\"initialize(address,uint256,uint256,uint256,bytes32,uint256)\":{\"params\":{\"_ammType\":\"the amm type\",\"_fundingToken\":\"the address of the ERC20 token used for funding\",\"_fundingTokenPrice\":\"the price of the ERC20 token used for funding\",\"_maxPrice\":\"the max price used in formulas\",\"_maxSupply\":\"the max supply used in formulas\",\"_precision\":\"precision value (loog for the README.md)\"}},\"sellTokens(address,uint256)\":{\"params\":{\"_ammTokenAmount\":\"the amount of funding token to exchange\",\"_seller\":\"address of the seller\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"buyTokens(address,uint256)\":{\"notice\":\"allows the buying (minting) of amm tokens\"},\"initialize(address,uint256,uint256,uint256,bytes32,uint256)\":{\"notice\":\"set the default admin (can't be on construction time for minimal proxy clones functionality)\"},\"sellTokens(address,uint256)\":{\"notice\":\"allows the selling (burning) of amm tokens\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/interfaces/IPriviAMM.sol\":\"IPriviAMM\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/interfaces/IPriviAMM.sol\":{\"keccak256\":\"0x5c612bf255ec582ed41d13556eaf7cf72c2e0d902999005240daec31006a0924\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a3d67db98a59c66b57bd6df8a42968f46b69ffb22c2f85be039afe7f99d43dae\",\"dweb:/ipfs/QmXLyMCGE3QnonVA8s6DTJ5g8kKGhCmMCp3NPDs537CyR4\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\ninterface IPriviAMM {\n    /**\n     * @notice set the default admin (can't be on construction time for minimal proxy clones functionality)\n     * @param _fundingToken the address of the ERC20 token used for funding\n     * @param _fundingTokenPrice the price of the ERC20 token used for funding\n     * @param _maxPrice the max price used in formulas\n     * @param _maxSupply the max supply used in formulas\n     * @param _ammType the amm type\n     * @param _precision precision value (loog for the README.md)\n     */\n    function initialize(\n        address _fundingToken,\n        uint256 _fundingTokenPrice,\n        uint256 _maxPrice,\n        uint256 _maxSupply,\n        bytes32 _ammType,\n        uint256 _precision\n    ) external;\n\n    /**\n     * @notice allows the buying (minting) of amm tokens\n     * @param _ammTokenAmount the amount of funding token to exchange\n     * @param _buyer address of the buyer\n     */\n    function buyTokens(address _buyer, uint256 _ammTokenAmount) external;\n\n    /**\n     * @notice allows the selling (burning) of amm tokens\n     * @param _ammTokenAmount the amount of funding token to exchange\n     * @param _seller address of the seller\n     */\n    function sellTokens(address _seller, uint256 _ammTokenAmount) external;\n}\n",
+  "sourcePath": "/Users/angelsatorresalmenara/Desktop/privi-pod/contracts/interfaces/IPriviAMM.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/interfaces/IPriviAMM.sol",
+    "exportedSymbols": {
+      "IPriviAMM": [
+        5738
+      ]
+    },
+    "id": 5739,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 5705,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:31"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 5738,
+        "linearizedBaseContracts": [
+          5738
+        ],
+        "name": "IPriviAMM",
+        "nameLocation": "67:9:31",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 5706,
+              "nodeType": "StructuredDocumentation",
+              "src": "83:488:31",
+              "text": " @notice set the default admin (can't be on construction time for minimal proxy clones functionality)\n @param _fundingToken the address of the ERC20 token used for funding\n @param _fundingTokenPrice the price of the ERC20 token used for funding\n @param _maxPrice the max price used in formulas\n @param _maxSupply the max supply used in formulas\n @param _ammType the amm type\n @param _precision precision value (loog for the README.md)"
+            },
+            "functionSelector": "dafd56d5",
+            "id": 5721,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "initialize",
+            "nameLocation": "585:10:31",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5719,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5708,
+                  "mutability": "mutable",
+                  "name": "_fundingToken",
+                  "nameLocation": "613:13:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5721,
+                  "src": "605:21:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 5707,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "605:7:31",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5710,
+                  "mutability": "mutable",
+                  "name": "_fundingTokenPrice",
+                  "nameLocation": "644:18:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5721,
+                  "src": "636:26:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5709,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "636:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5712,
+                  "mutability": "mutable",
+                  "name": "_maxPrice",
+                  "nameLocation": "680:9:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5721,
+                  "src": "672:17:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5711,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "672:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5714,
+                  "mutability": "mutable",
+                  "name": "_maxSupply",
+                  "nameLocation": "707:10:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5721,
+                  "src": "699:18:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5713,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "699:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5716,
+                  "mutability": "mutable",
+                  "name": "_ammType",
+                  "nameLocation": "735:8:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5721,
+                  "src": "727:16:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 5715,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "727:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5718,
+                  "mutability": "mutable",
+                  "name": "_precision",
+                  "nameLocation": "761:10:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5721,
+                  "src": "753:18:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5717,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "753:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "595:182:31"
+            },
+            "returnParameters": {
+              "id": 5720,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "786:0:31"
+            },
+            "scope": 5738,
+            "src": "576:211:31",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 5722,
+              "nodeType": "StructuredDocumentation",
+              "src": "793:180:31",
+              "text": " @notice allows the buying (minting) of amm tokens\n @param _ammTokenAmount the amount of funding token to exchange\n @param _buyer address of the buyer"
+            },
+            "functionSelector": "0752881a",
+            "id": 5729,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "buyTokens",
+            "nameLocation": "987:9:31",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5727,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5724,
+                  "mutability": "mutable",
+                  "name": "_buyer",
+                  "nameLocation": "1005:6:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5729,
+                  "src": "997:14:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 5723,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "997:7:31",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5726,
+                  "mutability": "mutable",
+                  "name": "_ammTokenAmount",
+                  "nameLocation": "1021:15:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5729,
+                  "src": "1013:23:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5725,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1013:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "996:41:31"
+            },
+            "returnParameters": {
+              "id": 5728,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1046:0:31"
+            },
+            "scope": 5738,
+            "src": "978:69:31",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 5730,
+              "nodeType": "StructuredDocumentation",
+              "src": "1053:183:31",
+              "text": " @notice allows the selling (burning) of amm tokens\n @param _ammTokenAmount the amount of funding token to exchange\n @param _seller address of the seller"
+            },
+            "functionSelector": "c464fe65",
+            "id": 5737,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "sellTokens",
+            "nameLocation": "1250:10:31",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5735,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5732,
+                  "mutability": "mutable",
+                  "name": "_seller",
+                  "nameLocation": "1269:7:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5737,
+                  "src": "1261:15:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 5731,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1261:7:31",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5734,
+                  "mutability": "mutable",
+                  "name": "_ammTokenAmount",
+                  "nameLocation": "1286:15:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5737,
+                  "src": "1278:23:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5733,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1278:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1260:42:31"
+            },
+            "returnParameters": {
+              "id": 5736,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1311:0:31"
+            },
+            "scope": 5738,
+            "src": "1241:71:31",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 5739,
+        "src": "57:1257:31",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:1283:31"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/interfaces/IPriviAMM.sol",
+    "exportedSymbols": {
+      "IPriviAMM": [
+        5738
+      ]
+    },
+    "id": 5739,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 5705,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:31"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 5738,
+        "linearizedBaseContracts": [
+          5738
+        ],
+        "name": "IPriviAMM",
+        "nameLocation": "67:9:31",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 5706,
+              "nodeType": "StructuredDocumentation",
+              "src": "83:488:31",
+              "text": " @notice set the default admin (can't be on construction time for minimal proxy clones functionality)\n @param _fundingToken the address of the ERC20 token used for funding\n @param _fundingTokenPrice the price of the ERC20 token used for funding\n @param _maxPrice the max price used in formulas\n @param _maxSupply the max supply used in formulas\n @param _ammType the amm type\n @param _precision precision value (loog for the README.md)"
+            },
+            "functionSelector": "dafd56d5",
+            "id": 5721,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "initialize",
+            "nameLocation": "585:10:31",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5719,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5708,
+                  "mutability": "mutable",
+                  "name": "_fundingToken",
+                  "nameLocation": "613:13:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5721,
+                  "src": "605:21:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 5707,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "605:7:31",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5710,
+                  "mutability": "mutable",
+                  "name": "_fundingTokenPrice",
+                  "nameLocation": "644:18:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5721,
+                  "src": "636:26:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5709,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "636:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5712,
+                  "mutability": "mutable",
+                  "name": "_maxPrice",
+                  "nameLocation": "680:9:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5721,
+                  "src": "672:17:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5711,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "672:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5714,
+                  "mutability": "mutable",
+                  "name": "_maxSupply",
+                  "nameLocation": "707:10:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5721,
+                  "src": "699:18:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5713,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "699:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5716,
+                  "mutability": "mutable",
+                  "name": "_ammType",
+                  "nameLocation": "735:8:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5721,
+                  "src": "727:16:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 5715,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "727:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5718,
+                  "mutability": "mutable",
+                  "name": "_precision",
+                  "nameLocation": "761:10:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5721,
+                  "src": "753:18:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5717,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "753:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "595:182:31"
+            },
+            "returnParameters": {
+              "id": 5720,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "786:0:31"
+            },
+            "scope": 5738,
+            "src": "576:211:31",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 5722,
+              "nodeType": "StructuredDocumentation",
+              "src": "793:180:31",
+              "text": " @notice allows the buying (minting) of amm tokens\n @param _ammTokenAmount the amount of funding token to exchange\n @param _buyer address of the buyer"
+            },
+            "functionSelector": "0752881a",
+            "id": 5729,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "buyTokens",
+            "nameLocation": "987:9:31",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5727,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5724,
+                  "mutability": "mutable",
+                  "name": "_buyer",
+                  "nameLocation": "1005:6:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5729,
+                  "src": "997:14:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 5723,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "997:7:31",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5726,
+                  "mutability": "mutable",
+                  "name": "_ammTokenAmount",
+                  "nameLocation": "1021:15:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5729,
+                  "src": "1013:23:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5725,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1013:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "996:41:31"
+            },
+            "returnParameters": {
+              "id": 5728,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1046:0:31"
+            },
+            "scope": 5738,
+            "src": "978:69:31",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 5730,
+              "nodeType": "StructuredDocumentation",
+              "src": "1053:183:31",
+              "text": " @notice allows the selling (burning) of amm tokens\n @param _ammTokenAmount the amount of funding token to exchange\n @param _seller address of the seller"
+            },
+            "functionSelector": "c464fe65",
+            "id": 5737,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "sellTokens",
+            "nameLocation": "1250:10:31",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5735,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5732,
+                  "mutability": "mutable",
+                  "name": "_seller",
+                  "nameLocation": "1269:7:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5737,
+                  "src": "1261:15:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 5731,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1261:7:31",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5734,
+                  "mutability": "mutable",
+                  "name": "_ammTokenAmount",
+                  "nameLocation": "1286:15:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5737,
+                  "src": "1278:23:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5733,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1278:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1260:42:31"
+            },
+            "returnParameters": {
+              "id": 5736,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1311:0:31"
+            },
+            "scope": 5738,
+            "src": "1241:71:31",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 5739,
+        "src": "57:1257:31",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:1283:31"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.6+commit.11564f7e.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2021-09-15T13:47:31.913Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "buyTokens(address,uint256)": {
+        "params": {
+          "_ammTokenAmount": "the amount of funding token to exchange",
+          "_buyer": "address of the buyer"
+        }
+      },
+      "initialize(address,uint256,uint256,uint256,bytes32,uint256)": {
+        "params": {
+          "_ammType": "the amm type",
+          "_fundingToken": "the address of the ERC20 token used for funding",
+          "_fundingTokenPrice": "the price of the ERC20 token used for funding",
+          "_maxPrice": "the max price used in formulas",
+          "_maxSupply": "the max supply used in formulas",
+          "_precision": "precision value (loog for the README.md)"
+        }
+      },
+      "sellTokens(address,uint256)": {
+        "params": {
+          "_ammTokenAmount": "the amount of funding token to exchange",
+          "_seller": "address of the seller"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "buyTokens(address,uint256)": {
+        "notice": "allows the buying (minting) of amm tokens"
+      },
+      "initialize(address,uint256,uint256,uint256,bytes32,uint256)": {
+        "notice": "set the default admin (can't be on construction time for minimal proxy clones functionality)"
+      },
+      "sellTokens(address,uint256)": {
+        "notice": "allows the selling (burning) of amm tokens"
+      }
+    },
+    "version": 1
+  }
+}

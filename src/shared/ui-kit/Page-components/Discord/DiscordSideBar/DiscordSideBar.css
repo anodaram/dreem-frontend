@@ -1,0 +1,181 @@
+.noItemsLabelSidebar {
+  font-size: 14px;
+  color: grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.discordSideBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.discordSideBar .loaderDiv {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+
+.discordSideBar .community-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  align-self: center;
+  margin-bottom: -30px;
+  z-index: 1;
+}
+
+.discordSideBar .sideBarTitle,
+.discordSideBar .sideBarTitleMedia {
+  width: 100%;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  margin: 8px 0px;
+  color: #081831;
+}
+.discordSideBar .sideBarTitle img,
+.discordSideBar .sideBarTitleMedia img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  margin-left: 15px;
+}
+.discordSideBar .sideBarSelectedImage {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 15px;
+}
+.sideBarSelectedImage .sideBarSelectedImageImg {
+  width: 70px;
+  height: 70px;
+  background-color: #5a5a5a;
+  border: 3px solid white;
+  box-shadow: 1px 1px 10px #ccc;
+  cursor: pointer;
+}
+
+.discordSideBar .sideBarSelectedTitle {
+  font-size: 14px;
+  color: #081831;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+.discordSideBar .sideBarSelectedSubtitle {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: rgb(101, 110, 126);
+}
+.sideBarRowFlexRoundUser {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.sideBarUser {
+  cursor: pointer;
+  margin-left: -10px;
+}
+.sideBarUser:first-child {
+  margin-left: 0;
+}
+.sideBarUserImg {
+  width: 40px;
+  height: 40px;
+  background-color: #5a5a5a;
+  border: 3px solid white;
+}
+.sideBarUsersNumPages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  margin-top: 5px;
+}
+.sideBarMediaList {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+.sideBarMediaItem {
+  margin: 5px;
+  width: 65px;
+  height: 65px;
+  background-color: #5a5a5a;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.sideBarMediaItemNoFlex {
+  margin: 5px;
+  width: 65px;
+  height: 65px;
+  background-color: #5a5a5a;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.discordSideBar .noItems {
+  color: rgb(101, 110, 126);
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.sideBarViewAll {
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  text-decoration: underline;
+  color: rgb(100, 200, 158) !important;
+}
+.sideBarMediaItemNoFlex .react-player-sidebar {
+  position: relative;
+}
+.sideBarMediaItemNoFlex .react-player-sidebar video {
+  width: 65px;
+  object-fit: cover;
+  height: 65px;
+  border-radius: 10px;
+  z-index: 0;
+}
+.sideBarMediaItemNoFlex .sideBarVideoIcon {
+  z-index: 1;
+  width: 65px;
+  height: 65px;
+  border-radius: 10px;
+  background-color: rgba(90, 90, 90, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: calc(-65px);
+}
+.sideBarMediaItemNoFlex svg {
+  min-height: 25px;
+}

@@ -1,0 +1,66 @@
+/*CHAT*/
+.headerMessagesContacts {
+  display: flex;
+}
+.titleMessagesContacts {
+  font-size: 18px;
+  font-weight: 700;
+  color: rgba(8, 24, 49, 0.5);
+  margin-right: 15px;
+  cursor: pointer;
+}
+.titleMessagesContactsSelected {
+  font-size: 18px;
+  font-weight: 700;
+  color: rgb(8, 24, 49);
+  margin-right: 15px;
+}
+.flexItemChatList {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(8, 24, 49, 0.2);
+  cursor: pointer;
+  align-items: center;
+}
+.messagesPartItemChatList {
+  width: 80%;
+}
+.datePartItemChatList {
+  width: 20%;
+  display: flex;
+  justify-content: flex-end;
+  color: rgba(8, 24, 49, 0.5);
+  font-size: 12px;
+}
+.chatLastMessageLabel {
+  font-size: 10px;
+  color: rgba(8, 24, 49, 0.5);
+  padding-top: 10px;
+}
+.chatUserLabel {
+  font-size: 14px;
+  color: rgb(8, 24, 49);
+}
+
+.flexItemChatList .chatUserPicture {
+  background-size: cover;
+  height: 48px;
+  width: 48px;
+  /*min-width: 40px;*/
+  /*min-height: 40px;*/
+  border-radius: 20px;
+  margin-right: 10px;
+  background-color: #656e7e;
+}
+
+.flexItemChatList .chatUserSmallImage {
+  background-size: cover;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  margin-right: 10px;
+  background-color: #656e7e;
+}

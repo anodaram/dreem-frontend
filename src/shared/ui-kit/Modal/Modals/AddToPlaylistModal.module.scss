@@ -1,0 +1,211 @@
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .modalContent {
+    background-color: white;
+    padding: 45px 65px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: calc(610px - 2 * 65px);
+    max-width: 85vw;
+    outline: none;
+    max-height: calc(85vh - 45px);
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    .exit {
+      align-self: flex-end;
+      margin-top: -25px;
+      margin-right: -50px;
+
+      &img {
+        cursor: pointer;
+      }
+    }
+
+    .content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      h2 {
+        margin: 0px;
+        margin-bottom: 30px;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 30px;
+        line-height: 104.5%;
+      }
+
+      label {
+        display: flex;
+        flex-direction: column;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        margin-bottom: 25px;
+        width: 100%;
+
+        .searcher {
+          border-radius: 10px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: #f7f8fa;
+          border: 1px solid #99a1b3;
+          border-radius: 11.36px;
+          color: #6b6b6b;
+          font-weight: normal;
+          font-size: 16px;
+          margin-top: 8px;
+
+          input {
+            font-size: 22px;
+            outline: none;
+            border: none;
+            background-color: transparent;
+            flex-grow: 1;
+            width: 100%;
+
+            &::placeholder {
+              color: #99a1b3;
+            }
+          }
+
+          img {
+            width: 24px;
+            height: 24px;
+            margin-left: 10px;
+          }
+        }
+      }
+
+      .playLists {
+        display: flex;
+        flex-direction: column;
+        max-height: 250px;
+        width: 100%;
+        overflow-y: auto;
+        scrollbar-width: none;
+        padding-right: 10px;
+        margin-bottom: 45px;
+
+        .tile {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin-bottom: 29.5px;
+
+          .left {
+            display: flex;
+            align-items: center;
+            height: 100%;
+
+            .thumbnails {
+              width: 50px;
+              display: flex;
+              flex-wrap: wrap;
+              min-height: 50px;
+              height: 50px;
+              margin-right: 12px;
+
+              > div {
+                background: linear-gradient(97.4deg, #ff79d1 14.43%, #db00ff 79.45%);
+              }
+
+              .only {
+                border-radius: 8px;
+                height: 100%;
+                width: 100%;
+              }
+
+              .two {
+                width: 24px;
+                height: 100%;
+
+                &:first-child {
+                  border-radius: 8px 2px 2px 8px;
+                }
+                &:last-child {
+                  border-radius: 2px 8px 8px 2px;
+                }
+              }
+
+              .four {
+                width: 24px;
+                height: 24px;
+
+                &:first-child {
+                  border-radius: 8px 2px 2px 2px;
+                  margin-right: 2px;
+                  margin-bottom: 2px;
+                }
+                &:nth-child(2) {
+                  border-radius: 2px 8px 2px 2px;
+                  margin-bottom: 2px;
+                }
+                &:nth-child(3) {
+                  border-radius: 2px 2px 2px 8px;
+                }
+                &:last-child {
+                  border-radius: 2px 2px 8px 2px;
+                  margin-left: 2px;
+                }
+              }
+            }
+
+            .column {
+              display: flex;
+              flex-direction: column;
+              height: 50px;
+              justify-content: space-between;
+              .title {
+                font-style: normal;
+                font-weight: bold;
+                font-size: 18px;
+              }
+
+              .length {
+                font-weight: normal;
+                font-size: 12px;
+                color: #121212;
+                opacity: 0.5;
+              }
+            }
+          }
+
+          span {
+            margin: 0;
+
+            img {
+              width: 26px;
+              height: 26px;
+            }
+          }
+        }
+      }
+
+      .buttons {
+        display: flex;
+        align-items: center;
+
+        button {
+          &:first-child {
+            background: white;
+            color: black;
+            border: 2px solid #99a1b3;
+            margin-right: 12px;
+          }
+        }
+      }
+    }
+  }
+}

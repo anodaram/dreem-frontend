@@ -1,0 +1,794 @@
+.media-content-wrapper {
+  margin-right: 72px;
+}
+.loaderDiv {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+.MediaDisplayHeader {
+  position: relative;
+  margin-bottom: 20px;
+
+  .bookmarkShareLike {
+    margin-top: -16px;
+  }
+
+  .title {
+    display: flex;
+    font-weight: 700;
+    font-size: 50px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #181818;
+    margin-bottom: 40px;
+  }
+
+  .likes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #181818;
+    /*border: 2px solid #ffffff;*/
+    border-radius: 18px;
+    height: 32px;
+    min-width: 100px;
+    width: 100px;
+    justify-content: space-evenly;
+    padding: 0px 15px;
+    position: relative;
+    margin-top: -16px;
+
+    button,
+    > div {
+      color: white;
+      margin-right: 5px;
+      display: flex;
+      align-items: center;
+      outline: none;
+      position: inherit !important;
+      background: transparent;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+    }
+
+    button {
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    img {
+      height: 16.5px;
+    }
+  }
+
+  .closeButton {
+    background: none;
+    color: gray;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding: 0px;
+    svg {
+      height: 24px;
+      width: 24px;
+    }
+  }
+}
+
+.mediaPriceStatusContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.mediaPriceStatus {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 7px 14px 6px;
+  background: linear-gradient(97.4deg, #ff79d1 14.43%, #db00ff 79.45%);
+  border-radius: 36px;
+}
+
+.mediaWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.creatorInfo {
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  img {
+    width: 72px;
+    height: 72px;
+    border-radius: 36px;
+    border: 2px solid #fff;
+    cursor: pointer;
+  }
+
+  div.personalInfo {
+    margin-left: 30px;
+    display: flex;
+    flex-direction: column;
+
+    .creatorFullName {
+      margin-bottom: 4px;
+      color: #181818;
+      font-family: "Agrandir";
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 23px;
+    }
+
+    .creatorOtherInfo {
+      display: flex;
+      align-items: center;
+
+      .creatorAlias {
+        color: #db00ff;
+        font-family: Agrandir;
+        font-weight: 400;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .userVerified {
+        margin-left: 4px;
+        width: 20px;
+        height: 20px;
+      }
+
+      .userLevel {
+        margin-left: 4px;
+        padding: 3px 8px 1px;
+        font-size: 11px;
+        line-height: 12px;
+        font-weight: 400;
+        border: 1px solid #707582;
+        border-radius: 9px;
+        height: 18px;
+        min-width: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+}
+
+div.followSection {
+  display: flex;
+
+  .followArtist {
+    cursor: pointer;
+    margin-right: 4px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+    height: 40px;
+    border-radius: 10px;
+    border: 2px solid #707582;
+    color: #151414;
+    font-weight: 800;
+  }
+
+  .chatWithCreator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 2px solid #707582;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    img {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.dashDivider {
+  margin: 14px 0px;
+  opacity: 0.3;
+  border: 1px dashed #181818;
+}
+
+.solidDivider {
+  margin: 14px 0px;
+  opacity: 0.3;
+  border: 1px solid #181818;
+}
+
+.ownersWrapper {
+  display: flex;
+  flex-direction: column;
+
+  .titleWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .contentTitle {
+      color: #707582;
+      font-family: Agrandir;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .btnViewCollection {
+      color: #20d0bf;
+      font-size: 14px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+  }
+
+  .owersRow {
+    display: flex;
+    align-items: center;
+
+    img {
+      margin-right: -10px;
+      border: 1.5px solid #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.2));
+    }
+  }
+}
+
+.descWrapper {
+  display: flex;
+  flex-direction: column;
+
+  .contentTitle {
+    color: #707582;
+    font-family: Agrandir;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .contentDescription {
+    color: #707582;
+    font-family: Agrandir;
+    font-size: 14px;
+    font-weight: 400;
+  }
+}
+
+.commentWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .newComment {
+    display: flex;
+    flex-direction: column;
+
+    .myInfo {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+
+      .avatar {
+        margin-right: 16px;
+        border: 1.5px solid #fff;
+        border-radius: 16px;
+        width: 32px;
+        height: 32px;
+      }
+
+      .myInfoName {
+        color: #181818;
+        font-weight: 700;
+        font-size: 14px;
+        font-family: Agrandir;
+      }
+    }
+
+    .commentInputWrapper {
+      display: flex;
+      margin-top: 18px;
+      margin-bottom: 6px;
+
+      .commentInput {
+        margin-right: 8px;
+        flex-grow: 1;
+        background: #f7f9fe;
+        border: 1px solid #707582;
+        box-sizing: border-box;
+        border-radius: 4px;
+        font-family: Agrandir;
+        padding: 0 16px;
+      }
+
+      .btnAddComment {
+        width: 124px;
+        min-width: 124px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        background-color: #181818;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .commentRow {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+
+    .commentLeftWrapper {
+      display: flex;
+
+      .commentRowAvatar {
+        margin-right: 16px;
+        border: 1.5px solid #fff;
+        border-radius: 16px;
+        width: 32px;
+        height: 32px;
+      }
+
+      .commentRowInfo {
+        display: flex;
+        flex-direction: column;
+
+        .commentRowName {
+          font-size: 14px;
+          font-weight: bold;
+          color: #181818;
+          font-family: Agrandir;
+        }
+
+        .commentRowComment {
+          margin-top: 8px;
+          font-family: Agrandir;
+          font-size: 14px;
+          color: #707582;
+        }
+      }
+    }
+
+    .commentDate {
+      display: flex;
+      align-items: center;
+      font-family: Agrandir;
+      font-size: 14px;
+      color: #707582;
+    }
+  }
+}
+
+.ratingWrapper {
+  display: flex;
+
+  div {
+    .feedback {
+      display: flex;
+      flex-direction: column;
+      font-weight: 400;
+      font-family: Agrandir;
+      h4 {
+        color: #181818;
+        margin: 0;
+        font-size: 30px;
+      }
+      span {
+        color: #707582;
+        margin: 0;
+        font-size: 14px;
+      }
+    }
+
+    .rateIcon {
+      margin-right: 4px;
+      background: linear-gradient(97.4deg, #ff79d1 14.43%, #db00ff 79.45%);
+      width: 12px;
+      height: 12px;
+      border-radius: 6px;
+    }
+
+    .emptyRateIcon {
+      margin-right: 4px;
+      width: 12px;
+      height: 12px;
+      background: #eff2f8;
+      border: 1px solid #e0e4f3;
+      box-sizing: border-box;
+      border-radius: 6px;
+    }
+  }
+}
+
+.collectionWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .collectionContainer {
+    display: flex;
+    flex-direction: row;
+    column-gap: 24px;
+
+    img {
+      width: 80px;
+      height: 80px;
+      border-radius: 6px;
+      flex: 0 0 80px;
+    }
+
+    .collectionDesc {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      width: calc(100% - 104px);
+
+      h3 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+      }
+
+      span {
+        font-family: Agrandir;
+        font-size: 14px;
+        font-weight: 400;
+        color: #707582;
+        word-break: break-all;
+      }
+
+      .btnViewCollection {
+        margin-top: 12px;
+        color: #20d0bf;
+        font-size: 14px;
+        font-weight: 400;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.statWrapper {
+  padding: 16px;
+
+  div {
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
+    div {
+      color: #181818;
+      font-size: 30px;
+      font-family: Agrandir;
+    }
+  }
+}
+
+.priceWrapper {
+  width: 100%;
+
+  .assetPrice {
+    font-weight: 400;
+    font-size: 30px;
+    font-family: Agrandir;
+    color: #181818;
+    display: flex;
+    align-items: flex-end;
+
+    span {
+      margin-left: 10px;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 104.5%;
+      color: #707582;
+      margin-bottom: 10px;
+    }
+  }
+
+  .statCategoryWrapper {
+    width: 100%;
+
+    div {
+      color: #707582;
+      .statCategory {
+        font-weight: 600;
+        font-size: 14px;
+        font-family: Agrandir;
+      }
+
+      .statCategoryVal {
+        font-weight: 400;
+        font-size: 14px;
+        font-family: Agrandir;
+      }
+    }
+  }
+}
+
+.auctionWrapper {
+  width: 100%;
+  h3 {
+    font-size: 30px;
+    color: #181818;
+    margin: 0;
+  }
+  h5 {
+    font-size: 18px;
+    color: #707582;
+    margin: 0;
+  }
+  h6 {
+    font-size: 14px;
+    color: #707582;
+    margin: 0;
+  }
+  .usdPrice {
+    line-height: 40px;
+    margin-left: 10px;
+  }
+  .tokenPrice {
+    line-height: 40px;
+  }
+  .auctionCard {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 14px 21px;
+    background: linear-gradient(97.4deg, #23d0c6 14.43%, #00cc8f 85.96%);
+    border-radius: 10px;
+    h3,
+    h5,
+    h6 {
+      color: white;
+    }
+    h3 {
+      line-height: 30px;
+    }
+    h5 {
+      margin-bottom: 15px;
+    }
+  }
+  img {
+    width: 18px;
+    height: 18px;
+  }
+  span {
+    margin-left: 10px;
+    margin-top: 4px;
+    font-size: 14px;
+    color: #707582;
+  }
+  .statCategoryWrapper {
+    width: 100%;
+
+    div {
+      .statCategory {
+        font-weight: 600;
+        font-size: 14px;
+        font-family: Agrandir;
+        color: #707582;
+      }
+
+      .statCategoryVal {
+        font-weight: 400;
+        font-size: 14px;
+        font-family: Agrandir;
+        color: #707582;
+      }
+    }
+  }
+}
+
+.btnPlaceBid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #181818;
+  color: white;
+  border-radius: 10px;
+  width: 100%;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: Agrandir;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.btnMoreDetails {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #181818;
+  background: white;
+  color: #181818;
+  border-radius: 10px;
+  width: 100%;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: Agrandir;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tagType {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 11px;
+  border: 1px solid #99a1b3;
+  border-radius: 14px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  color: #99a1b3;
+  height: 30px;
+  width: fit-content;
+  margin: 20px 0;
+}
+
+.tagType img {
+  width: 20px;
+  height: 20px;
+}
+
+.finalStepContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 32px;
+
+  .title {
+    font-size: 30px;
+    margin-top: 16px;
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+
+    &.loading {
+      width: 75px;
+      height: 75px;
+    }
+  }
+
+  p {
+    font-size: 18px;
+    color: #707582;
+    text-align: center;
+    margin: 24px 0 48px 0;
+  }
+}
+
+.signatureRequestView {
+  max-height: 80vh;
+  border-radius: 20px;
+  margin: -32px;
+  overflow: hidden;
+
+  h3 {
+    font-size: 24px;
+    font-weight: 25px;
+    text-align: center;
+    background: #eff2f8;
+    margin: 0;
+    padding: 20px 0;
+    display: block;
+
+    &::after {
+      content: " ";
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 15px solid #eff2f8;
+      position: relative;
+      top: 63px;
+      left: -100px;
+    }
+  }
+
+  .body {
+    padding: 24px;
+
+    .tokenImage {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 54px;
+      width: 36px;
+      height: 36px;
+    }
+
+    .title {
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      padding: 0 20%;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 48px;
+    }
+
+    .description {
+      color: #707582;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .logo {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .action {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .longDesc {
+      .message {
+        font-weight: bold;
+        color: #707582;
+      }
+    }
+
+    .action button {
+      width: 40%;
+      height: 57px;
+      border-radius: 15px;
+      border: 1px solid #99a1b3;
+    }
+
+    .cancelBtn {
+      background-color: white;
+      color: black;
+    }
+
+    .signBtn {
+      border: 1px solid #27e8d9 !important;
+      color: #27e8d9;
+      background: white;
+
+      &:hover {
+        background: #27e8d9;
+        color: white;
+      }
+    }
+  }
+}
+
+.darkGreyColor {
+  color: #707582 !important;
+  font-weight: 800 !important;
+}
+
+.greenColor {
+  color: #00ff15;
+}

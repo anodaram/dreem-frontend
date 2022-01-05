@@ -1,0 +1,102 @@
+.actions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.modalWrapper {
+  max-height: 80vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 0 16px;
+  margin: 0 -16px;
+}
+
+.title {
+  font-size: 22px;
+}
+
+.exit {
+  position: relative;
+  top: 0;
+  right: calc(-100% + 14px);
+}
+
+.goToWallet {
+  color: #707582;
+  font-size: 14px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  p {
+    color: #23d0c6;
+    padding-left: 12px;
+  }
+}
+
+.wallets {
+  .walletInfo {
+    display: flex;
+    flex-direction: column;
+
+    h4 {
+      font-weight: bold;
+      font-size: 30px;
+      color: #181818;
+      margin: 4px 0;
+    }
+
+    p {
+      font-size: 18px;
+      color: #707582;
+      margin: 0;
+    }
+  }
+
+  .walletIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .selectedWallet {
+    border: 2px solid #23d0c6;
+  }
+}
+
+.darkContent {
+  color: white;
+
+  .wallets {
+    .walletInfo {
+      display: flex;
+      flex-direction: column;
+
+      h4 {
+        font-weight: 400;
+        font-size: 24px;
+        color: white;
+        margin: 0px 0px 8px;
+      }
+
+      p {
+        font-size: 18px;
+        color: #a4a4a4;
+        margin: 0;
+      }
+    }
+
+    .selectedWallet {
+      border: 2px solid #a306ba;
+    }
+  }
+
+  .goToWallet {
+    color: #a4a4a4;
+
+    p {
+      color: #a306ba;
+    }
+  }
+}

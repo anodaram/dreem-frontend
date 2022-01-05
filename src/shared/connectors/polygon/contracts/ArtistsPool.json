@@ -1,0 +1,795 @@
+{
+  "contractName": "ArtistsPool",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.6+commit.11564f7e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Eric Nordelo\",\"kind\":\"dev\",\"methods\":{},\"title\":\"song artists pool contract implementation for minimal proxy multiple deployments\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"initialize()\":{\"notice\":\"initializes the minimal proxy clone\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/implementations/ArtistsPool.sol\":\"ArtistsPool\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/proxy/utils/Initializable.sol\":{\"keccak256\":\"0x8b2abd85d0ece7e866e100e9d47ca9cbec93c87cf71a8d267b2b93eb81f7d5e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fe9fa1beb63e4a09637701f783982ba80380d630d600c9cafe26b68bf58be1b2\",\"dweb:/ipfs/QmRA3GXhTWys88joD9x8xYhdjzvGwmDGLMMzGw3LxbSEge\"]},\"project:/contracts/implementations/ArtistsPool.sol\":{\"keccak256\":\"0xe91f640f8359305ad5f1d98714745e937caadf69f80646fbf432c57e35176b45\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://49bca231dd36a6951e17cc1d259dd879401a1491113e0210b3e088bd2f5aba91\",\"dweb:/ipfs/QmPWzgyamM4VTZhiMwJBN1ckJHnChbdW3oEcSKUwEcKn8H\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506101ec806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c80638129fc1c14610030575b600080fd5b61003861003a565b005b600060019054906101000a900460ff1680610060575060008054906101000a900460ff16155b61009f576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161009690610136565b60405180910390fd5b60008060019054906101000a900460ff1615905080156100ef576001600060016101000a81548160ff02191690831515021790555060016000806101000a81548160ff0219169083151502179055505b80156101105760008060016101000a81548160ff0219169083151502179055505b50565b6000610120602e83610156565b915061012b82610167565b604082019050919050565b6000602082019050818103600083015261014f81610113565b9050919050565b600082825260208201905092915050565b7f496e697469616c697a61626c653a20636f6e747261637420697320616c72656160008201527f647920696e697469616c697a656400000000000000000000000000000000000060208201525056fea26469706673582212200e57e9bb11a7da563f2724a9c9c1ad9cf50ab3962ca3b15660944e326cb4871464736f6c63430008060033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c80638129fc1c14610030575b600080fd5b61003861003a565b005b600060019054906101000a900460ff1680610060575060008054906101000a900460ff16155b61009f576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161009690610136565b60405180910390fd5b60008060019054906101000a900460ff1615905080156100ef576001600060016101000a81548160ff02191690831515021790555060016000806101000a81548160ff0219169083151502179055505b80156101105760008060016101000a81548160ff0219169083151502179055505b50565b6000610120602e83610156565b915061012b82610167565b604082019050919050565b6000602082019050818103600083015261014f81610113565b9050919050565b600082825260208201905092915050565b7f496e697469616c697a61626c653a20636f6e747261637420697320616c72656160008201527f647920696e697469616c697a656400000000000000000000000000000000000060208201525056fea26469706673582212200e57e9bb11a7da563f2724a9c9c1ad9cf50ab3962ca3b15660944e326cb4871464736f6c63430008060033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [
+    {
+      "ast": {
+        "nodeType": "YulBlock",
+        "src": "0:1215:54",
+        "statements": [
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "153:220:54",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "163:74:54",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "229:3:54"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "234:2:54",
+                        "type": "",
+                        "value": "46"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "array_storeLengthForEncoding_t_string_memory_ptr_fromStack",
+                      "nodeType": "YulIdentifier",
+                      "src": "170:58:54"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "170:67:54"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "pos",
+                      "nodeType": "YulIdentifier",
+                      "src": "163:3:54"
+                    }
+                  ]
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "335:3:54"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "store_literal_in_memory_7a2a4e26842155ea933fe6eb6e3137eb5a296dcdf55721c552be7b4c3cc23759",
+                      "nodeType": "YulIdentifier",
+                      "src": "246:88:54"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "246:93:54"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "246:93:54"
+                },
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "348:19:54",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "359:3:54"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "364:2:54",
+                        "type": "",
+                        "value": "64"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "add",
+                      "nodeType": "YulIdentifier",
+                      "src": "355:3:54"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "355:12:54"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "end",
+                      "nodeType": "YulIdentifier",
+                      "src": "348:3:54"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "abi_encode_t_stringliteral_7a2a4e26842155ea933fe6eb6e3137eb5a296dcdf55721c552be7b4c3cc23759_to_t_string_memory_ptr_fromStack",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "pos",
+                "nodeType": "YulTypedName",
+                "src": "141:3:54",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "end",
+                "nodeType": "YulTypedName",
+                "src": "149:3:54",
+                "type": ""
+              }
+            ],
+            "src": "7:366:54"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "550:248:54",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "560:26:54",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "headStart",
+                        "nodeType": "YulIdentifier",
+                        "src": "572:9:54"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "583:2:54",
+                        "type": "",
+                        "value": "32"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "add",
+                      "nodeType": "YulIdentifier",
+                      "src": "568:3:54"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "568:18:54"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "tail",
+                      "nodeType": "YulIdentifier",
+                      "src": "560:4:54"
+                    }
+                  ]
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "headStart",
+                            "nodeType": "YulIdentifier",
+                            "src": "607:9:54"
+                          },
+                          {
+                            "kind": "number",
+                            "nodeType": "YulLiteral",
+                            "src": "618:1:54",
+                            "type": "",
+                            "value": "0"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "add",
+                          "nodeType": "YulIdentifier",
+                          "src": "603:3:54"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "603:17:54"
+                      },
+                      {
+                        "arguments": [
+                          {
+                            "name": "tail",
+                            "nodeType": "YulIdentifier",
+                            "src": "626:4:54"
+                          },
+                          {
+                            "name": "headStart",
+                            "nodeType": "YulIdentifier",
+                            "src": "632:9:54"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "sub",
+                          "nodeType": "YulIdentifier",
+                          "src": "622:3:54"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "622:20:54"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "mstore",
+                      "nodeType": "YulIdentifier",
+                      "src": "596:6:54"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "596:47:54"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "596:47:54"
+                },
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "652:139:54",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "tail",
+                        "nodeType": "YulIdentifier",
+                        "src": "786:4:54"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "abi_encode_t_stringliteral_7a2a4e26842155ea933fe6eb6e3137eb5a296dcdf55721c552be7b4c3cc23759_to_t_string_memory_ptr_fromStack",
+                      "nodeType": "YulIdentifier",
+                      "src": "660:124:54"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "660:131:54"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "tail",
+                      "nodeType": "YulIdentifier",
+                      "src": "652:4:54"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "abi_encode_tuple_t_stringliteral_7a2a4e26842155ea933fe6eb6e3137eb5a296dcdf55721c552be7b4c3cc23759__to_t_string_memory_ptr__fromStack_reversed",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "headStart",
+                "nodeType": "YulTypedName",
+                "src": "530:9:54",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "tail",
+                "nodeType": "YulTypedName",
+                "src": "545:4:54",
+                "type": ""
+              }
+            ],
+            "src": "379:419:54"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "900:73:54",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "917:3:54"
+                      },
+                      {
+                        "name": "length",
+                        "nodeType": "YulIdentifier",
+                        "src": "922:6:54"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "mstore",
+                      "nodeType": "YulIdentifier",
+                      "src": "910:6:54"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "910:19:54"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "910:19:54"
+                },
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "938:29:54",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "957:3:54"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "962:4:54",
+                        "type": "",
+                        "value": "0x20"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "add",
+                      "nodeType": "YulIdentifier",
+                      "src": "953:3:54"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "953:14:54"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "updated_pos",
+                      "nodeType": "YulIdentifier",
+                      "src": "938:11:54"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "array_storeLengthForEncoding_t_string_memory_ptr_fromStack",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "pos",
+                "nodeType": "YulTypedName",
+                "src": "872:3:54",
+                "type": ""
+              },
+              {
+                "name": "length",
+                "nodeType": "YulTypedName",
+                "src": "877:6:54",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "updated_pos",
+                "nodeType": "YulTypedName",
+                "src": "888:11:54",
+                "type": ""
+              }
+            ],
+            "src": "804:169:54"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "1085:127:54",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "memPtr",
+                            "nodeType": "YulIdentifier",
+                            "src": "1107:6:54"
+                          },
+                          {
+                            "kind": "number",
+                            "nodeType": "YulLiteral",
+                            "src": "1115:1:54",
+                            "type": "",
+                            "value": "0"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "add",
+                          "nodeType": "YulIdentifier",
+                          "src": "1103:3:54"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "1103:14:54"
+                      },
+                      {
+                        "hexValue": "496e697469616c697a61626c653a20636f6e747261637420697320616c726561",
+                        "kind": "string",
+                        "nodeType": "YulLiteral",
+                        "src": "1119:34:54",
+                        "type": "",
+                        "value": "Initializable: contract is alrea"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "mstore",
+                      "nodeType": "YulIdentifier",
+                      "src": "1096:6:54"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1096:58:54"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "1096:58:54"
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "memPtr",
+                            "nodeType": "YulIdentifier",
+                            "src": "1175:6:54"
+                          },
+                          {
+                            "kind": "number",
+                            "nodeType": "YulLiteral",
+                            "src": "1183:2:54",
+                            "type": "",
+                            "value": "32"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "add",
+                          "nodeType": "YulIdentifier",
+                          "src": "1171:3:54"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "1171:15:54"
+                      },
+                      {
+                        "hexValue": "647920696e697469616c697a6564",
+                        "kind": "string",
+                        "nodeType": "YulLiteral",
+                        "src": "1188:16:54",
+                        "type": "",
+                        "value": "dy initialized"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "mstore",
+                      "nodeType": "YulIdentifier",
+                      "src": "1164:6:54"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1164:41:54"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "1164:41:54"
+                }
+              ]
+            },
+            "name": "store_literal_in_memory_7a2a4e26842155ea933fe6eb6e3137eb5a296dcdf55721c552be7b4c3cc23759",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "memPtr",
+                "nodeType": "YulTypedName",
+                "src": "1077:6:54",
+                "type": ""
+              }
+            ],
+            "src": "979:233:54"
+          }
+        ]
+      },
+      "contents": "{\n\n    function abi_encode_t_stringliteral_7a2a4e26842155ea933fe6eb6e3137eb5a296dcdf55721c552be7b4c3cc23759_to_t_string_memory_ptr_fromStack(pos) -> end {\n        pos := array_storeLengthForEncoding_t_string_memory_ptr_fromStack(pos, 46)\n        store_literal_in_memory_7a2a4e26842155ea933fe6eb6e3137eb5a296dcdf55721c552be7b4c3cc23759(pos)\n        end := add(pos, 64)\n    }\n\n    function abi_encode_tuple_t_stringliteral_7a2a4e26842155ea933fe6eb6e3137eb5a296dcdf55721c552be7b4c3cc23759__to_t_string_memory_ptr__fromStack_reversed(headStart ) -> tail {\n        tail := add(headStart, 32)\n\n        mstore(add(headStart, 0), sub(tail, headStart))\n        tail := abi_encode_t_stringliteral_7a2a4e26842155ea933fe6eb6e3137eb5a296dcdf55721c552be7b4c3cc23759_to_t_string_memory_ptr_fromStack( tail)\n\n    }\n\n    function array_storeLengthForEncoding_t_string_memory_ptr_fromStack(pos, length) -> updated_pos {\n        mstore(pos, length)\n        updated_pos := add(pos, 0x20)\n    }\n\n    function store_literal_in_memory_7a2a4e26842155ea933fe6eb6e3137eb5a296dcdf55721c552be7b4c3cc23759(memPtr) {\n\n        mstore(add(memPtr, 0), \"Initializable: contract is alrea\")\n\n        mstore(add(memPtr, 32), \"dy initialized\")\n\n    }\n\n}\n",
+      "id": 54,
+      "language": "Yul",
+      "name": "#utility.yul"
+    }
+  ],
+  "sourceMap": "245:158:40:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "245:158:40:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;356:45;;;:::i;:::-;;;1409:13:14;;;;;;;;;;;:30;;;;1427:12;;;;;;;;;;1426:13;1409:30;1401:89;;;;;;;;;;;;:::i;:::-;;;;;;;;;1501:19;1524:13;;;;;;;;;;;1523:14;1501:36;;1551:14;1547:98;;;1597:4;1581:13;;:20;;;;;;;;;;;;;;;;;;1630:4;1615:12;;:19;;;;;;;;;;;;;;;;;;1547:98;1671:14;1667:66;;;1717:5;1701:13;;:21;;;;;;;;;;;;;;;;;;1667:66;1391:348;356:45:40:o;7:366:54:-;149:3;170:67;234:2;229:3;170:67;:::i;:::-;163:74;;246:93;335:3;246:93;:::i;:::-;364:2;359:3;355:12;348:19;;153:220;;;:::o;379:419::-;545:4;583:2;572:9;568:18;560:26;;632:9;626:4;622:20;618:1;607:9;603:17;596:47;660:131;786:4;660:131;:::i;:::-;652:139;;550:248;;;:::o;804:169::-;888:11;922:6;917:3;910:19;962:4;957:3;953:14;938:29;;900:73;;;;:::o;979:233::-;1119:34;1115:1;1107:6;1103:14;1096:58;1188:16;1183:2;1175:6;1171:15;1164:41;1085:127;:::o",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\nimport \"@openzeppelin/contracts/proxy/utils/Initializable.sol\";\n\n/**\n * @title song artists pool contract implementation for minimal proxy multiple deployments\n * @author Eric Nordelo\n */\ncontract ArtistsPool is Initializable {\n    /**\n     * @notice initializes the minimal proxy clone\n     */\n    function initialize() external initializer {}\n}\n",
+  "sourcePath": "/Users/angelsatorresalmenara/Desktop/privi-trax-smart-contracts/contracts/implementations/ArtistsPool.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/implementations/ArtistsPool.sol",
+    "exportedSymbols": {
+      "ArtistsPool": [
+        8099
+      ],
+      "Initializable": [
+        2686
+      ]
+    },
+    "id": 8100,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 8087,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:40"
+      },
+      {
+        "absolutePath": "@openzeppelin/contracts/proxy/utils/Initializable.sol",
+        "file": "@openzeppelin/contracts/proxy/utils/Initializable.sol",
+        "id": 8088,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 8100,
+        "sourceUnit": 2687,
+        "src": "57:63:40",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [
+          {
+            "baseName": {
+              "id": 8090,
+              "name": "Initializable",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 2686,
+              "src": "269:13:40"
+            },
+            "id": 8091,
+            "nodeType": "InheritanceSpecifier",
+            "src": "269:13:40"
+          }
+        ],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 8089,
+          "nodeType": "StructuredDocumentation",
+          "src": "122:122:40",
+          "text": " @title song artists pool contract implementation for minimal proxy multiple deployments\n @author Eric Nordelo"
+        },
+        "fullyImplemented": true,
+        "id": 8099,
+        "linearizedBaseContracts": [
+          8099,
+          2686
+        ],
+        "name": "ArtistsPool",
+        "nameLocation": "254:11:40",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 8097,
+              "nodeType": "Block",
+              "src": "399:2:40",
+              "statements": []
+            },
+            "documentation": {
+              "id": 8092,
+              "nodeType": "StructuredDocumentation",
+              "src": "289:62:40",
+              "text": " @notice initializes the minimal proxy clone"
+            },
+            "functionSelector": "8129fc1c",
+            "id": 8098,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "id": 8095,
+                "kind": "modifierInvocation",
+                "modifierName": {
+                  "id": 8094,
+                  "name": "initializer",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 2685,
+                  "src": "387:11:40"
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "387:11:40"
+              }
+            ],
+            "name": "initialize",
+            "nameLocation": "365:10:40",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8093,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "375:2:40"
+            },
+            "returnParameters": {
+              "id": 8096,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "399:0:40"
+            },
+            "scope": 8099,
+            "src": "356:45:40",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 8100,
+        "src": "245:158:40",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:372:40"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/implementations/ArtistsPool.sol",
+    "exportedSymbols": {
+      "ArtistsPool": [
+        8099
+      ],
+      "Initializable": [
+        2686
+      ]
+    },
+    "id": 8100,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 8087,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:40"
+      },
+      {
+        "absolutePath": "@openzeppelin/contracts/proxy/utils/Initializable.sol",
+        "file": "@openzeppelin/contracts/proxy/utils/Initializable.sol",
+        "id": 8088,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 8100,
+        "sourceUnit": 2687,
+        "src": "57:63:40",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [
+          {
+            "baseName": {
+              "id": 8090,
+              "name": "Initializable",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 2686,
+              "src": "269:13:40"
+            },
+            "id": 8091,
+            "nodeType": "InheritanceSpecifier",
+            "src": "269:13:40"
+          }
+        ],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 8089,
+          "nodeType": "StructuredDocumentation",
+          "src": "122:122:40",
+          "text": " @title song artists pool contract implementation for minimal proxy multiple deployments\n @author Eric Nordelo"
+        },
+        "fullyImplemented": true,
+        "id": 8099,
+        "linearizedBaseContracts": [
+          8099,
+          2686
+        ],
+        "name": "ArtistsPool",
+        "nameLocation": "254:11:40",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 8097,
+              "nodeType": "Block",
+              "src": "399:2:40",
+              "statements": []
+            },
+            "documentation": {
+              "id": 8092,
+              "nodeType": "StructuredDocumentation",
+              "src": "289:62:40",
+              "text": " @notice initializes the minimal proxy clone"
+            },
+            "functionSelector": "8129fc1c",
+            "id": 8098,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "id": 8095,
+                "kind": "modifierInvocation",
+                "modifierName": {
+                  "id": 8094,
+                  "name": "initializer",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 2685,
+                  "src": "387:11:40"
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "387:11:40"
+              }
+            ],
+            "name": "initialize",
+            "nameLocation": "365:10:40",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 8093,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "375:2:40"
+            },
+            "returnParameters": {
+              "id": 8096,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "399:0:40"
+            },
+            "scope": 8099,
+            "src": "356:45:40",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 8100,
+        "src": "245:158:40",
+        "usedErrors": []
+      }
+    ],
+    "src": "32:372:40"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.6+commit.11564f7e.Emscripten.clang"
+  },
+  "networks": {
+    "80001": {
+      "events": {},
+      "links": {},
+      "address": "0xcDfceB79e0e4d81c78B5A00B7F3a682E7F7905A0",
+      "transactionHash": "0x32f826c32d05dc3a7954c32c19970d75561385f697c2a802fac6262ed71c1f78"
+    }
+  },
+  "schemaVersion": "3.4.2",
+  "updatedAt": "2021-09-02T15:30:08.546Z",
+  "networkType": "ethereum",
+  "devdoc": {
+    "author": "Eric Nordelo",
+    "kind": "dev",
+    "methods": {},
+    "title": "song artists pool contract implementation for minimal proxy multiple deployments",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "initialize()": {
+        "notice": "initializes the minimal proxy clone"
+      }
+    },
+    "version": 1
+  }
+}

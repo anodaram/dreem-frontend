@@ -1,0 +1,12 @@
+.discordPhotoFullScreen {
+  z-index: 0;
+  height: 80%;
+  margin: auto;
+  color: #ffffff80;
+}
+
+.discordPhotoWrapper {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}

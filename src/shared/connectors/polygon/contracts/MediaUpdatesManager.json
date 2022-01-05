@@ -1,0 +1,183 @@
+{
+  "contractName": "MediaUpdatesManager",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.1+commit.df193b15\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/home/ericng/Documents/PRIVI/Privi-Polygon/privi-media-nft/contracts/MediaUpdatesManager.sol\":\"MediaUpdatesManager\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/ericng/Documents/PRIVI/Privi-Polygon/privi-media-nft/contracts/MediaUpdatesManager.sol\":{\"keccak256\":\"0xb65ac0ad040d8fae575696dafce5ff7b70ae6000332ebbfc8463cf6b05fa55f2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://567dc02f8e42f777e04828116ecf2003db1cf946745fb94b475b43d25ade6859\",\"dweb:/ipfs/QmaJuqZRoW4ZP1HbCzeDBAGWbxPmmDTYy9HcuvpbSeWFLt\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212207ad2d027ba32c9142295130f1ca4f7c38e889f2bcfe156b5203d8fab8fa3be9364736f6c63430008010033",
+  "deployedBytecode": "0x6080604052600080fdfea26469706673582212207ad2d027ba32c9142295130f1ca4f7c38e889f2bcfe156b5203d8fab8fa3be9364736f6c63430008010033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "57:60:4:-:0;;;92:23;;;;;;;;;;57:60;;;;;;",
+  "deployedSourceMap": "57:60:4:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\ncontract MediaUpdatesManager {\n    constructor() public {}\n}\n",
+  "sourcePath": "/home/ericng/Documents/PRIVI/Privi-Polygon/privi-media-nft/contracts/MediaUpdatesManager.sol",
+  "ast": {
+    "absolutePath": "/home/ericng/Documents/PRIVI/Privi-Polygon/privi-media-nft/contracts/MediaUpdatesManager.sol",
+    "exportedSymbols": {
+      "MediaUpdatesManager": [
+        1489
+      ]
+    },
+    "id": 1490,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1484,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:4"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 1489,
+        "linearizedBaseContracts": [
+          1489
+        ],
+        "name": "MediaUpdatesManager",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 1487,
+              "nodeType": "Block",
+              "src": "113:2:4",
+              "statements": []
+            },
+            "id": 1488,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1485,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "103:2:4"
+            },
+            "returnParameters": {
+              "id": 1486,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "113:0:4"
+            },
+            "scope": 1489,
+            "src": "92:23:4",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 1490,
+        "src": "57:60:4"
+      }
+    ],
+    "src": "32:86:4"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/ericng/Documents/PRIVI/Privi-Polygon/privi-media-nft/contracts/MediaUpdatesManager.sol",
+    "exportedSymbols": {
+      "MediaUpdatesManager": [
+        1489
+      ]
+    },
+    "id": 1490,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1484,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:4"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 1489,
+        "linearizedBaseContracts": [
+          1489
+        ],
+        "name": "MediaUpdatesManager",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 1487,
+              "nodeType": "Block",
+              "src": "113:2:4",
+              "statements": []
+            },
+            "id": 1488,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1485,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "103:2:4"
+            },
+            "returnParameters": {
+              "id": 1486,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "113:0:4"
+            },
+            "scope": 1489,
+            "src": "92:23:4",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 1490,
+        "src": "57:60:4"
+      }
+    ],
+    "src": "32:86:4"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.1+commit.df193b15.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.1",
+  "updatedAt": "2021-06-23T03:15:59.964Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

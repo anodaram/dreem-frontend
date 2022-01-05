@@ -1,0 +1,555 @@
+{
+  "contractName": "IMediaManager",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "creatorAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "fundingToken",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "podAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "mediaName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "mediaType",
+              "type": "string"
+            },
+            {
+              "internalType": "uint80",
+              "name": "royalty",
+              "type": "uint80"
+            },
+            {
+              "internalType": "uint80",
+              "name": "collabsSize",
+              "type": "uint80"
+            },
+            {
+              "internalType": "uint80",
+              "name": "ownersSize",
+              "type": "uint80"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "viewingType",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint128",
+                  "name": "price",
+                  "type": "uint128"
+                },
+                {
+                  "internalType": "uint128",
+                  "name": "sharingFactor",
+                  "type": "uint128"
+                },
+                {
+                  "internalType": "uint128",
+                  "name": "reward",
+                  "type": "uint128"
+                },
+                {
+                  "internalType": "uint128",
+                  "name": "entry",
+                  "type": "uint128"
+                },
+                {
+                  "internalType": "uint128",
+                  "name": "duration",
+                  "type": "uint128"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isStreamingLive",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct ViewInfo",
+              "name": "viewConditions",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct Media",
+          "name": "_media",
+          "type": "tuple"
+        },
+        {
+          "internalType": "string",
+          "name": "_tokenURI",
+          "type": "string"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "holderAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "uint160",
+              "name": "share",
+              "type": "uint160"
+            }
+          ],
+          "internalType": "struct ShareHolder[]",
+          "name": "_initialCollabs",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "createMedia",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.1+commit.df193b15\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"creatorAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"fundingToken\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"podAddress\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"mediaName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"mediaType\",\"type\":\"string\"},{\"internalType\":\"uint80\",\"name\":\"royalty\",\"type\":\"uint80\"},{\"internalType\":\"uint80\",\"name\":\"collabsSize\",\"type\":\"uint80\"},{\"internalType\":\"uint80\",\"name\":\"ownersSize\",\"type\":\"uint80\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"viewingType\",\"type\":\"string\"},{\"internalType\":\"uint128\",\"name\":\"price\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"sharingFactor\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"reward\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"entry\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"duration\",\"type\":\"uint128\"},{\"internalType\":\"bool\",\"name\":\"isStreamingLive\",\"type\":\"bool\"}],\"internalType\":\"struct ViewInfo\",\"name\":\"viewConditions\",\"type\":\"tuple\"}],\"internalType\":\"struct Media\",\"name\":\"_media\",\"type\":\"tuple\"},{\"internalType\":\"string\",\"name\":\"_tokenURI\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"holderAddress\",\"type\":\"address\"},{\"internalType\":\"uint160\",\"name\":\"share\",\"type\":\"uint160\"}],\"internalType\":\"struct ShareHolder[]\",\"name\":\"_initialCollabs\",\"type\":\"tuple[]\"}],\"name\":\"createMedia\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"createMedia((address,address,address,string,string,uint80,uint80,uint80,(string,uint128,uint128,uint128,uint128,uint128,bool)),string,(address,uint160)[])\":{\"params\":{\"_initialCollabs\":\"The array of the creators and initial owners of the media\",\"_media\":\"The media structure with the data\",\"_tokenURI\":\"The IPFS hash id\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"createMedia((address,address,address,string,string,uint80,uint80,uint80,(string,uint128,uint128,uint128,uint128,uint128,bool)),string,(address,uint160)[])\":{\"notice\":\"Allows creation (minting) of a media\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/interfaces/IMediaManager.sol\":\"IMediaManager\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/interfaces/IMediaManager.sol\":{\"keccak256\":\"0x8811038790391887c5a3ef360dc21e38d3c991e6cd208b0ad12a02052c904e6f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://49bb89e7ac54bbae18e4c7e365da9d3962dc3f9f3b6a377e71e2d2f0853b21a5\",\"dweb:/ipfs/QmdLX7v6zFiZQPdV1iDbGyLjqvirthuiZ6L4CSSYDXDhXH\"]},\"project:/contracts/interfaces/IStructs.sol\":{\"keccak256\":\"0x3166e386c3ad9eb3e885f0837bcd8f0844533dd4ec7f46bd4d950248f178dfe8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d73d35f743f6d1473f40fd5e5712cd92376db9dcb26869ca192869d2a3dde58e\",\"dweb:/ipfs/QmWm7D7nMAgxzkoWGCJPjCbeKYmCBLXXqq3rLKgEQhFLd5\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\nimport \"./IStructs.sol\";\n\ninterface IMediaManager {\n    /**\n     * @notice Allows creation (minting) of a media\n     * @param _media The media structure with the data\n     * @param _tokenURI The IPFS hash id\n     * @param _initialCollabs The array of the creators and initial owners of the media\n     */\n    function createMedia(\n        Media memory _media,\n        string calldata _tokenURI,\n        ShareHolder[] calldata _initialCollabs\n    ) external;\n}\n",
+  "sourcePath": "/home/ericng/Documents/PRIVI/Privi-Polygon/privi-media-pod/contracts/interfaces/IMediaManager.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/interfaces/IMediaManager.sol",
+    "exportedSymbols": {
+      "IMediaManager": [
+        3313
+      ],
+      "Media": [
+        3385
+      ],
+      "ShareHolder": [
+        3390
+      ],
+      "ViewInfo": [
+        3365
+      ]
+    },
+    "id": 3314,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3298,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:17"
+      },
+      {
+        "absolutePath": "project:/contracts/interfaces/IStructs.sol",
+        "file": "./IStructs.sol",
+        "id": 3299,
+        "nodeType": "ImportDirective",
+        "scope": 3314,
+        "sourceUnit": 3391,
+        "src": "57:24:17",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 3313,
+        "linearizedBaseContracts": [
+          3313
+        ],
+        "name": "IMediaManager",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 3300,
+              "nodeType": "StructuredDocumentation",
+              "src": "113:247:17",
+              "text": " @notice Allows creation (minting) of a media\n @param _media The media structure with the data\n @param _tokenURI The IPFS hash id\n @param _initialCollabs The array of the creators and initial owners of the media"
+            },
+            "functionSelector": "deb7e413",
+            "id": 3312,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "createMedia",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3310,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3303,
+                  "mutability": "mutable",
+                  "name": "_media",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3312,
+                  "src": "395:19:17",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Media_$3385_memory_ptr",
+                    "typeString": "struct Media"
+                  },
+                  "typeName": {
+                    "id": 3302,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 3301,
+                      "name": "Media",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 3385,
+                      "src": "395:5:17"
+                    },
+                    "referencedDeclaration": 3385,
+                    "src": "395:5:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Media_$3385_storage_ptr",
+                      "typeString": "struct Media"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3305,
+                  "mutability": "mutable",
+                  "name": "_tokenURI",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3312,
+                  "src": "424:25:17",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 3304,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "424:6:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3309,
+                  "mutability": "mutable",
+                  "name": "_initialCollabs",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3312,
+                  "src": "459:38:17",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_ShareHolder_$3390_calldata_ptr_$dyn_calldata_ptr",
+                    "typeString": "struct ShareHolder[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 3307,
+                      "nodeType": "UserDefinedTypeName",
+                      "pathNode": {
+                        "id": 3306,
+                        "name": "ShareHolder",
+                        "nodeType": "IdentifierPath",
+                        "referencedDeclaration": 3390,
+                        "src": "459:11:17"
+                      },
+                      "referencedDeclaration": 3390,
+                      "src": "459:11:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_ShareHolder_$3390_storage_ptr",
+                        "typeString": "struct ShareHolder"
+                      }
+                    },
+                    "id": 3308,
+                    "nodeType": "ArrayTypeName",
+                    "src": "459:13:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_ShareHolder_$3390_storage_$dyn_storage_ptr",
+                      "typeString": "struct ShareHolder[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "385:118:17"
+            },
+            "returnParameters": {
+              "id": 3311,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "512:0:17"
+            },
+            "scope": 3313,
+            "src": "365:148:17",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 3314,
+        "src": "83:432:17"
+      }
+    ],
+    "src": "32:484:17"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/interfaces/IMediaManager.sol",
+    "exportedSymbols": {
+      "IMediaManager": [
+        3313
+      ],
+      "Media": [
+        3385
+      ],
+      "ShareHolder": [
+        3390
+      ],
+      "ViewInfo": [
+        3365
+      ]
+    },
+    "id": 3314,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3298,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:17"
+      },
+      {
+        "absolutePath": "project:/contracts/interfaces/IStructs.sol",
+        "file": "./IStructs.sol",
+        "id": 3299,
+        "nodeType": "ImportDirective",
+        "scope": 3314,
+        "sourceUnit": 3391,
+        "src": "57:24:17",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 3313,
+        "linearizedBaseContracts": [
+          3313
+        ],
+        "name": "IMediaManager",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 3300,
+              "nodeType": "StructuredDocumentation",
+              "src": "113:247:17",
+              "text": " @notice Allows creation (minting) of a media\n @param _media The media structure with the data\n @param _tokenURI The IPFS hash id\n @param _initialCollabs The array of the creators and initial owners of the media"
+            },
+            "functionSelector": "deb7e413",
+            "id": 3312,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "createMedia",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 3310,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3303,
+                  "mutability": "mutable",
+                  "name": "_media",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3312,
+                  "src": "395:19:17",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Media_$3385_memory_ptr",
+                    "typeString": "struct Media"
+                  },
+                  "typeName": {
+                    "id": 3302,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 3301,
+                      "name": "Media",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 3385,
+                      "src": "395:5:17"
+                    },
+                    "referencedDeclaration": 3385,
+                    "src": "395:5:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Media_$3385_storage_ptr",
+                      "typeString": "struct Media"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3305,
+                  "mutability": "mutable",
+                  "name": "_tokenURI",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3312,
+                  "src": "424:25:17",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 3304,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "424:6:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3309,
+                  "mutability": "mutable",
+                  "name": "_initialCollabs",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 3312,
+                  "src": "459:38:17",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_ShareHolder_$3390_calldata_ptr_$dyn_calldata_ptr",
+                    "typeString": "struct ShareHolder[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 3307,
+                      "nodeType": "UserDefinedTypeName",
+                      "pathNode": {
+                        "id": 3306,
+                        "name": "ShareHolder",
+                        "nodeType": "IdentifierPath",
+                        "referencedDeclaration": 3390,
+                        "src": "459:11:17"
+                      },
+                      "referencedDeclaration": 3390,
+                      "src": "459:11:17",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_ShareHolder_$3390_storage_ptr",
+                        "typeString": "struct ShareHolder"
+                      }
+                    },
+                    "id": 3308,
+                    "nodeType": "ArrayTypeName",
+                    "src": "459:13:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_ShareHolder_$3390_storage_$dyn_storage_ptr",
+                      "typeString": "struct ShareHolder[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "385:118:17"
+            },
+            "returnParameters": {
+              "id": 3311,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "512:0:17"
+            },
+            "scope": 3313,
+            "src": "365:148:17",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 3314,
+        "src": "83:432:17"
+      }
+    ],
+    "src": "32:484:17"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.1+commit.df193b15.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.2",
+  "updatedAt": "2021-08-16T18:07:29.453Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "createMedia((address,address,address,string,string,uint80,uint80,uint80,(string,uint128,uint128,uint128,uint128,uint128,bool)),string,(address,uint160)[])": {
+        "params": {
+          "_initialCollabs": "The array of the creators and initial owners of the media",
+          "_media": "The media structure with the data",
+          "_tokenURI": "The IPFS hash id"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "createMedia((address,address,address,string,string,uint80,uint80,uint80,(string,uint128,uint128,uint128,uint128,uint128,bool)),string,(address,uint160)[])": {
+        "notice": "Allows creation (minting) of a media"
+      }
+    },
+    "version": 1
+  }
+}

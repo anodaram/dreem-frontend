@@ -1,0 +1,215 @@
+.pod-card {
+  background: #ffffff;
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 24px;
+  position: relative;
+  background-clip: padding-box;
+}
+
+.pod-card:hover {
+  cursor: pointer;
+}
+
+.pod-card p,
+.pod-card span,
+.pod-card h4 {
+  color: white;
+}
+
+.pod-card .pod-card-image {
+  border-top-right-radius: 24px;
+  border-top-left-radius: 24px;
+  background: linear-gradient(180deg, rgb(64, 75, 88) 0%, rgba(8, 24, 49) 100%);
+  position: relative;
+  min-height: 80px;
+}
+
+.pod-card .aspect-ratio-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.pod-card .pod-card-image .pod-photo {
+  border-top-right-radius: 24px;
+  border-top-left-radius: 24px;
+  width: 100%;
+  height: 100%;
+  margin-bottom: -10px;
+}
+
+.pod-card .pod-card-image .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+  border: 2px solid #ffffff;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  transform: translate(0, 50%);
+  background-color: white;
+}
+
+.pod-card .bottom-info .social {
+  color: white;
+}
+
+.pod-card .bottom-info .social h3 {
+  margin: 0;
+  font-family: Agrandir;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.pod-card .pod-card-image .social-actions {
+  display: flex;
+  column-gap: 5px;
+  align-items: center;
+  background: #181818;
+  border: 2px solid #ffffff;
+  border-radius: 18px;
+  padding: 4px 9px;
+  position: absolute;
+  bottom: 0;
+  right: 16px;
+  transform: translate(0, 50%);
+}
+
+.pod-card-image .social-actions .clickable {
+  width: 17px;
+  height: 17px;
+}
+
+.pod-card-image .social-actions img {
+  width: 17px;
+  height: 17px;
+}
+
+.pod-card .pod-card-image .pod-status {
+  background: linear-gradient(97.4deg, #ff79d1 14.43%, #db00ff 79.45%);
+  border-radius: 24px;
+  padding: 8px 18px;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-weight: bold;
+  font-size: 14px;
+  color: white;
+  text-transform: capitalize;
+}
+
+.pod-card .pod-card-info {
+  padding: 16px 0;
+}
+
+.pod-card .pod-card-info .name {
+  font-weight: bold;
+  font-size: 18px;
+  color: black;
+  margin-top: 15px;
+  padding: 0 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pod-card-info .media-buttons {
+  display: flex;
+  column-gap: 5px;
+  padding: 8px 16px;
+  border-top: 1px solid #0000000c;
+  border-bottom: 1px solid #0000000c;
+  align-items: center;
+}
+
+.pod-card-info .media-buttons > span {
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  column-gap: 6px;
+  color: #949bab;
+  font-size: 11px;
+  padding: 6px 11px;
+  border: 1px solid #949bab;
+  border-radius: 14px;
+}
+
+.pod-card-info .media-buttons img {
+  width: 14px;
+  height: 17px;
+}
+
+.pod-card-info .media-buttons-owned-by {
+  display: flex;
+  flex-direction: row;
+  text-align: right;
+  padding: 8px 16px;
+  border-top: 1px solid #0000000c;
+  border-bottom: 1px solid #0000000c;
+  justify-content: space-between;
+}
+
+.pod-card-info .media-buttons-owned-by .media-buttons {
+  border: none;
+  padding: 0;
+}
+
+.pod-card-info .media-buttons-owned-by .investors > span {
+  color: #707582;
+  text-align: right;
+}
+
+.pod-card-info .media-buttons-owned-by .investors > p {
+  color: #181818;
+  text-align: right;
+}
+
+.pod-card-info .main-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  margin-top: 20px;
+}
+
+.pod-card-info .main-info > div > p {
+  text-align: right;
+}
+
+.pod-card-info .main-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  margin-top: 20px;
+}
+
+.pod-card-info .main-info span,
+.pod-card-info .price-info span {
+  font-size: 14px;
+  color: #707582;
+}
+
+.pod-card-info .main-info p,
+.pod-card-info .price-info p {
+  font-size: 18px;
+  color: #181818;
+}
+
+.pod-card-info .price-info {
+  padding: 22px;
+  text-align: right;
+}
+
+.pod-card-info .price-info .percentage-info {
+  font-size: 14px;
+  color: #707582;
+}
+
+.pod-card-info .invest-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
