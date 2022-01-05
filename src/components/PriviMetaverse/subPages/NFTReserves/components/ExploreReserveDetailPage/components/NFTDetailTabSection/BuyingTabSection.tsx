@@ -100,6 +100,8 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
       window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/tx/${_hash}`, "_blank");
     } else if (selectedChain.name === "BSC") {
       window.open(`https://${!isProd ? "testnet." : ""}bscscan.com/tx/${_hash}`, "_blank");
+    } else {
+      window.open(`https://${!isProd ? "testnet." : ""}bscscan.com/tx/${_hash}`, "_blank");
     }
   };
 
