@@ -216,14 +216,15 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
             Accept Blocking Offer
           </Box>
           <Box className={classes.description}>
-            {`Accept blocking offer from user "`}
-            <div
-              style={{ display: "contents", cursor: "pointer" }}
+            {`Accept blocking offer from user `}
+            <span
+              style={{  cursor: "pointer" }}
+              className={classes.gradientText}
               onClick={() => history.push(`/profile/${getUser(offer.Beneficiary)?.urlSlug}`)}
             >
               {getUser(offer.Beneficiary)?.name ?? getAbbrAddress(offer.Beneficiary, 6, 3)}
-            </div>
-            {`" to block the "${nft.name}"`}
+            </span>
+            {` to block the `}<span className={classes.gradientText}>{nft.name}</span>
           </Box>
           <Box className={classes.borderBox}>
             <Box className={classes.box}>

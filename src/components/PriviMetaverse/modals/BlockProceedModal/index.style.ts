@@ -72,5 +72,10 @@ export const BlockProceedModalStyles = makeStyles(theme => ({
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "column",
+  },
+  gradientText: {
+    background: "linear-gradient(#EDFF1C, #ED7B7B)",
+    "-webkit-text-fill-color": "transparent",
+    "-webkit-background-clip": "text",
   }
 }));
