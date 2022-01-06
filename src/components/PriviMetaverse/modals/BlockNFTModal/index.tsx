@@ -241,19 +241,43 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
               <Box fontSize="24px" color="#ffffff" style={{ textTransform: "uppercase" }}>
                 Block NFT
               </Box>
-              <Box className={classes.nameField}></Box>
+              <Box className={classes.nameField}>Blocking Price</Box>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                bgcolor="rgba(218, 230, 229, 0.06)"
+                padding="16px"
+                fontFamily="Rany"
+              >
+                <Box fontSize={16} color="#E9FF26" fontWeight={500}>{nft?.blockingSaleOffer?.Price}</Box>
+                <Box fontSize={14} color="#ffffff" >USDT</Box>
+              </Box>
+              <Box className={classes.nameField}>
+                Required {nft?.blockingSaleOffer?.CollateralPercent}% as Collateral
+              </Box>
               <Grid container spacing={2}>
-                <Grid item sm={12}>
+                <Grid item sm={7}>
                   <InputWithLabelAndTooltip
-                    inputValue={price}
-                    onInputValueChange={e => setPrice(e.target.value)}
+                    inputValue={collateral}
+                    onInputValueChange={e => setCollateral(e.target.value)}
                     overriedClasses={classes.inputJOT}
                     required
                     type="number"
                     theme="light"
                     minValue={0}
-                    endAdornment={<div className={classes.purpleText}>USDT</div>}
-                    placeHolder={"0.001"}
+                    placeHolder={"0"}
+                  />
+                </Grid>
+                <Grid item sm={5}>
+                  <ReserveTokenSelect
+                    tokens={tokenList.filter(
+                      token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
+                    )}
+                    value={reservePriceToken?.Address || ""}
+                    className={classes.tokenSelect}
+                    onChange={e => {
+                      setReservePriceToken(tokenList.find(v => v.Address === e.target.value));
+                    }}
                   />
                 </Grid>
               </Grid>
@@ -274,36 +298,6 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                   <span>MAX</span>
                 </Box>
               </Box>
-              <Box className={classes.nameField}>
-                Required {nft?.blockingSaleOffer?.CollateralPercent}% as Collateral
-              </Box>
-              <Grid container spacing={2}>
-                <Grid item sm={7}>
-                  <InputWithLabelAndTooltip
-                    inputValue={collateral}
-                    onInputValueChange={e => setCollateral(e.target.value)}
-                    overriedClasses={classes.inputJOT}
-                    required
-                    type="number"
-                    theme="light"
-                    minValue={0}
-                    endAdornment={<div className={classes.purpleText}>%</div>}
-                    placeHolder={"0"}
-                  />
-                </Grid>
-                <Grid item sm={5}>
-                  <ReserveTokenSelect
-                    tokens={tokenList.filter(
-                      token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
-                    )}
-                    value={reservePriceToken?.Address || ""}
-                    className={classes.tokenSelect}
-                    onChange={e => {
-                      setReservePriceToken(tokenList.find(v => v.Address === e.target.value));
-                    }}
-                  />
-                </Grid>
-              </Grid>
             </Box>
             <Box className={classes.footer}>
               <Box className={classes.totalText}>Total</Box>
