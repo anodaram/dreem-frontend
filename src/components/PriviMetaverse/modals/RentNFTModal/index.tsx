@@ -59,7 +59,20 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
     ? Math.ceil(+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime)
     : 0;
 
-  useEffect(() => setSelectedChain(nft), [nft]);
+  useEffect(() => setSelectedChain(getChainForNFT(nft)), [nft]);
+
+  useEffect(() => {
+    (async () => {
+      if (chainId && selectedChain && chainId !== selectedChain?.chainId) {
+        const isHere = await switchNetwork(selectedChain?.chainId || 0);
+
+        if (!isHere) {
+          showAlertMessage("Got failed while switching over to target network", { variant: "error" });
+          return;
+        }
+      }
+    })();
+  }, [chainId, selectedChain]);
 
   useEffect(() => {
     if (!open) return;
