@@ -12,7 +12,7 @@ export enum NotificationItemType {
   TaskBadge = "taskBadge",
   Token = "token",
   User = "user",
-  NFTMarketplace = "NftMarketplace"
+  NFTMarketplace = "NftMarketplace",
 }
 
 export type Notification = {
@@ -40,8 +40,8 @@ type GetNotificationsResult =
     }
   | { success: false };
 
-export const getNotifications = async (): Promise<GetNotificationsResult> => {
-  const response = await axios.get(`${URL()}/user/wall/getNotifications/METAVERSE`);
+export const getNotifications = async (): Promise<any> => {
+  const response = await axios.get(`${URL()}/user/getNotifications/METAVERSE`);
 
   return response.data;
 };
@@ -50,6 +50,12 @@ export const removeUserNotification = async (notificationId: string): Promise<Ge
   const response = await axios.post(`${URL()}/user/removeNotification`, {
     notificationId: notificationId,
   });
+
+  return response.data;
+};
+
+export const markUserNotificationsAsRead = async (): Promise<GetNotificationsResult> => {
+  const response = await axios.post(`${URL()}/user/markUserNotificationsAsRead`, {});
 
   return response.data;
 };
