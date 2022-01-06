@@ -4,23 +4,28 @@ import { Color } from "shared/ui-kit";
 export const useTransactionProgressModalStyles = makeStyles(theme => ({
   root: {
     textAlign: "center",
+    padding: "60px 146px !important",
+    maxWidth: "680px !important",
   },
   title: {
-    fontSize: 22,
-    fontWeight: 800,
+    fontSize: 24,
+    fontWeight: 700,
+    color: "#ffffff",
+    fontFamily: "GRIFTER",
     "& span": {
       fontWeight: 400,
     },
   },
   header1: {
     fontSize: 16,
-    fontWeight: 600,
-    color: "#54658F",
+    fontWeight: 400,
+    lineHeight: "24px",
+    color: "#ffffff50",
   },
   header2: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#5343B1",
+    fontWeight: 400,
+    color: "#E9FF26",
   },
   header3: {
     fontSize: 28,
@@ -58,12 +63,14 @@ export const useTransactionProgressModalStyles = makeStyles(theme => ({
     padding: theme.spacing(2),
   },
   ethImg: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     position: "absolute",
     left: "calc(50% - 34px)",
     top: "calc(50% - 40px)",
     borderRadius: "50%",
     padding: "10px",
-    boxShadow: "0px 0px 12px #dce7e1",
     width: "70px",
     height: "70px",
   },

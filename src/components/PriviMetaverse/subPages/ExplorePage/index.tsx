@@ -1,17 +1,19 @@
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Carousel from "react-elastic-carousel";
-import { useMediaQuery, useTheme } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
+import { useMediaQuery, useTheme } from "@material-ui/core";
 // import { useTheme } from "@material-ui/core";
 
 import Box from "shared/ui-kit/Box";
+import { PrimaryButton } from "shared/ui-kit";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import RealmCard from "components/PriviMetaverse/components/cards/RealmCard";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
-import { explorePageStyles } from "./index.styles";
 import { getDefaultImageUrl } from "shared/services/user/getUserAvatar";
+import { explorePageStyles } from "./index.styles";
 
 import shapeImgTriangle from "assets/metaverseImages/shape_home_2.png";
 import shapeImgBlueArc from "assets/metaverseImages/shape_explorer_blue_arc.png";
@@ -27,6 +29,7 @@ const filters = ["DRAFT_WORLD", "NFT_WORLD"];
 
 export default function ExplorePage() {
   const classes = explorePageStyles();
+  const history = useHistory();
 
   // const theme = useTheme();
   const width = useWindowDimensions().width;
@@ -232,9 +235,25 @@ export default function ExplorePage() {
             </Box>
           </Box>
           <Box>
-            <Box className={classes.gradientText} mb={2}>
-              Explore all realms & their extensions
+            <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+              <Box className={classes.gradientText}>Explore realms</Box>
+              {/* <PrimaryButton
+                size="medium"
+                style={{
+                  background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+                  height: 48,
+                  minWidth: 249,
+                  textTransform: "uppercase",
+                  borderRadius: "100px",
+                  color: "#121212",
+                  paddingTop: 4,
+                }}
+                onClick={() => history.push("/creating_realm")}
+              >
+                Create Realm
+              </PrimaryButton> */}
             </Box>
+
             <InfiniteScroll
               hasChildren={exploreRealms.length > 0}
               dataLength={exploreRealms.length}

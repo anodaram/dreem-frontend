@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
 
-import BlockedByMeNFT from "./RentedByMeNFT";
+import RentededByMeNFT from "./RentedByMeNFT";
 
 import Box from "shared/ui-kit/Box";
 import { getLockedNFTsByOwner } from "shared/services/API/ReserveAPI";
-import { CircularLoadingIndicator } from "shared/ui-kit";
 import { useAuth } from "shared/contexts/AuthContext";
-
+import useWindowDimensions from "shared/hooks/useWindowDimensions";
+import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import { RentedByMeStyles } from "./index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
+const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
+  400: 1,
+  650: 2,
+  1200: 3,
+  1420: 4,
+};
+
 const RentedByMe = () => {
   const classes = RentedByMeStyles();
   const { isSignedin } = useAuth();
+  const width = useWindowDimensions().width;
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [activedNfts, setActivedNfts] = useState<any>([]);
@@ -53,41 +61,36 @@ const RentedByMe = () => {
     }
   };
 
-  const handleFinish = (item) => {
+  const handleFinish = item => {
     const actives = [...activedNfts];
-    const index = actives.findIndex(a => a.id === item.id)
+    const index = actives.findIndex(a => a.id === item.id);
     actives.splice(index, 1);
     setActivedNfts([...actives]);
-    setExpiredNfts([
-      ...expiredNfts,
-      item
-    ])
-  }
+    setExpiredNfts([...expiredNfts, item]);
+  };
+
+  const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
 
   return isLoading ? (
-    <div
-      style={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingTop: 16,
-        paddingBottom: 16,
-      }}
-    >
-      <CircularLoadingIndicator theme="blue" />
-    </div>
+    <Box mt={2}>
+      <MasonryGrid
+        gutter={"40px"}
+        data={Array(loadingCount).fill(0)}
+        renderItem={(_, index) => <RentededByMeNFT isLoading={true} item={{}} />}
+        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+      />
+    </Box>
   ) : (
     <Box mb={8}>
-      <Box className={classes.title}>Actived</Box>
+      <Box className={classes.title}>Active</Box>
       {activedNfts.length > 0 ? (
-        activedNfts.map(item => <BlockedByMeNFT item={item} onFinished={handleFinish} />)
+        activedNfts.map(item => <RentededByMeNFT item={item} onFinished={handleFinish} />)
       ) : (
         <Box className={classes.content}>No Items</Box>
       )}
       <Box className={classes.title}>Expired</Box>
       {expiredNfts.length > 0 ? (
-        expiredNfts.map(item => <BlockedByMeNFT item={item} />)
+        expiredNfts.map(item => <RentededByMeNFT item={item} isExpired />)
       ) : (
         <Box className={classes.content}>No Items</Box>
       )}

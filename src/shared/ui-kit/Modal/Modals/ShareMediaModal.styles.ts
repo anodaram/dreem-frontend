@@ -12,6 +12,9 @@ export const shareMediaToSocialModalStyles = makeStyles(theme => ({
     padding: "20px 30px",
     display: "flex",
     flexDirection: "column",
+    [theme.breakpoints.down("xs")]: {
+      padding: "20px 0px",
+    },
   },
   shareSocialMedia: {
     fontSize: 20,

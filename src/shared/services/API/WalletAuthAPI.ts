@@ -30,6 +30,25 @@ export async function signInWithMetamaskWallet(
   });
 }
 
+export async function signUpWithAddressAndName(
+  address: string,
+  userName: string,
+  signature: string,
+  domain: string
+): Promise<any> {
+  return new Promise<any>((resolve, reject) => {
+    axios
+      .post(`${URL()}/user/signUpWithMetamaskWallet`, { address, userName, signature, domain })
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(async err => {
+        // console.log("Error in SignIn.tsx -> fetchUser() : ", err);
+        reject("Error");
+      });
+  });
+}
+
 export async function signInWithPriviWallet(address: string, privateKey?: any): Promise<any> {
   let { hash, signature } = await signWithPrivi(address, privateKey);
   hash = Buffer.from(hash).toString("hex");

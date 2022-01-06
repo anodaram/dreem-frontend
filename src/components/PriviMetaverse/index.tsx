@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 import axios from "axios";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import URL, { METAVERSE_MAINTENCE_URL } from "shared/functions/getURL";
@@ -16,7 +16,7 @@ import { priviMetaversePageStyles } from "./index.styles";
 
 export default function PriviMetaverse() {
   const classes = priviMetaversePageStyles();
-  // const history = useHistory();
+  const history = useHistory();
   const dispatch = useDispatch();
   const { setSignedin } = useAuth();
 

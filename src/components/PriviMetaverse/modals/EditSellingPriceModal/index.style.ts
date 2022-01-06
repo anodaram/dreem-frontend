@@ -7,26 +7,36 @@ export const EditSellingPriceModalStyles = makeStyles(theme => ({
   },
   nameField: {
     margin: "27px 0px 7px 0px",
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     fontStyle: "normal",
-    fontWeight: 500,
+    fontWeight: "normal",
     fontSize: "14px",
-    color: "#1A1B1C",
+    color: "#ffffff",
   },
   inputJOT: {
-    background: "rgba(144, 155, 255, 0.16)",
-    border: "1px solid #431AB7 !important",
+    backgroundColor: "#172227 !important",
+    border: "1px solid rgba(218, 218, 219, 0.59) !important",
     width: "100%",
-    borderRadius: theme.spacing(1),
     padding: theme.spacing(1),
-    margin: "0 2px",
+    color: "#ffffff60 !important",
+    borderRadius: "unset !important"
+  },
+  tokenSelect: {
+    backgroundColor: "#172227 !important",
+    border: "1px solid rgba(218, 218, 219, 0.59) !important",
+    width: "100%",
+    padding: theme.spacing(1),
+    color: "#ffffff !important",
+    borderRadius: "unset !important",
+    flex: "1"
   },
   purpleText: {
-    fontFamily: "Agrandir Variable !important",
     cursor: "pointer",
-    color: "#431AB7",
-    fontSize: "16px",
+    color: "#ffffff",
+    fontSize: "18px",
     fontWeight: 700,
+    fontFamily: "Rany",
+    lineHeight: "150%"
   },
   usdWrap: {
     display: "flex",
@@ -50,13 +60,13 @@ export const EditSellingPriceModalStyles = makeStyles(theme => ({
     justifyContent: "space-between",
     marginTop: "22px",
     "& span": {
-      color: "#431AB7",
+      color: "#ffffff",
       fontSize: "16px",
     },
   },
   usdt: {
     fontFamily: "Agrandir GrandHeavy !important",
-    color: "#431AB7",
+    color: "#ffffff",
     fontWeight: 800,
     fontSize: "16px",
   },
@@ -67,34 +77,26 @@ export const EditSellingPriceModalStyles = makeStyles(theme => ({
     fontSize: "14px",
     lineHeight: "150%",
     letterSpacing: "0.02em",
-    color: "#431AB7",
+    color: "#ffffff",
   },
   footer: {
     padding: "18px 25px 25px 25px",
     background: "#e0e0e53b",
   },
   primaryButton: {
-    color: "#fff !important",
-    padding: "0 73px !important",
+    color: "#212121 !important",
+    padding: "0 37px !important",
     height: "40px !important",
-    border: "none !important",
-    [theme.breakpoints.down("xs")]: {
-      padding: "0 0 !important",
-      width: "50% !important",
-    },
+    background: "linear-gradient(#B7FF5C, #EEFF21) !important",
+    borderRadius: "40px",
+    border: "none",
+    "&:disabled": {
+      background: "linear-gradient(#B7FF5C, #EEFF21) !important",
+      color: "#212121 !important",
+    }
   },
   secondaryButton: {
     padding: "0 37px !important",
-  },
-  datePicker: {
-    border: "1px solid #431ab7",
-    borderRadius: "9px",
-    width: "100%",
-
-    "& .MuiOutlinedInput-input": {
-      paddingTop: 15,
-      paddingBottom: 15,
-    },
   },
   cancelModal: {
     maxWidth: "521px !important",
@@ -105,28 +107,52 @@ export const EditSellingPriceModalStyles = makeStyles(theme => ({
     justifyContent: "center",
   },
   cancelTitle: {
-    fontFamily: "Agrandir GrandHeavy",
+    background: "linear-gradient(#EDFF1C, #ED7B7B)",
+    "-webkit-text-fill-color": "transparent",
+    "-webkit-background-clip": "text",
+    fontFamily: "GRIFTER",
     fontSize: "18px",
-    color: "#2D3047",
   },
   cancelDesc: {
-    color: "#54658F",
-    opacity: 0.9,
-    marginBottom: 54,
-    textAlign: "center",
-    padding: "20px 50px",
+    color: "#ffffff",
+    marginBottom: 64,
+    textAlign: 'center',
+    padding: '16px 50px',
+    fontSize: '16px',
+    lineHeight: '24px'
   },
   cancelButton: {
     backgroundColor: "transparent !important",
-    color: "black !important",
-    border: "1px solid #CBCBCB !important",
-    borderRadius: "4px !important",
-    width: "100% !important",
+    color: "#DDFF57 !important",
+    border: "1px solid #E9FF26 !important",
+    borderRadius: "40px !important",
+    width: '165px !important',
+    textTransform: "uppercase"
   },
   editPriceButton: {
-    backgroundColor: "#431AB7 !important",
-    color: "white",
-    width: "100% !important",
-    borderRadius: "4px !important",
+    backgroundColor: "#DDFF57 !important",
+    color: "#0B151C !important",
+    width: '165px !important',
+    borderRadius: "40px !important",
+    textTransform: "uppercase"
   },
+  borderBox: {
+    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
+    padding: 2,
+    marginTop: 32
+  },
+  box: {
+    padding: "23px 18px",
+    background: "rgb(11, 21, 28)",
+    display: "flex",
+    justifyContent: "space-between"
+  },
+  currentPrice: {
+    background: "linear-gradient(#EDFF1C, #ED7B7B)",
+    "-webkit-text-fill-color": "transparent",
+    "-webkit-background-clip": "text",
+    fontSize: "16px",
+    fontFamily: "Rany",
+    lineHeight: "150%"
+  }
 }));

@@ -7,42 +7,27 @@ export const CancelOfferModalStyles = makeStyles((theme) => ({
   },
   nameField: {
     marginTop: '8px',
-    fontFamily: 'Montserrat',
+    fontFamily: 'Rany',
     fontStyle: 'normal',
     fontWeight: 400,
     fontSize: '14px',
-    color: '#1A1B1C',
+    color: '#ffffff',
     lineHeight: '21px',
     textAlign: 'center'
   },
   primaryButton: {
-    color: "#fff !important",
+    color: "#212121 !important",
     padding: "0 37px !important",
     height: "40px !important",
-    border: "none !important"
+    background: "linear-gradient(#B7FF5C, #EEFF21) !important",
+    borderRadius: "40px",
+    border: "none",
+    "&:disabled": {
+      background: "linear-gradient(#B7FF5C, #EEFF21) !important",
+      color: "#212121 !important",
+    }
   },
   hash: {
     cursor: "pointer",
-  },
-  buttonCheck: {
-    fontFamily: "Agrandir",
-    fontStyle: "normal",
-    fontWeight: "bold",
-    fontSize: "16px",
-    lineHeight: "21px",
-    textAlign: "center",
-    letterSpacing: "-0.04em",
-    color: "white",
-    flex: "none",
-    order: 0,
-    flexGrow: 0,
-    margin: "0px 4px",
-    mixBlendMode: "normal",
-    border: "1px solid #4218B5",
-    boxSizing: "border-box",
-    borderRadius: "4px",
-    background: "white",
-    marginTop: "28px",
-    backgroundColor: "#431AB7",
   },
 }));

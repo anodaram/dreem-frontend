@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Notification } from "shared/services/API/NotificationsAPI";
 import URL from "shared/functions/getURL";
@@ -14,6 +14,7 @@ import Box from "shared/ui-kit/Box";
 import ReviewCommunityAirdropProposalModal from "shared/ui-kit/Modal/Modals/ReviewCommunityAirdropProposalModal";
 import ReviewCommunityMemberProposalModal from "shared/ui-kit/Modal/Modals/ReviewCommunityMemberProposal";
 import ReviewCommunityMediaAcquisitionProposalModal from "shared/ui-kit/Modal/Modals/ReviewCommunityMediaAcquisitionProposalModal";
+import { SignatureRequestModal } from "shared/ui-kit/Modal/Modals";
 import AlertMessage from "shared/ui-kit/Alert/AlertMessage";
 import RequestedJoinDAOModal from "shared/ui-kit/Modal/Modals/RequestedJoinDAO";
 import { notificationButtonStyles } from "./NotificationButtons.styles";
@@ -71,7 +72,7 @@ export const NotificationButtons: React.FunctionComponent<NotificationButtonsPro
   const acceptDeclineFollowing = (user, boolUpdateFollowing, idNotification) => {
     if (!user || !user.id) return;
 
-    setIsLoadingAccept(true);
+    setIsLoadingAccept(true)
     if (boolUpdateFollowing) {
       // accept
       axios
@@ -98,7 +99,7 @@ export const NotificationButtons: React.FunctionComponent<NotificationButtonsPro
               variant: "error",
             });
           }
-          setIsLoadingAccept(false);
+          setIsLoadingAccept(false)
         });
     } else {
       // decline
@@ -170,6 +171,7 @@ export const NotificationButtons: React.FunctionComponent<NotificationButtonsPro
   return (
     <>
       <ButtonContainer>
+        
         {notification.type === 1 ? (
           <>
             {isLoadingAccept ? (

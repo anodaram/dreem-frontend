@@ -18,7 +18,8 @@ const LeftNavigations: NavItemProps[] = [
   { name: "CREATE", value: "creations", link: "/create" },
   { name: "REALMS", value: "realms", link: "/realms" },
   { name: "AVATARS", value: "avatars", link: "/avatars" },
-  { name: "METAVERSE", value: "metaverse", link: "/metaverse" },
+  { name: "GAME NFT", value: "gameNFT", link: "/gameNFT" },
+  // { name: "METAVERSE", value: "metaverse", link: "/metaverse" },
 ];
 
 const RightNavigations: NavItemProps[] = [
@@ -87,7 +88,7 @@ const PriviMetaverseAppNavigation = () => {
           return false;
         }
       } else {
-        return location.pathname.includes(nav.link ?? '');
+        return location.pathname.includes(nav.link ?? "");
       }
     });
 

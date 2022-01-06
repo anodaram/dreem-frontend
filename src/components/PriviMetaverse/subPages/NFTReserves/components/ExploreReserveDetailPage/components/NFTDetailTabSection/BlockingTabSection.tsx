@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 
-import { Accordion, AccordionDetails, AccordionSummary } from "@material-ui/core";
+import { Accordion, AccordionDetails, AccordionSummary, Hidden } from "@material-ui/core";
 
+import { RootState } from "store/reducers/Reducer";
 import MakeNewOfferModal from "components/PriviMetaverse/modals/MakeNewOfferModal";
 import CancelOfferModal from "components/PriviMetaverse/modals/CancelOfferModal";
 import BlockProceedModal from "components/PriviMetaverse/modals/BlockProceedModal";
 import { TagIcon, HistoryIcon, HideIcon, ShowIcon } from "./index";
 
-import { PrimaryButton } from "shared/ui-kit";
+import { PrimaryButton, Variant } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import { CustomTable, CustomTableHeaderInfo } from "shared/ui-kit/Table";
 import { visitProfile } from "shared/services/API/UserAPI";
@@ -17,12 +19,10 @@ import { getChainForNFT } from "shared/functions/metamask";
 import { useAuth } from "shared/contexts/AuthContext";
 
 import { exploreOptionDetailPageStyles } from "../../index.styles";
-import { useSelector } from "react-redux";
-import { RootState } from "store/reducers/Reducer";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
+export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefresh }) => {
   const classes = exploreOptionDetailPageStyles();
   const history = useHistory();
   const { isSignedin } = useAuth();
@@ -36,7 +36,6 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
   const [isOfferExpanded, setIsOfferExpanded] = React.useState<boolean>(true);
   const [isHistoryExpaned, setIsHistoryExpanded] = React.useState<boolean>(true);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
-
   const offerTableHeaders: Array<CustomTableHeaderInfo> = isOwnership
     ? [
         {
@@ -60,9 +59,9 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
         },
         {
           headerName:
-            nft.chainsFullName?.toLowerCase() === "mumbai" || nft.chainsFullName?.toLowerCase() === "polygon"
+            nft.Chain?.toLowerCase() === "mumbai" || nft.Chain?.toLowerCase() === "polygon"
               ? "POLYGONSCAN"
-              : "ETHERSCAN",
+              : "BSCSCAN",
           headerAlign: isOwnership ? "left" : "center",
         },
       ]
@@ -88,9 +87,9 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
         },
         {
           headerName:
-            nft.chainsFullName?.toLowerCase() === "mumbai" || nft.chainsFullName?.toLowerCase() === "polygon"
+            nft.Chain?.toLowerCase() === "mumbai" || nft.Chain?.toLowerCase() === "polygon"
               ? "POLYGONSCAN"
-              : "ETHERSCAN",
+              : "BSCSCAN",
           headerAlign: isOwnership ? "left" : "center",
         },
       ];
@@ -112,7 +111,10 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
       headerAlign: "center",
     },
     {
-      headerName: nft.chainsFullName === "Mumbai" ? "POLYGONSCAN" : "ETHERSCAN",
+      headerName:
+        nft.Chain?.toLowerCase() === "mumbai" || nft.Chain?.toLowerCase() === "polygon"
+          ? "POLYGONSCAN"
+          : "BSCSCAN",
       headerAlign: "center",
     },
   ];
@@ -137,7 +139,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
   const getTokenSymbol = addr => {
     if (tokenList.length == 0 || !addr) return 0;
     let token = tokenList.find(token => token.Address === addr);
-    return token?.Symbol || '';
+    return token?.Symbol || "";
   };
   return (
     <>
@@ -147,7 +149,9 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
             <AccordionSummary
               expandIcon={
                 <Box display="flex" alignItems="center" fontSize={14} width={56}>
-                  <Box mr={1}>{isOfferExpanded ? "Hide" : "Show"}</Box>
+                  <Box color="white" mr={1}>
+                    {isOfferExpanded ? "Hide" : "Show"}
+                  </Box>
                   {isOfferExpanded ? <HideIcon /> : <ShowIcon />}
                 </Box>
               }
@@ -156,25 +160,44 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
               <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
                 <div className={classes.typo8}>
                   <TagIcon />
-                  <span>Blocking offers</span>
+                  <span className={classes.gradientText}>Blocking offers</span>
                 </div>
-                {!isOwnership && isSignedin && (
-                  <PrimaryButton
-                    size="small"
-                    className={classes.pricingButton}
-                    onClick={event => {
-                      event.stopPropagation();
-                      setOpenMakeNewOfferModal(true);
-                    }}
-                  >
-                    MAKE BLOCKING OFFER
-                  </PrimaryButton>
-                )}
+                <Hidden xsDown>
+                  {!isOwnership && isSignedin && (
+                    <PrimaryButton
+                      size="small"
+                      className={classes.pricingButton}
+                      onClick={event => {
+                        event.stopPropagation();
+                        setOpenMakeNewOfferModal(true);
+                      }}
+                    >
+                      MAKE BLOCKING OFFER
+                    </PrimaryButton>
+                  )}
+                </Hidden>
               </Box>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails style={{ display: "block" }}>
+              <Hidden smUp>
+                {!isOwnership && isSignedin && (
+                  <Box display="flex" justifyContent="flex-end" width={1} mb={1} mt={-1} pr={2}>
+                    <PrimaryButton
+                      size="small"
+                      className={classes.pricingButton}
+                      onClick={event => {
+                        event.stopPropagation();
+                        setOpenMakeNewOfferModal(true);
+                      }}
+                    >
+                      MAKE BLOCKING OFFER
+                    </PrimaryButton>
+                  </Box>
+                )}
+              </Hidden>
               <div className={classes.table}>
                 <CustomTable
+                  variant={Variant.Transparent}
                   headers={offerTableHeaders}
                   rows={
                     offerData
@@ -195,6 +218,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                               ) : (
                                 <Box display="flex" alignItems="center" style={{ maxWidth: "250px" }}>
                                   <span
+                                    className={classes.gradientText}
                                     style={{
                                       width: "100%",
                                       overflow: "hidden",
@@ -217,9 +241,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                           {
                             cell: isOwnership
                               ? `${item.CollateralPercent} %`
-                              : `${item.CollateralAmount} ${getTokenSymbol(
-                                  item.CollateralToken
-                                )}`,
+                              : `${item.CollateralAmount} ${getTokenSymbol(item.CollateralToken)}`,
                           },
                           {
                             cell: isOwnership ? `${item.AcceptDuration} Days` : `${item.ReservePeriod} Days`,
@@ -237,8 +259,9 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                                   src={
                                     selectedChain.name === "POLYGON"
                                       ? require("assets/icons/polygon_scan.png")
-                                      : require("assets/icons/icon_ethscan.png")
+                                      : require("assets/icons/icon_bscscan.ico")
                                   }
+                                  width={24}
                                   onClick={() => {
                                     handleClickLink(item.hash);
                                   }}
@@ -271,7 +294,9 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
             <AccordionSummary
               expandIcon={
                 <Box display="flex" alignItems="center" fontSize={14} width={56}>
-                  <Box mr={1}>{isHistoryExpaned ? "Hide" : "Show"}</Box>
+                  <Box color="white" mr={1}>
+                    {isHistoryExpaned ? "Hide" : "Show"}
+                  </Box>
                   {isHistoryExpaned ? <HideIcon /> : <ShowIcon />}
                 </Box>
               }
@@ -280,18 +305,20 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
               <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
                 <div className={classes.typo8}>
                   <HistoryIcon />
-                  <span>Blocking History</span>
+                  <span className={classes.gradientText}>Blocking History</span>
                 </div>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
               <div className={classes.table}>
                 <CustomTable
+                  variant={Variant.Transparent}
                   headers={historyTableHeaders}
                   rows={historyData.map(item => [
                     {
                       cell: (
                         <span
+                          className={classes.gradientText}
                           onClick={() => visitProfile(item.Beneficiary, history)}
                           style={{ cursor: "pointer" }}
                         >
@@ -320,8 +347,9 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                             src={
                               selectedChain.name === "POLYGON"
                                 ? require("assets/icons/polygon_scan.png")
-                                : require("assets/icons/icon_ethscan.png")
+                                : require("assets/icons/icon_bscscan.ico")
                             }
+                            width={24}
                           />
                         </div>
                       ),
@@ -355,6 +383,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
           handleClose={() => setProceedItem(null)}
           nft={nft}
           setNft={setNft}
+          handleRefresh={handleRefresh}
         />
       )}
     </>

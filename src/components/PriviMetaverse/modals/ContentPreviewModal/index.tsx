@@ -23,8 +23,6 @@ import EditRealmModal from "../EditRealmModal";
 import EditExtensionModal from "../EditExtensionModal";
 import { contentPreviewModalStyles } from "./index.styles";
 
-const isDev = process.env.REACT_APP_ENV === "dev";
-
 const ContentPreviewModal = ({
   nftId,
   open,
@@ -116,7 +114,7 @@ const ContentPreviewModal = ({
           let data: any = res.data?.data?.stamp;
           if (data) {
             customProtocolCheck(
-              `${isDev ? 'dreemdev://' : 'dreem://'}` + data,
+              "dreem://" + data,
               () => {
                 setOpenNotAppModal(true);
               },

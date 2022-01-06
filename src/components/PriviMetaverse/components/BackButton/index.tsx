@@ -6,15 +6,15 @@ import { ChevronIconLeft } from "shared/ui-kit/Icons/chevronIconLeft";
 
 export type ButtonProps = React.PropsWithChildren<{
   dark?: boolean;
-  purple?: boolean;
+  light?: boolean;
 }>;
 
 const Button = styled.div<ButtonProps>`
-  color: ${p => (p.dark ? "#181818" : p.purple ? "#431AB7" : "#99a1b3")};
-  margin-top: ${p => (p.dark || p.purple ? 0 : "50px")};
-  margin-bottom: ${p => (p.dark || p.purple ? 0 : "30px")};
+  color: ${p => (p.dark ? "#181818" : p.light ? "#ffffff" : "#99a1b3")};
+  margin-top: ${p => (p.dark || p.light ? 0 : "50px")};
+  margin-bottom: ${p => (p.dark || p.light ? 0 : "30px")};
   cursor: pointer;
-  font-family: ${p => (p.purple ? "Agrandir" : "sans-serif")};
+  font-family: ${p => (p.light ? "Agrandir" : "sans-serif")};
   font-size: 18px;
   font-weight: 400;
   display: flex;
@@ -22,17 +22,17 @@ const Button = styled.div<ButtonProps>`
   svg {
     width: 16px;
     height: 13px;
-    margin-right: ${p => (p.purple ? "12px" : "5px")};
+    margin-right: ${p => (p.light ? "12px" : "5px")};
   }
 `;
 
 export const BackButton = ({
   dark,
-  purple,
+  light,
   overrideFunction,
 }: {
   dark?: boolean;
-  purple?: boolean;
+  light?: boolean;
   overrideFunction?: () => void;
 }) => {
   const history = useHistory();
@@ -42,7 +42,7 @@ export const BackButton = ({
   };
 
   return (
-    <Button onClick={overrideFunction ?? onClick} dark={dark} purple={purple} style={{width:"fit-content"}}>
+    <Button onClick={overrideFunction ?? onClick} dark={dark} light={light} style={{width:"fit-content"}}>
       {dark ? (
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">
           <path
@@ -53,11 +53,11 @@ export const BackButton = ({
             strokeLinejoin="round"
           />
         </svg>
-      ) : purple ? (
+      ) : light ? (
         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="10" viewBox="0 0 13 10" fill="none">
           <path
             d="M1.5 5.00001L11.5 5.00001M1.5 5.00001L5.5 1M1.5 5.00001L5.5 9"
-            stroke="#431AB7"
+            stroke="#ffffff"
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -66,7 +66,7 @@ export const BackButton = ({
       ) : (
         <ChevronIconLeft />
       )}
-      <span>Back</span>
+      <span style={{ fontFamily: "Rany" }}>Back</span>
     </Button>
   );
 };

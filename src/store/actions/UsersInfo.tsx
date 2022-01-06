@@ -34,8 +34,9 @@ export interface UserInfo {
   wallets: any[];
   email?: string;
   whitelisted?: boolean;
-  infoImage?: any;
+  infoImage: any;
   ipfsImage?: any;
+  urlIpfsImage: string;
 }
 
 export const createUserInfo = (
@@ -72,7 +73,9 @@ export const createUserInfo = (
   wallets: [] = [],
   email: string,
   infoImage: any,
-  whitelisted: boolean = false
+  whitelisted: boolean = false,
+  ipfsImage: any,
+  urlIpfsImage: string
 ): UserInfo => {
   return {
     id,
@@ -108,7 +111,9 @@ export const createUserInfo = (
     wallets,
     email,
     infoImage,
-    whitelisted
+    whitelisted,
+    ipfsImage,
+    urlIpfsImage,
   };
 };
 

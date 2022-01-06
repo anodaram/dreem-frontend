@@ -115,7 +115,7 @@ export default function MetaversePage() {
               <Box display="flex" flexDirection="column" whiteSpace="nowrap" overflow="hidden">
                 <div className={`${classes.title} ${classes.fitSize}`}>Explore The Metaverse</div>
                 <div className={`${classes.description}  ${classes.fitSize}`}>
-                  Immerse yourself within the vast number of fun experiences built by Web3 communities
+                  Immerse yourself within the vast number of fun experiences built by Web 3 communities
                 </div>
               </Box>
               <div className={classes.searchBarContainer}>

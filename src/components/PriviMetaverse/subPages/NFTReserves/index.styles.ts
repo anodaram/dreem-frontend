@@ -4,28 +4,25 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   main: {
     position: "relative",
     width: "100%",
+    height: "100%",
+    backgroundImage: `url(${require("assets/metaverseImages/metaverse_bg.png")})`,
+    backgroundRepeat: "round",
+    overflow: "hidden",
   },
-  pixImage: {
+  image1: {
     position: "absolute",
-    top: 8,
-    right: 75,
-    width: 85,
-    [theme.breakpoints.down(600)]: {
-      right: -10,
-    },
+    left: -210,
+    top: 560,
   },
-  cameraImage: {
+  image2: {
     position: "absolute",
-    top: 112,
-    left: 91,
-    [theme.breakpoints.down("sm")]: {
-      top: 130,
-      left: 50,
-    },
-    [theme.breakpoints.down(600)]: {
-      top: 220,
-      left: -15,
-    },
+    top: 610,
+    right: -200,
+  },
+  limitedContent: {
+    background: "linear-gradient(180deg, rgba(0, 0, 0, 0) 9.5%, #17151A 69.7%)",
+    width: "100%",
+    height: "100%",
   },
   content: {
     width: "100%",
@@ -34,12 +31,12 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
-    minHeight: "calc(100vh - 72px)",
-    maxHeight: "calc(100vh - 72px)",
+    minHeight: "100%",
+    maxHeight: "100%",
     overflowX: "hidden",
     position: "relative",
-    padding: "90px 32px 45px",
-    maxWidth: 1600,
+    padding: "160px 32px 45px",
+    maxWidth: 1312,
     marginLeft: "auto",
     marginRight: "auto",
     "& > div > h2": {
@@ -64,13 +61,17 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       marginBottom: "16px",
     },
     [theme.breakpoints.down("md")]: {
-      padding: "63px 30px",
+      paddingLeft: "30px",
+      paddingRight: "30px",
+      maxWidth: 1280,
     },
     [theme.breakpoints.down("sm")]: {
-      padding: "63px 20px",
+      paddingLeft: "20px",
+      paddingRight: "20px",
     },
     [theme.breakpoints.down("sm")]: {
-      padding: "35px 16px",
+      paddingLeft: "16px",
+      paddingRight: "16px",
     },
   },
   titleBar: {
@@ -86,44 +87,52 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
   },
   title: {
-    fontFamily: "Agrandir GrandHeavy",
-    fontSize: 32,
-    fontWeight: 800,
-    color: "#431AB7",
+    fontFamily: "GRIFTER",
+    fontSize: 40,
+    fontWeight: 700,
+    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
+    "-webkit-text-fill-color": "transparent",
+    "-webkit-background-clip": "text",
+    textTransform: "uppercase",
     textAlign: "center",
     [theme.breakpoints.down(950)]: {
       fontSize: 28,
     },
     [theme.breakpoints.down("xs")]: {
       paddingBottom: 8,
+      fontSize: 24,
     },
   },
   subTitle: {
-    fontFamily: "Agrandir",
+    maxWidth: 750,
+    fontFamily: "GRIFTER",
     fontSize: 20,
-    fontWeight: 400,
-    color: "#431AB7",
+    fontWeight: 700,
+    color: "white",
     marginTop: 10,
     textAlign: "center",
+    textTransform: "uppercase",
+    lineHeight: "20.9px",
     [theme.breakpoints.down(950)]: {
-      fontSize: 28,
+      fontSize: "14px",
+      lineHeight: "120%",
     },
     [theme.breakpoints.down("xs")]: {
       paddingBottom: 8,
     },
   },
-  manageButton: {
-    position: "relative",
-    background: "linear-gradient(269.78deg, #418DFF 1.15%, #4541FF 52.53%, #EF41CB 94.95%), #000000",
-    borderRadius: "74px !important",
-    color: "#fff !important",
+  primaryButton: {
+    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+    borderRadius: "10px !important",
+    fontFamily: "GRIFTER",
+    fontWeight: "bold",
+    fontSize: "16px important",
+    color: "#212121 !important",
     border: "none !important",
-    height: "41x !important",
-    padding: "0 30px !important",
-    lineHeight: "24px !important",
-    fontSize: 16,
-    fontFamily: "Agrandir",
-    fontWeight: 800,
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "12px !important",
+      width: "193px !important",
+    },
   },
   subTitleSection: {
     display: "flex",
@@ -157,7 +166,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   controlBox: {
     display: "flex",
     alignItems: "center",
-    background: "#EFF2FD",
+    background: "#FFFFFF1A",
     borderRadius: 69,
   },
   showButton: {
@@ -166,11 +175,19 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     justifyContent: "center",
     border: "none !important",
     backgroundColor: "transparent !important",
+    minWidth: "unset !important",
+    padding: "10px !important",
+    "& svg": {
+      fill: "white",
+    },
   },
   showButtonSelected: {
     background: "#ffffff !important",
     boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.08), 0px -1px 20px rgba(0, 0, 0, 0.05)",
     borderRadius: 34,
+    "& svg": {
+      fill: "#212121",
+    },
   },
   listViewRow: {
     display: "flex",
@@ -223,52 +240,56 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     width: "100%",
   },
   filterTag: {
-    background: "#EFF2FD",
+    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
     borderRadius: "100px",
     marginTop: "15px",
     marginRight: "10px",
-    color: "rgb(45, 48, 71)",
-    fontFamily: "Montserrat",
-    fontWeight: 600,
+    color: "white",
+    fontFamily: "Rany",
+    fontWeight: 400,
     fontSize: 12,
     lineHeight: "18px",
     padding: "8px 14px",
     cursor: "pointer",
   },
   filterActive: {
-    background: "#4218B5 !important",
     color: "#fff",
     "& *": {
       color: "#fff !important",
     },
     "& svg path": {
-      fill: "white !important",
+      fill: "#fff !important",
     },
   },
   filterButtonBox: {
-    background: "rgba(240, 245, 248, 0.7)",
+    background: "#FFFFFF1A",
     display: "flex",
     alignItems: "center",
     padding: `${theme.spacing(1)}px`,
     cursor: "pointer",
     borderRadius: "100vh",
-    border: "1px solid #ccc",
-    color: "#2D3047",
+    color: "white",
     [theme.breakpoints.down("xs")]: {
       padding: "8px",
     },
   },
+  searchOpened: {
+    padding: "inherit 24px",
+  },
   select: {
-    background: "#EFF2FD",
-    borderRadius: 17,
+    marginTop: "8px",
+    background: "#212121",
     padding: "8px 12px",
     "& + &": {
       marginLeft: 10,
     },
     "& .MuiSelect-root": {
       padding: "0px 4px",
-      fontSize: 12,
-      color: "rgba(67, 26, 183, 0.5)",
+      fontFamily: "Rany",
+      fontWeight: 700,
+      fontSize: 14,
+      color: "rgba(255, 255, 255, 0.5)",
+      marginRight: 8,
       "&:focus": {
         backgroundColor: "unset",
       },
@@ -278,10 +299,17 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       },
       "& span": {
         fontSize: 14,
-        fontWeight: 600,
-        color: "#5343B1",
+        fontWeight: 700,
+        color: "#E9FF26",
       },
     },
+    "& svg path": {
+      stroke: "#E9FF26",
+    },
+  },
+  chainImage: {
+    width: "20px",
+    marginRight: "8px",
   },
   table: {
     minHeight: 400,
@@ -321,14 +349,14 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       },
       "& .MuiTableRow-root": {
         cursor: "pointer",
-        background: "#5F2AF4",
+        background: "#151515 !important",
         "& td:first-child": {
-          borderTopLeftRadius: "16px",
-          borderBottomLeftRadius: "16px",
+          borderTopLeftRadius: "14px",
+          borderBottomLeftRadius: "14px",
         },
         "& td:last-child": {
-          borderTopRightRadius: "16px",
-          borderBottomRightRadius: "16px",
+          borderTopRightRadius: "14px",
+          borderBottomRightRadius: "14px",
         },
       },
     },
@@ -345,13 +373,28 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       borderRadius: 4,
     },
   },
+  listLoading: {
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+    border: "2px solid #F2C525",
+    borderRadius: 16,
+    padding: 12,
+    background: "rgba(255, 255, 255, 0.1) !important",
+    "& .MuiSkeleton-root": {
+      backgroundColor: "#505050",
+      borderRadius: 6,
+    },
+  },
 }));
 
 export const useFilterSelectStyles = makeStyles({
   paper: {
-    background: "#EFF2FD",
+    marginTop: "10px",
+    marginLeft: "-13px",
+    background: "#212121",
     boxShadow: "0px 15px 35px -31px rgba(13, 12, 62, 0.19)",
-    borderRadius: 12,
+    color: "rgba(255, 255, 255, 0.5)",
     "& svg": {
       width: 18,
       height: 18,
@@ -359,19 +402,43 @@ export const useFilterSelectStyles = makeStyles({
     },
   },
   list: {
-    padding: "20px 8px",
+    padding: "20px 8px!important",
     paddingRight: 8,
     "& .MuiListItem-root": {
-      borderRadius: 6,
-      marginBottom: 12,
+      marginBottom: 10,
       padding: "2px 8px",
-      minHeight: 32,
+      minWidth: "200px",
+      Height: "36px",
       "&:last-child": {
         marginBottom: 0,
       },
       "&:hover": {
-        background: "white",
+        color: "white",
+        border: "solid 1px #E9FF26",
       },
     },
   },
 });
+
+export const useTabsStyles = makeStyles(theme => ({
+  tab: {
+    fontSize: "16px",
+    fontWeight: 700,
+    lineHeight: "19.2px",
+    color: "white",
+    borderRadius: "2px",
+    padding: "8px 20px",
+    textTransform: "uppercase",
+    cursor: "pointer",
+    [theme.breakpoints.down("xs")]: {
+      flex: 1,
+      fontSize: 10,
+      padding: "8px 10px",
+      textAlign: "center",
+    },
+  },
+  selected: {
+    color: "#212121",
+    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+  },
+}));

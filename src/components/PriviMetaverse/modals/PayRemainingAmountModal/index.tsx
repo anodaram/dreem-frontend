@@ -12,7 +12,7 @@ import { useWeb3React } from "@web3-react/core";
 import { RootState } from "store/reducers/Reducer";
 import { useSelector } from "react-redux";
 import { toDecimals, toNDecimals } from "shared/functions/web3";
-import { switchNetwork } from "shared/functions/metamask";
+import { switchNetwork, checkChainID, getChainForNFT } from "shared/functions/metamask";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { updateBlockingHistory } from "shared/services/API/ReserveAPI";
 
@@ -24,7 +24,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
   const { account, library, chainId } = useWeb3React();
   const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
   const [totalBalance, setTotalBalance] = useState<string>('0')
-  const [selectedChain, setSelectedChain] = useState<any>(filteredBlockchainNets[0]);
+  const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [confirmSuccess, setConfirmSuccess] = useState<boolean>(false);
   const [hash, setHash] = useState<string>("");
@@ -40,7 +40,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
     }
 
     if (selectedChain && nft && selectedChain.value !== nft.chain) {
-      setSelectedChain(filteredBlockchainNets.find(b => b.value === nft.chain));
+      setSelectedChain(getChainForNFT(nft))
     }
   }, [nft, selectedChain, open]);
 
@@ -58,7 +58,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
   };
 
   const setBalance = async () => {
-    const targetChain = BlockchainNets.find(net => net.value === nft.chain);
+    const targetChain = BlockchainNets.find(net => net.name.toLowerCase() === nft.Chain.toLowerCase());
     if (chainId && chainId !== targetChain?.chainId) {
       const isHere = await switchNetwork(targetChain?.chainId || 0);
       if (!isHere) {
@@ -131,7 +131,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
     setOpenTransactionModal(true);
     const info = nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1];
     const symbol = getTokenSymbol(info.PaymentToken)
-    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
+    if (!checkChainID(chainId)) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -141,7 +141,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
       web3.eth.abi.encodeParameters(
         ["address", "uint256", "address", "address"],
         [
-          collection_id,
+          nft.Address,
           token_id,
           nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].from,
           nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Beneficiary
@@ -187,7 +187,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
     <Modal size="medium" isOpen={open} onClose={handleCloseModal} showCloseIcon className={classes.container}>
       <>
         <Box>
-          <Box fontSize="24px" color="#431AB7" marginTop="50px">
+          <Box fontSize="24px" color="#ffffff" marginTop="50px" fontFamily="GRIFTER" style={{ textTransform: "uppercase" }}>
             Payment
           </Box>
           <Box className={classes.nameField}>
@@ -208,34 +208,33 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
           display="flex"
           alignItems="center"
           justifyContent="space-between"
-          color="#431AB7"
+          color="#ffffff50"
           marginTop="14px"
         >
           <Box display="flex" alignItems="center" gridColumnGap="10px" fontSize="14px">
             <span>Wallet Balance</span>
             <Box className={classes.usdWrap} display="flex" alignItems="center">
-              <Box className={classes.point}></Box>
               <Box fontWeight="700">{`${typeUnitValue(totalBalance, 1)} ${getTokenSymbol(nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaymentToken)}`} </Box>
             </Box>
           </Box>
         </Box>
         <Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
-            <SecondaryButton
+            <PrimaryButton
               size="medium"
-              style={{ color: "#431AB7", maxWidth: "50px", border: "2px solid #431AB7" }}
+              className={classes.primaryButton}
               onClick={handleApprove}
               disabled={isApproved}
             >
               APPROVE
-            </SecondaryButton>
+            </PrimaryButton>
             <PrimaryButton
               size="medium"
-              style={{ background: "#431AB7", color: "#ffffff", minWidth: "56%" }}
+              className={classes.primaryButton}
               onClick={handleConfirm}
               disabled={!isApproved}
             >
-              CONFIRM WITHDRAW
+              CONFIRM PAYMENT
             </PrimaryButton>
           </Box>
         </Box>

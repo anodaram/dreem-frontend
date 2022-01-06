@@ -47,7 +47,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
   const getTokenSymbol = addr => {
     if (tokenList.length == 0 || !addr) return 0;
     let token = tokenList.find(token => token.Address === addr);
-    return token?.Symbol || '';
+    return token?.Symbol || "";
   };
 
   const getTokenDecimal = addr => {
@@ -59,7 +59,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
   const handleInstantBuy = () => {
     setOpenInstantModal(false);
     refresh();
-  }
+  };
 
   return (
     <>
@@ -67,9 +67,9 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
         <Text
           style={{
             fontSize: "18px",
-            color: "#1A1B1C",
-            fontWeight: 800,
-            fontFamily: "Agrandir GrandHeavy",
+            color: "white",
+            fontWeight: 700,
+            fontFamily: "GRIFTER",
           }}
         >
           Instant Pricing Details
@@ -81,9 +81,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
           {isOwnership && nft?.sellingOffer?.Price && (
             <Text className={classes.pricingText2}>
               {nft?.sellingOffer?.Price &&
-                `${nft.sellingOffer.Price} ${getTokenSymbol(
-                  nft.sellingOffer.PaymentToken
-                )}`}
+                `${nft.sellingOffer.Price} ${getTokenSymbol(nft.sellingOffer.PaymentToken)}`}
             </Text>
           )}
           <Box display="flex" justifyContent="flex-end" alignItems="center">
@@ -113,9 +111,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                 <>
                   <Text className={classes.pricingText2}>
                     {nft?.sellingOffer?.Price &&
-                      `${nft.sellingOffer.Price} ${getTokenSymbol(
-                        nft.sellingOffer.PaymentToken
-                      )}`}
+                      `${nft.sellingOffer.Price} ${getTokenSymbol(nft.sellingOffer.PaymentToken)}`}
                   </Text>
                   &nbsp;
                   <PrimaryButton
@@ -133,9 +129,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
               <>
                 <Text className={!nft?.status ? classes.pricingText2 : classes.pricingText2Disable}>
                   {nft?.sellingOffer?.Price &&
-                    `${nft.sellingOffer.Price} ${getTokenSymbol(
-                      nft.sellingOffer.PaymentToken
-                    )}`}
+                    `${nft.sellingOffer.Price} ${getTokenSymbol(nft.sellingOffer.PaymentToken)}`}
                 </Text>
                 &nbsp;
                 <PrimaryButton
@@ -145,6 +139,9 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                     setOpenInstantModal(true);
                   }}
                   disabled={nft?.status}
+                  style={{
+                    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%) !important",
+                  }}
                 >
                   BUY
                 </PrimaryButton>
@@ -164,9 +161,9 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
           {isOwnership && nft?.blockingSaleOffer?.Price && (
             <Text className={classes.pricingText2}>
               {nft?.blockingSaleOffer?.Price &&
-                `${nft.blockingSaleOffer.Price} ${getTokenSymbol(
-                  nft.blockingSaleOffer.PaymentToken
-                )} for ${nft.blockingSaleOffer.ReservePeriod} Days`}
+                `${nft.blockingSaleOffer.Price} ${getTokenSymbol(nft.blockingSaleOffer.PaymentToken)} for ${
+                  nft.blockingSaleOffer.ReservePeriod
+                } Days`}
             </Text>
           )}
           <Box display="flex" justifyContent="flex-end" alignItems="center">
@@ -287,9 +284,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                           nft.rentSaleOffer.pricePerSecond,
                           getTokenDecimal(nft.rentSaleOffer.fundingToken)
                         ) * 86400
-                      ).toFixed(3)} ${getTokenSymbol(
-                        nft.rentSaleOffer.fundingToken
-                      )} / day`}
+                      ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / day`}
                   </Text>
                   &nbsp;
                   <PrimaryButton
@@ -312,9 +307,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                         nft.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(nft.rentSaleOffer.fundingToken)
                       ) * 86400
-                    ).toFixed(3)} ${getTokenSymbol(
-                      nft.rentSaleOffer.fundingToken
-                    )} / day`}
+                    ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / day`}
                 </Text>
                 &nbsp;
                 <PrimaryButton
@@ -323,7 +316,6 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                   onClick={() => {
                     setOpenRentNFTModal(true);
                   }}
-                  disabled={nft?.status}
                 >
                   Rent
                 </PrimaryButton>

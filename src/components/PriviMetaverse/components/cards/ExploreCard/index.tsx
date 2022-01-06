@@ -1,37 +1,41 @@
 import React, { useMemo } from "react";
 import { useHistory } from "react-router";
-
 import { useSelector } from "react-redux";
+
+import { Skeleton } from "@material-ui/lab";
+
 import { RootState } from "store/reducers/Reducer";
 import { toDecimals } from "shared/functions/web3";
 
 import Box from "shared/ui-kit/Box";
 import { Avatar } from "shared/ui-kit";
+import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
+import { getChainImageUrl } from "shared/functions/chainFucntions";
+import { visitChainLink } from "shared/helpers";
+
 import { cardStyles } from "./index.style";
-import { getAnonAvatarUrl, getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
 
 const CARD_COLORS = {
   LISTED: "rgba(31, 200, 139, 0.98)",
   RENTED: "#8D65FF",
-  BLOCKED: "#FF3F84",
+  BLOCKED:
+    "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
 };
 
-const isProd = process.env.REACT_APP_ENV === "prod";
-
-const ExploreCard = ({ nft }) => {
+const ExploreCard = ({ nft, isLoading = false }) => {
   const history = useHistory();
   const classes = cardStyles();
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const user = useSelector((state: RootState) => state.user);
+  const user: any = useSelector((state: RootState) => state.user);
 
   const handleOpenExplore = () => {
-    history.push(`/reserve/explore/${nft.token_address}/${nft.token_id}`);
+    history.push(`/gameNFT/${nft.collectionId}/${nft.tokenId}`);
   };
 
   const getTokenSymbol = addr => {
     if (tokenList.length == 0) return 0;
     let token = tokenList.find(token => token.Address === addr);
-    return token?.Symbol || '';
+    return token?.Symbol || "";
   };
 
   const getTokenDecimal = addr => {
@@ -41,35 +45,31 @@ const ExploreCard = ({ nft }) => {
   };
 
   const userName = React.useMemo(() => {
+    const ownerAddress = nft.ownerAddress ?? nft.owner_of;
     if (!nft.owner) {
-      if (nft.owner_of.toLowerCase() === user.address.toLowerCase()) {
+      if (ownerAddress?.toLowerCase() === user.address.toLowerCase()) {
         return user.firstName || user.lastName
           ? `${user.firstName} ${user.lastName}`
-          : nft.owner_of.substr(0, 5) + "..." + nft.owner_of.substr(nft.owner_of.length - 5, 5) ?? "";
+          : ownerAddress?.substr(0, 5) + "..." + ownerAddress?.substr(ownerAddress?.length - 5, 5) ?? "";
       }
-      return nft.owner_of.substr(0, 5) + "..." + nft.owner_of.substr(nft.owner_of.length - 5, 5) ?? "";
+      return ownerAddress?.substr(0, 5) + "..." + ownerAddress?.substr(ownerAddress?.length - 5, 5) ?? "";
     } else {
       let name: string = "";
       name =
-        nft.owner.firstName || nft.owner.lastName
-          ? `${nft.owner.firstName} ${nft.owner.lastName}`
-          : nft.owner_of.substr(0, 5) + "..." + nft.owner_of.substr(nft.owner_of.length - 5, 5) ?? "";
+        nft.owner?.firstName || nft.owner?.lastName
+          ? `${nft.owner?.firstName} ${nft.owner?.lastName}`
+          : ownerAddress?.substr(0, 5) + "..." + ownerAddress?.substr(ownerAddress.length - 5, 5) ?? "";
 
       return name;
     }
   }, [nft, user]);
 
   const avtarUrl = React.useMemo(() => {
-    if (!nft.owner?.urlSlug) {
-      if (nft.owner_of.toLowerCase() === user.address.toLowerCase()) {
-        return user.ipfsImage ?? getDefaultAvatar();
-      }
-      return getExternalAvatar();
-    } else {
-      return nft.owner.anon
-        ? getAnonAvatarUrl(nft.owner?.anonAvatar)
-        : nft.owner.urlIpfsImage ?? getDefaultAvatar();
+    const ownerAddress = nft.ownerAddress ?? nft.owner_of;
+    if (ownerAddress?.toLowerCase() === user.address.toLowerCase()) {
+      return user.urlIpfsImage ?? user.ipfsImage ?? getDefaultAvatar();
     }
+    return getExternalAvatar();
   }, [nft, user]);
 
   const handleOpenProfile = e => {
@@ -78,21 +78,17 @@ const ExploreCard = ({ nft }) => {
     if (nft.owner?.urlSlug) {
       history.push(`/profile/${nft.owner.urlSlug}`);
     } else {
-      if (nft.owner_of.toLowerCase() === user?.address?.toLowerCase()) {
+      const ownerAddress = nft.ownerAddress ?? nft.owner_of;
+      if (ownerAddress?.toLowerCase() === user?.address?.toLowerCase()) {
         history.push(`/profile/${user?.urlSlug}`);
       } else {
-        history.push(`/profile/${nft.owner_of}`);
+        history.push(`/profile/${ownerAddress}`);
       }
     }
   };
 
   const handleClickLink = (e, nft) => {
-    e.preventDefault();
-    if (nft.chain === "Polygon") {
-      window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/address/${nft.collectionId}`, "_blank");
-    } else if (nft.chain === "Ethereum") {
-      window.open(`https://${!isProd ? "rinkeby." : ""}etherscan.io/address/${nft.collectionId}`, "_blank");
-    }
+    visitChainLink(nft.Chain, nft.collectionId);
   };
 
   const nftStatus = useMemo(() => {
@@ -100,7 +96,7 @@ const ExploreCard = ({ nft }) => {
       return "";
     }
     if (nft.status) {
-      return nft.status.toUpperCase();
+      return nft.status.replace('Games', '').toUpperCase();
     }
     if (nft.sellingOffer?.Price || nft.blockingSaleOffer?.Price || nft.rentSaleOffer?.pricePerSecond) {
       return "LISTED";
@@ -111,39 +107,40 @@ const ExploreCard = ({ nft }) => {
     return "";
   }, [nft]);
 
-  const metaData = useMemo(() => JSON.parse(nft.metadata), [nft]);
-
   return (
     <div className={classes.outerCard} style={{ marginBottom: 0 }} onClick={handleOpenExplore}>
-      <div className={classes.innerCardGradient}>
-        <div className={classes.innerCard}>
+      {isLoading ? (
+        <Box className={classes.skeleton}>
+          <Skeleton variant="rect" width="100%" height={226} />
+          <Skeleton variant="rect" width="100%" height={24} style={{ marginTop: "8px" }} />
+          <Skeleton variant="rect" width="80%" height={24} style={{ marginTop: "8px" }} />
+          <Skeleton variant="rect" width="80%" height={24} style={{ marginTop: "8px" }} />
+          <Skeleton variant="rect" width="80%" height={24} style={{ marginTop: "8px" }} />
+        </Box>
+      ) : (
+        <>
           <div className={classes.cardImg}>
-            <img src={nft.content_url} style={{ width: "100%" }} />
+            <img src={nft.image || nft.content_url} style={{ width: "100%" }} />
             {nftStatus && (
               <span className={classes.cardOptionButton} style={{ background: CARD_COLORS[nftStatus] }}>
                 {nftStatus}
               </span>
             )}
-            <span className={classes.category}>
+          </div>
+          <div className={classes.cardTitle}>
+            <div className={classes.cardNftName}>{`${nft.name}`}</div>
+            <Box display="flex" justifyContent="space-between">
+              <Box onClick={handleOpenProfile} className={classes.userName}>
+                <Avatar size="small" url={avtarUrl} />
+                <span>{userName}</span>
+              </Box>
               <img
-                src={
-                  nft.chainsFullName.toLowerCase() === "mumbai" ||
-                  nft.chainsFullName.toLowerCase() === "polygon"
-                    ? require("assets/icons/polygon-blue.png")
-                    : require("assets/icons/ETHToken.svg")
-                }
+                src={getChainImageUrl(nft?.Chain || nft?.chainsFullName)}
                 style={{ width: "25px", height: "25px" }}
                 onClick={e => {
                   handleClickLink(e, nft);
                 }}
               />
-            </span>
-          </div>
-          <div className={classes.cardTitle}>
-            <div className={classes.cardNftName}>{`${nft.name} #${nft.token_id}`}</div>
-            <Box onClick={handleOpenProfile} className={classes.userName}>
-              <Avatar size="small" url={avtarUrl} />
-              <span>{userName}</span>
             </Box>
           </div>
           <div className={classes.divider} />
@@ -180,8 +177,8 @@ const ExploreCard = ({ nft }) => {
               </span>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };

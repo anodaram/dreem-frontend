@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import ReactPlayer from "react-player";
 import { useTypedSelector } from "store/reducers/Reducer";
 import Axios from "axios";
 import { useMediaQuery, useTheme } from "@material-ui/core";
@@ -13,9 +12,7 @@ import Avatar from "shared/ui-kit/Avatar";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 // import { getChainImageUrl } from "shared/functions/chainFucntions";
 import { characterDetailModalStyles } from "./index.styles";
-import { sanitizeIfIpfsUrl } from "shared/helpers";
 import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
-import { SharePopup } from "shared/ui-kit/SharePopup";
 import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAuth } from "shared/contexts/AuthContext";

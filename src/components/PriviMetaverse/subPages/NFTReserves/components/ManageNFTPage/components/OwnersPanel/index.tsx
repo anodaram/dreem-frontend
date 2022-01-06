@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import cls from "classnames";
 
-import { Grid, useTheme, useMediaQuery, Select, MenuItem } from "@material-ui/core";
+import { Grid, useTheme, useMediaQuery } from "@material-ui/core";
+import { useWeb3React } from "@web3-react/core";
 
 import { RootState } from "store/reducers/Reducer";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
@@ -14,11 +15,11 @@ import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import { getOwnedNFTs } from "shared/services/API/ReserveAPI";
 import { toDecimals } from "shared/functions/web3";
 import { useAuth } from "shared/contexts/AuthContext";
-
+import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import { ReactComponent as EthereumIcon } from "assets/icons/ETHToken.svg";
 import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
 
-import { useFilterSelectStyles, ownersPanelStyles } from "./index.styles";
+import { ownersPanelStyles } from "./index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 const filterChainOptions = ["All", "Ethereum", "Polygon"];
@@ -48,10 +49,10 @@ export const ArrowIcon = func => () =>
 
 const OwnersPanel = () => {
   const classes = ownersPanelStyles();
-  const filterClasses = useFilterSelectStyles();
   const theme = useTheme();
   const { isSignedin } = useAuth();
 
+  const width = useWindowDimensions().width;
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -60,11 +61,11 @@ const OwnersPanel = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const [filterChain, setFilterChain] = useState<string>(filterChainOptions[0]);
-  const [openChainSelect, setOpenChainSelect] = useState<boolean>(false);
   const [isFilterChain, setIsFilterChain] = useState<boolean>(false);
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
-  const TABS = ["Owned NFT", "Rented NFTs", "Blocked"];
+  const TABS = ["Owned NFTs", "Rented NFTs", "Blocked NFTs"];
+  const { account } = useWeb3React();
 
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
 
@@ -93,7 +94,7 @@ const OwnersPanel = () => {
           network: selectedChain,
         });
         let nfts = response.data ?? [];
-        setUserNFTs(nfts);
+        setUserNFTs(nfts.filter(nft => nft.ownerAddress?.toLowerCase() === account?.toLowerCase()));
       } catch (err) {}
       setLoading(false);
     }
@@ -124,27 +125,13 @@ const OwnersPanel = () => {
     return userNFTs;
   }, [userNFTs, selectedTab]);
 
-  const handleFilterChain = e => {
-    setFilterChain(e.target.value);
-    setIsFilterChain(true);
-  };
-
-  const getChainImage = chain => {
-    if (chain === filterChainOptions[1]) {
-      return <EthereumIcon />;
-    } else if (chain === filterChainOptions[2]) {
-      return <PolygonIcon />;
-    } else {
-      return null;
-    }
-  };
-
   const totalSaleRevenue = useMemo(() => {
-    return userNFTs.reduce(
-      (total, nft) => total + nft.salesHistories.reduce((t, cur) => t + +cur.Price, 0),
+    return (userNFTs || []).reduce(
+      (total, nft) => total + (nft.salesHistories || []).reduce((t, cur) => t + +cur.Price, 0),
       0
     );
   }, [userNFTs]);
+
   const monthSaleRevenue = useMemo(() => {
     const now = new Date();
     const monthStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -152,7 +139,9 @@ const OwnersPanel = () => {
     return userNFTs.reduce(
       (total, nft) =>
         total +
-        nft.salesHistories.filter(offer => offer.created >= monthStart).reduce((t, cur) => t + +cur.Price, 0),
+        (nft.salesHistories || [])
+          .filter(offer => offer.created >= monthStart)
+          .reduce((t, cur) => t + +cur.Price, 0),
       0
     );
   }, [userNFTs]);
@@ -160,7 +149,7 @@ const OwnersPanel = () => {
     return userNFTs.reduce(
       (total, nft) =>
         total +
-        nft.rentHistories.reduce(
+        (nft.rentHistories || []).reduce(
           (t, cur) =>
             t +
             +toDecimals(
@@ -179,7 +168,7 @@ const OwnersPanel = () => {
     return userNFTs.reduce(
       (total, nft) =>
         total +
-        nft.rentHistories
+        (nft.rentHistories || [])
           .filter(offer => offer.created >= monthStart)
           .reduce(
             (t, cur) =>
@@ -194,38 +183,31 @@ const OwnersPanel = () => {
     );
   }, [userNFTs]);
 
+  const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
+
   return (
     <div className={classes.content} onScroll={handleScroll}>
       <Grid container className={classes.infoPanel}>
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          md={6}
-          className={classes.subPanel}
-          style={{ borderRight: isTablet ? "none" : "1px solid #E8E3F6" }}
-        >
-          <span className={classes.infoTitle}>SALES REVENUE</span>
+        <Grid item xs={12} sm={6} className={classes.subPanel}>
           <Box className={classes.infoRow}>
             <Box className={classes.infoSubPanel}>
-              <span className={classes.infoLabel}>Total</span>
+              <span className={classes.infoLabel}>Total selling revenue</span>
               <span className={classes.infoValue}>{+totalSaleRevenue.toFixed(2)} USDT</span>
             </Box>
             <Box className={classes.infoSubPanel}>
-              <span className={classes.infoLabel}>Recent Month</span>
+              <span className={classes.infoLabel}>Selling revenue this month</span>
               <span className={classes.infoValue}>{+monthSaleRevenue.toFixed(2)} USDT</span>
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={12} md={6} className={classes.subPanel}>
-          <span className={classes.infoTitle}>RENTAL REVENUE</span>
+        <Grid item xs={12} sm={6} className={classes.subPanel}>
           <Box className={classes.infoRow}>
             <Box className={classes.infoSubPanel}>
-              <span className={classes.infoLabel}>Total</span>
+              <span className={classes.infoLabel}>Total Rent Revenue </span>
               <span className={classes.infoValue}>{+totalRentRevenue.toFixed(2)} USDT</span>
             </Box>
             <Box className={classes.infoSubPanel}>
-              <span className={classes.infoLabel}>Recent Month</span>
+              <span className={classes.infoLabel}>Rent revenue this month</span>
               <span className={classes.infoValue}>{+monthRentRevenue.toFixed(2)} USDT</span>
             </Box>
           </Box>
@@ -233,9 +215,16 @@ const OwnersPanel = () => {
       </Grid>
       <Box
         mb={3}
-        style={{ display: "flex", alignItems: "flex-start", flexDirection: isMobile ? "column" : "row" }}
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          flexDirection: isMobile ? "column" : "row",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.5)",
+          paddingBottom: "16px",
+          width: "100%",
+        }}
       >
-        <Select
+        {/* <Select
           open={openChainSelect}
           onClose={() => setOpenChainSelect(false)}
           value={filterChain}
@@ -268,7 +257,7 @@ const OwnersPanel = () => {
               {chain}
             </MenuItem>
           ))}
-        </Select>
+        </Select> */}
         <Box mt={isMobile ? 2 : 0} display="flex">
           {TABS.map((tab, index) => (
             <Box
@@ -287,7 +276,7 @@ const OwnersPanel = () => {
             <MasonryGrid
               gutter={"24px"}
               data={filteredNFTs}
-              renderItem={(item, index) => <ExploreCard nft={item} key={item.id} />}
+              renderItem={item => <ExploreCard nft={item} key={item.id} />}
               columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
             />
             {hasMore && (
@@ -306,18 +295,14 @@ const OwnersPanel = () => {
             )}
           </>
         ) : loading ? (
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              paddingTop: 16,
-              paddingBottom: 16,
-            }}
-          >
-            <CircularLoadingIndicator theme="blue" />
-          </div>
+          <Box mt={2}>
+            <MasonryGrid
+              gutter={"40px"}
+              data={Array(loadingCount).fill(0)}
+              renderItem={(_, index) => <ExploreCard isLoading={true} nft={{}} />}
+              columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+            />
+          </Box>
         ) : (
           <div></div>
         )}

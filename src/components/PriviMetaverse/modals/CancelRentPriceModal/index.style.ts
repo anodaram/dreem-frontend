@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 export const CancelRentPriceModalStyles = makeStyles(theme => ({
   container: {
-    maxWidth: "508px !important",
+    maxWidth: "540px !important",
     padding: "0px !important",
   },
   nameField: {
@@ -74,10 +74,16 @@ export const CancelRentPriceModalStyles = makeStyles(theme => ({
     background: "#e0e0e53b",
   },
   primaryButton: {
-    color: "#fff !important",
-    padding: "0 73px !important",
+    color: "#212121 !important",
+    padding: "0 37px !important",
     height: "40px !important",
-    border: "none !important",
+    background: "linear-gradient(#B7FF5C, #EEFF21) !important",
+    borderRadius: "40px",
+    border: "none",
+    "&:disabled": {
+      background: "linear-gradient(#B7FF5C, #EEFF21) !important",
+      color: "#212121 !important",
+    }
   },
   secondaryButton: {
     padding: "0 37px !important",
@@ -93,7 +99,7 @@ export const CancelRentPriceModalStyles = makeStyles(theme => ({
     },
   },
   cancelModal: {
-    maxWidth: "550px !important",
+    maxWidth: "545px !important",
     padding: "90px 32px 50px 32px !important",
     display: "flex",
     flexDirection: "column",
@@ -101,28 +107,33 @@ export const CancelRentPriceModalStyles = makeStyles(theme => ({
     justifyContent: "center",
   },
   cancelTitle: {
-    fontFamily: "Agrandir GrandHeavy",
+    background: "linear-gradient(#EDFF1C, #ED7B7B)",
+    "-webkit-text-fill-color": "transparent",
+    "-webkit-background-clip": "text",
+    fontFamily: "GRIFTER",
     fontSize: "18px",
-    color: "#2D3047",
   },
   cancelDesc: {
-    color: "#54658F",
-    opacity: 0.9,
-    marginBottom: 54,
+    color: "#ffffff",
+    marginBottom: 64,
     textAlign: 'center',
-    padding: '20px 50px'
+    padding: '16px 50px',
+    fontSize: '16px',
+    lineHeight: '24px'
   },
   cancelButton: {
     backgroundColor: "transparent !important",
-    color: "black !important",
-    border: "1px solid #CBCBCB !important",
-    borderRadius: "4px !important",
-    width: '100% !important',
+    color: "#DDFF57 !important",
+    border: "1px solid #E9FF26 !important",
+    borderRadius: "40px !important",
+    width: '165px !important',
+    textTransform: "uppercase"
   },
   editPriceButton: {
-    backgroundColor: "#431AB7 !important",
-    color: "white",
-    width: '100% !important',
-    borderRadius: "4px !important",
-  },
+    backgroundColor: "#DDFF57 !important",
+    color: "#0B151C !important",
+    width: '165px !important',
+    borderRadius: "40px !important",
+    textTransform: "uppercase"
+  }
 }));

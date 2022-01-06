@@ -15,6 +15,7 @@ import TransactionProgressModal from "components/PriviMetaverse/modals/Transacti
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
 // import ProcessingPaymentModal from "components/PriviMetaverse/modals/ProcessingPaymentModal";
 import { closeBlockingHistory } from "shared/services/API/ReserveAPI";
+import { checkChainID } from "shared/functions/metamask";
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function ClaimYourNFTModal({ open, claimType, handleClose = () => { }, onConfirm, nft }) {
@@ -47,7 +48,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
 
   const handleConfirm = async () => {
     setOpenTransactionModal(true);
-    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
+    if (!checkChainID(chainId)) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -57,7 +58,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
       web3.eth.abi.encodeParameters(
         ["address", "uint256", "address", "address"],
         [
-          collection_id,
+          nft.Address,
           token_id,
           blockingInfo.from,
           blockingInfo.Beneficiary
@@ -98,14 +99,14 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
   return (
     <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.container}>
       <Box className={classes.card}>
-        <ExploreCard nft={nft} />
+        <img src={nft.image || nft.content_url} className={classes.cardImg} />
         {transactionSuccess && (
           <Box className={classes.checkMark}>
             <img src={require("assets/icons/check.svg")} alt="check" />
           </Box>
         )}
       </Box>
-      <div className={classes.title}>Claim your Collateral & NFT</div>
+      <div className={classes.title}>Claim your NFT & Collateral</div>
       <div className={classes.description}>
         {transactionSuccess
           ? `Congrats, you’ve succesfully ${claimType}ed your NFT ${nft.name} and Collateral. here is summary`
@@ -130,3 +131,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
     </Modal>
   );
 }
+function setOpenTransactionModal(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
+

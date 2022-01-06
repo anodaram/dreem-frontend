@@ -1,37 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router";
+import Web3 from "web3";
+
+import { Grid } from "@material-ui/core";
 
 import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
-import { ReserveNftModalStyles } from "./index.style";
-import { Grid } from "@material-ui/core";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
 import { BlockchainNets } from "shared/constants/constants";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import TransactionProgressModal from "../TransactionProgressModal";
-
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
-import { useParams } from "react-router";
-import Web3 from "web3";
-import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
+import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
 import { toDecimals, toNDecimals } from "shared/functions/web3";
 import { acceptBlockingOffer } from "shared/services/API/ReserveAPI";
-import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
+import TransactionProgressModal from "../TransactionProgressModal";
+import { ReserveNftModalStyles } from "./index.style";
 
 export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfirm }) {
   const classes = ReserveNftModalStyles();
-  const { collection_id, token_id } = useParams();
+  const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
   const { account, library, chainId } = useWeb3React();
-  const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
-  const [price, setPrice] = useState<string | number>(nft?.blockingSaleOffer?.Price);
+
+  const [price, setPrice] = useState<number>(nft?.blockingSaleOffer?.Price);
   const [selectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const [collateralToken, setCollateralToken] = useState<any>(tokenList[0]);
   const [reservePriceToken, setReservePriceToken] = useState<any>(tokenList[0]);
-  const [collateralPercent, setCollateralPercent] = useState<string | number>(
-    nft?.blockingSaleOffer?.CollateralPercent
+  const [collateral, setCollateral] = useState<number>(
+    (Number(nft?.blockingSaleOffer?.Price) * Number(nft?.blockingSaleOffer?.CollateralPercent)) / 100
   );
   const [totalBalance, setTotalBalance] = React.useState<string>("0");
   const [isApproved, setIsApproved] = useState<boolean>(false);
@@ -43,8 +44,9 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
   const isProd = process.env.REACT_APP_ENV === "prod";
 
   useEffect(() => {
-    setReservePriceToken(tokenList[0])
-  }, [tokenList])
+    setCollateralToken(tokenList[0]);
+    setReservePriceToken(tokenList.find(token => token.Address === nft?.blockingSaleOffer?.PaymentToken));
+  }, [tokenList, nft]);
 
   useEffect(() => {
     if (!open) {
@@ -61,7 +63,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
 
   const setBalance = async () => {
     if (reservePriceToken) {
-      const targetChain = BlockchainNets.find(net => net.value === nft.chain);
+      const targetChain = BlockchainNets.find(net => net.name.toLowerCase() === nft.Chain.toLowerCase());
       if (chainId && chainId !== targetChain?.chainId) {
         const isHere = await switchNetwork(targetChain?.chainId || 0);
         if (!isHere) {
@@ -85,6 +87,11 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
 
   const handleApprove = async () => {
     try {
+      if (!price || !collateral) {
+        showAlertMessage("Please fill all the fields", { variant: "error" });
+        return;
+      }
+
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
@@ -131,8 +138,13 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
   };
 
   const handleConfirm = async () => {
+    if (!price || !collateral) {
+      showAlertMessage("Please fill all the fields", { variant: "error" });
+      return;
+    }
+
     setOpenTransactionModal(true);
-    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
+    if (!checkChainID(chainId)) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -142,14 +154,14 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
       web3,
       account!,
       {
-        collection_id,
+        collection_id: nft.Address,
         token_id,
         paymentToken: reservePriceToken?.Address,
         collateralToken: reservePriceToken?.Address,
         price: toNDecimals(price, reservePriceToken.Decimals),
         beneficiary: account,
-        collateralInitialAmount: toNDecimals(price, reservePriceToken.Decimals),
-        collateralPercent: toNDecimals(collateralPercent, 2),
+        collateralInitialAmount: toNDecimals(collateral, collateralToken.Decimals),
+        collateralPercent: toNDecimals(Number(nft?.blockingSaleOffer?.CollateralPercent), 2),
         reservePeriod: Math.ceil(+nft.blockingSaleOffer.ReservePeriod * 3600 * 24),
         validityPeriod: Number(nft.blockingSaleOffer.AcceptDuration || 0) * 3600 * 24,
         sellerToMatch: nft.blockingSaleOffer.Beneficiary,
@@ -163,12 +175,12 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "uint256", "address", "uint80", "uint64"],
           [
-            collection_id,
+            nft.Address,
             token_id,
             reservePriceToken?.Address,
             toNDecimals(price, reservePriceToken.Decimals),
             account,
-            toNDecimals(collateralPercent, 2),
+            toNDecimals((Number(collateral) / Number(nft?.blockingSaleOffer?.Price)) * 100, 2),
             Math.ceil(+nft.blockingSaleOffer.ReservePeriod * 3600 * 24),
           ]
         )
@@ -183,11 +195,11 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         PaymentToken: nft.blockingSaleOffer.PaymentToken,
         Price: nft.blockingSaleOffer.Price,
         Beneficiary: account,
-        CollateralPercent: nft.blockingSaleOffer.CollateralPercent,
+        CollateralPercent: ((Number(collateral) / Number(nft?.blockingSaleOffer?.Price)) * 100).toFixed(2),
         ReservePeriod: nft.blockingSaleOffer.ReservePeriod,
         from: nft.blockingSaleOffer.Beneficiary,
         hash: response.hash,
-        notificationMode: 1
+        notificationMode: 1,
       });
       let newNft = { ...nft };
       newNft.status = "Blocked";
@@ -226,20 +238,12 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         {!confirmSuccess && (
           <>
             <Box style={{ padding: "25px" }}>
-              <Box fontSize="24px" color="#431AB7">
+              <Box fontSize="24px" color="#ffffff" style={{ textTransform: "uppercase" }}>
                 Block NFT
               </Box>
               <Box className={classes.nameField}></Box>
               <Grid container spacing={2}>
-                <Grid item sm={7}>
-                  <Box className={classes.nameField}>Price Offer</Box>
-                </Grid>
-                <Grid item sm={5}>
-                  <Box className={classes.nameField}>Reserve Token</Box>
-                </Grid>
-              </Grid>
-              <Grid container spacing={2}>
-                <Grid item sm={7}>
+                <Grid item sm={12}>
                   <InputWithLabelAndTooltip
                     inputValue={price}
                     onInputValueChange={e => setPrice(e.target.value)}
@@ -248,19 +252,8 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                     type="number"
                     theme="light"
                     minValue={0}
-                    disabled={true}
-                  />
-                </Grid>
-                <Grid item sm={5}>
-                  <ReserveTokenSelect
-                    tokens={tokenList}
-                    value={reservePriceToken?.Address || ""}
-                    className={classes.inputJOT}
-                    onChange={e => {
-                      setReservePriceToken(tokenList.find(v => v.Address === e.target.value));
-                    }}
-                    style={{ flex: "1" }}
-                    disabled={true}
+                    endAdornment={<div className={classes.purpleText}>USDT</div>}
+                    placeHolder={"0.001"}
                   />
                 </Grid>
               </Grid>
@@ -268,13 +261,12 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 display="flex"
                 alignItems="center"
                 justifyContent="space-between"
-                color="#431AB7"
+                color="#ffffff"
                 marginTop="14px"
               >
                 <Box display="flex" alignItems="center" gridColumnGap="10px" fontSize="14px">
                   <span>Wallet Balance</span>
-                  <Box className={classes.usdWrap} display="flex" alignItems="center">
-                    <Box className={classes.point}></Box>
+                  <Box className={classes.usdWrap} display="flex" alignItems="center" color="#E9FF26">
                     <Box fontWeight="700">{totalBalance} USDT</Box>
                   </Box>
                 </Box>
@@ -282,72 +274,63 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                   <span>MAX</span>
                 </Box>
               </Box>
-              <Box className={classes.nameField}>Required x% as Collateral</Box>
+              <Box className={classes.nameField}>
+                Required {nft?.blockingSaleOffer?.CollateralPercent}% as Collateral
+              </Box>
               <Grid container spacing={2}>
-                <Grid item sm={12}>
+                <Grid item sm={7}>
                   <InputWithLabelAndTooltip
-                    inputValue={collateralPercent}
-                    onInputValueChange={e => setCollateralPercent(e.target.value)}
+                    inputValue={collateral}
+                    onInputValueChange={e => setCollateral(e.target.value)}
                     overriedClasses={classes.inputJOT}
                     required
                     type="number"
                     theme="light"
                     minValue={0}
-                    disabled={true}
+                    endAdornment={<div className={classes.purpleText}>%</div>}
+                    placeHolder={"0"}
                   />
                 </Grid>
-                {/* <Grid item sm={5}>
-                <ReserveTokenSelect
-                  tokens={tokenList}
-                  value={reservePriceToken?.Address || ""}
-                  className={classes.inputJOT}
-                  onChange={e => {
-                    setReservePriceToken(tokenList.find(v => v.Address === e.target.value));
-                  }}
-                  style={{ flex: "1" }}
-                  disabled={isApproved}
-                />
-              </Grid> */}
+                <Grid item sm={5}>
+                  <ReserveTokenSelect
+                    tokens={tokenList.filter(
+                      token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
+                    )}
+                    value={reservePriceToken?.Address || ""}
+                    className={classes.tokenSelect}
+                    onChange={e => {
+                      setReservePriceToken(tokenList.find(v => v.Address === e.target.value));
+                    }}
+                  />
+                </Grid>
               </Grid>
-              {/* <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              color="#431AB7"
-              marginTop="14px"
-            >
-              <Box display="flex" alignItems="center" gridColumnGap="10px" fontSize="14px">
-                <span>Wallet Balance</span>
-                <Box className={classes.usdWrap} display="flex" alignItems="center">
-                  <Box className={classes.point}></Box>
-                  <Box fontWeight="700">{typeUnitValue(usdtBalance, 1)} USDT</Box>
-                </Box>
-              </Box>
-              <Box display="flex" alignItems="center" fontSize="16px">
-                <span>MAX</span>
-              </Box>
-            </Box> */}
             </Box>
             <Box className={classes.footer}>
               <Box className={classes.totalText}>Total</Box>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box
-                  style={{ color: "#431AB7", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
+                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  Collateral at 40% / <b>50</b>%
+                  Collateral at{" "}
+                  {((Number(collateral) / Number(nft?.blockingSaleOffer?.Price)) * 100).toFixed(2)}% /{" "}
+                  <b>{nft?.blockingSaleOffer?.CollateralPercent}</b>%
+                  {Number(nft?.blockingSaleOffer?.CollateralPercent) >
+                    (Number(collateral) / Number(nft?.blockingSaleOffer?.Price)) * 100 && (
+                    <Box style={{ color: "red" }}>You need to add more collateral</Box>
+                  )}
                 </Box>
                 <Box
-                  style={{ color: "#431AB7", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
+                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  22 225 USDT
+                  {collateral} USDT
                 </Box>
               </Box>
+
               <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
                 <SecondaryButton
                   size="medium"
                   className={classes.primaryButton}
                   onClick={handleApprove}
-                  style={{ backgroundColor: "#431AB7" }}
                   disabled={isApproved || !price}
                 >
                   Approve
@@ -355,9 +338,8 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <PrimaryButton
                   size="medium"
                   className={classes.primaryButton}
-                  style={{ backgroundColor: "#431AB7" }}
                   onClick={handleConfirm}
-                  disabled={!isApproved || !price || !collateralPercent}
+                  disabled={!isApproved || !price || !collateral}
                 >
                   Confirm Offer
                 </PrimaryButton>

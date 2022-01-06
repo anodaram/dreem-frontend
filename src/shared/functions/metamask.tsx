@@ -132,5 +132,12 @@ export const getTokenBalances = async (chainId: number, address: string) => {
 
 export const getChainForNFT = (nft: any): (any | undefined) => {
   const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
-  return filteredBlockchainNets.find(net => net.value === nft?.chain);
+  return filteredBlockchainNets.find(net => net.name.toLowerCase() === nft?.Chain?.toLowerCase());
+}
+
+export const checkChainID = (chainId: number | undefined) => {
+  if (!chainId) return false
+
+  const avaialbleChainIds = BlockchainNets.map((chain) => chain.chainId);
+  return avaialbleChainIds.includes(chainId)
 }

@@ -1,32 +1,33 @@
 import React, { useState, useEffect } from "react";
 import Web3 from "web3";
-import Axios from "axios";
-import URL from "shared/functions/getURL";
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
-import { toDecimals, toNDecimals } from "shared/functions/web3";
+import { useSelector } from "react-redux";
+import { useWeb3React } from "@web3-react/core";
+import { useParams } from "react-router";
+
+import { Grid } from "@material-ui/core";
+
+import { toNDecimals } from "shared/functions/web3";
 import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import TransactionProgressModal from "../TransactionProgressModal";
 import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
-import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { PrimaryButton } from "shared/ui-kit";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
-import { MakeEditBlockingPriceModalStyles } from "./index.style";
-import { Grid } from "@material-ui/core";
-import { BlockchainNets } from "shared/constants/constants";
-import { useParams } from "react-router";
 import { cancelBlockingOffer, setBlockingOffer } from "shared/services/API/ReserveAPI";
 import { RootState } from "store/reducers/Reducer";
-import { useSelector } from "react-redux";
+import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
+import TransactionProgressModal from "../TransactionProgressModal";
+import { MakeEditBlockingPriceModalStyles } from "./index.style";
+
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function EditBlockingPriceModal({ open, handleClose, offer, nft, setNft }) {
   const classes = MakeEditBlockingPriceModalStyles();
   const { account, library, chainId } = useWeb3React();
-  const [price, setPrice] = React.useState<number | string>("");
-  const [period, setPeriod] = React.useState<number | string>("");
-  const [collateralPercent, setCollateralPercent] = useState<number | string>("");
+  const [price, setPrice] = React.useState<number>();
+  const [period, setPeriod] = React.useState<number>();
+  const [collateralPercent, setCollateralPercent] = useState<number>();
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const [reservePriceToken, setReservePriceToken] = useState<any>(tokenList[0]);
@@ -37,12 +38,12 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const { showAlertMessage } = useAlertMessage();
 
-  const { collection_id, token_id } = useParams();
+  const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
 
   useEffect(() => {
-    setReservePriceToken(tokenList[0])
-  }, [tokenList])
-  
+    setReservePriceToken(tokenList[0]);
+  }, [tokenList]);
+
   useEffect(() => {
     if (!open) {
       setIsApproved(false);
@@ -64,7 +65,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
         return;
       }
     }
-  
+
     try {
       setOpenTransactionModal(true);
       const web3APIHandler = selectedChain.apiHandler;
@@ -74,7 +75,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
         web3,
         account!,
         {
-          collection_id,
+          collection_id: nft.Address,
           token_id,
           paymentToken: offer.PaymentToken,
           price: toNDecimals(offer.Price, getTokenDecimal(offer.PaymentToken)),
@@ -110,6 +111,11 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
   };
 
   const handleApprove = async () => {
+    if (!price || !period || !collateralPercent) {
+      showAlertMessage("Please fill all the fields", { variant: "error" });
+      return;
+    }
+
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
@@ -127,7 +133,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
       let approved = await web3APIHandler.Erc721.approve(web3, account || "", {
         to: web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE,
         tokenId: token_id,
-        nftAddress: collection_id,
+        nftAddress: nft.Address,
       });
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -150,6 +156,11 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
   };
 
   const handleConfirm = async () => {
+    if (!price || !period || !collateralPercent) {
+      showAlertMessage("Please fill all the fields", { variant: "error" });
+      return;
+    }
+
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
@@ -167,7 +178,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
         web3,
         account!,
         {
-          collection_id,
+          collection_id: nft.Address,
           token_id,
           paymentToken: reservePriceToken?.Address,
           collateralToken: reservePriceToken?.Address,
@@ -187,7 +198,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address", "uint80", "uint64"],
             [
-              collection_id,
+              nft.Address,
               token_id,
               reservePriceToken?.Address,
               toNDecimals(price, reservePriceToken.Decimals),
@@ -259,9 +270,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
       ) : (
         <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.container}>
           <Box style={{ padding: "25px" }}>
-            <Box fontSize="24px" color="#431AB7">
-              Edit Blocking Price
-            </Box>
+            <Box className={classes.title}>Edit Blocking Price</Box>
             <Grid container spacing={2}>
               <Grid item sm={7}>
                 <Box className={classes.nameField}>Blocking Price</Box>
@@ -274,18 +283,21 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
               <Grid item sm={7}>
                 <InputWithLabelAndTooltip
                   inputValue={price}
-                  onInputValueChange={e => setPrice(+e.target.value)}
+                  onInputValueChange={e => setPrice(e.target.value)}
                   overriedClasses={classes.inputJOT}
                   required
                   type="number"
                   theme="light"
                   minValue={0}
                   disabled={isApproved}
+                  placeHolder={"0.001"}
                 />
               </Grid>
               <Grid item sm={5}>
                 <ReserveTokenSelect
-                  tokens={tokenList}
+                  tokens={tokenList.filter(
+                    token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
+                  )}
                   value={reservePriceToken?.Address || ""}
                   className={classes.inputJOT}
                   onChange={e => {
@@ -296,34 +308,39 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
                 />
               </Grid>
             </Grid>
-            <Box className={classes.nameField}>Blocking Period</Box>
+            <Box className={classes.nameField}>
+              <span>Blocking Period</span>
+              <InfoTooltip tooltip={""} />
+            </Box>
             <InputWithLabelAndTooltip
               inputValue={period}
-              onInputValueChange={e => setPeriod(+e.target.value)}
+              onInputValueChange={e => setPeriod(e.target.value)}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
-              endAdornment={<div className={classes.purpleText}>DAYS</div>}
+              endAdornment={<div className={classes.suffixText}>DAYS</div>}
               disabled={isApproved}
+              placeHolder={"00"}
             />
-            <Box className={classes.nameField}>Collateral Required (%)</Box>
+            <Box className={classes.nameField}>Collateral % Required</Box>
             <InputWithLabelAndTooltip
               inputValue={collateralPercent}
-              onInputValueChange={e => setCollateralPercent(+e.target.value)}
+              onInputValueChange={e => setCollateralPercent(e.target.value)}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
               disabled={isApproved}
+              placeHolder={"0"}
+              endAdornment={<div className={classes.suffixText}>%</div>}
             />
             <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
               <PrimaryButton
                 size="medium"
                 className={classes.primaryButton}
-                style={{ backgroundColor: isApproved ? "#431AB750" : "#431AB7" }}
                 onClick={handleApprove}
                 disabled={isApproved}
               >
@@ -332,7 +349,6 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
               <PrimaryButton
                 size="medium"
                 className={classes.primaryButton}
-                style={{ backgroundColor: !isApproved ? "#431AB750" : "#431AB7" }}
                 onClick={handleConfirm}
                 disabled={!isApproved || !price || !period || !collateralPercent}
               >
