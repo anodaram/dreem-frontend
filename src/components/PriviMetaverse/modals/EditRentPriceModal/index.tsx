@@ -31,10 +31,10 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
   const [pricePerSec, setPricePerSec] = useState<number>();
 
   const [maxRentalTime, setMaxRentalTime] = useState<any>();
-  const [limitDays, setLimitDays] = useState<number>();
-  const [limitHour, setLimitHour] = useState<number>();
-  const [limitMin, setLimitMin] = useState<number>();
-  const [limitSec, setLimitSec] = useState<number>();
+  const [limitDays, setLimitDays] = useState<number>(0);
+  const [limitHour, setLimitHour] = useState<number>(0);
+  const [limitMin, setLimitMin] = useState<number>(0);
+  const [limitSec, setLimitSec] = useState<number>(0);
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [isCancelled, setIsCancelled] = useState<boolean>(false);
 

@@ -18,12 +18,11 @@ import { RootState } from "store/reducers/Reducer";
 import { useSelector } from "react-redux";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
-const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
 const SECONDS_PER_DAY = 86400;
 
 export default function RentProceedModal({ open, offer, handleClose = () => {}, nft, setNft }) {
   const classes = RentProceedModalStyles();
-  const [selectedChain, setSelectedChain] = React.useState<any>(filteredBlockchainNets[0]);
+  const [selectedChain, setSelectedChain] = React.useState<any>(getChainForNFT(nft));
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const [hash, setHash] = useState<string>("");
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
@@ -45,10 +44,8 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
       return;
     }
 
-    if (selectedChain && nft && selectedChain.value !== nft.chain) {
-      setSelectedChain(filteredBlockchainNets.find(b => b.value === nft.chain));
-    }
-  }, [nft, selectedChain, open]);
+    setSelectedChain(getChainForNFT(nft));
+  }, [nft]);
 
   const getTokenDecimal = addr => {
     if (tokens.length == 0) return 0;
@@ -62,23 +59,17 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
         return;
       }
 
-      const nftChain = getChainForNFT(nft);
-      if (!nftChain) {
-        showAlertMessage(`network error`, { variant: "error" });
-        return;
-      }
-      if (chainId && chainId !== nftChain?.chainId) {
-        const isHere = await switchNetwork(nftChain?.chainId || 0);
+      if (chainId && chainId !== selectedChain?.chainId) {
+        const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
           showAlertMessage("Got failed while switching over to target network", { variant: "error" });
           return;
         }
-        setSelectedChain(nftChain);
       }
 
       setOpenTransactionModal(true);
-      const web3Config = nftChain.config;
-      const web3APIHandler = nftChain.apiHandler;
+      const web3Config = selectedChain.config;
+      const web3APIHandler = selectedChain.apiHandler;
       const web3 = new Web3(library.provider);
       let approved = await web3APIHandler.Erc721.approve(web3, account || "", {
         to: web3Config.CONTRACT_ADDRESSES.RENTAL_MANAGER,
@@ -138,7 +129,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
         await acceptRentOffer({
           mode: isProd ? "main" : "test",
           rentalOfferId: offer.id,
-          collection: newOffer.collection,
+          collection: collection_id,
           tokenId: newOffer.tokenId,
           rentalTime: newOffer.rentalTime,
           pricePerSecond: newOffer.pricePerSecond,
