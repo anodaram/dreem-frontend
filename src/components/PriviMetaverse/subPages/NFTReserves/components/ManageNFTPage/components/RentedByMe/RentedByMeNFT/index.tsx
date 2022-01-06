@@ -97,7 +97,7 @@ export default ({
       ) : (
         <Box display="flex" alignItems="center" color="#fff" width="100%" className={classes.container}>
           <img
-            src={item?.content_url ?? require(`assets/backgrounds/digital_art_1.png`)}
+            src={item?.image ?? require(`assets/backgrounds/digital_art_1.png`)}
             className={classes.nftImage}
             alt={item?.name}
           />
