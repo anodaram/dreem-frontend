@@ -1,10 +1,10 @@
 # This is the build and deploy Dev branch CI
-name: Deploy dev-2 CI
+name: Deploy dev CI
 # Controls when the action will run.
 on:
  # Triggers the workflow on push or pull request events
   push:
-    branches: [ dev-2 ]
+    branches: [ dev ]
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
