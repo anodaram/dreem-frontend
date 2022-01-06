@@ -145,7 +145,7 @@ export default function CancelReserveModal({
       const activeReserveId = web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "address"],
-          [nft.Address, token_id, blockingInfo.from, blockingInfo.Beneficiary]
+          [collection_id, token_id, blockingInfo.from, blockingInfo.Beneficiary]
         )
       );
 
@@ -186,19 +186,15 @@ export default function CancelReserveModal({
     <Modal size="medium" isOpen={open} onClose={handleCloseModal} showCloseIcon className={classes.container}>
       <>
         <Box>
-          <Box fontSize="24px" color="#ffffff" marginTop="50px" style={{
-            textTransform: "uppercase"
-          }}>
-            Cancel Reserve
+          <Box fontSize="24px" color="#431AB7" marginTop="50px">
+            Cancel Blocking
           </Box>
           <Box className={classes.nameField}>
-            Repay your collaterall to be able to recoverand withdraw your NFT
-          </Box>
-          <Box className={classes.nameField}>
-            By recovering your NFT before end of  the auction  you’ll have to pay penalty fee of {penaltyFee}%
+            Cancelling the blocking of your NFT will incur in a penalty of {penaltyFee}%. After that, you will
+            receive back your NFT
           </Box>
           <Box className={classes.availableCollateral}>
-            <Box className={classes.collateralText}>{"Penalty Fee"}</Box>
+            <Box className={classes.collateralText}>{"Penalty To Pay"}</Box>
             <Box className={classes.collateralAmount}>{`${
               (blockingInfo?.Price * penaltyFee) / 100
             } ${getTokenSymbol(blockingInfo?.PaymentToken)}`}</Box>
@@ -224,7 +220,7 @@ export default function CancelReserveModal({
                 onClick={handleConfirm}
                 disabled={!isApproved}
               >
-                pay & cancel
+                Repay & recover
               </PrimaryButton>
             </Box>
           </Box>

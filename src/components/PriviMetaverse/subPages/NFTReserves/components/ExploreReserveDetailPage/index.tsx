@@ -10,18 +10,6 @@ import { BackButton } from "components/PriviMetaverse/components/BackButton";
 import CancelReserveModal from "components/PriviMetaverse/modals/CancelReserveModal";
 import ClaimPaymentModal from "components/PriviMetaverse/modals/ClaimPaymentModal";
 import ClaimYourNFTModal from "components/PriviMetaverse/modals/ClaimYourNFTModal";
-import { Avatar, Color, SecondaryButton, Text, PrimaryButton } from "shared/ui-kit";
-import Box from "shared/ui-kit/Box";
-import { LoadingWrapper } from "shared/ui-kit/Hocs";
-import { Modal } from "shared/ui-kit";
-import { ShareWhiteIcon } from "shared/ui-kit/Icons/SvgIcons";
-import DiscordPhotoFullScreen from "shared/ui-kit/Page-components/Discord/DiscordPhotoFullScreen/DiscordPhotoFullScreen";
-import { getGameNFT } from "shared/services/API/ReserveAPI";
-import { getAllTokenInfos } from "shared/services/API/TokenAPI";
-import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
-import { getChainForNFT } from "shared/functions/metamask";
-import GameNFTDetailModal from "components/PriviMetaverse/modals/GameNFTDetailModal";
-import { getChainImageUrl } from "shared/functions/chainFucntions";
 import NFTDetailTabSection from "./components/NFTDetailTabSection";
 import GeneralDetailSection from "./components/GeneralDetailSection";
 import RentedDetailSection from "./components/RentedDetailSection";
@@ -31,7 +19,18 @@ import RegularBlockedDetailSection from "./components/RegularBlockedDetailSectio
 import RegularBlockedStatusSection from "./components/RegularBlockedStatusSection";
 import ExpiredPayDetailSection from "./components/ExpiredPayDetailSection";
 import ExpiredPayStatusSection from "./components/ExpiredPayStatusSection";
-import { useShareMedia } from "shared/contexts/ShareMediaContext";
+
+import { Avatar, Color, SecondaryButton, Text, PrimaryButton } from "shared/ui-kit";
+import Box from "shared/ui-kit/Box";
+import { LoadingWrapper } from "shared/ui-kit/Hocs";
+import { Modal } from "shared/ui-kit";
+import DiscordPhotoFullScreen from "shared/ui-kit/Page-components/Discord/DiscordPhotoFullScreen/DiscordPhotoFullScreen";
+import { getNFT } from "shared/services/API/ReserveAPI";
+import { BlockchainNets } from "shared/constants/constants";
+import { getAllTokenInfos } from "shared/services/API/TokenAPI";
+import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
+import { getChainForNFT } from "shared/functions/metamask";
+
 import { exploreOptionDetailPageStyles } from "./index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -40,8 +39,6 @@ const ExploreReserveDetailPage = () => {
   const classes = exploreOptionDetailPageStyles();
   const dispatch = useDispatch();
   const { collection_id, token_id }: { collection_id: string; token_id: string } = useParams();
-
-  const { shareMedia } = useShareMedia();
 
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isBlockedNFT, setIsBlockedNFT] = useState<boolean>(false);
@@ -59,29 +56,18 @@ const ExploreReserveDetailPage = () => {
   const [openCancelReserveModal, setOpenCancelReserveModal] = useState<boolean>(false);
   const [openClaimPaymentModal, setOpenClaimPaymentModal] = useState<boolean>(false);
   const [openClaimYourNFTModal, setOpenClaimYourNFTModal] = useState<boolean>(false);
-  const [openGameDetailModal, setOpenGameDetailModal] = useState<boolean>(false);
   const [claimType, setClaimType] = useState("");
   const [nft, setNft] = useState<any>({});
   const { account } = useWeb3React();
 
   const [openModalPhotoFullScreen, setOpenModalPhotoFullScreen] = useState<boolean>(false);
 
-  const avatarUrl = React.useMemo(() => {
-    if (nft?.owner?.urlIpfsImage.startsWith("/assets")) {
-      const lastIndex = nft?.owner?.urlIpfsImage.lastIndexOf("/");
-
-      return require(`assets/anonAvatars/${nft?.owner?.urlIpfsImage.substring(lastIndex + 1)}`);
-    }
-
-    return nft?.owner?.urlIpfsImage;
-  }, [nft?.owner?.urlIpfsImage]);
-
   useEffect(() => {
     getData();
   }, []);
 
   useEffect(() => {
-    setIsOwner((account || "").toLowerCase() === (nft?.ownerAddress || "").toLowerCase());
+    setIsOwner((account || "").toLowerCase() === (nft?.owner_of || "").toLowerCase());
     setIsBlockedNFT(nft?.status === "Blocked");
     setIsRentedNFT(nft?.status === "Rented");
     if (nft?.blockingSalesHistories?.length > 0) {
@@ -99,23 +85,42 @@ const ExploreReserveDetailPage = () => {
       const nftChain = getChainForNFT(nft);
       if (!nftChain) return;
 
+      const tokenList: any[] = Object.entries(nftChain.config.TOKEN_ADDRESSES);
       const { tokens } = await getAllTokenInfos();
-      const nftTokens = tokens.find(token => token.Network.toLowerCase() === nftChain.name.toLowerCase());
-      dispatch(setTokenList([nftTokens]));
-    })();
-  }, [nft]);
+      const nftTokens = tokens.map(t => {
+        const token = tokenList.find(chainToken => chainToken[0] === t.Symbol);
+        return {
+          ...t,
+          Address: token ? token[1] : t.Address,
+        };
+      });
+
+      dispatch(setTokenList(nftTokens));
+    })()
+  }, [nft])
 
   const getData = async () => {
     setIsLoading(true);
-    const response = await getGameNFT({
+    const response = await getNFT({
       mode: isProd ? "main" : "test",
       collectionId: collection_id,
       tokenId: token_id,
     });
 
     if (response.success) {
+      let chain;
+      if (["mumbai", "polygon"].includes(response.nft.chainsFullName?.toLowerCase())) {
+        chain = BlockchainNets[1].value;
+      } else if (
+        ["rinkeby", "ethereum", "eth", "mainnet"].includes(response.nft.chainsFullName?.toLowerCase())
+      ) {
+        chain = BlockchainNets[2].value;
+      } else {
+        chain = BlockchainNets[2].value;
+      }
       setNft({
         ...response.nft,
+        chain,
       });
     }
 
@@ -123,7 +128,7 @@ const ExploreReserveDetailPage = () => {
   };
 
   const goBack = () => {
-    history.goBack();
+    history.push("/reserve/explore");
   };
 
   const handleClaimPayment = () => {
@@ -140,35 +145,33 @@ const ExploreReserveDetailPage = () => {
   };
 
   const handleClickLink = () => {
-    if (nft.Chain?.toLowerCase() === "bsc") {
+    if (nft.chainsFullName?.toLowerCase() === "mumbai" || nft.chainsFullName?.toLowerCase() === "polygon") {
       window.open(
-        `https://${!isProd ? "testnet." : ""}bscscan.com/token/${nft.Address}?a=${nft.id}`,
+        `https://${!isProd ? "mumbai." : ""}polygonscan.com/token/${nft.token_address}?a=${nft.token_id}`,
         "_blank"
       );
     } else {
       window.open(
-        `https://${!isProd ? "mumbai." : ""}polygonscan.com/token/${nft.Address}?a=${nft.id}`,
+        `https://${!isProd ? "rinkeby." : ""}etherscan.io/token/${nft.token_address}?a=${nft.token_id}`,
         "_blank"
       );
     }
   };
 
   return (
-    <Box style={{ position: "relative", flex: 1, display: "flex", justifyContent: "center" }}>
+    <Box style={{ position: "relative", flex: 1 }}>
       <div className={classes.content}>
-        <Box className={classes.header} mb={3}>
-          <BackButton light overrideFunction={goBack} />
+        <Box className={classes.header}>
+          <BackButton purple overrideFunction={goBack} />
           {isOwner && isBlockedNFT && !isExpired && (
             <PrimaryButton
               size="medium"
               className={classes.cancelBlockingBtn}
-              style={{
-                backgroundColor: "#EEFF21",
-                color: "#212121",
-              }}
+              style={{ backgroundColor: "#431AB7" }}
               onClick={() => setOpenCancelReserveModal(true)}
             >
-              CANCEL RESERVE
+              CANCEL BLOCKING
+              <img src={require("assets/icons/info_icon.png")} alt="cancel" />
             </PrimaryButton>
           )}
         </Box>
@@ -188,12 +191,11 @@ const ExploreReserveDetailPage = () => {
               mr={isMobileScreen ? 0 : isTableScreen ? 2 : 5}
               borderRadius="20px"
               style={{
-                backgroundImage: `url("${nft?.image}")`,
+                backgroundImage: `url("${nft?.content_url}")`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "contain",
                 backgroundPosition: "center",
                 boxShadow: "0px 32.6829px 21.7886px -26.7406px rgba(0, 0, 0, 0.07)",
-                overflow: "hidden",
               }}
             >
               {nft?.content_url && (
@@ -211,24 +213,8 @@ const ExploreReserveDetailPage = () => {
               )}
             </Box>
             <Box ml={isMobileScreen ? 0 : isTableScreen ? 2 : 5} py={2} style={{ flex: "1" }} width={1}>
-              <Box display="flex" justifyContent="space-between">
-                <Box
-                  className={classes.status}
-                  style={{ backgroundColor: isRentedNFT ? "#8D65FF" : "#E9FF26" }}
-                >
-                  {isRentedNFT ? "RENTED" : isBlockedNFT ? "BLOCKED" : "Listed"}
-                </Box>
-                <span
-                  onClick={() =>
-                    shareMedia(
-                      "gameNFT",
-                      `gameNFT/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`
-                    )
-                  }
-                  style={{ cursor: "pointer" }}
-                >
-                  <ShareWhiteIcon />
-                </span>
+              <Box className={classes.badge} style={{ backgroundColor: isRentedNFT ? "#8D65FF" : "#1FC88B" }}>
+                {isRentedNFT ? "RENTED" : isBlockedNFT ? "BLOCKED" : "Listed"}
               </Box>
               <Box
                 display="flex"
@@ -246,40 +232,40 @@ const ExploreReserveDetailPage = () => {
                   </Box>
                 </Box>
                 <Box display="flex" flexDirection="row" alignItems="center">
-                  <SecondaryButton
-                    className={classes.detailsButton}
-                    size="small"
-                    onClick={() => setOpenGameDetailModal(true)}
-                  >
-                    Details
+                  <SecondaryButton size="small" onClick={handleClickLink} className={classes.checkOnBtn}>
+                    Check on
+                    <img
+                      src={
+                        nft.chainsFullName?.toLowerCase() === "mumbai" ||
+                        nft.chainsFullName?.toLowerCase() === "polygon"
+                          ? require("assets/icons/polygon_scan.png")
+                          : require("assets/icons/icon_ethscan.png")
+                      }
+                      alt=""
+                    />
                   </SecondaryButton>
                 </Box>
               </Box>
               <Box
                 display="flex"
-                flexDirection={isMobileScreen ? "column" : "row"}
-                alignItems={isMobileScreen ? "flex-start" : "center"}
-                justifyContent="space-between"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="flex-start"
                 mt={1}
+                style={{ cursor: "pointer" }}
+                onClick={() => (nft?.owner?.urlSlug ? history.push(`/profile/${nft?.owner?.urlSlug}`) : {})}
               >
-                <Box display="flex" alignItems="center" style={{ cursor: "pointer" }}
-                onClick={() => (nft?.owner?.urlSlug ? history.push(`/profile/${nft?.owner?.urlSlug}`) : {})}>
-                  <Avatar
-                    url={avatarUrl ?? (nft?.owner ? getDefaultAvatar() : getExternalAvatar())}
-                    size="small"
-                  />
-                  <Text style={{ margin: "0px 9px", fontFamily: "Rany", fontWeight: 400 }}>Owned by</Text>
-                  <Text className={classes.gradientText}>
-                    {nft?.owner?.name ||
-                      nft?.ownerAddress?.substr(0, 18) +
-                        "..." +
-                        nft?.ownerAddress?.substr(nft?.ownerAddress?.length - 3, 3)}
-                  </Text>
-                </Box>
-                <SecondaryButton size="small" onClick={handleClickLink} className={classes.checkOnBtn}>
-                  Check on
-                  <img src={getChainImageUrl(nft.Chain)} alt="" />
-                </SecondaryButton>
+                <Avatar
+                  url={nft?.owner?.urlIpfsImage ?? (nft?.owner ? getDefaultAvatar() : getExternalAvatar())}
+                  size="small"
+                />
+                <Text style={{ margin: "0px 9px" }}>Owned by</Text>
+                <Text style={{ color: "#431AB7" }}>
+                  {nft?.owner?.name ||
+                    nft?.owner_of?.substr(0, 18) +
+                      "..." +
+                      nft?.owner_of?.substr(nft?.owner_of?.length - 3, 3)}
+                </Text>
               </Box>
               <hr className={classes.divider} />
               {isOwner ? (
@@ -294,9 +280,8 @@ const ExploreReserveDetailPage = () => {
                         style={{
                           width: "100%",
                           height: 52,
-                          backgroundColor: "#EEFF21",
+                          backgroundColor: "#431AB7",
                           marginTop: 14,
-                          color: "#212121",
                         }}
                         onClick={handleClaimPayment}
                       >
@@ -309,10 +294,9 @@ const ExploreReserveDetailPage = () => {
                         style={{
                           width: "100%",
                           height: 52,
-                          backgroundColor: "#EEFF21",
+                          backgroundColor: "#431AB7",
                           marginTop: 14,
                           textTransform: "uppercase",
-                          color: "#212121",
                         }}
                         onClick={() => handleClaimCollateral("block")}
                       >
@@ -338,7 +322,7 @@ const ExploreReserveDetailPage = () => {
             isRentedNFT ? null : isBlockedNFT ? (
               !isExpired && <BlockedStatusSection isOwnership={isOwner} nft={nft} refresh={refresh} />
             ) : (
-              <NFTDetailTabSection isOwnership={isOwner} nft={nft} setNft={setNft} handleRefresh={refresh} />
+              <NFTDetailTabSection isOwnership={isOwner} nft={nft} setNft={setNft} />
             )
           ) : isBlockedNFT ? (
             isExpired ? (
@@ -349,7 +333,7 @@ const ExploreReserveDetailPage = () => {
               <RegularBlockedStatusSection isOwnership={isOwner} nft={nft} refresh={refresh} />
             )
           ) : (
-            <NFTDetailTabSection isOwnership={isOwner} nft={nft} setNft={setNft} handleRefresh={refresh} />
+            <NFTDetailTabSection isOwnership={isOwner} nft={nft} setNft={setNft} />
           )}
         </LoadingWrapper>
       </div>
@@ -372,14 +356,7 @@ const ExploreReserveDetailPage = () => {
         nft={nft}
         claimType={claimType}
       />
-      {openGameDetailModal && (
-        <GameNFTDetailModal
-          open={openGameDetailModal}
-          nft={nft}
-          onClose={() => setOpenGameDetailModal(false)}
-          onFruit={() => {}}
-        />
-      )}
+
       {openModalPhotoFullScreen && (
         <Modal
           size="medium"

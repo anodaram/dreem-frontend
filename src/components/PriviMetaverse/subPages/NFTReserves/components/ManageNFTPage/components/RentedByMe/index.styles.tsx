@@ -2,17 +2,15 @@ import { makeStyles } from "@material-ui/core/styles";
 
 export const RentedByMeStyles = makeStyles(theme => ({
   title: {
-    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
-    "-webkit-text-fill-color": "transparent",
-    "-webkit-background-clip": "text",
-    fontFamily: 'GRIFTER',
+    fontFamily: 'Agrandir GrandHeavy',
     fontSize: 18,
+    color: "#431AB7",
     marginTop: 32
   } ,
   content: {
-    fontFamily: 'GRIFTER',
+    fontFamily: 'Agrandir GrandHeavy',
     fontSize: 14,
-    color: "#ffffff",
+    color: "#000000",
     marginTop: 32
   } 
 }));

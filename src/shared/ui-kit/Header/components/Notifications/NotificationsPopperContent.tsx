@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { formatDistanceToNowStrict } from "date-fns/esm";
 import styled from "styled-components";
 
@@ -34,19 +35,16 @@ export const NotificationsPopperContent: React.FunctionComponent<NotificationsPo
   handleHidePopper,
   theme = "light",
 }) => {
+  const history = useHistory();
   const [avatar, setAvatar] = useState<string>("");
 
-  const NotificationItem = ({ notification } : { notification: Notification }) => {
+  const NotificationItem = ({ notification }: { notification: Notification }) => {
     useEffect(() => {
       (async () => {
-        if (notification && notification.typeItemId === 'NftMarketplace') {
-          setAvatar(notification.externalData.nft.image);
+        if (notification && notification.avatar) {
+          setAvatar(notification.avatar);
         } else {
-          if (notification && notification.avatar) {
-            setAvatar(notification.avatar);
-          } else {
-            setAvatar(getDefaultAvatar());
-          }
+          setAvatar(getDefaultAvatar());
         }
       })();
     }, [notification]);
@@ -94,7 +92,21 @@ export const NotificationsPopperContent: React.FunctionComponent<NotificationsPo
       </Box>
       <TimeDivider theme={theme} />
       {notifications && notifications.length > 0 ? (
-        notifications.map(n => <NotificationItem notification={n}/>)
+        <>
+          {notifications.map(n => (
+            <NotificationItem notification={n} />
+          ))}
+          <Box
+            style={{ cursor: "pointer", color: "white", textAlign: "center", borderTop: "1px solid white" }}
+            pt={2}
+            onClick={() => {
+              handleClosePopper();
+              history.push("/notifications");
+            }}
+          >
+            See Older Notifications
+          </Box>
+        </>
       ) : (
         <Box display="flex" justifyContent="center" color="#ffffff" py={2}>
           No Notifications

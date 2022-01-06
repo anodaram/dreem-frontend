@@ -1,29 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
-import { useParams } from "react-router";
-import Web3 from "web3";
-import { useSelector } from "react-redux";
-
-import { Grid } from "@material-ui/core";
 
 import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { ReserveNftModalStyles } from "./index.style";
+import { Grid } from "@material-ui/core";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
 import { BlockchainNets } from "shared/constants/constants";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
+import TransactionProgressModal from "../TransactionProgressModal";
+
+import { useParams } from "react-router";
+import Web3 from "web3";
+import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import { toDecimals, toNDecimals } from "shared/functions/web3";
 import { updateBlockingHistory } from "shared/services/API/ReserveAPI";
+import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
-import TransactionProgressModal from "../TransactionProgressModal";
-import { ReserveNftModalStyles } from "./index.style";
 
 export default function AddCollateralModal({ open, handleClose, nft, refresh }) {
   const classes = ReserveNftModalStyles();
-  const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
+  const { collection_id, token_id } = useParams();
   const { account, library, chainId } = useWeb3React();
+  const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
   const [price, setPrice] = useState<number>(0);
   const [selectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
@@ -33,7 +34,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   const [collateralPercent, setCollateralPercent] = useState<string | number>(
     nft?.blockingSaleOffer?.CollateralPercent
   );
-  const [totalBalance, setTotalBalance] = useState<string>("0");
+  const [totalBalance, setTotalBalance] = useState<string>('0')
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [confirmSuccess, setConfirmSuccess] = useState<boolean>(false);
   const [hash, setHash] = useState<string>("");
@@ -43,8 +44,8 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   const isProd = process.env.REACT_APP_ENV === "prod";
 
   useEffect(() => {
-    setReservePriceToken(tokenList[0]);
-  }, [tokenList]);
+    setReservePriceToken(tokenList[0])
+  }, [tokenList])
 
   useEffect(() => {
     if (!open) {
@@ -60,7 +61,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
 
   const setBalance = async () => {
     if (reservePriceToken) {
-      const targetChain = BlockchainNets.find(net => net.name.toLowerCase() === nft.Chain.toLowerCase());
+      const targetChain = BlockchainNets.find(net => net.value === nft.chain);
       if (chainId && chainId !== targetChain?.chainId) {
         const isHere = await switchNetwork(targetChain?.chainId || 0);
         if (!isHere) {
@@ -82,19 +83,8 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
     }
   };
 
-  const getTokenName = addr => {
-    if (tokenList.length == 0 || !addr) return "";
-    let token = tokenList.find(token => token.Address === addr);
-    return token?.Symbol || '';
-  };
-
   const handleApprove = async () => {
     try {
-      if (!price) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
-        return;
-      }
-
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
@@ -141,13 +131,8 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   };
 
   const handleConfirm = async () => {
-    if (!price) {
-      showAlertMessage("Please fill all the fields", { variant: "error" });
-      return;
-    }
-
     setOpenTransactionModal(true);
-    if (!checkChainID(chainId)) {
+    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -157,10 +142,10 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
       web3.eth.abi.encodeParameters(
         ["address", "uint256", "address", "address"],
         [
-          nft.Address,
+          collection_id,
           token_id,
           nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].from,
-          nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Beneficiary,
+          nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Beneficiary
         ]
       )
     );
@@ -170,7 +155,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
       account!,
       {
         activeReserveId,
-        amount: toNDecimals(price, reservePriceToken.Decimals),
+        amount: toNDecimals(price, reservePriceToken.Decimals)
       },
       setHash
     );
@@ -183,15 +168,10 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
         CollectionId: collection_id,
         TokenId: token_id,
         OfferId: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].id,
-        TotalCollateralPercent:
-          Number(
-            nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].TotalCollateralPercent ||
-              nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].CollateralPercent
-          ) +
-          Number(
-            ((price || 0) / nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price) * 100
-          ),
-        PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaidAmount || 0,
+        TotalCollateralPercent: Number(nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].TotalCollateralPercent 
+          || nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].CollateralPercent) 
+          + Number(price / nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price * 100),
+        PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaidAmount || 0
       });
 
       refresh();
@@ -201,8 +181,6 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
       showAlertMessage("Failed to make an offer", { variant: "error" });
     }
   };
-
-  const collateral = Number(nft?.blockingSaleOffer?.Price) * Number(nft?.blockingSaleOffer?.CollateralPercent) / 100
 
   return (
     <>
@@ -219,25 +197,16 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
         {!confirmSuccess && (
           <>
             <Box style={{ padding: "25px" }}>
-              <Box fontSize="24px" color="#ffffff" fontFamily="GRIFTER" style={{
-                textTransform: "uppercase"
-              }}>
+              <Box fontSize="24px" color="#431AB7">
                 Add Collateral
               </Box>
-              <Box className={classes.borderBox} mt="20px">
-                <Box className={classes.box}>
-                  <span style={{ fontSize: "16px", color: "#ffffff"  }}>Current Collateral</span>
-                  <span className={classes.gradientText}>
-                    {`${collateral} ${getTokenName(nft?.blockingSaleOffer?.PaymentToken)}`}
-                  </span>
-                </Box>
-              </Box>
-              <Grid container spacing={2} style={{
-                display: "flex",
-                justifyContent: "space-between"
-              }}>
+              <Box className={classes.nameField}></Box>
+              <Grid container spacing={2}>
                 <Grid item sm={7}>
-                  <Box className={classes.nameField}>Amount To Add</Box>
+                  <Box className={classes.nameField}>Price Offer</Box>
+                </Grid>
+                <Grid item sm={5}>
+                  <Box className={classes.nameField}>Reserve Token</Box>
                 </Grid>
               </Grid>
               <Grid container spacing={2}>
@@ -250,14 +219,11 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                     type="number"
                     theme="light"
                     minValue={0}
-                    placeHolder={"0.001"}
                   />
                 </Grid>
                 <Grid item sm={5}>
                   <ReserveTokenSelect
-                    tokens={tokenList.filter(
-                      token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
-                    )}
+                    tokens={tokenList}
                     value={reservePriceToken?.Address || ""}
                     className={classes.inputJOT}
                     onChange={e => {
@@ -268,47 +234,14 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                   />
                 </Grid>
               </Grid>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-                color="#ffffff"
-                marginTop="14px"
-              >
-                <Box display="flex" alignItems="center" gridColumnGap="10px" fontSize="14px">
-                  <span>Wallet Balance</span>
-                  <Box className={classes.usdWrap} display="flex" alignItems="center" color="#E9FF26">
-                    <Box fontWeight="700">{totalBalance} USDT</Box>
-                  </Box>
-                </Box>
-                <Box display="flex" alignItems="center" fontSize="16px">
-                  <span>MAX</span>
-                </Box>
-              </Box>
             </Box>
             <Box className={classes.footer}>
-              <Box className={classes.totalText}>Total</Box>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Box
-                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}
-                >
-                  Collateral at {(Number(price) / Number(nft?.blockingSaleOffer?.Price) * 100).toFixed(2)}% / <b>{nft?.blockingSaleOffer?.CollateralPercent}</b>%
-                  {(Number(nft?.blockingSaleOffer?.CollateralPercent) > (Number(price) / Number(nft?.blockingSaleOffer?.Price) * 100)) && (
-                    <Box style={{ color: "red" }}>You need to add more collateral</Box>
-                  )}
-                </Box>
-                <Box
-                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}
-                >
-                  {price} USDT
-                </Box>
-              </Box>
-              
               <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
                 <SecondaryButton
                   size="medium"
                   className={classes.primaryButton}
                   onClick={handleApprove}
+                  style={{ backgroundColor: "#431AB7" }}
                   disabled={isApproved || !price}
                 >
                   Approve
@@ -316,10 +249,11 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                 <PrimaryButton
                   size="medium"
                   className={classes.primaryButton}
+                  style={{ backgroundColor: "#431AB7" }}
                   onClick={handleConfirm}
-                  disabled={!isApproved || !price}
+                  disabled={!isApproved || !price || !collateralPercent}
                 >
-                  Accept
+                  Confirm Offer
                 </PrimaryButton>
               </Box>
             </Box>

@@ -10,8 +10,8 @@ export const priviMetaversePageStyles = makeStyles(theme => ({
     display: "flex",
     width: "100%",
     height: "100%",
-    background: "#151515",
-    color: "#ffffff",
+    background: '#151515',
+    color: '#ffffff',
   },
   content: {
     display: "flex",

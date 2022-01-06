@@ -35,20 +35,11 @@ export default ({isOwnership, nft, refresh}) => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" p={4} pl={4.5} width="100%"  className={classes.gradientBorder}>
+    <Box display="flex" flexDirection="column" p={4} pl={4.5} width="100%" style={{ border: "1px solid #9EACF2" }} borderRadius="20px">
       <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Box display="flex" flexDirection="column">
-          <Box
-            fontFamily='GRIFTER'
-            fontSize={20}
-            className={classes.gradientText}
-            style={{
-              textTransform: "uppercase"
-            }}
-          >
-            Buyer status of reservance
-          </Box>
-          <Box fontSize={14} color="#ffffff" fontFamily="Rany" mt={1}>If buyer is collateral is too small you can claim liquidation and cancel reservation.</Box>
+        <Box display="flex" flexDirection="column" color="#4218B5">
+          <Box fontFamily='Agrandir GrandHeavy' fontSize={18}>Buyer status of reservance</Box>
+          <Box fontSize={14}>If buyer is collateral is too small you can claim liquidation and cancel reservation.</Box>
         </Box>
         <PrimaryButton size="medium" className={classes.claimButton}>CLAIM LIQUIDATION</PrimaryButton>
       </Box>
@@ -56,7 +47,7 @@ export default ({isOwnership, nft, refresh}) => {
       <Box mt={5}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
           <span>
-            Collateral status<span style={{ color: "#ffffff", marginLeft: 6 }}>{blockingInfo?.TotalCollateralPercent || blockingInfo?.CollateralPercent}%</span>
+            Collateral status<span style={{ color: "#431AB7", marginLeft: 6 }}>{blockingInfo?.TotalCollateralPercent || blockingInfo?.CollateralPercent}%</span>
           </span>
           <span>
             Collateral needed<span style={{ color: "#D30401", marginLeft: 6 }}>100%</span>
@@ -73,17 +64,7 @@ export default ({isOwnership, nft, refresh}) => {
         </Box>
       </Box>
 
-      <Box
-        className={classes.gradientText}
-        fontFamily='GRIFTER'
-        fontSize={24}
-        mt={4.5}
-        style={{
-          textTransform: "uppercase"
-        }}
-      >
-        Collateral available
-      </Box>
+      <Box color="#4218B5" fontFamily='Agrandir GrandHeavy' fontSize={18} mt={4.5}>Collateral available</Box>
       <Box
         display="flex"
         flex={1}
@@ -99,7 +80,7 @@ export default ({isOwnership, nft, refresh}) => {
         <Box className={classes.tableHeader} flex={0.3}>amount</Box>
       </Box>
       <Box display="flex" flex={1} alignItems="center" padding="15px 50px">
-        <Box flex={0.4} color="#ffffff">{blockingInfo?.Beneficiary?.substr(0, 6) + "..." + blockingInfo?.Beneficiary?.substr(blockingInfo?.Beneficiary?.length - 6, 6)}</Box>
+        <Box flex={0.4} color="#4218B5">{blockingInfo?.Beneficiary?.substr(0, 6) + "..." + blockingInfo?.Beneficiary?.substr(blockingInfo?.Beneficiary?.length - 6, 6)}</Box>
         <Box flex={0.6}>
           <img src={getTokenAvatar(blockingInfo?.PaymentToken)} width={24} />
         </Box>

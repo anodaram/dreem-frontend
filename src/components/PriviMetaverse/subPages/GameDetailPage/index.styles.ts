@@ -68,26 +68,3 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     paddingBottom: 180,
   },
 }));
-
-export const gameDetailTabsStyles = makeStyles(theme => ({
-  tab: {
-    fontSize: "16px",
-    fontWeight: 700,
-    lineHeight: "19.2px",
-    color: "white",
-    borderRadius: "2px",
-    padding: "8px 20px",
-    textTransform: "uppercase",
-    cursor: "pointer",
-    [theme.breakpoints.down("xs")]: {
-      flex: 1,
-      fontSize: 10,
-      padding: "8px 10px",
-      textAlign: "center",
-    },
-  },
-  selected: {
-    color: "#212121",
-    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
-  },
-}));

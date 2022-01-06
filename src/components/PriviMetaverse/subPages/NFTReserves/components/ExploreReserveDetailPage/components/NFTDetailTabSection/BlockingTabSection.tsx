@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
-import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 
-import { Accordion, AccordionDetails, AccordionSummary, Hidden } from "@material-ui/core";
+import { Accordion, AccordionDetails, AccordionSummary } from "@material-ui/core";
 
-import { RootState } from "store/reducers/Reducer";
 import MakeNewOfferModal from "components/PriviMetaverse/modals/MakeNewOfferModal";
 import CancelOfferModal from "components/PriviMetaverse/modals/CancelOfferModal";
 import BlockProceedModal from "components/PriviMetaverse/modals/BlockProceedModal";
 import { TagIcon, HistoryIcon, HideIcon, ShowIcon } from "./index";
 
-import { PrimaryButton, Variant } from "shared/ui-kit";
+import { PrimaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import { CustomTable, CustomTableHeaderInfo } from "shared/ui-kit/Table";
 import { visitProfile } from "shared/services/API/UserAPI";
@@ -19,10 +17,12 @@ import { getChainForNFT } from "shared/functions/metamask";
 import { useAuth } from "shared/contexts/AuthContext";
 
 import { exploreOptionDetailPageStyles } from "../../index.styles";
+import { useSelector } from "react-redux";
+import { RootState } from "store/reducers/Reducer";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefresh }) => {
+export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
   const classes = exploreOptionDetailPageStyles();
   const history = useHistory();
   const { isSignedin } = useAuth();
@@ -36,6 +36,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
   const [isOfferExpanded, setIsOfferExpanded] = React.useState<boolean>(true);
   const [isHistoryExpaned, setIsHistoryExpanded] = React.useState<boolean>(true);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+
   const offerTableHeaders: Array<CustomTableHeaderInfo> = isOwnership
     ? [
         {
@@ -59,9 +60,9 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
         },
         {
           headerName:
-            nft.Chain?.toLowerCase() === "mumbai" || nft.Chain?.toLowerCase() === "polygon"
+            nft.chainsFullName?.toLowerCase() === "mumbai" || nft.chainsFullName?.toLowerCase() === "polygon"
               ? "POLYGONSCAN"
-              : "BSCSCAN",
+              : "ETHERSCAN",
           headerAlign: isOwnership ? "left" : "center",
         },
       ]
@@ -87,9 +88,9 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
         },
         {
           headerName:
-            nft.Chain?.toLowerCase() === "mumbai" || nft.Chain?.toLowerCase() === "polygon"
+            nft.chainsFullName?.toLowerCase() === "mumbai" || nft.chainsFullName?.toLowerCase() === "polygon"
               ? "POLYGONSCAN"
-              : "BSCSCAN",
+              : "ETHERSCAN",
           headerAlign: isOwnership ? "left" : "center",
         },
       ];
@@ -111,10 +112,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
       headerAlign: "center",
     },
     {
-      headerName:
-        nft.Chain?.toLowerCase() === "mumbai" || nft.Chain?.toLowerCase() === "polygon"
-          ? "POLYGONSCAN"
-          : "BSCSCAN",
+      headerName: nft.chainsFullName === "Mumbai" ? "POLYGONSCAN" : "ETHERSCAN",
       headerAlign: "center",
     },
   ];
@@ -133,15 +131,13 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
       window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/tx/${_hash}`, "_blank");
     } else if (selectedChain.name === "ETHEREUM") {
       window.open(`https://${!isProd ? "rinkeby." : ""}etherscan.io/tx/${_hash}`, "_blank");
-    } else {
-      window.open(`https://${!isProd ? "testnet." : ""}bscscan.com/tx/${_hash}`, "_blank");
     }
   };
 
   const getTokenSymbol = addr => {
     if (tokenList.length == 0 || !addr) return 0;
     let token = tokenList.find(token => token.Address === addr);
-    return token?.Symbol || "";
+    return token?.Symbol || '';
   };
   return (
     <>
@@ -151,9 +147,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
             <AccordionSummary
               expandIcon={
                 <Box display="flex" alignItems="center" fontSize={14} width={56}>
-                  <Box color="white" mr={1}>
-                    {isOfferExpanded ? "Hide" : "Show"}
-                  </Box>
+                  <Box mr={1}>{isOfferExpanded ? "Hide" : "Show"}</Box>
                   {isOfferExpanded ? <HideIcon /> : <ShowIcon />}
                 </Box>
               }
@@ -162,44 +156,25 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
               <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
                 <div className={classes.typo8}>
                   <TagIcon />
-                  <span className={classes.gradientText}>Blocking offers</span>
+                  <span>Blocking offers</span>
                 </div>
-                <Hidden xsDown>
-                  {!isOwnership && isSignedin && (
-                    <PrimaryButton
-                      size="small"
-                      className={classes.pricingButton}
-                      onClick={event => {
-                        event.stopPropagation();
-                        setOpenMakeNewOfferModal(true);
-                      }}
-                    >
-                      MAKE BLOCKING OFFER
-                    </PrimaryButton>
-                  )}
-                </Hidden>
+                {!isOwnership && isSignedin && (
+                  <PrimaryButton
+                    size="small"
+                    className={classes.pricingButton}
+                    onClick={event => {
+                      event.stopPropagation();
+                      setOpenMakeNewOfferModal(true);
+                    }}
+                  >
+                    MAKE BLOCKING OFFER
+                  </PrimaryButton>
+                )}
               </Box>
             </AccordionSummary>
-            <AccordionDetails style={{ display: "block" }}>
-              <Hidden smUp>
-                {!isOwnership && isSignedin && (
-                  <Box display="flex" justifyContent="flex-end" width={1} mb={1} mt={-1} pr={2}>
-                    <PrimaryButton
-                      size="small"
-                      className={classes.pricingButton}
-                      onClick={event => {
-                        event.stopPropagation();
-                        setOpenMakeNewOfferModal(true);
-                      }}
-                    >
-                      MAKE BLOCKING OFFER
-                    </PrimaryButton>
-                  </Box>
-                )}
-              </Hidden>
+            <AccordionDetails>
               <div className={classes.table}>
                 <CustomTable
-                  variant={Variant.Transparent}
                   headers={offerTableHeaders}
                   rows={
                     offerData
@@ -220,7 +195,6 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                               ) : (
                                 <Box display="flex" alignItems="center" style={{ maxWidth: "250px" }}>
                                   <span
-                                    className={classes.gradientText}
                                     style={{
                                       width: "100%",
                                       overflow: "hidden",
@@ -243,7 +217,9 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                           {
                             cell: isOwnership
                               ? `${item.CollateralPercent} %`
-                              : `${item.CollateralAmount} ${getTokenSymbol(item.CollateralToken)}`,
+                              : `${item.CollateralAmount} ${getTokenSymbol(
+                                  item.CollateralToken
+                                )}`,
                           },
                           {
                             cell: isOwnership ? `${item.AcceptDuration} Days` : `${item.ReservePeriod} Days`,
@@ -261,12 +237,11 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                                   src={
                                     selectedChain.name === "POLYGON"
                                       ? require("assets/icons/polygon_scan.png")
-                                      : require("assets/icons/icon_bscscan.ico")
+                                      : require("assets/icons/icon_ethscan.png")
                                   }
                                   onClick={() => {
                                     handleClickLink(item.hash);
                                   }}
-                                  width={24}
                                 />
                                 {isOwnership && (
                                   <PrimaryButton
@@ -296,9 +271,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
             <AccordionSummary
               expandIcon={
                 <Box display="flex" alignItems="center" fontSize={14} width={56}>
-                  <Box color="white" mr={1}>
-                    {isHistoryExpaned ? "Hide" : "Show"}
-                  </Box>
+                  <Box mr={1}>{isHistoryExpaned ? "Hide" : "Show"}</Box>
                   {isHistoryExpaned ? <HideIcon /> : <ShowIcon />}
                 </Box>
               }
@@ -307,20 +280,18 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
               <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
                 <div className={classes.typo8}>
                   <HistoryIcon />
-                  <span className={classes.gradientText}>Blocking History</span>
+                  <span>Blocking History</span>
                 </div>
               </Box>
             </AccordionSummary>
             <AccordionDetails>
               <div className={classes.table}>
                 <CustomTable
-                  variant={Variant.Transparent}
                   headers={historyTableHeaders}
                   rows={historyData.map(item => [
                     {
                       cell: (
                         <span
-                          className={classes.gradientText}
                           onClick={() => visitProfile(item.Beneficiary, history)}
                           style={{ cursor: "pointer" }}
                         >
@@ -349,9 +320,8 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                             src={
                               selectedChain.name === "POLYGON"
                                 ? require("assets/icons/polygon_scan.png")
-                                : require("assets/icons/icon_bscscan.ico")
+                                : require("assets/icons/icon_ethscan.png")
                             }
-                            width={24}
                           />
                         </div>
                       ),
@@ -385,7 +355,6 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
           handleClose={() => setProceedItem(null)}
           nft={nft}
           setNft={setNft}
-          handleRefresh={handleRefresh}
         />
       )}
     </>

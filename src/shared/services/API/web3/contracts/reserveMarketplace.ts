@@ -203,8 +203,7 @@ const reserveMarketplace = (network: string) => {
             setHash(hash);
           });
         console.log("transaction succeed", response.events);
-        const offer = response.events.SaleReserveProposed?.returnValues
-                    || response.events.SaleReserved?.returnValues;
+        const offer = response.events.SaleReserveProposed?.returnValues;
         if (offer) {
           resolve({ success: true, offer, hash: response.transactionHash });
         } else {

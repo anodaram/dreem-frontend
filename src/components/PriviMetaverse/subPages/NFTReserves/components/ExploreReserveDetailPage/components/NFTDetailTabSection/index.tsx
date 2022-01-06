@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import cls from "classnames";
 
 import Box from "shared/ui-kit/Box";
@@ -6,49 +6,36 @@ import { exploreOptionDetailPageStyles } from "../../index.styles";
 import BuyingTabSection from "./BuyingTabSection";
 import BlockingTabSection from "./BlockingTabSection";
 import RentingTabSection from "./RentingTabSection";
-import TabsView from "shared/ui-kit/TabsView";
 
-export default ({ isOwnership, nft, setNft, handleRefresh }) => {
+export default ({ isOwnership, nft, setNft }) => {
   const classes = exploreOptionDetailPageStyles();
-  const [selectedTab, setSelectedTab] = useState<string>("buying");
-  const nftDetailTabs = useMemo(
-    () => [
-      {
-        key: "buying",
-        title: "Buying",
-        badge: nft?.buyingOffers?.length || 0,
-      },
-      {
-        key: "renting",
-        title: "Renting",
-        badge: nft?.rentBuyOffers?.length || 0,
-      },
-      {
-        key: "blocking",
-        title: "Blocking",
-        badge: nft?.blockingBuyOffers?.length || 0,
-      },
-    ],
-    [nft]
-  );
+  const [selectedTab, setSelectedTab] = useState<"buying" | "renting" | "blocking">("buying");
 
   return (
-    <Box width="100%">
-      <TabsView
-        tabs={nftDetailTabs}
-        onSelectTab={tab => {
-          setSelectedTab(tab.key);
-        }}
-        equalTab
-        percentagedTab
-        mt={4}
-        renderTab={tab => (
-          <Box display="flex" alignItems="center">
-            <Box>{tab.title}</Box>
-            <Box className={classes.badge}>{tab.badge}</Box>
-          </Box>
-        )}
-      />
+    <Box width="100%" borderBottom="2px solid rgba(196,196,196,0.4)">
+      <div className={classes.subTitleSection} style={{ width: "100%", overflow: "auto" }}>
+        <div
+          className={cls({ [classes.selectedTabSection]: selectedTab === "buying" }, classes.tabSection)}
+          onClick={() => setSelectedTab("buying")}
+        >
+          <span>BUYING</span>
+          <div>{nft?.buyingOffers?.length || 0}</div>
+        </div>
+        <div
+          className={cls({ [classes.selectedTabSection]: selectedTab === "renting" }, classes.tabSection)}
+          onClick={() => setSelectedTab("renting")}
+        >
+          <span>RENTAL</span>
+          <div>{(nft.rentBuyOffers ?? []).length}</div>
+        </div>
+        <div
+          className={cls({ [classes.selectedTabSection]: selectedTab === "blocking" }, classes.tabSection)}
+          onClick={() => setSelectedTab("blocking")}
+        >
+          <span>BLOCKING</span>
+          <div>{nft?.blockingBuyOffers?.length || 0}</div>
+        </div>
+      </div>
       {selectedTab === "buying" && (
         <BuyingTabSection
           offerData={nft.buyingOffers}
@@ -65,7 +52,6 @@ export default ({ isOwnership, nft, setNft, handleRefresh }) => {
           isOwnership={isOwnership}
           nft={nft}
           setNft={setNft}
-          handleRefresh={handleRefresh}
         />
       )}
       {selectedTab === "renting" && (
@@ -82,61 +68,20 @@ export default ({ isOwnership, nft, setNft, handleRefresh }) => {
 };
 
 export const TagIcon = () => (
-  <svg width="27" height="28" viewBox="0 0 27 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
-      d="M18.7508 9.51051C18.7508 11.1443 16.3008 11.1443 16.3008 9.51051C16.3008 7.87671 18.7508 7.87671 18.7508 9.51051Z"
-      fill="url(#paint0_linear_4081_4331)"
+      d="M9.44909 0.385568C8.89266 0.385568 8.35807 0.607052 7.96568 1.00216L1.45919 7.50446C0.746866 8.21538 0.347656 9.17928 0.347656 10.1855C0.347656 11.1918 0.746866 12.1556 1.45919 12.8666L8.16798 19.5754C8.8789 20.2877 9.8428 20.6869 10.8491 20.6869C11.8553 20.6869 12.8192 20.2877 13.5301 19.5754L20.0324 13.0689C20.4275 12.6765 20.649 12.142 20.649 11.5855V3.1855C20.649 2.44311 20.3537 1.73083 19.8287 1.20583C19.3037 0.680828 18.5914 0.385498 17.849 0.385498L9.44909 0.385568ZM18.5491 3.18557V11.5856L12.0468 18.0879C11.3864 18.7482 10.3159 18.7482 9.65559 18.0879L2.94679 11.3833C2.28645 10.7229 2.28645 9.65241 2.94679 8.99207L9.44909 2.48557H17.8491C18.035 2.48557 18.2128 2.5594 18.344 2.69065C18.4753 2.8219 18.5491 2.99963 18.5491 3.18558L18.5491 3.18557Z"
+      fill="#431AB7"
     />
-    <path
-      d="M12.4491 3.38679C11.8927 3.38679 11.3581 3.60827 10.9657 4.00338L4.45919 10.5057C3.74687 11.2166 3.34766 12.1805 3.34766 13.1868C3.34766 14.193 3.74687 15.1569 4.45919 15.8678L11.168 22.5766C11.8789 23.2889 12.8428 23.6882 13.8491 23.6882C14.8553 23.6882 15.8192 23.2889 16.5301 22.5766L23.0324 16.0701C23.4275 15.6777 23.649 15.1432 23.649 14.5867V6.18672C23.649 5.44433 23.3537 4.73205 22.8287 4.20705C22.3037 3.68205 21.5914 3.38672 20.849 3.38672L12.4491 3.38679ZM21.5491 6.18679V14.5868L15.0468 21.0891C14.3864 21.7494 13.3159 21.7494 12.6556 21.0891L5.94679 14.3845C5.28645 13.7241 5.28645 12.6536 5.94679 11.9933L12.4491 5.48679H20.8491C21.035 5.48679 21.2128 5.56062 21.344 5.69187C21.4753 5.82312 21.5491 6.00085 21.5491 6.1868L21.5491 6.18679Z"
-      fill="url(#paint1_linear_4081_4331)"
-    />
-    <defs>
-      <linearGradient
-        id="paint0_linear_4081_4331"
-        x1="17.7941"
-        y1="10.2087"
-        x2="15.8386"
-        y2="9.00697"
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop stop-color="#ED7B7B" />
-        <stop offset="1" stop-color="#EDFF1C" />
-      </linearGradient>
-      <linearGradient
-        id="paint1_linear_4081_4331"
-        x1="15.7213"
-        y1="19.321"
-        x2="-0.479604"
-        y2="9.36213"
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop stop-color="#ED7B7B" />
-        <stop offset="1" stop-color="#EDFF1C" />
-      </linearGradient>
-    </defs>
   </svg>
 );
 
 export const HistoryIcon = () => (
   <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
-      d="M14.2949 3.44922C10.3156 3.44922 6.85232 5.71905 5.18705 9.03586L4.8254 8.38869C4.60651 7.98422 4.17942 7.73796 3.72141 7.75103C3.29075 7.76055 2.897 7.9961 2.68643 8.37085C2.47587 8.74678 2.47825 9.20479 2.69357 9.57832L4.36859 12.5667C4.68623 13.1401 5.40119 13.359 5.9865 13.0616L8.96535 11.5388C9.26633 11.3997 9.49831 11.1451 9.60777 10.8322C9.71721 10.5182 9.69342 10.1743 9.54352 9.87812C9.39244 9.58309 9.12833 9.36063 8.81072 9.26546C8.49307 9.1691 8.15046 9.20598 7.86138 9.36896L7.76621 9.41654C9.1343 7.29899 11.5374 5.88561 14.2951 5.88561C18.5886 5.88561 22.0325 9.28924 22.0325 13.4993C22.0325 17.675 18.6432 21.0582 14.3999 21.113C14.0763 21.1178 13.7682 21.251 13.5433 21.483C13.3185 21.715 13.1948 22.0267 13.1995 22.3503C13.2055 22.6727 13.3387 22.9808 13.5707 23.2056C13.8027 23.4305 14.1144 23.5542 14.438 23.5494C19.9698 23.478 24.4692 18.9992 24.4692 13.4993C24.4692 7.9544 19.8879 3.44922 14.2955 3.44922L14.2949 3.44922ZM14.3996 7.38947C14.076 7.39423 13.7679 7.52747 13.543 7.75943C13.3182 7.99142 13.1945 8.30311 13.2004 8.6267V13.4995C13.1992 13.8694 13.3681 14.2192 13.6572 14.4512L16.7027 16.8876C17.2274 17.3075 17.9947 17.2219 18.4158 16.6972C18.8357 16.1714 18.7501 15.4041 18.2255 14.9841L15.6368 12.9094V8.62685C15.6416 8.29733 15.5131 7.9785 15.2799 7.74533C15.0467 7.51217 14.7291 7.38368 14.3996 7.38962V7.38947Z"
-      fill="url(#paint0_linear_4081_3104)"
+      d="M14.2951 3.44995C10.3159 3.44995 6.85257 5.71978 5.18729 9.03659L4.82564 8.38943C4.60675 7.98495 4.17967 7.7387 3.72166 7.75176C3.29099 7.76128 2.89724 7.99683 2.68668 8.37158C2.47611 8.74751 2.47849 9.20552 2.69382 9.57905L4.36883 12.5674C4.68648 13.1408 5.40143 13.3597 5.98675 13.0623L8.96559 11.5396C9.26657 11.4004 9.49855 11.1458 9.60801 10.8329C9.71746 10.5189 9.69366 10.1751 9.54377 9.87885C9.39268 9.58382 9.12858 9.36136 8.81096 9.26619C8.49332 9.16983 8.1507 9.20671 7.86163 9.36969L7.76645 9.41727C9.13455 7.29972 11.5377 5.88634 14.2954 5.88634C18.5889 5.88634 22.0327 9.28997 22.0327 13.5C22.0327 17.6757 18.6434 21.0589 14.4001 21.1138C14.0765 21.1185 13.7684 21.2518 13.5436 21.4837C13.3187 21.7157 13.195 22.0274 13.1998 22.351C13.2057 22.6734 13.339 22.9815 13.571 23.2063C13.8029 23.4312 14.1146 23.5549 14.4382 23.5501C19.97 23.4788 24.4694 18.9999 24.4694 13.5C24.4694 7.95514 19.8881 3.44995 14.2957 3.44995L14.2951 3.44995ZM14.3998 7.3902C14.0762 7.39496 13.7681 7.5282 13.5433 7.76017C13.3184 7.99215 13.1947 8.30385 13.2006 8.62743V13.5002C13.1995 13.8702 13.3684 14.2199 13.6575 14.4519L16.703 16.8883C17.2276 17.3082 17.9949 17.2226 18.416 16.698C18.836 16.1721 18.7503 15.4048 18.2257 14.9849L15.637 12.9101V8.62758C15.6418 8.29806 15.5133 7.97923 15.2801 7.74607C15.047 7.5129 14.7293 7.38442 14.3998 7.39035V7.3902Z"
+      fill="#431AB7"
     />
-    <defs>
-      <linearGradient
-        id="paint0_linear_4081_3104"
-        x1="15.902"
-        y1="19.2256"
-        x2="-0.732919"
-        y2="8.0646"
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop stop-color="#ED7B7B" />
-        <stop offset="1" stop-color="#EDFF1C" />
-      </linearGradient>
-    </defs>
   </svg>
 );
 

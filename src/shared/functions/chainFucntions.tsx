@@ -29,8 +29,6 @@ export const getChainImageUrl = blockchain => {
     return require("assets/tokenImages/HICETNUNC.png");
   } else if (blockchain.toLowerCase().includes("binance")) {
     return require("assets/tokenImages/BNB.png");
-  } else if (blockchain.toLowerCase().includes("mumbai")) {
-    return require("assets/tokenImages/POLYGON.png");
   }
   return require("assets/tokenImages/ETH.png");
 };

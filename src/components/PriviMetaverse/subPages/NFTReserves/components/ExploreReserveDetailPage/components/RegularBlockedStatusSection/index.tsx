@@ -3,9 +3,9 @@ import Box from "shared/ui-kit/Box";
 import { PrimaryButton } from "shared/ui-kit";
 import { exploreOptionDetailPageStyles } from "../../index.styles";
 import RangeSlider from "shared/ui-kit/RangeSlider";
-import { RootState } from "store/reducers/Reducer";
-import { useSelector } from "react-redux";
-import AddCollateralModal from "components/PriviMetaverse/modals/AddCollateralModal";
+import { RootState } from 'store/reducers/Reducer';
+import { useSelector } from 'react-redux';
+import AddCollateralModal from 'components/PriviMetaverse/modals/AddCollateralModal';
 
 export default ({ isOwnership, nft, refresh }) => {
   const [range, setRange] = useState(0);
@@ -22,35 +22,34 @@ export default ({ isOwnership, nft, refresh }) => {
   }, [nft]);
 
   useEffect(() => {
-    setRange(blockingInfo?.CollateralPercent);
-  }, [blockingInfo]);
+    setRange(blockingInfo?.CollateralPercent)
+  }, [blockingInfo])
 
   const getTokenSymbol = addr => {
     if (tokens.length == 0) return 0;
     let token = tokens.find(token => token.Address === addr);
-    return token?.Symbol || "";
+    return token?.Symbol || '';
   };
 
-  const getTokenImageUrl = addr => {
+  const getTokenImageUrl = (addr) => {
     if (tokens.length == 0) return null;
     let token = tokens.find(token => token.Address === addr);
-    return token?.ImageUrl ?? "";
+    return token?.ImageUrl ?? '';
   };
 
   return (
     <Box
-      className={classes.gradientBorder}
       display="flex"
       flexDirection="column"
       p={4}
       pl={4.5}
       width="100%"
+      style={{ border: "1px solid #9EACF2" }}
       borderRadius="20px"
-      fontFamily="Rany"
     >
       <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Box display="flex" flexDirection="column" color="white">
-          <Box className={classes.gradientText} fontFamily="GRIFTER" fontSize={20} fontWeight="700">
+        <Box display="flex" flexDirection="column" color="#4218B5">
+          <Box fontFamily="Agrandir GrandHeavy" fontSize={18}>
             Manage Collateral
           </Box>
           <Box fontSize={14}>
@@ -58,30 +57,24 @@ export default ({ isOwnership, nft, refresh }) => {
             whole collateral.
           </Box>
         </Box>
-        {blockingInfo?.PaidAmount !== blockingInfo?.Price && (
-          <PrimaryButton
-            size="medium"
-            className={classes.addCollateral}
-            onClick={() => setOpenCollateralModal(true)}
-          >
-            ADD COLLATERAL
-          </PrimaryButton>
-        )}
+        <PrimaryButton size="medium" className={classes.addCollateral} onClick={() => setOpenCollateralModal(true)}>ADD COLLATERAL</PrimaryButton>
       </Box>
 
       <Box mt={5}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
           <span>
             Your Collateral Percentage
-            <span style={{ color: "#E9FF26", marginLeft: 6 }}>
-              {blockingInfo?.TotalCollateralPercent || blockingInfo?.CollateralPercent}%
-            </span>
+            <span style={{ color: "#431AB7", marginLeft: 6 }}>{blockingInfo?.TotalCollateralPercent || blockingInfo?.CollateralPercent}%</span>
           </span>
           <span>
-            Liquadation LTV<span style={{ color: "#E9FF26", marginLeft: 6 }}>80%</span>
+            Liquadation LTV<span style={{ color: "#D30401", marginLeft: 6 }}>80%</span>
           </span>
         </Box>
-        <RangeSlider value={range} variant="transparent" onChange={(event, newValue) => {}} />
+        <RangeSlider
+          value={range}
+          variant="secondary"
+          onChange={(event, newValue) => {}}
+        />
         <Box display="flex" alignItems="center" mt={1}>
           <Box flex="0.125">
             <strong>0%</strong>
@@ -97,15 +90,15 @@ export default ({ isOwnership, nft, refresh }) => {
         </Box>
       </Box>
 
-      <Box className={classes.gradientText} fontFamily="GRIFTER" fontSize={20} fontWeight="700" mt={4.5}>
-        Collateral deposited
+      <Box color="#4218B5" fontFamily="Agrandir GrandHeavy" fontSize={18} mt={4.5}>
+        Collateral eposited
       </Box>
       <Box
         display="flex"
         flex={1}
         alignItems="center"
-        borderTop="1px solid #ffffff10"
-        borderBottom="1px solid #ffffff10"
+        borderTop="1px solid #00000010"
+        borderBottom="1px solid #00000010"
         padding="8px 50px"
         mt={3}
       >
@@ -124,10 +117,7 @@ export default ({ isOwnership, nft, refresh }) => {
           <img src={getTokenImageUrl(blockingInfo?.PaymentToken)} width={24} />
         </Box>
         <Box flex={0.2}>{blockingInfo?.TotalCollateralPercent || blockingInfo?.CollateralPercent} %</Box>
-        <Box flex={0.2}>{`${
-          (blockingInfo?.Price * (blockingInfo?.TotalCollateralPercent || blockingInfo?.CollateralPercent)) /
-          100
-        } ${getTokenSymbol(blockingInfo?.PaymentToken)}`}</Box>
+        <Box flex={0.2}>{`${blockingInfo?.Price * (blockingInfo?.TotalCollateralPercent || blockingInfo?.CollateralPercent) / 100} ${getTokenSymbol(blockingInfo?.PaymentToken)}`}</Box>
       </Box>
       <AddCollateralModal
         open={openCollateralModal}

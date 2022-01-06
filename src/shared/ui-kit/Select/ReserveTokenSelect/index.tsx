@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: "#f7f9fe",
       color: "rgb(101, 110, 126)",
       padding: "11.5px 18px",
-      fontFamily: "Rany",
+      fontFamily: "Agrandir",
       paddingLeft: "16px",
       height: "100%",
       "& .MuiSelect-select:focus": {
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: "#f7f9fe",
       color: "rgb(101, 110, 126)",
       padding: "16px",
-      fontFamily: "Rany",
+      fontFamily: "Agrandir",
       height: "100%",
       paddingLeft: "16px",
       minHeight: "45px",
@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme => ({
       border: "1px solid #FFFFFF",
       backgroundColor: "rgba(255, 255, 255, 0.16)",
       color: "white",
-      fontFamily: "Rany",
+      fontFamily: "Agrandir",
       fontSize: "14px",
       paddingLeft: "10px",
       height: "100%",
@@ -138,7 +138,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "#1A1B1C",
     borderRadius: 0,
     "& *": {
-      fontFamily: "Rany",
+      fontFamily: "Agrandir",
       fontSize: "14px",
       color: "white",
     },
@@ -147,7 +147,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "white",
   },
   "& *": {
-    fontFamily: "Rany",
+    fontFamily: "Agrandir",
   },
 }));
 
@@ -214,7 +214,7 @@ export const resImages = [
   "USDC",
   "MATIC",
   "PIX",
-  "TRAX",
+  "TRAX"
 ];
 
 export const ReserveTokenSelect = ({
@@ -236,13 +236,12 @@ export const ReserveTokenSelect = ({
       value={value}
       disabled={disabled ?? false}
       onChange={onChange}
-      className={`${
-        theme === "dark"
-          ? classes.selectDark
-          : theme === "music dao"
+      className={`${theme === "dark"
+        ? classes.selectDark
+        : theme === "music dao"
           ? classes.selectMusicDao
           : classes.select
-      } ${className}`}
+        } ${className}`}
       MenuProps={{ classes: { paper: theme === "dark" ? classes.paperDark : classes.paper } }}
     >
       {placeholder && (
@@ -250,15 +249,21 @@ export const ReserveTokenSelect = ({
           {placeholder}
         </MenuItem>
       )}
-      {tokens &&
+      {
+        tokens &&
         tokens.map((token, index) => (
           <StyledMenuItem value={token.Address} key={token.Name + "-" + index}>
-            <Box display="flex" alignItems="center" fontFamily="Rany">
-              <img className={classes.tokenImage} src={token.ImageUrl} alt={token.Name} />
+            <Box display="flex" alignItems="center" fontFamily="Agrandir">
+              <img
+                className={classes.tokenImage}
+                src={token.ImageUrl}
+                alt={token.Name}
+              />
               {token.Symbol}
             </Box>
           </StyledMenuItem>
-        ))}
+        ))
+      }
     </Select>
   );
 };
@@ -295,13 +300,12 @@ export const StyledSelectComponent = ({
       value={value}
       onChange={onChange}
       IconComponent={IconComponent}
-      className={`${
-        theme === "dark"
-          ? classes.selectDark
-          : theme === "music dao"
+      className={`${theme === "dark"
+        ? classes.selectDark
+        : theme === "music dao"
           ? classes.selectMusicDao
           : classes.select
-      } ${className ?? ""}`}
+        } ${className ?? ""}`}
       MenuProps={{ classes: { paper: theme === "dark" ? classes.paperDark : classes.paper } }}
       renderValue={renderValue}
     >

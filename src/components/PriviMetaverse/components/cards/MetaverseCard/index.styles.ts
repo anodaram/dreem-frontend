@@ -103,9 +103,10 @@ export const metaverseCardStyles = makeStyles(theme => ({
   },
   description: {
     fontFamily: "Rany",
-    fontSize: (props: any) => (props.isFeature ? 16 : 14),
+    fontSize: 14,
+    lineHeight: 1.28,
     color: "white",
-    opacity: (props: any) => (props.isFeature ? undefined : 0.6),
+    opacity: 0.6,
     width: "100%",
     overflow: "hidden",
     textOverflow: "ellipsis",

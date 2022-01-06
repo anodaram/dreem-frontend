@@ -17,7 +17,7 @@ export const realmCardStyles = makeStyles(theme => ({
       height: (props: any) => (props.isFeature ? 473 : 297),
     },
     [theme.breakpoints.down("xs")]: {
-      height: (props: any) => (props.isFeature ? 359 : 297),
+      height: (props: any) => (props.isFeature ? 359 : 236),
     },
     "&:hover": {
       transform: (props: any) => (props.disableEffect ? undefined : "scale(1.02)"),

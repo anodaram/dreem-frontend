@@ -1,41 +1,31 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-export const ReserveNftModalStyles = makeStyles(theme => ({
+export const ReserveNftModalStyles = makeStyles((theme) => ({
   container: {
-    padding: "0px !important",
+    padding:'0px !important'
   },
   nameField: {
-    margin: "27px 0px 7px 0px",
-    fontFamily: "Rany",
-    fontStyle: "normal",
-    fontWeight: "normal",
-    fontSize: "14px",
-    color: "#ffffff",
+    margin: '27px 0px 7px 0px',
+    fontFamily: 'Montserrat',
+    fontStyle: 'normal',
+    fontWeight: 500,
+    fontSize: '14px',
+    color: '#1A1B1C',
   },
   inputJOT: {
-    backgroundColor: "#172227 !important",
-    border: "1px solid rgba(218, 218, 219, 0.59) !important",
+    background: "rgba(144, 155, 255, 0.16)",
+    border: "1px solid #431AB7 !important",
     width: "100%",
+    borderRadius: theme.spacing(1),
     padding: theme.spacing(1),
-    color: "#ffffff60 !important",
-    borderRadius: "unset !important",
-  },
-  tokenSelect: {
-    backgroundColor: "#172227 !important",
-    border: "1px solid rgba(218, 218, 219, 0.59) !important",
-    width: "100%",
-    padding: theme.spacing(1),
-    color: "#ffffff !important",
-    borderRadius: "unset !important",
-    flex: "1",
   },
   purpleText: {
-    fontFamily: "Rany",
+    fontFamily: "Agrandir Variable !important",
     cursor: "pointer",
-    color: "#ffffff",
-    fontSize: "14px",
+    color: "#431AB7",
+    fontSize: "16px",
     minWidth: "55px",
-    fontWeight: 400,
+    fontWeight: 700
   },
   usdWrap: {
     display: "flex",
@@ -43,6 +33,13 @@ export const ReserveNftModalStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       paddingTop: "0",
     },
+  },
+  point: {
+    background: "#D9F66F",
+    width: "13px",
+    height: "13px",
+    borderRadius: "100%",
+    marginRight: 4,
   },
   receiveContainer: {
     background: "rgba(158, 172, 242, 0.2)",
@@ -52,39 +49,33 @@ export const ReserveNftModalStyles = makeStyles(theme => ({
     justifyContent: "space-between",
     marginTop: "22px",
     "& span": {
-      color: "#ffffff",
-      fontSize: "16px",
-    },
+      color: "#431AB7",
+      fontSize: "16px"
+    }
   },
   usdt: {
-    fontFamily: "Rany",
-    color: "#ffffff",
+    fontFamily: "Agrandir GrandHeavy !important",
+    color: "#431AB7",
     fontWeight: 800,
-    fontSize: "16px",
+    fontSize: "16px"
   },
   totalText: {
-    fontFamily: "Rany",
-    fontStyle: "normal",
+    fontFamily: 'Agrandir GrandHeavy',
+    fontStyle: 'normal',
     fontWeight: 800,
-    fontSize: "14px",
-    lineHeight: "150%",
-    letterSpacing: "0.02em",
-    color: "#ffffff",
+    fontSize: '14px',
+    lineHeight: '150%',
+    letterSpacing: '0.02em',
+    color: '#431AB7',
   },
   footer: {
-    padding: "18px 25px 25px 25px",
-    background: "#182127",
+    padding: '18px 25px 25px 25px',
+    background: '#e0e0e53b',
   },
   primaryButton: {
-    background: "linear-gradient(#B7FF5C, #EEFF21) !important",
-    color: "#212121 !important",
+    color: "#fff !important",
     padding: "0 37px !important",
     height: "40px !important",
-    border: "none !important",
-    borderRadius: "40px !important",
-    "&:disabled": {
-      background: "linear-gradient(#B7FF5C, #EEFF21) !important",
-      color: "#212121 !important",
-    },
-  },
+    border: "none !important"
+  }
 }));

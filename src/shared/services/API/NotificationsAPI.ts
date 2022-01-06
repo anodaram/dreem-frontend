@@ -12,7 +12,6 @@ export enum NotificationItemType {
   TaskBadge = "taskBadge",
   Token = "token",
   User = "user",
-  NFTMarketplace = "NftMarketplace"
 }
 
 export type Notification = {
@@ -29,8 +28,6 @@ export type Notification = {
   otherItemId: string;
   comment: string;
   avatar: string;
-  externalData: any;
-  podType: string;
 };
 
 type GetNotificationsResult =

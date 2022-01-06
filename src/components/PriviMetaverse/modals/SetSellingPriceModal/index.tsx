@@ -1,45 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
-import { useParams } from "react-router";
-import { useSelector } from "react-redux";
-
-import { Grid } from "@material-ui/core";
-
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
-import { PrimaryButton } from "shared/ui-kit";
+import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { SetSellingPriceModalStyles } from "./index.style";
+import { BlockchainNets } from "shared/constants/constants";
 import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import { toNDecimals } from "shared/functions/web3";
+import { useParams } from "react-router";
+import TransactionProgressModal from "../TransactionProgressModal";
 import { createSellOffer } from "shared/services/API/ReserveAPI";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
+import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
+import { Grid } from "@material-ui/core";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
-import TransactionProgressModal from "../TransactionProgressModal";
-import { SetSellingPriceModalStyles } from "./index.style";
-
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function SetSellingPriceModal({ open, handleClose, nft, setNft }) {
   const classes = SetSellingPriceModalStyles();
-  const { account, library, chainId } = useWeb3React();
-  const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
-  const { showAlertMessage } = useAlertMessage();
   const [selectedChain] = useState<any>(getChainForNFT(nft));
 
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
   const [token, setToken] = useState<any>(tokens[0]);
 
-  const [inputBalance, setInputBalance] = useState<number>();
+  const [inputBalance, setInputBalance] = useState<string>("");
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [hash, setHash] = useState<string>("");
+  const { account, library, chainId } = useWeb3React();
+  const { collection_id, token_id } = useParams();
+  const { showAlertMessage } = useAlertMessage();
 
   useEffect(() => {
     setToken(tokens[0]);
-  }, [tokens]);
+  }, [tokens])
 
   useEffect(() => {
     if (!open) {
@@ -48,16 +46,11 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
   }, [open]);
 
   useEffect(() => {
-    setToken(tokens[0]);
-  }, [tokens]);
+    setToken(tokens[0])
+  }, [tokens])
 
   const handleApprove = async () => {
     try {
-      if (!inputBalance) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
-        return;
-      }
-
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
@@ -79,7 +72,7 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
       let approved = await web3APIHandler.Erc721.approve(web3, account || "", {
         to: web3Config.CONTRACT_ADDRESSES.OPEN_SALES_MANAGER,
         tokenId: token_id,
-        nftAddress: nft.Address,
+        nftAddress: collection_id,
       });
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -102,11 +95,6 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
   };
 
   const handleConfirm = async () => {
-    if (!inputBalance) {
-      showAlertMessage("Please fill all the fields", { variant: "error" });
-      return;
-    }
-
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
@@ -122,7 +110,7 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
       web3,
       account!,
       {
-        collection_id: nft.Address,
+        collection_id,
         token_id,
         paymentToken: token.Address,
         price: toNDecimals(inputBalance, token.Decimals),
@@ -137,7 +125,7 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
       const offerId = web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "uint256", "address"],
-          [nft.Address, token_id, token.Address, toNDecimals(inputBalance, token.Decimals), account]
+          [collection_id, token_id, token.Address, toNDecimals(inputBalance, token.Decimals), account]
         )
       );
 
@@ -171,7 +159,7 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
     <>
       <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.container}>
         <Box style={{ padding: "25px" }}>
-          <Box fontSize="24px" color="#ffffff" fontFamily="GRIFTER" style={{ textTransform: "uppercase" }}>
+          <Box fontSize="24px" color="#431AB7">
             Set New Price
           </Box>
           <Grid container spacing={2}>
@@ -186,17 +174,14 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
                 theme="light"
                 minValue={0}
                 disabled={isApproved}
-                placeHolder={"0"}
               />
             </Grid>
             <Grid item xs={6} sm={5}>
-              <Box className={classes.nameField}>Token</Box>
+              <Box className={classes.nameField}>Selling Token</Box>
               <ReserveTokenSelect
-                tokens={tokens.filter(
-                  token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
-                )}
+                tokens={tokens}
                 value={token?.Address || ""}
-                className={classes.tokenSelect}
+                className={classes.inputJOT}
                 onChange={e => {
                   setToken(tokens.find(v => v.Address === e.target.value));
                 }}
@@ -209,16 +194,16 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
+              style={{ backgroundColor: isApproved ? "#431AB750" : "#431AB7" }}
               onClick={handleApprove}
-              disabled={isApproved}
             >
               Approve
             </PrimaryButton>
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
+              style={{ backgroundColor: !isApproved ? "#431AB750" : "#431AB7" }}
               onClick={handleConfirm}
-              disabled={!isApproved}
             >
               Confirm Set
             </PrimaryButton>

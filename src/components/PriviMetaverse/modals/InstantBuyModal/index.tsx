@@ -7,7 +7,7 @@ import Box from "shared/ui-kit/Box";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import { InstantBuyModalStyles } from "./index.style";
 import { BlockchainNets } from "shared/constants/constants";
-import { switchNetwork, checkChainID, getChainForNFT } from "shared/functions/metamask";
+import { switchNetwork } from "shared/functions/metamask";
 import { toNDecimals } from "shared/functions/web3";
 import { useParams } from "react-router";
 import TransactionProgressModal from "../TransactionProgressModal";
@@ -15,11 +15,12 @@ import { acceptBuyingOffer } from "shared/services/API/ReserveAPI";
 import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
 const isProd = process.env.REACT_APP_ENV === "prod";
+const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
 
 export default function InstantBuyModal({ open, handleClose, onConfirm, offer, nft }) {
   const classes = InstantBuyModalStyles();
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
+  const [selectedChain, setSelectedChain] = useState<any>(filteredBlockchainNets[0]);
   const { account, library, chainId } = useWeb3React();
   const { collection_id, token_id } = useParams();
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
@@ -35,7 +36,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
   }, [open]);
 
   useEffect(() => {
-    setSelectedChain(getChainForNFT(nft))
+    setSelectedChain(filteredBlockchainNets.find(net => net.value === nft.chain))
   }, [nft])
 
   const getTokenName = addr => {
@@ -53,7 +54,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
 
   const handleApprove = async () => {
     try {
-      if (!checkChainID(chainId)) {
+      if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
         showAlertMessage(`network error`, { variant: "error" });
         return;
       }
@@ -102,7 +103,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
   };
 
   const handleConfirm = async () => {
-    if (!checkChainID(chainId)) {
+    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -114,7 +115,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
       web3,
       account!,
       {
-        collection_id: nft.Address,
+        collection_id,
         token_id,
         paymentToken: offer.PaymentToken,
         price: toNDecimals(offer.Price, getTokenDecimals(offer.PaymentToken)),
@@ -129,7 +130,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
       const offerId = web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "uint256", "address"],
-          [nft.Address, token_id, offer.PaymentToken, 0, account]
+          [collection_id, token_id, offer.PaymentToken, 0, account]
         )
       );
 
@@ -166,24 +167,23 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
       }}
     >
       <Box style={{ padding: "25px" }}>
-        <Box fontSize="24px" className={classes.title}>
+        <Box fontSize="24px" color="#431AB7">
           Instant Buy
         </Box>
-        <Box mt="12px" mb="15px" color="#ffffff">
+        <Box mt="12px" mb="15px">
           Accept and buy NFT at Owner price.
         </Box>
-        <Box className={classes.borderBox}>
-          <Box className={classes.box}>
-            <span style={{ fontSize: "16px", color: "#ffffff"  }}>Amount to pay</span>
-            <span className={classes.purpleText} style={{ fontFamily: "Rany" }}>
-              {`${offer?.Price} ${getTokenName(offer?.PaymentToken)}`}
-            </span>
-          </Box>
+        <Box className={classes.box}>
+          <span className={classes.purpleText}>Amount to pay</span>
+          <span className={classes.purpleText} style={{ fontFamily: "Agrandir GrandHeavy" }}>
+            {`${offer?.Price} ${getTokenName(offer?.PaymentToken)}`}
+          </span>
         </Box>
         <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
           <SecondaryButton
             size="medium"
             className={classes.primaryButton}
+            style={{ backgroundColor: "#431AB7" }}
             onClick={handleApprove}
             disabled={isApproved}
           >
@@ -192,6 +192,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
           <PrimaryButton
             size="medium"
             className={classes.primaryButton}
+            style={{ backgroundColor: "#431AB7" }}
             onClick={handleConfirm}
             disabled={!isApproved}
           >

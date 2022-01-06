@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Skeleton } from "@material-ui/lab";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import Box from "shared/ui-kit/Box";
 import { getDefaultImageUrl } from "shared/services/user/getUserAvatar";
@@ -20,7 +21,7 @@ export default function MetaverseCard(props) {
   }, [props.item]);
 
   const handleOpenDetail = () => {
-    history.push(`/gameNFT/${props?.item?.id}`);
+    history.push(`/metaverse/${props?.item?.id}`);
   };
 
   return (

@@ -590,7 +590,6 @@ const AssistanceTab = React.memo((props: any) => {
                       inputValue={assistances}
                       minValue={"0"}
                       onInputValueChange={e => setAssistances(e.target.value)}
-                      placeHolder={"0"}
                     />
                   </label>
                 </div>

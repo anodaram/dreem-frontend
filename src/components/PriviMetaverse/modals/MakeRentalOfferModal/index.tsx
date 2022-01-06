@@ -3,7 +3,10 @@ import DateFnsUtils from "@date-io/date-fns";
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 import { useParams } from "react-router";
-import { useSelector } from "react-redux";
+
+import { BlockchainNets } from "shared/constants/constants";
+import { toNDecimals } from "shared/functions/web3";
+import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { Grid } from "@material-ui/core";
@@ -12,15 +15,14 @@ import Box from "shared/ui-kit/Box";
 import { Modal } from "shared/ui-kit";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
-import { PrimaryButton } from "shared/ui-kit";
+import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
-import { toNDecimals } from "shared/functions/web3";
+import TransactionProgressModal from "../TransactionProgressModal";
+import { MakeRentalOfferModalStyles } from "./index.style";
 import { createRentOffer } from "shared/services/API/ReserveAPI";
 import { RootState } from "store/reducers/Reducer";
 import { getNextDay } from "shared/helpers/utils";
-import TransactionProgressModal from "../TransactionProgressModal";
-import { MakeRentalOfferModalStyles } from "./index.style";
+import { useSelector } from "react-redux";
 
 const SECONDS_PER_DAY = 86400;
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -28,13 +30,15 @@ const isProd = process.env.REACT_APP_ENV === "prod";
 export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft, setNft }) {
   const classes = MakeRentalOfferModalStyles();
   const { account, library, chainId } = useWeb3React();
-  const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
+  const { collection_id, token_id } = useParams();
+  const [pricePerSec, setPricePerSec] = React.useState<number>(0);
 
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [date, setDate] = useState<any>();
-  const [rentalTime, setRentalTime] = useState<number>();
-  const [pricePerSec, setPricePerSec] = useState<number>();
-  const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
+  const [rentalTime, setRentalTime] = React.useState<number>(0);
+
+  const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
+  const [selectedChain, setSelectedChain] = useState<any>(filteredBlockchainNets[0]);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const [rentalToken, setRentalToken] = useState<any>(tokenList[0]);
 
@@ -43,12 +47,12 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const { showAlertMessage } = useAlertMessage();
 
-  const rentalSeconds = Math.floor((rentalTime || 0) * SECONDS_PER_DAY);
-  const price = (pricePerSec || 0) * rentalSeconds;
+  const rentalSeconds = Math.floor(rentalTime * SECONDS_PER_DAY);
+  const price = pricePerSec * rentalSeconds;
 
   useEffect(() => {
     setRentalToken(tokenList[0]);
-  }, [tokenList]);
+  }, [tokenList])
 
   useEffect(() => {
     if (!open) {
@@ -56,10 +60,10 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
       return;
     }
 
-    if (nft) {
-      setSelectedChain(getChainForNFT(nft));
+    if (selectedChain && nft && selectedChain.value !== nft.chain) {
+      setSelectedChain(filteredBlockchainNets.find(b => b.value === nft.chain));
     }
-  }, [nft, open]);
+  }, [nft, selectedChain, open]);
 
   const handleApprove = async () => {
     try {
@@ -67,15 +71,10 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         return;
       }
 
-      if (!pricePerSec || !rentalTime) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
-        return;
-      }
-
       const nftChain = getChainForNFT(nft);
       if (!nftChain) {
         showAlertMessage(`network error`, { variant: "error" });
-        return;
+        return;     
       }
       if (chainId && chainId !== nftChain?.chainId) {
         const isHere = await switchNetwork(nftChain?.chainId || 0);
@@ -130,14 +129,8 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
       if (!isApproved) {
         return;
       }
-
-      if (!pricePerSec || !rentalTime) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
-        return;
-      }
-
       setOpenTransactionModal(true);
-      if (!checkChainID(chainId)) {
+      if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
         showAlertMessage(`network error`, { variant: "error" });
         return;
       }
@@ -147,12 +140,12 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         web3,
         account!,
         {
-          collectionId: nft.Address,
+          collectionId: collection_id,
           tokenId: token_id,
           rentalTime: rentalSeconds,
           pricePerSecond: toNDecimals(pricePerSec, rentalToken.Decimals),
           rentalExpiration: getNextDay(date),
-          operator: nft.ownerAddress,
+          operator: nft.owner_of,
           fundingToken: rentalToken.Address,
         },
         setHash
@@ -177,7 +170,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
           rentalTime: offer.rentalTime,
           tokenId: offer.tokenId,
           offerer: account!,
-          hash: offer.hash,
+          hash: offer.hash
         };
         await createRentOffer(newOffer);
         let newNft = { ...nft };
@@ -199,7 +192,6 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         showAlertMessage("Failed to make an offer", { variant: "error" });
       }
     } catch (err) {
-      console.log(err);
       setTransactionSuccess(false);
       showAlertMessage("Failed to make an offer", { variant: "error" });
     }
@@ -219,7 +211,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         className={classes.container}
       >
         <Box style={{ padding: "25px" }}>
-          <Box fontSize="24px" className={classes.title}>
+          <Box fontSize="24px" color="#431AB7">
             Make Rental Offer
           </Box>
           <Grid container spacing={2}>
@@ -241,14 +233,11 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
                 theme="light"
                 minValue={0}
                 disabled={isApproved}
-                placeHolder={"0.001"}
               />
             </Grid>
             <Grid item sm={5}>
               <ReserveTokenSelect
-                tokens={tokenList.filter(
-                  token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
-                )}
+                tokens={tokenList}
                 value={rentalToken?.Address || ""}
                 className={classes.inputJOT}
                 onChange={e => {
@@ -262,7 +251,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
           <Box className={classes.nameField}>Rental Time</Box>
           <InputWithLabelAndTooltip
             inputValue={rentalTime}
-            onInputValueChange={e => setRentalTime(e.target.value)}
+            onInputValueChange={e => setRentalTime(+e.target.value)}
             overriedClasses={classes.inputJOT}
             required
             type="number"
@@ -270,7 +259,6 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
             minValue={0}
             endAdornment={<div className={classes.purpleText}>DAYS</div>}
             disabled={isApproved}
-            placeHolder={"00"}
           />
           <Box className={classes.nameField}>Offer will disapppear if not accepted before</Box>
           <Box width="100%">
@@ -297,23 +285,23 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         <Box className={classes.footer}>
           <Box display="flex" justifyContent="space-between">
             <Box className={classes.totalText}>Total</Box>
-            <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}>
+            <Box style={{ color: "#431AB7", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}>
               {`${price} ${rentalToken?.Symbol}`}
             </Box>
           </Box>
           <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
-            <PrimaryButton
+            <SecondaryButton
               size="medium"
               className={classes.primaryButton}
-              disabled={isApproved}
+              style={{ backgroundColor: isApproved ? "#431AB750" : "#431AB7" }}
               onClick={handleApprove}
             >
               Approve
-            </PrimaryButton>
+            </SecondaryButton>
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
-              disabled={!isApproved}
+              style={{ backgroundColor: !isApproved ? "#431AB750" : "#431AB7" }}
               onClick={handleConfirm}
             >
               Confirm Offer

@@ -3,10 +3,6 @@ import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 import { useParams } from "react-router";
 import DateFnsUtils from "@date-io/date-fns";
-import { useSelector } from "react-redux";
-
-import { Grid } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 
 import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
@@ -14,22 +10,27 @@ import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { PrimaryButton } from "shared/ui-kit";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import { Grid, Tooltip, Fade } from "@material-ui/core";
+import { SetRentPriceModalStyles } from "./index.style";
+import TransactionProgressModal from "../TransactionProgressModal";
+
 import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import { createListOffer } from "shared/services/API/ReserveAPI";
 import { toNDecimals } from "shared/functions/web3";
 import { getNextDay } from "shared/helpers/utils";
+import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
-import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
-import TransactionProgressModal from "../TransactionProgressModal";
-import { SetRentPriceModalStyles } from "./index.style";
+
+const infoIcon = require("assets/icons/info_black.png");
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function SetRentPriceModal({ open, handleClose = () => {}, nft, setNft }) {
   const classes = SetRentPriceModalStyles();
   const { account, library, chainId } = useWeb3React();
-  const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
-  const [pricePerSec, setPricePerSec] = useState<number>();
+  const { collection_id, token_id } = useParams();
+  const [pricePerSec, setPricePerSec] = useState<number>(0);
 
   const [maxRentalTime, setMaxRentalTime] = useState<any>();
   const [limitDays, setLimitDays] = useState<number>(0);
@@ -37,7 +38,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
   const [limitMin, setLimitMin] = useState<number>(0);
   const [limitSec, setLimitSec] = useState<number>(0);
   const [isApproved, setIsApproved] = useState<boolean>(false);
-  const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
+  const [selectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const [rentalToken, setRentalToken] = useState<any>(tokenList[0]);
 
@@ -46,11 +47,9 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const { showAlertMessage } = useAlertMessage();
 
-  useEffect(() => setSelectedChain(getChainForNFT(nft)), [nft]);
-
   useEffect(() => {
     setRentalToken(tokenList[0]);
-  }, [tokenList]);
+  }, [tokenList])
 
   useEffect(() => {
     if (!open) {
@@ -61,11 +60,6 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
   const handleApprove = async () => {
     try {
       if (isApproved) {
-        return;
-      }
-
-      if (!pricePerSec || !(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
         return;
       }
 
@@ -84,7 +78,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
       let approved = await web3APIHandler.Erc721.approve(web3, account || "", {
         to: web3Config.CONTRACT_ADDRESSES.RENTAL_MANAGER,
         tokenId: token_id,
-        nftAddress: nft.Address,
+        nftAddress: collection_id,
       });
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -111,12 +105,6 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
       if (!isApproved) {
         return;
       }
-
-      if (!pricePerSec || !(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
-        return;
-      }
-
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
@@ -132,7 +120,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
         web3,
         account!,
         {
-          collectionId: nft.Address,
+          collectionId: collection_id,
           tokenId: token_id,
           maximumRentalTime: toSeconds(limitDays, limitHour, limitMin, limitSec),
           pricePerSecond: toNDecimals(pricePerSec, rentalToken.Decimals),
@@ -202,14 +190,22 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
         className={classes.container}
       >
         <Box style={{ padding: "25px" }}>
-          <Box className={classes.title}>Set Rental Price</Box>
+          <Box fontSize="24px" color="#431AB7">
+            Set Rental Price
+          </Box>
           <Grid container spacing={2}>
             <Grid item xs={6} sm={7}>
-              <Box className={classes.nameField}>
-                <span>Price Per Second</span>
-                <InfoTooltip
-                  tooltip={"To be streamed from the renters wallet to yours on a second by second basis"}
-                />
+              <Box display="flex" alignItems="center" className={classes.nameField}>
+                <span>Price per second</span>
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 400 }}
+                  arrow
+                  className={classes.tooltipHeaderInfo}
+                  title='To be streamed from the renters wallet to yours on a second by second basis'
+                >
+                  <img src={infoIcon} alt={"info"} />
+                </Tooltip>
               </Box>
               <InputWithLabelAndTooltip
                 inputValue={pricePerSec}
@@ -218,20 +214,14 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
                 required
                 type="number"
                 theme="light"
-                minValue={0.001}
+                minValue={0}
                 disabled={isApproved}
-                placeHolder={"0.001"}
               />
             </Grid>
             <Grid item xs={6} sm={5}>
-              <Box className={classes.nameField}>
-                <span>Rental Token</span>
-                <InfoTooltip tooltip={""} />
-              </Box>
+              <Box className={classes.nameField}>Rental Token</Box>
               <ReserveTokenSelect
-                tokens={tokenList.filter(
-                  token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
-                )}
+                tokens={tokenList}
                 value={rentalToken?.Address || ""}
                 className={classes.inputJOT}
                 onChange={e => {
@@ -242,9 +232,17 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
               />
             </Grid>
           </Grid>
-          <Box className={classes.nameField}>
+          <Box display="flex" alignItems="center" className={classes.nameField}>
             <span>Max Rental Time</span>
-            <InfoTooltip tooltip={"This is the maximum time a player can rent your NFT"} />
+            <Tooltip
+              TransitionComponent={Fade}
+              TransitionProps={{ timeout: 400 }}
+              arrow
+              className={classes.tooltipHeaderInfo}
+              title='This is the maximum time a player can rent your NFT'
+            >
+              <img src={infoIcon} alt={"info"} />
+            </Tooltip>
           </Box>
           <Box width="100%">
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -267,80 +265,77 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
             </MuiPickersUtilsProvider>
           </Box>
           <Box display="flex" alignItems="center" className={classes.nameField}>
-            <span>Limit Rental Time</span>
-            <InfoTooltip
-              tooltip={
-                "This is the minimum time allowed someone can rent your NFT. For example if you select 10 minutes, someone cannot rent it for 9 minutes"
-              }
-            />
+            <span>Limit rental time</span>
+            <Tooltip
+              TransitionComponent={Fade}
+              TransitionProps={{ timeout: 400 }}
+              arrow
+              className={classes.tooltipHeaderInfo}
+              title='This is the minimum time allowed someone can rent your NFT. For example if you select 10 minutes, someone cannot rent it for 9 minutes'
+            >
+              <img src={infoIcon} alt={"info"} />
+            </Tooltip>
           </Box>
           <Box display="flex" alignItems="center">
             <InputWithLabelAndTooltip
               inputValue={limitDays}
-              onInputValueChange={e => setLimitDays(e.target.value)}
+              onInputValueChange={e => setLimitDays(+e.target.value)}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
-              endAdornment={<div className={classes.suffixText}>DAYS</div>}
+              endAdornment={<div className={classes.purpleText}>d</div>}
               disabled={isApproved}
-              placeHolder={"00"}
             />
             <InputWithLabelAndTooltip
               inputValue={limitHour}
-              onInputValueChange={e => setLimitHour(e.target.value)}
+              onInputValueChange={e => setLimitHour(+e.target.value)}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
-              endAdornment={<div className={classes.suffixText}>HRS</div>}
+              endAdornment={<div className={classes.purpleText}>h</div>}
               disabled={isApproved}
-              style={{ marginLeft: "8px" }}
-              placeHolder={"00"}
             />
             <InputWithLabelAndTooltip
               inputValue={limitMin}
-              onInputValueChange={e => setLimitMin(e.target.value)}
+              onInputValueChange={e => setLimitMin(+e.target.value)}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
-              endAdornment={<div className={classes.suffixText}>MINS</div>}
+              endAdornment={<div className={classes.purpleText}>m</div>}
               disabled={isApproved}
-              style={{ marginLeft: "8px" }}
-              placeHolder={"00"}
             />
             <InputWithLabelAndTooltip
               inputValue={limitSec}
-              onInputValueChange={e => setLimitSec(e.target.value)}
+              onInputValueChange={e => setLimitSec(+e.target.value)}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
-              endAdornment={<div className={classes.suffixText}>SEC</div>}
+              endAdornment={<div className={classes.purpleText}>s</div>}
               disabled={isApproved}
-              style={{ marginLeft: "8px" }}
-              placeHolder={"00"}
             />
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
+              style={{ backgroundColor: isApproved ? "#431AB750" : "#431AB7" }}
               onClick={handleApprove}
-              disabled={isApproved}
             >
               Approve
             </PrimaryButton>
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
+              style={{ backgroundColor: !isApproved ? "#431AB750" : "#431AB7" }}
               onClick={handleConfirm}
-              disabled={!isApproved}
             >
               Confirm Set
             </PrimaryButton>

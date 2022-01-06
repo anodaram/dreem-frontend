@@ -134,7 +134,6 @@ export default function HomePage() {
 
   const dispatch = useDispatch();
   const underMaintenanceSelector = useSelector((state: RootState) => state.underMaintenanceInfo?.info);
-  const publicy = useSelector((state: RootState) => state.underMaintenanceInfo?.publicy);
 
   const history = useHistory();
   const theme = useTheme();
@@ -181,35 +180,35 @@ export default function HomePage() {
   }, [underMaintenanceSelector]);
 
   React.useEffect(() => {
-    if (!underMaintenanceSelector.underMaintenance) {
-      setLoadingFeatured(true);
-      MetaverseAPI.getFeaturedWorlds(filters)
-        .then(res => {
-          if (res.success) {
-            setFeaturedRealms(res.data.items);
-          }
-        })
-        .finally(() => setLoadingFeatured(false));
+    setLoadingFeatured(true);
+    MetaverseAPI.getFeaturedWorlds(filters)
+      .then(res => {
+        if (res.success) {
+          setFeaturedRealms(res.data.items);
+        }
+      })
+      .finally(() => setLoadingFeatured(false));
 
-      setLoadingExplore(true);
-      MetaverseAPI.getWorlds(9, 1, "timestamp", filters, true, undefined, undefined, false)
-        .then(res => {
-          if (res.success) {
-            const items = res.data.items;
-            if (items && items.length > 0) {
-              setExploreReamls(res.data.items);
-            }
+    setLoadingExplore(true);
+    MetaverseAPI.getWorlds(9, 1, "timestamp", filters, true, undefined, undefined, false)
+      .then(res => {
+        if (res.success) {
+          const items = res.data.items;
+          if (items && items.length > 0) {
+            setExploreReamls(res.data.items);
           }
-        })
-        .finally(() => setLoadingExplore(false));
+        }
+      })
+      .finally(() => setLoadingExplore(false));
 
-      setLoadingExploreCharacters(true);
-      MetaverseAPI.getCharacters(null, true)
-        .then(res => {
+    setLoadingExploreCharacters(true);
+    MetaverseAPI.getCharacters(null, true)
+      .then(res => {
+        if (res) {
           setExploreCharacters(res.data);
-        })
-        .finally(() => setLoadingExploreCharacters(false));
-    }
+        }
+      })
+      .finally(() => setLoadingExploreCharacters(false));
   }, []);
 
   const openLearnToCreator = () => {
@@ -256,12 +255,8 @@ export default function HomePage() {
           setOnSigning(false);
         } else {
           if (res.message) {
-            if (res.message === "Wallet address doesn't exist" && publicy) {
-              signUp(res.signature);
-            } else {
-              showAlertMessage(res.message, { variant: "error" });
-              setOnSigning(false);
-            }
+            showAlertMessage(res.message, { variant: "error" });
+            setOnSigning(false);
           } else {
             showAlertMessage("Connect the metamask", { variant: "error" });
             setOnSigning(false);
@@ -271,31 +266,6 @@ export default function HomePage() {
       .catch(e => {
         setOnSigning(false);
       });
-  };
-
-  const signUp = async signature => {
-    if (account) {
-      const res = await API.signUpWithAddressAndName(account, account, signature, "Dreem");
-      if (res.isSignedIn) {
-        setSignedin(true);
-        let data = res.privian.user;
-        data.infoImage = {
-          avatarUrl: res.privian.user.avatarUrl,
-        };
-        dispatch(setUser(data));
-        localStorage.setItem("token", res.accessToken);
-        localStorage.setItem("address", account);
-        localStorage.setItem("userId", data.id);
-        localStorage.setItem("userSlug", data.urlSlug ?? data.id);
-
-        axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
-        dispatch(setLoginBool(true));
-        setOnSigning(false);
-      } else {
-        showAlertMessage(res.message, { variant: "error" });
-        setOnSigning(false);
-      }
-    }
   };
 
   const handleCreate = () => {
@@ -387,7 +357,7 @@ export default function HomePage() {
                 paddingTop: 6,
                 pointerEvents: isOnSigning ? "none" : undefined,
                 opacity: isOnSigning ? 0.4 : undefined,
-                marginLeft: 30,
+                marginLeft: isMobile ? 0 : 30,
               }}
               onClick={handleCreate}
             >
