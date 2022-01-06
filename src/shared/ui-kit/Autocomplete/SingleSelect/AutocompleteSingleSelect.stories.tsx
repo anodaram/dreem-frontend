@@ -17,7 +17,7 @@ export const autocompleteSingleSelect = () => {
       allItems={EUROPEAN_COUNTRIES}
       selectedItem={selectedCountry}
       onSelectedItemChange={setSelectedCountry}
-      placeholder="Select countries"
+      placeholder="Select country"
       getOptionLabel={country => country.name}
       renderOption={country => (
         <>

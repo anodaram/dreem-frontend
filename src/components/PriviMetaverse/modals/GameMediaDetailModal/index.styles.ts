@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-export const gameNFTDetailModalStyles = makeStyles(theme => ({
+export const gameMediaDetailModalStyles = makeStyles(theme => ({
   root: {
     width: "100vw !important",
     maxWidth: "unset !important",
@@ -139,7 +139,6 @@ export const gameNFTDetailModalStyles = makeStyles(theme => ({
     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
-    width: "fit-content",
   },
   typo4: {
     fontFamily: "Rany",

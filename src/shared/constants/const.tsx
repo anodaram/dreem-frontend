@@ -26,7 +26,7 @@ export enum BorderRadius {
 }
 
 export enum Color {
-  Black = "#212121",
+  Black = "#181818",
   White = "#ffffff",
 
   GrayDark = "#707582",
@@ -66,11 +66,6 @@ export enum Color {
   MusicDAOTightGreen = "#00D13B",
   MusicDAOOrange = "#FF9900",
   MusicDAOGray = "#7E7D95",
-
-  NestedAMMDark = "#2D163C",
-  NestedAMMGreen = "#D9F66F",
-  NestedAMMPink = "#ea88f2",
-  NestedAMMPurple = "#47295B",
 }
 
 export enum Gradient {
@@ -81,7 +76,6 @@ export enum Gradient {
   BlueMagenta = "linear-gradient(102.54deg, #00BFFF -9.09%, #8D2EFF 56.17%, #FF00C1 112.56%)",
   Green = "conic-gradient(from 111.31deg at 50% 51.67%, #B1FF00 -118.12deg, #00FF15 110.62deg, #B1FF00 241.88deg, #00FF15 470.63deg)",
   Green1 = "linear-gradient(97.63deg, #A0D800 26.36%, #0DCC9E 80%)",
-  Pink = "linear-gradient(118.42deg, #EA88F2 12.03%, #A839FF 85.16%)",
 }
 
 export enum Variant {

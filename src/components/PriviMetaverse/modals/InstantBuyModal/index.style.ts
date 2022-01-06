@@ -4,43 +4,23 @@ export const InstantBuyModalStyles = makeStyles((theme) => ({
   container: {
     padding:'0px !important'
   },
-  title: {
-    background: "linear-gradient(#EDFF1C, #ED7B7B)",
-    "-webkit-text-fill-color": "transparent",
-    "-webkit-background-clip": "text",
-    textTransform: "uppercase",
-    fontSize: "24px",
-    fontFamily: "Rany",
-    fontWeight: "bold"
-  },
   purpleText: {
-    background: "linear-gradient(#EDFF1C, #ED7B7B)",
-    "-webkit-text-fill-color": "transparent",
-    "-webkit-background-clip": "text",
     cursor: "pointer",
-    fontSize: "18px",
+    color: "#431AB7",
+    fontSize: "16px",
     minWidth: "55px",
-    fontWeight: "bold"
+    fontWeight: 400
   },
   primaryButton: {
-    color: "#212121 !important",
+    color: "#fff !important",
     padding: "0 37px !important",
     height: "40px !important",
-    background: "linear-gradient(#B7FF5C, #EEFF21) !important",
-    borderRadius: "40px",
-    border: "none",
-    "&:disabled": {
-      background: "linear-gradient(#B7FF5C, #EEFF21) !important",
-      color: "#212121 !important",
-    }
-  },
-  borderBox: {
-    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
-    padding: 2,
+    border: "none !important"
   },
   box: {
     padding: "23px 18px",
-    background: "rgb(11, 21, 28)",
+    background: "rgba(158, 172, 242, 0.2)",
+    borderRadius: 16,
     display: "flex",
     justifyContent: "space-between"
   }

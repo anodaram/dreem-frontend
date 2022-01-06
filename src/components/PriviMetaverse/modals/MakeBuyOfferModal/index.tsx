@@ -5,10 +5,12 @@ import { useSelector } from "react-redux";
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 
+import TransactionProgressModal from "../TransactionProgressModal";
+import { RootState } from "store/reducers/Reducer";
+
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import { Grid } from "@material-ui/core";
 
-import { RootState } from "store/reducers/Reducer";
 import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
@@ -16,11 +18,11 @@ import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import { BlockchainNets } from "shared/constants/constants";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { toDecimals, toNDecimals } from "shared/functions/web3";
-import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
+import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import { createBuyOffer } from "shared/services/API/ReserveAPI";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
 import { getNextDay } from "shared/helpers/utils";
-import TransactionProgressModal from "../TransactionProgressModal";
+
 import { MakeBuyOfferModalStyles } from "./index.style";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -31,7 +33,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
   const [token, setToken] = useState<any>(tokens[0]);
   const [totalBalance, setTotalBalance] = useState<string>("0");
-  const [price, setPrice] = useState<number>();
+  const [price, setPrice] = useState<string | number>();
   const [selectedChain, setSelectedChain] = useState<any>(filteredBlockchainNets[0]);
   const { showAlertMessage } = useAlertMessage();
 
@@ -67,8 +69,11 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
 
   const setBalance = async () => {
     if (token) {
-      const targetChain = await checkNetworkFromNFT();
-      const web3APIHandler = targetChain.apiHandler;
+      if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
+        showAlertMessage(`network error`, { variant: "error" });
+        return;
+      }
+      const web3APIHandler = selectedChain.apiHandler;
       const web3 = new Web3(library.provider);
       const decimals = await web3APIHandler.Erc20[token?.Symbol || "ETH"]?.decimals(web3, token.Address);
       const balance = await web3APIHandler.Erc20[token?.Symbol || "ETH"]?.balanceOf(web3, {
@@ -80,7 +85,6 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
 
   const checkNetworkFromNFT = async () => {
     const nftChain = getChainForNFT(nft);
-    console.log('aa', nftChain)
     if (!nftChain) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
@@ -100,11 +104,6 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
 
   const handleApprove = async () => {
     try {
-      if (!price) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
-        return;
-      }
-
       const targetChain = await checkNetworkFromNFT();
 
       setOpenTransactionModal(true);
@@ -147,22 +146,28 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
 
   const handleConfirm = async () => {
     try {
-      if (!price) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
+      if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
+        showAlertMessage(`network error`, { variant: "error" });
         return;
       }
-      const targetChain = await checkNetworkFromNFT();
-
       setOpenTransactionModal(true);
-
-      const web3APIHandler = targetChain.apiHandler;
+      const web3Config = selectedChain.config;
+      if (chainId && chainId !== selectedChain?.chainId) {
+        const isHere = await switchNetwork(selectedChain?.chainId || 0);
+        if (!isHere) {
+          showAlertMessage("Got failed while switching over to target network", { variant: "error" });
+          setTransactionSuccess(false);
+          return;
+        }
+      }
+      const web3APIHandler = selectedChain.apiHandler;
       const web3 = new Web3(library.provider);
 
       const response = await web3APIHandler.openSalesManager.approvePurchase(
         web3,
         account!,
         {
-          collection_id: nft.Address,
+          collection_id,
           token_id,
           paymentToken: token.Address,
           price: toNDecimals(price, token.Decimals),
@@ -177,7 +182,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
         const offerId = web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address"],
-            [nft.Address, token_id, token.Address, toNDecimals(price, token.Decimals), account]
+            [collection_id, token_id, token.Address, toNDecimals(price, token.Decimals), account]
           )
         );
 
@@ -230,7 +235,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
       }}
     >
       <Box style={{ padding: "25px" }}>
-        <Box fontSize="24px" className={classes.title}>
+        <Box fontSize="24px" color="#431AB7">
           Make Buy Offer
         </Box>
         <Box className={classes.nameField}></Box>
@@ -246,14 +251,11 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
               theme="light"
               minValue={0}
               disabled={isApproved}
-              placeHolder={"0.001"}
             />
           </Grid>
           <Grid item xs={6} sm={5}>
             <ReserveTokenSelect
-              tokens={tokens.filter(
-                token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
-              )}
+              tokens={tokens}
               value={token?.Address || ""}
               onChange={e => {
                 setToken(tokens.find(v => v.Address === e.target.value));

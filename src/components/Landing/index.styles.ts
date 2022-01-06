@@ -14,7 +14,7 @@ export const useLandingStyles = makeStyles(theme => ({
       position: "absolute",
       objectFit: "cover",
       zindex: 0,
-    }
+    },
   },
   main: {
     display: "flex",
@@ -50,20 +50,23 @@ export const useLandingStyles = makeStyles(theme => ({
       color: "#181818 !important",
     },
     [theme.breakpoints.down("xs")]: {
-      maxWidth: "290px !important"
+      maxWidth: "290px !important",
     },
   },
   text: {
     fontSize: 15,
+    fontWeight: 400,
+    fontFamily: "Rany",
+    letterSpacing: "0.05em",
   },
   alert: {
     fontSize: 16,
     fontFamily: "Montserrat",
-    fontWeight: 800
+    fontWeight: 800,
   },
   logo: {
     [theme.breakpoints.down("xs")]: {
-      width: "290px !important"
+      width: "290px !important",
     },
-  }
+  },
 }));

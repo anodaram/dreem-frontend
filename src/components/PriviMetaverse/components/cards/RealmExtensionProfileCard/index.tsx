@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 
 import { styled, Switch, SwitchProps, FormControlLabel, CircularProgress } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
 
 import Box from "shared/ui-kit/Box";
 import Avatar from "shared/ui-kit/Avatar";
@@ -25,13 +24,11 @@ export default function RealmExtensionProfileCard({
   hideInfo,
   isHomePage,
   handleRefresh,
-  isLoading,
 }: {
-  nft?: any;
+  nft: any;
   hideInfo?: boolean;
   isHomePage?: boolean;
   handleRefresh?: () => void;
-  isLoading?: boolean;
 }) {
   const history = useHistory();
   const styles = nftCardStyles();
@@ -57,7 +54,7 @@ export default function RealmExtensionProfileCard({
     setData(nft);
     setIsPublic(nft.worldIsPublic);
     if (users.length) {
-      const creator = users.find(user => user.id === nft.worldCreator?.user?.id);
+      const creator = users.find(user => user.id === nft.worldCreator.user.id);
       if (creator && creator.ipfsImage) {
         setImageIPFS(creator.ipfsImage);
       } else {
@@ -128,117 +125,108 @@ export default function RealmExtensionProfileCard({
       });
   };
 
-  const isOwner = nft && nft.creatorId === userSelector.id;
+  const isOwner = nft.creatorId === userSelector.id;
 
   return (
     <div className={styles.cardBorderWrapper}>
-      {isLoading ? (
-        <Box className={styles.skeleton}>
-          <Skeleton variant="rect" width="100%" />
-          <Skeleton variant="rect" width={"100%"} />
-          <Skeleton variant="rect" width={"80%"} />
-        </Box>
-      ) : (
-        <div className={styles.card}>
-          <div className={styles.imageContent} onClick={handleOpenModal}>
-            <div
-              className={styles.nftImage}
-              style={{
-                backgroundImage: data.worldImages
-                  ? `url("${data.worldImages}")`
-                  : `url(${getDefaultImageUrl()})`,
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                overflow: "hidden",
-              }}
-              ref={parentNode}
-            >
-              {nft.itemKind === "DRAFT_WORLD" ? (
-                nft.worldIsExtension ? (
-                  <Box padding="10px" display="flex">
-                    <Box className={styles.extensionTag}>Extension</Box>
-                  </Box>
-                ) : (
-                  <Box padding="10px" display="flex">
-                    <Box className={styles.draftTag}>Draft</Box>
-                  </Box>
-                )
+      <div className={styles.card}>
+        <div className={styles.imageContent} onClick={handleOpenModal}>
+          <div
+            className={styles.nftImage}
+            style={{
+              backgroundImage: data.worldImages
+                ? `url("${data.worldImages}")`
+                : `url(${getDefaultImageUrl()})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              overflow: "hidden",
+            }}
+            ref={parentNode}
+          >
+            {nft.itemKind === "DRAFT_WORLD" ? (
+              nft.worldIsExtension ? (
+                <Box padding="10px" display="flex">
+                  <Box className={styles.extensionTag}>Extension</Box>
+                </Box>
               ) : (
                 <Box padding="10px" display="flex">
-                  <Box className={styles.realmTag}>Realm</Box>
+                  <Box className={styles.draftTag}>Draft</Box>
                 </Box>
-              )}
-            </div>
-          </div>
-          <div className={styles.shapeIcon}>
-            <ShapeIcon
-              style={{ cusor: "pointer" }}
-              onClick={e => {
-                shareMedia("NFT", `realms/${data.id}`);
-              }}
-            />
-          </div>
-          <Box className={styles.infoContent}>
-            <Box className={styles.infoName}>{data.worldTitle || "Untitled"}</Box>
-            <Box className={styles.infoDescription} mb={2}>
-              {data.worldDescription || "No description"}
-            </Box>
-            {!hideInfo && (
-              <>
-                <div className={styles.divider} />
-                <div
-                  className={styles.creatorSection}
-                  onClick={() => {
-                    if (data.worldCreator?.user?.address) {
-                      history.push(`/profile/${data.worldCreator.user.address}`);
-                    }
-                  }}
-                >
-                  <Box display="flex" alignItems="center" width={1}>
-                    {imageIPFS && <Avatar size={24} rounded bordered image={imageIPFS} />}
-                    <div className={styles.creatorName}>{data.worldCreator?.character?.name}</div>
-                  </Box>
-                  <Box display="flex" alignItems="center">
-                    <EyeIcon />
-                    <div className={styles.viewsCount}>{data.views}</div>
-                  </Box>
-                </div>
-              </>
+              )
+            ) : (
+              <Box padding="10px" display="flex">
+                <Box className={styles.realmTag}>Realm</Box>
+              </Box>
             )}
-            {nft.itemKind === "DRAFT_WORLD" && isOwner && !isHomePage && (
-              <>
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                  <Box display="flex" alignItems="center">
-                    <FormControlLabel
-                      control={<IOSSwitch defaultChecked checked={isPublic} onChange={handlePublic} />}
-                      label={""}
-                      labelPlacement="end"
-                    />
-                    <Box className={styles.typo1}>Make Public</Box>
-                  </Box>
-
-                  <Box display="flex" alignItems="center">
-                    <Box className={styles.draftContent} onClick={handleRemove}>
-                      <RemoveIcon />
-                    </Box>
-                    {isLoadingMetaData ? (
-                      <Box minWidth={48} display="flex" justifyContent="center">
-                        <CircularProgress size={24} style={{ color: "#EEFF21" }} />
-                      </Box>
-                    ) : (
-                      <Box className={styles.draftContent} onClick={handleOpenDraftModal} ml={1}>
-                        <SettingIcon />
-                      </Box>
-                    )}
-                  </Box>
-                </Box>
-              </>
-            )}
-          </Box>
+          </div>
         </div>
-      )}
+        <div className={styles.shapeIcon}>
+          <ShapeIcon
+            style={{ cusor: "pointer" }}
+            onClick={e => {
+              shareMedia("NFT", `realms/${data.id}`);
+            }}
+          />
+        </div>
+        <Box className={styles.infoContent}>
+          <Box className={styles.infoName}>{data.worldTitle || "Untitled"}</Box>
+          <Box className={styles.infoDescription} mb={2}>
+            {data.worldDescription || "No description"}
+          </Box>
+          {!hideInfo && (
+            <>
+              <div className={styles.divider} />
+              <div
+                className={styles.creatorSection}
+                onClick={() => {
+                  if (data.worldCreator?.user?.address) {
+                    history.push(`/profile/${data.worldCreator.user.address}`);
+                  }
+                }}
+              >
+                <Box display="flex" alignItems="center" width={1}>
+                  {imageIPFS && <Avatar size={24} rounded bordered image={imageIPFS} />}
+                  <div className={styles.creatorName}>{data.worldCreator?.character?.name}</div>
+                </Box>
+                <Box display="flex" alignItems="center">
+                  <EyeIcon />
+                  <div className={styles.viewsCount}>{data.views}</div>
+                </Box>
+              </div>
+            </>
+          )}
+          {nft.itemKind === "DRAFT_WORLD" && isOwner && !isHomePage && (
+            <>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Box display="flex" alignItems="center">
+                  <FormControlLabel
+                    control={<IOSSwitch defaultChecked checked={isPublic} onChange={handlePublic} />}
+                    label={""}
+                    labelPlacement="end"
+                  />
+                  <Box className={styles.typo1}>Make Public</Box>
+                </Box>
 
+                <Box display="flex" alignItems="center">
+                  <Box className={styles.draftContent} onClick={handleRemove}>
+                    <RemoveIcon />
+                  </Box>
+                  {isLoadingMetaData ? (
+                    <Box minWidth={48} display="flex" justifyContent="center">
+                      <CircularProgress size={24} style={{ color: "#EEFF21" }} />
+                    </Box>
+                  ) : (
+                    <Box className={styles.draftContent} onClick={handleOpenDraftModal} ml={1}>
+                      <SettingIcon />
+                    </Box>
+                  )}
+                </Box>
+              </Box>
+            </>
+          )}
+        </Box>
+      </div>
       {openContentPreview && (
         <ContentPreviewModal
           open={openContentPreview}

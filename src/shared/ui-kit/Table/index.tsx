@@ -17,25 +17,23 @@ export type CustomTableProps = {
   placeholderText?: string;
   variant?: Variant;
   theme?:
-  | "dark"
-  | "light"
-  | "green"
-  | "transparent"
-  | "transCards"
-  | "song"
-  | "transaction"
-  | "artist"
-  | "vote art"
-  | "art green"
-  | "offers blue"
-  | "bid"
-  | "normal"
-  | "dreem";
+    | "dark"
+    | "light"
+    | "green"
+    | "transparent"
+    | "transCards"
+    | "song"
+    | "transaction"
+    | "artist"
+    | "vote art"
+    | "art green"
+    | "offers blue"
+    | "bid"
+    | "normal";
   onSort?: any;
   sorted?: any;
   radius?: number;
-  onClickRow?: (row?: any) => void;
-};
+}
 
 export interface CustomTableHeaderInfo {
   headerName: string;
@@ -58,7 +56,7 @@ const useStyles = makeStyles(() =>
       "& .MuiTableCell-head": {
         textTransform: "uppercase",
         fontSize: FontSize.M,
-        color: Color.White,
+        color: Color.Black,
       },
       "& .MuiTableCell-body": {
         fontSize: FontSize.M,
@@ -141,55 +139,6 @@ const useStyles = makeStyles(() =>
         fontSize: 18,
         color: "white",
         opacity: "0.8",
-      },
-    },
-    dreem: {
-      "& .MuiTable-root": {
-        borderCollapse: "separate !important",
-        borderSpacing: "0 10px",
-        marginTop: "-10px",
-      },
-      "& .MuiTableHead-root": {
-        backgroundColor: "transparent",
-      },
-      "& .MuiTableCell-root": {
-        fontFamily: "Rany",
-        border: 0,
-        fontWeight: 400,
-        color: "white",
-      },
-      "& .MuiTableCell-head": {
-        textTransform: "uppercase",
-        fontSize: 18,
-        fontFamily: "Rany",
-        paddingBottom: 0,
-        color: "white !important",
-      },
-      "& .MuiTableCell-body": {
-        fontSize: 18,
-        color: "white",
-        opacity: "0.8",
-      },
-      "& .MuiTableBody-root": {
-        "& .MuiTableRow-root": {
-          background: "rgba(255, 255, 255, 0.1) !important",
-        },
-        "& .MuiTableCell-root": {
-          borderTop: "2px solid #F2C525",
-          borderBottom: "2px solid #F2C525",
-          "&:first-child": {
-            borderLeft: "2px solid #F2C525",
-            borderLeftStyle: "solid",
-            borderTopLeftRadius: "10px",
-            borderBottomLeftRadius: "12px",
-          },
-          "&:last-child": {
-            borderRight: "2px solid #F2C525",
-            borderRightStyle: "solid",
-            borderBottomRightRadius: "12px",
-            borderTopRightRadius: "12px",
-          },
-        },
       },
     },
     tableGreen: {
@@ -447,7 +396,6 @@ export const CustomTable = ({
   onSort,
   sorted,
   radius,
-  onClickRow,
 }: CustomTableProps) => {
   const classes = useStyles({ radius: radius });
 
@@ -473,28 +421,26 @@ export const CustomTable = ({
         theme && theme === "dark"
           ? classes.tableDark
           : theme === "green"
-            ? classes.tableGreen
-            : theme === "transparent" || theme === "transCards"
-              ? classes.tableTransparent
-              : theme === "song"
-                ? classes.tableSong
-                : theme === "transaction"
-                  ? classes.tableTransaction
-                  : theme === "artist"
-                    ? classes.tableArtist
-                    : theme === "vote art"
-                      ? classes.tableVote
-                      : theme === "art green"
-                        ? classes.tableGreenArt
-                        : theme === "offers blue"
-                          ? classes.offersBlue
-                          : theme === "bid"
-                            ? classes.bid
-                            : theme === "dreem"
-                              ? classes.dreem
-                              : theme === "normal"
-                                ? classes.normal
-                                : classes.table
+          ? classes.tableGreen
+          : theme === "transparent" || theme === "transCards"
+          ? classes.tableTransparent
+          : theme === "song"
+          ? classes.tableSong
+          : theme === "transaction"
+          ? classes.tableTransaction
+          : theme === "artist"
+          ? classes.tableArtist
+          : theme === "vote art"
+          ? classes.tableVote
+          : theme === "art green"
+          ? classes.tableGreenArt
+          : theme === "offers blue"
+          ? classes.offersBlue
+          : theme === "bid"
+          ? classes.bid
+          : theme === "normal"
+          ? classes.normal
+          : classes.table
       }
     >
       <Table>
@@ -505,12 +451,12 @@ export const CustomTable = ({
                 variant === Variant.Primary
                   ? classes.primaryHeader
                   : variant === Variant.Secondary
-                    ? classes.secondaryHeader
-                    : variant === Variant.Tertiary
-                      ? classes.thirdHeader
-                      : variant === Variant.Transparent
-                        ? classes.transparentHeader
-                        : classes.transactionTableHeader,
+                  ? classes.secondaryHeader
+                  : variant === Variant.Tertiary
+                  ? classes.thirdHeader
+                  : variant === Variant.Transparent
+                  ? classes.transparentHeader
+                  : classes.transactionTableHeader,
             }}
           >
             {headers?.map((header, index) => (
@@ -534,16 +480,16 @@ export const CustomTable = ({
         <TableBody style={{ background: variant === Variant.Tertiary ? "white" : "inherit" }}>
           {rows?.length > 0 ? (
             rows?.map((row, i) => (
-              <TableRow key={i} style={theme === "transCards" ? { background: getBackground(i + 1) } : {}} onClick={() => onClickRow && onClickRow(row)}>
+              <TableRow key={i} style={theme === "transCards" ? { background: getBackground(i + 1) } : {}}>
                 {row?.map((cellData, index) => (
-                  <TableCell align={cellData.cellAlign || (headers && (headers.length > index) && headers[index]?.headerAlign) || "inherit"} key={cellData.cell + "-" + index}>
+                  <TableCell align={cellData.cellAlign || "inherit"} key={cellData.cell + "-" + index}>
                     {cellData.cell}
                   </TableCell>
                 ))}
               </TableRow>
             ))
           ) : (
-            <TableRow onClick={() => onClickRow && onClickRow()}>
+            <TableRow>
               <TableCell align="center" colSpan={headers.length}>
                 {placeholderText}
               </TableCell>

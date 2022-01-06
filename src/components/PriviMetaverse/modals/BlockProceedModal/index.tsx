@@ -4,30 +4,26 @@ import { useWeb3React } from "@web3-react/core";
 
 import { Modal } from "shared/ui-kit";
 import { BlockchainNets } from "shared/constants/constants";
-import { useSelector } from "react-redux";
-import { getUsersInfoList } from "store/selectors";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import Box from "shared/ui-kit/Box";
 import { PrimaryButton } from "shared/ui-kit";
 import { BlockProceedModalStyles } from "./index.style";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { toNDecimals } from "shared/functions/web3";
-import { useHistory, useParams } from "react-router";
+import { useParams } from "react-router";
 import { acceptBlockingOffer } from "shared/services/API/ReserveAPI";
+import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
-import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
-import { getAbbrAddress } from "shared/helpers";
+import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-export default function BlockProceedModal({ open, offer, handleClose, nft, setNft, handleRefresh }) {
-  const history = useHistory();
+export default function BlockProceedModal({ open, offer, handleClose, nft, setNft }) {
   const classes = BlockProceedModalStyles();
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const [hash, setHash] = useState<string>("");
   const [selectedChain] = useState<any>(getChainForNFT(nft));
 
-  const usersInfoList = useSelector(getUsersInfoList);
   const { account, library, chainId } = useWeb3React();
   const { showAlertMessage } = useAlertMessage();
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
@@ -54,10 +50,6 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
     return token?.Symbol || '';
   };
 
-  const getUser = (address) => {
-    return usersInfoList.find(u => u.address.toLowerCase() === address?.toLowerCase());
-  }
-
   const handleCloseModal = () => {
     handleClose();
   };
@@ -79,7 +71,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
       let approved = await web3APIHandler.Erc721.approve(web3, account || "", {
         to: web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE,
         tokenId: token_id,
-        nftAddress: nft.Address,
+        nftAddress: collection_id,
       });
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -102,7 +94,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
   };
 
   const handleAccept = async () => {
-    if (!checkChainID(chainId)) {
+    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -116,7 +108,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
         web3,
         account!,
         {
-          collection_id: nft.Address,
+          collection_id,
           token_id,
           paymentToken: offer.PaymentToken,
           collateralToken: offer.CollateralToken,
@@ -136,7 +128,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address", "uint80", "uint64", "address"],
             [
-              nft.Address,
+              collection_id,
               token_id,
               offer.PaymentToken,
               toNDecimals(offer.Price, getTokenDecimal(offer.PaymentToken)),
@@ -180,7 +172,6 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
           created: new Date().getTime(),
         });
         setNft(newNft);
-        handleRefresh()
         handleClose();
       } else {
         setTransactionSuccess(false);
@@ -212,37 +203,52 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
         }}
       >
         <Box style={{ padding: "25px" }}>
-          <Box fontSize="24px" color="#ffffff" style={{ textTransform: "uppercase" }} fontFamily="GRIFTER">
-            Accept Blocking Offer
+          <Box fontSize="24px" color="#431AB7">
+            Accept Block Offer
           </Box>
           <Box className={classes.description}>
-            {`Accept blocking offer from user "`}
-            <div
-              style={{ display: "contents", cursor: "pointer" }}
-              onClick={() => history.push(`/profile/${getUser(offer.Beneficiary)?.urlSlug}`)}
-            >
-              {getUser(offer.Beneficiary)?.name ?? getAbbrAddress(offer.Beneficiary, 6, 3)}
-            </div>
-            {`" to block the "${nft.name}"`}
+            {`Accept the offer from user "${offer.Beneficiary}" to block the "${nft.name}"`}
           </Box>
-          <Box className={classes.borderBox}>
-            <Box className={classes.box}>
-              <Box className={classes.infoRow}>
-                <span className={classes.infoLabel}>Price</span>
-                <span className={classes.infoValue}>{`${offer.Price} ${getTokenSymbol(
-                  offer.PaymentToken
-                )}`}</span>
-              </Box>
-              <Box className={classes.infoRow} mt={1}>
-                <span className={classes.infoLabel}>Blocking Period</span>
-                <span className={classes.infoValue}>{`${offer.ReservePeriod} Days`}</span>
-              </Box>
+          <Box className={classes.infoPanel} style={{ background: "#eceefc" }}>
+            <Box className={classes.infoRow}>
+              <span className={classes.infoLabel}>Price</span>
+              <span className={classes.infoValue}>{`${offer.Price} ${getTokenSymbol(
+                offer.PaymentToken
+              )}`}</span>
+            </Box>
+            <Box className={classes.divider} />
+            <Box className={classes.infoRow}>
+              <span className={classes.infoLabel}>Period</span>
+              <span className={classes.infoValue}>{`${offer.ReservePeriod} Days`}</span>
+            </Box>
+            <Box className={classes.divider} />
+            <Box className={classes.infoRow}>
+              <span className={classes.infoLabel}>Collateral %</span>
+              <span className={classes.infoValue}>{`${offer.CollateralPercent} %`}</span>
+            </Box>
+            <Box className={classes.divider} />
+            <Box className={classes.infoRow}>
+              <span className={classes.infoLabel}>Expiration</span>
+              <span className={classes.infoValue}>{`${offer.AcceptDuration} Days`}</span>
+            </Box>
+            <Box className={classes.divider} />
+            <Box className={classes.infoRow}>
+              <span className={classes.infoLabel}>Etherscan link</span>
+              <span
+                className={classes.infoValue}
+                style={{ cursor: "pointer" }}
+                onClick={() => handleClickLink(offer.hash)}
+              >
+                {offer.hash.substr(0, 18) + "..." + offer.hash.substr(offer.hash.length - 3, 3)}
+              </span>
             </Box>
           </Box>
+
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
+              style={{ backgroundColor: "#431AB7" }}
               onClick={handleApprove}
               disabled={isApproved}
             >
@@ -251,6 +257,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
+              style={{ backgroundColor: "#431AB7" }}
               onClick={handleAccept}
               disabled={!isApproved}
             >

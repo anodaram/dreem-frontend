@@ -128,11 +128,15 @@ export const realmDetailPageStyles = makeStyles(theme => ({
     "& button": {
       marginTop: -20,
       zIndex: 1,
-      height: 48,
     },
     "& img,video": {
       width: "100%",
       height: "100%",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
       objectFit: "cover",
       objectPosition: "center",
     },
@@ -147,7 +151,6 @@ export const realmDetailPageStyles = makeStyles(theme => ({
     color: "black !important",
     textTransform: "uppercase",
     fontSize: "16px !important",
-    height: 40,
     "& svg": {
       marginRight: 8,
     },

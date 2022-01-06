@@ -133,15 +133,10 @@ export const useModalStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    padding: "8px 16px !important",
-    [theme.breakpoints.down("xs")]: {
-      height: "auto",
-    },
     "& img": {
       marginRight: 8,
     },
     "& button": {
-      padding: "8px !important",
       color: "#ffffff",
       background: "#4218B5",
       border: "1px solid rgba(255, 255, 255, 0.2)",
@@ -158,11 +153,6 @@ export const useModalStyles = makeStyles(theme => ({
           stroke: "#4218B5",
           fill: "#4218B5",
         },
-      },
-      [theme.breakpoints.down("xs")]: {
-        marginLeft: 8,
-        height: "auto",
-        lineHeight: "100%",
       },
     },
   },
@@ -279,6 +269,6 @@ export const useModalStyles = makeStyles(theme => ({
     padding: "3px 4px 0px",
     position: "absolute",
     bottom: "-10px",
-    left: "calc(50% - 46px)",
-  },
+    left: "calc(50% - 46px)"
+  }
 }));

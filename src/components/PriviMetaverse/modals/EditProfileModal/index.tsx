@@ -134,13 +134,7 @@ const EditProfileModal = (props: any) => {
                 props.onClose();
               }, 1000);
             } else {
-              let message = "";
-              for (const validation of response.data.validations) {
-                if (!validation.success) {
-                  message = `${message}${validation.message}\n`;
-                }
-              }
-              showAlertMessage(message ?? "Error when checking updating profile, please try again", {
+              showAlertMessage("error when checking updating profile, please try again", {
                 variant: "error",
               });
               setEditionProgress(false);
@@ -218,7 +212,7 @@ const EditProfileModal = (props: any) => {
                     country: country.name,
                   });
                 }}
-                placeholder="Select countries"
+                placeholder="Select country"
                 getOptionLabel={country => country.name}
                 renderOption={country => country.name}
               />

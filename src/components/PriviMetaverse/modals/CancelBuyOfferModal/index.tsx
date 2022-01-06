@@ -13,7 +13,6 @@ import TransactionProgressModal from "../TransactionProgressModal";
 import { removeBlockingOffer, removeBuyOffer } from "shared/services/API/ReserveAPI";
 import { RootState } from "store/reducers/Reducer";
 import { useSelector } from "react-redux";
-import { checkChainID, getChainForNFT } from "shared/functions/metamask";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
@@ -21,7 +20,7 @@ const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
 export default function CancelBuyOfferModal({ open, handleClose, offer, nft, setNft }) {
   const classes = CancelOfferModalStyles();
   const [hash, setHash] = useState<string>("");
-  const [selectedChain, setSelectedChain] = React.useState<any>(getChainForNFT(nft));
+  const [selectedChain, setSelectedChain] = React.useState<any>(filteredBlockchainNets[0]);
 
   const { account, library, chainId } = useWeb3React();
   const { showAlertMessage } = useAlertMessage();
@@ -35,8 +34,10 @@ export default function CancelBuyOfferModal({ open, handleClose, offer, nft, set
       return;
     }
 
-    setSelectedChain(getChainForNFT(nft));
-  }, [nft]);
+    if (selectedChain && nft && selectedChain.value !== nft.chain) {
+      setSelectedChain(filteredBlockchainNets.find(b => b.value === nft.chain));
+    }
+  }, [nft, selectedChain, open]);
 
   const getTokenDecimal = addr => {
     if (tokens.length == 0) return 0;
@@ -45,7 +46,7 @@ export default function CancelBuyOfferModal({ open, handleClose, offer, nft, set
   };
 
   const handleConfirm = async () => {
-    if (!checkChainID(chainId)) {
+    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -59,7 +60,7 @@ export default function CancelBuyOfferModal({ open, handleClose, offer, nft, set
         web3,
         account!,
         {
-          collection_id: nft.Address,
+          collection_id,
           token_id,
           paymentToken: offer.PaymentToken,
           price: toNDecimals(offer.Price, getTokenDecimal(offer.PaymentToken)),
@@ -98,13 +99,7 @@ export default function CancelBuyOfferModal({ open, handleClose, offer, nft, set
         <>
           <Box display="flex" alignItems="center" flexDirection="column">
             <img src={require("assets/icons/cancel_icon.png")} width="110px" /> <br />
-            <Box
-              fontSize="24px"
-              fontWeight={700}
-              color="#ffffff"
-              marginTop="20px"
-              style={{ textTransform: "uppercase" }}
-            >
+            <Box fontSize="24px" color="#431AB7" marginTop="20px">
               Cancel Offer
             </Box>
             <Box className={classes.nameField}>

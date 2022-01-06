@@ -11,7 +11,8 @@ export const SharePopup = ({ item, openMenu, anchorRef, handleCloseMenu }) => {
   const { shareMedia } = useShareMedia();
 
   const getPrefixURL = () => {
-    return window.location.origin + "/#";
+    if (process.env.NODE_ENV === "development") return `http://localhost:3001/#`;
+    return `https://www.privi.store/#`;
   };
 
   const handleShareWithQR = () => {
@@ -21,8 +22,6 @@ export const SharePopup = ({ item, openMenu, anchorRef, handleCloseMenu }) => {
       setShareLink(
         `${getPrefixURL()}/${item.PodAddress ? "pod" : ""}/${item.MediaSymbol || item.PodAddress || item.id}`
       );
-    } else if (item?.collectionId && item?.tokenId) {
-      setShareLink(`${getPrefixURL()}/gameNFT/${item.collectionId}/${item.tokenId}`);
     } else {
       setShareLink(`${getPrefixURL()}/pod_post/${item.id}`);
     }
@@ -40,8 +39,6 @@ export const SharePopup = ({ item, openMenu, anchorRef, handleCloseMenu }) => {
       shareMedia(item.Type, `realms/${item.realm?.id}/${item.id}`);
     } else if (item?.MediaSymbol || item.PodAddress) {
       shareMedia(item.Type, item.MediaSymbol ? "" : `pod/${item.PodAddress}`);
-    } else if (item?.collectionId && item?.tokenId) {
-      shareMedia("gameNFT", `gameNFT/${item.collectionId}/${item.tokenId}`);
     } else {
       shareMedia(item.Type, item.MediaSymbol ? "" : `pod_post/${item.id}`);
     }

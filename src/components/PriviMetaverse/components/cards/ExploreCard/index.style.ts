@@ -1,14 +1,16 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { after } from "lodash";
 
 export const cardStyles = makeStyles(theme => ({
   outerCard: {
     width: "100%",
+    background: "#431AB7",
     boxShadow: "0px 3px 1.50913px rgba(0, 0, 0, 0.3)",
-    borderRadius: 16,
+    borderRadius: 12,
     cursor: "pointer",
-    padding: 24,
-    background: "#151515",
-    border: "2px solid #F2C525",
+    // height: "fit-content",
+    padding: 9,
+    backdropFilter: "blur(3.59442px)",
     "&:hover": {
       boxShadow: "0px 10px 24px rgba(19, 45, 38, 0.25), 0px 31px 44px -13px rgba(0, 0, 0, 0.02)",
       transform: "scale(1.02)",
@@ -20,22 +22,27 @@ export const cardStyles = makeStyles(theme => ({
     borderRadius: "12px",
     backgroundImage: "linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 108.25%)",
   },
+  innerCard: {
+    padding: "7px",
+    borderRadius: "10px",
+    color: "white",
+    background: "#5F2AF4",
+  },
   cardTitle: {
-    marginBottom: "16px",
+    marginBottom: "9px",
   },
   cardNftName: {
-    fontFamily: "GRIFTER",
-    fontWeight: 700,
-    fontSize: "19.5px",
-    lineHeight: "23.39px",
-    textTransform: "uppercase",
+    fontFamily: "Agrandir",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: "12px",
+    lineHeight: "16px",
     letterSpacing: "0.02em",
+    textTransform: "capitalize",
     height: 20,
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
-    marginTop: "16px",
-    marginBottom: "16px",
   },
   cardOptionButton: {
     float: "right",
@@ -48,15 +55,14 @@ export const cardStyles = makeStyles(theme => ({
     flex: "none",
     order: 1,
     flexGrow: 0,
-    color: "#212121",
     margin: "0px 5.96494px",
-    fontFamily: "GRIFTER",
-    fontStyle: "10px",
+    fontFamily: "Agrandir",
+    fontStyle: "normal",
     fontWeight: "bold",
     fontSize: "8.26741px",
     position: "absolute",
     right: 4,
-    top: 16,
+    top: 8,
   },
 
   category: {
@@ -85,23 +91,24 @@ export const cardStyles = makeStyles(theme => ({
       borderRadius: 9,
       overflow: "hidden",
       height: "330px",
-      objectFit: "contain",
+      objectFit: "cover",
     },
   },
   cardContent: {
     padding: "0px 8px",
   },
   cardContentDiv: {
-    fontFamily: "Rany",
     display: "flex",
     justifyContent: "space-between",
     marginBottom: "6px",
   },
   cardContentText: {
+    fontFamily: "Agrandir",
     fontStyle: "normal",
     fontWeight: 800,
     fontSize: "12px",
     lineHeight: "17px",
+    textAlign: "center",
     letterSpacing: "0.02em",
     textTransform: "uppercase",
     color: "#FFFFFF",
@@ -109,11 +116,12 @@ export const cardStyles = makeStyles(theme => ({
   },
   cardContentAmount: {
     float: "right",
+    fontFamily: "Agrandir",
     fontStyle: "normal",
     fontWeight: 800,
     fontSize: "12.3951px",
     lineHeight: "16px",
-    textAlign: "end",
+    textAlign: "center",
     letterSpacing: "0.02em",
     textTransform: "capitalize",
     color: "#FFFFFF",
@@ -121,15 +129,13 @@ export const cardStyles = makeStyles(theme => ({
   divider: {
     height: 1,
     width: "calc(100% + 14px)",
-    background:
-      "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)",
+    background: "#6C3BF5",
     marginLeft: -7,
     marginBottom: 13,
   },
   userName: {
     display: "flex",
     alignItems: "center",
-    width: "80%",
     "& span": {
       marginLeft: 10,
       color: "#FFFFFF",
@@ -137,8 +143,6 @@ export const cardStyles = makeStyles(theme => ({
       fontFamily: "Montserrat",
       fontWeight: 600,
       fontSize: 12,
-      overflow: "hidden",
-      textOverflow: "ellipsis",
     },
     "&:hover": {
       "& span": {
@@ -146,17 +150,6 @@ export const cardStyles = makeStyles(theme => ({
         fontSize: 13,
         fontWeight: 800,
       },
-    },
-  },
-  skeleton: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    height: "100%",
-    width: "100%",
-    "& .MuiSkeleton-root": {
-      backgroundColor: "#505050",
-      borderRadius: 6,
     },
   },
 }));

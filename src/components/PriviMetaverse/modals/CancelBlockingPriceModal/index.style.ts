@@ -93,7 +93,7 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
     },
   },
   cancelModal: {
-    maxWidth: "545px !important",
+    maxWidth: "640px !important",
     padding: "90px 32px 50px 32px !important",
     display: "flex",
     flexDirection: "column",
@@ -101,33 +101,28 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
     justifyContent: "center",
   },
   cancelTitle: {
-    background: "linear-gradient(#EDFF1C, #ED7B7B)",
-    "-webkit-text-fill-color": "transparent",
-    "-webkit-background-clip": "text",
-    fontFamily: "GRIFTER",
+    fontFamily: "Agrandir GrandHeavy",
     fontSize: "18px",
+    color: "#2D3047",
   },
   cancelDesc: {
-    color: "#ffffff",
-    marginBottom: 64,
+    color: "#54658F",
+    opacity: 0.9,
+    marginBottom: 54,
     textAlign: 'center',
-    padding: '16px 50px',
-    fontSize: '16px',
-    lineHeight: '24px'
+    padding: '20px 50px'
   },
   cancelButton: {
     backgroundColor: "transparent !important",
-    color: "#DDFF57 !important",
-    border: "1px solid #E9FF26 !important",
-    borderRadius: "40px !important",
-    width: '165px !important',
-    textTransform: "uppercase"
+    color: "black !important",
+    border: "1px solid #CBCBCB !important",
+    borderRadius: "4px !important",
+    width: '100% !important',
   },
   editPriceButton: {
-    backgroundColor: "#DDFF57 !important",
-    color: "#0B151C !important",
-    width: '165px !important',
-    borderRadius: "40px !important",
-    textTransform: "uppercase"
-  }
+    backgroundColor: "#431AB7 !important",
+    color: "white",
+    width: '100% !important',
+    borderRadius: "4px !important",
+  },
 }));

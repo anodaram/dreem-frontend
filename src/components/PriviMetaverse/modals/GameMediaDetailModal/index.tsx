@@ -1,31 +1,30 @@
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import ReactPlayer from "react-player";
 import Axios from "axios";
-import { useSelector } from "react-redux";
-
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
-import { getUsersInfoList } from "store/selectors";
-import { useTypedSelector } from "store/reducers/Reducer";
-
 import URL from "shared/functions/getURL";
-import { Modal /*, PrimaryButton */ } from "shared/ui-kit";
+
+import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import Avatar from "shared/ui-kit/Avatar";
 import { getDefaultAvatar, getDefaultBGImage } from "shared/services/user/getUserAvatar";
+// import { getChainImageUrl } from "shared/functions/chainFucntions";
+import { gameMediaDetailModalStyles } from "./index.styles";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
 import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
 import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import { useAuth } from "shared/contexts/AuthContext";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
+import { useSelector } from "react-redux";
+import { getUsersInfoList } from "store/selectors";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
-
-import { gameNFTDetailModalStyles } from "./index.styles";
+import { useTypedSelector } from "store/reducers/Reducer";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
-const GameNFTDetailModal = ({
+const GameMediaDetailModal = ({
   nft,
   open,
   isLoading,
@@ -42,7 +41,7 @@ const GameNFTDetailModal = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const { isSignedin } = useAuth();
 
-  const classes = gameNFTDetailModalStyles();
+  const classes = gameMediaDetailModalStyles();
   const history = useHistory();
 
   const usersInfoList = useSelector(getUsersInfoList);
@@ -78,6 +77,7 @@ const GameNFTDetailModal = ({
   };
 
   const [media, setMedia] = React.useState<any>(null);
+  const anchorShareMenuRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let media = {};
@@ -96,7 +96,7 @@ const GameNFTDetailModal = ({
 
   const isVideo = React.useMemo(() => {
     if (!nft) return;
-    return nft?.image?.endsWith("mp4");
+    return nft?.ipfsImage?.endsWith("mp4");
   }, [nft]);
 
   const convertAddress = address => {
@@ -107,15 +107,15 @@ const GameNFTDetailModal = ({
   };
 
   const handleClickAddress = () => {
-    const address = nft?.Address || "";
-    if (chainName(nft?.Chain) === "Polygon") {
+    const address = nft?.gameInfo?.Address || "";
+    if (chainName(nft?.gameInfo?.Chain) === "Polygon") {
       window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/address/${address}`, "_blank");
-    } else if (chainName(nft?.Chain) === "Ethereum") {
+    } else if (chainName(nft?.gameInfo?.Chain) === "Ethereum") {
       window.open(`https://${!isProd ? "rinkeby." : ""}etherscan.io/address/${address}`, "_blank");
-    } else if (nft?.Chain.toLowerCase() === "bsc") {
+    } else if (nft?.gameInfo?.Chain.toLowerCase() === "bsc") {
       window.open(`https://bscscan.com/address/${address}`, "_blank");
-    } else if (nft?.Chain.toLowerCase() === "solana") {
-      window.open(`https://explorer.solana.com/address/${nft?.Address}`, "_blank");
+    } else if (nft?.gameInfo?.Chain.toLowerCase() === "solana") {
+      window.open(`https://explorer.solana.com/address/${nft?.tokenAddress}`, "_blank");
     }
   };
 
@@ -132,7 +132,7 @@ const GameNFTDetailModal = ({
     }
 
     const body = {
-      gameId: nft?.Slug?.toString(),
+      gameId: nft?.gameInfo?.Slug?.toString(),
       characterId: nft?.id?.toString(),
       userId: curUser?.id,
       fruitId: type,
@@ -148,7 +148,10 @@ const GameNFTDetailModal = ({
   };
 
   const handleClickShare = () => {
-    shareMedia("GameCharacter", `gameNFT/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`);
+    shareMedia(
+      "GameCharacter",
+      `metaverse/${encodeURIComponent(nft?.gameInfo?.Slug)}/${encodeURIComponent(nft?.id)}`
+    );
   };
 
   return (
@@ -196,6 +199,7 @@ const GameNFTDetailModal = ({
                   <div
                     style={{ display: "flex", alignItems: "center", marginLeft: "16px", cursor: "pointer" }}
                     onClick={handleClickShare}
+                    ref={anchorShareMenuRef}
                   >
                     <ShareIcon />
                   </div>
@@ -205,7 +209,7 @@ const GameNFTDetailModal = ({
                 <Box className={classes.nftPreviewSection}>
                   {isVideo ? (
                     <ReactPlayer
-                      url={nft?.image}
+                      url={nft?.ipfsImage}
                       ref={playerVideoItem}
                       controls
                       progressInterval={200}
@@ -224,7 +228,7 @@ const GameNFTDetailModal = ({
                     />
                   ) : (
                     <img
-                      src={sanitizeIfIpfsUrl(nft?.image) ?? getDefaultBGImage()}
+                      src={sanitizeIfIpfsUrl(nft?.ipfsImage) ?? getDefaultBGImage()}
                       width="100%"
                       height="100%"
                       style={{ objectFit: "contain" }}
@@ -233,42 +237,16 @@ const GameNFTDetailModal = ({
                 </Box>
               )}
               <Box className={classes.typo2} mt={isMobile ? 4 : 6} color="#fff">
-                {nft?.Chain === "Solana" ? nft?.id : nft?.name}
+                {nft?.gameInfo?.Chain === "Solana" ? nft?.id : nft?.name}
               </Box>
               {nft?.description && (
-                <>
-                  <Box className={classes.typo3} fontWeight={800} mt={6}>
-                    Description
-                  </Box>
-                  <Box className={classes.typo5} my={1.5} mb={4} color="#fff">
-                    {nft?.description}
-                  </Box>
-                </>
-              )}
-              {/* <PrimaryButton
-                size="medium"
-                onClick={() => history.push("/gameNFT")}
-                style={{
-                  background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
-                  borderRadius: "100px",
-                  display: "flex",
-                  alignItems: "center",
-                  height: 48,
-                  color: "#212121",
-                  fontSize: 18,
-                  fontFamily: "Grifter",
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  marginTop: 64,
-                  padding: "0px 30px",
-                  maxWidth: 330,
-                }}
-              >
-                <BookmarkIcon />
-                <Box ml={1.5} pt={0.5}>
-                  Open On Marketplace
+                <Box className={classes.typo3} fontWeight={800} mt={6}>
+                  Description
                 </Box>
-              </PrimaryButton> */}
+              )}
+              <Box className={classes.typo5} my={1.5} mb={4} color="#fff">
+                {nft?.description}
+              </Box>
             </Box>
             <Box display="flex" flexDirection="column">
               {nft?.token_url && (
@@ -286,8 +264,8 @@ const GameNFTDetailModal = ({
                   <ExpandIcon />
                 </Box>
               )}
-              {((nft?.Chain !== "Solana" && nft?.Address) ||
-                (nft?.Chain === "Solana" && nft?.tokenAddress)) && (
+              {((nft?.gameInfo?.Chain !== "Solana" && nft?.gameInfo?.Address) ||
+                (nft?.gameInfo?.Chain === "Solana" && nft?.tokenAddress)) && (
                 <Box
                   display="flex"
                   alignItems="center"
@@ -304,7 +282,9 @@ const GameNFTDetailModal = ({
                     onClick={handleClickAddress}
                   >
                     <Box className={classes.typo4} color="#E9FF26" mr={1}>
-                      {convertAddress(nft?.Chain === "Solana" ? nft?.tokenAddress : nft?.Address)}
+                      {convertAddress(
+                        nft?.gameInfo?.Chain === "Solana" ? nft?.tokenAddress : nft?.gameInfo?.Address
+                      )}
                     </Box>
                     <ExpandIcon />
                   </Box>
@@ -319,9 +299,9 @@ const GameNFTDetailModal = ({
               >
                 <Box className={classes.typo4}>Minted on</Box>
                 <Box display="flex" alignItems="center" mt={1}>
-                  <img src={getChainImageUrl(nft?.Chain)} width={"22px"} />
+                  <img src={getChainImageUrl(nft?.gameInfo?.Chain)} width={"22px"} />
                   <Box className={classes.typo4} color="#E9FF26" mx={1} mt={"2px"}>
-                    {chainName(nft?.Chain)} Chain
+                    {chainName(nft?.gameInfo?.Chain)} Chain
                   </Box>
                 </Box>
               </Box>
@@ -331,7 +311,7 @@ const GameNFTDetailModal = ({
             <Box className={classes.nftPreviewSection}>
               {isVideo ? (
                 <ReactPlayer
-                  url={nft?.image}
+                  url={nft?.ipfsImage}
                   ref={playerVideoItem}
                   controls
                   progressInterval={200}
@@ -350,7 +330,7 @@ const GameNFTDetailModal = ({
                 />
               ) : (
                 <img
-                  src={sanitizeIfIpfsUrl(nft?.image) ?? getDefaultBGImage()}
+                  src={sanitizeIfIpfsUrl(nft?.ipfsImage) ?? getDefaultBGImage()}
                   width="100%"
                   height="100%"
                   style={{ objectFit: "contain" }}
@@ -364,7 +344,7 @@ const GameNFTDetailModal = ({
   );
 };
 
-export default GameNFTDetailModal;
+export default GameMediaDetailModal;
 
 const ExpandIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -399,16 +379,5 @@ const ShareIcon = () => (
       stroke="#EEFF21"
     />
     <rect x="0.5" y="0.5" width="37" height="37" rx="18.5" stroke="#EEFF21" />
-  </svg>
-);
-
-const BookmarkIcon = () => (
-  <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M2.22112 1.82746L1.32121 1.82309L1.3255 2.723L1.36266 10.5111L1.36441 10.8778L1.62371 11.1371L11.1005 20.6138L11.7307 21.2441L12.361 20.6138L20.1112 12.8636L20.7415 12.2334L20.1113 11.6031L10.6358 2.12634L10.3765 1.86703L10.0098 1.86525L2.22112 1.82746Z"
-      stroke="#151515"
-      stroke-width="1.78261"
-    />
-    <circle cx="6.5918" cy="7.09375" r="1.62942" stroke="#151515" stroke-width="1.33696" />
   </svg>
 );

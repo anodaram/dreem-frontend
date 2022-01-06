@@ -13,7 +13,7 @@ import TransactionProgressModal from "../TransactionProgressModal";
 import { RentProceedModalStyles } from "./index.style";
 
 import { acceptRentOffer } from "shared/services/API/ReserveAPI";
-import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
+import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import { RootState } from "store/reducers/Reducer";
 import { useSelector } from "react-redux";
 
@@ -23,7 +23,7 @@ const SECONDS_PER_DAY = 86400;
 
 export default function RentProceedModal({ open, offer, handleClose = () => {}, nft, setNft }) {
   const classes = RentProceedModalStyles();
-  const [selectedChain, setSelectedChain] = React.useState<any>(getChainForNFT(nft));
+  const [selectedChain, setSelectedChain] = React.useState<any>(filteredBlockchainNets[0]);
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const [hash, setHash] = useState<string>("");
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
@@ -40,7 +40,15 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
     }
   }, [open]);
 
-  useEffect(() => setSelectedChain(getChainForNFT(nft)), [nft]);
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    if (selectedChain && nft && selectedChain.value !== nft.chain) {
+      setSelectedChain(filteredBlockchainNets.find(b => b.value === nft.chain));
+    }
+  }, [nft, selectedChain, open]);
 
   const getTokenDecimal = addr => {
     if (tokens.length == 0) return 0;
@@ -54,22 +62,28 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
         return;
       }
 
-      if (chainId && chainId !== selectedChain?.chainId) {
-        const isHere = await switchNetwork(selectedChain?.chainId || 0);
+      const nftChain = getChainForNFT(nft);
+      if (!nftChain) {
+        showAlertMessage(`network error`, { variant: "error" });
+        return;     
+      }
+      if (chainId && chainId !== nftChain?.chainId) {
+        const isHere = await switchNetwork(nftChain?.chainId || 0);
         if (!isHere) {
           showAlertMessage("Got failed while switching over to target network", { variant: "error" });
           return;
         }
+        setSelectedChain(nftChain);
       }
 
       setOpenTransactionModal(true);
-      const web3Config = selectedChain.config;
-      const web3APIHandler = selectedChain.apiHandler;
+      const web3Config = nftChain.config;
+      const web3APIHandler = nftChain.apiHandler;
       const web3 = new Web3(library.provider);
       let approved = await web3APIHandler.Erc721.approve(web3, account || "", {
         to: web3Config.CONTRACT_ADDRESSES.RENTAL_MANAGER,
         tokenId: token_id,
-        nftAddress: nft.Address,
+        nftAddress: collection_id,
       });
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -92,7 +106,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
   };
 
   const handleAccept = async () => {
-    if (!checkChainID(chainId)) {
+    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -106,7 +120,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
         web3,
         account!,
         {
-          collectionId: nft.Address,
+          collectionId: collection_id,
           tokenId: token_id,
           rentalTime: offer.rentalTime,
           pricePerSecond: offer.pricePerSecond,
@@ -124,7 +138,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
         await acceptRentOffer({
           mode: isProd ? "main" : "test",
           rentalOfferId: offer.id,
-          collection: collection_id,
+          collection: newOffer.collection,
           tokenId: newOffer.tokenId,
           rentalTime: newOffer.rentalTime,
           pricePerSecond: newOffer.pricePerSecond,
@@ -176,7 +190,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
   const getTokenSymbol = addr => {
     if (tokens.length == 0 || !addr) return 0;
     let token = tokens.find(token => token.Address === addr);
-    return token?.Symbol || "";
+    return token?.Symbol || '';
   };
 
   return (
@@ -192,51 +206,55 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
         }}
       >
         <Box style={{ padding: "25px" }}>
-          <Box className={classes.title}>Accept Rent Offer</Box>
-          <Box className={classes.description}>
-            {`Accept the offer from user "${offer?.offerer ?? ""} " to rent the "${nft.name}"`}
+          <Box fontSize="24px" color="#431AB7">
+            Accept Rent Offer
           </Box>
-          <Box className={classes.borderBox}>
-            <Box className={classes.box}>
-              <Box className={classes.infoRow}>
-                <span className={classes.infoLabel}>Price per second</span>
-                <span className={classes.infoValue}>
-                  {`${toDecimals(offer.pricePerSecond, getTokenDecimal(offer.fundingToken))} ${getTokenSymbol(
-                    offer.fundingToken
-                  )}`}
-                </span>
-              </Box>
-              <Box className={classes.infoRow} mt={1}>
-                <span className={classes.infoLabel}>Rental time</span>
-                <span className={classes.infoValue}>{`${(offer.rentalTime / SECONDS_PER_DAY).toFixed(
-                  3
-                )} Days`}</span>
-              </Box>
-              <Box className={classes.infoRow} mt={1}>
-                <span className={classes.infoLabel}>Total cost</span>
-                <span className={classes.infoValue}>
-                  {`${toDecimals(
-                    offer.pricePerSecond * offer.rentalTime,
-                    getTokenDecimal(offer.fundingToken)
-                  )} ${getTokenSymbol(offer.fundingToken)}`}
-                </span>
-              </Box>
-              {/* <Box className={classes.infoRow} mt={1}>
-                <span className={classes.infoLabel}>Etherscan link</span>
-                <span
-                  className={classes.infoValue}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => handleClickLink(offer.hash)}
-                >
-                  {offer.hash.substr(0, 18) + "..." + offer.hash.substr(offer.hash.length - 3, 3)}
-                </span>
-              </Box> */}
+          <Box className={classes.description}>
+            {`Accept the offer from user "${offer.offerer}" to rent the "${nft.name}"`}
+          </Box>
+          <Box className={classes.infoPanel} style={{ background: "#eceefc" }}>
+            <Box className={classes.infoRow}>
+              <span className={classes.infoLabel}>Price per second</span>
+              <span className={classes.infoValue}>
+                {`${toDecimals(offer.pricePerSecond, getTokenDecimal(offer.fundingToken))} ${getTokenSymbol(
+                  offer.fundingToken
+                )}`}
+              </span>
+            </Box>
+            <Box className={classes.divider} />
+            <Box className={classes.infoRow}>
+              <span className={classes.infoLabel}>Rental time</span>
+              <span className={classes.infoValue}>{`${(offer.rentalTime / SECONDS_PER_DAY).toFixed(
+                3
+              )} Days`}</span>
+            </Box>
+            <Box className={classes.divider} />
+            <Box className={classes.infoRow}>
+              <span className={classes.infoLabel}>Total cost</span>
+              <span className={classes.infoValue}>
+                {`${toDecimals(
+                  offer.pricePerSecond * offer.rentalTime,
+                  getTokenDecimal(offer.fundingToken)
+                )} ${getTokenSymbol(offer.fundingToken)}`}
+              </span>
+            </Box>
+            <Box className={classes.divider} />
+            <Box className={classes.infoRow}>
+              <span className={classes.infoLabel}>Etherscan link</span>
+              <span
+                className={classes.infoValue}
+                style={{ cursor: "pointer" }}
+                onClick={() => handleClickLink(offer.hash)}
+              >
+                {offer.hash.substr(0, 18) + "..." + offer.hash.substr(offer.hash.length - 3, 3)}
+              </span>
             </Box>
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
+              style={{ backgroundColor: "#431AB7" }}
               onClick={handleApprove}
               disabled={isApproved}
             >
@@ -245,6 +263,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
+              style={{ backgroundColor: "#431AB7" }}
               onClick={handleAccept}
               disabled={!isApproved}
             >

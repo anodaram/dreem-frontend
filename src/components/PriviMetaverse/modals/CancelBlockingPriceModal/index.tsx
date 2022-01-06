@@ -58,7 +58,7 @@ export default function CancelBlockingPriceModal({ open, handleClose, offer, nft
         web3,
         account!,
         {
-          collection_id: nft.Address,
+          collection_id,
           token_id,
           paymentToken: offer.PaymentToken,
           price: toNDecimals(offer.Price, getTokenDecimal(offer.PaymentToken)),

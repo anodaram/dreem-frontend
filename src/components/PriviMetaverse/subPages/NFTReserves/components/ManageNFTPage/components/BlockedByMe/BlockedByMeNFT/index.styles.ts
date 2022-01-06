@@ -1,68 +1,44 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 export const blockedByMeNFTStyles = makeStyles(theme => ({
-  borderContainer: {
-    border: (props: { isExpired: boolean | undefined }) =>
-      props.isExpired ? "1px solid rgba(255, 255, 255, 0.5)" : "1px solid #E9FF26",
-    borderRadius: 14,
-    margin: "8px 0",
-  },
   container: {
     padding: 28,
-    backgroundColor: "#2c2c2c",
-    borderRadius: 14,
+    backgroundColor: "#5F2AF4",
+    boxShadow: "0px 3px 1.50913px rgba(0, 0, 0, 0.3)",
+    borderRadius: 16,
+    margin: "8px 0",
+    "&:hover": {
+      boxShadow: "0px 16px 24px rgba(19, 45, 38, 0.25), 0px 31px 44px -13px rgba(0, 0, 0, 0.3)",
+    },
   },
   nftImage: {
     width: 157,
     height: 157,
-    borderRadius: 8,
+    borderRadius: 8
   },
   header: {
     opacity: 0.8,
     textTransform: "capitalize",
-    letterSpacing: "0.02em",
-    fontSize: 14,
-    lineHeight: "30px",
+    letterSpacing: '0.02em',
+    fontSize: 16,
+    lineHeight: "30px"
   },
   section: {
     borderRight: "1px solid #ffffff20",
-    fontFamily: "GRIFTER",
-    fontWeight: 700,
+    fontFamily: "Montserrat",
+    fontWeight: 700
   },
   time: {
     padding: "8px 13px",
-    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+    background: "rgba(66, 24, 181, 0.6)",
     borderRadius: 7,
-    margin: "0 3px",
-    color: "#212121",
+    margin: "0 3px"
   },
   nftName: {
-    fontFamily: "GRIFTER",
+    fontFamily: "Agrandir",
     fontStyle: "normal",
     fontWeight: "bold",
     fontSize: "22px",
-    lineHeight: "29px",
-    background: "linear-gradient(#EDFF1C, #ED7B7B)",
-    "-webkit-text-fill-color": "transparent",
-    "-webkit-background-clip": "text",
-  },
-  slider: {
-    width: "100%",
-    "& .MuiSlider-markLabel": {
-      top: "14px",
-      color: "#ffffff60",
-    },
-  },
-  skeleton: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    height: "100%",
-    width: "100%",
-    padding: 16,
-    "& .MuiSkeleton-root": {
-      backgroundColor: "#505050",
-      borderRadius: 14,
-    },
-  },
+    lineHeight: "29px"
+  }
 }));

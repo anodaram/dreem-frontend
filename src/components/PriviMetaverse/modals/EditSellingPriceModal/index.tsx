@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router";
-
-import { Grid } from "@material-ui/core";
+import { Grid, useMediaQuery, useTheme } from "@material-ui/core";
 
 import Box from "shared/ui-kit/Box";
 import { Modal, PrimaryButton } from "shared/ui-kit";
-import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
-import { toNDecimals } from "shared/functions/web3";
+import URL from "shared/functions/getURL";
+import { EditSellingPriceModalStyles } from "./index.style";
+import { BlockchainNets } from "shared/constants/constants";
+import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
+import { toDecimals, toNDecimals } from "shared/functions/web3";
+import TransactionProgressModal from "../TransactionProgressModal";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
+import { useParams } from "react-router";
 import { cancelSellingOffer, createSellOffer } from "shared/services/API/ReserveAPI";
+import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
-import TransactionProgressModal from "../TransactionProgressModal";
-import { EditSellingPriceModalStyles } from "./index.style";
 
 const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
   const classes = EditSellingPriceModalStyles();
   const { account, library, chainId } = useWeb3React();
-  const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
 
+  const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const [reservePriceToken, setReservePriceToken] = useState<any>(tokenList[0]);
@@ -31,19 +33,22 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const [isApproved, setIsApproved] = useState<boolean>(false);
-  const [inputBalance, setInputBalance] = useState<number>();
-  const [orgNft, setOrgNft] = useState<any>({});
+  const [inputBalance, setInputBalance] = useState<string>("");
   const { showAlertMessage } = useAlertMessage();
 
+  const { collection_id, token_id } = useParams();
   const isProd = process.env.REACT_APP_ENV === "prod";
 
-  useEffect(() => nft && setSelectedChain(getChainForNFT(nft)), [nft]);
   useEffect(() => {
     if (!open) {
       setIsApproved(false);
       return;
     }
-  }, [open]);
+
+    if (selectedChain && nft && selectedChain.value !== nft.chain) {
+      setSelectedChain(filteredBlockchainNets.find(b => b.value === nft.chain));
+    }
+  }, [nft, selectedChain, open]);
 
   useEffect(() => {
     setStep(0);
@@ -53,12 +58,6 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
     if (tokenList.length == 0) return 0;
     let token = tokenList.find(token => token.Address === addr);
     return token?.Decimals || 0;
-  };
-
-  const getTokenName = addr => {
-    if (tokenList.length == 0 || !addr) return "";
-    let token = tokenList.find(token => token.Address === addr);
-    return token?.Symbol || "";
   };
 
   const handleCancel = async () => {
@@ -77,7 +76,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
       web3,
       account!,
       {
-        collection_id: nft.Address,
+        collection_id,
         token_id,
         paymentToken: offer.PaymentToken,
         price: toNDecimals(offer.Price, getTokenDecimal(offer.PaymentToken)),
@@ -95,10 +94,8 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
         TokenId: token_id,
       });
       let newNft = { ...nft };
-      let _orgNft = { ...nft };
       newNft.sellingOffer = {};
       setNft(newNft);
-      setOrgNft(_orgNft);
       setStep(1);
     } else {
       setTransactionSuccess(false);
@@ -108,11 +105,6 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
   };
 
   const handleApprove = async () => {
-    if (!inputBalance) {
-      showAlertMessage("Please fill all the fields", { variant: "error" });
-      return;
-    }
-
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
@@ -130,7 +122,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
       let approved = await web3APIHandler.Erc721.approve(web3, account || "", {
         to: web3Config.CONTRACT_ADDRESSES.OPEN_SALES_MANAGER,
         tokenId: token_id,
-        nftAddress: orgNft.Address,
+        nftAddress: collection_id,
       });
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -153,12 +145,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
   };
 
   const handleConfirm = async () => {
-    if (!inputBalance) {
-      showAlertMessage("Please fill all the fields", { variant: "error" });
-      return;
-    }
-
-    if (!checkChainID(chainId)) {
+    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -170,7 +157,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
       web3,
       account!,
       {
-        collection_id: orgNft.Address,
+        collection_id,
         token_id,
         paymentToken: reservePriceToken?.Address,
         price: toNDecimals(inputBalance, reservePriceToken.Decimals),
@@ -186,7 +173,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "uint256", "address"],
           [
-            orgNft.Address,
+            collection_id,
             token_id,
             reservePriceToken?.Address,
             toNDecimals(inputBalance, reservePriceToken.Decimals),
@@ -255,16 +242,8 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
     <>
       <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.container}>
         <Box style={{ padding: "25px" }}>
-          <Box fontSize="24px" color="#ffffff" style={{ textTransform: "uppercase" }}>
+          <Box fontSize="24px" color="#431AB7">
             Set New Price
-          </Box>
-          <Box className={classes.borderBox}>
-            <Box className={classes.box}>
-              <span className={classes.currentPrice}>Current price</span>
-              <span className={classes.purpleText}>
-                {`${orgNft?.sellingOffer?.Price} ${getTokenName(orgNft?.sellingOffer?.PaymentToken)}`}
-              </span>
-            </Box>
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={6} sm={7}>
@@ -278,20 +257,18 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
                 theme="light"
                 minValue={0}
                 disabled={isApproved}
-                placeHolder={"0.001"}
               />
             </Grid>
             <Grid item xs={6} sm={5}>
               <Box className={classes.nameField}>Selling Token</Box>
               <ReserveTokenSelect
-                tokens={tokenList.filter(
-                  token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
-                )}
+                tokens={tokenList}
                 value={reservePriceToken?.Address || ""}
-                className={classes.tokenSelect}
+                className={classes.inputJOT}
                 onChange={e => {
                   setReservePriceToken(tokenList.find(v => v.Address === e.target.value));
                 }}
+                style={{ flex: "1" }}
                 disabled={true}
               />
             </Grid>
@@ -300,7 +277,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
-              disabled={isApproved}
+              style={{ backgroundColor: isApproved ? "#431AB750" : "#431AB7" }}
               onClick={handleApprove}
             >
               Approve
@@ -308,7 +285,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
-              disabled={!isApproved}
+              style={{ backgroundColor: !isApproved ? "#431AB750" : "#431AB7" }}
               onClick={handleConfirm}
             >
               Confirm Set

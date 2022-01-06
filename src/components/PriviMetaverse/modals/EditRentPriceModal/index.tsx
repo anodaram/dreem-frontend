@@ -3,32 +3,33 @@ import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 import { useParams } from "react-router";
 import DateFnsUtils from "@date-io/date-fns";
-import { useSelector } from "react-redux";
-
-import { Grid } from "@material-ui/core";
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 
 import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
-import { PrimaryButton } from "shared/ui-kit";
+import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import { cancelListOffer, createListOffer } from "shared/services/API/ReserveAPI";
-import { toNDecimals } from "shared/functions/web3";
-import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
-import { getNextDay } from "shared/helpers/utils";
-import { RootState } from "store/reducers/Reducer";
-import TransactionProgressModal from "../TransactionProgressModal";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import { Grid } from "@material-ui/core";
 import { EditRentPriceModalStyles } from "./index.style";
+import TransactionProgressModal from "../TransactionProgressModal";
+
+import { BlockchainNets } from "shared/constants/constants";
+import { cancelListOffer, createListOffer } from "shared/services/API/ReserveAPI";
+import { toDecimals, toNDecimals } from "shared/functions/web3";
+import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
+import { getNextDay } from "shared/helpers/utils";
+import { useSelector } from "react-redux";
+import { RootState } from "store/reducers/Reducer";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function EditRentPriceModal({ open, offer, handleClose = () => {}, nft, setNft }) {
   const classes = EditRentPriceModalStyles();
   const { account, library, chainId } = useWeb3React();
-  const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
-  const [pricePerSec, setPricePerSec] = useState<number>();
+  const { collection_id, token_id } = useParams();
+  const [pricePerSec, setPricePerSec] = useState<number>(0);
 
   const [maxRentalTime, setMaxRentalTime] = useState<any>();
   const [limitDays, setLimitDays] = useState<number>(0);
@@ -38,7 +39,8 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [isCancelled, setIsCancelled] = useState<boolean>(false);
 
-  const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
+  const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
+  const [selectedChain, setSelectedChain] = useState<any>(filteredBlockchainNets[0]);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const [rentalToken, setRentalToken] = useState<any>(tokenList[0]);
   const [hash, setHash] = useState<string>("");
@@ -46,51 +48,54 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const { showAlertMessage } = useAlertMessage();
 
-  useEffect(() => nft && setSelectedChain(getChainForNFT(nft)), [nft]);
-
   useEffect(() => {
     setIsCancelled(false);
     setIsApproved(false);
   }, [open]);
 
   useEffect(() => {
-    setRentalToken(tokenList[0]);
-  }, [tokenList]);
+    setRentalToken(tokenList[0])
+  }, [tokenList])
 
   useEffect(() => {
     if (!open) {
       setIsApproved(false);
       return;
     }
-  }, [open]);
+
+    if (selectedChain && nft && selectedChain.value !== nft.chain) {
+      setSelectedChain(filteredBlockchainNets.find(b => b.value === nft.chain));
+    }
+  }, [nft, selectedChain, open]);
 
   const handleApprove = async () => {
-    if (isApproved) {
-      return;
-    }
-
-    if (!pricePerSec || !(limitDays || limitHour || limitMin || limitSec)) {
-      showAlertMessage("Please fill all the fields", { variant: "error" });
-      return;
-    }
-
     try {
-      if (chainId && chainId !== selectedChain?.chainId) {
-        const isHere = await switchNetwork(selectedChain?.chainId || 0);
+      if (isApproved) {
+        return;
+      }
+
+      const nftChain = getChainForNFT(nft);
+      if (!nftChain) {
+        showAlertMessage(`network error`, { variant: "error" });
+        return;     
+      }
+      if (chainId && chainId !== nftChain?.chainId) {
+        const isHere = await switchNetwork(nftChain?.chainId || 0);
         if (!isHere) {
           showAlertMessage("Got failed while switching over to target network", { variant: "error" });
           return;
         }
+        setSelectedChain(nftChain);
       }
 
       setOpenTransactionModal(true);
-      const web3Config = selectedChain.config;
-      const web3APIHandler = selectedChain.apiHandler;
+      const web3Config = nftChain.config;
+      const web3APIHandler = nftChain.apiHandler;
       const web3 = new Web3(library.provider);
       let approved = await web3APIHandler.Erc721.approve(web3, account || "", {
         to: web3Config.CONTRACT_ADDRESSES.RENTAL_MANAGER,
         tokenId: token_id,
-        nftAddress: nft.Address,
+        nftAddress: collection_id,
       });
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -117,14 +122,8 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
       if (!isApproved) {
         return;
       }
-
-      if (!pricePerSec || !(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
-        return;
-      }
-
       setOpenTransactionModal(true);
-      if (!checkChainID(chainId)) {
+      if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
         showAlertMessage(`network error`, { variant: "error" });
         return;
       }
@@ -134,7 +133,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
         web3,
         account!,
         {
-          collectionId: nft.Address,
+          collectionId: collection_id,
           tokenId: token_id,
           maximumRentalTime: toSeconds(limitDays, limitHour, limitMin, limitSec),
           pricePerSecond: toNDecimals(pricePerSec, rentalToken.Decimals),
@@ -191,7 +190,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
   };
 
   const handleCancel = async () => {
-    if (!checkChainID(chainId)) {
+    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -204,7 +203,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
         web3,
         account!,
         {
-          collectionId: nft.Address,
+          collectionId: collection_id,
           tokenId: token_id,
           maximumRentalTime: offer.maximumRentTime,
           pricePerSecond: offer.pricePerSecond,
@@ -288,13 +287,15 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
         className={classes.container}
       >
         <Box style={{ padding: "25px" }}>
-          <Box className={classes.title}>Edit Rental Price</Box>
+          <Box fontSize="24px" color="#431AB7">
+            Edit Rental Price
+          </Box>
           <Grid container spacing={2}>
             <Grid item sm={7}>
-              <Box className={classes.nameField}>Price Per Second</Box>
+              <Box className={classes.nameField}>Price per second</Box>
             </Grid>
             <Grid item sm={5}>
-              <Box className={classes.nameField}>Token</Box>
+              <Box className={classes.nameField}>Rental Token</Box>
             </Grid>
           </Grid>
           <Grid container spacing={2}>
@@ -308,14 +309,11 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
                 theme="light"
                 minValue={0}
                 disabled={isApproved}
-                placeHolder={"0.001"}
               />
             </Grid>
             <Grid item sm={5}>
               <ReserveTokenSelect
-                tokens={tokenList.filter(
-                  token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
-                )}
+                tokens={tokenList}
                 value={rentalToken?.Address || ""}
                 className={classes.inputJOT}
                 onChange={e => {
@@ -347,74 +345,67 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
               />
             </MuiPickersUtilsProvider>
           </Box>
-          <Box className={classes.nameField}>Limit Rental Time</Box>
+          <Box className={classes.nameField}>Limit rental time</Box>
           <Box display="flex" alignItems="center">
             <InputWithLabelAndTooltip
               inputValue={limitDays}
-              onInputValueChange={e => setLimitDays(e.target.value)}
+              onInputValueChange={e => setLimitDays(+e.target.value)}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
-              endAdornment={<div className={classes.suffixText}>DAYS</div>}
+              endAdornment={<div className={classes.purpleText}>d</div>}
               disabled={isApproved}
-              placeHolder={"00"}
             />
             <InputWithLabelAndTooltip
               inputValue={limitHour}
-              onInputValueChange={e => setLimitHour(e.target.value)}
+              onInputValueChange={e => setLimitHour(+e.target.value)}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
-              endAdornment={<div className={classes.suffixText}>HRS</div>}
+              endAdornment={<div className={classes.purpleText}>h</div>}
               disabled={isApproved}
-              style={{ marginLeft: "8px" }}
-              placeHolder={"00"}
             />
             <InputWithLabelAndTooltip
               inputValue={limitMin}
-              onInputValueChange={e => setLimitMin(e.target.value)}
+              onInputValueChange={e => setLimitMin(+e.target.value)}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
-              endAdornment={<div className={classes.suffixText}>MINS</div>}
+              endAdornment={<div className={classes.purpleText}>m</div>}
               disabled={isApproved}
-              style={{ marginLeft: "8px" }}
-              placeHolder={"00"}
             />
             <InputWithLabelAndTooltip
               inputValue={limitSec}
-              onInputValueChange={e => setLimitSec(e.target.value)}
+              onInputValueChange={e => setLimitSec(+e.target.value)}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
-              endAdornment={<div className={classes.suffixText}>SEC</div>}
+              endAdornment={<div className={classes.purpleText}>s</div>}
               disabled={isApproved}
-              style={{ marginLeft: "8px" }}
-              placeHolder={"00"}
             />
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
+              style={{ backgroundColor: isApproved ? "#431AB750" : "#431AB7" }}
               onClick={handleApprove}
-              disabled={isApproved}
             >
               Approve
             </PrimaryButton>
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
+              style={{ backgroundColor: !isApproved ? "#431AB750" : "#431AB7" }}
               onClick={handleConfirm}
-              disabled={!isApproved}
             >
               Confirm Set
             </PrimaryButton>

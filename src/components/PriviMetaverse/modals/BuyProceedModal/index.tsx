@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router";
+import moment from "moment";
 
 import { Modal } from "shared/ui-kit";
+import { BlockchainNets } from "shared/constants/constants";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import Box from "shared/ui-kit/Box";
 import { PrimaryButton } from "shared/ui-kit";
+import { BuyProceedModalStyles } from "./index.style";
+import TransactionProgressModal from "../TransactionProgressModal";
 import { toNDecimals } from "shared/functions/web3";
+import { useParams } from "react-router";
 import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import { acceptBuyingOffer } from "shared/services/API/ReserveAPI";
 import { RootState } from "store/reducers/Reducer";
-import TransactionProgressModal from "../TransactionProgressModal";
-import { BuyProceedModalStyles } from "./index.style";
+import { useSelector } from "react-redux";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -46,7 +48,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
   const getTokenSymbol = addr => {
     if (tokens.length == 0 || !addr) return 0;
     let token = tokens.find(token => token.Address === addr);
-    return token?.Symbol || "USDT";
+    return token?.Symbol || '';
   };
 
   const handleCloseModal = () => {
@@ -71,7 +73,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
       let approved = await web3APIHandler.Erc721.approve(web3, account || "", {
         to: web3Config.CONTRACT_ADDRESSES.OPEN_SALES_MANAGER,
         tokenId: token_id,
-        nftAddress: nft.Address,
+        nftAddress: collection_id,
       });
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -111,7 +113,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
         web3,
         account!,
         {
-          collection_id: nft.Address,
+          collection_id,
           token_id,
           paymentToken: offer.PaymentToken,
           price: toNDecimals(offer.Price, getTokenDecimal(offer.PaymentToken)),
@@ -126,7 +128,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
         const offerId = web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address"],
-            [nft.Address, token_id, offer.PaymentToken, 0, offer.Beneficiary]
+            [collection_id, token_id, offer.PaymentToken, 0, offer.Beneficiary]
           )
         );
 
@@ -187,16 +189,36 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
         }}
       >
         <Box style={{ padding: "25px" }}>
-          <Box className={classes.title}>Accept Buy Offer</Box>
+          <Box fontSize="24px" color="#431AB7">
+            Accept Buy Offer
+          </Box>
           <Box className={classes.description}>
             {`Accept the offer from user "${offer.Beneficiary}" to block the "${nft.name}"`}
           </Box>
-          <Box className={classes.borderBox}>
-            <Box className={classes.box}>
+          <Box className={classes.infoPanel} style={{ background: "#eceefc" }}>
+            <Box className={classes.infoRow}>
               <span className={classes.infoLabel}>Price</span>
               <span className={classes.infoValue}>{`${offer.Price} ${getTokenSymbol(
                 offer.PaymentToken
               )}`}</span>
+            </Box>
+            <Box className={classes.divider} />
+            <Box className={classes.infoRow}>
+              <span className={classes.infoLabel}>Expiration</span>
+              <span className={classes.infoValue}>
+                {moment(new Date(offer.Expiration)).format("DD-MM-YYYY")}
+              </span>
+            </Box>
+            <Box className={classes.divider} />
+            <Box className={classes.infoRow}>
+              <span className={classes.infoLabel}>Etherscan link</span>
+              <span
+                className={classes.infoValue}
+                style={{ cursor: "pointer" }}
+                onClick={() => handleClickLink(offer.hash)}
+              >
+                {offer.hash.substr(0, 18) + "..." + offer.hash.substr(offer.hash.length - 3, 3)}
+              </span>
             </Box>
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
@@ -216,7 +238,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
               onClick={handleAccept}
               disabled={!isApproved}
             >
-              Confirm Offer
+              Accept Offer
             </PrimaryButton>
           </Box>
         </Box>

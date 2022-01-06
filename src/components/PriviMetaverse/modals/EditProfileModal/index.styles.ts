@@ -13,7 +13,7 @@ export const createNFTModalStyles = makeStyles(theme => ({
     flexDirection: "column",
   },
   itemTitle: {
-    fontFamily: "Rany",
+    fontFamily: "GRIFTER",
     fontSize: 14,
     fontWeight: "bold",
     lineHeight: "104%",
@@ -23,7 +23,7 @@ export const createNFTModalStyles = makeStyles(theme => ({
     border: "1px solid rgba(218, 218, 219, 0.59)",
     height: 48,
     fontSize: 14,
-    fontFamily: "Rany",
+    fontFamily: "GRIFTER",
     fontWeight: 500,
     lineHeight: "14px",
     padding: "12px 16px",
@@ -41,7 +41,7 @@ export const createNFTModalStyles = makeStyles(theme => ({
         backgroundColor: "transparent",
         "& input": {
           color: "white",
-          fontFamily: "Rany !important",
+          fontFamily: "GRIFTER !important",
         },
       },
     },
@@ -113,14 +113,14 @@ export const createNFTModalStyles = makeStyles(theme => ({
     },
   },
   countryContainer: {
-    fontFamily: "Rany",
+    fontFamily: "GRIFTER",
     "& .MuiInputBase-fullWidth": {
       borderRadius: "0 !important",
       height: "48px !important",
       border: "1px solid rgba(218, 218, 219, 0.59) !important",
       background: "rgba(218, 230, 229, 0.06) !important",
       color: "white !important",
-      fontFamily: "Rany !important",
+      fontFamily: "GRIFTER !important",
     },
   },
 }));

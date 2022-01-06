@@ -48,7 +48,7 @@ export default function CancelRentPriceModal({ open, handleClose, offer, nft, se
         web3,
         account!,
         {
-          collectionId: nft.Address,
+          collectionId: collection_id,
           tokenId: token_id,
           maximumRentalTime: offer.maximumRentTime,
           pricePerSecond: offer.pricePerSecond,

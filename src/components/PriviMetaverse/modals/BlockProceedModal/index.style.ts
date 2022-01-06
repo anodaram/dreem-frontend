@@ -4,6 +4,12 @@ export const BlockProceedModalStyles = makeStyles(theme => ({
   container: {
     padding: "0px !important",
   },
+  primaryButton: {
+    color: "#fff !important",
+    padding: "0 37px !important",
+    height: "40px !important",
+    border: "none !important",
+  },
   infoPanel: {
     marginTop: 17,
     marginBottom: 34,
@@ -16,7 +22,7 @@ export const BlockProceedModalStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    fontFamily: "Rany",
+    fontFamily: "Agrandir",
     fontSize: "16px",
     letterSpacing: "0.02em",
     lineHeight: "150%",
@@ -28,49 +34,41 @@ export const BlockProceedModalStyles = makeStyles(theme => ({
     height: 1,
   },
   infoLabel: {
-    fontSize: 16,
-    lineHeight: "24px",
-    background: "linear-gradient(#EDFF1C, #ED7B7B)",
-    "-webkit-text-fill-color": "transparent",
-    "-webkit-background-clip": "text",
+    color: "#1A1B1C",
   },
   infoValue: {
     fontWeight: 800,
-    fontSize: 18,
-    color: "#ffffff",
+    color: "#431AB7",
   },
   description: {
-    fontFamily: "Rany",
+    fontFamily: "Agrandir",
     fontSize: "14px",
-    color: "#ffffff",
-    marginTop: 31,
-    marginBottom: 15,
-    fontWeight: 400
+    color: "#1A1B1C",
+    marginTop: 10,
+    marginBottom: 17,
   },
   hash: {
     cursor: "pointer",
   },
-  primaryButton: {
-    color: "#212121 !important",
-    padding: "0 37px !important",
-    height: "40px !important",
-    background: "linear-gradient(#B7FF5C, #EEFF21) !important",
-    borderRadius: "40px",
-    border: "none",
-    "&:disabled": {
-      background: "linear-gradient(#B7FF5C, #EEFF21) !important",
-      color: "#212121 !important",
-    }
+  buttonCheck: {
+    fontFamily: "Agrandir",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: "16px",
+    lineHeight: "21px",
+    textAlign: "center",
+    letterSpacing: "-0.04em",
+    color: "white",
+    flex: "none",
+    order: 0,
+    flexGrow: 0,
+    margin: "0px 4px",
+    mixBlendMode: "normal",
+    border: "1px solid #4218B5",
+    boxSizing: "border-box",
+    borderRadius: "4px",
+    background: "white",
+    marginTop: "28px",
+    backgroundColor: "#431AB7",
   },
-  borderBox: {
-    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
-    padding: 2,
-  },
-  box: {
-    padding: "24px 18px",
-    background: "rgb(11, 21, 28)",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-  }
 }));

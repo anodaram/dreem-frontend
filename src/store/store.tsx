@@ -6,7 +6,6 @@ import podsReducer from "./reducers/PodsManager";
 import userBalances from "./reducers/UserBalances";
 import usersInfoReducer from "./reducers/UsersInfo";
 import loginBoolReducer from "./reducers/LoginBool";
-import marketPlaceReducer from "./reducers/MarketPlace";
 import MessageBoxReducer from "./reducers/MessageBox";
 import reserveReducer from "./reducers/StakingReserve";
 import sideBarShowReducer from "./reducers/SideBarShow";
@@ -45,7 +44,6 @@ const rootReducer = combineReducers({
   topNav: navigationReducer,
   userBalances: userBalances,
   loginBool: loginBoolReducer,
-  marketPlace: marketPlaceReducer,
   messageBox: MessageBoxReducer,
   usersInfoList: usersInfoReducer,
   sideBarShow: sideBarShowReducer,

@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState, useRef } from "react";
 import { Notification, getNotifications, removeUserNotification } from "shared/services/API/NotificationsAPI";
+import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import { useTypedSelector } from "store/reducers/Reducer";
 
 type NotificationsContextType = {
@@ -23,17 +24,40 @@ export const NotificationsContextProvider: React.FunctionComponent<Notifications
   const [unreadNotifications, setUnreadNotifications] = useState<number>(0);
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
+  const users = useTypedSelector(state => state.usersInfoList);
+
   // WARN Deps use `currentUser.id` because there is legacy code that updates user in redux store
   // Checking for user ID is hack to avoid unnecesary updates
   const currentUserId = useTypedSelector(state => state.user)?.id || null;
 
   useEffect(() => {
+    if (users.length) {
+      setNotifications(prev =>
+        prev.map(notification => {
+          const notificationUserId =
+            notification.typeItemId === "user" ? notification.itemId : notification.follower;
+          const user = users.find(item => item.id === notificationUserId);
+          let avatar: string;
+          if (user && user.ipfsImage) {
+            avatar = user.ipfsImage;
+          } else {
+            avatar = getDefaultAvatar();
+          }
+          return {
+            ...notification,
+            avatar,
+          }
+        })
+      );
+    }
+
+  }, [notifications.length, users]);
+
+  useEffect(() => {
     if (currentUserId) {
       getNotifications().then(result => {
         if (result.success) {
-          const followRequestNotifications = result.data.filter(
-            n => n.type === 1 || n.type === 2 || n.podType === "Dreem" || n.podType === "METAVERSE"
-          );
+          const followRequestNotifications = result.data.filter(n => n.type === 1 || n.type === 2);
 
           // remove duplicated notifications
           const filteredNotifications = followRequestNotifications.reduce((acc: any[], current: any) => {

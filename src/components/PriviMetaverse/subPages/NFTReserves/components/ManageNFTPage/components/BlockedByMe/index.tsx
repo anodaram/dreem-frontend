@@ -3,24 +3,16 @@ import BlockedByMeNFT from "./BlockedByMeNFT";
 
 import Box from "shared/ui-kit/Box";
 import { getLockedNFTsByOwner } from "shared/services/API/ReserveAPI";
-import useWindowDimensions from "shared/hooks/useWindowDimensions";
+import { CircularLoadingIndicator } from "shared/ui-kit";
 import { useAuth } from "shared/contexts/AuthContext";
-import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
+
 import { BlockedByMeStyles } from "./index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
-  400: 1,
-  650: 2,
-  1200: 3,
-  1420: 4,
-};
-
 const BlockedByMe = () => {
   const classes = BlockedByMeStyles();
   const { isSignedin } = useAuth();
-  const width = useWindowDimensions().width;
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [activedNfts, setActivedNfts] = useState<any>([]);
@@ -60,20 +52,22 @@ const BlockedByMe = () => {
     }
   };
 
-  const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
-
   return isLoading ? (
-    <Box mt={2}>
-      <MasonryGrid
-        gutter={"40px"}
-        data={Array(loadingCount).fill(0)}
-        renderItem={(_, index) => <BlockedByMeNFT isLoading={true} item={{}} />}
-        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-      />
-    </Box>
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: 16,
+        paddingBottom: 16,
+      }}
+    >
+      <CircularLoadingIndicator theme="blue" />
+    </div>
   ) : (
     <Box mb={8}>
-      <Box className={classes.title}>Active</Box>
+      <Box className={classes.title}>Actived</Box>
       {activedNfts.length > 0 ? (
         activedNfts.map(item => <BlockedByMeNFT item={item} />)
       ) : (

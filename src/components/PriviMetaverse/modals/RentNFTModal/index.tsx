@@ -2,39 +2,41 @@ import React, { useState, useEffect } from "react";
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 import { useParams } from "react-router";
-import { useSelector } from "react-redux";
 
 import Box from "shared/ui-kit/Box";
 import { Modal } from "shared/ui-kit";
 import { PrimaryButton } from "shared/ui-kit";
+import { RentNFTModalStyles } from "./index.style";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
+import TransactionProgressModal from "../TransactionProgressModal";
+
+import { BlockchainNets } from "shared/constants/constants";
 import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import { toDecimals, toNDecimals, toSeconds } from "shared/functions/web3";
 import { rentNFT } from "shared/services/API/ReserveAPI";
 import { formatDuration } from "shared/helpers/utils";
-import { RootState, useTypedSelector } from "store/reducers/Reducer";
-import TransactionProgressModal from "../TransactionProgressModal";
-import { RentNFTModalStyles } from "./index.style";
+import { RootState } from "store/reducers/Reducer";
+import { useSelector } from "react-redux";
 
+const SECONDS_PER_DAY = 86400;
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function RentNFTModal({ open, handleClose = () => {}, offer, nft, setNft }) {
   const classes = RentNFTModalStyles();
   const { account, library, chainId } = useWeb3React();
-  const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
+  const { collection_id, token_id } = useParams();
 
   const [maxDays, setMaxDays] = useState<number>(0);
   const [maxHours, setMaxHours] = useState<number>(0);
   const [maxMins, setMaxMins] = useState<number>(0);
   const [maxSeconds, setMaxSeconds] = useState<number>(0);
-  const [limitDays, setLimitDays] = useState<number>();
-  const [limitHour, setLimitHour] = useState<number>();
-  const [limitMin, setLimitMin] = useState<number>();
-  const [limitSec, setLimitSec] = useState<number>();
+  const [limitDays, setLimitDays] = useState<number>(0);
+  const [limitHour, setLimitHour] = useState<number>(0);
+  const [limitMin, setLimitMin] = useState<number>(0);
+  const [limitSec, setLimitSec] = useState<number>(0);
   const [balance, setBalance] = React.useState<number>(0);
   const [rentalToken, setRentalToken] = useState<any>();
-  const users = useTypedSelector(state => state.usersInfoList);
   const rentalTime = React.useMemo(
     () => toSeconds(limitDays, limitHour, limitMin, limitSec),
     [limitDays, limitHour, limitMin, limitSec]
@@ -60,8 +62,6 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
     ? Math.ceil(+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime)
     : 0;
 
-  useEffect(() => setSelectedChain(nft), [nft]);
-
   useEffect(() => {
     if (!open) return;
 
@@ -70,6 +70,15 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
 
   const getBalance = async () => {
     if (tokenList && offer && library) {
+      const targetChain = BlockchainNets.find(net => net.value === nft.chain);
+      if (chainId && chainId !== targetChain?.chainId) {
+        const isHere = await switchNetwork(targetChain?.chainId || 0);
+        if (!isHere) {
+          showAlertMessage("Got failed while switching over to target network", { variant: "error" });
+          return;
+        }
+      }
+
       const token = tokenList.find(v => v.Address === offer.fundingToken);
       const web3APIHandler = selectedChain.apiHandler;
       const web3 = new Web3(library.provider);
@@ -103,11 +112,6 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
   const handleApprove = async () => {
     try {
       if (isApproved) {
-        return;
-      }
-
-      if (!(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
         return;
       }
 
@@ -163,12 +167,6 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
       if (!isApproved) {
         return;
       }
-
-      if (!(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
-        return;
-      }
-
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
@@ -183,7 +181,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
         web3,
         account!,
         {
-          collectionId: nft.Address,
+          collectionId: collection_id,
           tokenId: token_id,
           maximumRentalTime: offer.maximumRentTime,
           pricePerSecond: offer.pricePerSecond,
@@ -206,7 +204,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
 
         const nftRentedOffer = {
           mode: isProd ? "main" : "test",
-          collection: collection_id,
+          collection: offer.collection,
           fundingToken: rentalToken.Address,
           operator: offer.operator,
           pricePerSecond: offer.pricePerSecond,
@@ -275,14 +273,14 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
         }}
       >
         <Box style={{ padding: "25px" }}>
-          <Box className={classes.title}>Rent Game NFT</Box>
-          <Box className={classes.subTitle} mt="12px">
-            Accept the rental price and rent the NFT.
+          <Box fontSize="24px" color="#431AB7">
+            Rent NFT
           </Box>
-          <Box className={classes.subTitle} mb="40px">
-            By renting you will receive a Synthetic NFT to use as the original one.
+          <Box mt="12px">Accept the Owner price and rent the NFT.</Box>
+          <Box className={classes.purpleText} mb="15px">
+            By renting you will receive NFT Synthetic to use however you need.
           </Box>
-          <Box display="flex" justifyContent="space-between" mb="7px">
+          <Box display="flex" justifyContent="space-between" mt="27px" mb="7px">
             <Box className={classes.nameField}>Rental Time</Box>
             <Box className={classes.maxTime} onClick={setRentalTimeAsMax}>
               Max {maxDays > 0 ? `${maxDays} days` : maxHours > 0 ? `${maxHours} hours` : `${maxMins} mins`}
@@ -292,7 +290,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
             {maxDays > 0 && (
               <InputWithLabelAndTooltip
                 inputValue={limitDays}
-                onInputValueChange={e => setLimitDays(e.target.value)}
+                onInputValueChange={e => setLimitDays(+e.target.value)}
                 overriedClasses={classes.inputDays}
                 required
                 type="number"
@@ -301,14 +299,12 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
                 minValue={0}
                 endAdornment={<div className={classes.inputLabel}>DAYS</div>}
                 disabled={isApproved}
-                style={{ marginRight: "8px" }}
-                placeHolder="00"
               />
             )}
             {maxHours > 0 && (
               <InputWithLabelAndTooltip
                 inputValue={limitHour}
-                onInputValueChange={e => setLimitHour(e.target.value)}
+                onInputValueChange={e => setLimitHour(+e.target.value)}
                 overriedClasses={classes.inputDays}
                 required
                 type="number"
@@ -317,13 +313,11 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
                 minValue={0}
                 endAdornment={<div className={classes.inputLabel}>h</div>}
                 disabled={isApproved}
-                style={{ marginRight: "8px" }}
-                placeHolder="00"
               />
             )}
             <InputWithLabelAndTooltip
               inputValue={limitMin}
-              onInputValueChange={e => setLimitMin(e.target.value)}
+              onInputValueChange={e => setLimitMin(+e.target.value)}
               overriedClasses={classes.inputDays}
               required
               type="number"
@@ -332,12 +326,10 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
               minValue={0}
               endAdornment={<div className={classes.inputLabel}>min</div>}
               disabled={isApproved}
-              style={{ marginRight: "8px" }}
-              placeHolder="00"
             />
             <InputWithLabelAndTooltip
               inputValue={limitSec}
-              onInputValueChange={e => setLimitSec(e.target.value)}
+              onInputValueChange={e => setLimitSec(+e.target.value)}
               overriedClasses={classes.inputDays}
               required
               type="number"
@@ -346,21 +338,20 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
               minValue={0}
               endAdornment={<div className={classes.inputLabel}>sec</div>}
               disabled={isApproved}
-              placeHolder="00"
             />
           </Box>
-          <Box className={classes.borderBox}>
-            <Box className={classes.box}>
-              <Box display="flex" flexDirection="column">
-                <span className={classes.amountLabel}>Amount to pay</span>
-                <span className={classes.purpleText}>{`${price} ${rentalToken?.Symbol ?? "USDT"}`}</span>
-              </Box>
-              <Box display="flex" flexDirection="column">
-                <span className={classes.amountLabel}>Max rental time</span>
-                <span className={classes.purpleText}>
-                  {`${formatDuration((offer?.maximumRentTime ?? 0) * 1000) ?? "0 seconds"}`}
-                </span>
-              </Box>
+          <Box className={classes.box}>
+            <Box display="flex" flexDirection="column">
+              <span className={classes.purpleText}>Amount to pay</span>
+              <span className={classes.purpleText} style={{ fontFamily: "Agrandir GrandHeavy" }}>
+                {`${price} ${rentalToken?.Symbol ?? ""}`}
+              </span>
+            </Box>
+            <Box display="flex" flexDirection="column">
+              <span className={classes.purpleText}>Max rental time</span>
+              <span className={classes.purpleText} style={{ fontFamily: "Agrandir GrandHeavy" }}>
+                {formatDuration((offer?.maximumRentTime ?? 0) * 1000)}
+              </span>
             </Box>
           </Box>
           <Box
@@ -368,19 +359,19 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
             alignItems="center"
             gridColumnGap="10px"
             fontSize="14px"
-            color="#E9FF26"
+            color="#431AB7"
             my={2}
             ml={2}
           >
             <span>Wallet Balance</span>
-            <Box fontWeight="700">{`${balance.toFixed() ?? "0.00"} ${rentalToken?.Symbol ?? "USDT"}`}</Box>
+            <Box fontWeight="700">{`${balance.toFixed()} ${rentalToken?.Symbol ?? ""}`}</Box>
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
               onClick={handleApprove}
-              disabled={isApproved}
+              style={{ backgroundColor: isApproved ? "#431AB750" : "#431AB7" }}
             >
               Approve
             </PrimaryButton>
@@ -388,7 +379,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
               size="medium"
               className={classes.primaryButton}
               onClick={handleConfirm}
-              disabled={!isApproved}
+              style={{ backgroundColor: !isApproved ? "#431AB750" : "#431AB7" }}
             >
               Confirm Offer
             </PrimaryButton>
