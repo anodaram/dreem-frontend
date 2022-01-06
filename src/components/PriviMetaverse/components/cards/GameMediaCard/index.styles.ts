@@ -103,6 +103,7 @@ export const gameMediaCardStyles = makeStyles(theme => ({
     fontFamily: "Rany",
     display: "flex",
     justifyContent: "space-between",
+    whiteSpace: "nowrap",
     marginBottom: "6px",
   },
   cardContentText: {
@@ -110,9 +111,9 @@ export const gameMediaCardStyles = makeStyles(theme => ({
     fontWeight: 800,
     fontSize: "13px",
     lineHeight: "17px",
-    textAlign: "center",
     letterSpacing: "0.02em",
     textTransform: "uppercase",
+    whiteSpace: "nowrap",
     color: "#FFFFFF",
     opacity: 0.5,
   },
