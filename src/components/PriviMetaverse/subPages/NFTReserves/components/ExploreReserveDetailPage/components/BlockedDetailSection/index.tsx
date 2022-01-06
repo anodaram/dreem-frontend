@@ -48,7 +48,7 @@ export default ({ nft, refresh }) => {
   const getTokenSymbol = addr => {
     if (tokens.length == 0 || !addr) return 0;
     let token = tokens.find(token => token.Address === addr);
-    return token?.Symbol || '';
+    return token?.Symbol || "";
   };
 
   return (
@@ -56,10 +56,10 @@ export default ({ nft, refresh }) => {
       <Box display="flex" justifyContent="space-between">
         <Text
           style={{
-            fontSize: "18px",
-            color: "#1A1B1C",
-            fontWeight: 800,
-            fontFamily: "Agrandir GrandHeavy",
+            fontSize: "20px",
+            fontWeight: "bold",
+            fontFamily: "GRIFTER",
+            color: "white",
           }}
         >
           Details
@@ -72,24 +72,31 @@ export default ({ nft, refresh }) => {
           flex={1}
           style={{ borderRight: "1px solid #9EACF220", fontSize: 14 }}
         >
-          <Box color="#431AB7">Option Time</Box>
-          <Box style={{ fontSize: 18 }}>{`${blockingInfo?.ReservePeriod} days (${moment(
+          <Box className={classes.gradientText} fontSize="14px" mb="4px">
+            Option Time
+          </Box>
+          <Box fontFamily="GRIFTER" fontWeight="bold" fontSize="20px">{`${
+            blockingInfo?.ReservePeriod
+          } days (${moment(
             new Date(blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + blockingInfo?.created)
           ).format("DD.MM.YYYY")})`}</Box>
         </Box>
         <Box display="flex" flexDirection="column" flex={1} pl={5} style={{ fontSize: 14 }}>
-          <Box color="#431AB7">Collateral</Box>
-          <Box style={{ fontSize: 18 }}>{blockingInfo?.CollateralPercent} %</Box>
+          <Box className={classes.gradientText} fontSize="14px" mb="4px">
+            Collateral
+          </Box>
+          <Box fontFamily="GRIFTER" fontWeight="bold" fontSize="20px">
+            {blockingInfo?.CollateralPercent} %
+          </Box>
         </Box>
       </Box>
       <Box mt={4} className={classes.BlockedDetailSection}>
         <Box display="flex" justifyContent="space-between" padding="32px">
-          <Box fontSize={16}>Blocked price</Box>
-          <Box color="#4218B5" style={{ fontWeight: 800, fontFamily: "Agrandir GrandHeavy" }}>
-            {blockingInfo?.Price}{" "}
-            <span style={{ opacity: 0.6 }}>
-              {getTokenSymbol(blockingInfo?.PaymentToken)}
-            </span>
+          <Box fontFamily="Rany" fontSize={16}>
+            Blocked price
+          </Box>
+          <Box className={classes.gradientText} style={{ fontWeight: 800 }} fontSize={24}>
+            {blockingInfo?.Price}{" "}{getTokenSymbol(blockingInfo?.PaymentToken)}
           </Box>
         </Box>
         <Box className={classes.BlockedDetailBottomSection}>
@@ -98,17 +105,14 @@ export default ({ nft, refresh }) => {
             justifyContent="space-between"
             padding="32px 0"
             marginX="32px"
-            color="#4218B5"
-            style={{ borderBottom: "1px solid #431AB721", position: "relative" }}
+            color="white"
+            style={{ borderBottom: "1px solid #ED7B7B21", position: "relative" }}
           >
-            <Box fontSize={16} fontWeight={700}>
+            <Box fontSize={16} fontFamily="Rany">
               Already paid
             </Box>
-            <Box style={{ fontWeight: 800, fontFamily: "Agrandir GrandHeavy" }}>
-              {blockingInfo?.PaidAmount || 0}{" "}
-              <span style={{ opacity: 0.6 }}>
-                {getTokenSymbol(blockingInfo?.PaymentToken)}
-              </span>
+            <Box className={classes.gradientText} style={{ fontWeight: 800 }} fontSize={24}>
+              {blockingInfo?.PaidAmount || 0}{" "}{getTokenSymbol(blockingInfo?.PaymentToken)}
             </Box>
             {blockingInfo && blockingInfo?.PaidAmount == blockingInfo?.Price && (
               <Box position="absolute" bottom={"calc(50% - 30px)"} right={0} fontSize={14} fontWeight={700}>
@@ -118,25 +122,50 @@ export default ({ nft, refresh }) => {
           </Box>
           <Box padding="32px 0" display="flex" alignItems="center" justifyContent="center">
             {blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + blockingInfo?.created - Date.now() > 0 ? (
-              <Box ml={2} fontFamily="Agrandir GrandHeavy" display="flex">
-                <Box color="#4218B5A0" pr={1}>
+              <Box
+                ml={2}
+                fontFamily="GRIFTER"
+                display="flex"
+                fontSize={20}
+                style={{
+                  textTransform: "uppercase",
+                  letterSpacing: "0.09em"
+                }}
+              >
+                <Box color="white" pr={1}>
                   Blocking expires in{" "}
                 </Box>
-                <Box color="#4218B5">{`${closeTime?.day || 0} Days ${closeTime?.hour || 0}h ${
-                  closeTime?.min || 0
-                } min`}</Box>
+                <Box className={classes.gradientText}>{`${closeTime?.day || 0} Days ${closeTime?.hour || 0}h ${closeTime?.min || 0} min`}</Box>
               </Box>
             ) : blockingInfo?.PaidAmount == blockingInfo?.Price ? (
               <>
                 <CheckIcon />
-                <Box ml={2} fontFamily="Agrandir GrandHeavy" color="#4218B5">
+                <Box
+                  ml={2}
+                  fontFamily="Rany"
+                  fontWeight={700}
+                  className={classes.gradientText}
+                  style={{
+                    fontSize: "24px",
+                    textTransform: "uppercase"
+                  }}
+                >
                   Blocking Paid
                 </Box>
               </>
             ) : (
               <>
                 <ClockIcon />
-                <Box ml={2} fontFamily="Agrandir GrandHeavy" color="#4218B5">
+                <Box
+                  ml={2}
+                  fontFamily="Rany"
+                  fontWeight={700}
+                  className={classes.gradientText}
+                  style={{
+                    fontSize: "24px",
+                    textTransform: "uppercase"
+                  }}
+                >
                   Blocking Expired
                 </Box>
               </>
@@ -149,34 +178,24 @@ export default ({ nft, refresh }) => {
 };
 
 const ClockIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M14.5346 28.2435C15.3664 28.2426 16.1965 28.1666 17.0146 28.0163C17.6887 28.9218 18.5498 29.6716 19.5395 30.2146C20.5291 30.7577 21.6241 31.0812 22.75 31.1633C23.8759 31.2453 25.0062 31.084 26.0642 30.6902C27.1221 30.2964 28.0829 29.6794 28.8811 28.8812C29.6793 28.083 30.2963 27.1222 30.6901 26.0643C31.0839 25.0063 31.2452 23.876 31.1632 22.7501C31.0811 21.6242 30.7576 20.5292 30.2145 19.5396C29.6715 18.5499 28.9218 17.6888 28.0162 17.0147C28.5253 14.2435 28.1681 11.3828 26.9933 8.82184C25.8184 6.2609 23.8831 4.12415 21.4505 2.7024C19.018 1.28065 16.2064 0.642967 13.3986 0.876134C10.5907 1.1093 7.92281 2.20199 5.75809 4.0055C3.59337 5.809 2.03694 8.23571 1.30062 10.9554C0.564298 13.675 0.683858 16.5555 1.64303 19.2047C2.60219 21.854 4.35438 24.1434 6.66111 25.7613C8.96784 27.3792 11.7171 28.247 14.5346 28.2467V28.2435ZM23.309 17.3635C24.484 17.3635 25.6327 17.7119 26.6098 18.3645C27.5869 19.0172 28.3485 19.9449 28.7985 21.0304C29.2484 22.1158 29.3665 23.3103 29.1377 24.4629C28.9089 25.6154 28.3436 26.6742 27.5132 27.5056C26.6828 28.3369 25.6245 28.9033 24.4722 29.1333C23.32 29.3634 22.1253 29.2466 21.0394 28.7978C19.9534 28.349 19.0249 27.5884 18.3712 26.612C17.7175 25.6356 17.3679 24.4873 17.3666 23.3123C17.3683 21.736 17.9953 20.2247 19.1099 19.11C20.2246 17.9954 21.7359 17.3684 23.3122 17.3667L23.309 17.3635ZM8.47702 13.8083H13.7186V5.80831H15.6386V15.7283H8.47702V13.8083Z"
-      fill="#4218B5"
-    />
+  <svg width="31" height="32" viewBox="0 0 31 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.7844 28.2425C14.6162 28.2417 15.4462 28.1656 16.2644 28.0153C16.9384 28.9209 17.7996 29.6706 18.7892 30.2137C19.7789 30.7567 20.8739 31.0802 21.9998 31.1623C23.1257 31.2443 24.256 31.083 25.3139 30.6892C26.3719 30.2954 27.3326 29.6785 28.1309 28.8802C28.9291 28.082 29.5461 27.1213 29.9399 26.0633C30.3336 25.0054 30.495 23.875 30.4129 22.7491C30.3309 21.6233 30.0073 20.5283 29.4643 19.5386C28.9213 18.5489 28.1715 17.6878 27.266 17.0137C27.775 14.2425 27.4178 11.3818 26.243 8.82087C25.0682 6.25992 23.1328 4.12317 20.7003 2.70142C18.2677 1.27968 15.4562 0.641991 12.6483 0.875157C9.84041 1.10832 7.17256 2.20102 5.00785 4.00452C2.84313 5.80802 1.28669 8.23473 0.550374 10.9544C-0.185946 13.674 -0.0663863 16.5545 0.892781 19.2038C1.85195 21.853 3.60413 24.1424 5.91086 25.7603C8.21759 27.3782 10.9668 28.2461 13.7844 28.2457V28.2425ZM22.5588 17.3625C23.7338 17.3625 24.8824 17.7109 25.8595 18.3636C26.8366 19.0162 27.5983 19.9439 28.0482 21.0294C28.4982 22.1149 28.6162 23.3094 28.3875 24.4619C28.1587 25.6144 27.5934 26.6733 26.7629 27.5046C25.9325 28.3359 24.8743 28.9024 23.722 29.1324C22.5697 29.3624 21.3751 29.2456 20.2891 28.7968C19.2032 28.348 18.2747 27.5874 17.621 26.611C16.9672 25.6346 16.6176 24.4864 16.6164 23.3113C16.6181 21.735 17.245 20.2237 18.3597 19.109C19.4743 17.9944 20.9856 17.3674 22.562 17.3657L22.5588 17.3625ZM7.72678 13.8073H12.9684V5.80733H14.8884V15.7273H7.72678V13.8073Z" fill="url(#paint0_linear_4453_31784)"/>
+    <defs>
+      <linearGradient id="paint0_linear_4453_31784" x1="18.5782" y1="24.6532" x2="-5.64737" y2="9.75915" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#ED7B7B"/>
+        <stop offset="1" stop-color="#EDFF1C"/>
+      </linearGradient>
+    </defs>
   </svg>
 );
 
 const CheckIcon = () => (
-  <svg width="26" height="20" viewBox="0 0 26 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M3 9.97619L9.68177 17L23 3"
-      stroke="url(#paint0_linear_8545_124626)"
-      strokeWidth="6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+  <svg width="27" height="20" viewBox="0 0 27 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3.25012 9.97619L9.93189 17L23.2501 3" stroke="url(#paint0_linear_4453_30896)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
     <defs>
-      <linearGradient
-        id="paint0_linear_8545_124626"
-        x1="-11.236"
-        y1="32.2571"
-        x2="4.29076"
-        y2="0.0907994"
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop offset="0.435643" stop-color="#C0AAFF" />
-        <stop offset="0.984387" stop-color="#431AB7" />
+      <linearGradient id="paint0_linear_4453_30896" x1="15.4401" y1="13.9884" x2="3.02377" y2="3.08486" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#ED7B7B"/>
+        <stop offset="1" stop-color="#EDFF1C"/>
       </linearGradient>
     </defs>
   </svg>

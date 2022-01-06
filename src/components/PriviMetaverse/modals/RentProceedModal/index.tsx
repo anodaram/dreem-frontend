@@ -13,7 +13,7 @@ import TransactionProgressModal from "../TransactionProgressModal";
 import { RentProceedModalStyles } from "./index.style";
 
 import { acceptRentOffer } from "shared/services/API/ReserveAPI";
-import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
+import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
 import { RootState } from "store/reducers/Reducer";
 import { useSelector } from "react-redux";
 
@@ -65,7 +65,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
       const nftChain = getChainForNFT(nft);
       if (!nftChain) {
         showAlertMessage(`network error`, { variant: "error" });
-        return;     
+        return;
       }
       if (chainId && chainId !== nftChain?.chainId) {
         const isHere = await switchNetwork(nftChain?.chainId || 0);
@@ -83,7 +83,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
       let approved = await web3APIHandler.Erc721.approve(web3, account || "", {
         to: web3Config.CONTRACT_ADDRESSES.RENTAL_MANAGER,
         tokenId: token_id,
-        nftAddress: collection_id,
+        nftAddress: nft.Address,
       });
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -106,7 +106,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
   };
 
   const handleAccept = async () => {
-    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
+    if (!checkChainID(chainId)) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -120,7 +120,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
         web3,
         account!,
         {
-          collectionId: collection_id,
+          collectionId: nft.Address,
           tokenId: token_id,
           rentalTime: offer.rentalTime,
           pricePerSecond: offer.pricePerSecond,
@@ -190,7 +190,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
   const getTokenSymbol = addr => {
     if (tokens.length == 0 || !addr) return 0;
     let token = tokens.find(token => token.Address === addr);
-    return token?.Symbol || '';
+    return token?.Symbol || "";
   };
 
   return (
@@ -206,55 +206,51 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
         }}
       >
         <Box style={{ padding: "25px" }}>
-          <Box fontSize="24px" color="#431AB7">
-            Accept Rent Offer
-          </Box>
+          <Box className={classes.title}>Accept Rent Offer</Box>
           <Box className={classes.description}>
-            {`Accept the offer from user "${offer.offerer}" to rent the "${nft.name}"`}
+            {`Accept the offer from user "${offer?.offerer ?? ""} " to rent the "${nft.name}"`}
           </Box>
-          <Box className={classes.infoPanel} style={{ background: "#eceefc" }}>
-            <Box className={classes.infoRow}>
-              <span className={classes.infoLabel}>Price per second</span>
-              <span className={classes.infoValue}>
-                {`${toDecimals(offer.pricePerSecond, getTokenDecimal(offer.fundingToken))} ${getTokenSymbol(
-                  offer.fundingToken
-                )}`}
-              </span>
-            </Box>
-            <Box className={classes.divider} />
-            <Box className={classes.infoRow}>
-              <span className={classes.infoLabel}>Rental time</span>
-              <span className={classes.infoValue}>{`${(offer.rentalTime / SECONDS_PER_DAY).toFixed(
-                3
-              )} Days`}</span>
-            </Box>
-            <Box className={classes.divider} />
-            <Box className={classes.infoRow}>
-              <span className={classes.infoLabel}>Total cost</span>
-              <span className={classes.infoValue}>
-                {`${toDecimals(
-                  offer.pricePerSecond * offer.rentalTime,
-                  getTokenDecimal(offer.fundingToken)
-                )} ${getTokenSymbol(offer.fundingToken)}`}
-              </span>
-            </Box>
-            <Box className={classes.divider} />
-            <Box className={classes.infoRow}>
-              <span className={classes.infoLabel}>Etherscan link</span>
-              <span
-                className={classes.infoValue}
-                style={{ cursor: "pointer" }}
-                onClick={() => handleClickLink(offer.hash)}
-              >
-                {offer.hash.substr(0, 18) + "..." + offer.hash.substr(offer.hash.length - 3, 3)}
-              </span>
+          <Box className={classes.borderBox}>
+            <Box className={classes.box}>
+              <Box className={classes.infoRow}>
+                <span className={classes.infoLabel}>Price per second</span>
+                <span className={classes.infoValue}>
+                  {`${toDecimals(offer.pricePerSecond, getTokenDecimal(offer.fundingToken))} ${getTokenSymbol(
+                    offer.fundingToken
+                  )}`}
+                </span>
+              </Box>
+              <Box className={classes.infoRow} mt={1}>
+                <span className={classes.infoLabel}>Rental time</span>
+                <span className={classes.infoValue}>{`${(offer.rentalTime / SECONDS_PER_DAY).toFixed(
+                  3
+                )} Days`}</span>
+              </Box>
+              <Box className={classes.infoRow} mt={1}>
+                <span className={classes.infoLabel}>Total cost</span>
+                <span className={classes.infoValue}>
+                  {`${toDecimals(
+                    offer.pricePerSecond * offer.rentalTime,
+                    getTokenDecimal(offer.fundingToken)
+                  )} ${getTokenSymbol(offer.fundingToken)}`}
+                </span>
+              </Box>
+              {/* <Box className={classes.infoRow} mt={1}>
+                <span className={classes.infoLabel}>Etherscan link</span>
+                <span
+                  className={classes.infoValue}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleClickLink(offer.hash)}
+                >
+                  {offer.hash.substr(0, 18) + "..." + offer.hash.substr(offer.hash.length - 3, 3)}
+                </span>
+              </Box> */}
             </Box>
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
-              style={{ backgroundColor: "#431AB7" }}
               onClick={handleApprove}
               disabled={isApproved}
             >
@@ -263,7 +259,6 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
             <PrimaryButton
               size="medium"
               className={classes.primaryButton}
-              style={{ backgroundColor: "#431AB7" }}
               onClick={handleAccept}
               disabled={!isApproved}
             >

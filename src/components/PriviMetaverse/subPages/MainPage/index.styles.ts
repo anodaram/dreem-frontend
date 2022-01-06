@@ -126,7 +126,7 @@ export const homePageStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       flexDirection: "column",
       "& button:last-child": {
-        marginLeft: 0,
+        marginLeft: "0px !important",
         marginTop: 12,
       },
     },

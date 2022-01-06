@@ -1,37 +1,39 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { useWeb3React } from "@web3-react/core";
+import Web3 from "web3";
+
+import { Grid } from "@material-ui/core";
 
 import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
-import { MakeNewOfferModalStyles } from "./index.style";
-import { Grid } from "@material-ui/core";
 import { BlockchainNets } from "shared/constants/constants";
-import { useWeb3React } from "@web3-react/core";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
-import Web3 from "web3";
 import { toDecimals, toNDecimals } from "shared/functions/web3";
-import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
+import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import TransactionProgressModal from "../TransactionProgressModal";
-import { useParams } from "react-router";
 import { createBlockingOffer } from "shared/services/API/ReserveAPI";
-import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
+import TransactionProgressModal from "../TransactionProgressModal";
+import { MakeNewOfferModalStyles } from "./index.style";
 
 export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
   const classes = MakeNewOfferModalStyles();
-  const { collection_id, token_id } = useParams();
+  const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
   const { account, library, chainId } = useWeb3React();
+
   const [price, setPrice] = useState<number>();
-  const [disappearDays, setDisappearDays] = React.useState<number>(0);
-  const [collateral, setCollateral] = useState(0);
+  const [disappearDays, setDisappearDays] = useState<number>();
+  const [collateral, setCollateral] = useState<number>();
   const [selectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const [reservePriceToken, setReservePriceToken] = useState<any>(tokenList[0]);
   const [colaterralPriceToken, setColaterralPriceToken] = useState<any>(tokenList[0]);
-  const [collateralPercent, setCollateralPercent] = useState<number>(0);
-  const [blockingPeriod, setBlockingPeriod] = useState<string | number>();
+  const [collateralPercent, setCollateralPercent] = useState<number>();
+  const [blockingPeriod, setBlockingPeriod] = useState<number>();
   const [totalBalance, setTotalBalance] = React.useState<string>("0");
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [confirmSuccess, setConfirmSuccess] = useState<boolean>(false);
@@ -45,7 +47,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
   useEffect(() => {
     setReservePriceToken(tokenList[0]);
     setColaterralPriceToken(tokenList[0]);
-  }, [tokenList])
+  }, [tokenList]);
 
   useEffect(() => {
     if (!open) {
@@ -53,7 +55,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
       return;
     }
   }, [open]);
-  
+
   useEffect(() => {
     if (!open) return;
 
@@ -62,18 +64,18 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
 
   const setBalance = async () => {
     if (reservePriceToken) {
-      if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
+      if (!checkChainID(chainId)) {
         showAlertMessage(`network error`, { variant: "error" });
         return;
       }
 
       const web3APIHandler = selectedChain.apiHandler;
       const web3 = new Web3(library.provider);
-      const decimals = await web3APIHandler.Erc20[reservePriceToken?.Symbol || "ETH"]?.decimals(
+      const decimals = await web3APIHandler.Erc20[reservePriceToken?.Symbol || "USDT"]?.decimals(
         web3,
         reservePriceToken?.Address
       );
-      const balance = await web3APIHandler.Erc20[reservePriceToken?.Symbol || "ETH"]?.balanceOf(web3, {
+      const balance = await web3APIHandler.Erc20[reservePriceToken?.Symbol || "USDT"]?.balanceOf(web3, {
         account,
       });
       setTotalBalance(toDecimals(balance, decimals));
@@ -82,6 +84,11 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
 
   const handleApprove = async () => {
     try {
+      if (!price || !blockingPeriod || !collateral || !collateralPercent || !disappearDays) {
+        showAlertMessage("Please fill all the fields", { variant: "error" });
+        return;
+      }
+
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
@@ -128,8 +135,13 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
   };
 
   const handleConfirm = async () => {
+    if (!price || !blockingPeriod || !collateral || !collateralPercent || !disappearDays) {
+      showAlertMessage("Please fill all the fields", { variant: "error" });
+      return;
+    }
+
     setOpenTransactionModal(true);
-    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
+    if (!checkChainID(chainId)) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -141,7 +153,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
       web3,
       account!,
       {
-        collection_id,
+        collection_id: nft.Address,
         token_id,
         paymentToken: reservePriceToken?.Address,
         collateralToken: colaterralPriceToken?.Address,
@@ -162,14 +174,14 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "address", "uint80", "uint256", "uint256", "address"],
           [
-            collection_id,
+            nft.Address,
             token_id,
             reservePriceToken?.Address,
             colaterralPriceToken?.Address,
             toNDecimals(collateralPercent, 2),
             toNDecimals(price, reservePriceToken.Decimals),
             toNDecimals(collateral, colaterralPriceToken.Decimals),
-            account
+            account,
           ]
         )
       );
@@ -217,7 +229,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
         {!confirmSuccess && (
           <>
             <Box style={{ padding: "25px" }}>
-              <Box fontSize="24px" color="#431AB7">
+              <Box fontSize="24px" color="#ffffff" style={{ textTransform: "uppercase" }}>
                 Make New Blocking Offer
               </Box>
               <Grid container spacing={2}>
@@ -239,11 +251,14 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                     theme="light"
                     minValue={0}
                     disabled={isApproved}
+                    placeHolder={"0.001"}
                   />
                 </Grid>
                 <Grid item sm={5}>
                   <ReserveTokenSelect
-                    tokens={tokenList}
+                    tokens={tokenList.filter(
+                      token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
+                    )}
                     value={reservePriceToken?.Address || ""}
                     className={classes.inputJOT}
                     onChange={e => {
@@ -265,6 +280,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                 minValue={0}
                 endAdornment={<div className={classes.purpleText}>DAYS</div>}
                 disabled={isApproved}
+                placeHolder={"00"}
               />
               <Box className={classes.nameField}>Collateral % to Block Price</Box>
               <InputWithLabelAndTooltip
@@ -277,8 +293,9 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                 minValue={0}
                 endAdornment={<div className={classes.purpleText}>%</div>}
                 disabled={isApproved}
+                placeHolder={"0"}
               />
-              <Box className={classes.nameField}>collateral Amount & Token</Box>
+              <Box className={classes.nameField}>Collateral Amount & Token</Box>
               <Grid container spacing={2}>
                 <Grid item sm={7}>
                   <InputWithLabelAndTooltip
@@ -291,11 +308,14 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                     theme="light"
                     minValue={0}
                     disabled={isApproved}
+                    placeHolder={"0"}
                   />
                 </Grid>
                 <Grid item sm={5}>
                   <ReserveTokenSelect
-                    tokens={tokenList}
+                    tokens={tokenList.filter(
+                      token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
+                    )}
                     value={colaterralPriceToken?.Address || ""}
                     className={classes.inputJOT}
                     onChange={e => {
@@ -310,14 +330,13 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                 display="flex"
                 alignItems="center"
                 justifyContent="space-between"
-                color="#431AB7"
+                color="#ffffff"
                 marginTop="14px"
               >
                 <Box display="flex" alignItems="center" gridColumnGap="10px" fontSize="14px">
                   <span>Wallet Balance</span>
                   <Box className={classes.usdWrap} display="flex" alignItems="center">
-                    <Box className={classes.point}></Box>
-                    <Box fontWeight="700">
+                    <Box fontWeight="700" color="#E9FF26">
                       {totalBalance} {reservePriceToken?.Symbol}
                     </Box>
                   </Box>
@@ -338,23 +357,22 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                 minValue={0}
                 endAdornment={<div className={classes.purpleText}>DAYS</div>}
                 disabled={isApproved}
+                placeHolder={"0"}
               />
             </Box>
             <Box className={classes.footer}>
               <Box className={classes.totalText}>Total</Box>
               <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Box
-                  style={{ color: "#431AB7", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
-                >
-                  Your collateral at {((collateral / (!price || price == 0 ? 1 : price)) * 100).toFixed(2)}%
-                  of {collateralPercent}% required
-                  {(collateral / (!price || price == 0 ? 1 : price)) * 100 < collateralPercent && (
+                <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
+                  Your collateral at{" "}
+                  {(((collateral || 0) / (!price || price == 0 ? 1 : price)) * 100).toFixed(2)}% of{" "}
+                  {collateralPercent}% required
+                  {((collateral || 0) / (!price || price == 0 ? 1 : price)) * 100 <
+                    (collateralPercent || 0) && (
                     <Box style={{ color: "red" }}>You need to add more collateral</Box>
                   )}
                 </Box>
-                <Box
-                  style={{ color: "#431AB7", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
-                >
+                <Box style={{ color: "#fff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
                   {`${collateral} ${colaterralPriceToken?.Symbol}`}
                 </Box>
               </Box>
@@ -362,12 +380,11 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                 <SecondaryButton
                   size="medium"
                   className={classes.primaryButton}
-                  style={{ backgroundColor: "#431AB7" }}
                   onClick={handleApprove}
                   disabled={
                     isApproved ||
                     !price ||
-                    (collateral / (!price || price == 0 ? 1 : price)) * 100 < collateralPercent
+                    ((collateral || 0) / (!price || price == 0 ? 1 : price)) * 100 < (collateralPercent || 0)
                   }
                 >
                   {isApproved ? "Approved" : "Approve"}
@@ -375,7 +392,6 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                 <PrimaryButton
                   size="medium"
                   className={classes.primaryButton}
-                  style={{ backgroundColor: "#431AB7" }}
                   onClick={handleConfirm}
                   disabled={
                     !isApproved ||
@@ -404,8 +420,8 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
             <img src={require("assets/icons/lock-success-icon.png")} width="110px" /> <br />
             <div
               style={{
-                fontFamily: "Agrandir GrandHeavy",
-                color: "#2D3047",
+                fontFamily: "GRIFTER",
+                color: "#ffffff",
                 fontSize: "22px",
                 fontWeight: 800,
                 marginTop: "31px",
@@ -415,14 +431,14 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
               Your blocking <br />
               offer was sent
             </div>
-            <div style={{ color: "#54658F", fontSize: "16px", marginTop: "34px", textAlign: "center" }}>
+            <div style={{ color: "#ffffff50", fontSize: "16px", marginTop: "34px", textAlign: "center" }}>
               You’ve succesfully send blocking offer for <br />
               [NFT NAME]
             </div>
             <PrimaryButton
               size="medium"
               style={{
-                background: "#431AB7",
+                background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
                 color: "#ffffff",
                 minWidth: "56%",
                 fontSize: "14px",

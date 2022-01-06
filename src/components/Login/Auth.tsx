@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { HashRouter as Router } from "react-router-dom";
 import axios from "axios";
@@ -26,11 +26,10 @@ export const setSocket = (sock: SocketIOClient.Socket) => {
 
 const Auth = () => {
   const dispatch = useDispatch();
-  const timerRef = useRef<any>();
+  const [numberOfMessages, setNumberOfMessages] = useState<number>(0);
 
   const user = useTypedSelector(state => state.user);
 
-  const [numberOfMessages, setNumberOfMessages] = useState<number>(0);
   // NOTE: this hack is required to trigger re-render
   const [internalSocket, setInternalSocket] = useState<SocketIOClient.Socket | null>(null);
 
@@ -48,24 +47,10 @@ const Auth = () => {
         })
         .catch(err => console.log("numberMessages error: ", err));
       if (!socket) {
-        const sock = io(URL(), {
-          query: { token: localStorage.getItem("token")?.toString() || "" },
-          transports: ["websocket"],
-        });
-        sock.on("connected", () => {
-          if (timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = undefined;
-          }
-        });
+        const sock = io(URL(), { query: { token: localStorage.getItem("token")?.toString() || "" } });
         sock.connect();
         setSocket(sock);
         sock.emit("add user", localStorage.getItem("userId")?.toString() || "");
-        sock.on("disconnect", () => {
-          timerRef.current = setInterval(() => {
-            sock.connect();
-          }, 5000);
-        });
       }
       socket && socket.emit("subscribeToYou", { _id: userId });
 

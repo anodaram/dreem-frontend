@@ -14,18 +14,19 @@ type ModalProps = {
   className?: string;
   theme?: "dark" | "light" | "img-preview";
   wrapperPadding?: string;
+  backTrans?: boolean;
   style?: any;
 };
 
 export const Modal: React.FunctionComponent<ModalProps> = React.memo(
-  ({ isOpen, onClose, size, children, className, showCloseIcon, theme, wrapperPadding, style }) => (
-    <MuiModal open={isOpen} onClose={onClose}>
+  ({ isOpen, onClose, size, children, className, showCloseIcon, theme, wrapperPadding, style, backTrans }) => (
+    <MuiModal open={isOpen} onClose={onClose} BackdropProps={{ style: { background: backTrans ? "transparent": undefined } }}>
       <ModalWrapper>
         <ModalContent
           theme={theme}
           size={size}
           className={className}
-          style={{ position: "relative", ...style }}
+          style={{ position: "relative", background: "#0b151c", ...style }}
           wrapperPadding={wrapperPadding || ""}
         >
           {showCloseIcon && <CloseButton onClick={onClose} />}

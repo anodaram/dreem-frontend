@@ -1,27 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useHistory, useParams } from "react-router";
 import { useDispatch } from "react-redux";
 import OwnersPanel from "./components/OwnersPanel";
 import RentedByMe from "./components/RentedByMe";
 import BlockedByMe from "./components/BlockedByMe";
-import { BackButton } from "components/PriviMetaverse/components/BackButton";
 
-import { useManageNFTPageStyles } from "./index.styles";
+import { useManageNFTPageStyles, useTabsStyles } from "./index.styles";
 import Box from "shared/ui-kit/Box";
-import cls from "classnames";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { setTokenList } from "store/actions/MarketPlace";
+import TabsView, { TabItem } from "shared/ui-kit/TabsView";
 
-type TabId = "owners" | "rent" | "block";
-interface Tab {
-  label: string;
-  id: TabId;
-}
+const TAB_OWNERS = "owners";
+const TAB_RENT = "rent";
+const TAB_BLOCK = "block";
+
+const Tabs: TabItem[] = [
+  {
+    key: TAB_OWNERS,
+    title: "owners",
+  },
+  {
+    key: TAB_RENT,
+    title: "rented by me",
+  },
+  {
+    key: TAB_BLOCK,
+    title: "blocked by me",
+  },
+];
 
 const ManageNFTPage = () => {
   const classes = useManageNFTPageStyles();
-  const [selectedTab, setSelectedTab] = useState<TabId>("owners");
-  const history = useHistory();
+  const tabsClasses = useTabsStyles();
+
+  const [selectedTab, setSelectedTab] = React.useState<string>(TAB_OWNERS);
   const params: { tab?: string } = useParams();
   const dispatch = useDispatch();
 
@@ -31,32 +44,17 @@ const ManageNFTPage = () => {
 
   useEffect(() => {
     if (params?.tab) {
-      setSelectedTab(params.tab as TabId);
+      setSelectedTab(params.tab);
     }
   }, [params]);
 
   const getTokenList = async () => {
     getAllTokenInfos().then(res => {
       if (res.success) {
-        dispatch(setTokenList(res.tokens));
+        dispatch(setTokenList(res.tokens.filter(t => t.Symbol === "USDT")));
       }
     });
   };
-
-  const TABS: Tab[] = [
-    {
-      label: "OWNERS PANEL",
-      id: "owners",
-    },
-    {
-      label: "RENTED BY ME",
-      id: "rent",
-    },
-    {
-      label: "BLOCKED BY ME",
-      id: "block",
-    },
-  ];
 
   return (
     <Box
@@ -64,34 +62,24 @@ const ManageNFTPage = () => {
       style={{
         overflow: "auto",
       }}
+      mt={9}
     >
-      <Box className={`${classes.backButtonContainer} ${classes.fitContent}`}>
-        <Box className={classes.backBtn} onClick={() => history.goBack()}>
-          <BackButton purple />
-        </Box>
-        <Box className={classes.title}>Manage NFTs</Box>
-      </Box>
-      <Box width="100%" borderBottom="2px solid rgba(196,196,196,0.4)">
-        <div className={`${classes.subTitleSection} ${classes.fitContent}`}>
-          {TABS.map(tab => (
-            <div
-              className={cls({ [classes.selectedTabSection]: selectedTab === tab.id }, classes.tabSection)}
-              onClick={() => setSelectedTab(tab.id as TabId)}
-              key={tab.id}
-            >
-              <span>{tab.label}</span>
-            </div>
-          ))}
-        </div>
-      </Box>
       <Box width="100%" className={classes.fitContent}>
-        {selectedTab === "owners" ? (
-          <OwnersPanel />
-        ) : selectedTab === "rent" ? (
-          <RentedByMe />
-        ) : selectedTab === "block" ? (
-          <BlockedByMe />
-        ) : null}
+        <Box className={classes.backButtonContainer}>
+          <Box className={classes.pageTitle}>MANAGE NFTS</Box>
+        </Box>
+        <Box width="100%">
+          <TabsView
+            tabs={Tabs}
+            onSelectTab={tab => {
+              setSelectedTab(tab.key);
+            }}
+            extendedClasses={tabsClasses}
+          />
+        </Box>
+        {selectedTab === TAB_OWNERS && <OwnersPanel />}
+        {selectedTab === TAB_RENT && <RentedByMe />}
+        {selectedTab === TAB_BLOCK && <BlockedByMe />}
       </Box>
     </Box>
   );

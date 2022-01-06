@@ -4,11 +4,11 @@ export const tabViewStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     padding: "16px",
-    overflowX: 'auto',
+    overflowX: "auto",
     border: "2px solid",
     borderImageSlice: "1",
     borderImageSource: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
       fontSize: "12px",
       padding: "15px 11px",
     },
@@ -28,12 +28,12 @@ export const tabViewStyles = makeStyles(theme => ({
     fontSize: "16px",
     lineHeight: "120%",
     textTransform: "uppercase",
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
       fontSize: "12px",
       marginRight: "8px",
       padding: "10px 33px 6px",
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       marginRight: "0px",
       padding: "8px 16px 4px",
     },
@@ -46,11 +46,17 @@ export const tabViewStyles = makeStyles(theme => ({
     minWidth: 210,
     paddingLeft: 0,
     paddingRight: 0,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
       minWidth: 182,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       minWidth: 142,
     },
-  }
+  },
+  percentaged: {
+    [theme.breakpoints.down("xs")]: {
+      minWidth: 0,
+      width: "33%",
+    },
+  },
 }));

@@ -68,6 +68,8 @@ enum OpenType {
   Queue = "QUEUE",
 }
 
+const APP_ENV = process.env.REACT_APP_ENV || "dev";
+
 const Header = props => {
   const classes = headerStyles();
   const location = useLocation();
@@ -86,6 +88,7 @@ const Header = props => {
   const userSelector = useSelector(getUser);
   const usersInfoList = useSelector(getUsersInfoList);
   const underMaintenanceSelector = useSelector((state: RootState) => state.underMaintenanceInfo?.info);
+  const publicy = useSelector((state: RootState) => state.underMaintenanceInfo?.publicy);
 
   const {
     unreadNotifications,
@@ -132,23 +135,29 @@ const Header = props => {
 
   const [noMetamask, setNoMetamask] = React.useState<boolean>(false);
   const { showAlertMessage } = useAlertMessage();
+  const [hasUnderMaintenanceInfo, setHasUnderMaintenanceInfo] = useState(false);
+  const underMaintenance = React.useMemo(
+    () =>
+      isOnSigning ||
+      !hasUnderMaintenanceInfo ||
+      (underMaintenanceSelector &&
+        Object.keys(underMaintenanceSelector).length > 0 &&
+        underMaintenanceSelector.underMaintenance &&
+        APP_ENV !== "dev"),
+    [isOnSigning, hasUnderMaintenanceInfo, underMaintenanceSelector]
+  );
 
-  useEffect(() => {
-    if (!isSignedin && !underMaintenanceSelector?.underMaintenance) {
-      signInWithMetamask();
-    }
-  }, [underMaintenanceSelector, isSignedin]);
-
-  useEffect(() => {
-    if (account && userSelector?.address && userSelector?.address.toLowerCase() !== account.toLowerCase()) {
-      handleLogout();
-      return;
-    }
-
-    if (account && !isSignedin) {
+  React.useEffect(() => {
+    if (hasUnderMaintenanceInfo && !isSignedin && !underMaintenanceSelector.underMaintenance) {
       signInWithMetamask();
     }
   }, [account, isSignedin]);
+
+  useEffect(() => {
+    if (underMaintenanceSelector && Object.keys(underMaintenanceSelector).length > 0) {
+      setHasUnderMaintenanceInfo(true);
+    }
+  }, [underMaintenanceSelector]);
 
   useEffect(() => {
     getPhotoUser();
@@ -291,7 +300,6 @@ const Header = props => {
                   usr?.infoImage?.metadata?.properties?.name &&
                   (!usr.ipfsImage || usr.ipfsImage === "")
                 ) {
-                  console.log("user", usr.infoImage.newFileCID);
                   usr.ipfsImage = await getPhotoIPFS(
                     usr.infoImage.newFileCID,
                     usr.infoImage.metadata.properties.name,
@@ -314,31 +322,23 @@ const Header = props => {
   }, [userId, userProfile]);
 
   useEffect(() => {
-    if (!usersInfoList || usersInfoList.length === 0) {
+    if ((!usersInfoList || usersInfoList?.length === 0) && userSelector.id) {
       axios
         .post(`${URL()}/chat/getUsers`)
         .then(response => {
           if (response.data.success) {
-            //should be remove user's id from the list ?? so they don't message themselves
-            // const allUsers = [...response.data.data].filter(user => user.id !== userSelector.id) ?? [];
             const allUsers = response.data.data;
             const u = [] as any[];
-
             allUsers.forEach(user => {
               let image = "";
               if (
                 user.anon != undefined &&
                 user.anon === true &&
                 user.anonAvatar &&
-                user.anonAvatar.length > 0
+                user.anonAvatar?.length > 0
               ) {
                 image = `${require(`assets/anonAvatars/${user.anonAvatar}`)}`;
-              } else {
-                if (user.hasPhoto && user.url) {
-                  image = `${user.url}?${Date.now()}`;
-                }
               }
-              user.imageUrl = image;
               user.assistances = user.assistances ?? 0;
               user.rate = user.rate ?? 0;
 
@@ -352,7 +352,7 @@ const Header = props => {
                   user.level ?? 1,
                   user.numFollowers || 0,
                   user.numFollowings || 0,
-                  user.creds.length ?? 0,
+                  user.creds?.length ?? 0,
                   user.badges ?? [],
                   user.urlSlug ??
                     `${user.firstName ? user.firstName : ""}${user.lastName ? user.lastName : ""}`,
@@ -377,37 +377,43 @@ const Header = props => {
                   user.url ?? "",
                   user.wallets ?? [],
                   user.email ?? "",
-                  user.infoImage ?? {}
+                  user.infoImage ?? {},
+                  false,
+                  user.ipfsImage ?? "",
+                  user.urlIpfsImage ?? ""
                 )
               );
             });
             allUsers.sort((user1, user2) => {
               const name1 = user1.firstName || user1.urlSlug;
               const name2 = user2.firstName || user2.urlSlug;
-              if (name1.startsWith("0x") && name2.startsWith("0x")) return name1.localeCompare(name2);
-              if (name1.startsWith("0x")) return 1;
-              if (name2.startsWith("0x")) return -1;
+              if (name1?.startsWith("0x") && name2?.startsWith("0x")) return name1?.localeCompare(name2);
+              if (name1?.startsWith("0x")) return 1;
+              if (name2?.startsWith("0x")) return -1;
               return capitalize(name1).localeCompare(capitalize(name2));
             });
-            const dispatchUsers = async () => {
-              for (let usr of u) {
-                if (usr?.infoImage?.newFileCID && usr?.infoImage?.metadata?.properties?.name) {
-                  usr.ipfsImage = await getPhotoIPFS(
-                    usr.infoImage.newFileCID,
-                    usr.infoImage.metadata.properties.name,
-                    downloadWithNonDecryption
-                  );
-                }
-              }
-              await dispatch(setUsersInfoList(u));
-            };
 
-            dispatchUsers();
+            dispatch(setUsersInfoList(u));
           }
         })
         .catch(error => {
           console.log(error);
         });
+    } else {
+      const allUsers = usersInfoList.filter(user => user.id !== userSelector.id) ?? [];
+      allUsers.forEach(user => {
+        let image = "";
+        if (user.anon != undefined && user.anon === true && user.anonAvatar && user.anonAvatar?.length > 0) {
+          image = `${require(`assets/anonAvatars/${user.anonAvatar}`)}`;
+        } else {
+          if (user.hasPhoto && user.url) {
+            image = `${user.url}?${Date.now()}`;
+          }
+        }
+        user.imageUrl = image;
+        user.assistances = user.assistances ?? 0;
+        user.rate = user.rate ?? 0;
+      });
     }
   }, [usersInfoList, userSelector.id]);
 
@@ -465,8 +471,12 @@ const Header = props => {
           setOnSigning(false);
         } else {
           if (res.message) {
-            showAlertMessage(res.message, { variant: "error" });
-            setOnSigning(false);
+            if (res.message === "Wallet address doesn't exist" && publicy) {
+              signUp(res.signature);
+            } else {
+              showAlertMessage(res.message, { variant: "error" });
+              setOnSigning(false);
+            }
           } else {
             showAlertMessage("Connect the metamask", { variant: "error" });
             setOnSigning(false);
@@ -478,15 +488,42 @@ const Header = props => {
       });
   };
 
-  const handleConnect = () => {
-    activate(injected, undefined, true).catch(error => {
-      if (error instanceof UnsupportedChainIdError) {
-        activate(injected);
+  const signUp = async signature => {
+    if (account) {
+      const res = await API.signUpWithAddressAndName(account, account, signature, "Dreem");
+      if (res.isSignedIn) {
+        setSignedin(true);
+        dispatch(setUser(res.userData));
+        localStorage.setItem("token", res.accessToken);
+        localStorage.setItem("address", account);
+        localStorage.setItem("userId", res.userData.id);
+        localStorage.setItem("userSlug", res.userData.urlSlug ?? res.userData.id);
+
+        axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
+        dispatch(setLoginBool(true));
+        setOnSigning(false);
       } else {
-        console.info("Connection Error - ", error);
-        setNoMetamask(true);
+        showAlertMessage(res.message, { variant: "error" });
+        setOnSigning(false);
       }
-    });
+    }
+  };
+
+  const handleConnect = () => {
+    activate(injected, undefined, true)
+      .then(res => {
+        signInWithMetamask();
+      })
+      .catch(error => {
+        if (error instanceof UnsupportedChainIdError) {
+          activate(injected).then(res => {
+            signInWithMetamask();
+          });
+        } else {
+          console.info("Connection Error - ", error);
+          setNoMetamask(true);
+        }
+      });
   };
 
   return (
@@ -594,7 +631,7 @@ const Header = props => {
             <SecondaryButton
               size="medium"
               className={classes.accountInfo}
-              disabled={isOnSigning || underMaintenanceSelector?.underMaintenance}
+              disabled={underMaintenance}
               style={{
                 pointerEvents: isOnSigning ? "none" : undefined,
                 opacity: isOnSigning ? 0.4 : undefined,
@@ -679,26 +716,46 @@ const Header = props => {
                           )}
                         </Hidden>
                         {account && (
-                          <MenuItem onClick={handleProfile}>
-                            <div className="avatar-container">
+                          <>
+                            <MenuItem onClick={handleProfile}>
+                              <div className="avatar-container">
+                                <div
+                                  className="avatar"
+                                  style={{
+                                    backgroundImage: imageIPFS
+                                      ? `url(${imageIPFS})`
+                                      : `url(${getDefaultAvatar()})`,
+                                    cursor: ownUser ? "pointer" : "auto",
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundSize: "cover",
+                                    backgroundPosition: "center",
+                                    width: 44,
+                                    height: 44,
+                                    marginLeft: 0,
+                                  }}
+                                />
+                              </div>
+                              PROFILE
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                handleLogout();
+                                setAnchorEl(null);
+                              }}
+                            >
                               <div
-                                className="avatar"
                                 style={{
-                                  backgroundImage: imageIPFS
-                                    ? `url(${imageIPFS})`
-                                    : `url(${getDefaultAvatar()})`,
-                                  cursor: ownUser ? "pointer" : "auto",
-                                  backgroundRepeat: "no-repeat",
-                                  backgroundSize: "cover",
-                                  backgroundPosition: "center",
-                                  width: 44,
-                                  height: 44,
-                                  marginLeft: 0,
+                                  textTransform: "uppercase",
+                                  fontFamily: "Grifter",
+                                  width: "100%",
+                                  paddingTop: 16,
+                                  borderTop: "1px solid #FFFFFF40",
                                 }}
-                              />
-                            </div>
-                            PROFILE
-                          </MenuItem>
+                              >
+                                Log Out
+                              </div>
+                            </MenuItem>
+                          </>
                         )}
                       </MenuList>
                     </ClickAwayListener>
@@ -735,7 +792,16 @@ const Header = props => {
           >
             <div className={classes.header_popup_back}>
               <div className={classes.header_popup_back_item} onClick={handleProfile}>
-                Profile
+                Account
+              </div>
+              <div
+                className={classes.header_popup_back_item}
+                onClick={() => {
+                  history.push("/gameNFT/manage_nft");
+                  setAnchorEl(null);
+                }}
+              >
+                MY NFTs
               </div>
               <div
                 className={classes.header_popup_back_item}
@@ -814,7 +880,7 @@ const Header = props => {
           selectedNotification={selectedNotification}
         />
       </div>
-      {underMaintenanceSelector?.underMaintenance ? (
+      {APP_ENV !== "dev" && underMaintenanceSelector?.underMaintenance ? (
         <div
           style={{
             height: "62px",
@@ -860,6 +926,7 @@ const Navigator: NavItem[] = [
   { name: "CREATE", value: "creations", link: "/create" },
   { name: "REALMS", value: "realms", link: "/realms" },
   { name: "AVATARS", value: "avatars", link: "/avatars" },
-  { name: "METAVERSE", value: "metaverse", link: "/metaverse" },
+  { name: "GAME NFT", value: "gameNFT", link: "/gameNFT" },
+  // { name: "METAVERSE", value: "metaverse", link: "/metaverse" },
   // { name: "Claim Dreem", value: "claim_dreem", link: "/claim_dreem", authorize: true },
 ];

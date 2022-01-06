@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, BoxProps } from "@material-ui/core";
+import { getAbbrAddress } from "shared/helpers";
 
 type AddressViewProps = {
   className?: string;
@@ -10,7 +11,7 @@ const AddressView: React.FC<AddressViewProps> = ({ address, className, ...props 
   return (
     <Box className={className} {...props}>
       {address && address.length > 17
-        ? `${address?.substring(0, 6)}...${address?.substring(address?.length - 11, address.length)}`
+        ? getAbbrAddress(address, 6, 11)
         : address}
     </Box>
   );

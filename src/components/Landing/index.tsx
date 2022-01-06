@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import Web3 from "web3";
@@ -26,12 +26,11 @@ import OpenDesktopModal from "components/PriviMetaverse/modals/OpenDesktopModal"
 
 import { useLandingStyles } from "./index.styles";
 
-const isDev = process.env.REACT_APP_ENV === "dev";
-
 const LandingPage = () => {
   const classes = useLandingStyles();
   const dispatch = useDispatch();
   const underMaintenanceSelector = useSelector((state: RootState) => state.underMaintenanceInfo?.info);
+  const publicy = useSelector((state: RootState) => state.underMaintenanceInfo?.publicy);
 
   const { activate, account, library } = useWeb3React();
   const { isSignedin, setSignedin, isOnSigning, setOnSigning } = useAuth();
@@ -41,9 +40,22 @@ const LandingPage = () => {
   const [noMetamask, setNoMetamask] = React.useState<boolean>(false);
   const [isAuthorized, setIsAuthorized] = React.useState<boolean>(false);
   const [notInstalled, setNotInstalled] = React.useState<boolean>(false);
+  const [hasUnderMaintenanceInfo, setHasUnderMaintenanceInfo] = useState(false);
   const [isDownload, setIsDownload] = useState<boolean>(false);
   const [openNotAppModal, setOpenNotAppModal] = useState<boolean>(false);
   const [showPlayModal, setShowPlayModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (underMaintenanceSelector && Object.keys(underMaintenanceSelector).length > 0) {
+      setHasUnderMaintenanceInfo(true);
+    }
+  }, [underMaintenanceSelector]);
+
+  React.useEffect(() => {
+    if (hasUnderMaintenanceInfo && !isSignedin && !underMaintenanceSelector.underMaintenance) {
+      signInWithMetamask();
+    }
+  }, [account, isSignedin]);
 
   const signInWithMetamask = () => {
     if (!account) return;
@@ -67,8 +79,12 @@ const LandingPage = () => {
           setOnSigning(false);
         } else {
           if (res.message) {
-            showAlertMessage(res.message, { variant: "error" });
-            setOnSigning(false);
+            if (res.message === "Wallet address doesn't exist" && publicy) {
+              signUp(res.signature);
+            } else {
+              showAlertMessage(res.message, { variant: "error" });
+              setOnSigning(false);
+            }
           } else {
             showAlertMessage("Connect the metamask", { variant: "error" });
             setOnSigning(false);
@@ -78,6 +94,29 @@ const LandingPage = () => {
       .catch(e => {
         setOnSigning(false);
       });
+  };
+
+  const signUp = async signature => {
+    if (account) {
+      const res = await API.signUpWithAddressAndName(account, account, signature, "Dreem");
+      if (res.isSignedIn) {
+        setSignedin(true);
+        // setIsAuthorized(true);
+        const data = res.userData;
+        dispatch(setUser(data));
+        localStorage.setItem("token", res.accessToken);
+        localStorage.setItem("address", account);
+        localStorage.setItem("userId", data.id);
+        localStorage.setItem("userSlug", data.urlSlug ?? data.id);
+
+        axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
+        dispatch(setLoginBool(true));
+        setOnSigning(false);
+      } else {
+        showAlertMessage(res.message, { variant: "error" });
+        setOnSigning(false);
+      }
+    }
   };
 
   const handleConnect = () => {
@@ -110,7 +149,7 @@ const LandingPage = () => {
         let data: any = res.data?.data?.stamp;
         if (data) {
           customProtocolCheck(
-            `${isDev ? 'dreemdev://' : 'dreem://'}` + data,
+            "dreem://" + data,
             () => {
               setOpenNotAppModal(true);
             },
@@ -154,7 +193,13 @@ const LandingPage = () => {
               onClick={handleConnect}
               size="medium"
               className={classes.button}
-              disabled={isOnSigning || underMaintenanceSelector?.underMaintenance}
+              disabled={
+                isOnSigning ||
+                !hasUnderMaintenanceInfo ||
+                (underMaintenanceSelector &&
+                  Object.keys(underMaintenanceSelector).length > 0 &&
+                  underMaintenanceSelector.underMaintenance)
+              }
               style={{
                 pointerEvents: isOnSigning ? "none" : undefined,
                 opacity: isOnSigning ? 0.4 : undefined,

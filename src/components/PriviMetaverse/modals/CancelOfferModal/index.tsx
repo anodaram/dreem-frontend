@@ -62,7 +62,7 @@ export default function CancelOfferModal({ open, handleClose, offer, type, nft, 
           web3,
           account!,
           {
-            collection_id,
+            collection_id: nft.Address,
             token_id,
             paymentToken: offer.PaymentToken,
             price: toNDecimals(offer.Price, getTokenDecimal(offer.PaymentToken)),
@@ -78,7 +78,7 @@ export default function CancelOfferModal({ open, handleClose, offer, type, nft, 
           web3,
           account!,
           {
-            collectionId: collection_id,
+            collectionId: nft.Address,
             tokenId: token_id,
             rentalTime: offer.rentalTime,
             pricePerSecond: offer.pricePerSecond,
@@ -134,7 +134,7 @@ export default function CancelOfferModal({ open, handleClose, offer, type, nft, 
         <>
           <Box display="flex" alignItems="center" flexDirection="column">
             <img src={require("assets/icons/cancel_icon.png")} width="110px" /> <br />
-            <Box fontSize="24px" color="#431AB7" marginTop="20px">
+            <Box fontSize="24px" color="#ffffff" marginTop="20px" style={{ textTransform: "uppercase" }}>
               Cancel Offer
             </Box>
             <Box className={classes.nameField}>

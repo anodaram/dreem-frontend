@@ -280,19 +280,26 @@ export const headerStyles = makeStyles(theme => ({
     },
   },
   header_popup_back: {
-    borderRadius: 20,
+    width: 255,
+    height: 195,
     marginTop: 10,
-    padding: "10px 20px",
-    background: "#000000",
+    padding: "16px 21px",
+    background: "#0B151C",
     color: "#ffffff",
+    boxShadow: "0px 38px 96px 17px rgba(1, 1, 13, 0.25), 0px 38px 42px 17px rgba(35, 55, 50, 0.21)",
   },
   header_popup_back_item: {
     cursor: "pointer",
-    // textAlign: "end",
     padding: 20,
-    borderBottom: "1px solid #ffffff",
+    fontSize: 16,
+    fontWeight: 400,
+    fontFamily: "Grifter",
+    textTransform: "uppercase",
+    "&:first-child": {
+      borderBottom: "1px solid #ffffff20",
+    },
     "&:last-child": {
-      borderBottom: "none",
+      color: "#ffffff90",
     },
   },
   musicApp: {

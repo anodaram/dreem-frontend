@@ -6,31 +6,17 @@ export const votingItemStyles = makeStyles(theme => ({
     padding: 2,
     borderRadius: 12,
     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
-    // position: "relative",
-    // border: "4px solid transparent",
-    // borderRadius: "16px",
-    // background: "linear-gradient(orange, violet)",
-    // backgroundClip: "padding-box",
-    // padding: 10,
-    // /* just to show box-shadow still works fine */
-    // boxShadow: "0 3px 9px black, inset 0 0 9px white",
-
-    // "&:after": {
-    //   position: "absolute",
-    //   top: "-4px",
-    //   bottom: "-4px",
-    //   left: "-4px",
-    //   right: "-4px",
-    //   background: "linear-gradient(red, blue)",
-    //   content: '',
-    //   zIndex: "-1",
-    //   borderRadius: "16px",
-    // }
   },
   rootMain: {
     background: "#151515",
     borderRadius: 10,
     padding: "32px 24px 32px 16px",
+    [theme.breakpoints.down("sm")]: {
+      padding: 10,
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: 8,
+    },
   },
   skeleton: {},
   sktImage: {},
@@ -45,6 +31,11 @@ export const votingItemStyles = makeStyles(theme => ({
     width: 172,
     height: 112,
     marginRight: 28,
+    [theme.breakpoints.down("xs")]: {
+      width: 79,
+      height: 57,
+      marginRight: 8,
+    },
   },
   titleSection: {
     flex: 1,
@@ -54,6 +45,17 @@ export const votingItemStyles = makeStyles(theme => ({
     fontSize: 14,
     lineHeight: "104.5%",
     marginRight: 32,
+    [theme.breakpoints.down("sm")]: {
+      fontWeight: "normal",
+      display: "flex",
+      margin: 8,
+    },
+    [theme.breakpoints.down("xs")]: {
+      display: "flex",
+      flexDirection: "column",
+      margin: 0,
+      justifyContent: "space-between",
+    },
   },
   title: {
     WebkitBackgroundClip: "text",
@@ -68,6 +70,9 @@ export const votingItemStyles = makeStyles(theme => ({
     letterSpacing: "0.02em",
     textTransform: "uppercase",
     // width: "fit-content",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "14px",
+    },
   },
   infoSection: {
     flex: 2,
@@ -92,6 +97,16 @@ export const votingItemStyles = makeStyles(theme => ({
     height: 24,
     background: "rgba(255,255,255,0.3)",
     position: "relative",
+    [theme.breakpoints.down("sm")]: {
+      width: 95,
+      display: "flex",
+      marginRight: 0,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: 95,
+      display: "flex",
+      marginRight: 0,
+    },
   },
   doneBar: {
     position: "absolute",
@@ -116,11 +131,20 @@ export const votingItemStyles = makeStyles(theme => ({
     fontWeight: 600,
     fontSize: 16,
     lineHeight: "19px",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 14,
+    },
   },
   detailButton: {
     width: 156,
     height: 46,
     color: "#151515 !important",
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+    [theme.breakpoints.down("sm")]: {
+      width: "100% !important",
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "156px !important",
+    },
   },
 }));

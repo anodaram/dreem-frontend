@@ -261,6 +261,7 @@ export const getNftGames = async (lastId: string, search: string, chain: string)
       lastId,
       search,
       chain,
+      mode: process.env.REACT_APP_ENV || "dev",
     },
   };
   try {

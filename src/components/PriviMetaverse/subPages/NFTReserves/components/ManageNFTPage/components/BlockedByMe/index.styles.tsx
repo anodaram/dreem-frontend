@@ -2,15 +2,17 @@ import { makeStyles } from "@material-ui/core/styles";
 
 export const BlockedByMeStyles = makeStyles(theme => ({
   title: {
-    fontFamily: 'Agrandir GrandHeavy',
+    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
+    "-webkit-text-fill-color": "transparent",
+    "-webkit-background-clip": "text",
+    fontFamily: "GRIFTER",
     fontSize: 18,
-    color: "#431AB7",
-    marginTop: 32
+    marginTop: 32,
   },
   content: {
-    fontFamily: 'Agrandir GrandHeavy',
+    fontFamily: "GRIFTER",
     fontSize: 14,
-    color: "#000000",
-    marginTop: 32
-  }
+    color: "#ffffff",
+    marginTop: 32,
+  },
 }));

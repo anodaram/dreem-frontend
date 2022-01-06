@@ -91,7 +91,6 @@ const PriviMetaverseConnect = () => {
   const [downloadAppLinkMac, setDownloadAppLinkMac] = useState<string>("");
   const [downloadAppLinkWindows, setDownloadAppLinkWindows] = useState<string>("");
   const twitterButton = useRef<HTMLButtonElement>(null);
-  const timerRef = useRef<any>();
 
   //  blinding early access
   useEffect(() => {
@@ -207,20 +206,9 @@ const PriviMetaverseConnect = () => {
 
           // socket
           if (!socket) {
-            const sock = io(URL(), { query: { token: res.accessToken }, transports: ["websocket"] });
-            sock.on("connected", () => {
-              if (timerRef.current) {
-                clearInterval(timerRef.current);
-                timerRef.current = undefined;
-              }
-            });
+            const sock = io(URL(), { query: { token: res.accessToken } });
             sock.connect();
             setSocket(sock);
-            sock.on("disconnect", () => {
-              timerRef.current = setInterval(() => {
-                sock.connect();
-              }, 5000);
-            });
           }
           if (socket) {
             socket.emit("add user", data.id);
@@ -240,12 +228,50 @@ const PriviMetaverseConnect = () => {
         } else {
           if (res.message) {
             setSignatureFail(true);
-            showAlertMessage(res.message, { variant: "error" });
+            if (res.message === "Wallet address doesn't exist") {
+              signUp(res.signature);
+            } else {
+              showAlertMessage(res.message, { variant: "error" });
+            }
           } else {
             showAlertMessage("Connect the metamask", { variant: "error" });
           }
         }
       });
+    }
+  };
+
+  const signUp = async signature => {
+    if (account) {
+      const res = await API.signUpWithAddressAndName(account, account, signature, "Dreem");
+      if (res.isSignedIn) {
+        setSignedin(true);
+        const data = res.userData;
+
+        // socket
+        if (!socket) {
+          const sock = io(URL(), { query: { token: res.accessToken } });
+          sock.connect();
+          setSocket(sock);
+        }
+        if (socket) {
+          socket.emit("add user", data.id);
+        }
+
+        dispatch(setUser(data));
+        localStorage.setItem("token", res.accessToken);
+        localStorage.setItem("address", account);
+        localStorage.setItem("userId", data.id);
+        localStorage.setItem("userSlug", data.urlSlug ?? data.id);
+
+        axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
+        dispatch(setLoginBool(true));
+        getDownloadAppLink();
+
+        history.push("/");
+      } else {
+        showAlertMessage(res.message, { variant: "error" });
+      }
     }
   };
 

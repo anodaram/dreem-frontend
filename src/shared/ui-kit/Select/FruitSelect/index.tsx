@@ -49,7 +49,6 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 600,
     "& img": {
       width: "20px",
-      marginBottom: theme.spacing(1),
     },
   },
 }));

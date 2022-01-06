@@ -54,7 +54,7 @@ const NotificationItem = ({ notification }) => {
           </TimeLabel>
         </Hidden>
         <NotificationMessage theme="dark">
-          <NotificationContent notification={notification} isFromPage />
+          <NotificationContent notification={notification} />
         </NotificationMessage>
         <NotificationButtons
           notification={notification}

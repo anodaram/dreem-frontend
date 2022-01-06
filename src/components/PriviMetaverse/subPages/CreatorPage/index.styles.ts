@@ -241,11 +241,13 @@ export const creatorPageStyles = makeStyles(theme => ({
     fontFamily: "GRIFTER",
     lineHeight: "120%",
     textTransform: "uppercase",
+    paddingRight: 56,
     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
     "-webkit-text-fill-color": "transparent",
     "-webkit-background-clip": "text",
     [theme.breakpoints.down("xs")]: {
       fontSize: 24,
+      paddingRight: 0,
     },
     "&:after": {
       position: "absolute",

@@ -36,7 +36,7 @@ export const metaversePageStyles = makeStyles(theme => ({
     paddingBottom: 96,
     [theme.breakpoints.down("sm")]: {
       paddingBottom: 48,
-    }
+    },
   },
   title: {
     fontFamily: "GRIFTER",
@@ -160,7 +160,7 @@ export const metaversePageStyles = makeStyles(theme => ({
     justifyContent: "flex-end",
     [theme.breakpoints.down("sm")]: {
       justifyContent: "flex-end",
-    }
+    },
   },
   selectedTab: {
     fontSize: 16,
@@ -315,7 +315,6 @@ export const useFilterSelectStyles = makeStyles({
       padding: "2px 8px",
       minWidth: "200px",
       Height: "36px",
-      border: "solid 1px transparent",
       "&:last-child": {
         marginBottom: 0,
       },

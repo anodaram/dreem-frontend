@@ -9,24 +9,6 @@ export const ClaimYourNFTModalStyles = makeStyles(theme => ({
     alignItems: "center",
     flexDirection: "column",
   },
-  infoPanel: {
-    marginTop: 17,
-    marginBottom: 34,
-    borderRadius: "16px",
-    padding: 19,
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    background: "#eceefc",
-    color: "#431AB7",
-  },
-  divider: {
-    background: "#431AB7",
-    opacity: 0.2,
-    margin: "0 36px",
-    width: 1,
-    height: 28,
-  },
   infoLabel: {
     fontSize: 16,
     marginBottom: 12,
@@ -41,23 +23,29 @@ export const ClaimYourNFTModalStyles = makeStyles(theme => ({
     fontFamily: "Agrandir GrandHeavy",
   },
   confirmButton: {
-    background: "#431AB7 !important",
-    color: "#ffffff",
-    width: "100% !important",
-    fontSize: "14px",
+    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%) !important",
+    color: "#212121 !important",
+    fontSize: "18px",
+    borderRadius: "40px !important",
+    textTransform: "uppercase",
+    marginTop: "27px",
+    padding: "0 44px !important"
   },
   title: {
-    fontFamily: "Agrandir GrandHeavy",
-    color: "#2D3047",
-    fontSize: "22px",
+    fontFamily: "GRIFTER",
+    color: "#ffffff",
+    fontSize: "24px",
     fontWeight: 800,
+    width: "50%",
+    textAlign: "center"
   },
   description: {
-    color: "#54658F",
+    fontFamily: "Rany",
+    color: "#ffffff50",
     fontSize: "16x",
-    fontWeight: 500,
+    lineHeight: "24px",
+    fontWeight: 400,
     marginTop: "20px",
-    opacity: 0.9,
     width: "70%",
     textAlign: "center",
   },
@@ -77,4 +65,8 @@ export const ClaimYourNFTModalStyles = makeStyles(theme => ({
     bottom: -22,
     left: "calc(50% - 52px)",
   },
+  cardImg: {
+    height: "316px",
+    objectFit: "cover"
+  }
 }));

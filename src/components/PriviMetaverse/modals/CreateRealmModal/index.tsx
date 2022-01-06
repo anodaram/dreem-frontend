@@ -542,7 +542,7 @@ const CreateRealmModal = ({
                 fontSize={12}
                 style={{ background: "#E9FF26 !important", borderRadius: "8px !important" }}
               >
-                {unity.name}
+                <Box flex={1}>{unity.name}</Box>
                 <SecondaryButton
                   size="medium"
                   onClick={e => {
@@ -587,7 +587,7 @@ const CreateRealmModal = ({
                 fontSize={12}
                 style={{ background: "#E9FF26 !important", borderRadius: "8px !important" }}
               >
-                {entity.name}
+                <Box flex={1}>{entity.name}</Box>
                 <SecondaryButton
                   size="medium"
                   onClick={e => {

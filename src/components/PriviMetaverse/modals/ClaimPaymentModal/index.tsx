@@ -13,6 +13,7 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { useWeb3React } from "@web3-react/core";
 import TransactionProgressModal from "components/PriviMetaverse/modals/TransactionProgressModal";
 import { successFinishBlocking } from "shared/services/API/ReserveAPI";
+import { checkChainID } from "shared/functions/metamask";
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, onConfirm }) {
@@ -43,7 +44,7 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
 
   const handleConfirm = async () => {
     setOpenTransactionModal(true);
-    if (chainId !== BlockchainNets[1].chainId && chainId !== BlockchainNets[2].chainId) {
+    if (!checkChainID(chainId)) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
@@ -53,7 +54,7 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
       web3.eth.abi.encodeParameters(
         ["address", "uint256", "address", "address"],
         [
-          collection_id,
+          nft.Address,
           token_id,
           blockingInfo.from,
           blockingInfo.Beneficiary

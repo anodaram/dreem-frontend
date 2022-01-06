@@ -37,7 +37,7 @@ const CancelSellingPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
   useEffect(() => {
     if (!open) return;
 
-    setSelectedChain(filteredBlockchainNets.find(b => b.value === nft.chain));
+    setSelectedChain(getChainForNFT(nft));
   }, [open, nft])
 
   const getTokenDecimal = addr => {
@@ -63,7 +63,7 @@ const CancelSellingPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
       web3,
       account!,
       {
-        collection_id,
+        collection_id: nft.Address,
         token_id,
         paymentToken: offer.PaymentToken,
         price: toNDecimals(offer.Price, getTokenDecimal(offer.PaymentToken)),

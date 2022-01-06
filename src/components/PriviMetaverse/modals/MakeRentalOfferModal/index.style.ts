@@ -3,30 +3,47 @@ import { makeStyles } from "@material-ui/core/styles";
 export const MakeRentalOfferModalStyles = makeStyles(theme => ({
   container: {
     maxWidth: "508px !important",
-    padding: "0px !important",
+    padding:'0px !important'
+  },
+  title: {
+    fontWeight: 700,
+    background: "linear-gradient(#EDFF1C, #ED7B7B)",
+    "-webkit-text-fill-color": "transparent",
+    "-webkit-background-clip": "text",
   },
   nameField: {
-    margin: "27px 0px 7px 0px",
-    fontFamily: "Montserrat",
-    fontStyle: "normal",
-    fontWeight: 500,
-    fontSize: "14px",
-    color: "#1A1B1C",
+    margin: '27px 0px 7px 0px',
+    fontFamily: 'Rany',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: '14px',
+    color: '#ffffff',
   },
   inputJOT: {
-    background: "rgba(144, 155, 255, 0.16)",
-    border: "1px solid #431AB7 !important",
+    backgroundColor: "#172227 !important",
+    border: "1px solid rgba(218, 218, 219, 0.59) !important",
     width: "100%",
-    borderRadius: theme.spacing(1),
     padding: theme.spacing(1),
+    color: "#ffffff60 !important",
+    borderRadius: "unset !important"
+  },
+  tokenSelect: {
+    backgroundColor: "#172227 !important",
+    border: "1px solid rgba(218, 218, 219, 0.59) !important",
+    width: "100%",
+    padding: theme.spacing(1),
+    color: "#ffffff !important",
+    borderRadius: "unset !important",
+    flex: "1",
+    fontFamily: "Rany !important"
   },
   purpleText: {
-    fontFamily: "Agrandir Variable !important",
+    fontFamily: "Rany",
     cursor: "pointer",
-    color: "#431AB7",
+    color: "#ffffff",
     fontSize: "16px",
     minWidth: "55px",
-    fontWeight: 700,
+    fontWeight: 700
   },
   usdWrap: {
     display: "flex",
@@ -34,13 +51,6 @@ export const MakeRentalOfferModalStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       paddingTop: "0",
     },
-  },
-  point: {
-    background: "#D9F66F",
-    width: "13px",
-    height: "13px",
-    borderRadius: "100%",
-    marginRight: 4,
   },
   receiveContainer: {
     background: "rgba(158, 172, 242, 0.2)",
@@ -50,43 +60,52 @@ export const MakeRentalOfferModalStyles = makeStyles(theme => ({
     justifyContent: "space-between",
     marginTop: "22px",
     "& span": {
-      color: "#431AB7",
-      fontSize: "16px",
-    },
+      color: "#ffffff",
+      fontSize: "16px"
+    }
   },
   usdt: {
-    fontFamily: "Agrandir GrandHeavy !important",
-    color: "#431AB7",
+    fontFamily: "Rany",
+    color: "#ffffff",
     fontWeight: 800,
-    fontSize: "16px",
+    fontSize: "16px"
   },
   totalText: {
-    fontFamily: "Agrandir",
-    fontStyle: "normal",
+    fontFamily: 'Rany',
+    fontStyle: 'normal',
     fontWeight: 800,
-    fontSize: "14px",
-    lineHeight: "150%",
-    letterSpacing: "0.02em",
-    color: "#431AB7",
+    fontSize: '14px',
+    lineHeight: '150%',
+    letterSpacing: '0.02em',
+    color: '#ffffff',
   },
   footer: {
-    padding: "18px 25px 25px 25px",
-    background: "#e0e0e53b",
+    padding: '18px 25px 25px 25px',
+    background: '#182127',
   },
   primaryButton: {
-    color: "#fff !important",
+    background: "linear-gradient(#B7FF5C, #EEFF21) !important",
+    color: "#212121 !important",
     padding: "0 37px !important",
     height: "40px !important",
     border: "none !important",
+    borderRadius: "40px !important",
+    "&:disabled": {
+      background: "linear-gradient(#B7FF5C, #EEFF21) !important",
+      color: "#212121 !important",
+    }
   },
-  datePicker : {
-    border: '1px solid #431ab7',
-    borderRadius: '9px',
-    width: '100%',
+  datePicker: {
+    border: "1px solid rgba(218, 218, 219, 0.59) !important",
+    width: "100%",
 
-    '& .MuiOutlinedInput-input': {
+    "& .MuiOutlinedInput-input": {
       paddingTop: 15,
-      paddingBottom: 15
+      paddingBottom: 15,
+      color: "#ffffff60 !important",
+    },
+    "& svg": {
+      color: "#ffffff"
     }
   }
 }));

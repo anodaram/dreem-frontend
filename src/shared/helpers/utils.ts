@@ -1,5 +1,7 @@
 import moment from "moment";
 
+const isProd = process.env.REACT_APP_ENV === "prod";
+
 export const countDecimals = (value: number) => {
   if (Math.floor(value) === value) return 0;
   return value.toString().split(".")[1].length || 0;
@@ -53,7 +55,7 @@ export const sanitizeIfIpfsUrl = url => {
   if (!url) {
     return null;
   }
-  if (url.startsWith("ipfs://")) {
+  if (url.includes("ipfs://")) {
     return url.replace("ipfs://", "https://ipfs.io/ipfs/");
   }
   return url;
@@ -137,3 +139,23 @@ export const typeUnitValue = (value: any, precision: number) => {
     return roundFloat(Number(value), precision);
   }
 };
+
+export const visitChainLink = (chain, address, isAddress = true) => {
+  if (isAddress) {
+    if (chain.toLowerCase() === "bsc") {
+      window.open(`https://${!isProd ? "testnet." : ""}bscscan.com/address/${address}`, "_blank");
+    } else if (chain.toLowerCase() === "polygon"){
+      window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/address/${address}`, "_blank");
+    }
+  } else {
+    if (chain.toLowerCase() === "bsc") {
+      window.open(`https://${!isProd ? "testnet." : ""}bscscan.com/tx/${address}`, "_blank");
+    } else if (chain.toLowerCase() === "polygon"){
+      window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/tx/${address}`, "_blank");
+    }
+  }
+}
+
+export const getAbbrAddress = (address, start, end) => {
+  return `${address?.substring(0, start)}...${address?.substring(address?.length - end, address.length)}`
+}

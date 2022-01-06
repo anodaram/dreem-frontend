@@ -17,7 +17,7 @@ import Box from "shared/ui-kit/Box";
 import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
 import Avatar from "shared/ui-kit/Avatar";
 import TabsView, { TabItem } from "shared/ui-kit/TabsView";
-import { PrimaryButton } from "shared/ui-kit";
+import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
@@ -27,10 +27,8 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import URL from "shared/functions/getURL";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import { detectMob } from "shared/helpers";
-// import VotingItem from "./VotingItem";
+import VotingItem from "./VotingItem";
 import { realmDetailPageStyles } from "./index.styles";
-
-const isDev = process.env.REACT_APP_ENV === "dev";
 
 const COLUMNS_COUNT_BREAK_POINTS_THREE = {
   375: 1,
@@ -47,18 +45,18 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
 };
 
 const RealmDetailTabs: TabItem[] = [
-  // {
-  //   key: "avatars",
-  //   title: "Avatars",
-  // },
+  {
+    key: "avatars",
+    title: "Avatars",
+  },
   {
     key: "extensions",
     title: "Extensions",
   },
-  // {
-  //   key: "voting",
-  //   title: "Voting",
-  // },
+  {
+    key: "voting",
+    title: "Voting",
+  },
 ];
 
 export default function RealmDetailPage() {
@@ -80,7 +78,7 @@ export default function RealmDetailPage() {
   const [realmData, setRealmData] = React.useState<any>({});
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [characters, setCharacters] = React.useState<any[]>([]);
-  const [selectedTab, setSelectedTab] = React.useState<string>("extensions");
+  const [selectedTab, setSelectedTab] = React.useState<string>("avatars");
   const [isLoadingCharacters, setIsLoadingCharacters] = React.useState<boolean>(true);
   const [isLoadingMetaData, setIsLoadingMetaData] = React.useState<boolean>(false);
 
@@ -148,7 +146,7 @@ export default function RealmDetailPage() {
           let data: any = res.data?.data?.stamp;
           if (data) {
             customProtocolCheck(
-              `${isDev ? "dreemdev://" : "dreem://"}` + data,
+              "dreem://" + data,
               () => {
                 setOpenNotAppModal(true);
               },
@@ -281,6 +279,24 @@ export default function RealmDetailPage() {
                     Enter realm
                   </Box>
                 </PrimaryButton>
+                {false && (
+                  <SecondaryButton
+                    size="medium"
+                    onClick={() => history.push("/creating_extension")}
+                    style={{
+                      background: "transparent",
+                      textTransform: "uppercase",
+                      height: 40,
+                      minWidth: 250,
+                      color: "#fff",
+                      borderRadius: "100px",
+                      marginLeft: 0,
+                      marginTop: -48,
+                    }}
+                  >
+                    Apply Extension
+                  </SecondaryButton>
+                )}
               </Hidden>
             )}
             <Hidden mdUp>
@@ -312,7 +328,7 @@ export default function RealmDetailPage() {
         <Box className={`${!isTablet ? classes.fitContent : undefined}`}>
           <Box className={classes.imageContainer}>
             {isSignedin && (
-              <Box position="relative" display="flex">
+              <Box position="relative" display="flex" mb={4}>
                 <Hidden smDown>
                   <PrimaryButton className={classes.button} size="medium" onClick={handlePlay}>
                     <EnterIcon />
@@ -320,6 +336,21 @@ export default function RealmDetailPage() {
                       Enter realm
                     </Box>
                   </PrimaryButton>
+                  <SecondaryButton
+                    size="medium"
+                    onClick={() => history.push("/creating_extension")}
+                    style={{
+                      background: "transparent",
+                      textTransform: "uppercase",
+                      height: 48,
+                      minWidth: 250,
+                      color: "#fff",
+                      borderRadius: "100px",
+                      paddingTop: 4,
+                    }}
+                  >
+                    Apply Extension
+                  </SecondaryButton>
                 </Hidden>
               </Box>
             )}
@@ -396,7 +427,7 @@ export default function RealmDetailPage() {
                       ))}
                   </Box>
                   <Box mt={4}>
-                    {realmData && realmData.extensions?.length ? (
+                    {realmData && realmData.extensions.length ? (
                       <MasonryGrid
                         gutter={"16px"}
                         data={isLoading ? Array(loadingCount).fill(3) : realmData.extensions}
@@ -415,7 +446,7 @@ export default function RealmDetailPage() {
               ) : (
                 <>
                   <Box className={classes.gradientText}>Voting</Box>
-                  {/* <Box mt={2}>
+                  <Box mt={2}>
                     {[1, 2, 3, 4, 5].map(v => {
                       return (
                         <Box mt={3}>
@@ -423,7 +454,7 @@ export default function RealmDetailPage() {
                         </Box>
                       );
                     })}
-                  </Box> */}
+                  </Box>
                 </>
               )}
             </Box>

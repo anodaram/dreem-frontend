@@ -1,9 +1,9 @@
 import axios from "axios";
 import URL from "shared/functions/getURL";
 
-export async function getAllNFTs(payload: any): Promise<any> {
+export async function getAllGameNFTs(payload: any): Promise<any> {
   try {
-    const response = await axios.get(`${URL()}/reserve/getAllNFTs`, {
+    const response = await axios.get(`${URL()}/metaverseReserve/getAllGameNFTs`, {
       params: payload,
     });
     return response.data;
@@ -13,9 +13,9 @@ export async function getAllNFTs(payload: any): Promise<any> {
   }
 }
 
-export async function getNFT(payload: any): Promise<any> {
+export async function getGameNFT(payload: any): Promise<any> {
   try {
-    const response = await axios.get(`${URL()}/reserve/getNFT`, {
+    const response = await axios.get(`${URL()}/metaverseReserve/getGameNFT`, {
       params: payload,
     });
     return response.data;
@@ -27,7 +27,7 @@ export async function getNFT(payload: any): Promise<any> {
 
 export async function getLockedNFTsByOwner(payload: any): Promise<any> {
   try {
-    const response = await axios.get(`${URL()}/reserve/getLockedNFTsByOwner`, {
+    const response = await axios.get(`${URL()}/metaverseReserve/getLockedNFTsByOwner`, {
       params: payload,
     });
     return response.data;
@@ -39,7 +39,7 @@ export async function getLockedNFTsByOwner(payload: any): Promise<any> {
 
 export async function acceptBuyingOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/acceptBuyingOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/acceptBuyingOffer`, {
       ...payload,
     });
     return response.data;
@@ -51,7 +51,7 @@ export async function acceptBuyingOffer(payload: any): Promise<any> {
 
 export async function createSellOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/setSellingOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/setSellingOffer`, {
       ...payload,
     });
     return response.data;
@@ -63,7 +63,7 @@ export async function createSellOffer(payload: any): Promise<any> {
 
 export async function cancelSellingOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/cancelSellingOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/cancelSellingOffer`, {
       ...payload,
     });
     return response.data;
@@ -75,7 +75,7 @@ export async function cancelSellingOffer(payload: any): Promise<any> {
 
 export async function createBuyOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/createBuyOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/createBuyOffer`, {
       ...payload,
     });
     return response.data;
@@ -87,7 +87,7 @@ export async function createBuyOffer(payload: any): Promise<any> {
 
 export async function removeBuyOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/deleteBuyOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/deleteBuyOffer`, {
       ...payload,
     });
     return response.data;
@@ -99,7 +99,7 @@ export async function removeBuyOffer(payload: any): Promise<any> {
 
 export async function getOwnedNFTs(payload: any): Promise<any> {
   try {
-    const response = await axios.get(`${URL()}/reserve/getOwnedNFTs`, {
+    const response = await axios.get(`${URL()}/metaverseReserve/getOwnedGameNfts`, {
       params: payload,
     });
     return response.data;
@@ -111,7 +111,7 @@ export async function getOwnedNFTs(payload: any): Promise<any> {
 
 export async function createBlockingOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/createBlockingOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/createBlockingOffer`, {
       ...payload,
     });
     return response.data;
@@ -123,7 +123,7 @@ export async function createBlockingOffer(payload: any): Promise<any> {
 
 export async function removeBlockingOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/deleteBlockingOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/deleteBlockingOffer`, {
       ...payload,
     });
     return response.data;
@@ -135,7 +135,7 @@ export async function removeBlockingOffer(payload: any): Promise<any> {
 
 export async function acceptBlockingOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/acceptBlockingOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/acceptBlockingOffer`, {
       ...payload,
     });
     return response.data;
@@ -147,7 +147,7 @@ export async function acceptBlockingOffer(payload: any): Promise<any> {
 
 export async function setBlockingOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/setBlockingOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/setBlockingOffer`, {
       ...payload,
     });
     return response.data;
@@ -159,7 +159,7 @@ export async function setBlockingOffer(payload: any): Promise<any> {
 
 export async function cancelBlockingOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/cancelBlockingOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/cancelBlockingOffer`, {
       ...payload,
     });
     return response.data;
@@ -171,7 +171,7 @@ export async function cancelBlockingOffer(payload: any): Promise<any> {
 
 export async function closeBlockingHistory(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/closeBlockingHistory`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/closeBlockingHistory`, {
       ...payload,
     });
     return response.data;
@@ -183,7 +183,7 @@ export async function closeBlockingHistory(payload: any): Promise<any> {
 
 export async function successFinishBlocking(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/successFinishBlocking`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/successFinishBlocking`, {
       ...payload,
     });
     return response.data;
@@ -195,7 +195,7 @@ export async function successFinishBlocking(payload: any): Promise<any> {
 
 export async function updateBlockingHistory(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/updateBlockingHistory`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/updateBlockingHistory`, {
       ...payload,
     });
     return response.data;
@@ -207,7 +207,7 @@ export async function updateBlockingHistory(payload: any): Promise<any> {
 
 export async function createRentOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/createRentOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/createRentOffer`, {
       ...payload,
     });
     return response.data;
@@ -219,7 +219,7 @@ export async function createRentOffer(payload: any): Promise<any> {
 
 export async function cancelRentOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/cancelRentOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/cancelRentOffer`, {
       ...payload,
     });
     return response.data;
@@ -231,7 +231,7 @@ export async function cancelRentOffer(payload: any): Promise<any> {
 
 export async function createListOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/createListOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/createListOffer`, {
       ...payload,
     });
     return response.data;
@@ -243,7 +243,7 @@ export async function createListOffer(payload: any): Promise<any> {
 
 export async function acceptRentOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/acceptRentOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/acceptRentOffer`, {
       ...payload,
     });
     return response.data;
@@ -255,7 +255,7 @@ export async function acceptRentOffer(payload: any): Promise<any> {
 
 export async function cancelListOffer(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/cancelListOffer`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/cancelListOffer`, {
       ...payload,
     });
     return response.data;
@@ -267,7 +267,7 @@ export async function cancelListOffer(payload: any): Promise<any> {
 
 export async function rentNFT(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/rentNFT`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/rentNFT`, {
       ...payload,
     });
     return response.data;
@@ -280,7 +280,7 @@ export async function rentNFT(payload: any): Promise<any> {
 
 export async function resetStatus(payload: any): Promise<any> {
   try {
-    const response = await axios.post(`${URL()}/reserve/resetStatus`, {
+    const response = await axios.post(`${URL()}/metaverseReserve/resetStatus`, {
       ...payload,
     });
     return response.data;

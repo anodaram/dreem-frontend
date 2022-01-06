@@ -13,7 +13,6 @@ import { setUser } from "store/actions/User";
 import Box from "shared/ui-kit/Box";
 import { CircularLoadingIndicator, PrimaryButton } from "shared/ui-kit";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
-// import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
 import Avatar from "shared/ui-kit/Avatar";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import URL from "shared/functions/getURL";
@@ -27,6 +26,8 @@ import TabsView from "shared/ui-kit/TabsView";
 import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import RealmCard from "components/PriviMetaverse/components/cards/RealmCard";
 import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
+import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
+import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import EditProfileModal from "../../modals/EditProfileModal";
 import VerifyProfileModal from "../../modals/VerifyProfileModal";
 import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProfileCard";
@@ -50,30 +51,39 @@ const ProfileTabs = [
 
 const MAX_NAME_LENGTH = 20;
 
+const COLUMNS_COUNT_BREAK_POINTS_THREE = {
+  375: 1,
+  600: 2,
+  1000: 3,
+  1440: 3,
+};
+
 export default function CreatorPage() {
   const classes = creatorPageStyles();
   const dispatch = useDispatch();
+
+  const width = useWindowDimensions().width;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const users = useSelector(getUsersInfoList);
 
   const { creatorAddress } = useParams<{ creatorAddress: string }>();
   const userSelector = useTypedSelector(state => state.user);
-  const [creator, setCreator] = React.useState<any>({});
-  const [loadingProfile, setLoadingProfile] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [nftContents, setNftContents] = React.useState<any[]>([]);
-  const [likedRealms, setLikedRealms] = React.useState<any[]>([]);
-  const [likedAvatars, setLikedAvatars] = React.useState<any[]>([]);
-  const [openFollowProfileModal, setOpenFollowProfileModal] = React.useState<boolean>(false);
-  const [followsList, setFollowsList] = React.useState<any[]>([]);
-  const [isLoadingFollows, setIsLoadingFollows] = React.useState<boolean>(false);
+  const [creator, setCreator] = useState<any>({});
+  const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [nftContents, setNftContents] = useState<any[]>([]);
+  const [likedRealms, setLikedRealms] = useState<any[]>([]);
+  const [likedAvatars, setLikedAvatars] = useState<any[]>([]);
+  const [openFollowProfileModal, setOpenFollowProfileModal] = useState<boolean>(false);
+  const [followsList, setFollowsList] = useState<any[]>([]);
+  const [isLoadingFollows, setIsLoadingFollows] = useState<boolean>(false);
   const [isFollowingList, setIsFollowingList] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isOwner, setIsOwner] = React.useState<boolean | undefined>();
-  // const [fruit, setFruit] = React.useState<any>({});
-  const [selectedTab, setSelectedTab] = React.useState<string>("drafts");
+  const [isOwner, setIsOwner] = useState<boolean | undefined>();
+  // const [fruit, setFruit] = useState<any>({});
+  const [selectedTab, setSelectedTab] = useState<string>("drafts");
   const { followUser, unfollowUser, isUserFollowed } = useUserConnections();
   const [isFollowing, setIsFollowing] = useState<number>(-1);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
@@ -82,13 +92,13 @@ export default function CreatorPage() {
   const { setMultiAddr, uploadWithNonEncryption } = useIPFS();
   const { profileAvatarChanged, setProfileAvatarChanged } = usePageRefreshContext();
   const [openActionBox, setOpenActionBox] = useState<boolean>(false);
-  const inputRef = React.useRef<any>();
+  const inputRef = useRef<any>();
 
-  const [curPage, setCurPage] = React.useState(1);
-  const [lastPage, setLastPage] = React.useState(1);
-  const [hasMore, setHasMore] = React.useState<boolean>(true);
+  const [curPage, setCurPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [hasMore, setHasMore] = useState<boolean>(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");
   }, []);
 
@@ -134,7 +144,7 @@ export default function CreatorPage() {
     }
   }, [creator.userInfo?.id, isOwner]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (creator?.userInfo) {
       (async () => {
         try {
@@ -465,6 +475,8 @@ export default function CreatorPage() {
     }
   };
 
+  const loadingCount = React.useMemo(() => (width > 1000 ? 6 : width > 600 ? 3 : 6), [width]);
+
   return (
     <>
       <div className={classes.root}>
@@ -776,8 +788,15 @@ export default function CreatorPage() {
                           hasMore={hasMore}
                           loader={
                             loading && (
-                              <Box display="flex" justifyContent="center">
-                                <CircularLoadingIndicator theme="light dark" />
+                              <Box mt={2}>
+                                <MasonryGrid
+                                  gutter={"16px"}
+                                  data={Array(loadingCount).fill(0)}
+                                  renderItem={(item, _) => (
+                                    <RealmExtensionProfileCard nft={{}} isLoading={true} />
+                                  )}
+                                  columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
+                                />
                               </Box>
                             )
                           }
@@ -814,8 +833,13 @@ export default function CreatorPage() {
                           hasMore={hasMore}
                           loader={
                             loading && (
-                              <Box display="flex" justifyContent="center">
-                                <CircularLoadingIndicator theme="light dark" />
+                              <Box mt={2}>
+                                <MasonryGrid
+                                  gutter={"16px"}
+                                  data={Array(loadingCount).fill(0)}
+                                  renderItem={(item, _) => <RealmCard isLoading={true} />}
+                                  columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
+                                />
                               </Box>
                             )
                           }
@@ -845,8 +869,13 @@ export default function CreatorPage() {
                           hasMore={hasMore}
                           loader={
                             loading && (
-                              <Box display="flex" justifyContent="center">
-                                <CircularLoadingIndicator theme="light dark" />
+                              <Box mt={2}>
+                                <MasonryGrid
+                                  gutter={"16px"}
+                                  data={Array(loadingCount).fill(0)}
+                                  renderItem={(item, _) => <AvatarCard isLoading={true} />}
+                                  columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
+                                />
                               </Box>
                             )
                           }

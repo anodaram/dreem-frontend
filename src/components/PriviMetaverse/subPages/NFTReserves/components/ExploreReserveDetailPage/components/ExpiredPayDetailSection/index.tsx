@@ -51,7 +51,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
     const activeReserveId = web3.utils.keccak256(
       web3.eth.abi.encodeParameters(
         ["address", "uint256", "address", "address"],
-        [collection_id, token_id, blockingInfo.from, blockingInfo.Beneficiary]
+        [nft.Address, token_id, blockingInfo.from, blockingInfo.Beneficiary]
       )
     );
 
@@ -74,7 +74,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
           Id: blockingInfo.id,
           Beneficiary: blockingInfo.Beneficiary,
           offerer: account,
-          notificationMode: 1
+          notificationMode: 1,
         });
       } else {
         await closeBlockingHistory({
@@ -84,7 +84,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
           Id: blockingInfo.id,
           Beneficiary: blockingInfo.Beneficiary,
           offerer: account,
-          notificationMode: 1
+          notificationMode: 1,
         });
       }
 
@@ -99,7 +99,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
   const getTokenSymbol = addr => {
     if (tokens.length == 0 || !addr) return 0;
     let token = tokens.find(token => token.Address === addr);
-    return token?.Symbol || '';
+    return token?.Symbol || "";
   };
 
   return (
@@ -107,10 +107,11 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
       <Box display="flex" justifyContent="space-between">
         <Text
           style={{
-            fontSize: "18px",
-            color: "#1A1B1C",
-            fontWeight: 800,
-            fontFamily: "Agrandir GrandHeavy",
+            fontSize: "20px",
+            fontWeight: "bold",
+            fontFamily: "GRIFTER",
+            color: "white",
+            textTransform: "uppercase",
           }}
         >
           Details
@@ -123,66 +124,77 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
           flex={1}
           style={{ borderRight: "1px solid #9EACF220", fontSize: 14 }}
         >
-          <Box color="#431AB7">Option Time</Box>
-          <Box style={{ fontSize: 18 }}>{`${blockingInfo?.ReservePeriod} days (${moment(
+          <Box className={classes.gradientText} fontSize="14px" mb="4px">
+            Option Time
+          </Box>
+          <Box fontFamily="GRIFTER" fontWeight="bold" fontSize="20px">{`${
+            blockingInfo?.ReservePeriod
+          } days (${moment(
             new Date(blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + blockingInfo?.created)
           ).format("DD.MM.YYYY")})`}</Box>
         </Box>
         <Box display="flex" flexDirection="column" flex={1} pl={5} style={{ fontSize: 14 }}>
-          <Box color="#431AB7">Collateral</Box>
-          <Box style={{ fontSize: 18 }}>{blockingInfo?.TotalCollateralPercent} %</Box>
+          <Box className={classes.gradientText} fontSize="14px" mb="4px">
+            Collateral
+          </Box>
+          <Box fontFamily="GRIFTER" fontWeight="bold" fontSize="20px">
+            {blockingInfo?.TotalCollateralPercent || 0} %
+          </Box>
         </Box>
       </Box>
+      <hr className={classes.divider} />
       <Box mt={4} className={isSuccess ? classes.ExpiredPaySuccess : classes.ExpiredPayFailed} padding="20px">
-        <Box fontFamily="Agrandir GrandHeavy" fontSize={14} color={isSuccess ? "#431AB7" : "#FF8E3C"}>
+        <Box fontFamily="GRIFTER" fontSize={20} color="#E9FF26">
           {isSuccess ? "Offer Paid" : "Offer Expired"}
         </Box>
-        {
-          isSuccess ? (
-            <>
-              <Box mt={1}>
-                You didn’t manage to pay full amount necessary to buy out your NFT. You can withdraw your funds and
-                NFT will be returned to it’s owner.{" "}
-              </Box>
-              <Box flex={1} mt="27px" display="flex" justifyContent="space-between" alignItems="center">
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  flex={0.5}
-                  style={{ borderRight: "1px solid #A4A4A420" }}
-                >
-                  <Box fontSize={16}>Future Price</Box>
-                  <Box color="#431AB7" fontFamily="Agrandir GrandHeavy" fontSize={18}>
-                    {`${(blockingInfo?.TotalCollateralPercent / 100) * blockingInfo?.Price} ${getTokenSymbol(
-                      blockingInfo?.PaymentToken
-                    )}`}
-                  </Box>
-                </Box>
-                <Box display="flex" flexDirection="column" flex={0.5} pl={8}>
-                  <Box fontSize={16}>Paid amount to withdraw</Box>
-                  <Box color="#431AB7" fontFamily="Agrandir GrandHeavy" fontSize={18}>
-                    {`${
-                      ((blockingInfo?.TotalCollateralPercent - blockingInfo?.CollateralPercent) / 100) *
-                      blockingInfo?.Price
-                    } ${getTokenSymbol(blockingInfo?.PaymentToken)}`}
-                  </Box>
-                </Box>
-              </Box>
-            </>
-          ) : (
+        {isSuccess ? (
+          <>
             <Box mt={1}>
-              You didn’t manage to pay full amount necessary to buy out your NFT. You’ve lost a chance to buy it and lost {blockingInfo?.CollateralPercent}% of collaterall for blocking Claim the outstanding amount 
+              You didn’t manage to pay full amount necessary to buy out your NFT. You can withdraw your funds
+              and NFT will be returned to it’s owner.{" "}
             </Box>
-          )
-        }
+            <Box flex={1} mt="27px" display="flex" justifyContent="space-between" alignItems="center">
+              <Box
+                display="flex"
+                flexDirection="column"
+                flex={0.5}
+                style={{ borderRight: "1px solid #A4A4A420" }}
+              >
+                <Box fontSize={16}>Future Price</Box>
+                <Box color="white" fontFamily="Rany" fontSize={18}>
+                  {`${(blockingInfo?.TotalCollateralPercent / 100) * blockingInfo?.Price} ${getTokenSymbol(
+                    blockingInfo?.PaymentToken
+                  )}`}
+                </Box>
+              </Box>
+              <Box display="flex" flexDirection="column" flex={0.5} pl={8}>
+                <Box fontSize={14}>Paid amount to withdraw</Box>
+                <Box color="white" fontFamily="Rany" fontSize={18}>
+                  {`${
+                    ((blockingInfo?.TotalCollateralPercent - blockingInfo?.CollateralPercent) / 100) *
+                    blockingInfo?.Price
+                  } ${getTokenSymbol(blockingInfo?.PaymentToken)}`}
+                </Box>
+              </Box>
+            </Box>
+          </>
+        ) : (
+          <Box mt={1} fontFamily="Rany" fontSize={14} lineHeight="22.4px">
+            You didn’t manage to pay full amount necessary to buy out your NFT. You’ve lost a chance to buy it
+            and lost <span style={{ color: "#E9FF26" }}>{blockingInfo?.CollateralPercent}%</span> of
+            collaterall for blocking Claim the outstanding amount
+          </Box>
+        )}
         <PrimaryButton
           size="medium"
           style={{
             width: "100%",
             height: 52,
-            backgroundColor: "#431AB7",
+            backgroundColor: "#E9FF26",
             marginTop: 14,
             textTransform: "uppercase",
+            color: "#212121",
+            borderRadius: 0,
           }}
           onClick={() => {
             onConfirm();

@@ -2,10 +2,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 export const nftCardStyles = makeStyles(theme => ({
   cardBorderWrapper: {
-    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
-    padding: 2,
+    border: "1px solid #ED7B7B",
     borderRadius: 12,
-  },  
+  },
   card: {
     background: "#212121",
     borderRadius: 12,
@@ -212,5 +211,41 @@ export const nftCardStyles = makeStyles(theme => ({
     fontFamily: "Grifter",
     color: "#fff",
     textTransform: "uppercase",
+  },
+  skeleton: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    padding: "30px 72px 70px",
+    height: "100%",
+    background: "unset",
+    [theme.breakpoints.down("sm")]: {
+      padding: "20px 0px 40px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: "10px 0px 20px",
+    },
+    "& .MuiSkeleton-root": {
+      backgroundColor: "#505050",
+      borderRadius: 6,
+      "&:nth-child(1)": {
+        height: (props: any) => (props.isFeature ? 400 : 200),
+        [theme.breakpoints.down("sm")]: {
+          height: (props: any) => (props.isFeature ? 260 : 160),
+        },
+      },
+      "&:nth-child(2)": {
+        height: (props: any) => (props.isFeature ? 36 : 24),
+        [theme.breakpoints.down("sm")]: {
+          height: (props: any) => (props.isFeature ? 24 : 16),
+        },
+      },
+      "&:nth-child(3)": {
+        height: (props: any) => (props.isFeature ? 36 : 24),
+        [theme.breakpoints.down("sm")]: {
+          height: (props: any) => (props.isFeature ? 24 : 16),
+        },
+      },
+    },
   },
 }));

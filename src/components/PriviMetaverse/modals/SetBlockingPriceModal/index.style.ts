@@ -7,26 +7,35 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
   },
   nameField: {
     margin: "27px 0px 7px 0px",
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     fontStyle: "normal",
-    fontWeight: 500,
+    fontWeight: "normal",
     fontSize: "14px",
-    color: "#1A1B1C",
+    color: "#ffffff",
   },
   inputJOT: {
-    background: "rgba(144, 155, 255, 0.16)",
-    border: "1px solid #431AB7 !important",
+    backgroundColor: "#172227 !important",
+    border: "1px solid rgba(218, 218, 219, 0.59) !important",
     width: "100%",
-    borderRadius: theme.spacing(1),
     padding: theme.spacing(1),
-    margin: "0 2px",
+    color: "#ffffff60 !important",
+    borderRadius: "unset !important"
+  },
+  tokenSelect: {
+    backgroundColor: "#172227 !important",
+    border: "1px solid rgba(218, 218, 219, 0.59) !important",
+    width: "100%",
+    padding: theme.spacing(1),
+    color: "#ffffff !important",
+    borderRadius: "unset !important",
+    flex: "1"
   },
   purpleText: {
-    fontFamily: "Agrandir Variable !important",
+    fontFamily: "Rany",
     cursor: "pointer",
-    color: "#431AB7",
+    color: "#ffffff",
     fontSize: "16px",
-    fontWeight: 700,
+    fontWeight: 500,
   },
   usdWrap: {
     display: "flex",
@@ -50,13 +59,13 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
     justifyContent: "space-between",
     marginTop: "22px",
     "& span": {
-      color: "#431AB7",
+      color: "#ffffff",
       fontSize: "16px",
     },
   },
   usdt: {
     fontFamily: "Agrandir GrandHeavy !important",
-    color: "#431AB7",
+    color: "#ffffff",
     fontWeight: 800,
     fontSize: "16px",
   },
@@ -67,27 +76,13 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
     fontSize: "14px",
     lineHeight: "150%",
     letterSpacing: "0.02em",
-    color: "#431AB7",
-  },
-  footer: {
-    padding: "18px 25px 25px 25px",
-    background: "#e0e0e53b",
-  },
-  primaryButton: {
-    color: "#fff !important",
-    padding: "0 73px !important",
-    height: "40px !important",
-    border: "none !important",
-    [theme.breakpoints.down("xs")]: {
-      padding: "0 0 !important",
-      width: "50% !important",
-    },
+    color: "#ffffff",
   },
   secondaryButton: {
     padding: "0 37px !important",
   },
   datePicker: {
-    border: "1px solid #431ab7",
+    border: "1px solid #ffffff",
     borderRadius: "9px",
     width: "100%",
 
@@ -118,14 +113,29 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
   },
   cancelButton: {
     backgroundColor: "transparent !important",
-    color: "black !important",
-    border: "1px solid #CBCBCB !important",
-    borderRadius: "4px",
-    width: "100% !important",
+    color: "#DDFF57 !important",
+    border: "1px solid #E9FF26 !important",
+    borderRadius: "40px !important",
+    width: '165px !important',
+    textTransform: "uppercase"
   },
   editPriceButton: {
-    backgroundColor: "#431AB7 !important",
-    color: "white",
-    width: "100% !important",
+    backgroundColor: "#DDFF57 !important",
+    color: "#0B151C !important",
+    width: '165px !important',
+    borderRadius: "40px !important",
+    textTransform: "uppercase"
+  },
+  primaryButton: {
+    color: "#212121 !important",
+    padding: "0 37px !important",
+    height: "40px !important",
+    background: "linear-gradient(#B7FF5C, #EEFF21) !important",
+    borderRadius: "40px",
+    border: "none",
+    "&:disabled": {
+      background: "linear-gradient(#B7FF5C, #EEFF21) !important",
+      color: "#212121 !important",
+    }
   },
 }));

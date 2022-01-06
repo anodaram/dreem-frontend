@@ -2,30 +2,50 @@ import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 // import { useDebounce } from "use-debounce/lib";
 import InfiniteScroll from "react-infinite-scroll-component";
+
 import { useMediaQuery, useTheme } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 
 import GameMediaCard from "components/PriviMetaverse/components/cards/GameMediaCard";
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
-// import { SearchInputBox } from "shared/ui-kit/SearchInputBox/SearchInputBox";
 import { getGameInfo, getCharactersByGame } from "shared/services/API/DreemAPI";
-
-import { gameDetailPageStyles } from "./index.styles";
-
-import { IconButton } from "@material-ui/core";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
+import TabsView, { TabItem } from "shared/ui-kit/TabsView";
+import { gameDetailPageStyles, gameDetailTabsStyles } from "./index.styles";
+import MarketplaceFeed from "./components/MarketplaceFeed";
+import Owners from "./components/Owners";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
   600: 2,
   900: 3,
   1200: 4,
-  // 1440: 4,
 };
+
+const TAB_NFTS = "nfts";
+const TAB_MARKETPLACE_FEED = "marketplace_feed";
+const TAB_OWNERS = "owners";
+
+const GameDetailTabs: TabItem[] = [
+  {
+    key: TAB_NFTS,
+    title: "NFTs",
+  },
+  {
+    key: TAB_MARKETPLACE_FEED,
+    title: "MARKETPLACE FEED",
+  },
+  {
+    key: TAB_OWNERS,
+    title: "owners",
+  },
+];
 
 export default function GameDetailPage() {
   const classes = gameDetailPageStyles();
+  const tabsClasses = gameDetailTabsStyles();
 
   const history = useHistory();
   const width = useWindowDimensions().width;
@@ -34,13 +54,15 @@ export default function GameDetailPage() {
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { id: gameId } = useParams<{ id: string }>();
+  const { collection_id }: { collection_id: string } = useParams();
   const [gameInfo, setGameInfo] = React.useState<any>(undefined);
   // const [keyword, setKeyword] = React.useState<string>("");
   const [nfts, setNfts] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [lastId, setLastId] = React.useState<any>(undefined);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
+
+  const [selectedTab, setSelectedTab] = React.useState<string>(TAB_NFTS);
 
   // const [debouncedKeyword] = useDebounce(keyword, 500);
 
@@ -64,7 +86,7 @@ export default function GameDetailPage() {
 
   const loadGameInfo = async () => {
     try {
-      const res = await getGameInfo({ gameId });
+      const res = await getGameInfo({ gameId: collection_id });
       if (res.success) {
         let gf = res.data;
         if (gf.Address) {
@@ -85,7 +107,7 @@ export default function GameDetailPage() {
     try {
       setLoading(true);
       const response = await getCharactersByGame({
-        gameId,
+        gameId: collection_id,
         lastId: init ? undefined : lastId,
         searchValue: "", // debouncedKeyword,
       });
@@ -113,7 +135,6 @@ export default function GameDetailPage() {
 
   return (
     <Box className={classes.root} id="scrollContainer">
-      {/* <img className={classes.headerBG} src={require("assets/metaverseImages/game_detail_header_bg.png")} /> */}
       <Box
         className={classes.headerBG}
         style={{
@@ -125,9 +146,7 @@ export default function GameDetailPage() {
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center",
-
           backgroundColor: "#151515",
-          // backgroundPosition: "0 0",
         }}
       />
       <Box className={classes.container}>
@@ -147,13 +166,10 @@ export default function GameDetailPage() {
             {gameInfo?.CollectionName}
           </Box>
           {gameInfo?.Chain && (
-            <Box
-              display="flex"
-              flexDirection={"row"}
-              alignItems={"center"}
-              fontSize={isMobile ? 14 : 20}
-            >
-              <Box display="flex" alignItems="center"
+            <Box display="flex" flexDirection={"row"} alignItems={"center"} fontSize={isMobile ? 14 : 20}>
+              <Box
+                display="flex"
+                alignItems="center"
                 style={{ cursor: "pointer" }}
                 onClick={handleClickProject}
               >
@@ -172,14 +188,11 @@ export default function GameDetailPage() {
                 }}
               />
               <Box display="flex" alignItems="center">
-                <IconButton aria-label="" style={{cursor: "unset"}}>
+                <IconButton aria-label="" style={{ cursor: "unset" }}>
                   <img src={getChainImageUrl(gameInfo?.Chain)} width={"22px"} />
                 </IconButton>
                 <span>{gameInfo?.Chain}</span>
               </Box>
-              {/* <span style={{ marginLeft: 10, fontSize: 20 }}>
-            {`${gameInfo?.Chain} ${gameInfo?.Address && gameInfo?.Address.length > 0 ? '•' : ''} ${isMobile ? gameInfo?.AddressShort : gameInfo?.Address}`}
-          </span> */}
             </Box>
           )}
           {isMobile ? (
@@ -187,114 +200,72 @@ export default function GameDetailPage() {
               <Box className={classes.description} style={{ flex: isTablet ? 3 : 2.5 }}>
                 <p>{gameInfo?.Description}</p>
               </Box>
-              {/* <Box style={{ flex: isTablet ? 1.5 : 1 }} mt={3}>
-                <SearchInputBox
-                  keyword={keyword}
-                  setKeyword={setKeyword}
-                  placeholder="Search content"
-                  style={{
-                    background: "transparent",
-                    borderRadius: 0,
-                    color: "#fff",
-                    borderColor: "#fff",
-                    fontSize: 20,
-                  }}
-                  iconStyle="gray"
-                />
-              </Box> */}
             </Box>
           ) : (
             <Box display="flex" justifyContent="space-between">
               <Box className={classes.description} style={{ flex: isTablet ? 3 : 2.5 }}>
                 <p>{gameInfo?.Description}</p>
               </Box>
-              {/* <div style={{ flex: isTablet ? 0.3 : 0.5 }}></div> */}
-              {/* <Box style={{ flex: isTablet ? 1.5 : 1 }} mt={3}>
-                <SearchInputBox
-                  keyword={keyword}
-                  setKeyword={setKeyword}
-                  placeholder="Search content"
-                  style={{
-                    background: "transparent",
-                    borderRadius: 0,
-                    color: "#fff",
-                    borderColor: "#fff",
-                    fontSize: 20,
-                  }}
-                  iconStyle="gray"
-                />
-              </Box> */}
             </Box>
           )}
 
-          <Box
-            className={classes.fitContent}
-            style={{ paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}
-          >
-            <InfiniteScroll
-              hasChildren={nfts?.length > 0}
-              dataLength={nfts?.length}
-              scrollableTarget={"scrollContainer"}
-              next={loadNfts}
-              hasMore={hasMore}
-              loader={
-                loading && (
-                  <Box mt={2}>
-                    <MasonryGrid
-                      gutter={"40px"}
-                      data={Array(loadingCount).fill(0)}
-                      renderItem={(_, index) => <GameMediaCard isLoading={true} key={`game_${index}`} />}
-                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                    />
-                  </Box>
-                )
-              }
+          <TabsView
+            tabs={GameDetailTabs}
+            onSelectTab={tab => {
+              setSelectedTab(tab.key);
+            }}
+            extendedClasses={tabsClasses}
+          />
+
+          {selectedTab === TAB_NFTS && (
+            <Box
+              className={classes.fitContent}
+              style={{ paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}
             >
-              <Box mt={4}>
-                <MasonryGrid
-                  gutter={"40px"}
-                  data={nfts}
-                  renderItem={(item, index) => (
-                    <GameMediaCard item={item} gameInfo={gameInfo} key={`game_${index}`} />
-                  )}
-                  columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                />
-              </Box>
-              {/* <Grid container spacing={3} style={{ marginBottom: 24 }}>
-                {nfts?.map((item, index) => (
-                  <Grid item key={`avatar-${index}`} lg={3} md={4} sm={6} xs={12}>
-                    <GameMediaCard
-                      item={item}
-                      gameInfo={gameInfo}
-                      isLoading={loading}
-                    />
-                  </Grid>
-                ))}
-              </Grid> */}
-            </InfiniteScroll>
-            {!loading && nfts?.length < 1 && (
-              <Box textAlign="center" width="100%" mb={10} mt={2}>
-                No NFTs
-              </Box>
-            )}
-          </Box>
+              <InfiniteScroll
+                hasChildren={nfts?.length > 0}
+                dataLength={nfts?.length}
+                scrollableTarget={"scrollContainer"}
+                next={loadNfts}
+                hasMore={hasMore}
+                loader={
+                  loading && (
+                    <Box mt={2}>
+                      <MasonryGrid
+                        gutter={"40px"}
+                        data={Array(loadingCount).fill(0)}
+                        renderItem={(_, index) => <GameMediaCard isLoading={true} key={`game_${index}`} />}
+                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                      />
+                    </Box>
+                  )
+                }
+              >
+                <Box mt={4}>
+                  <MasonryGrid
+                    gutter={"40px"}
+                    data={nfts}
+                    renderItem={(item, index) => (
+                      <GameMediaCard item={item} gameInfo={gameInfo} key={`game_${index}`} />
+                    )}
+                    columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                  />
+                </Box>
+              </InfiniteScroll>
+              {!loading && nfts?.length < 1 && (
+                <Box textAlign="center" width="100%" mb={10} mt={2}>
+                  No NFTs
+                </Box>
+              )}
+            </Box>
+          )}
+          {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed />}
+          {selectedTab === TAB_OWNERS && <Owners />}
         </Box>
       </Box>
     </Box>
   );
 }
-
-const NetIcon = () => (
-  <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M3.38194 8.90942H19.1634M3.38194 14.5457H19.1634M10.803 3.27319C9.22045 5.80913 8.38146 8.73833 8.38146 11.7275C8.38146 14.7167 9.22045 17.6459 10.803 20.1819M11.7423 3.27319C13.3248 5.80913 14.1638 8.73833 14.1638 11.7275C14.1638 14.7167 13.3248 17.6459 11.7423 20.1819M19.7271 11.7275C19.7271 16.3967 15.9419 20.1819 11.2727 20.1819C6.6035 20.1819 2.81836 16.3967 2.81836 11.7275C2.81836 7.05833 6.6035 3.27319 11.2727 3.27319C15.9419 3.27319 19.7271 7.05833 19.7271 11.7275Z"
-      stroke="#E9FF26"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
-);
 
 export const ArrowIcon = ({ color = "white" }) => (
   <svg width="57" height="15" viewBox="0 0 57 15" fill="none" xmlns="http://www.w3.org/2000/svg">
