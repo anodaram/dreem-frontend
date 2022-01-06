@@ -28,13 +28,12 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
   const [maxHours, setMaxHours] = useState<number>(0);
   const [maxMins, setMaxMins] = useState<number>(0);
   const [maxSeconds, setMaxSeconds] = useState<number>(0);
-  const [limitDays, setLimitDays] = useState<number>();
-  const [limitHour, setLimitHour] = useState<number>();
-  const [limitMin, setLimitMin] = useState<number>();
-  const [limitSec, setLimitSec] = useState<number>();
+  const [limitDays, setLimitDays] = useState<number>(0);
+  const [limitHour, setLimitHour] = useState<number>(0);
+  const [limitMin, setLimitMin] = useState<number>(0);
+  const [limitSec, setLimitSec] = useState<number>(0);
   const [balance, setBalance] = React.useState<number>(0);
   const [rentalToken, setRentalToken] = useState<any>();
-  const users = useTypedSelector(state => state.usersInfoList);
   const rentalTime = React.useMemo(
     () => toSeconds(limitDays, limitHour, limitMin, limitSec),
     [limitDays, limitHour, limitMin, limitSec]
@@ -183,7 +182,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
         web3,
         account!,
         {
-          collectionId: collection_id,
+          collectionId: nft.Address,
           tokenId: token_id,
           maximumRentalTime: offer.maximumRentTime,
           pricePerSecond: offer.pricePerSecond,

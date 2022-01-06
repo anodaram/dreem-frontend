@@ -41,7 +41,7 @@ const RentedByMe = () => {
       });
       const nfts = response.nfts.map(item => {
         const histories = item?.rentHistories;
-        const activeHistory = histories[0];
+        const activeHistory = histories && histories.length && histories[0];
         return {
           ...item,
           history: activeHistory,
