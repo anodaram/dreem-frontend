@@ -56,7 +56,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
   };
 
   const price = offer
-    ? Math.ceil(+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime)
+    ? (+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime).toFixed(3)
     : 0;
 
   useEffect(() => setSelectedChain(getChainForNFT(nft)), [nft]);
@@ -262,7 +262,15 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
     handleClose();
   };
 
+  const resetRentalTime = () => {
+    setLimitDays(0);
+    setLimitHour(0);
+    setLimitMin(0);
+    setLimitSec(0);
+  };
+
   const setRentalTimeAsMax = () => {
+    resetRentalTime();
     if (maxDays > 0) {
       setLimitDays(maxDays);
     } else if (maxHours > 0) {
