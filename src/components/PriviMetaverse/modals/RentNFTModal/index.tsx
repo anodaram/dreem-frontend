@@ -183,7 +183,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
         web3,
         account!,
         {
-          collectionId: nft.Address,
+          collectionId: collection_id,
           tokenId: token_id,
           maximumRentalTime: offer.maximumRentTime,
           pricePerSecond: offer.pricePerSecond,
