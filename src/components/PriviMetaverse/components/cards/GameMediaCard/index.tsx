@@ -47,7 +47,7 @@ export default function GameMediaCard(props) {
             <img className={classes.image} src={media?.image} alt="robot" />
             <Box display="flex" alignItems="center" justifyContent="space-between" mt={2}>
               <Box className={classes.name}>
-                {media?.gameInfo?.Chain === "Solana" ? media.id : media?.name}
+                {media?.gameInfo?.Chain === "Solana" ? media?.id : media?.name}
               </Box>
             </Box>
             <Box onClick={() => {}} className={classes.userName}>

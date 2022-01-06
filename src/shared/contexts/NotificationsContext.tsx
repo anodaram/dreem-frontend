@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { Notification, getNotifications, removeUserNotification } from "shared/services/API/NotificationsAPI";
+import {
+  Notification,
+  getNotifications,
+  removeUserNotification,
+  markUserNotificationsAsRead,
+} from "shared/services/API/NotificationsAPI";
 import { useTypedSelector } from "store/reducers/Reducer";
 
 type NotificationsContextType = {
@@ -31,7 +36,7 @@ export const NotificationsContextProvider: React.FunctionComponent<Notifications
     if (currentUserId) {
       getNotifications().then(result => {
         if (result.success) {
-          const followRequestNotifications = result.data.filter(
+          const followRequestNotifications = result.data.notifications.filter(
             n => n.type === 1 || n.type === 2 || n.podType === "Dreem" || n.podType === "METAVERSE"
           );
 
@@ -51,7 +56,7 @@ export const NotificationsContextProvider: React.FunctionComponent<Notifications
           }, []);
 
           setNotifications(sortNotifications(filteredNotifications));
-          setUnreadNotifications(filteredNotifications.length);
+          setUnreadNotifications(result.data.numberOfMissedNotifications ?? 0);
         }
       });
     }
@@ -80,6 +85,7 @@ export const NotificationsContextProvider: React.FunctionComponent<Notifications
     () => ({
       unreadNotifications,
       markAllNotificationsAsRead() {
+        markUserNotificationsAsRead();
         setUnreadNotifications(0);
       },
       notifications,
