@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { Notification } from "shared/services/API/NotificationsAPI";
 import { setSelectedUser } from "store/actions/SelectedUser";
+import { makeStyles } from "@material-ui/core/styles";
 
 type NotificationContentProps = {
   notification: Notification;
@@ -16,6 +17,19 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
   const location = useLocation();
 
   const dispatch = useDispatch();
+
+  const useClasses = makeStyles(theme => ({
+    username: {
+      color: "#EDFF1C"
+    },
+    nftName: {
+      background: "linear-gradient(#EDFF1C, #ED7B7B)",
+      "-webkit-text-fill-color": "transparent",
+      "-webkit-background-clip": "text",
+    }
+  }));
+
+  const classes = useClasses();
 
   const handleProfileRouting = () => {
     if (location) {
@@ -47,7 +61,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 236 ? (
         <div>
           <div>
-            {externalData.user} placed a new offer on {externalData.nft.name} to Rent it for{" "}
+            <span className={classes.username}>{externalData.user}</span> placed a new offer on <span className={classes.nftName}>{externalData.nft.name}</span> to Rent it for{" "}
             {externalData.price} USDT over {Number(externalData.duration).toFixed(2)} days
           </div>
           <b
@@ -62,7 +76,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 237 ? (
         <div>
           <div>
-            {externalData.user} rented your {externalData.nft.name} at instant price of {externalData.price}{" "}
+            <span className={classes.username}>{externalData.user}</span> rented your <span className={classes.nftName}>{externalData.nft.name}</span> at instant price of {externalData.price}{" "}
             USDT over {Number(externalData.duration).toFixed(2)} days
           </div>
           <b
@@ -77,8 +91,8 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 238 ? (
         <div>
           <div>
-            You have accepted {externalData.user} rent offer for {externalData.price} USDT/sec for{" "}
-            {Number(externalData.duration).toFixed(2)} Days on your NFT {externalData.nft.name}
+            You have accepted <span className={classes.username}>{externalData.user}</span> rent offer for {externalData.price} USDT/sec for{" "}
+            {Number(externalData.duration).toFixed(2)} Days on your NFT <span className={classes.nftName}>{externalData.nft.name}</span>
           </div>
           <b
             style={{ color: "rgba(233, 255, 38, 1)" }}
@@ -91,7 +105,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
         </div>
       ) : type === 239 ? (
         <div>
-          <div>Your blocked NFT {externalData.nft.name} is was fully Paid and is now unblocked.</div>
+          <div>Your blocked NFT <span className={classes.nftName}>{externalData.nft.name}</span> is was fully Paid and is now unblocked.</div>
           <b
             style={{ color: "rgba(233, 255, 38, 1)" }}
             onClick={() =>
@@ -103,7 +117,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
         </div>
       ) : type === 240 ? (
         <div>
-          <div>The NFT {externalData.nft.name} is now fully paid and unblocked. You are now the owner.</div>
+          <div>The NFT <span className={classes.nftName}>{externalData.nft.name}</span> is now fully paid and unblocked. You are now the owner.</div>
           <b
             style={{ color: "rgba(233, 255, 38, 1)" }}
             onClick={() =>
@@ -116,7 +130,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 241 ? (
         <div>
           <div>
-            Your blocked NFT {externalData.nft.name} is has expired to to NFT and claim the collateral and NFT
+            Your blocked NFT <span className={classes.nftName}>{externalData.nft.name}</span> is has expired to to NFT and claim the collateral and NFT
             back
           </div>
           <b
@@ -131,7 +145,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 242 ? (
         <div>
           <div>
-            The NFT {externalData.nft.name} wasn’t fully paid before expiration and is now returned to the
+            The NFT <span className={classes.nftName}>{externalData.nft.name}</span> wasn’t fully paid before expiration and is now returned to the
             owner along with your collateral.
           </div>
           <b
@@ -146,7 +160,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 243 ? (
         <div>
           <div>
-            {externalData.user} has canceled the NFT Reserve on {externalData.nft.name}. Your offer was
+            <span className={classes.username}>{externalData.user}</span> has canceled the NFT Reserve on <span className={classes.nftName}>{externalData.nft.name}</span>. Your offer was
             canceled with it and collateral returned.
           </div>
           <b
@@ -161,8 +175,8 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 244 ? (
         <div>
           <div>
-            You have successfully accepted Blocking offer of {externalData.user} for your NFT{" "}
-            {externalData.nft.name}.
+            You have successfully accepted Blocking offer of <span className={classes.username}>{externalData.user}</span> for your NFT{" "}
+            <span className={classes.nftName}>{externalData.nft.name}</span>.
           </div>
           <b
             style={{ color: "rgba(233, 255, 38, 1)" }}
@@ -176,8 +190,8 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 245 ? (
         <div>
           <div>
-            {externalData.user} just accepted your NFT {externalData.price} USDT Blocking offer for{" "}
-            {externalData.nft.name}
+            <span className={classes.username}>{externalData.user}</span> just accepted your NFT {externalData.price} USDT Blocking offer for{" "}
+            <span className={classes.nftName}>{externalData.nft.name}</span>
           </div>
           <b
             style={{ color: "rgba(233, 255, 38, 1)" }}
@@ -191,7 +205,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 246 || type === 254 ? (
         <div>
           <div>
-            {externalData.user} has placed new offer on your {externalData.nft.name}. Click below to see more
+            <span className={classes.username}>{externalData.user}</span> has placed new offer on your <span className={classes.nftName}>{externalData.nft.name}</span>. Click below to see more
             details.
           </div>
           <b
@@ -206,7 +220,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 247 ? (
         <div>
           <div>
-            {externalData.user} just bought your NFT Reserve your {externalData.nft.name}. Click below to see
+            <span className={classes.username}>{externalData.user}</span> just bought your NFT Reserve your <span className={classes.nftName}>{externalData.nft.name}</span>. Click below to see
             more details.
           </div>
           <b
@@ -221,7 +235,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 248 ? (
         <div>
           <div>
-            Your blocked NFT {externalData.nft.name} was fully paid by {externalData.user}
+            Your blocked NFT <span className={classes.nftName}>{externalData.nft.name}</span> was fully paid by <span className={classes.username}>{externalData.user}</span>
           </div>
           <b
             style={{ color: "rgba(233, 255, 38, 1)" }}
@@ -234,7 +248,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
         </div>
       ) : type === 249 ? (
         <div>
-          <div>Congrats! {externalData.nft.name} you blocked is now fully paid and available to claim.</div>
+          <div>Congrats! <span className={classes.nftName}>{externalData.nft.name}</span> you blocked is now fully paid and available to claim.</div>
           <b
             style={{ color: "rgba(233, 255, 38, 1)" }}
             onClick={() =>
@@ -246,7 +260,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
         </div>
       ) : type === 250 ? (
         <div>
-          <div>Your blocked NFT {externalData.nft.name} is about to expire today.</div>
+          <div>Your blocked NFT <span className={classes.nftName}>{externalData.nft.name}</span> is about to expire today.</div>
           <b
             style={{ color: "rgba(233, 255, 38, 1)" }}
             onClick={() =>
@@ -259,7 +273,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 251 ? (
         <div>
           <div>
-            The NFT {externalData.nft.name} you blocked is about to expire today. Make sure to pay for it or
+            The NFT <span className={classes.nftName}>{externalData.nft.name}</span> you blocked is about to expire today. Make sure to pay for it or
             it’ll be returned to the owner.
           </div>
           <b
@@ -274,7 +288,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 252 ? (
         <div>
           <div>
-            Your blocked NFT {externalData.nft.name} succesfully claimed by {externalData.user} and
+            Your blocked NFT <span className={classes.nftName}>{externalData.nft.name}</span> succesfully claimed by <span className={classes.username}>{externalData.user}</span> and
             transferred to the new owner.
           </div>
           <b
@@ -289,7 +303,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 253 ? (
         <div>
           <div>
-            Your have succesfully claimed {externalData.nft.name} NFT and you are now the owner. Congrats!
+            Your have succesfully claimed <span className={classes.nftName}>{externalData.nft.name}</span> NFT and you are now the owner. Congrats!
           </div>
           <b
             style={{ color: "rgba(233, 255, 38, 1)" }}
@@ -303,7 +317,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 255 ? (
         <div>
           <div>
-            {externalData.user} has accepted your offer on {externalData.nft.name}. Go to your NFT to see your
+            <span className={classes.username}>{externalData.user}</span> has accepted your offer on <span className={classes.nftName}>{externalData.nft.name}</span>. Go to your NFT to see your
             purchase
           </div>
           <b
