@@ -213,21 +213,8 @@ const ExploreReserveDetailPage = () => {
               )}
             </Box>
             <Box ml={isMobileScreen ? 0 : isTableScreen ? 2 : 5} py={2} style={{ flex: "1" }} width={1}>
-              <Box display="flex" justifyContent="space-between">
-                <Box className={classes.status}>
-                  {isRentedNFT ? "RENTED" : isBlockedNFT ? "BLOCKED" : "Listed"}
-                </Box>
-                <span
-                  onClick={() =>
-                    shareMedia(
-                      "gameNFT",
-                      `gameNFT/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`
-                    )
-                  }
-                  style={{ cursor: "pointer" }}
-                >
-                  <ShareWhiteIcon />
-                </span>
+              <Box className={classes.badge} style={{ backgroundColor: isRentedNFT ? "#8D65FF" : "#1FC88B" }}>
+                {isRentedNFT ? "RENTED" : isBlockedNFT ? "BLOCKED" : "Listed"}
               </Box>
               <Box
                 display="flex"
@@ -268,28 +255,17 @@ const ExploreReserveDetailPage = () => {
                 style={{ cursor: "pointer" }}
                 onClick={() => (nft?.owner?.urlSlug ? history.push(`/profile/${nft?.owner?.urlSlug}`) : {})}
               >
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => (nft?.owner?.urlSlug ? history.push(`/profile/${nft?.owner?.urlSlug}`) : {})}
-                >
-                  <Avatar
-                    url={avatarUrl ?? (nft?.owner ? getDefaultAvatar() : getExternalAvatar())}
-                    size="small"
-                  />
-                  <Text style={{ margin: "0px 9px", fontFamily: "Rany", fontWeight: 400 }}>Owned by</Text>
-                  <Text className={classes.gradientText}>
-                    {nft?.owner?.name ||
-                      nft?.ownerAddress?.substr(0, 18) +
-                        "..." +
-                        nft?.ownerAddress?.substr(nft?.ownerAddress?.length - 3, 3)}
-                  </Text>
-                </Box>
-                <SecondaryButton size="small" onClick={handleClickLink} className={classes.checkOnBtn}>
-                  Check on
-                  <img src={getChainImageUrl(nft.Chain)} alt="" />
-                </SecondaryButton>
+                <Avatar
+                  url={nft?.owner?.urlIpfsImage ?? (nft?.owner ? getDefaultAvatar() : getExternalAvatar())}
+                  size="small"
+                />
+                <Text style={{ margin: "0px 9px" }}>Owned by</Text>
+                <Text style={{ color: "#431AB7" }}>
+                  {nft?.owner?.name ||
+                    nft?.owner_of?.substr(0, 18) +
+                      "..." +
+                      nft?.owner_of?.substr(nft?.owner_of?.length - 3, 3)}
+                </Text>
               </Box>
               <hr className={classes.divider} />
               {isOwner ? (

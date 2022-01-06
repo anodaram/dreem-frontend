@@ -40,7 +40,7 @@ jobs:
     - run: yarn build
       env:
           NODE_OPTIONS: '--max_old_space_size=8192'
-          REACT_APP_PRIVI_BACKEND_URL: 'https://be.dreem.xyz/backend'
+          REACT_APP_PRIVI_BACKEND_URL: 'https://backend-prod.privi.store/backend'
           REACT_APP_PRIVI_METAVERSE_URL: 'https://web.dreem.xyz'
           CI: false
     - run: ls -a
@@ -49,15 +49,15 @@ jobs:
 
     - name: clone repo B, build output, and push to repo B
       run: |
-        git clone https://${{ secrets.API_TOKEN_GITHUB_DEV }}@github.com/dreem-xyz/Dreem-FE-builds.git
-        cd Dreem-FE-builds/
-        git checkout prod
+        # API_TOKEN_GITHUB_DEV (should be PROD but the user is the same)
+        git clone https://${{ secrets.API_TOKEN_GITHUB_DEV }}@github.com/Cache2020/Privi-Metaverse-Prod-Build.git
+        cd Privi-Metaverse-Prod-Build/
         git rm -r  .
         git add . && git commit -m 'remove all'
         git push
         cd ../
-        cp -r build/* Dreem-FE-builds/
-        cd Dreem-FE-builds/
+        cp -r build/* Privi-Metaverse-Prod-Build/
+        cd Privi-Metaverse-Prod-Build/
         date > date.txt
         ls -a
         #git checkout prod

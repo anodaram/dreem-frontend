@@ -33,10 +33,10 @@ export const exploreOptionDetailPageStyles = makeStyles(theme => ({
       marginLeft: 2,
     },
   },
-  status: {
-    backgroundColor: "#E9FF26",
-    padding: "9px 12px",
-    fontSize: 12,
+  badge: {
+    backgroundColor: "#1FC88B",
+    padding: "5px 8px",
+    fontSize: 8,
     lineHeight: "10px",
     textTransform: "uppercase",
     color: "#fff",
@@ -127,13 +127,6 @@ export const exploreOptionDetailPageStyles = makeStyles(theme => ({
       width: 18,
       marginLeft: 8,
     },
-  },
-  revenueTotal: {
-    background:
-      "linear-gradient(301.58deg, rgba(237, 123, 123, 0.1) 32.37%, rgba(237, 255, 28, 0.1) 100.47%)",
-    borderImageSource: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
-    borderTop: "1px solid",
-    borderImageSlice: 1,
   },
   label: {
     color: "#1A1B1C",
@@ -624,15 +617,15 @@ export const exploreOptionDetailPageStyles = makeStyles(theme => ({
     padding: "0 14px",
   },
   RentedDetailSection: {
-    border: "1px solid",
-    borderImageSource: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
-    borderImageSlice: 1,
-    fontSize: 14,
+    background: "#FAFBFF",
+    border: "1px solid #E9E9F2",
+    borderRadius: 16,
+    fontSize: 16,
   },
   RentedDetailSectionOne: {
-    background: "#212121",
-    fontFamily: "Rany",
-
+    background: "#ffffff",
+    border: "1px solid #E9E9F2",
+    borderRadius: 16,
   },
   BlockedDetailSection: {
     background: "rgba(158, 172, 242, 0.16)",
@@ -660,8 +653,7 @@ export const exploreOptionDetailPageStyles = makeStyles(theme => ({
   claimButton: {
     padding: "0 37px !important",
     height: "52px !important",
-    backgroundColor: "#EEFF21 !important",
-    color: "#212121 !important",
+    backgroundColor: "#F2604C !important",
   },
   addCollateral: {
     padding: "0 37px !important",
