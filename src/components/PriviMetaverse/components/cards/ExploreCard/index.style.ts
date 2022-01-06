@@ -84,7 +84,7 @@ export const cardStyles = makeStyles(theme => ({
     "& img": {
       borderRadius: 9,
       overflow: "hidden",
-      maxHeight: "330px",
+      height: "330px",
       objectFit: "contain",
     },
   },
