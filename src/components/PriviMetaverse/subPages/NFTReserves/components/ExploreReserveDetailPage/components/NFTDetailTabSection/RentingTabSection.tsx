@@ -239,12 +239,13 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                               src={
                                 selectedChain.name === "POLYGON"
                                   ? require("assets/icons/polygon_scan.png")
-                                  : require("assets/icons/icon_ethscan.png")
+                                  : require("assets/icons/icon_bscscan.ico")
                               }
                               onClick={() => {
                                 handleClickLink(item.hash);
                               }}
                               style={{ cursor: "pointer" }}
+                              width={24}
                             />
                             {isOwnership && (
                               <PrimaryButton
@@ -333,8 +334,9 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                               src={
                                 selectedChain.name === "POLYGON"
                                   ? require("assets/icons/polygon_scan.png")
-                                  : require("assets/icons/icon_ethscan.png")
+                                  : require("assets/icons/icon_bscscan.ico")
                               }
+                              width={24}
                             />
                           </div>
                         ),
