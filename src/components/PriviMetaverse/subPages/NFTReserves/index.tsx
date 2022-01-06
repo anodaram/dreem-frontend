@@ -282,7 +282,7 @@ const NFTReserves = () => {
       } else {
         setReservedNftList([...reservedNftList, ...newNfts]);
       }
-      setHasMore(newNfts.length === PAGE_SIZE);
+      setHasMore(newNfts.length);
       if (newNfts.length) {
         lastNFTId.current = newNfts[newNfts.length - 1].RandomId;
         lastCollectionId.current = newNfts[newNfts.length - 1].collectionId;
