@@ -48,7 +48,7 @@ export default ({ nft, setNft }) => {
   const getTokenSymbol = addr => {
     if (tokens.length == 0 || !addr) return 0;
     let token = tokens.find(token => token.Address === addr);
-    return token?.Symbol || '';
+    return token?.Symbol || "";
   };
 
   const getTokenDecimal = addr => {
@@ -67,25 +67,12 @@ export default ({ nft, setNft }) => {
         <Text
           style={{
             fontSize: "18px",
-            color: "#1A1B1C",
-            fontWeight: 800,
-            fontFamily: "Agrandir GrandHeavy",
+            fontWeight: 700,
+            color: "white",
+            fontFamily: "GRIFTER",
           }}
         >
           Rented NFT Details
-        </Text>
-        <Text
-          style={{
-            fontSize: "14px",
-            color: "#181818",
-            fontWeight: 600,
-            fontFamily: "Agrandir",
-          }}
-        >
-          Until {moment(new Date(+offer.rentalExpiration)).format("DD.MM.YYYY")}{" "}
-          <span style={{ opacity: 0.6 }}>
-            ({formatDuration(moment(new Date(+offer.rentalExpiration)).diff(moment()))})
-          </span>
         </Text>
       </Box>
       <Box display="flex" flexDirection="column" className={classes.RentedDetailSection} mt={3}>
@@ -95,43 +82,32 @@ export default ({ nft, setNft }) => {
             padding="28px 24px 28px 0"
             display="flex"
             justifyContent="space-between"
-            style={{ borderBottom: "1px solid #E9E9F2" }}
+            style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.5)" }}
           >
             <span>Price per Second</span>
-            <Box color="#4218B5" style={{ fontWeight: 800, fontFamily: "Montserrat" }}>
+            <Box className={classes.gradientText} textAlign="end" fontWeight="700" fontFamily="GRIFTER" fontSize={18}>
               {`${toDecimals(offer.pricePerSecond, getTokenDecimal(offer.fundingToken))}`}{" "}
-              <span style={{ opacity: 0.6 }}>{getTokenSymbol(offer.fundingToken)}</span>
-            </Box>
-          </Box>
-          <Box
-            ml={3}
-            padding="28px 24px 28px 0"
-            display="flex"
-            justifyContent="space-between"
-            style={{ borderBottom: "1px solid #E9E9F2" }}
-          >
-            <span>Remaining rental time</span>
-            <Box color="#4218B5" style={{ fontWeight: 800, fontFamily: "Montserrat" }}>
-              {formatDuration(remainingTime)}
+              {getTokenSymbol(offer.fundingToken)}
             </Box>
           </Box>
           <Box ml={3} padding="28px 24px 28px 0" display="flex" justifyContent="space-between">
-            <span>Total cost</span>
-            <Box color="#4218B5" style={{ fontWeight: 800, fontFamily: "Montserrat" }}>
-              {toDecimals(
-                offer.pricePerSecond * ((+offer.rentalTime * 1000 - remainingTime) / 1000),
-                getTokenDecimal(offer.fundingToken)
-              )}{" "}
-              <span style={{ opacity: 0.6 }}>{getTokenSymbol(offer.fundingToken)}</span>
+            <span>Remaining rental time</span>
+            <Box className={classes.gradientText} textAlign="end" fontWeight="700" fontFamily="GRIFTER" fontSize={18}>
+              {formatDuration(remainingTime)}
             </Box>
           </Box>
         </Box>
-        <Box padding="30px 24px 30px 24px" display="flex" justifyContent="space-between" color="#4218B5">
-          <span>Revenue to date</span>
-          <span style={{ fontWeight: 800, fontFamily: "Montserrat" }}>
-            {toDecimals(offer.pricePerSecond * +offer.rentalTime, getTokenDecimal(offer.fundingToken))}{" "}
-            <span style={{ opacity: 0.6 }}>{getTokenSymbol(offer.fundingToken)}</span>
-          </span>
+        <Box className={classes.revenueTotal} padding="30px 24px 30px 24px" display="flex" justifyContent="space-between" color="#4218B5">
+          <Box className={classes.gradientText} fontWeight="700" fontFamily="GRIFTER" fontSize={18}>
+            Total Revenue
+          </Box>
+          <Box className={classes.gradientText} textAlign="end" fontWeight="700" fontFamily="GRIFTER" fontSize={18}>
+            {toDecimals(
+              offer.pricePerSecond * ((+offer.rentalTime * 1000 - remainingTime) / 1000),
+              getTokenDecimal(offer.fundingToken)
+            )}{" "}
+            {getTokenSymbol(offer.fundingToken)}
+          </Box>
         </Box>
       </Box>
     </>

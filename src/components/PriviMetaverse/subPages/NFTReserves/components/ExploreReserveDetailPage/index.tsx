@@ -212,10 +212,7 @@ const ExploreReserveDetailPage = () => {
             </Box>
             <Box ml={isMobileScreen ? 0 : isTableScreen ? 2 : 5} py={2} style={{ flex: "1" }} width={1}>
               <Box display="flex" justifyContent="space-between">
-                <Box
-                  className={classes.status}
-                  style={{ backgroundColor: isRentedNFT ? "#8D65FF" : "#E9FF26" }}
-                >
+                <Box className={classes.status}>
                   {isRentedNFT ? "RENTED" : isBlockedNFT ? "BLOCKED" : "Listed"}
                 </Box>
                 <span
@@ -262,8 +259,12 @@ const ExploreReserveDetailPage = () => {
                 justifyContent="space-between"
                 mt={1}
               >
-                <Box display="flex" alignItems="center" style={{ cursor: "pointer" }}
-                onClick={() => (nft?.owner?.urlSlug ? history.push(`/profile/${nft?.owner?.urlSlug}`) : {})}>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => (nft?.owner?.urlSlug ? history.push(`/profile/${nft?.owner?.urlSlug}`) : {})}
+                >
                   <Avatar
                     url={avatarUrl ?? (nft?.owner ? getDefaultAvatar() : getExternalAvatar())}
                     size="small"
