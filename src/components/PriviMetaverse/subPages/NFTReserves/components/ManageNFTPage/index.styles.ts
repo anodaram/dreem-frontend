@@ -112,6 +112,7 @@ export const useManageNFTPageStyles = makeStyles(theme => ({
     fontFamily: "GRIFTER",
     display: "flex",
     alignItems: "center",
+    marginTop: 54,
     background: "linear-gradient(#EDFF1C, #ED7B7B)",
     "-webkit-text-fill-color": "transparent",
     "-webkit-background-clip": "text",
