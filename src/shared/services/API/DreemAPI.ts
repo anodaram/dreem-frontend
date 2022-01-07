@@ -15,8 +15,8 @@ export async function getGameInfo(payload: any): Promise<any> {
 
 export async function getCharactersByGame(payload: any): Promise<any> {
   try {
-    const response = await axios.get(`${URL()}/dreemRealm/getCharactersByGame`, {
-      params: payload
+    const response = await axios.get(`${URL()}/metaverseReserve/getCharactersByGame`, {
+      params: payload,
     });
     return response.data;
   } catch (e) {
