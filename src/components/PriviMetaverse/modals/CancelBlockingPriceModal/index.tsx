@@ -70,20 +70,19 @@ export default function CancelBlockingPriceModal({ open, handleClose, offer, nft
         setHash
       );
 
-      if (contractResponse.success) {
-        setTransactionSuccess(true);
+      setTransactionSuccess(true);
 
-        await cancelBlockingOffer({
-          mode: isProd ? "main" : "test",
-          offerId: offer.id,
-          CollectionId: collection_id,
-          TokenId: token_id,
-        });
-        let newNft = { ...nft };
-        newNft.blockingSaleOffer = {};
-        setNft(newNft);
-        handleClose();
-      } else {
+      await cancelBlockingOffer({
+        mode: isProd ? "main" : "test",
+        offerId: offer.id,
+        CollectionId: collection_id,
+        TokenId: token_id,
+      });
+      let newNft = { ...nft };
+      newNft.blockingSaleOffer = {};
+      setNft(newNft);
+      handleClose();
+      if (!contractResponse.success) {
         setTransactionSuccess(false);
         showAlertMessage("Failed to decline an offer", { variant: "error" });
       }
