@@ -31,7 +31,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
   const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
   const [pricePerSec, setPricePerSec] = useState<number>();
 
-  const [maxRentalTime, setMaxRentalTime] = useState<any>();
+  const [maxRentalTime, setMaxRentalTime] = useState<any>(new Date());
   const [limitDays, setLimitDays] = useState<number>(0);
   const [limitHour, setLimitHour] = useState<number>(0);
   const [limitMin, setLimitMin] = useState<number>(0);
