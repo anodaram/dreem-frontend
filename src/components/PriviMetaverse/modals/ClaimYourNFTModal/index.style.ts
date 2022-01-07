@@ -36,8 +36,9 @@ export const ClaimYourNFTModalStyles = makeStyles(theme => ({
     color: "#ffffff",
     fontSize: "24px",
     fontWeight: 800,
-    width: "50%",
-    textAlign: "center"
+    width: "70%",
+    textAlign: "center",
+    textTransform: "uppercase"
   },
   description: {
     fontFamily: "Rany",
