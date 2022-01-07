@@ -108,7 +108,15 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
       }}
     >
       <Box style={{ padding: "25px" }}>
-        <Box fontSize="24px" color="#431AB7">
+        <Box
+          fontSize="24px"
+          color="#ffffff"
+          fontFamily="GRIFTER"
+          fontWeight={700}
+          style={{
+            textTransform: "uppercase"
+          }}
+        >
           Claim Payment
         </Box>
         <Box className={classes.description}>
@@ -118,7 +126,7 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
           <span className={classes.infoLabel}>Payment</span>
           <span className={classes.infoValue}>{`${blockingInfo?.Price} ${getTokenSymbol(blockingInfo?.PaymentToken)}`}</span>
         </Box>
-        <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
+        <Box display="flex" alignItems="center" justifyContent="center" mt={3}>
           <PrimaryButton size="medium" className={classes.primaryButton} onClick={handleConfirm}>
             CLAIM
           </PrimaryButton>
