@@ -19,7 +19,6 @@ export const walletconnect = new WalletConnectConnector({
   rpc: { 1: RPC_URLS[1] },
   bridge: 'https://wc-bridge-5qt5i.ondigitalocean.app',
   qrcode: true,
-  pollingInterval: POLLING_INTERVAL
 })
 
 export const bscConnect = new BscConnector({ supportedChainIds: [56, 97] });

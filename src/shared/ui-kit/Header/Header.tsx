@@ -6,7 +6,6 @@ import Web3 from "web3";
 import axios from "axios";
 
 import {
-  Dialog,
   Popper,
   ClickAwayListener,
   Grow,
@@ -26,7 +25,6 @@ import { capitalize } from "shared/helpers/string";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import { createUserInfo, setUsersInfoList } from "store/actions/UsersInfo";
 import { useAuth } from "shared/contexts/AuthContext";
-import { _signPayload } from "shared/services/WalletSign";
 
 import { IconNotifications } from "./components/Toolbar/IconNotifications";
 import { IconNotificationsWhite } from "./components/Toolbar/IconNotificationsWhite";
@@ -47,6 +45,8 @@ import * as API from "shared/services/API/WalletAuthAPI";
 import { setLoginBool } from "store/actions/LoginBool";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { CircularLoadingIndicator } from "shared/ui-kit";
+
+import "shared/ui-kit/Global.module.css";
 
 enum OpenType {
   Home = "HOME",
