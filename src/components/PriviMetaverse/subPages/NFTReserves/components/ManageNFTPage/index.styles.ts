@@ -122,7 +122,7 @@ export const useManageNFTPageStyles = makeStyles(theme => ({
     },
   },
   fitContent: {
-    maxWidth: 1280,
+    maxWidth: 1400,
     marginLeft: "auto",
     marginRight: "auto",
     paddingLeft: "32px !important",

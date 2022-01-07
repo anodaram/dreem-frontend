@@ -36,7 +36,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     overflowX: "hidden",
     position: "relative",
     padding: "160px 32px 45px",
-    maxWidth: 1312,
+    maxWidth: 1400,
     marginLeft: "auto",
     marginRight: "auto",
     "& > div > h2": {
