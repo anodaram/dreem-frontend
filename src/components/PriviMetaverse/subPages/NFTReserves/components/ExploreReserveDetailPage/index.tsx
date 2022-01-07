@@ -67,7 +67,7 @@ const ExploreReserveDetailPage = () => {
   const [openModalPhotoFullScreen, setOpenModalPhotoFullScreen] = useState<boolean>(false);
 
   const avatarUrl = React.useMemo(() => {
-    if (nft?.owner?.urlIpfsImage.startsWith("/assets")) {
+    if (nft?.owner?.urlIpfsImage?.startsWith("/assets")) {
       const lastIndex = nft?.owner?.urlIpfsImage.lastIndexOf("/");
 
       return require(`assets/anonAvatars/${nft?.owner?.urlIpfsImage.substring(lastIndex + 1)}`);
