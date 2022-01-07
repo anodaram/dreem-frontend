@@ -1,9 +1,0 @@
-.pod-graph {
-  /* height: calc(100% - 45px); */
-  height: 100%;
-  width: calc(100%);
-}
-
-.my-wallet-graph .pod-graph {
-  height: 200px;
-}
