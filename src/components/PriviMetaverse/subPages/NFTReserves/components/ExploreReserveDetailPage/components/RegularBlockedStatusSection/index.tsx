@@ -37,6 +37,8 @@ export default ({ isOwnership, nft, refresh }) => {
     return token?.ImageUrl ?? "";
   };
 
+  const collateralPercent = blockingInfo?.TotalCollateralPercent || blockingInfo?.CollateralPercent;
+
   return (
     <Box
       className={classes.gradientBorder}
@@ -74,7 +76,7 @@ export default ({ isOwnership, nft, refresh }) => {
           <span>
             Your Collateral Percentage
             <span style={{ color: "#E9FF26", marginLeft: 6 }}>
-              {blockingInfo?.TotalCollateralPercent || blockingInfo?.CollateralPercent}%
+              {Number(collateralPercent).toFixed(2)}%
             </span>
           </span>
           <span>
@@ -123,7 +125,7 @@ export default ({ isOwnership, nft, refresh }) => {
         <Box flex={0.8}>
           <img src={getTokenImageUrl(blockingInfo?.PaymentToken)} width={24} />
         </Box>
-        <Box flex={0.2}>{blockingInfo?.TotalCollateralPercent || blockingInfo?.CollateralPercent} %</Box>
+        <Box flex={0.2}>{Number(collateralPercent).toFixed(2)} %</Box>
         <Box flex={0.2}>{`${
           (blockingInfo?.Price * (blockingInfo?.TotalCollateralPercent || blockingInfo?.CollateralPercent)) /
           100

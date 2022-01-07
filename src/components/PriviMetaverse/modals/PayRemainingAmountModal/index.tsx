@@ -190,9 +190,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
           <Box fontSize="24px" color="#ffffff" marginTop="50px" fontFamily="GRIFTER" style={{ textTransform: "uppercase" }}>
             Payment
           </Box>
-          <Box className={classes.nameField}>
-            Pay reserved price for your NFT in one payment or few installment.
-          </Box>
+          <Box className={classes.nameField}></Box>
           <Box className={classes.availableCollateral} display="flex">
             <Box>
               <Box className={classes.collateralText} style={{ marginRight: "40px" }}>
