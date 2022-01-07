@@ -195,6 +195,10 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
       showAlertMessage(`network error`, { variant: "error" });
       return;
     }
+    if (!offer) {
+      showAlertMessage(`Offer is not exist`, { variant: "error" });
+      return;
+    }
 
     try {
       setOpenTransactionModal(true);
@@ -214,20 +218,16 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
         setHash
       );
 
-      if (contractResponse.success) {
-        setTransactionSuccess(null);
-        await cancelListOffer({
-          mode: isProd ? "main" : "test",
-          CollectionId: collection_id,
-          TokenId: token_id,
-        });
-        let newNft = { ...nft };
-        newNft.rentSaleOffer = null;
-        setNft(newNft);
-        setIsCancelled(true);
-      } else {
-        setTransactionSuccess(false);
-      }
+      setTransactionSuccess(null);
+      await cancelListOffer({
+        mode: isProd ? "main" : "test",
+        CollectionId: collection_id,
+        TokenId: token_id,
+      });
+      let newNft = { ...nft };
+      newNft.rentSaleOffer = null;
+      setNft(newNft);
+      setIsCancelled(true);
       setOpenTransactionModal(false);
     } catch (err) {
       showAlertMessage("Failed to decline cancel offer, Please try again", { variant: "error" });
