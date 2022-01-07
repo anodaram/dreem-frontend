@@ -21,7 +21,7 @@ import TransactionProgressModal from "../TransactionProgressModal";
 import { ReserveNftModalStyles } from "./index.style";
 
 export default function AddCollateralModal({ open, handleClose, nft, refresh }) {
-  const classes = ReserveNftModalStyles();
+  const classes = ReserveNftModalStyles();  
   const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
   const { account, library, chainId } = useWeb3React();
   const [price, setPrice] = useState<number>(0);
@@ -292,10 +292,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}
                 >
-                  Collateral at {(Number(price) / Number(nft?.blockingSaleOffer?.Price) * 100).toFixed(2)}% / <b>{nft?.blockingSaleOffer?.CollateralPercent}</b>%
-                  {(Number(nft?.blockingSaleOffer?.CollateralPercent) > (Number(price) / Number(nft?.blockingSaleOffer?.Price) * 100)) && (
-                    <Box style={{ color: "red" }}>You need to add more collateral</Box>
-                  )}
+                  Collateral at {(Number(price) / Number(nft?.blockingSaleOffer?.Price) * 100 + Number(nft?.blockingSaleOffer?.CollateralPercent)).toFixed(2)}% / <b>{nft?.blockingSaleOffer?.CollateralPercent}</b>%
                 </Box>
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}
