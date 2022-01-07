@@ -58,20 +58,19 @@ export default function CancelRentPriceModal({ open, handleClose, offer, nft, se
         setHash
       );
 
-      if (contractResponse.success) {
-        setTransactionSuccess(true);
+      setTransactionSuccess(true);
 
-        await cancelListOffer({
-          mode: isProd ? "main" : "test",
-          CollectionId: collection_id,
-          TokenId: token_id,
-        });
+      await cancelListOffer({
+        mode: isProd ? "main" : "test",
+        CollectionId: collection_id,
+        TokenId: token_id,
+      });
 
-        handleClose();
-        let newNft = { ...nft };
-        newNft.rentSaleOffer = null;
-        setNft(newNft);
-      } else {
+      handleClose();
+      let newNft = { ...nft };
+      newNft.rentSaleOffer = null;
+      setNft(newNft);
+      if (!contractResponse.success) {
         setTransactionSuccess(false);
         showAlertMessage("Failed to decline an offer", { variant: "error" });
       }
