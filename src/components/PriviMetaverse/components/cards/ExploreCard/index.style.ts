@@ -100,7 +100,7 @@ export const cardStyles = makeStyles(theme => ({
   cardContentText: {
     fontStyle: "normal",
     fontWeight: 800,
-    fontSize: "12px",
+    fontSize: "11px",
     lineHeight: "17px",
     textAlign: "start",
     letterSpacing: "0.02em",
@@ -112,7 +112,7 @@ export const cardStyles = makeStyles(theme => ({
     float: "right",
     fontStyle: "normal",
     fontWeight: 800,
-    fontSize: "12.3951px",
+    fontSize: "11px",
     lineHeight: "16px",
     textAlign: "end",
     letterSpacing: "0.02em",
