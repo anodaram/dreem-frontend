@@ -12,7 +12,6 @@ import { BlockchainNets } from "shared/constants/constants";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import TransactionProgressModal from "components/PriviMetaverse/modals/TransactionProgressModal";
 
-import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
 // import ProcessingPaymentModal from "components/PriviMetaverse/modals/ProcessingPaymentModal";
 import { closeBlockingHistory } from "shared/services/API/ReserveAPI";
 import { checkChainID } from "shared/functions/metamask";
@@ -106,12 +105,29 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
           </Box>
         )}
       </Box>
-      <div className={classes.title}>Claim your NFT & Collateral</div>
+      <div className={classes.title}>Claim your Game NFT & Collateral</div>
       <div className={classes.description}>
         {transactionSuccess
           ? `Congrats, you’ve succesfully ${claimType}ed your NFT ${nft.name} and Collateral. here is summary`
-          : `Congrats, you can claim your ${claimType}ed NFT ${nft.name} at [Price]`}
+          : ''}
       </div>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        bgcolor="rgba(218, 230, 229, 0.06)"
+        padding="32px"
+        border="1px solid rgba(218, 218, 219, 0.59)"
+        color="#ffffff"
+        width="100%"
+      >
+        <Box>
+          Collateral to claim
+        </Box>
+        <Box>
+          {(Number(nft?.blockingSaleOffer?.Price) * Number(nft?.blockingSaleOffer?.TotalCollateralPercent || nft?.blockingSaleOffer?.CollateralPercent) / 100).toFixed(2)} USDT
+        </Box>
+      </Box>
       <PrimaryButton size="medium" onClick={handleConfirm} className={classes.confirmButton}>
         Confirm Claim
       </PrimaryButton>

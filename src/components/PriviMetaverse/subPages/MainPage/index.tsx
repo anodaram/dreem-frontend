@@ -8,7 +8,6 @@ import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import axios from "axios";
 
 import RealmCard from "components/PriviMetaverse/components/cards/RealmCard";
-import Footer from "components/PriviMetaverse/components/Footer";
 import OpenDesktopModal from "components/PriviMetaverse/modals/OpenDesktopModal";
 import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
 import { RootState } from "store/reducers/Reducer";
@@ -35,6 +34,7 @@ import roadmapImage from "assets/metaverseImages/shape_roadmap.png";
 
 import { homePageStyles, DotContainer, Dot } from "./index.styles";
 import { getOperatingSystem } from "shared/helpers/platform";
+import Footer from "components/PriviMetaverse/components/Footer";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
