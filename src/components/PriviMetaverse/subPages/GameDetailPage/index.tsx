@@ -16,6 +16,7 @@ import TabsView, { TabItem } from "shared/ui-kit/TabsView";
 import { gameDetailPageStyles, gameDetailTabsStyles } from "./index.styles";
 import MarketplaceFeed from "./components/MarketplaceFeed";
 import Owners from "./components/Owners";
+import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
@@ -42,6 +43,7 @@ const GameDetailTabs: TabItem[] = [
     title: "owners",
   },
 ];
+const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function GameDetailPage() {
   const classes = gameDetailPageStyles();
@@ -110,6 +112,7 @@ export default function GameDetailPage() {
         gameId: collection_id,
         lastId: init ? undefined : lastId,
         searchValue: "", // debouncedKeyword,
+        mode: isProd ? "main" : "test",
       });
       if (response.success) {
         const newCharacters = response.data.list;
@@ -245,9 +248,7 @@ export default function GameDetailPage() {
                   <MasonryGrid
                     gutter={"40px"}
                     data={nfts}
-                    renderItem={(item, index) => (
-                      <GameMediaCard item={item} gameInfo={gameInfo} key={`game_${index}`} />
-                    )}
+                    renderItem={item => <ExploreCard nft={item} />}
                     columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                   />
                 </Box>
