@@ -437,7 +437,7 @@ const NFTReserves = () => {
   };
 
   const nftListWithSkeleton = useMemo(() => {
-    if (hasMore) {
+    if (hasMore && selectedTab === TAB_NFTS) {
       let addedCount = 1;
       if (breakFour) {
         addedCount = 4 - (reservedNftList.length % 4);
@@ -456,10 +456,10 @@ const NFTReserves = () => {
     } else {
       return reservedNftList;
     }
-  }, [reservedNftList, hasMore, breakTwo, breakThree, breakFour]);
+  }, [reservedNftList, hasMore, selectedTab, breakTwo, breakThree, breakFour]);
 
   const collectionListWithSkeleton = useMemo(() => {
-    if (hasMore) {
+    if (hasMore && selectedTab !== TAB_NFTS) {
       let addedCount = 1;
       if (breakThree) {
         addedCount = 3 - (exploreMetaverses.length % 3);
@@ -476,7 +476,7 @@ const NFTReserves = () => {
     } else {
       return exploreMetaverses;
     }
-  }, [exploreMetaverses, hasMore, breakTwo, breakThree, breakFour]);
+  }, [exploreMetaverses, hasMore, selectedTab, breakTwo, breakThree]);
 
   return (
     <>
@@ -736,27 +736,23 @@ const NFTReserves = () => {
                   />
                 </Box>
               )}
-              {(loading || loadingCollections) && (
+              {loading && selectedTab === TAB_NFTS && isListView && (
                 <div
                   style={{
-                    paddingTop: selectedTab === TAB_NFTS && isListView ? 8 : 16,
-                    paddingBottom: selectedTab === TAB_NFTS && isListView ? 8 : 16,
+                    paddingTop: 8,
+                    paddingBottom: 8,
                   }}
                 >
-                  {selectedTab === TAB_NFTS && isListView ? (
-                    Array(loadingCount)
-                      .fill(0)
-                      .map((_, index) => (
-                        <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
-                          <Skeleton variant="rect" width={60} height={60} />
-                          <Skeleton variant="rect" width="40%" height={24} style={{ marginLeft: "8px" }} />
-                          <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
-                          <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
-                        </Box>
-                      ))
-                  ) : (
-                    <></>
-                  )}
+                  {Array(loadingCount)
+                    .fill(0)
+                    .map((_, index) => (
+                      <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
+                        <Skeleton variant="rect" width={60} height={60} />
+                        <Skeleton variant="rect" width="40%" height={24} style={{ marginLeft: "8px" }} />
+                        <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
+                        <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
+                      </Box>
+                    ))}
                 </div>
               )}
             </div>
