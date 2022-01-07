@@ -88,7 +88,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
   };
 
   const handleClickLink = (e, nft) => {
-    visitChainLink(nft.Chain, nft.collectionId);
+    visitChainLink(nft.Chain, nft.Address);
   };
 
   const nftStatus = useMemo(() => {
