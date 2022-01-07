@@ -1,16 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
 
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Popper from "@material-ui/core/Popper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener/ClickAwayListener";
-import { RootState } from "store/reducers/Reducer";
 
 import Box from "shared/ui-kit/Box";
-import { ChooseWalletModal } from "shared/ui-kit/Modal/Modals/ChooseWalletModal";
-import { Color, SignatureRequestModal } from "shared/ui-kit";
-import { buildJsxFromObject } from "shared/functions/commonFunctions";
-import { getUsersInfoList } from "store/selectors";
 import { MenuItem, MenuList } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
@@ -64,16 +58,9 @@ export const FruitSelect = ({
   theme = "",
 }) => {
   const classes = useStyles({ theme });
-  const userSelector = useSelector((state: RootState) => state.user);
-  const usersInfoList = useSelector(getUsersInfoList);
 
   const [appAnchorEl, setAppAnchorEl] = React.useState<null | HTMLElement>(null);
   const appPopperOpen = Boolean(appAnchorEl);
-  const [openChooseWalletModal, setOpenChooseWalletModal] = React.useState<boolean>(false);
-  const [openSignRequestModal, setOpenSignRequestModal] = React.useState<boolean>(false);
-
-  const [signRequestModalDetail, setSignRequestModalDetail] = React.useState<any>(null);
-  const [amount, setAmount] = React.useState<any>(0);
 
   const [showChildInParent, setShowChildInParent] = React.useState<boolean>(false);
 
@@ -185,38 +172,6 @@ export const FruitSelect = ({
             </MenuList>
           </ClickAwayListener>
         </Popper>
-      )}
-      {openChooseWalletModal && (
-        <ChooseWalletModal
-          isOpen={openChooseWalletModal}
-          onClose={() => {
-            setOpenChooseWalletModal(false);
-          }}
-          onAccept={() => {
-            setOpenChooseWalletModal(false);
-            let payload: any = {
-              Token: fruitObject.TokenSymbol || "USDT",
-              From: userSelector.address,
-              To: members
-                .filter(user => user.id !== userSelector.id)
-                .map(user => usersInfoList?.find(item => item.id === user.id)?.address || ""),
-              Amount: amount,
-              Type: "transfer",
-            };
-            setSignRequestModalDetail(buildJsxFromObject(payload));
-            setOpenSignRequestModal(true);
-          }}
-        />
-      )}
-      {openSignRequestModal && (
-        <SignatureRequestModal
-          open={openSignRequestModal}
-          address={userSelector.address}
-          transactionFee="0.0000"
-          detail={signRequestModalDetail}
-          handleOk={handleSubmit}
-          handleClose={() => setOpenSignRequestModal(false)}
-        />
       )}
     </>
   );

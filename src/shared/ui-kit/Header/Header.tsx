@@ -6,7 +6,6 @@ import Web3 from "web3";
 import axios from "axios";
 
 import {
-  Dialog,
   Popper,
   ClickAwayListener,
   Grow,
@@ -18,24 +17,14 @@ import {
 } from "@material-ui/core";
 
 import { socket } from "components/Login/Auth";
-import SignInModal from "components/Login/SignInModal";
-import MediaSellingOfferModal from "shared/ui-kit/Modal/Modals/MediaSellingOfferModal";
 import { useNotifications } from "shared/contexts/NotificationsContext";
 import URL from "shared/functions/getURL";
 import { getUser, getUsersInfoList } from "store/selectors/user";
 import { setUser, signOut } from "store/actions/User";
-import CreateMediaModal from "shared/ui-kit/Modal/Modals/CreateMediaModal";
-import PodCreateNFTMediaModal from "shared/ui-kit/Modal/Modals/Pod-Create-NFTMedia-Modal/PodCreateNFTMediaModal";
-import CreateCommunityModal from "shared/ui-kit/Modal/Modals/CreateCommunity";
-import CreateImportSocialTokenModal from "shared/ui-kit/Modal/Modals/Create-social-token/CreateImportSocialTokenModal";
-import { CreatePriviWalletModal } from "shared/ui-kit/Modal/Modals";
 import { capitalize } from "shared/helpers/string";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import { createUserInfo, setUsersInfoList } from "store/actions/UsersInfo";
-import CommunityContributionModal from "shared/ui-kit/Modal/Modals/CommunityContributionModal";
-import ShareContributionModal from "shared/ui-kit/Modal/Modals/ShareContributionModal";
 import { useAuth } from "shared/contexts/AuthContext";
-import { _signPayload } from "shared/services/WalletSign";
 
 import { IconNotifications } from "./components/Toolbar/IconNotifications";
 import { IconNotificationsWhite } from "./components/Toolbar/IconNotificationsWhite";
@@ -56,6 +45,8 @@ import * as API from "shared/services/API/WalletAuthAPI";
 import { setLoginBool } from "store/actions/LoginBool";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { CircularLoadingIndicator } from "shared/ui-kit";
+
+import "shared/ui-kit/Global.module.css";
 
 enum OpenType {
   Home = "HOME",
@@ -103,18 +94,8 @@ const Header = props => {
   const [userId, setUserId] = useState<string>("");
   const [ownUser, setOwnUser] = useState<boolean>(idUrl === localStorage.getItem("userId"));
   const [userProfile, setUserProfile] = useState<any>({});
-  const [openSignInModal, setOpenSignInModal] = useState<boolean>(false);
-  const [openMediaModal, setOpenMediaModal] = useState<boolean>(false);
-  const [openPodCreateModal, setOpenPodCreateModal] = useState<boolean>(false);
-  const [openCreateCommunityModal, setOpenCreateCommunityModal] = useState<boolean>(false);
-  const [openCreateSocialTokenModal, setOpenCreateSocialTokenModal] = useState<boolean>(false);
   const [openNotificationModal, setOpenNotificationModal] = useState<boolean>(false);
-  const [openContributionModal, setOpenContributionModal] = useState(false);
-  const [openModalShareContribution, setOpenModalShareContribution] = useState(false);
-  const [communityName, setCommunityName] = useState("");
-  const [communityAddress, setCommunityAddress] = useState("");
   const [selectedNotification, setSelectedNotification] = useState<any>();
-  const [openPriviWalletDialog, setOpenPriviWalletDialog] = useState<boolean>(false);
   const [secondsLeft, setSecondsLeft] = useState<number>(0);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -196,27 +177,8 @@ const Header = props => {
     }
   };
 
-  const handleCloseWalletDialog = () => {
-    setOpenPriviWalletDialog(false);
-  };
   const handleCreatePopup = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseMediaModal = () => {
-    setOpenMediaModal(false);
-  };
-
-  const handleClosePodCreateModal = () => {
-    setOpenPodCreateModal(false);
-  };
-
-  const handleCloseCreateCommunityModal = () => {
-    setOpenCreateCommunityModal(false);
-  };
-
-  const handleCloseSocialTokenModal = () => {
-    setOpenCreateSocialTokenModal(false);
   };
 
   const handleLogout = () => {
@@ -236,30 +198,14 @@ const Header = props => {
     setOpenModalMediaSellingOffer(true);
   };
 
-  const handleCloseModalMediaSellingOffer = () => {
-    setOpenModalMediaSellingOffer(false);
-  };
-
   const handleOpenContributionModal = () => {
     setOpenNotificationModal(false);
-    setOpenContributionModal(true);
   };
 
   const handleCloseContributionModal = () => {
-    setOpenContributionModal(false);
   };
 
   const handleOpenModalShareContribution = () => {
-    setOpenModalShareContribution(true);
-  };
-
-  const handleCloseModalShareContribution = () => {
-    setOpenModalShareContribution(false);
-  };
-
-  const handleShareCommunity = () => {
-    handleCloseContributionModal();
-    handleOpenModalShareContribution();
   };
 
   const viewMore = notification => {
@@ -550,16 +496,6 @@ const Header = props => {
           </Hidden>
         </Box>
         <div className="header-right">
-          {openPriviWalletDialog && (
-            <CreatePriviWalletModal
-              open={openPriviWalletDialog}
-              handleClose={handleCloseWalletDialog}
-              handleOk={() => {
-                setOpenPriviWalletDialog(false);
-                history.push("/create-wallet");
-              }}
-            />
-          )}
           {isSignedin ? (
             <>
               <div className="header-icons">
@@ -765,7 +701,6 @@ const Header = props => {
             </Popper>
           </Hidden>
         </div>
-        <SignInModal open={openSignInModal} handleClose={() => setOpenSignInModal(false)} />
         <Popper
           id={popperId}
           open={popperOpen}
@@ -815,70 +750,6 @@ const Header = props => {
             </div>
           </ClickAwayListener>
         </Popper>
-        {isSignedin && openMediaModal && (
-          <CreateMediaModal open={openMediaModal} handleClose={handleCloseMediaModal} />
-        )}
-        {isSignedin && openPodCreateModal && (
-          <PodCreateNFTMediaModal
-            onClose={handleClosePodCreateModal}
-            type={"Digital NFT"}
-            open={openPodCreateModal}
-          />
-        )}
-        {isSignedin && openCreateCommunityModal && (
-          <CreateCommunityModal
-            open={openCreateCommunityModal}
-            handleClose={handleCloseCreateCommunityModal}
-          />
-        )}
-        {isSignedin && openCreateSocialTokenModal && (
-          <CreateImportSocialTokenModal
-            user={userSelector}
-            handleClose={handleCloseSocialTokenModal}
-            type={"FT"}
-            handleRefresh={() => {}}
-            open={openCreateSocialTokenModal}
-          />
-        )}
-        {isSignedin && openContributionModal && (
-          <>
-            <Dialog
-              className="modalCommunityContribution"
-              open={openContributionModal}
-              onClose={handleCloseContributionModal}
-              fullWidth={true}
-              maxWidth={"md"}
-            >
-              <CommunityContributionModal
-                handleClose={handleCloseContributionModal}
-                communityId={selectedNotification?.otherItemId}
-                communityName={selectedNotification?.pod}
-                token={selectedNotification?.token}
-                amount={selectedNotification?.amount}
-                shareOnCommunity={handleShareCommunity}
-                userId={selectedNotification?.itemId}
-              />
-            </Dialog>
-            <Dialog
-              className="modalShareContribution"
-              open={openModalShareContribution}
-              onClose={handleOpenModalShareContribution}
-              fullWidth={true}
-              maxWidth={"md"}
-            >
-              <ShareContributionModal
-                handleClose={handleCloseModalShareContribution}
-                communityId={communityAddress}
-                communityName={communityName}
-              />
-            </Dialog>
-          </>
-        )}
-        <MediaSellingOfferModal
-          open={openModalMediaSellingOffer}
-          handleClose={handleCloseModalMediaSellingOffer}
-          selectedNotification={selectedNotification}
-        />
       </div>
       {APP_ENV !== "dev" && underMaintenanceSelector?.underMaintenance ? (
         <div
