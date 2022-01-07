@@ -292,6 +292,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
                 onChange={e => {
                   setReservePriceToken(tokenList.find(v => v.Address === e.target.value));
                 }}
+                style={{ flex: "1" }}
                 disabled={true}
               />
             </Grid>
