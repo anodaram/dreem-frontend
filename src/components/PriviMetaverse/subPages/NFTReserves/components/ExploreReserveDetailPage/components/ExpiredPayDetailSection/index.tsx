@@ -200,7 +200,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
             onConfirm();
           }}
         >
-          {isSuccess ? "CLAIM NFT & COLLATERAL" : "WITHDRAW YOUR FUNDS"}
+          {isSuccess ? "CLAIM BLOCKED NFT" : "WITHDRAW YOUR FUNDS"}
         </PrimaryButton>
       </Box>
       {openTranactionModal && (
