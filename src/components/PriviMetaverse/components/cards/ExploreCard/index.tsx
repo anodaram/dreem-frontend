@@ -96,7 +96,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
       return "";
     }
     if (nft.status) {
-      return nft.status.replace('Games', '').toUpperCase();
+      return nft.status.replace("Games", "").toUpperCase();
     }
     if (nft.sellingOffer?.Price || nft.blockingSaleOffer?.Price || nft.rentSaleOffer?.pricePerSecond) {
       return "LISTED";
@@ -111,11 +111,11 @@ const ExploreCard = ({ nft, isLoading = false }) => {
     <div className={classes.outerCard} style={{ marginBottom: 0 }} onClick={handleOpenExplore}>
       {isLoading ? (
         <Box className={classes.skeleton}>
-          <Skeleton variant="rect" width="100%" height={226} />
-          <Skeleton variant="rect" width="100%" height={24} style={{ marginTop: "8px" }} />
-          <Skeleton variant="rect" width="80%" height={24} style={{ marginTop: "8px" }} />
-          <Skeleton variant="rect" width="80%" height={24} style={{ marginTop: "8px" }} />
-          <Skeleton variant="rect" width="80%" height={24} style={{ marginTop: "8px" }} />
+          <Skeleton variant="rect" width="100%" height={330} />
+          <Skeleton variant="rect" width="100%" height={40} style={{ marginTop: "8px" }} />
+          <Skeleton variant="rect" width="80%" height={40} style={{ marginTop: "8px" }} />
+          <Skeleton variant="rect" width="80%" height={40} style={{ marginTop: "8px" }} />
+          <Skeleton variant="rect" width="80%" height={35} style={{ marginTop: "8px" }} />
         </Box>
       ) : (
         <>

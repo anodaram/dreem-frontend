@@ -36,7 +36,7 @@ const isProd = process.env.REACT_APP_ENV === "prod";
 const COLUMNS_COUNT_BREAK_POINTS_THREE = {
   400: 1,
   700: 2,
-  1440: 3,
+  1200: 3,
 };
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
@@ -103,11 +103,14 @@ const NFTReserves = () => {
     () => (width > 1440 ? 4 : width > 700 ? 3 : width > 400 ? 2 : 1),
     [width]
   );
-  const loadingCount1 = React.useMemo(() => (width > 700 ? 3 : width > 400 ? 2 : 1), [width]);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const breakTwo = useMediaQuery(theme.breakpoints.up(700));
+  const breakThree = useMediaQuery(theme.breakpoints.up(1200));
+  const breakFour = useMediaQuery(theme.breakpoints.up(1440));
 
   const [exploreMetaverses, setExploreMetaverses] = React.useState<any[]>([]);
 
@@ -430,9 +433,50 @@ const NFTReserves = () => {
     if (!row || !row[0].rawData) return;
 
     const nft = row[0].rawData;
-
     history.push(`/gameNFT/${nft.collectionId}/${nft.tokenId}`);
   };
+
+  const nftListWithSkeleton = useMemo(() => {
+    if (hasMore && selectedTab === TAB_NFTS) {
+      let addedCount = 1;
+      if (breakFour) {
+        addedCount = 4 - (reservedNftList.length % 4);
+      } else if (breakThree) {
+        addedCount = 3 - (reservedNftList.length % 3);
+      } else if (breakTwo) {
+        addedCount = 2 - (reservedNftList.length % 2);
+      }
+
+      const result = [...reservedNftList];
+      for (let index = 0; index < addedCount; index++) {
+        result.push({});
+      }
+
+      return result;
+    } else {
+      return reservedNftList;
+    }
+  }, [reservedNftList, hasMore, selectedTab, breakTwo, breakThree, breakFour]);
+
+  const collectionListWithSkeleton = useMemo(() => {
+    if (hasMore && selectedTab !== TAB_NFTS) {
+      let addedCount = 1;
+      if (breakThree) {
+        addedCount = 3 - (exploreMetaverses.length % 3);
+      } else if (breakTwo) {
+        addedCount = 2 - (exploreMetaverses.length % 2);
+      }
+
+      const result = [...exploreMetaverses];
+      for (let index = 0; index < addedCount; index++) {
+        result.push({});
+      }
+
+      return result;
+    } else {
+      return exploreMetaverses;
+    }
+  }, [exploreMetaverses, hasMore, selectedTab, breakTwo, breakThree]);
 
   return (
     <>
@@ -668,8 +712,10 @@ const NFTReserves = () => {
                   <Box sx={{ flexGrow: 1, width: "100%" }}>
                     <MasonryGrid
                       gutter={"24px"}
-                      data={reservedNftList}
-                      renderItem={item => <ExploreCard nft={item} />}
+                      data={nftListWithSkeleton}
+                      renderItem={item => (
+                        <ExploreCard nft={item} isLoading={Object.entries(item).length === 0} />
+                      )}
                       columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                     />
                   </Box>
@@ -678,48 +724,35 @@ const NFTReserves = () => {
                 <Box sx={{ flexGrow: 1, width: "100%" }}>
                   <MasonryGrid
                     gutter={"40px"}
-                    data={exploreMetaverses}
-                    renderItem={(item, index) => <MetaverseCard item={item} key={`game_${index}`} />}
+                    data={collectionListWithSkeleton}
+                    renderItem={(item, index) => (
+                      <MetaverseCard
+                        item={item}
+                        key={`game_${index}`}
+                        isLoading={Object.entries(item).length === 0}
+                      />
+                    )}
                     columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
                   />
                 </Box>
               )}
-              {(loading || loadingCollections) && (
+              {loading && selectedTab === TAB_NFTS && isListView && (
                 <div
                   style={{
-                    paddingTop: selectedTab === TAB_NFTS && isListView ? 8 : 16,
-                    paddingBottom: selectedTab === TAB_NFTS && isListView ? 8 : 16,
+                    paddingTop: 8,
+                    paddingBottom: 8,
                   }}
                 >
-                  {selectedTab === TAB_NFTS && isListView ? (
-                    Array(loadingCount)
-                      .fill(0)
-                      .map((_, index) => (
-                        <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
-                          <Skeleton variant="rect" width={60} height={60} />
-                          <Skeleton variant="rect" width="40%" height={24} style={{ marginLeft: "8px" }} />
-                          <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
-                          <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
-                        </Box>
-                      ))
-                  ) : (
-                    <MasonryGrid
-                      gutter={selectedTab === TAB_NFTS ? "24px" : "40px"}
-                      data={Array(selectedTab === TAB_NFTS ? loadingCount : loadingCount1).fill(0)}
-                      renderItem={(item, index) =>
-                        selectedTab === TAB_NFTS ? (
-                          <ExploreCard nft={item} isLoading />
-                        ) : (
-                          <MetaverseCard item={item} key={`game_${index}`} isLoading />
-                        )
-                      }
-                      columnsCountBreakPoints={
-                        selectedTab === TAB_NFTS
-                          ? COLUMNS_COUNT_BREAK_POINTS_FOUR
-                          : COLUMNS_COUNT_BREAK_POINTS_THREE
-                      }
-                    />
-                  )}
+                  {Array(loadingCount)
+                    .fill(0)
+                    .map((_, index) => (
+                      <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
+                        <Skeleton variant="rect" width={60} height={60} />
+                        <Skeleton variant="rect" width="40%" height={24} style={{ marginLeft: "8px" }} />
+                        <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
+                        <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
+                      </Box>
+                    ))}
                 </div>
               )}
             </div>
