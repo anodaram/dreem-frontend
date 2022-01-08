@@ -8,23 +8,24 @@ import { SecondaryGradientSlider } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import { RootState } from "store/reducers/Reducer";
 import { blockedByMeNFTStyles } from "./index.styles";
+import RangeSlider from "shared/ui-kit/RangeSlider";
 
 const SlideMarks = [
   {
     value: 0,
-    label: "10% Liquidation",
+    label: "",
   },
   {
     value: 33.0,
-    label: "25% High Risk",
+    label: "",
   },
   {
     value: 66.0,
-    label: "50% Medium Risk",
+    label: "",
   },
   {
     value: 100,
-    label: "80% Low Risk",
+    label: "",
   },
 ];
 
@@ -66,6 +67,8 @@ export default ({ item, isExpired, isLoading }: { item: any; isExpired?: boolean
     let token = tokens.find(token => token.Address === addr);
     return token?.Symbol || "";
   };
+
+  const collateralPercent = Number(item.history?.TotalCollateralPercent || item.history?.CollateralPercent)
 
   return (
     <Box className={classes.borderContainer}>
@@ -134,14 +137,21 @@ export default ({ item, isExpired, isLoading }: { item: any; isExpired?: boolean
                   %
                 </Box>
               </Box>
-              <Box flex={1} mr={4}>
-                <SecondaryGradientSlider
-                  marks={SlideMarks}
-                  step={1}
-                  value={item.history?.TotalCollateralPercent || item.history?.CollateralPercent}
-                  valueLabelDisplay="off"
-                  className={classes.slider}
-                />
+              <Box display="flex" flexDirection="column" flex={1} mr={4} mt={0.5}>
+                <RangeSlider value={collateralPercent / 80 * 100} variant="transparent" onChange={(event, newValue) => {}} />
+                <Box display="flex" alignItems="center" justifyContent="space-between" mt={1} width="100%">
+                  <Box flex={collateralPercent / 80}>
+                    <strong>0%</strong>
+                  </Box>
+                  <Box flex={collateralPercent / 80 * 0.2} className={classes.flexBox}>
+                    <strong>{Number(collateralPercent).toFixed(1)}% Liquidation</strong>
+                  </Box>
+                  <Box flex={collateralPercent / 80 * 0.3} className={classes.flexBox}>{Number(collateralPercent * 1.2).toFixed(1)}% High Risk</Box>
+                  <Box flex={collateralPercent / 80 * 0.5}>{Number(collateralPercent * 1.5).toFixed(1)}% Medium Risk</Box>
+                  <Box>
+                    <strong>{Number(collateralPercent * 2).toFixed(1)}% Low Risk</strong>
+                  </Box>
+                </Box>
               </Box>
             </Box>
           </Box>

@@ -65,4 +65,8 @@ export const blockedByMeNFTStyles = makeStyles(theme => ({
       borderRadius: 14,
     },
   },
+  flexBox: {
+    width: '60px',
+    textAlign: 'center'
+  },
 }));
