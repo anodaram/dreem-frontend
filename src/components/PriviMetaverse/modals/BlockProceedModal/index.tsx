@@ -161,6 +161,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
           TotalCollateralPercent: offer.CollateralPercent,
           ReservePeriod: offer.ReservePeriod,
           from: account,
+          to: offer.Beneficiary,
           hash: contractResponse.hash,
           notificationMode: 2
         });
