@@ -192,6 +192,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
             ((price || 0) / nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price) * 100
           ),
         PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaidAmount || 0,
+        notificationMode: 2
       });
 
       refresh();
