@@ -20,13 +20,13 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
 
   const useClasses = makeStyles(theme => ({
     username: {
-      color: "#EDFF1C"
+      color: "#EDFF1C",
     },
     nftName: {
       background: "linear-gradient(#EDFF1C, #ED7B7B)",
       "-webkit-text-fill-color": "transparent",
       "-webkit-background-clip": "text",
-    }
+    },
   }));
 
   const classes = useClasses();
@@ -61,45 +61,52 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 236 ? (
         <div>
           <div>
-            <span className={classes.username}>{externalData.user}</span> placed a new offer on <span className={classes.nftName}>{externalData.nft.name}</span> to Rent it for{" "}
-            {externalData.price} USDT over {Number(externalData.duration).toFixed(2)} days
+            <span className={classes.username}>{externalData.user}</span> placed a new rental offer on{" "}
+            <span className={classes.nftName}>{externalData.nft.name}</span> for {externalData.price} USDT
+            over {Number(externalData.duration).toFixed(2)} days 👀
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
+            Go to your NFT
+          </b>
+        </div>
+      ) : type === 262 ? (
+        <div>
+          <div>
+            You have accepted <span className={classes.username}>{externalData.user}</span>'s rental offer for{" "}
+            {externalData.price} USDT over {Number(externalData.duration).toFixed(2)} days on your{" "}
+            <span className={classes.nftName}>{externalData.nft.name}</span>
+          </div>
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
+            Go to your NFT
+          </b>
+        </div>
+      ) : type === 266 ? (
+        <div>
+          <div>
+            You have successfully rented <span className={classes.nftName}>{externalData.nft.name}</span>{" "}
+            🎉
+          </div>
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your NFT
           </b>
         </div>
       ) : type === 237 ? (
         <div>
           <div>
-            <span className={classes.username}>{externalData.user}</span> rented your <span className={classes.nftName}>{externalData.nft.name}</span> at instant price of {externalData.price}{" "}
-            USDT over {Number(externalData.duration).toFixed(2)} days
+            <span className={classes.username}>{externalData.user}</span> accepted your rental offer of
+            <span className={classes.nftName}>{externalData.nft.name}</span> at {externalData.price} USDT for
+            {Number(externalData.duration).toFixed(2)} days 😀
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your NFT
           </b>
         </div>
       ) : type === 238 ? (
         <div>
           <div>
-            You have accepted <span className={classes.username}>{externalData.user}</span> rent offer for {externalData.price} USDT/sec for{" "}
-            {Number(externalData.duration).toFixed(2)} Days on your NFT <span className={classes.nftName}>{externalData.nft.name}</span>
+            You have successfully rented <span className={classes.nftName}>{externalData.nft.name}</span> 🎉
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your NFT
           </b>
         </div>
@@ -134,27 +141,17 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             Time is up <img src={require("assets/emojiIcons/stopwatch.png")} /> on the <span className={classes.nftName}>{externalData.nft.name}</span> block. Head to Game NFTs to find more stuff to block!
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your NFT Reserve
           </b>
         </div>
       ) : type === 242 ? (
         <div>
           <div>
-            The NFT <span className={classes.nftName}>{externalData.nft.name}</span> wasn’t fully paid before expiration and is now returned to the
-            owner along with your collateral.
+            The NFT <span className={classes.nftName}>{externalData.nft.name}</span> wasn’t fully paid before
+            expiration and is now returned to the owner along with your collateral.
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your management
           </b>
         </div>
@@ -163,12 +160,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             Look at you taking care of your NFTs <img src={require("assets/emojiIcons/passport_control.png")} /> <span className={classes.nftName}>{externalData.nft.name}</span> is back in your possession
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to Manage Futures
           </b>
         </div>
@@ -177,12 +169,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             You have successfully blocked <span className={classes.nftName}>{externalData.nft.name}</span> <img src={require("assets/emojiIcons/gorilla.png")} />
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your NFT Reserve
           </b>
         </div>
@@ -191,42 +178,27 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             <span className={classes.username}>{externalData.user}</span> just accepted your blocking offer of <span className={classes.nftName}>{externalData.nft.name}</span> for {externalData.price} USDT <img src={require("assets/emojiIcons/muscle.png")} />
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your management
           </b>
         </div>
       ) : type === 246 || type === 254 ? (
         <div>
           <div>
-            <span className={classes.username}>{externalData.user}</span> has placed new offer on your <span className={classes.nftName}>{externalData.nft.name}</span>. Click below to see more
-            details.
+            <span className={classes.username}>{externalData.user}</span> has placed new offer on your{" "}
+            <span className={classes.nftName}>{externalData.nft.name}</span>. Click below to see more details.
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your NFT Reserve
           </b>
         </div>
       ) : type === 247 ? (
         <div>
           <div>
-            <span className={classes.username}>{externalData.user}</span> just bought your NFT Reserve your <span className={classes.nftName}>{externalData.nft.name}</span>. Click below to see
-            more details.
+            <span className={classes.username}>{externalData.user}</span> just bought your NFT Reserve your{" "}
+            <span className={classes.nftName}>{externalData.nft.name}</span>. Click below to see more details.
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your NFT Reserve
           </b>
         </div>
@@ -235,12 +207,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             Your blocked NFT <span className={classes.nftName}>{externalData.nft.name}</span> was fully paid by <span className={classes.username}>{externalData.user}</span> <img src={require("assets/emojiIcons/white_check_mark.png")} />
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your management
           </b>
         </div>
@@ -258,28 +225,21 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
         </div>
       ) : type === 250 ? (
         <div>
-          <div>Your blocked NFT <span className={classes.nftName}>{externalData.nft.name}</span> is about to expire today.</div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <div>
+            Your blocked NFT <span className={classes.nftName}>{externalData.nft.name}</span> is about to
+            expire today.
+          </div>
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your NFT Reserve
           </b>
         </div>
       ) : type === 251 ? (
         <div>
           <div>
-            The NFT <span className={classes.nftName}>{externalData.nft.name}</span> you blocked is about to expire today. Make sure to pay for it or
-            it’ll be returned to the owner.
+            The NFT <span className={classes.nftName}>{externalData.nft.name}</span> you blocked is about to
+            expire today. Make sure to pay for it or it’ll be returned to the owner.
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your management
           </b>
         </div>
@@ -288,12 +248,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             Your <span className={classes.nftName}>{externalData.nft.name}</span> was claimed and paid for by <span className={classes.username}>{externalData.user}</span>, head to Game NFTs to explore more
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your NFT Reserve
           </b>
         </div>
@@ -302,12 +257,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             Congratulations! You are now the owner of <span className={classes.nftName}>{externalData.nft.name}</span>, it is unblocked and fully paid <img src={require("assets/emojiIcons/bomb.png")} />
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your management
           </b>
         </div>
@@ -316,12 +266,25 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             You have successfully blocked <span className={classes.nftName}>{externalData.nft.name}</span> <img src={require("assets/emojiIcons/partying_face.png")} />, head to Manage Your NFTs to peep it.
           </div>
-          <b
-            style={{ color: "rgba(233, 255, 38, 1)" }}
-            onClick={() =>
-              goToNFTDetail()
-            }
-          >
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
+            Go to NFT management
+          </b>
+        </div>
+      ) : type === 267 ? (
+        <div>
+          <div>
+          👋 Your rental of <span className={classes.nftName}>{externalData.nft.name}</span> has expired.
+          </div>
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
+            Go to NFT management
+          </b>
+        </div>
+      ) : type === 268 ? (
+        <div>
+          <div>
+            <span className={classes.nftName}>{externalData.nft.name}</span> is no longer being rented, head to Manage your NFTs to see more and find a new renter.
+          </div>
+          <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to NFT management
           </b>
         </div>
