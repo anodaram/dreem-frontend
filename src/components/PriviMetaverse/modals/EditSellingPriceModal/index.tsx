@@ -86,21 +86,20 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
       setHash
     );
 
-    if (response.success) {
-      setTransactionSuccess(null);
-      await cancelSellingOffer({
-        mode: isProd ? "main" : "test",
-        offerId: offer.id,
-        CollectionId: collection_id,
-        TokenId: token_id,
-      });
-      let newNft = { ...nft };
-      let _orgNft = { ...nft };
-      newNft.sellingOffer = {};
-      setNft(newNft);
-      setOrgNft(_orgNft);
-      setStep(1);
-    } else {
+    setTransactionSuccess(null);
+    await cancelSellingOffer({
+      mode: isProd ? "main" : "test",
+      offerId: offer.id,
+      CollectionId: collection_id,
+      TokenId: token_id,
+    });
+    let newNft = { ...nft };
+    let _orgNft = { ...nft };
+    newNft.sellingOffer = {};
+    setNft(newNft);
+    setOrgNft(_orgNft);
+    setStep(1);
+    if (!response.success) {
       setTransactionSuccess(false);
       showAlertMessage("Failed to edit price of offer", { variant: "error" });
     }
@@ -292,6 +291,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
                 onChange={e => {
                   setReservePriceToken(tokenList.find(v => v.Address === e.target.value));
                 }}
+                style={{ flex: "1" }}
                 disabled={true}
               />
             </Grid>

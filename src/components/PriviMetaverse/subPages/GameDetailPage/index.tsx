@@ -21,8 +21,8 @@ import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard"
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
   600: 2,
-  900: 3,
-  1200: 4,
+  1200: 3,
+  1440: 4,
 };
 
 const TAB_NFTS = "nfts";

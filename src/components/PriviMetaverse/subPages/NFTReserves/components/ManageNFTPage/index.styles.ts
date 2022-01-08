@@ -80,7 +80,7 @@ export const useManageNFTPageStyles = makeStyles(theme => ({
     margin: "10px 0 30px 0",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     position: "relative",
     [theme.breakpoints.down("sm")]: {
       margin: "50px 0 70px 0",
@@ -122,7 +122,7 @@ export const useManageNFTPageStyles = makeStyles(theme => ({
     },
   },
   fitContent: {
-    maxWidth: 1280,
+    maxWidth: 1400,
     marginLeft: "auto",
     marginRight: "auto",
     paddingLeft: "32px !important",

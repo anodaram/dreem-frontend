@@ -38,7 +38,7 @@ const CancelSellingPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
     if (!open) return;
 
     setSelectedChain(getChainForNFT(nft));
-  }, [open, nft])
+  }, [open, nft]);
 
   const getTokenDecimal = addr => {
     if (tokenList.length == 0) return 0;
@@ -54,7 +54,7 @@ const CancelSellingPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
         return;
       }
     }
-  
+
     setOpenTransactionModal(true);
     const web3APIHandler = selectedChain.apiHandler;
     const web3 = new Web3(library.provider);
@@ -72,19 +72,18 @@ const CancelSellingPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
       setHash
     );
 
-    if (response.success) {
-      setTransactionSuccess(true);
-      await cancelSellingOffer({
-        mode: isProd ? "main" : "test",
-        offerId: offer.id,
-        CollectionId: collection_id,
-        TokenId: token_id,
-      });
-      let newNft = { ...nft };
-      newNft.sellingOffer = {};
-      setNft(newNft);
-      handleClose();
-    } else {
+    setTransactionSuccess(true);
+    await cancelSellingOffer({
+      mode: isProd ? "main" : "test",
+      offerId: offer.id,
+      CollectionId: collection_id,
+      TokenId: token_id,
+    });
+    let newNft = { ...nft };
+    newNft.sellingOffer = {};
+    setNft(newNft);
+    handleClose();
+    if (!response.success) {
       setTransactionSuccess(false);
       showAlertMessage("Failed to cancel selling of offer", { variant: "error" });
     }

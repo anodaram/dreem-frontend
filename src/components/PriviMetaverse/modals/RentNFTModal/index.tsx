@@ -28,13 +28,12 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
   const [maxHours, setMaxHours] = useState<number>(0);
   const [maxMins, setMaxMins] = useState<number>(0);
   const [maxSeconds, setMaxSeconds] = useState<number>(0);
-  const [limitDays, setLimitDays] = useState<number>();
-  const [limitHour, setLimitHour] = useState<number>();
-  const [limitMin, setLimitMin] = useState<number>();
-  const [limitSec, setLimitSec] = useState<number>();
+  const [limitDays, setLimitDays] = useState<number>(0);
+  const [limitHour, setLimitHour] = useState<number>(0);
+  const [limitMin, setLimitMin] = useState<number>(0);
+  const [limitSec, setLimitSec] = useState<number>(0);
   const [balance, setBalance] = React.useState<number>(0);
   const [rentalToken, setRentalToken] = useState<any>();
-  const users = useTypedSelector(state => state.usersInfoList);
   const rentalTime = React.useMemo(
     () => toSeconds(limitDays, limitHour, limitMin, limitSec),
     [limitDays, limitHour, limitMin, limitSec]
@@ -57,10 +56,23 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
   };
 
   const price = offer
-    ? Math.ceil(+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime)
+    ? (+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime).toFixed(3)
     : 0;
 
-  useEffect(() => setSelectedChain(nft), [nft]);
+  useEffect(() => setSelectedChain(getChainForNFT(nft)), [nft]);
+
+  useEffect(() => {
+    (async () => {
+      if (chainId && selectedChain && chainId !== selectedChain?.chainId) {
+        const isHere = await switchNetwork(selectedChain?.chainId || 0);
+
+        if (!isHere) {
+          showAlertMessage("Got failed while switching over to target network", { variant: "error" });
+          return;
+        }
+      }
+    })();
+  }, [chainId, selectedChain]);
 
   useEffect(() => {
     if (!open) return;
@@ -250,7 +262,15 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
     handleClose();
   };
 
+  const resetRentalTime = () => {
+    setLimitDays(0);
+    setLimitHour(0);
+    setLimitMin(0);
+    setLimitSec(0);
+  };
+
   const setRentalTimeAsMax = () => {
+    resetRentalTime();
     if (maxDays > 0) {
       setLimitDays(maxDays);
     } else if (maxHours > 0) {

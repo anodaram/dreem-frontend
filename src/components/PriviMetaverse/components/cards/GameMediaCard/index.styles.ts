@@ -104,6 +104,7 @@ export const gameMediaCardStyles = makeStyles(theme => ({
     display: "flex",
     justifyContent: "space-between",
     whiteSpace: "nowrap",
+    textAlign: 'start',
     marginBottom: "6px",
   },
   cardContentText: {
@@ -123,9 +124,10 @@ export const gameMediaCardStyles = makeStyles(theme => ({
     fontWeight: 800,
     fontSize: "13px",
     lineHeight: "16px",
-    textAlign: "center",
+    textAlign: "end",
     letterSpacing: "0.02em",
     textTransform: "capitalize",
     color: "#FFFFFF",
+    whiteSpace: "nowrap",
   },
 }));

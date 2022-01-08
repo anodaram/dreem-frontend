@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
 import { useHistory, useParams } from "react-router";
 import { useDispatch } from "react-redux";
-import OwnersPanel from "./components/OwnersPanel";
-import RentedByMe from "./components/RentedByMe";
-import BlockedByMe from "./components/BlockedByMe";
 
-import { useManageNFTPageStyles, useTabsStyles } from "./index.styles";
 import Box from "shared/ui-kit/Box";
+import { BackButton } from "components/PriviMetaverse/components/BackButton";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { setTokenList } from "store/actions/MarketPlace";
 import TabsView, { TabItem } from "shared/ui-kit/TabsView";
+import OwnersPanel from "./components/OwnersPanel";
+import RentedByMe from "./components/RentedByMe";
+import BlockedByMe from "./components/BlockedByMe";
+import { useManageNFTPageStyles, useTabsStyles } from "./index.styles";
 
 const TAB_OWNERS = "owners";
 const TAB_RENT = "rent";
@@ -33,6 +34,7 @@ const Tabs: TabItem[] = [
 const ManageNFTPage = () => {
   const classes = useManageNFTPageStyles();
   const tabsClasses = useTabsStyles();
+  const history = useHistory();
 
   const [selectedTab, setSelectedTab] = React.useState<string>(TAB_OWNERS);
   const params: { tab?: string } = useParams();
@@ -66,7 +68,9 @@ const ManageNFTPage = () => {
     >
       <Box width="100%" className={classes.fitContent}>
         <Box className={classes.backButtonContainer}>
+          <BackButton light overrideFunction={() => history.goBack()} />
           <Box className={classes.pageTitle}>MANAGE NFTS</Box>
+          <Box width={50} />
         </Box>
         <Box width="100%">
           <TabsView

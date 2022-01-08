@@ -43,10 +43,10 @@ export default function PriviMetaverseRouter(props) {
         <Route exact path="/become_creator" component={GettingStartedPage} />
         <Route exact path="/creating_realm" component={CreatingRealmPage} />
         <Route exact path="/creating_extension" component={CreatingExtensionPage} />
-        <Route exact path="/gameNFT" component={NFTReserves} />
-        <Route exact path="/gameNFT/manage_nft/:tab?" component={ManageNFTPage} />
-        <Route exact path="/gameNFT/:collection_id" component={GameDetailPage} />
-        <Route exact path="/gameNFT/:collection_id/:token_id" component={ExploreReserveDetailPage} />
+        <Route exact path="/gameNFTS" component={NFTReserves} />
+        <Route exact path="/gameNFTS/manage_nft/:tab?" component={ManageNFTPage} />
+        <Route exact path="/gameNFTS/:collection_id" component={GameDetailPage} />
+        <Route exact path="/gameNFTS/:collection_id/:token_id" component={ExploreReserveDetailPage} />
         {/* <Route exact path="/claim_dreem" component={ClaimDreemPage} />, */}
         <Route exact path="/" component={MainPage} />
         <Route path="/404" component={Error404Page} />
