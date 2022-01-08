@@ -125,7 +125,14 @@ export default ({ item, isExpired, isLoading }: { item: any; isExpired?: boolean
             <Box display="flex" alignItems="center">
               <Box display="flex" flexDirection="column" mr={8}>
                 <Box className={classes.header}>Collateral Pct.</Box>
-                <Box>{item.history?.TotalCollateralPercent || item.history?.CollateralPercent}%</Box>
+                <Box>
+                  {item.history?.TotalCollateralPercent
+                    ? item.history?.TotalCollateralPercent.toFixed(2)
+                    : item.history?.CollateralPercent
+                    ? item.history?.CollateralPercent.toFixed(2)
+                    : "0.00"}
+                  %
+                </Box>
               </Box>
               <Box flex={1} mr={4}>
                 <SecondaryGradientSlider
