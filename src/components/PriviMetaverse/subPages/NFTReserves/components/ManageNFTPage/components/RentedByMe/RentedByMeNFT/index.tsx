@@ -9,6 +9,7 @@ import { RootState } from "store/reducers/Reducer";
 import { toDecimals } from "shared/functions/web3";
 import { PrimaryButton } from "shared/ui-kit";
 import { RentedByMeNFTStyles } from "./index.styles";
+import { useHistory } from "react-router-dom";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 export default ({
@@ -22,6 +23,7 @@ export default ({
   isExpired?: boolean;
   isLoading?: boolean;
 }) => {
+  const history = useHistory();
   const classes = RentedByMeNFTStyles({ isExpired });
   const [closeTime, setCloseTime] = useState<any>(null);
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
@@ -146,7 +148,9 @@ export default ({
                     style={{
                       borderRadius: "40px",
                     }}
-                    onClick={() => {}}
+                    onClick={() => {
+                      history.push(`/gameNFTS/${item.Slug}/${item.id}`);
+                    }}
                   >
                     Rent back
                   </PrimaryButton>
