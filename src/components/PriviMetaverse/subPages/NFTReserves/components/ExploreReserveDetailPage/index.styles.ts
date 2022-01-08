@@ -25,6 +25,10 @@ export const exploreOptionDetailPageStyles = makeStyles(theme => ({
       padding: "100px 16px 45px 16px",
     },
   },
+  flexBox: {
+    width: '60px',
+    textAlign: 'center'
+  },
   header: {
     display: "flex",
     justifyContent: "space-between",
