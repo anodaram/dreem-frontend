@@ -243,8 +243,8 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
             </Grid>
           </Grid>
           <Box className={classes.nameField}>
-            <span>Max Rental Time</span>
-            <InfoTooltip tooltip={"This is the maximum time a player can rent your NFT"} />
+            <span>Max Rental Date</span>
+            <InfoTooltip tooltip={"Your NFT will be available for rental till this date"} />
           </Box>
           <Box width="100%">
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -270,7 +270,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
             <span>Limit Rental Time</span>
             <InfoTooltip
               tooltip={
-                "This is the minimum time allowed someone can rent your NFT. For example if you select 10 minutes, someone cannot rent it for 9 minutes"
+                "This is the maximum length of time you want to rent out your NFT. If you put 6 days, no one can rent it for 7."
               }
             />
           </Box>
