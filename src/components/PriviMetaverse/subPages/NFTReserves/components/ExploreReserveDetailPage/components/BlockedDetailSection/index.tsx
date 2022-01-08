@@ -42,6 +42,7 @@ export default ({ nft, refresh }) => {
       day: parseInt((value / day_unit).toString()),
       hour: parseInt(((value % day_unit) / hr_unit).toString()),
       min: parseInt(((value / min_unit) % min_unit).toString()),
+      seconds: Math.floor(value % 60)
     };
   };
 
@@ -135,7 +136,7 @@ export default ({ nft, refresh }) => {
                 <Box color="white" pr={1}>
                   Blocking expires in{" "}
                 </Box>
-                <Box className={classes.gradientText}>{`${closeTime?.day || 0} Days ${closeTime?.hour || 0}h ${closeTime?.min || 0} min`}</Box>
+                <Box className={classes.gradientText}>{`${closeTime?.day || 0} Days ${closeTime?.hour || 0}h ${closeTime?.min || 0} min ${closeTime?.seconds || 0} min`}</Box>
               </Box>
             ) : blockingInfo?.PaidAmount == blockingInfo?.Price ? (
               <>
