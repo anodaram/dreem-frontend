@@ -102,6 +102,7 @@ export default ({ isOwnership, nft, refresh }) => {
       });
 
       refresh();
+      setRange(0);
       // handleClose();
     } else {
       setTransactionSuccess(false);
