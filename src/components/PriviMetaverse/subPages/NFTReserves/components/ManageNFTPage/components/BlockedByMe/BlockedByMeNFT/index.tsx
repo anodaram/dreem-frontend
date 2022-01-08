@@ -80,7 +80,7 @@ export default ({ item, isExpired, isLoading }: { item: any; isExpired?: boolean
       ) : (
         <Box display="flex" alignItems="center" color="#fff" width="100%" className={classes.container}>
           <img
-            src={item?.content_url ?? require(`assets/backgrounds/digital_art_1.png`)}
+            src={item?.image ?? require(`assets/backgrounds/digital_art_1.png`)}
             className={classes.nftImage}
             alt={item.nftName}
           />
@@ -92,7 +92,7 @@ export default ({ item, isExpired, isLoading }: { item: any; isExpired?: boolean
             flex={1}
             height="150px"
           >
-            <Box className={classes.nftName}>{item.name}</Box>
+            <Box className={classes.nftName}>{item?.name}</Box>
             <Box display="flex" alignItems="center" flex={1}>
               <Box display="flex" flexDirection="column" flex={0.25} className={classes.section}>
                 <Box className={classes.header}>Future Price</Box>
