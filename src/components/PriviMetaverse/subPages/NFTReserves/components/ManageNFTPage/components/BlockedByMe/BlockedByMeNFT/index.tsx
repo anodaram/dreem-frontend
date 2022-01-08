@@ -127,9 +127,9 @@ export default ({ item, isExpired, isLoading }: { item: any; isExpired?: boolean
                 <Box className={classes.header}>Collateral Pct.</Box>
                 <Box>
                   {item.history?.TotalCollateralPercent
-                    ? item.history?.TotalCollateralPercent.toFixed(2)
+                    ? Number(item.history?.TotalCollateralPercent).toFixed(2)
                     : item.history?.CollateralPercent
-                    ? item.history?.CollateralPercent.toFixed(2)
+                    ? Number(item.history?.CollateralPercent).toFixed(2)
                     : "0.00"}
                   %
                 </Box>
