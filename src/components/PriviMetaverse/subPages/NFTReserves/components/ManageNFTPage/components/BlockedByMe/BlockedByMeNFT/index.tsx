@@ -80,7 +80,7 @@ export default ({ item, isExpired, isLoading }: { item: any; isExpired?: boolean
       ) : (
         <Box display="flex" alignItems="center" color="#fff" width="100%" className={classes.container}>
           <img
-            src={item?.content_url ?? require(`assets/backgrounds/digital_art_1.png`)}
+            src={item?.image ?? require(`assets/backgrounds/digital_art_1.png`)}
             className={classes.nftImage}
             alt={item.nftName}
           />
@@ -92,7 +92,7 @@ export default ({ item, isExpired, isLoading }: { item: any; isExpired?: boolean
             flex={1}
             height="150px"
           >
-            <Box className={classes.nftName}>{item.name}</Box>
+            <Box className={classes.nftName}>{item?.name}</Box>
             <Box display="flex" alignItems="center" flex={1}>
               <Box display="flex" flexDirection="column" flex={0.25} className={classes.section}>
                 <Box className={classes.header}>Future Price</Box>
@@ -114,8 +114,8 @@ export default ({ item, isExpired, isLoading }: { item: any; isExpired?: boolean
                   <Box className={classes.header} mr={3}>
                     Payment In
                   </Box>
-                  <span className={classes.time}>{closeTime?.day} Days</span>
-                  <span className={classes.time}>{closeTime?.hour} h</span>
+                  <span className={classes.time}>{closeTime?.day} day(s) </span>
+                  <span className={classes.time}>{closeTime?.hour} hour(s) </span>
                   <span className={classes.time}>{closeTime?.min} min</span>
                 </Box>
               ) : (
@@ -125,7 +125,14 @@ export default ({ item, isExpired, isLoading }: { item: any; isExpired?: boolean
             <Box display="flex" alignItems="center">
               <Box display="flex" flexDirection="column" mr={8}>
                 <Box className={classes.header}>Collateral Pct.</Box>
-                <Box>{item.history?.TotalCollateralPercent || item.history?.CollateralPercent}%</Box>
+                <Box>
+                  {item.history?.TotalCollateralPercent
+                    ? Number(item.history?.TotalCollateralPercent).toFixed(2)
+                    : item.history?.CollateralPercent
+                    ? Number(item.history?.CollateralPercent).toFixed(2)
+                    : "0.00"}
+                  %
+                </Box>
               </Box>
               <Box flex={1} mr={4}>
                 <SecondaryGradientSlider

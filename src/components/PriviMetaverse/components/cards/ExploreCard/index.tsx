@@ -159,7 +159,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
                 {nft?.blockingSaleOffer?.Price
                   ? `${nft.blockingSaleOffer.Price} ${getTokenSymbol(
                       nft.blockingSaleOffer.PaymentToken
-                    )} for ${nft.blockingSaleOffer.ReservePeriod} Days`
+                    )} for ${nft.blockingSaleOffer.ReservePeriod} Day(s)`
                   : "_"}
               </span>
             </div>

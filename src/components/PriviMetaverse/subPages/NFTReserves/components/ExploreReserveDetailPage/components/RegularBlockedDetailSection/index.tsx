@@ -120,10 +120,10 @@ export default ({ nft, refresh }) => {
               <Box fontSize={14} textAlign="center" width="48px" mr="11px">
                 Time to pay
               </Box>
-              <Box className={classes.time}>{closeTime?.day} Days</Box>
-              <Box className={classes.time}>{closeTime?.hour} h</Box>
+              <Box className={classes.time}>{closeTime?.day} day(s)</Box>
+              <Box className={classes.time}>{closeTime?.hour} hour(s)</Box>
               <Box className={classes.time}>{closeTime?.min} min</Box>
-              <Box className={classes.time}>{closeTime?.second} s</Box>
+              <Box className={classes.time}>{closeTime?.second} sec</Box>
             </Box>
           </Box>
           <PrimaryButton

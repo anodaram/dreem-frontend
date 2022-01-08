@@ -164,18 +164,18 @@ export default ({ isOwnership, nft, refresh }) => {
             Liquadation LTV<span style={{ color: "#E9FF26", marginLeft: 6 }}>80%</span>
           </span>
         </Box>
-        <RangeSlider value={range} variant="transparent" onChange={(event, newValue) => {}} />
+        <RangeSlider value={range / 80 * 100} variant="transparent" onChange={(event, newValue) => {}} />
         <Box display="flex" alignItems="center" mt={1}>
-          <Box flex="0.125">
+          <Box flex={collateralPercent / 80}>
             <strong>0%</strong>
           </Box>
-          <Box flex="0.1875">
-            <strong>10% Liquidation</strong>
+          <Box flex={collateralPercent / 80 * 0.2} className={classes.flexBox}>
+            <strong>{Number(collateralPercent).toFixed(1)}% Liquidation</strong>
           </Box>
-          <Box flex="0.3125">25% High Risk</Box>
-          <Box flex="0.375">50% Medium Risk</Box>
+          <Box flex={collateralPercent / 80 * 0.3} className={classes.flexBox}>{Number(collateralPercent * 1.2).toFixed(1)}% High Risk</Box>
+          <Box flex={collateralPercent / 80 * 0.5}>{Number(collateralPercent * 1.5).toFixed(1)}% Medium Risk</Box>
           <Box>
-            <strong>80% Low Risk</strong>
+            <strong>{Number(collateralPercent * 2).toFixed(1)}% Low Risk</strong>
           </Box>
         </Box>
       </Box>

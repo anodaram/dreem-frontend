@@ -141,6 +141,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
           from: account,
           to: offer.Beneficiary,
           hash: contractResponse.hash,
+          fromOwner: false,
         });
         let newNft = { ...nft };
         newNft.status = null;

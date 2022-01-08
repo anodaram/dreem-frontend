@@ -160,8 +160,8 @@ export default ({
                   <Box mr={3} color="#fff" fontSize={14} style={{ textTransform: "capitalize" }}>
                     Remaining Rental Time
                   </Box>
-                  <span className={classes.time}>{closeTime?.day} Days</span>
-                  <span className={classes.time}>{closeTime?.hour} h</span>
+                  <span className={classes.time}>{closeTime?.day} day(s)</span>
+                  <span className={classes.time}>{closeTime?.hour} hour(s)</span>
                   <span className={classes.time}>{closeTime?.min} min</span>
                 </Box>
               )}

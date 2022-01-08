@@ -144,6 +144,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
         from: offer.Beneficiary,
         to: account,
         hash: response.hash,
+        fromOwner: true,
       });
       handleClose();
       onConfirm();

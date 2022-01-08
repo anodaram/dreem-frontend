@@ -32,7 +32,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
   const [token, setToken] = useState<any>(tokens[0]);
   const [totalBalance, setTotalBalance] = useState<string>("0");
   const [price, setPrice] = useState<number>();
-  const [selectedChain, setSelectedChain] = useState<any>(filteredBlockchainNets[0]);
+  const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const { showAlertMessage } = useAlertMessage();
 
   const { account, library, chainId } = useWeb3React();
@@ -259,6 +259,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
                 setToken(tokens.find(v => v.Address === e.target.value));
               }}
               className={classes.inputJOT}
+              style={{ flex: "1" }}
               disabled={true}
             />
           </Grid>

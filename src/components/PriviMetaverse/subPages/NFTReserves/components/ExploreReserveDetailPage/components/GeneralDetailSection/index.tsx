@@ -163,7 +163,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
               {nft?.blockingSaleOffer?.Price &&
                 `${nft.blockingSaleOffer.Price} ${getTokenSymbol(nft.blockingSaleOffer.PaymentToken)} for ${
                   nft.blockingSaleOffer.ReservePeriod
-                } Days`}
+                } Day(s)`}
             </Text>
           )}
           <Box display="flex" justifyContent="flex-end" alignItems="center">
@@ -195,7 +195,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                     {nft?.blockingSaleOffer?.Price &&
                       `${nft.blockingSaleOffer.Price} ${getTokenSymbol(
                         nft.blockingSaleOffer.PaymentToken
-                      )} for ${nft.blockingSaleOffer.ReservePeriod} Days`}
+                      )} for ${nft.blockingSaleOffer.ReservePeriod} Day(s)`}
                   </Text>
                   &nbsp;
                   <PrimaryButton
@@ -215,7 +215,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                   {nft?.blockingSaleOffer?.Price &&
                     `${nft.blockingSaleOffer.Price} ${getTokenSymbol(
                       nft.blockingSaleOffer.PaymentToken
-                    )} for ${nft.blockingSaleOffer.ReservePeriod} Days`}
+                    )} for ${nft.blockingSaleOffer.ReservePeriod} Day(s)`}
                 </Text>
                 &nbsp;
                 <PrimaryButton
