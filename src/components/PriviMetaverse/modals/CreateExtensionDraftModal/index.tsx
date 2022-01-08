@@ -170,7 +170,7 @@ const CreateExtensionDraftModal = ({ realmId, onClose, open, loadRealm, metaData
   };
   const validate = () => {
     if (!title || !description || !image || !unity || !entity) {
-      showAlertMessage(`All fields should not be empty`, { variant: "error" });
+      showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
       return false;
     }
 

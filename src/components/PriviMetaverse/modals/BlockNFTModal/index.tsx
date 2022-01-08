@@ -88,7 +88,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
   const handleApprove = async () => {
     try {
       if (!price || !collateral) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
+        showAlertMessage("Please fill the fields to proceed", { variant: "error" });
         return;
       }
 
@@ -139,7 +139,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
 
   const handleConfirm = async () => {
     if (!price || !collateral) {
-      showAlertMessage("Please fill all the fields", { variant: "error" });
+      showAlertMessage("Please fill the fields to proceed", { variant: "error" });
       return;
     }
 
@@ -196,7 +196,9 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         Price: nft.blockingSaleOffer.Price,
         Beneficiary: account,
         CollateralPercent: ((Number(collateral) / Number(nft?.blockingSaleOffer?.Price)) * 100).toFixed(2),
-        TotalCollateralPercent: ((Number(collateral) / Number(nft?.blockingSaleOffer?.Price)) * 100).toFixed(2),
+        TotalCollateralPercent: ((Number(collateral) / Number(nft?.blockingSaleOffer?.Price)) * 100).toFixed(
+          2
+        ),
         ReservePeriod: nft.blockingSaleOffer.ReservePeriod,
         from: nft.blockingSaleOffer.Beneficiary,
         to: account,
@@ -252,8 +254,12 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 padding="16px"
                 fontFamily="Rany"
               >
-                <Box fontSize={16} color="#E9FF26" fontWeight={500}>{nft?.blockingSaleOffer?.Price}</Box>
-                <Box fontSize={14} color="#ffffff" >USDT</Box>
+                <Box fontSize={16} color="#E9FF26" fontWeight={500}>
+                  {nft?.blockingSaleOffer?.Price}
+                </Box>
+                <Box fontSize={14} color="#ffffff">
+                  USDT
+                </Box>
               </Box>
               <Box className={classes.nameField}>
                 Required {nft?.blockingSaleOffer?.CollateralPercent}% as Collateral

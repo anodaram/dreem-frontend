@@ -80,7 +80,6 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
 
   const checkNetworkFromNFT = async () => {
     const nftChain = getChainForNFT(nft);
-    console.log('aa', nftChain)
     if (!nftChain) {
       showAlertMessage(`network error`, { variant: "error" });
       return;
@@ -101,7 +100,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
   const handleApprove = async () => {
     try {
       if (!price) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
+        showAlertMessage("Please fill the fields to proceed", { variant: "error" });
         return;
       }
 
@@ -148,7 +147,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
   const handleConfirm = async () => {
     try {
       if (!price) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
+        showAlertMessage("Please fill the fields to proceed", { variant: "error" });
         return;
       }
       const targetChain = await checkNetworkFromNFT();

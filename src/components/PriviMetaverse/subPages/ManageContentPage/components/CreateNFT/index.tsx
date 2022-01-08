@@ -187,12 +187,12 @@ const CreateNFT = ({
 
   const validate = () => {
     if (!title || !description || !image || !unity || !symbol || !entity) {
-      showAlertMessage(`All fields should not be empty`, { variant: "error" });
+      showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
       return false;
     }
 
     if (!isDraft && !video) {
-      showAlertMessage(`All fields should not be empty`, { variant: "error" });
+      showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
       return false;
     }
 
