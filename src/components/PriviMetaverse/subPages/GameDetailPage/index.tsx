@@ -34,14 +34,14 @@ const GameDetailTabs: TabItem[] = [
     key: TAB_NFTS,
     title: "NFTs",
   },
-  {
-    key: TAB_MARKETPLACE_FEED,
-    title: "MARKETPLACE FEED",
-  },
-  {
-    key: TAB_OWNERS,
-    title: "owners",
-  },
+  // {
+  //   key: TAB_MARKETPLACE_FEED,
+  //   title: "MARKETPLACE FEED",
+  // },
+  // {
+  //   key: TAB_OWNERS,
+  //   title: "owners",
+  // },
 ];
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -260,8 +260,8 @@ export default function GameDetailPage() {
               )}
             </Box>
           )}
-          {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed />}
-          {selectedTab === TAB_OWNERS && <Owners />}
+          {/* {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed />}
+          {selectedTab === TAB_OWNERS && <Owners />} */}
         </Box>
       </Box>
     </Box>
