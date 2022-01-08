@@ -142,7 +142,7 @@ export default ({ item, isExpired, isLoading }: { item: any; isExpired?: boolean
             src={require(`assets/icons/arrow_white_right.png`)}
             style={{ cursor: "pointer" }}
             onClick={() => {
-              history.push(`/gameNFTS/${item.token_address}/${item.token_id}`);
+              history.push(`/gameNFTS/${item.Slug}/${item.id}`);
             }}
           />
         </Box>
