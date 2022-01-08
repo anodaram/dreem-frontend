@@ -108,8 +108,7 @@ export default function CancelBuyOfferModal({ open, handleClose, offer, nft, set
               Cancel Offer
             </Box>
             <Box className={classes.nameField}>
-              Canceling will remove your listing from list of <br /> Reserves and you’ll stop receiving
-              offers.
+              Canceling will remove your offer and your  <br /> details from the list
             </Box>
             <Box display="flex" alignItems="center" justifyContent="center" mt={6}>
               <PrimaryButton

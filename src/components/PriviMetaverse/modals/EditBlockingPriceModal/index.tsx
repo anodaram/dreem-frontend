@@ -253,16 +253,16 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
           showCloseIcon
           className={classes.cancelModal}
         >
-          <span className={classes.cancelTitle}>Are you sure you want to edit blocking price? </span>
+          <span className={classes.cancelTitle}>Your sure about editing this blocking price? </span>
           <span className={classes.cancelDesc}>
-            This process will require changes through smart contract that will take few moments.
+             This will require a few changes to the smart contract, this may take a few moments
           </span>
           <Box display="flex" alignItems="center" justifyContent="space-between" style={{ width: "80%" }}>
             <PrimaryButton size="medium" className={classes.cancelButton} onClick={handleClose}>
-              Cancel
+              Go Back
             </PrimaryButton>
             <PrimaryButton size="medium" className={classes.editPriceButton} onClick={handleCancel}>
-              Yes, Edit Blocking
+              Yes, Edit It
             </PrimaryButton>
           </Box>
         </Modal>
