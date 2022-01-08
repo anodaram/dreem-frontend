@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "use-debounce/lib";
@@ -99,10 +99,7 @@ const NFTReserves = () => {
   const tabsClasses = useTabsStyles();
 
   const width = useWindowDimensions().width;
-  const loadingCount = React.useMemo(
-    () => (width > 1440 ? 4 : width > 700 ? 3 : width > 400 ? 2 : 1),
-    [width]
-  );
+  const loadingCount = useMemo(() => (width > 1440 ? 4 : width > 700 ? 3 : width > 400 ? 2 : 1), [width]);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -112,20 +109,21 @@ const NFTReserves = () => {
   const breakThree = useMediaQuery(theme.breakpoints.up(1200));
   const breakFour = useMediaQuery(theme.breakpoints.up(1440));
 
-  const [exploreMetaverses, setExploreMetaverses] = React.useState<any[]>([]);
-
+  const [exploreMetaverses, setExploreMetaverses] = useState<any[]>([]);
   const [reservedNftList, setReservedNftList] = useState<any[]>([]);
-  const lastNFTId = React.useRef();
-  const lastCollectionId = React.useRef();
+
+  const lastNFTId = useRef();
+  const lastCollectionId = useRef();
   const [hasMore, setHasMore] = useState(true);
+  const [hasMoreCollections, setHasMoreCollections] = useState(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingCollections, setLoadingCollections] = useState<boolean>(false);
   const [isListView, setIsListView] = useState<boolean>(false);
 
-  const [selectedTab, setSelectedTab] = React.useState<string>(TAB_NFTS);
+  const [selectedTab, setSelectedTab] = useState<string>(TAB_NFTS);
 
-  const [showSearchBox, setShowSearchBox] = React.useState<boolean>(false);
-  const [searchValue, setSearchValue] = React.useState<string>("");
+  const [showSearchBox, setShowSearchBox] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>("");
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const [filterChain, setFilterChain] = useState<string>(filterChainOptions[0]);
@@ -187,22 +185,23 @@ const NFTReserves = () => {
   useEffect(() => {
     lastNFTId.current = undefined;
     lastNFTId.current = undefined;
-    setHasMore(true);
     if (selectedTab === TAB_NFTS) {
+      setHasMore(true);
       getData();
     } else {
+      setHasMoreCollections(true);
       setExploreMetaverses([]);
-      setHasMore(true);
       getCollectionData(true);
     }
   }, [filterChain, filterStatus, debouncedSearchValue]);
 
   useEffect(() => {
     lastNFTId.current = undefined;
-    setHasMore(true);
     if (selectedTab === TAB_NFTS) {
+      setHasMore(true);
       getData(true);
     } else {
+      setHasMoreCollections(true);
       setExploreMetaverses([]);
       getCollectionData(true);
     }
@@ -295,7 +294,7 @@ const NFTReserves = () => {
   };
 
   const getCollectionData = (isInit = false) => {
-    if (!isInit && (!hasMore || loadingCollections)) return;
+    if (!isInit && (!hasMoreCollections || loadingCollections)) return;
 
     setLoadingCollections(true);
     MetaverseAPI.getNftGames(
@@ -307,7 +306,7 @@ const NFTReserves = () => {
         if (res && res.success) {
           const items = res.data.items;
           setExploreMetaverses(prev => [...prev, ...items]);
-          setHasMore(res.data.hasMore);
+          setHasMoreCollections(res.data.hasMore);
           lastNFTId.current = res.data.lastId;
         }
       })
@@ -437,7 +436,7 @@ const NFTReserves = () => {
   };
 
   const nftListWithSkeleton = useMemo(() => {
-    if (hasMore && selectedTab === TAB_NFTS) {
+    if (hasMore) {
       let addedCount = 1;
       if (breakFour) {
         addedCount = 4 - (reservedNftList.length % 4);
@@ -459,7 +458,7 @@ const NFTReserves = () => {
   }, [reservedNftList, hasMore, selectedTab, breakTwo, breakThree, breakFour]);
 
   const collectionListWithSkeleton = useMemo(() => {
-    if (hasMore && selectedTab !== TAB_NFTS) {
+    if (hasMoreCollections) {
       let addedCount = 1;
       if (breakThree) {
         addedCount = 3 - (exploreMetaverses.length % 3);
@@ -476,7 +475,7 @@ const NFTReserves = () => {
     } else {
       return exploreMetaverses;
     }
-  }, [exploreMetaverses, hasMore, selectedTab, breakTwo, breakThree]);
+  }, [exploreMetaverses, hasMoreCollections, selectedTab, breakTwo, breakThree]);
 
   return (
     <>
@@ -496,7 +495,7 @@ const NFTReserves = () => {
               <Box display="flex" flexDirection="column" alignItems="center">
                 <div className={classes.title}>Not your average NFT marketplace</div>
                 <div className={classes.subTitle}>
-                  Explore Gaming NFTs across Polygon, BSC (and soon Solana). Buy, Rent or Block and Reserve to 
+                  Explore Gaming NFTs across Polygon, BSC (and soon Solana). Buy, Rent or Block and Reserve to
                   Buy at a Later Date
                 </div>
               </Box>
