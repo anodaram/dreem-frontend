@@ -76,7 +76,7 @@ export const SecondaryGradientSlider = withStyles({
   },
   track: {
     background:
-      "linear-gradient(90deg, #B5F400 0%, #B5F400 15.64%, #FFE600 32.88%, #FFE600 42.11%, #FF6B00 65.18%, #FF0F00 75.74%, #C70000 100%)",
+      "linear-gradient(90deg, #C70000 0%, #FF0F00 15.64%, #FF6B00 32.88%, #FFE600 42.11%, #FFE600 65.18%, #B5F400 75.74%, #B5F400 100%)",
     height: 8,
     borderRadius: 4,
   },
