@@ -297,10 +297,10 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
         <Box style={{ padding: "25px" }}>
           <Box className={classes.title}>Rent Game NFT</Box>
           <Box className={classes.subTitle} mt="12px">
-            Accept the rental price and rent the NFT.
+            You must approve the rental time and price in order to rent this NFT.
           </Box>
           <Box className={classes.subTitle} mb="40px">
-            By renting you will receive a Synthetic NFT to use as the original one.
+            By approving this, you are agreeing to receive a synthetic NFT to use as the original for the allotted time.
           </Box>
           <Box display="flex" justifyContent="space-between" mb="7px">
             <Box className={classes.nameField}>Rental Time</Box>
