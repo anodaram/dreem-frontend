@@ -29,7 +29,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
   const user: any = useSelector((state: RootState) => state.user);
 
   const handleOpenExplore = () => {
-    history.push(`/gameNFT/${nft.collectionId}/${nft.tokenId}`);
+    history.push(`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
   };
 
   const getTokenSymbol = addr => {

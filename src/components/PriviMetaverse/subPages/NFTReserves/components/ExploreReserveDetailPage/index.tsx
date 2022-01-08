@@ -218,8 +218,8 @@ const ExploreReserveDetailPage = () => {
                 <span
                   onClick={() =>
                     shareMedia(
-                      "gameNFT",
-                      `gameNFT/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`
+                      "gameNFTS",
+                      `gameNFTS/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`
                     )
                   }
                   style={{ cursor: "pointer" }}

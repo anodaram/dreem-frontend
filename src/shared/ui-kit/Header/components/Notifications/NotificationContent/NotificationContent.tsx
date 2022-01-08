@@ -43,7 +43,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
   };
 
   const goToNFTDetail = () => {
-    history.push(`/gameNFT/${externalData.nft.collection}/${externalData.nft.id}`)
+    history.push(`/gameNFTS/${externalData.nft.collection}/${externalData.nft.id}`)
   }
 
   return (

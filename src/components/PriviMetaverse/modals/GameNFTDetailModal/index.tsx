@@ -148,7 +148,7 @@ const GameNFTDetailModal = ({
   };
 
   const handleClickShare = () => {
-    shareMedia("GameCharacter", `gameNFT/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`);
+    shareMedia("GameCharacter", `gameNFTS/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`);
   };
 
   return (
@@ -247,7 +247,7 @@ const GameNFTDetailModal = ({
               )}
               {/* <PrimaryButton
                 size="medium"
-                onClick={() => history.push("/gameNFT")}
+                onClick={() => history.push("/gameNFTS")}
                 style={{
                   background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
                   borderRadius: "100px",

@@ -433,7 +433,7 @@ const NFTReserves = () => {
     if (!row || !row[0].rawData) return;
 
     const nft = row[0].rawData;
-    history.push(`/gameNFT/${nft.collectionId}/${nft.tokenId}`);
+    history.push(`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
   };
 
   const nftListWithSkeleton = useMemo(() => {
@@ -519,7 +519,7 @@ const NFTReserves = () => {
                     size="medium"
                     className={classes.primaryButton}
                     onClick={() => {
-                      history.push("/gameNFT/manage_nft");
+                      history.push("/gameNFTS/manage_nft");
                     }}
                     style={{
                       width: isMobile ? "100%" : "auto",

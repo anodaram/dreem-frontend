@@ -20,7 +20,7 @@ export default function MetaverseCard(props) {
   }, [props.item]);
 
   const handleOpenDetail = () => {
-    history.push(`/gameNFT/${props?.item?.id}`);
+    history.push(`/gameNFTS/${props?.item?.id}`);
   };
 
   return (
