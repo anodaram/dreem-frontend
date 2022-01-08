@@ -199,6 +199,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         TotalCollateralPercent: ((Number(collateral) / Number(nft?.blockingSaleOffer?.Price)) * 100).toFixed(2),
         ReservePeriod: nft.blockingSaleOffer.ReservePeriod,
         from: nft.blockingSaleOffer.Beneficiary,
+        to: account,
         hash: response.hash,
         notificationMode: 1,
       });

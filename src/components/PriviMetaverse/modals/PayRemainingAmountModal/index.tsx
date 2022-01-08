@@ -168,7 +168,8 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
         OfferId: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].id,
         PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price,
         TotalCollateralPercent: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].TotalCollateralPercent || nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].CollateralPercent,
-        offerer: account!
+        offerer: account!,
+        notificationMode: 1
       });
 
       onConfirm();
