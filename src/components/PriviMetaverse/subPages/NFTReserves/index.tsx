@@ -496,8 +496,8 @@ const NFTReserves = () => {
               <Box display="flex" flexDirection="column" alignItems="center">
                 <div className={classes.title}>Not your average NFT marketplace</div>
                 <div className={classes.subTitle}>
-                  Explore gaming NFTs across Polygon, BSC (and soon Solana) Buy, rent or try the new reserve
-                  to buy later option
+                  Explore Gaming NFTs across Polygon, BSC (and soon Solana). Buy, Rent or Block and Reserve to 
+                  Buy at a Later Date
                 </div>
               </Box>
               <Box
