@@ -114,8 +114,8 @@ export default ({ item, isExpired, isLoading }: { item: any; isExpired?: boolean
                   <Box className={classes.header} mr={3}>
                     Payment In
                   </Box>
-                  <span className={classes.time}>{closeTime?.day} Days</span>
-                  <span className={classes.time}>{closeTime?.hour} h</span>
+                  <span className={classes.time}>{closeTime?.day} day(s) </span>
+                  <span className={classes.time}>{closeTime?.hour} hour(s) </span>
                   <span className={classes.time}>{closeTime?.min} min</span>
                 </Box>
               ) : (

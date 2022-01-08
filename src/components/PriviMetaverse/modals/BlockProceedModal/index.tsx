@@ -239,7 +239,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
               </Box>
               <Box className={classes.infoRow} mt={1}>
                 <span className={classes.infoLabel}>Blocking Period</span>
-                <span className={classes.infoValue}>{`${offer.ReservePeriod} Days`}</span>
+                <span className={classes.infoValue}>{`${offer.ReservePeriod} Day(s)`}</span>
               </Box>
             </Box>
           </Box>

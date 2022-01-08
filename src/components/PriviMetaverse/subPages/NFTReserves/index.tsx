@@ -376,7 +376,7 @@ const NFTReserves = () => {
                 {row?.blockingSaleOffer?.Price
                   ? `${row.blockingSaleOffer.Price} ${getTokenSymbol(
                       row.blockingSaleOffer.PaymentToken
-                    )} for ${row.blockingSaleOffer.ReservePeriod} Days`
+                    )} for ${row.blockingSaleOffer.ReservePeriod} Day(s)`
                   : "_"}
               </Box>
             ),

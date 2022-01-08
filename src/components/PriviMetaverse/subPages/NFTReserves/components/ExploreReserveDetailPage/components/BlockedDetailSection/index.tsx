@@ -136,7 +136,7 @@ export default ({ nft, refresh }) => {
                 <Box color="white" pr={1}>
                   Blocking expires in{" "}
                 </Box>
-                <Box className={classes.gradientText}>{`${closeTime?.day || 0} Days ${closeTime?.hour || 0}h ${closeTime?.min || 0} min ${closeTime?.seconds || 0} min`}</Box>
+                <Box className={classes.gradientText}>{`${closeTime?.day || 0} day(s) ${closeTime?.hour || 0} hour(s) ${closeTime?.min || 0} min ${closeTime?.seconds || 0} sec`}</Box>
               </Box>
             ) : blockingInfo?.PaidAmount == blockingInfo?.Price ? (
               <>
