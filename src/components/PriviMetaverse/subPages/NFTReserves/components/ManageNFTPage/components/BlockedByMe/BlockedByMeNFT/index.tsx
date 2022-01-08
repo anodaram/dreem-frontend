@@ -12,19 +12,19 @@ import { blockedByMeNFTStyles } from "./index.styles";
 const SlideMarks = [
   {
     value: 0,
-    label: "Liquidation",
+    label: "10% Liquidation",
   },
   {
     value: 33.0,
-    label: "High Risk",
+    label: "25% High Risk",
   },
   {
     value: 66.0,
-    label: "Medium Risk",
+    label: "50% Medium Risk",
   },
   {
     value: 100,
-    label: "Low Risk",
+    label: "80% Low Risk",
   },
 ];
 
