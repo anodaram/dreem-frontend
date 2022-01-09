@@ -72,7 +72,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
             fontFamily: "GRIFTER",
           }}
         >
-          Instant Pricing Details
+          Live Pricing Details
         </Text>
       </Box>
       <Box display="flex" justifyContent="space-between" my={3.5}>
