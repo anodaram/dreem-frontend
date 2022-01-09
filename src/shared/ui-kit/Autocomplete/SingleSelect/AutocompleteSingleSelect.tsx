@@ -87,6 +87,9 @@ const OptionContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: left;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
 `;
 
 const PaperComponent = styled.div`
