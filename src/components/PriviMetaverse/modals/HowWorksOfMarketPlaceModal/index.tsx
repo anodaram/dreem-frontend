@@ -200,11 +200,11 @@ const HowWorksOfMarketPlaceModal = props => {
               <span className={classes.contentNumber}>1</span>
             </Box>
             <Box className={classes.blockNew}>
-              <Box className={classes.subTitleNew}>BEGINNER</Box>
-              <Box className={classes.titleNew}>List for sale</Box>
+              <Box className={classes.subTitleNew}>SIMPLE</Box>
+              <Box className={classes.titleNew}>List For Sale</Box>
               <Box className={classes.descriptionNew}>
-                Sell your NFT at a price you choose or have others make offers for you to discover how much
-                they are willing to pay.
+                Sell your NFT as a price of your choosing, and have others make offers 
+                for you for price discovery.
               </Box>
             </Box>
           </Box>
