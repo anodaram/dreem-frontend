@@ -146,7 +146,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
           <div className={classes.divider} />
           <div>
             <div className={classes.cardContentDiv}>
-              <span className={classes.cardContentText}>SELLING PRICE</span>
+              <span className={classes.cardContentText}>Direct Purchase</span>
               <span className={classes.cardContentAmount}>
                 {nft?.sellingOffer?.Price
                   ? `${nft.sellingOffer.Price} ${getTokenSymbol(nft.sellingOffer.PaymentToken)}`
@@ -154,17 +154,17 @@ const ExploreCard = ({ nft, isLoading = false }) => {
               </span>
             </div>
             <div className={classes.cardContentDiv}>
-              <span className={classes.cardContentText}>BLOCKING PRICE</span>
+              <span className={classes.cardContentText}>Block to Buy Later</span>
               <span className={classes.cardContentAmount}>
                 {nft?.blockingSaleOffer?.Price
                   ? `${nft.blockingSaleOffer.Price} ${getTokenSymbol(
                       nft.blockingSaleOffer.PaymentToken
-                    )} for ${nft.blockingSaleOffer.ReservePeriod} Day(s)`
+                    )}`
                   : "_"}
               </span>
             </div>
             <div className={classes.cardContentDiv}>
-              <span className={classes.cardContentText}>RENTAL PRICE</span>
+              <span className={classes.cardContentText}>Rental Fee (per hour)</span>
               <span className={classes.cardContentAmount}>
                 {nft?.rentSaleOffer?.pricePerSecond
                   ? `${(
@@ -172,7 +172,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
                         nft.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(nft.rentSaleOffer.fundingToken)
                       ) * 1440
-                    ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / hour`
+                    ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`
                   : "_"}
               </span>
             </div>

@@ -239,7 +239,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
       </Box>
       <hr className={classes.divider} />
       <Box display="flex" justifyContent="space-between" mb={3.5} mt={2.5}>
-        <Text className={classes.pricingText1}>Rental Price:</Text>
+        <Text className={classes.pricingText1}>Rental Fee (per hour):</Text>
         <Box>
           {isOwnership && nft?.rentSaleOffer?.pricePerSecond && (
             <Text className={classes.pricingText2}>
@@ -249,7 +249,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                     nft.rentSaleOffer.pricePerSecond,
                     getTokenDecimal(nft.rentSaleOffer.fundingToken)
                   ) * 1440
-                ).toFixed(2)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / hour`}
+                ).toFixed(2)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
             </Text>
           )}
           <Box display="flex" justifyContent="flex-end" alignItems="center">
@@ -284,7 +284,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                           nft.rentSaleOffer.pricePerSecond,
                           getTokenDecimal(nft.rentSaleOffer.fundingToken)
                         ) * 1440
-                      ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / hour`}
+                      ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
                   </Text>
                   &nbsp;
                   <PrimaryButton
@@ -307,7 +307,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                         nft.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(nft.rentSaleOffer.fundingToken)
                       ) * 1440
-                    ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / hour`}
+                    ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
                 </Text>
                 &nbsp;
                 <PrimaryButton

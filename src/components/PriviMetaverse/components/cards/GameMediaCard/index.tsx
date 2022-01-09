@@ -60,16 +60,16 @@ export default function GameMediaCard(props) {
           <Box className={classes.divider} />
           <Box pt={2} pb={4} px={3}>
             <div className={classes.cardContentDiv}>
-              <span className={classes.cardContentText}>SELLING PRICE</span>
+              <span className={classes.cardContentText}>Direct Purchase</span>
               <span className={classes.cardContentAmount}>{"10 ETH"}</span>
             </div>
             <div className={classes.cardContentDiv}>
-              <span className={classes.cardContentText}>BLOCKING PRICE</span>
-              <span className={classes.cardContentAmount}>{"1ETH for 90 days"}</span>
+              <span className={classes.cardContentText}>Block to Buy Later</span>
+              <span className={classes.cardContentAmount}>{"1ETH"}</span>
             </div>
             <div className={classes.cardContentDiv}>
-              <span className={classes.cardContentText}>RENTAL PRICE</span>
-              <span className={classes.cardContentAmount}>{"0.1ETH / day"}</span>
+              <span className={classes.cardContentText}>Rental Fee (per hour)</span>
+              <span className={classes.cardContentAmount}>{"0.1ETH"}</span>
             </div>
           </Box>
         </>

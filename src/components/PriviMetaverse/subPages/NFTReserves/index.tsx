@@ -153,15 +153,15 @@ const NFTReserves = () => {
       headerAlign: "center",
     },
     {
-      headerName: "Selling Price",
+      headerName: "Direct Purchase",
       headerAlign: "center",
     },
     {
-      headerName: "Blocking Price",
+      headerName: "Block to Buy Later",
       headerAlign: "center",
     },
     {
-      headerName: "Rental Price",
+      headerName: "Rental Fee (per hour)",
       headerAlign: "center",
     },
   ];
@@ -389,7 +389,7 @@ const NFTReserves = () => {
                         row.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(row.rentSaleOffer.fundingToken)
                       ) * 1440
-                    ).toFixed(3)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)} / hour`
+                    ).toFixed(3)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
                   : "_"}
               </Box>
             ),
