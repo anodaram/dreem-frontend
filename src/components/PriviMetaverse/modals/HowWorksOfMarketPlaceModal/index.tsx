@@ -227,7 +227,7 @@ const HowWorksOfMarketPlaceModal = props => {
               <Box className={classes.subTitleNew}>ADVANCED</Box>
               <Box className={classes.titleNew}>Block to buy and sell at a future date</Box>
               <Box className={classes.subBlock}>
-                <Box className={classes.subject}>FOR BLOCKERS:</Box>
+                <Box className={classes.subject}>For Blockers:</Box>
                 <Box className={classes.description}>
                 Find an NFT you've always wanted but lack the funds to buy it at that moment? 
                 Block the NFT by agreeing on a purchase value on a certain date for a deposit. 
@@ -236,7 +236,7 @@ const HowWorksOfMarketPlaceModal = props => {
                 </Box>
               </Box>
               <Box className={classes.subBlock}>
-                <Box className={classes.subject}>FOR SELLERS:</Box>
+                <Box className={classes.subject}>For Sellers:</Box>
                 <Box className={classes.description}>
                   Need liquidity now but want to sell the NFT later? If the buyer does not buy the NFT at the
                   expiration date, you keep the deposit.
@@ -263,7 +263,7 @@ const HowWorksOfMarketPlaceModal = props => {
               <Box className={classes.subTitleNew}>GAMING AND MORE</Box>
               <Box className={classes.titleNew}>Rent an NFT:</Box>
               <Box className={classes.subBlock}>
-                <Box className={classes.subject}>FOR USERS THAT WANT TO PLAY:</Box>
+                <Box className={classes.subject}>For users that want to play:</Box>
                 <Box className={classes.description}>
                 Often games require owning an NFT to enter the game, but what if you could rent an NFT for a short period 
                 of time to try it out? Rent an NFT that gets you access into the game for an agreed upon time, 
@@ -271,7 +271,7 @@ const HowWorksOfMarketPlaceModal = props => {
                 </Box>
               </Box>
               <Box className={classes.subBlock}>
-                <Box className={classes.subject}>FOR USERS WITH INVENTORY:</Box>
+                <Box className={classes.subject}>For users with inventory:</Box>
                 <Box className={classes.description}>
                 This is a great option if you don't want to sell your Game NFT, but you want to make fees from it. 
                 The rental feature is undercollaterallized, meaning that the renter does not need to lock collateral 
