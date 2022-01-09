@@ -347,7 +347,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
               />
             </MuiPickersUtilsProvider>
           </Box>
-          <Box className={classes.nameField}>Limit Rental Time</Box>
+          <Box className={classes.nameField}>Max duration of one rental</Box>
           <Box display="flex" alignItems="center">
             <InputWithLabelAndTooltip
               inputValue={limitDays}

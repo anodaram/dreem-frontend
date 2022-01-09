@@ -243,7 +243,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
             </Grid>
           </Grid>
           <Box className={classes.nameField}>
-            <span>Max Rental Date</span>
+            <span>Last day of rental before returning item</span>
             <InfoTooltip tooltip={"Your NFT will be available for rental till this date"} />
           </Box>
           <Box width="100%">
@@ -267,7 +267,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
             </MuiPickersUtilsProvider>
           </Box>
           <Box display="flex" alignItems="center" className={classes.nameField}>
-            <span>Limit Rental Time</span>
+            <span>Max duration of one rental</span>
             <InfoTooltip
               tooltip={
                 "This is the maximum length of time you want to rent out your NFT. If you put 6 days, no one can rent it for 7."
@@ -334,7 +334,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
               onClick={handleApprove}
               disabled={isApproved}
             >
-              Approve
+              Approve for Rental
             </PrimaryButton>
             <PrimaryButton
               size="medium"
@@ -342,7 +342,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
               onClick={handleConfirm}
               disabled={!isApproved}
             >
-              Confirm Set
+              Confirm Rental Offer
             </PrimaryButton>
           </Box>
         </Box>
