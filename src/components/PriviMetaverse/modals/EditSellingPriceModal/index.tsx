@@ -303,7 +303,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
               disabled={isApproved}
               onClick={handleApprove}
             >
-              Approve
+              Approve for Sale
             </PrimaryButton>
             <PrimaryButton
               size="medium"
@@ -311,7 +311,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
               disabled={!isApproved}
               onClick={handleConfirm}
             >
-              Confirm Set
+              Confirm Sale Offer
             </PrimaryButton>
           </Box>
         </Box>
