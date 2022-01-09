@@ -70,7 +70,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
     }
 
     if (!pricePerSec || !(limitDays || limitHour || limitMin || limitSec)) {
-      showAlertMessage("Please fill all fields to proceed", { variant: "error" });
+      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
       return;
     }
 
@@ -119,7 +119,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
       }
 
       if (!pricePerSec || !(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Please fill all fields to proceed", { variant: "error" });
+        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
         return;
       }
 

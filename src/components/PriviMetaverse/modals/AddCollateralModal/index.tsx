@@ -91,7 +91,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   const handleApprove = async () => {
     try {
       if (!price) {
-        showAlertMessage("Please fill all fields to proceed", { variant: "error" });
+        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
         return;
       }
 
@@ -142,7 +142,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
 
   const handleConfirm = async () => {
     if (!price) {
-      showAlertMessage("Please fill all fields to proceed", { variant: "error" });
+      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
       return;
     }
 

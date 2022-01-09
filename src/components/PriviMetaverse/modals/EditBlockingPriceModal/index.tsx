@@ -111,7 +111,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
 
   const handleApprove = async () => {
     if (!price || !period || !collateralPercent) {
-      showAlertMessage("Please fill all fields to proceed", { variant: "error" });
+      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
       return;
     }
 
@@ -156,7 +156,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
 
   const handleConfirm = async () => {
     if (!price || !period || !collateralPercent) {
-      showAlertMessage("Please fill all fields to proceed", { variant: "error" });
+      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
       return;
     }
 

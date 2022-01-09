@@ -19,7 +19,7 @@ const TAB_BLOCK = "block";
 const Tabs: TabItem[] = [
   {
     key: TAB_OWNERS,
-    title: "owners",
+    title: "owned",
   },
   {
     key: TAB_RENT,

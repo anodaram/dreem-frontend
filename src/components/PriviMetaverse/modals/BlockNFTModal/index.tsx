@@ -88,7 +88,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
   const handleApprove = async () => {
     try {
       if (!price || !collateral) {
-        showAlertMessage("Please fill all fields to proceed", { variant: "error" });
+        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
         return;
       }
 
@@ -139,7 +139,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
 
   const handleConfirm = async () => {
     if (!price || !collateral) {
-      showAlertMessage("Please fill all fields to proceed", { variant: "error" });
+      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
       return;
     }
 
