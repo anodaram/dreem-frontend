@@ -265,18 +265,17 @@ const HowWorksOfMarketPlaceModal = props => {
               <Box className={classes.subBlock}>
                 <Box className={classes.subject}>FOR USERS THAT WANT TO PLAY:</Box>
                 <Box className={classes.description}>
-                  You want to try out a new game that you are not sure about? Rent the NFT that gets you into
-                  the game for an agreed upon time and access the game, the NFT is burned after the time
-                  expires.
+                Often games require owning an NFT to enter the game, but what if you could rent an NFT for a short period 
+                of time to try it out? Rent an NFT that gets you access into the game for an agreed upon time, 
+                the NFT is then burned after the time expires.
                 </Box>
               </Box>
               <Box className={classes.subBlock}>
                 <Box className={classes.subject}>FOR USERS WITH INVENTORY:</Box>
                 <Box className={classes.description}>
-                  Have loads of great NFTs from your game that you want to earn income from? Rent them out
-                  instead of selling them. The rental feature is undercollaterallized, meaning the renter does
-                  not provide the full value of the item instead a 3rd contract is created giving both parties
-                  necessary assurances.
+                This is a great option if you don't want to sell your Game NFT, but you want to make fees from it. 
+                The rental feature is undercollaterallized, meaning that the renter does not need to lock collateral 
+                (which increases rental volume), instead a 3rd contract is created giving both parties necessary assurances.
                 </Box>
               </Box>
             </Box>
