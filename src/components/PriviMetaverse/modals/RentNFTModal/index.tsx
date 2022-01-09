@@ -410,7 +410,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
               onClick={handleConfirm}
               disabled={!isApproved}
             >
-              Confirm Offer
+              Confirm
             </PrimaryButton>
           </Box>
         </Box>

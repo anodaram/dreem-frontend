@@ -408,7 +408,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
               onClick={handleApprove}
               disabled={isApproved}
             >
-              Approve for Rental
+              Approve
             </PrimaryButton>
             <PrimaryButton
               size="medium"
@@ -416,7 +416,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
               onClick={handleConfirm}
               disabled={!isApproved}
             >
-              Confirm Rental Offer
+              Confirm
             </PrimaryButton>
           </Box>
         </Box>

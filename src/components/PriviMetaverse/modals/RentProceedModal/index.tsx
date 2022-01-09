@@ -215,7 +215,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
                 <span className={classes.infoLabel}>Rental time</span>
                 <span className={classes.infoValue}>{`${(offer.rentalTime / SECONDS_PER_DAY).toFixed(
                   3
-                )} Day(s)`}</span>
+                )} Days`}</span>
               </Box>
               <Box className={classes.infoRow} mt={1}>
                 <span className={classes.infoLabel}>Total cost</span>

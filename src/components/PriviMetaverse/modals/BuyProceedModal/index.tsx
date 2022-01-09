@@ -217,7 +217,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
               onClick={handleAccept}
               disabled={!isApproved}
             >
-              Confirm Offer
+              Confirm
             </PrimaryButton>
           </Box>
         </Box>

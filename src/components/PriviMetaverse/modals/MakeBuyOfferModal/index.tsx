@@ -301,7 +301,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
             onClick={handleConfirm}
             disabled={!isApproved || !price || !token || !date}
           >
-            Confirm Offer
+            Confirm
           </PrimaryButton>
         </Box>
       </Box>

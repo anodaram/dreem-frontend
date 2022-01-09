@@ -334,7 +334,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
               onClick={handleApprove}
               disabled={isApproved}
             >
-              Approve for Rental
+              Approve
             </PrimaryButton>
             <PrimaryButton
               size="medium"
@@ -342,7 +342,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
               onClick={handleConfirm}
               disabled={!isApproved}
             >
-              Confirm Rental Offer
+              Confirm
             </PrimaryButton>
           </Box>
         </Box>

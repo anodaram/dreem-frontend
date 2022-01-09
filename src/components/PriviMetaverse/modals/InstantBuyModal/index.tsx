@@ -196,7 +196,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
             onClick={handleConfirm}
             disabled={!isApproved}
           >
-            Confirm Offer
+            Confirm
           </PrimaryButton>
         </Box>
       </Box>

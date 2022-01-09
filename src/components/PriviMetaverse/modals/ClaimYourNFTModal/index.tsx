@@ -129,7 +129,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
         </Box>
       </Box>
       <PrimaryButton size="medium" onClick={handleConfirm} className={classes.confirmButton}>
-        Confirm Claim
+        Confirm
       </PrimaryButton>
       {openTranactionModal && (
         <TransactionProgressModal

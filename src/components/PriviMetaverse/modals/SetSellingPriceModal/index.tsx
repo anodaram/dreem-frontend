@@ -212,7 +212,7 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
               onClick={handleApprove}
               disabled={isApproved}
             >
-              Approve for Sale
+              Approve
             </PrimaryButton>
             <PrimaryButton
               size="medium"
@@ -220,7 +220,7 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
               onClick={handleConfirm}
               disabled={!isApproved}
             >
-              Confirm Sales Offer
+              Confirm
             </PrimaryButton>
           </Box>
         </Box>

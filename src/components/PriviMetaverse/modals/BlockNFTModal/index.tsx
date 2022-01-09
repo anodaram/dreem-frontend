@@ -344,7 +344,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                   onClick={handleConfirm}
                   disabled={!isApproved || !price || !collateral}
                 >
-                  Confirm Offer
+                  Confirm
                 </PrimaryButton>
               </Box>
             </Box>

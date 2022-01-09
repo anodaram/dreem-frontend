@@ -402,7 +402,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                     !disappearDays
                   }
                 >
-                  Confirm Offer
+                  Confirm
                 </PrimaryButton>
               </Box>
             </Box>
