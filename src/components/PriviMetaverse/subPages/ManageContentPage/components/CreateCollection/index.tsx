@@ -70,7 +70,7 @@ const CreateCollection = ({
 
   const validate = () => {
     if (!title || !description || !image) {
-      showAlertMessage(`All fields should not be empty`, { variant: "error" });
+      showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
       return false;
     }
 

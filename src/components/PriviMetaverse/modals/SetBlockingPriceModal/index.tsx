@@ -52,7 +52,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
 
   const handleApprove = async () => {
     if (!price || !period || !collateralPercent) {
-      showAlertMessage("Please fill all the fields", { variant: "error" });
+      showAlertMessage("Please fill the fields to proceed", { variant: "error" });
       return;
     }
 
@@ -97,7 +97,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
 
   const handleConfirm = async () => {
     if (!price || !period || !collateralPercent) {
-      showAlertMessage("Please fill all the fields", { variant: "error" });
+      showAlertMessage("Please fill the fields to proceed", { variant: "error" });
       return;
     }
 

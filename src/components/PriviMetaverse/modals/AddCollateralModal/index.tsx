@@ -21,7 +21,7 @@ import TransactionProgressModal from "../TransactionProgressModal";
 import { ReserveNftModalStyles } from "./index.style";
 
 export default function AddCollateralModal({ open, handleClose, nft, refresh }) {
-  const classes = ReserveNftModalStyles();  
+  const classes = ReserveNftModalStyles();
   const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
   const { account, library, chainId } = useWeb3React();
   const [price, setPrice] = useState<number>(0);
@@ -85,13 +85,13 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   const getTokenName = addr => {
     if (tokenList.length == 0 || !addr) return "";
     let token = tokenList.find(token => token.Address === addr);
-    return token?.Symbol || '';
+    return token?.Symbol || "";
   };
 
   const handleApprove = async () => {
     try {
       if (!price) {
-        showAlertMessage("Please fill all the fields", { variant: "error" });
+        showAlertMessage("Please fill the fields to proceed", { variant: "error" });
         return;
       }
 
@@ -142,7 +142,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
 
   const handleConfirm = async () => {
     if (!price) {
-      showAlertMessage("Please fill all the fields", { variant: "error" });
+      showAlertMessage("Please fill the fields to proceed", { variant: "error" });
       return;
     }
 
@@ -192,7 +192,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
             ((price || 0) / nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price) * 100
           ),
         PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaidAmount || 0,
-        notificationMode: 2
+        notificationMode: 2,
       });
 
       refresh();
@@ -203,7 +203,8 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
     }
   };
 
-  const collateral = Number(nft?.blockingSaleOffer?.Price) * Number(nft?.blockingSaleOffer?.CollateralPercent) / 100
+  const collateral =
+    (Number(nft?.blockingSaleOffer?.Price) * Number(nft?.blockingSaleOffer?.CollateralPercent)) / 100;
 
   return (
     <>
@@ -220,23 +221,32 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
         {!confirmSuccess && (
           <>
             <Box style={{ padding: "25px" }}>
-              <Box fontSize="24px" color="#ffffff" fontFamily="GRIFTER" style={{
-                textTransform: "uppercase"
-              }}>
+              <Box
+                fontSize="24px"
+                color="#ffffff"
+                fontFamily="GRIFTER"
+                style={{
+                  textTransform: "uppercase",
+                }}
+              >
                 Add Collateral
               </Box>
               <Box className={classes.borderBox} mt="20px">
                 <Box className={classes.box}>
-                  <span style={{ fontSize: "16px", color: "#ffffff"  }}>Current Collateral</span>
+                  <span style={{ fontSize: "16px", color: "#ffffff" }}>Current Collateral</span>
                   <span className={classes.gradientText}>
                     {`${collateral} ${getTokenName(nft?.blockingSaleOffer?.PaymentToken)}`}
                   </span>
                 </Box>
               </Box>
-              <Grid container spacing={2} style={{
-                display: "flex",
-                justifyContent: "space-between"
-              }}>
+              <Grid
+                container
+                spacing={2}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
                 <Grid item sm={7}>
                   <Box className={classes.nameField}>Amount To Add</Box>
                 </Grid>
@@ -290,18 +300,19 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
             <Box className={classes.footer}>
               <Box className={classes.totalText}>Total</Box>
               <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Box
-                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}
-                >
-                  Collateral at {(Number(price) / Number(nft?.blockingSaleOffer?.Price) * 100 + Number(nft?.blockingSaleOffer?.CollateralPercent)).toFixed(2)}% / <b>{nft?.blockingSaleOffer?.CollateralPercent}</b>%
+                <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
+                  Collateral at{" "}
+                  {(
+                    (Number(price) / Number(nft?.blockingSaleOffer?.Price)) * 100 +
+                    Number(nft?.blockingSaleOffer?.CollateralPercent)
+                  ).toFixed(2)}
+                  % / <b>{nft?.blockingSaleOffer?.CollateralPercent}</b>%
                 </Box>
-                <Box
-                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}
-                >
+                <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
                   {price} USDT
                 </Box>
               </Box>
-              
+
               <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
                 <SecondaryButton
                   size="medium"
