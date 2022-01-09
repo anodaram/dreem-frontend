@@ -11,7 +11,7 @@ import { resetStatus } from "shared/services/API/ReserveAPI";
 import { exploreOptionDetailPageStyles } from "../../index.styles";
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-export default ({ nft, setNft }) => {
+export default ({ nft, setNft, isOwner }) => {
   const classes = exploreOptionDetailPageStyles();
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
   const histories = nft?.rentHistories ?? [];
@@ -85,23 +85,53 @@ export default ({ nft, setNft }) => {
             style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.5)" }}
           >
             <span>Price per Second</span>
-            <Box className={classes.gradientText} textAlign="end" fontWeight="700" fontFamily="GRIFTER" fontSize={18}>
+            <Box
+              className={classes.gradientText}
+              textAlign="end"
+              fontWeight="700"
+              fontFamily="GRIFTER"
+              fontSize={18}
+            >
               {`${toDecimals(offer.pricePerSecond, getTokenDecimal(offer.fundingToken))}`}{" "}
               {getTokenSymbol(offer.fundingToken)}
             </Box>
           </Box>
           <Box ml={3} padding="28px 24px 28px 0" display="flex" justifyContent="space-between">
             <span>Remaining rental time</span>
-            <Box className={classes.gradientText} textAlign="end" fontWeight="700" fontFamily="GRIFTER" fontSize={18}>
+            <Box
+              className={classes.gradientText}
+              textAlign="end"
+              fontWeight="700"
+              fontFamily="GRIFTER"
+              fontSize={18}
+            >
               {formatDuration(remainingTime)}
             </Box>
           </Box>
         </Box>
-        <Box className={classes.revenueTotal} padding="30px 24px 30px 24px" display="flex" justifyContent="space-between" color="#4218B5">
-          <Box className={classes.gradientText} fontWeight="700" fontFamily="GRIFTER" fontSize={18}>
-            Total Revenue
+        <Box
+          className={classes.revenueTotal}
+          padding="30px 24px 30px 24px"
+          display="flex"
+          justifyContent="space-between"
+          color="#4218B5"
+        >
+          <Box
+            className={classes.gradientText}
+            fontWeight="700"
+            fontFamily="GRIFTER"
+            fontSize={18}
+            style={{ textTransform: "uppercase" }}
+          >
+            Total {isOwner ? "Revenue" : "Paid"}
           </Box>
-          <Box className={classes.gradientText} textAlign="end" fontWeight="700" fontFamily="GRIFTER" fontSize={18}>
+          <Box
+            className={classes.gradientText}
+            textAlign="end"
+            fontWeight="700"
+            fontFamily="GRIFTER"
+            fontSize={18}
+          >
             {toDecimals(
               offer.pricePerSecond * ((+offer.rentalTime * 1000 - remainingTime) / 1000),
               getTokenDecimal(offer.fundingToken)

@@ -62,6 +62,7 @@ const ExploreReserveDetailPage = () => {
   const [openGameDetailModal, setOpenGameDetailModal] = useState<boolean>(false);
   const [claimType, setClaimType] = useState("");
   const [nft, setNft] = useState<any>({});
+  const [nftStatus, setNFTStatus] = useState('');
   const { account } = useWeb3React();
 
   const [openModalPhotoFullScreen, setOpenModalPhotoFullScreen] = useState<boolean>(false);
@@ -82,8 +83,8 @@ const ExploreReserveDetailPage = () => {
 
   useEffect(() => {
     setIsOwner((account || "").toLowerCase() === (nft?.ownerAddress || "").toLowerCase());
-    setIsBlockedNFT(nft?.status === "Blocked");
-    setIsRentedNFT(nft?.status === "Rented");
+    setIsBlockedNFT(nftStatus === "Blocked");
+    setIsRentedNFT(nftStatus === "Rented");
     if (nft?.blockingSalesHistories?.length > 0) {
       let _blockingInfo = nft.blockingSalesHistories[nft.blockingSalesHistories.length - 1];
 
@@ -114,6 +115,7 @@ const ExploreReserveDetailPage = () => {
     });
 
     if (response.success) {
+      setNFTStatus(response?.nft?.status);
       setNft({
         ...response.nft,
       });
@@ -284,9 +286,7 @@ const ExploreReserveDetailPage = () => {
               </Box>
               <hr className={classes.divider} />
               {isOwner ? (
-                isRentedNFT ? (
-                  <RentedDetailSection nft={nft} setNft={setNft} />
-                ) : isBlockedNFT ? (
+                isBlockedNFT ? (
                   <>
                     <BlockedDetailSection nft={nft} refresh={refresh} />
                     {isExpired && isExpiredPaySuccess && (
@@ -330,8 +330,11 @@ const ExploreReserveDetailPage = () => {
                 ) : (
                   <RegularBlockedDetailSection nft={nft} refresh={refresh} />
                 )
-              ) : (
+              ) : isRentedNFT ? (
+                <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} />
+              ) : (<>
                 <GeneralDetailSection isOwnership={isOwner} nft={nft} setNft={setNft} refresh={refresh} />
+                </>
               )}
             </Box>
           </Box>
