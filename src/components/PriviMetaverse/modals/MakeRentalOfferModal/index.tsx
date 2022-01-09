@@ -80,7 +80,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
       if (chainId && chainId !== nftChain?.chainId) {
         const isHere = await switchNetwork(nftChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Got failed while switching over to target network", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
           return;
         }
         setSelectedChain(nftChain);

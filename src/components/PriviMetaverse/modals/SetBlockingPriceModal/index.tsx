@@ -59,7 +59,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
-        showAlertMessage("Got failed while switching over to target network", { variant: "error" });
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
         return;
       }
     }
@@ -104,7 +104,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
-        showAlertMessage("Got failed while switching over to target network", { variant: "error" });
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
         return;
       }
     }

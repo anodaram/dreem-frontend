@@ -149,7 +149,7 @@ export default function ClaimDreemPage() {
       if (chainId && chainId !== targetChain?.chainId) {
         const isHere = await switchNetwork(targetChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Got failed while switching over to target network", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
           return;
         }
       }
