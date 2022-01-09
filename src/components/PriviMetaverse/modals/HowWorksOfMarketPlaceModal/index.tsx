@@ -225,14 +225,14 @@ const HowWorksOfMarketPlaceModal = props => {
             </Box>
             <Box className={classes.blockNew}>
               <Box className={classes.subTitleNew}>ADVANCED</Box>
-              <Box className={classes.titleNew}>Block to buy/sell in the future</Box>
+              <Box className={classes.titleNew}>Block to buy and sell at a future date</Box>
               <Box className={classes.subBlock}>
-                <Box className={classes.subject}>FOR BUYERS:</Box>
+                <Box className={classes.subject}>FOR BLOCKERS:</Box>
                 <Box className={classes.description}>
-                  Found an NFT you always wanted but lack the funds to buy atm? Block the NFT at an agreed
-                  purchase value for a certain amount of time for a deposit. When the time is up, you can pay
-                  the remaining balance or not buy it, although you lose your deposit. You can even use other
-                  Game NFTs as collateral.
+                Find an NFT you've always wanted but lack the funds to buy it at that moment? 
+                Block the NFT by agreeing on a purchase value on a certain date for a deposit. 
+                When the time is up, you can either pay the remaining balance or choose not to buy it, 
+                however you lose the deposit. As a bonus, you can even use another Game NFT as collateral.
                 </Box>
               </Box>
               <Box className={classes.subBlock}>
