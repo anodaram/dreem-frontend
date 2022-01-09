@@ -20,6 +20,9 @@ export const RentSuccessModalStyles = makeStyles(theme => ({
       background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
       borderRadius: 1000,
       height: "auto",
+    },
+    [theme.breakpoints.down("sm")]: {
+      padding: "48px 16px !important",
     }
   },
   borderBox: {
