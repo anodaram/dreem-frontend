@@ -154,7 +154,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                   <Box color="white" mr={1}>
                     {isOfferExpanded ? "Hide" : "Show"}
                   </Box>
-                  {isOfferExpanded ? <HideIcon /> : <ShowIcon />}
+                  {isOfferExpanded ? <ShowIcon /> : <HideIcon />}
                 </Box>
               }
               aria-controls="panel-content"
@@ -299,7 +299,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                   <Box color="white" mr={1}>
                     {isHistoryExpaned ? "Hide" : "Show"}
                   </Box>
-                  {isHistoryExpaned ? <HideIcon /> : <ShowIcon />}
+                  {isHistoryExpaned ? <ShowIcon /> : <HideIcon />}
                 </Box>
               }
               aria-controls="panel-content"
