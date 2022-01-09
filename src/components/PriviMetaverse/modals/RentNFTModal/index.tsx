@@ -119,7 +119,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
       }
 
       if (!(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Please fill the fields to proceed", { variant: "error" });
+        showAlertMessage("Please fill all fields to proceed", { variant: "error" });
         return;
       }
 
@@ -177,7 +177,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
       }
 
       if (!(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Please fill the fields to proceed", { variant: "error" });
+        showAlertMessage("Please fill all fields to proceed", { variant: "error" });
         return;
       }
 

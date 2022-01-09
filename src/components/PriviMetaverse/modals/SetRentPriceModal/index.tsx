@@ -65,7 +65,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
       }
 
       if (!pricePerSec || !(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Please fill the fields to proceed", { variant: "error" });
+        showAlertMessage("Please fill all fields to proceed", { variant: "error" });
         return;
       }
 
@@ -113,7 +113,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
       }
 
       if (!pricePerSec || !(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Please fill the fields to proceed", { variant: "error" });
+        showAlertMessage("Please fill all fields to proceed", { variant: "error" });
         return;
       }
 

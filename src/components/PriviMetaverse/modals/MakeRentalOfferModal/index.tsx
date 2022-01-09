@@ -68,7 +68,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
       }
 
       if (!pricePerSec || !rentalTime) {
-        showAlertMessage("Please fill the fields to proceed", { variant: "error" });
+        showAlertMessage("Please fill all fields to proceed", { variant: "error" });
         return;
       }
 
@@ -132,7 +132,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
       }
 
       if (!pricePerSec || !rentalTime) {
-        showAlertMessage("Please fill the fields to proceed", { variant: "error" });
+        showAlertMessage("Please fill all fields to proceed", { variant: "error" });
         return;
       }
 

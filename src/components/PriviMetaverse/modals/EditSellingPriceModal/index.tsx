@@ -108,7 +108,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
 
   const handleApprove = async () => {
     if (!inputBalance) {
-      showAlertMessage("Please fill the fields to proceed", { variant: "error" });
+      showAlertMessage("Please fill all fields to proceed", { variant: "error" });
       return;
     }
 
@@ -153,7 +153,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
 
   const handleConfirm = async () => {
     if (!inputBalance) {
-      showAlertMessage("Please fill the fields to proceed", { variant: "error" });
+      showAlertMessage("Please fill all fields to proceed", { variant: "error" });
       return;
     }
 

@@ -85,7 +85,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
   const handleApprove = async () => {
     try {
       if (!price || !blockingPeriod || !collateral || !collateralPercent || !disappearDays) {
-        showAlertMessage("Please fill the fields to proceed", { variant: "error" });
+        showAlertMessage("Please fill all fields to proceed", { variant: "error" });
         return;
       }
 
@@ -136,7 +136,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
 
   const handleConfirm = async () => {
     if (!price || !blockingPeriod || !collateral || !collateralPercent || !disappearDays) {
-      showAlertMessage("Please fill the fields to proceed", { variant: "error" });
+      showAlertMessage("Please fill all fields to proceed", { variant: "error" });
       return;
     }
 
