@@ -171,8 +171,8 @@ const ExploreCard = ({ nft, isLoading = false }) => {
                       +toDecimals(
                         nft.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(nft.rentSaleOffer.fundingToken)
-                      ) * 86400
-                    ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / day`
+                      ) * 1440
+                    ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / hour`
                   : "_"}
               </span>
             </div>

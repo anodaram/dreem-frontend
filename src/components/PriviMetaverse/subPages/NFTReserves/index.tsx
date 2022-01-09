@@ -388,8 +388,8 @@ const NFTReserves = () => {
                       +toDecimals(
                         row.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(row.rentSaleOffer.fundingToken)
-                      ) * 86400
-                    ).toFixed(3)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)} / day`
+                      ) * 1440
+                    ).toFixed(3)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)} / hour`
                   : "_"}
               </Box>
             ),

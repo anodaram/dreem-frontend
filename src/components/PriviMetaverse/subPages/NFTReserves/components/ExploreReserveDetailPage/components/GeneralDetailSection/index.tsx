@@ -248,8 +248,8 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                   +toDecimals(
                     nft.rentSaleOffer.pricePerSecond,
                     getTokenDecimal(nft.rentSaleOffer.fundingToken)
-                  ) * 86400
-                ).toFixed(2)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / day`}
+                  ) * 1440
+                ).toFixed(2)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / hour`}
             </Text>
           )}
           <Box display="flex" justifyContent="flex-end" alignItems="center">
@@ -283,8 +283,8 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                         +toDecimals(
                           nft.rentSaleOffer.pricePerSecond,
                           getTokenDecimal(nft.rentSaleOffer.fundingToken)
-                        ) * 86400
-                      ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / day`}
+                        ) * 1440
+                      ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / hour`}
                   </Text>
                   &nbsp;
                   <PrimaryButton
@@ -306,8 +306,8 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                       +toDecimals(
                         nft.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(nft.rentSaleOffer.fundingToken)
-                      ) * 86400
-                    ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / day`}
+                      ) * 1440
+                    ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)} / hour`}
                 </Text>
                 &nbsp;
                 <PrimaryButton
