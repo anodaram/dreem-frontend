@@ -28,7 +28,7 @@ export const blockedByMeNFTStyles = makeStyles(theme => ({
     fontFamily: "Rany",
     fontWeight: 500,
     fontSize: 14,
-    width: 140,
+    width: 128,
     textTransform: "uppercase",
     lineHeight: "18px"
   },
