@@ -2,8 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 export const blockedByMeNFTStyles = makeStyles(theme => ({
   borderContainer: {
-    border: (props: { isExpired: boolean | undefined }) =>
-      props.isExpired ? "1px solid rgba(255, 255, 255, 0.5)" : "1px solid #E9FF26",
+    border: "1px solid #E9FF26",
     borderRadius: 14,
     margin: "8px 0",
   },
@@ -24,6 +23,15 @@ export const blockedByMeNFTStyles = makeStyles(theme => ({
     fontSize: 14,
     lineHeight: "30px",
   },
+  paymentStatus: {
+    opacity: 0.8,
+    fontFamily: "Rany",
+    fontWeight: 500,
+    fontSize: 14,
+    width: 128,
+    textTransform: "uppercase",
+    lineHeight: "18px"
+  },
   section: {
     borderRight: "1px solid #ffffff20",
     fontFamily: "GRIFTER",
@@ -42,6 +50,12 @@ export const blockedByMeNFTStyles = makeStyles(theme => ({
     fontWeight: "bold",
     fontSize: "22px",
     lineHeight: "29px",
+    background: "linear-gradient(#EDFF1C, #ED7B7B)",
+    "-webkit-text-fill-color": "transparent",
+    "-webkit-background-clip": "text",
+  },
+  gradientText: {
+    textTransform: "uppercase",
     background: "linear-gradient(#EDFF1C, #ED7B7B)",
     "-webkit-text-fill-color": "transparent",
     "-webkit-background-clip": "text",
@@ -69,4 +83,15 @@ export const blockedByMeNFTStyles = makeStyles(theme => ({
     width: '90px',
     textAlign: 'center'
   },
+  primaryButton: {
+    color: "#212121 !important",
+    padding: "0 37px !important",
+    height: "40px !important",
+    border: "none !important",
+    background: "#DDFF57 !important",
+    borderRadius: "2px !important",
+    marginTop: "8px",
+    display: "flex",
+    alignItems: "center"
+  }
 }));

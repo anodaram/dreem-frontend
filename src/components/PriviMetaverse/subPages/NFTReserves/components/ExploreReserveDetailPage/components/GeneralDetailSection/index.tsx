@@ -138,7 +138,6 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                   onClick={() => {
                     setOpenInstantModal(true);
                   }}
-                  disabled={nft?.status}
                   style={{
                     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%) !important",
                   }}
@@ -224,7 +223,6 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                   onClick={() => {
                     setOpenReserveNftModal(true);
                   }}
-                  disabled={nft?.status}
                 >
                   Block
                 </PrimaryButton>
@@ -240,7 +238,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
       <hr className={classes.divider} />
       <Box display="flex" justifyContent="space-between" mb={3.5} mt={2.5}>
         <Text className={classes.pricingText1}>Rental Fee (per hour):</Text>
-        <Box>
+        <Box textAlign="right">
           {isOwnership && nft?.rentSaleOffer?.pricePerSecond && (
             <Text className={classes.pricingText2}>
               {nft?.rentSaleOffer?.pricePerSecond &&

@@ -31,6 +31,7 @@ export const createNFTModalStyles = makeStyles(theme => ({
   },
   input: {
     outline: "none",
+    fontFamily: 'GRIFTER'
   },
   timeSelect: {
     padding: 0,

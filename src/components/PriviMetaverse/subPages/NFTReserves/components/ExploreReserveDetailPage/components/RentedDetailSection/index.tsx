@@ -132,11 +132,10 @@ export default ({ nft, setNft, isOwner }) => {
             fontFamily="GRIFTER"
             fontSize={18}
           >
-            {toDecimals(
-              offer.pricePerSecond * ((+offer.rentalTime * 1000 - remainingTime) / 1000),
+            {`${toDecimals(
+              offer.pricePerSecond * offer.rentalTime,
               getTokenDecimal(offer.fundingToken)
-            )}{" "}
-            {getTokenSymbol(offer.fundingToken)}
+            )} ${getTokenSymbol(offer.fundingToken)}`}
           </Box>
         </Box>
       </Box>

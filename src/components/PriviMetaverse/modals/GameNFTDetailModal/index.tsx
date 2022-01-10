@@ -10,8 +10,8 @@ import { useTypedSelector } from "store/reducers/Reducer";
 import URL from "shared/functions/getURL";
 import { Modal /*, PrimaryButton */ } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
-import Avatar from "shared/ui-kit/Avatar";
-import { getDefaultAvatar, getDefaultBGImage } from "shared/services/user/getUserAvatar";
+import { Avatar } from "shared/ui-kit";
+import { getDefaultAvatar, getDefaultBGImage, getExternalAvatar } from "shared/services/user/getUserAvatar";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
 import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
 import { LoadingWrapper } from "shared/ui-kit/Hocs";
@@ -147,6 +147,18 @@ const GameNFTDetailModal = ({
     shareMedia("GameCharacter", `gameNFTS/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`);
   };
 
+  console.log('383838383883', nft)
+
+  const avatarUrl = React.useMemo(() => {
+    if (nft?.owner?.urlIpfsImage?.startsWith("/assets")) {
+      const lastIndex = nft?.owner?.urlIpfsImage.lastIndexOf("/");
+
+      return require(`assets/anonAvatars/${nft?.owner?.urlIpfsImage.substring(lastIndex + 1)}`);
+    }
+
+    return nft?.owner?.urlIpfsImage;
+  }, [nft?.owner?.urlIpfsImage]);
+
   return (
     <Modal size="medium" isOpen={open} onClose={onClose} showCloseIcon className={classes.root}>
       <Box className={classes.container} height={1}>
@@ -156,17 +168,22 @@ const GameNFTDetailModal = ({
               <Box className={classes.topOptWrap}>
                 <Box
                   className={classes.creatorinfoSection}
-                  onClick={() => nft.owner?.urlSlug && history.push(`/profile/${nft.owner.urlSlug}`)}
+                  onClick={() => history.push(`/profile/${nft?.owner?.urlSlug}`)}
                 >
-                  <Avatar size={32} rounded bordered image={nft.owner?.urlIpfsImage ?? getDefaultAvatar()} />
+                  {nft?.owner?.urlIpfsImage && (
+                    <Avatar
+                      url={avatarUrl ?? (nft?.owner ? getDefaultAvatar() : getExternalAvatar())}
+                      size="small"
+                    />
+                  )}
                   <Box ml={1}>
-                    {nft.owner?.name && <Box className={classes.typo1}>{nft.owner?.name}</Box>}
+                    {nft?.owner?.name && <Box className={classes.typo1}>{nft?.owner?.name}</Box>}
                     <Box
                       className={classes.typo1}
-                      mt={nft.owner?.name && nft.owner?.name ? 1 : 0}
+                      mt={nft?.owner?.name ? 1 : 0}
                       style={{ color: "#ffffff" }}
                     >
-                      {convertAddress(nft.owner?.urlSlug || nft?.ownerAddress || nft?.originalOwner)}
+                      {convertAddress(nft?.creatorAddress)}
                     </Box>
                   </Box>
                 </Box>
