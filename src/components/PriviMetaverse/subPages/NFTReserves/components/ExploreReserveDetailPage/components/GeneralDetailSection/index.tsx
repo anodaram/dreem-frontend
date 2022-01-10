@@ -138,7 +138,6 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                   onClick={() => {
                     setOpenInstantModal(true);
                   }}
-                  disabled={nft?.status}
                   style={{
                     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%) !important",
                   }}
@@ -224,7 +223,6 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
                   onClick={() => {
                     setOpenReserveNftModal(true);
                   }}
-                  disabled={nft?.status}
                 >
                   Block
                 </PrimaryButton>
