@@ -240,7 +240,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
       <hr className={classes.divider} />
       <Box display="flex" justifyContent="space-between" mb={3.5} mt={2.5}>
         <Text className={classes.pricingText1}>Rental Fee (per hour):</Text>
-        <Box>
+        <Box textAlign="right">
           {isOwnership && nft?.rentSaleOffer?.pricePerSecond && (
             <Text className={classes.pricingText2}>
               {nft?.rentSaleOffer?.pricePerSecond &&
