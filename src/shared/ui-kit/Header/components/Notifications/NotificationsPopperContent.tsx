@@ -34,12 +34,12 @@ export const NotificationsPopperContent: React.FunctionComponent<NotificationsPo
   handleHidePopper,
   theme = "light",
 }) => {
-  const [avatar, setAvatar] = useState<string>("");
+  const NotificationItem = ({ notification }: { notification: Notification }) => {
+    const [avatar, setAvatar] = useState<string>("");
 
-  const NotificationItem = ({ notification } : { notification: Notification }) => {
     useEffect(() => {
       (async () => {
-        if (notification && notification.typeItemId === 'NftMarketplace') {
+        if (notification && notification.typeItemId === "NftMarketplace") {
           setAvatar(notification.externalData.nft.image);
         } else {
           if (notification && notification.avatar) {
@@ -94,7 +94,7 @@ export const NotificationsPopperContent: React.FunctionComponent<NotificationsPo
       </Box>
       <TimeDivider theme={theme} />
       {notifications && notifications.length > 0 ? (
-        notifications.map(n => <NotificationItem notification={n}/>)
+        notifications.map(n => <NotificationItem notification={n} />)
       ) : (
         <Box display="flex" justifyContent="center" color="#ffffff" py={2}>
           No Notifications
