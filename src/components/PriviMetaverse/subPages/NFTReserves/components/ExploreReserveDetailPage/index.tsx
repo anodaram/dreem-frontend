@@ -81,8 +81,6 @@ const ExploreReserveDetailPage = () => {
     getData();
   }, []);
 
-  console.log(`nft====================`, nft);
-
   useEffect(() => {
     if (nft) {
       setIsOwner((account || "").toLowerCase() === (nft.ownerAddress || "").toLowerCase());
