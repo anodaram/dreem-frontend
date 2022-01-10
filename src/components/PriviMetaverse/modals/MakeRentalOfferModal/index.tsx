@@ -15,7 +15,7 @@ import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { PrimaryButton } from "shared/ui-kit";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
-import { toNDecimals } from "shared/functions/web3";
+import { toDecimals, toNDecimals } from "shared/functions/web3";
 import { createRentOffer } from "shared/services/API/ReserveAPI";
 import { RootState } from "store/reducers/Reducer";
 import { getNextDay } from "shared/helpers/utils";
@@ -166,6 +166,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
           return;
         }
         setTransactionSuccess(true);
+        let estimatedCost = +toDecimals(offer.pricePerSecond, rentalToken?.Decimals) * offer.rentalTime;
         const newOffer = {
           mode: isProd ? "main" : "test",
           collection: collection_id,
@@ -178,6 +179,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
           tokenId: offer.tokenId,
           offerer: account!,
           hash: offer.hash,
+          estimatedCost,
         };
         await createRentOffer(newOffer);
         let newNft = { ...nft };
