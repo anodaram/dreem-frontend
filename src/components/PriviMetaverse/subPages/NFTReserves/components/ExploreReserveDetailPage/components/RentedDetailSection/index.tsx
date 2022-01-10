@@ -92,7 +92,8 @@ export default ({ nft, setNft, isOwner }) => {
               fontFamily="GRIFTER"
               fontSize={18}
             >
-              {`${offer.pricePerSecond}`} {getTokenSymbol(offer.fundingToken)}
+              {`${toDecimals(offer.pricePerSecond, getTokenDecimal(offer.fundingToken))}`}{" "}
+              {getTokenSymbol(offer.fundingToken)}
             </Box>
           </Box>
           <Box ml={3} padding="28px 24px 28px 0" display="flex" justifyContent="space-between">
@@ -131,8 +132,10 @@ export default ({ nft, setNft, isOwner }) => {
             fontFamily="GRIFTER"
             fontSize={18}
           >
-            {offer.pricePerSecond * ((+offer.rentalTime * 1000 - remainingTime) / 1000)}{" "}
-            {getTokenSymbol(offer.fundingToken)}
+            {`${toDecimals(
+              offer.pricePerSecond * offer.rentalTime,
+              getTokenDecimal(offer.fundingToken)
+            )} ${getTokenSymbol(offer.fundingToken)}`}
           </Box>
         </Box>
       </Box>
