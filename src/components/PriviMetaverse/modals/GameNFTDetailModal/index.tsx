@@ -2,11 +2,9 @@ import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import ReactPlayer from "react-player";
 import Axios from "axios";
-import { useSelector } from "react-redux";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
-import { getUsersInfoList } from "store/selectors";
 import { useTypedSelector } from "store/reducers/Reducer";
 
 import URL from "shared/functions/getURL";
@@ -45,8 +43,6 @@ const GameNFTDetailModal = ({
   const classes = gameNFTDetailModalStyles();
   const history = useHistory();
 
-  const usersInfoList = useSelector(getUsersInfoList);
-  const user = usersInfoList.find(u => u.address.toLowerCase() === nft?.creatorAddress?.toLowerCase());
   const curUser = useTypedSelector(state => state.user);
 
   const { showAlertMessage } = useAlertMessage();

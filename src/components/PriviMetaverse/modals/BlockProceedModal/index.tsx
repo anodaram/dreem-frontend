@@ -3,9 +3,7 @@ import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 
 import { Modal } from "shared/ui-kit";
-import { BlockchainNets } from "shared/constants/constants";
 import { useSelector } from "react-redux";
-import { getUsersInfoList } from "store/selectors";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import Box from "shared/ui-kit/Box";
 import { PrimaryButton } from "shared/ui-kit";
@@ -27,7 +25,6 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
   const [hash, setHash] = useState<string>("");
   const [selectedChain] = useState<any>(getChainForNFT(nft));
 
-  const usersInfoList = useSelector(getUsersInfoList);
   const { account, library, chainId } = useWeb3React();
   const { showAlertMessage } = useAlertMessage();
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
@@ -53,10 +50,6 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
     let token = tokens.find(token => token.Address === addr);
     return token?.Symbol || '';
   };
-
-  const getUser = (address) => {
-    return usersInfoList.find(u => u.address.toLowerCase() === address?.toLowerCase());
-  }
 
   const handleCloseModal = () => {
     handleClose();
@@ -223,9 +216,9 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
             <span
               style={{  cursor: "pointer" }}
               className={classes.gradientText}
-              onClick={() => history.push(`/profile/${getUser(offer.Beneficiary)?.urlSlug}`)}
+              onClick={() => offer.userInfo && history.push(`/profile/${offer.userInfo.urlSlug}`)}
             >
-              {getUser(offer.Beneficiary)?.name ?? getAbbrAddress(offer.Beneficiary, 6, 3)}
+              {offer.userInfo?.name ?? getAbbrAddress(offer.Beneficiary, 6, 3)}
             </span>
             {` to block the `}<span className={classes.gradientText}>{nft.name}</span>
           </Box>
