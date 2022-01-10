@@ -333,10 +333,18 @@ export default function CreatorPage() {
         .post(`${URL()}/user/changeProfilePhoto/saveMetadata/${userSelector.id}`, metadataID)
         .then(res => {
           if (res.data.data) {
-            let setterUser: any = { ...userSelector, infoImage: res.data.data };
+            let setterUser: any = {
+              ...userSelector,
+              infoImage: res.data.data.body,
+              urlIpfsImage: res.data.data.urlIpfsImage,
+            };
             setterUser.hasPhoto = true;
             if (setterUser.id) {
               dispatch(setUser(setterUser));
+              setCreator(prev => ({
+                ...prev,
+                userInfo: { ...prev.userInfo, infoImage: setterUser.infoImage, urlIpfsImage: setterUser.urlIpfsImage },
+              }));
             }
             setProfileAvatarChanged(Date.now());
           }
