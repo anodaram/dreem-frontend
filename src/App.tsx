@@ -10,6 +10,7 @@ import Interceptor from "store/interceptor/interceptor";
 import { walletConnect, chainId } from "shared/constants/constants";
 import { SnackbarProvider } from "notistack";
 import MetamaskProvider from "./provider/MetamaskProvider";
+import { AuthContextProvider } from "shared/contexts/AuthContext";
 
 Interceptor.interceptor(store);
 
@@ -20,13 +21,13 @@ const App = ({ hideLoader }) => {
     <WalletProvider chainId={chainId} connectors={walletConnect}>
       <Web3Provider getLibrary={getLibrary}>
         <MetamaskProvider>
-          {/* <SubstrateProvider> */}
           <StoreProvider store={store}>
             <SnackbarProvider maxSnack={3}>
-              <Auth />
+              <AuthContextProvider>
+                <Auth />
+              </AuthContextProvider>
             </SnackbarProvider>
           </StoreProvider>
-          {/* </SubstrateProvider> */}
         </MetamaskProvider>
       </Web3Provider>
     </WalletProvider>
