@@ -2,11 +2,9 @@ import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import ReactPlayer from "react-player";
 import Axios from "axios";
-import { useSelector } from "react-redux";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
-import { getUsersInfoList } from "store/selectors";
 import { useTypedSelector } from "store/reducers/Reducer";
 
 import URL from "shared/functions/getURL";
@@ -45,8 +43,6 @@ const GameNFTDetailModal = ({
   const classes = gameNFTDetailModalStyles();
   const history = useHistory();
 
-  const usersInfoList = useSelector(getUsersInfoList);
-  const user = usersInfoList.find(u => u.address.toLowerCase() === nft?.creatorAddress?.toLowerCase());
   const curUser = useTypedSelector(state => state.user);
 
   const { showAlertMessage } = useAlertMessage();
@@ -160,19 +156,17 @@ const GameNFTDetailModal = ({
               <Box className={classes.topOptWrap}>
                 <Box
                   className={classes.creatorinfoSection}
-                  onClick={() => user?.urlSlug && history.push(`/profile/${user?.urlSlug}`)}
+                  onClick={() => nft.owner?.urlSlug && history.push(`/profile/${nft.owner.urlSlug}`)}
                 >
-                  {nft?.creatorAddress && (
-                    <Avatar size={32} rounded bordered image={user?.ipfsImage ?? getDefaultAvatar()} />
-                  )}
+                  <Avatar size={32} rounded bordered image={nft.owner?.urlIpfsImage ?? getDefaultAvatar()} />
                   <Box ml={1}>
-                    {user && user?.name && <Box className={classes.typo1}>{user?.name}</Box>}
+                    {nft.owner?.name && <Box className={classes.typo1}>{nft.owner?.name}</Box>}
                     <Box
                       className={classes.typo1}
-                      mt={user && user?.name ? 1 : 0}
+                      mt={nft.owner?.name && nft.owner?.name ? 1 : 0}
                       style={{ color: "#ffffff" }}
                     >
-                      {convertAddress(user?.urlSlug || nft?.creatorAddress)}
+                      {convertAddress(nft.owner?.urlSlug || nft?.ownerAddress || nft?.originalOwner)}
                     </Box>
                   </Box>
                 </Box>

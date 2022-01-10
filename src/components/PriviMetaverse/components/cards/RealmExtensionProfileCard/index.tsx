@@ -13,7 +13,6 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { getUser } from "store/selectors/user";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
-import { useTypedSelector } from "store/reducers/Reducer";
 import confirmAlert from "shared/ui-kit/ConfirmAlert";
 import ContentPreviewModal from "../../../modals/ContentPreviewModal";
 import EditRealmModal from "../../../modals/EditRealmModal";
@@ -37,7 +36,6 @@ export default function RealmExtensionProfileCard({
   const styles = nftCardStyles();
   const { shareMedia } = useShareMedia();
   const { showAlertMessage } = useAlertMessage();
-  const users = useTypedSelector(state => state.usersInfoList);
   const { draftId } = useParams<{ draftId?: string }>();
 
   const [openContentPreview, setOpenContentPreview] = useState<boolean>(
@@ -56,15 +54,7 @@ export default function RealmExtensionProfileCard({
   React.useEffect(() => {
     setData(nft);
     setIsPublic(nft.worldIsPublic);
-    if (users.length) {
-      const creator = users.find(user => user.id === nft.worldCreator?.user?.id);
-      if (creator && creator.ipfsImage) {
-        setImageIPFS(creator.ipfsImage);
-      } else {
-        setImageIPFS(getDefaultAvatar());
-      }
-    }
-  }, [nft, users]);
+  }, [nft]);
 
   const handleRemove = async () => {
     const confirm = await confirmAlert({
@@ -187,23 +177,25 @@ export default function RealmExtensionProfileCard({
             {!hideInfo && (
               <>
                 <div className={styles.divider} />
-                <div
-                  className={styles.creatorSection}
-                  onClick={() => {
-                    if (data.worldCreator?.user?.address) {
-                      history.push(`/profile/${data.worldCreator.user.address}`);
-                    }
-                  }}
-                >
-                  <Box display="flex" alignItems="center" width={1}>
-                    {imageIPFS && <Avatar size={24} rounded bordered image={imageIPFS} />}
-                    <div className={styles.creatorName}>{data.worldCreator?.character?.name}</div>
-                  </Box>
-                  <Box display="flex" alignItems="center">
-                    <EyeIcon />
-                    <div className={styles.viewsCount}>{data.views}</div>
-                  </Box>
-                </div>
+                {data ? (
+                  <div
+                    className={styles.creatorSection}
+                    onClick={() => {
+                      if (data.worldCreator?.user?.address) {
+                        history.push(`/profile/${data.worldCreator.user.address}`);
+                      }
+                    }}
+                  >
+                    <Box display="flex" alignItems="center" width={1}>
+                      <Avatar size={24} rounded bordered image={data.worldCreator?.user?.avatarUrl || getDefaultAvatar()} />
+                      <div className={styles.creatorName}>{data.worldCreator?.character?.name}</div>
+                    </Box>
+                    <Box display="flex" alignItems="center">
+                      <EyeIcon />
+                      <div className={styles.viewsCount}>{data.views}</div>
+                    </Box>
+                  </div>
+                ) : null}
               </>
             )}
             {nft.itemKind === "DRAFT_WORLD" && isOwner && !isHomePage && (
