@@ -55,6 +55,7 @@ export default ({
       day: parseInt((value / day_unit).toString()),
       hour: parseInt(((value % day_unit) / hr_unit).toString()),
       min: parseInt(((value / min_unit) % min_unit).toString()),
+      sec: Math.floor(value % 60),
       value,
     };
   };
@@ -160,6 +161,7 @@ export default ({
                   <span className={classes.time}>{closeTime?.day} day(s)</span>
                   <span className={classes.time}>{closeTime?.hour} hour(s)</span>
                   <span className={classes.time}>{closeTime?.min} min</span>
+                  <span className={classes.time}>{closeTime?.sec} sec</span>
                 </Box>
               )}
             </Box>
