@@ -82,8 +82,7 @@ export default ({
   const getAmount = () => {
     const a =
       +toDecimals(item.history?.pricePerSecond, getTokenDecimal(item.history?.fundingToken)) *
-      item.history.rentalTime *
-      86400;
+      item.history.rentalTime;
     return Math.round(a * 100) / 100;
   };
   return (
@@ -122,9 +121,7 @@ export default ({
               <Box className={classes.nftName}>{item?.name}</Box>
               <Box className={classes.address}>
                 Address:{" "}
-                {item.Address.substr(0, 18) +
-                  "..." +
-                  item.Address.substr(item.Address.length - 3, 3)}
+                {item.Address.substr(0, 18) + "..." + item.Address.substr(item.Address.length - 3, 3)}
                 <span onClick={handleOpenAddress}>
                   <CopyIcon />
                 </span>
