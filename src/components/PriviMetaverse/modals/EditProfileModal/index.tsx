@@ -43,7 +43,7 @@ const EditProfileModal = (props: any) => {
   );
 
   useEffect(() => {
-    if (userSelector && !editionProgress && !user.name) {
+    if (userSelector && !editionProgress) {
       const userCopy = { ...userSelector } as any;
       userCopy.name = userSelector.firstName + " " + userSelector.lastName;
 
