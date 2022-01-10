@@ -85,6 +85,7 @@ export const creatorPageStyles = makeStyles(theme => ({
     },
   },
   avatarBox: {
+    cursor: "pointer",
     marginRight: theme.spacing(5.5),
     marginBottom: theme.spacing(2),
     [theme.breakpoints.down("xs")]: {
