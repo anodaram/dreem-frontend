@@ -136,6 +136,81 @@ export const gameDetailPageStyles = makeStyles(theme => ({
       fill: "#212121",
     },
   },
+  listNFTImage: {
+    height: 60,
+    width: 60,
+    "& img": {
+      width: "100%",
+      borderRadius: 4,
+    },
+  },
+  table: {
+    minHeight: 400,
+    "& .MuiTable-root": {
+      borderSpacing: "0px 8px",
+      borderCollapse: "unset",
+    },
+    "& .MuiTableCell-root": {
+      border: "none",
+      fontFamily: "Agrandir",
+    },
+    "& .MuiTableRow-head": {
+      background: "transparent",
+      "& .MuiTableCell-head": {
+        border: "none",
+        color: "#4218B5",
+        fontSize: "14px",
+        fontFamily: "Montserrat",
+        fontWeight: 600,
+        [theme.breakpoints.down("sm")]: {
+          fontSize: "12px",
+        },
+      },
+    },
+    "& .MuiTableBody-root": {
+      "& .MuiTableCell-body": {
+        fontSize: 14,
+        fontWeight: 600,
+        fontFamily: "Montserrat",
+        color: "white",
+        [theme.breakpoints.down("sm")]: {
+          fontSize: 12,
+        },
+        [theme.breakpoints.down("xs")]: {
+          fontSize: 8,
+        },
+      },
+      "& .MuiTableRow-root": {
+        cursor: "pointer",
+        background: "#151515 !important",
+        "& td:first-child": {
+          borderTopLeftRadius: "14px",
+          borderBottomLeftRadius: "14px",
+        },
+        "& td:last-child": {
+          borderTopRightRadius: "14px",
+          borderBottomRightRadius: "14px",
+        },
+      },
+    },
+
+    [theme.breakpoints.down("sm")]: {
+      minHeight: 200,
+    },
+  },
+  listLoading: {
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+    border: "2px solid #F2C525",
+    borderRadius: 16,
+    padding: 12,
+    background: "rgba(255, 255, 255, 0.1) !important",
+    "& .MuiSkeleton-root": {
+      backgroundColor: "#505050",
+      borderRadius: 6,
+    },
+  },
 }));
 
 export const gameDetailTabsStyles = makeStyles(theme => ({

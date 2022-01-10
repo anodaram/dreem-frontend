@@ -2,9 +2,10 @@ import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDebounce } from "use-debounce/lib";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useSelector } from "react-redux";
 
-import { useMediaQuery, useTheme, Select, MenuItem } from "@material-ui/core";
-import { IconButton } from "@material-ui/core";
+import { useMediaQuery, useTheme, Select, MenuItem, IconButton } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 
 import GameMediaCard from "components/PriviMetaverse/components/cards/GameMediaCard";
 import Box from "shared/ui-kit/Box";
@@ -16,6 +17,10 @@ import TabsView, { TabItem } from "shared/ui-kit/TabsView";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
+import SkeletonBox from "shared/ui-kit/SkeletonBox";
+import { RootState } from "store/reducers/Reducer";
+import { toDecimals } from "shared/functions/web3";
 // import MarketplaceFeed from "./components/MarketplaceFeed";
 // import Owners from "./components/Owners";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
@@ -46,12 +51,42 @@ const GameDetailTabs: TabItem[] = [
 ];
 const filterStatusOptions = ["All", "On Sale", "For Rental", "Blocked", "Rented"];
 
+const tableHeaders: Array<CustomTableHeaderInfo> = [
+  {
+    headerName: "Name",
+    headerAlign: "left",
+  },
+  {
+    headerName: "Owner",
+    headerAlign: "center",
+  },
+  {
+    headerName: "Status",
+    headerAlign: "center",
+  },
+  {
+    headerName: "Direct Purchase",
+    headerAlign: "center",
+  },
+  {
+    headerName: "Block to Buy Later",
+    headerAlign: "center",
+  },
+  {
+    headerName: "Rental Fee (per hour)",
+    headerAlign: "center",
+  },
+];
+
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function GameDetailPage() {
   const classes = gameDetailPageStyles();
   const tabsClasses = gameDetailTabsStyles();
   const filterClasses = useFilterSelectStyles();
+
+  const user = useSelector((state: RootState) => state.user);
+  const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
 
   const history = useHistory();
   const width = useWindowDimensions().width;
@@ -139,6 +174,152 @@ export default function GameDetailPage() {
       setLoading(false);
     }
   };
+
+  const nftStatus = nft => {
+    if (!nft) {
+      return "";
+    }
+    if (nft.status) {
+      return nft.status.toUpperCase();
+    }
+    if (nft.sellingOffer?.Price || nft.blockingSaleOffer?.Price || nft.rentSaleOffer?.pricePerSecond) {
+      return "LISTED";
+    }
+    if (nft.blockingBuyOffers?.length || nft.buyingOffers?.length || nft.rentBuyOffers?.length) {
+      return "LISTED";
+    }
+    return "";
+  };
+
+  const userName = nft => {
+    if (!nft) return;
+
+    if (!nft.owner) {
+      if (nft.ownerAddress.toLowerCase() === user.address.toLowerCase()) {
+        return user.firstName || user.lastName
+          ? `${user.firstName} ${user.lastName}`
+          : width > 700
+          ? nft.ownerAddress
+          : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
+            "";
+      }
+      return width > 700
+        ? nft.ownerAddress
+        : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
+            "";
+    } else {
+      let name: string = "";
+      name =
+        nft.owner.firstName || nft.owner.lastName
+          ? `${nft.owner.firstName} ${nft.owner.lastName}`
+          : width > 700
+          ? nft.ownerAddress
+          : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
+            "";
+
+      return name;
+    }
+  };
+
+  const getTokenSymbol = addr => {
+    if (tokenList.length == 0 || !addr) return 0;
+    let token = tokenList.find(token => token.Address === addr);
+    return token?.Symbol || "";
+  };
+
+  const getTokenDecimal = addr => {
+    if (tokenList.length == 0) return 0;
+    let token = tokenList.find(token => token.Address === addr);
+    return token?.Decimals;
+  };
+
+  const tableData = React.useMemo(() => {
+    let data: Array<Array<CustomTableCellInfo>> = [];
+    if (nfts && nfts.length) {
+      data = nfts.map(row => {
+        return [
+          {
+            rawData: row,
+            cell: (
+              <Box display="flex" flexDirection="row" alignItems="center">
+                <Box className={classes.listNFTImage}>
+                  <SkeletonBox
+                    width="100%"
+                    height="100%"
+                    image={row.image}
+                    style={{
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      borderRadius: isMobile ? "6px" : "8px",
+                    }}
+                  />
+                </Box>
+                <Box mx={isMobile ? 1 : 2} width={isMobile ? 120 : 245} fontSize={16} fontWeight={800}>
+                  {row.name}
+                </Box>
+              </Box>
+            ),
+          },
+          {
+            cell: (
+              <Box color="#ffffff70" textAlign="center">
+                {userName(row)}
+              </Box>
+            ),
+          },
+          {
+            cell: (
+              <Box
+                textAlign="center"
+                padding={"5px 8px"}
+                bgcolor={nftStatus(row) ? "#8D65FF" : "transparent"}
+                fontSize={12}
+                borderRadius={6}
+              >
+                {nftStatus(row)}
+              </Box>
+            ),
+          },
+          {
+            cell: (
+              <Box textAlign="center">
+                {row?.sellingOffer?.Price
+                  ? `${row.sellingOffer.Price} ${getTokenSymbol(row.sellingOffer.PaymentToken)}`
+                  : "_"}
+              </Box>
+            ),
+          },
+          {
+            cell: (
+              <Box textAlign="center">
+                {row?.blockingSaleOffer?.Price
+                  ? `${row.blockingSaleOffer.Price} ${getTokenSymbol(
+                      row.blockingSaleOffer.PaymentToken
+                    )} for ${row.blockingSaleOffer.ReservePeriod} Day(s)`
+                  : "_"}
+              </Box>
+            ),
+          },
+          {
+            cell: (
+              <Box textAlign="center">
+                {row?.rentSaleOffer?.pricePerSecond
+                  ? `${(
+                      +toDecimals(
+                        row.rentSaleOffer.pricePerSecond,
+                        getTokenDecimal(row.rentSaleOffer.fundingToken)
+                      ) * 1440
+                    ).toFixed(3)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
+                  : "_"}
+              </Box>
+            ),
+          },
+        ];
+      });
+    }
+
+    return data;
+  }, [nfts]);
 
   const handleClickProject = () => {
     window.open(gameInfo?.Project, "_blank");
@@ -359,25 +540,78 @@ export default function GameDetailPage() {
                 hasMore={hasMore}
                 loader={
                   loading && (
-                    <Box mt={2}>
-                      <MasonryGrid
-                        gutter={"40px"}
-                        data={Array(loadingCount).fill(0)}
-                        renderItem={(_, index) => <GameMediaCard isLoading={true} key={`game_${index}`} />}
-                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                      />
-                    </Box>
+                    <>
+                      {isListView ? (
+                        <div
+                          style={{
+                            paddingTop: 8,
+                            paddingBottom: 8,
+                          }}
+                        >
+                          {Array(loadingCount)
+                            .fill(0)
+                            .map((_, index) => (
+                              <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
+                                <Skeleton variant="rect" width={60} height={60} />
+                                <Skeleton
+                                  variant="rect"
+                                  width="40%"
+                                  height={24}
+                                  style={{ marginLeft: "8px" }}
+                                />
+                                <Skeleton
+                                  variant="rect"
+                                  width="20%"
+                                  height={24}
+                                  style={{ marginLeft: "8px" }}
+                                />
+                                <Skeleton
+                                  variant="rect"
+                                  width="20%"
+                                  height={24}
+                                  style={{ marginLeft: "8px" }}
+                                />
+                              </Box>
+                            ))}
+                        </div>
+                      ) : (
+                        <Box mt={2}>
+                          <MasonryGrid
+                            gutter={"40px"}
+                            data={Array(loadingCount).fill(0)}
+                            renderItem={(_, index) => (
+                              <GameMediaCard isLoading={true} key={`game_${index}`} />
+                            )}
+                            columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                          />
+                        </Box>
+                      )}
+                    </>
                   )
                 }
               >
-                <Box mt={4}>
-                  <MasonryGrid
-                    gutter={"40px"}
-                    data={nfts}
-                    renderItem={item => <ExploreCard nft={item} />}
-                    columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                  />
-                </Box>
+                {isListView ? (
+                  tableData.length > 0 && (
+                    <div className={classes.table}>
+                      <CustomTable
+                        headers={tableHeaders}
+                        rows={tableData}
+                        placeholderText=""
+                        theme="dreem"
+                        onClickRow={() => {}}
+                      />
+                    </div>
+                  )
+                ) : (
+                  <Box mt={4}>
+                    <MasonryGrid
+                      gutter={"40px"}
+                      data={nfts}
+                      renderItem={item => <ExploreCard nft={item} />}
+                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                    />
+                  </Box>
+                )}
               </InfiniteScroll>
               {!loading && nfts?.length < 1 && (
                 <Box textAlign="center" width="100%" mb={10} mt={2}>
