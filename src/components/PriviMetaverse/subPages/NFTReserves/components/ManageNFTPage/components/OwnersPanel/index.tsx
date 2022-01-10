@@ -9,7 +9,7 @@ import { RootState } from "store/reducers/Reducer";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
 
 import Box from "shared/ui-kit/Box";
-import { CircularLoadingIndicator } from "shared/ui-kit";
+import { CircularLoadingIndicator, PrimaryButton } from "shared/ui-kit";
 import { BlockchainNets } from "shared/constants/constants";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import { getOwnedNFTs } from "shared/services/API/ReserveAPI";
@@ -33,19 +33,19 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
 };
 
 export const ArrowIcon = func => () =>
-  (
-    <Box style={{ cursor: "pointer" }} onClick={() => func(true)}>
-      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
-          stroke="#2D3047"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </Box>
-  );
+(
+  <Box style={{ cursor: "pointer" }} onClick={() => func(true)}>
+    <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
+        stroke="#2D3047"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </Box>
+);
 
 const OwnersPanel = () => {
   const classes = ownersPanelStyles();
@@ -76,9 +76,13 @@ const OwnersPanel = () => {
   };
 
   useEffect(() => {
+    refreshData();
+  }, [filterChain]);
+
+  const refreshData = () => {
     setUserNFTs([]);
     getData();
-  }, [filterChain]);
+  }
 
   const getData = async () => {
     if (isSignedin) {
@@ -95,7 +99,7 @@ const OwnersPanel = () => {
         });
         let nfts = response.data ?? [];
         setUserNFTs(nfts.filter(nft => nft.ownerAddress?.toLowerCase() === account?.toLowerCase()));
-      } catch (err) {}
+      } catch (err) { }
       setLoading(false);
     }
   };
@@ -219,6 +223,8 @@ const OwnersPanel = () => {
           display: "flex",
           alignItems: "flex-start",
           flexDirection: isMobile ? "column" : "row",
+          justifyContent: "space-between",
+          rowGap: "12px",
           borderBottom: "1px solid rgba(255, 255, 255, 0.5)",
           paddingBottom: "16px",
           width: "100%",
@@ -269,6 +275,29 @@ const OwnersPanel = () => {
             </Box>
           ))}
         </Box>
+        <Box>
+          <PrimaryButton
+            onClick={() => { refreshData(); }}
+            size="small"
+            style={{
+              background: "#3b4834",
+              fontFamily: "Montserrat",
+              fontStyle: "normal",
+              fontWeight: 600,
+              fontSize: "12px",
+              lineHeight: "15px",
+              textAlign: "center",
+              color: "#E9FF26",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gridGap: "6px",
+              borderRadius: 0,
+            }}
+          >
+            <RefreshIcon />
+            Sync NFTs</PrimaryButton>
+        </Box>
       </Box>
       <Box sx={{ flexGrow: 1, width: "100%", paddingBottom: isMobile ? 70 : isTablet ? 50 : 0 }}>
         {filteredNFTs && filteredNFTs.length ? (
@@ -312,3 +341,10 @@ const OwnersPanel = () => {
 };
 
 export default OwnersPanel;
+
+const RefreshIcon = () => {
+  return <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15 8.25051C14.8166 6.93068 14.2043 5.70776 13.2575 4.77013C12.3107 3.83251 11.0818 3.2322 9.76025 3.06168C8.43869 2.89115 7.09772 3.15987 5.9439 3.82645C4.79009 4.49302 3.88744 5.52046 3.375 6.75051M3 3.75051V6.75051H6" stroke="#E9FF26" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M3 9.75C3.18342 11.0698 3.7957 12.2928 4.74252 13.2304C5.68934 14.168 6.91818 14.7683 8.23975 14.9388C9.56131 15.1094 10.9023 14.8406 12.0561 14.1741C13.2099 13.5075 14.1126 12.48 14.625 11.25M15 14.25V11.25H12" stroke="#E9FF26" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+}
