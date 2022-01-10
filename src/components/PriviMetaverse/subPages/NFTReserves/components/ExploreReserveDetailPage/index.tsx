@@ -44,6 +44,7 @@ const ExploreReserveDetailPage = () => {
   const { shareMedia } = useShareMedia();
 
   const [isOwner, setIsOwner] = useState<boolean>(false);
+  const [isListed, setIsListed] = useState<boolean>(false);
   const [isBlockedNFT, setIsBlockedNFT] = useState<boolean>(false);
   const [isRentedNFT, setIsRentedNFT] = useState<boolean>(false);
   const [isExpired, setIsExpired] = useState<boolean>(false);
@@ -62,7 +63,6 @@ const ExploreReserveDetailPage = () => {
   const [openGameDetailModal, setOpenGameDetailModal] = useState<boolean>(false);
   const [claimType, setClaimType] = useState("");
   const [nft, setNft] = useState<any>({});
-  const [nftStatus, setNFTStatus] = useState('');
   const { account } = useWeb3React();
 
   const [openModalPhotoFullScreen, setOpenModalPhotoFullScreen] = useState<boolean>(false);
@@ -81,15 +81,24 @@ const ExploreReserveDetailPage = () => {
     getData();
   }, []);
 
-  useEffect(() => {
-    setIsOwner((account || "").toLowerCase() === (nft?.ownerAddress || "").toLowerCase());
-    setIsBlockedNFT(nftStatus === "Blocked");
-    setIsRentedNFT(nftStatus === "Rented");
-    if (nft?.blockingSalesHistories?.length > 0) {
-      let _blockingInfo = nft.blockingSalesHistories[nft.blockingSalesHistories.length - 1];
+  console.log(`nft====================`, nft);
 
-      setIsExpired(_blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + _blockingInfo?.created - Date.now() < 0);
-      setIsExpiredPaySuccess(_blockingInfo.PaidAmount === _blockingInfo.Price);
+  useEffect(() => {
+    if (nft) {
+      setIsOwner((account || "").toLowerCase() === (nft.ownerAddress || "").toLowerCase());
+      setIsBlockedNFT(nft.status === "Blocked");
+      setIsRentedNFT(nft.status === "Rented");
+      setIsListed(
+        nft.sellingOffer?.Price || nft.blockingSaleOffer?.Price || nft.rentSaleOffer?.pricePerSecond
+      );
+      if (nft.blockingSalesHistories?.length > 0) {
+        let _blockingInfo = nft.blockingSalesHistories[nft.blockingSalesHistories.length - 1];
+
+        setIsExpired(
+          _blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + _blockingInfo?.created - Date.now() < 0
+        );
+        setIsExpiredPaySuccess(_blockingInfo.PaidAmount === _blockingInfo.Price);
+      }
     }
   }, [nft]);
 
@@ -115,7 +124,6 @@ const ExploreReserveDetailPage = () => {
     });
 
     if (response.success) {
-      setNFTStatus(response?.nft?.status);
       setNft({
         ...response.nft,
       });
@@ -213,10 +221,14 @@ const ExploreReserveDetailPage = () => {
               )}
             </Box>
             <Box ml={isMobileScreen ? 0 : isTableScreen ? 2 : 5} py={2} style={{ flex: "1" }} width={1}>
-              <Box display="flex" justifyContent="space-between">
-                <Box className={classes.status}>
-                  {isRentedNFT ? "RENTED" : isBlockedNFT ? "BLOCKED" : "Listed"}
-                </Box>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                {isListed ? (
+                  <Box className={classes.status}>
+                    {isRentedNFT ? "RENTED" : isBlockedNFT ? "BLOCKED" : "LISTED"}
+                  </Box>
+                ) : (
+                  <div />
+                )}
                 <span
                   onClick={() =>
                     shareMedia(
@@ -332,8 +344,9 @@ const ExploreReserveDetailPage = () => {
                 )
               ) : isRentedNFT ? (
                 <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} />
-              ) : (<>
-                <GeneralDetailSection isOwnership={isOwner} nft={nft} setNft={setNft} refresh={refresh} />
+              ) : (
+                <>
+                  <GeneralDetailSection isOwnership={isOwner} nft={nft} setNft={setNft} refresh={refresh} />
                 </>
               )}
             </Box>

@@ -26,8 +26,8 @@ export const exploreOptionDetailPageStyles = makeStyles(theme => ({
     },
   },
   flexBox: {
-    width: '60px',
-    textAlign: 'center'
+    width: "60px",
+    textAlign: "center",
   },
   header: {
     display: "flex",
@@ -51,7 +51,6 @@ export const exploreOptionDetailPageStyles = makeStyles(theme => ({
     fontFamily: "Rany",
     width: "fit-content",
     borderRadius: 6,
-    marginBottom: 16,
   },
   badge: {
     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
