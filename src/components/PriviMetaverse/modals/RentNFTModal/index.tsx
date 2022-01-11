@@ -62,19 +62,6 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
   useEffect(() => setSelectedChain(getChainForNFT(nft)), [nft]);
 
   useEffect(() => {
-    (async () => {
-      if (chainId && selectedChain && chainId !== selectedChain?.chainId) {
-        const isHere = await switchNetwork(selectedChain?.chainId || 0);
-
-        if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
-          return;
-        }
-      }
-    })();
-  }, [chainId, selectedChain]);
-
-  useEffect(() => {
     if (!open) return;
 
     getBalance();
