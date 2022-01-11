@@ -99,6 +99,9 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
       headerName: "USER",
     },
     {
+      headerName: "STATUS",
+    },
+    {
       headerName: "PRICE",
       headerAlign: "center",
     },
@@ -316,47 +319,59 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                 <CustomTable
                   variant={Variant.Transparent}
                   headers={historyTableHeaders}
-                  rows={historyData.map(item => [
-                    {
-                      cell: (
-                        <span
-                          className={classes.gradientText}
-                          onClick={() => visitProfile(item.Beneficiary, history)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {item.Beneficiary}
-                        </span>
-                      ),
-                    },
-                    {
-                      cell: `${item.Price} ${getTokenSymbol(item.PaymentToken)}`,
-                    },
-                    {
-                      cell: `${item.ReservePeriod} Day(s)`,
-                    },
-                    {
-                      cell: `${item.CollateralPercent} %`,
-                    },
-                    {
-                      cellAlign: "center",
-                      cell: (
-                        <div
-                          onClick={() => {
-                            handleClickLink(item.hash);
-                          }}
-                        >
-                          <img
-                            src={
-                              selectedChain.name === "POLYGON"
-                                ? require("assets/icons/polygon_scan.png")
-                                : require("assets/icons/icon_bscscan.ico")
-                            }
-                            width={24}
-                          />
-                        </div>
-                      ),
-                    },
-                  ])}
+                  rows={historyData.map(item => {
+                    const Status = () => {
+                      const isPaid = item?.Price === item?.PaidAmount
+                      if (isPaid) {
+                        return <Box>Paid</Box>
+                      }
+                      return null
+                    }
+                    return [
+                      {
+                        cell: (
+                          <span
+                            className={classes.gradientText}
+                            onClick={() => visitProfile(item.Beneficiary, history)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {item.Beneficiary}
+                          </span>
+                        ),
+                      },
+                      {
+                        cell: <Status />,
+                      },
+                      {
+                        cell: `${item.Price} ${getTokenSymbol(item.PaymentToken)}`,
+                      },
+                      {
+                        cell: `${item.ReservePeriod} Day(s)`,
+                      },
+                      {
+                        cell: `${item.CollateralPercent} %`,
+                      },
+                      {
+                        cellAlign: "center",
+                        cell: (
+                          <div
+                            onClick={() => {
+                              handleClickLink(item.hash);
+                            }}
+                          >
+                            <img
+                              src={
+                                selectedChain.name === "POLYGON"
+                                  ? require("assets/icons/polygon_scan.png")
+                                  : require("assets/icons/icon_bscscan.ico")
+                              }
+                              width={24}
+                            />
+                          </div>
+                        ),
+                      },
+                    ]
+                  })}
                   placeholderText="No History"
                 />
               </div>
