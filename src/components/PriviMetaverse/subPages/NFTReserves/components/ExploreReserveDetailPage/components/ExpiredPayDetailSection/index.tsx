@@ -169,10 +169,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
               <Box display="flex" flexDirection="column" flex={0.5} pl={8}>
                 <Box fontSize={14}>Paid amount to withdraw</Box>
                 <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
-                  {`${
-                    ((blockingInfo?.TotalCollateralPercent - blockingInfo?.CollateralPercent) / 100) *
-                    blockingInfo?.Price
-                  } ${getTokenSymbol(blockingInfo?.PaymentToken)}`}
+                  100%
                 </Box>
               </Box>
             </Box>
