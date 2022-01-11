@@ -77,7 +77,7 @@ const NotificationItem = ({ notification }) => {
 };
 
 const NotificationContainer = styled.div`
-  padding: ${grid(2)} ${grid(2)} ${grid(2)} ${grid(2)};
+  padding: 18px 16px 16px;
   border-radius: 12px;
   display: flex;
   align-items: flex-start;

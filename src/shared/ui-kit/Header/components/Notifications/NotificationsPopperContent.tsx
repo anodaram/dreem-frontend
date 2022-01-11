@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { formatDistanceToNowStrict } from "date-fns/esm";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
 import Box from "shared/ui-kit/Box";
 import { Notification } from "shared/services/API/NotificationsAPI";
@@ -34,6 +35,8 @@ export const NotificationsPopperContent: React.FunctionComponent<NotificationsPo
   handleHidePopper,
   theme = "light",
 }) => {
+  const history = useHistory();
+
   const NotificationItem = ({ notification }: { notification: Notification }) => {
     const [avatar, setAvatar] = useState<string>("");
 
@@ -94,7 +97,21 @@ export const NotificationsPopperContent: React.FunctionComponent<NotificationsPo
       </Box>
       <TimeDivider theme={theme} />
       {notifications && notifications.length > 0 ? (
-        notifications.map(n => <NotificationItem notification={n} />)
+        <>
+          {notifications
+            .filter((v, i) => i < 10)
+            .map((n, index) => (
+              <NotificationItem notification={n} />
+            ))}
+          <ShowAllButtton
+            onClick={() => {
+              history.push(`/notifications`);
+              handleClosePopper();
+            }}
+          >
+            See All Notifications
+          </ShowAllButtton>
+        </>
       ) : (
         <Box display="flex" justifyContent="center" color="#ffffff" py={2}>
           No Notifications
@@ -172,4 +189,12 @@ const TimeDivider = styled.div<NotificationMessageProps>`
   opacity: 0.1;
   border: 1px solid ${p => (p.theme === "dark" ? Color.White : Color.Black)};
   margin-top: 20px;
+`;
+
+const ShowAllButtton = styled.div`
+  padding-top: 20px;
+  padding-bottom: 5px;
+  text-align: center;
+  color: #99a1b3;
+  cursor: pointer;
 `;
