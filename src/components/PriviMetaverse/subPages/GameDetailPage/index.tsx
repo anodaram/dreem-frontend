@@ -97,7 +97,7 @@ export default function GameDetailPage() {
 
   const { collection_id }: { collection_id: string } = useParams();
   const [gameInfo, setGameInfo] = React.useState<any>(undefined);
-  // const [keyword, setKeyword] = React.useState<string>("");
+
   const [nfts, setNfts] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [lastId, setLastId] = React.useState<any>(undefined);
@@ -192,7 +192,7 @@ export default function GameDetailPage() {
   };
 
   const userName = nft => {
-    if (!nft) return;
+    if (!nft) "";
 
     if (!nft.owner) {
       if (nft.ownerAddress.toLowerCase() === user.address.toLowerCase()) {
