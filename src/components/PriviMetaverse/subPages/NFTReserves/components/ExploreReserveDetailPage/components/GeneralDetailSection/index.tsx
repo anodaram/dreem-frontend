@@ -20,6 +20,7 @@ import CancelBlockingPriceModal from "components/PriviMetaverse/modals/CancelBlo
 import CancelRentPriceModal from "components/PriviMetaverse/modals/CancelRentPriceModal";
 import SetSellingPriceModal from "components/PriviMetaverse/modals/SetSellingPriceModal";
 import CancelSellingPriceModal from "components/PriviMetaverse/modals/CancelSellingPriceModal";
+import RentSuccessModal from "components/PriviMetaverse/modals/RentSuccessModal";
 
 import { exploreOptionDetailPageStyles } from "../../index.styles";
 
@@ -42,6 +43,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
   const [openEditRentPriceModal, setOpenEditRentPriceModal] = useState<boolean>(false);
 
   const [openRentNFTModal, setOpenRentNFTModal] = useState<boolean>(false);
+  const [openRentSuccess, setOpenRentSccess] = useState<boolean>(false);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
 
   const getTokenSymbol = addr => {
@@ -410,7 +412,12 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
         offer={nft.rentSaleOffer}
         nft={nft}
         setNft={setNft}
+        onSuccess={() => setOpenRentSccess(true)}
       />
+      <RentSuccessModal 
+        open={openRentSuccess}
+        handleClose={() => setOpenRentSccess(false)}
+        nft={nft} />
     </>
   );
 };
