@@ -179,10 +179,10 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
       setTransactionSuccess(true);
 
       await updateBlockingHistory({
+        ...nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1],
         mode: isProd ? "main" : "test",
         CollectionId: collection_id,
         TokenId: token_id,
-        OfferId: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].id,
         TotalCollateralPercent:
           Number(
             nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].TotalCollateralPercent ||

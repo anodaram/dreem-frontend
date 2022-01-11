@@ -78,10 +78,11 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
         });
       } else {
         await closeBlockingHistory({
+          ...blockingInfo,
           mode: isProd ? "main" : "test",
           CollectionId: collection_id,
           TokenId: token_id,
-          Id: blockingInfo.id,
+          Id: activeReserveId,
           Beneficiary: blockingInfo.Beneficiary,
           offerer: account,
           notificationMode: 1,

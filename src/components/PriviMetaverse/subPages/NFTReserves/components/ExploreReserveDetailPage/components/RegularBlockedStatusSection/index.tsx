@@ -93,17 +93,17 @@ export default ({ isOwnership, nft, refresh }) => {
       setTransactionSuccess(true);
       
       await updateBlockingHistory({
+        ...nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1],
         mode: isProd ? "main" : "test",
         CollectionId: collection_id,
         TokenId: token_id,
-        OfferId: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].id,
         TotalCollateralPercent: 0,
         PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaidAmount || 0,
         notificationMode: 0,
         offerer: account!
       });
 
-      // refresh();
+      refresh();
       setRange(0);
       // handleClose();
     } else {

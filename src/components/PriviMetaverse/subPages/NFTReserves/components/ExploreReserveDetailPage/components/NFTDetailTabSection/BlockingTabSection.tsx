@@ -321,11 +321,23 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                   headers={historyTableHeaders}
                   rows={historyData.map(item => {
                     const Status = () => {
-                      const isPaid = item?.Price === item?.PaidAmount
-                      if (isPaid) {
-                        return <Box>Paid</Box>
+                      if (item.status === 'CANCELLED') {
+                        return <Box color="#ffffff50">CANCELLED</Box>
                       }
-                      return null
+
+                      if (item.status === 'LIQUIDIATED') {
+                        return <Box color="#FF6868">LIQUIDATED</Box>
+                      }
+
+                      if (item.status === 'SOLD') {
+                        return <Box color="#5EFF26">SOLD</Box>
+                      }
+
+                      if (item.status === 'UNPAID') {
+                        return <Box color="#EEFF21">UNPAID</Box>
+                      }
+
+                      return <Box>ACTIVE</Box>
                     }
                     return [
                       {
