@@ -39,7 +39,6 @@ export default function RentSuccessModal({ open, nft, handleClose = () => {} }) 
     let token = tokenList.find(token => token.Address === addr);
     return token?.Decimals ?? 1;
   };
-  console.log(nft);
 
   return (
     <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.container}>
