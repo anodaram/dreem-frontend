@@ -99,10 +99,11 @@ export default ({ isOwnership, nft, refresh }) => {
         OfferId: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].id,
         TotalCollateralPercent: 0,
         PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaidAmount || 0,
-        notificationMode: 0
+        notificationMode: 0,
+        offerer: account!
       });
 
-      refresh();
+      // refresh();
       setRange(0);
       // handleClose();
     } else {
@@ -140,7 +141,7 @@ export default ({ isOwnership, nft, refresh }) => {
           >
             ADD COLLATERAL
           </PrimaryButton>
-        ) : Number(collateralPercent) ? (
+        ) : Number(totalCollateralPercent) ? (
           <PrimaryButton
             size="medium"
             className={classes.addCollateral}
@@ -178,7 +179,7 @@ export default ({ isOwnership, nft, refresh }) => {
         </Box>
       </Box>
 
-      {Number(collateralPercent) ? (
+      {Number(totalCollateralPercent) ? (
         <>
           <Box className={classes.gradientText} fontFamily="GRIFTER" fontSize={20} fontWeight="700" mt={4.5}>
             Collateral deposited
