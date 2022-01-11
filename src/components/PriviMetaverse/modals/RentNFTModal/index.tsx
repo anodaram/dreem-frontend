@@ -19,7 +19,7 @@ import { RentNFTModalStyles } from "./index.style";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-export default function RentNFTModal({ open, handleClose = () => {}, offer, nft, setNft }) {
+export default function RentNFTModal({ open, handleClose = () => {}, onSuccess = () => {}, offer, nft, setNft }) {
   const classes = RentNFTModalStyles();
   const { account, library, chainId } = useWeb3React();
   const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
@@ -233,6 +233,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
           created: new Date().getTime(),
         });
         setNft(newNft);
+        onSuccess();
         handleClose();
       } else {
         setTransactionSuccess(false);
