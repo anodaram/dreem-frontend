@@ -143,7 +143,6 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
 
         await acceptBlockingOffer({
           mode: isProd ? "main" : "test",
-          offerId: offerId,
           CollectionId: collection_id,
           TokenId: token_id,
           AcceptDuration: offer.AcceptDuration,

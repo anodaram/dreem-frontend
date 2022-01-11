@@ -188,7 +188,6 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
 
       await acceptBlockingOffer({
         mode: isProd ? "main" : "test",
-        offerId: offerId,
         CollectionId: collection_id,
         TokenId: token_id,
         AcceptDuration: nft.blockingSaleOffer.AcceptDuration,
