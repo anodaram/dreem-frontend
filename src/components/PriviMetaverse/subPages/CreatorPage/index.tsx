@@ -32,6 +32,7 @@ import VerifyProfileModal from "../../modals/VerifyProfileModal";
 import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProfileCard";
 import FollowProfileModal from "../../modals/FollowProfileModal";
 import { creatorPageStyles } from "./index.styles";
+import ImageCropModal from "components/PriviMetaverse/modals/ImageCropModal";
 
 const ProfileTabs = [
   {
@@ -86,6 +87,8 @@ export default function CreatorPage() {
   const [isFollowing, setIsFollowing] = useState<number>(-1);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const [openVerifyProfileModal, setOpenVerifyProfileModal] = useState<boolean>(false);
+  const [openAvartaImageCropModal, setOpenAvartaImageCropModal] = useState<boolean>(false);
+  const [imageFile, setImageFile] = useState<any>();
   const { shareMedia } = useShareMedia();
   const { setMultiAddr, uploadWithNonEncryption } = useIPFS();
   const { profileAvatarChanged, setProfileAvatarChanged } = usePageRefreshContext();
@@ -295,64 +298,38 @@ export default function CreatorPage() {
     e.preventDefault();
     const files = e.target.files;
     if (files.length) {
-      handleFiles(files);
+      setImageFile(files[0]);
+      setOpenAvartaImageCropModal(true);
     }
   };
 
-  const handleFiles = async (files: any) => {
-    if (validateFile(files[0])) {
-      /*const formData = new FormData();
-      formData.append("image", files[0], localStorage.getItem("userId") ?? "");
-      const config = {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      };
-      axios
-        .post(`${URL()}/user/changeProfilePhoto`, formData, config)
-        .then(res => {
-          let setterUser: any = { ...user, url: res.data.data + "?" + Date.now() };
+  const handleImage = async (file: any) => {
+    // image to file
+    let metadataID = await onUploadNonEncrypt(file, file => uploadWithNonEncryption(file));
+
+    axios
+      .post(`${URL()}/user/changeProfilePhoto/saveMetadata/${userSelector.id}`, metadataID)
+      .then(res => {
+        if (res.data.data) {
+          let setterUser: any = {
+            ...userSelector,
+            infoImage: res.data.data.body,
+            urlIpfsImage: res.data.data.urlIpfsImage,
+          };
           setterUser.hasPhoto = true;
           if (setterUser.id) {
             dispatch(setUser(setterUser));
+            setCreator(prev => ({
+              ...prev,
+              userInfo: { ...prev.userInfo, infoImage: setterUser.infoImage, urlIpfsImage: setterUser.urlIpfsImage },
+            }));
           }
-        })
-        .catch(error => {
-          setStatus({
-            msg: "Error change user profile photo",
-            key: Math.random(),
-            variant: "error",
-          });
-        });*/
-
-      let metadataID = await onUploadNonEncrypt(files[0], file => uploadWithNonEncryption(file));
-
-      axios
-        .post(`${URL()}/user/changeProfilePhoto/saveMetadata/${userSelector.id}`, metadataID)
-        .then(res => {
-          if (res.data.data) {
-            let setterUser: any = {
-              ...userSelector,
-              infoImage: res.data.data.body,
-              urlIpfsImage: res.data.data.urlIpfsImage,
-            };
-            setterUser.hasPhoto = true;
-            if (setterUser.id) {
-              dispatch(setUser(setterUser));
-              setCreator(prev => ({
-                ...prev,
-                userInfo: { ...prev.userInfo, infoImage: setterUser.infoImage, urlIpfsImage: setterUser.urlIpfsImage },
-              }));
-            }
-            setProfileAvatarChanged(Date.now());
-          }
-        })
-        .catch(error => {
-          console.log("Error", error);
-        });
-    } else {
-      files[0]["invalid"] = true;
-    }
+          setProfileAvatarChanged(Date.now());
+        }
+      })
+      .catch(error => {
+        console.log("Error", error);
+      });
   };
 
   const validateFile = file => {
@@ -392,6 +369,10 @@ export default function CreatorPage() {
   const onVerifyProfileClicked = () => {
     setOpenVerifyProfileModal(true);
   };
+
+  const onAvartaPictureClicked = () => {
+    setOpenAvartaImageCropModal(true);
+  }
 
   const openFollowProfileClicked = isFollowing => {
     setOpenFollowProfileModal(true);
@@ -477,6 +458,7 @@ export default function CreatorPage() {
                         onClick={() => {
                           if (isOwner) {
                             if (inputRef && inputRef.current) {
+                              inputRef.current.value = '';
                               inputRef.current.click();
                             }
                           }
@@ -615,8 +597,8 @@ export default function CreatorPage() {
                                 {isFollowing === 0
                                   ? "Follow"
                                   : isFollowing === 1
-                                  ? "Cancel request"
-                                  : "Unfollow"}
+                                    ? "Cancel request"
+                                    : "Unfollow"}
                               </PrimaryButton>
                             ))
                           )}
@@ -1008,6 +990,14 @@ export default function CreatorPage() {
           isLoadingFollows={isLoadingFollows}
           isOwner={!!isOwner}
         />
+      )}
+      {openAvartaImageCropModal && (
+        <ImageCropModal
+          imageFile={imageFile}
+          open={openAvartaImageCropModal}
+          aspect={3 / 3}
+          onClose={() => setOpenAvartaImageCropModal(false)}
+          setCroppedImage={(file) => { handleImage(file) }} />
       )}
     </>
   );
