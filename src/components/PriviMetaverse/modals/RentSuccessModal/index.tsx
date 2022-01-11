@@ -53,7 +53,7 @@ export default function RentSuccessModal({ open, nft, handleClose = () => {} }) 
         </Box>
       </Box>
       <Box className={classes.title} mb={1}>
-        You’ve rented GAME NFT.
+        You’ve rented {nft.CollectionName}.
       </Box>
       <Box className={classes.description} mb={5}>
         Congrat’s you’ve succesfully rented <span>{nft.CollectionName}</span> at{" "}
