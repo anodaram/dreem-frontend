@@ -98,25 +98,25 @@ export default function RentNFTModal({
       setRentalToken(token);
       setBalance(+toDecimals(balance, decimals));
 
-      const maxSeconds = Math.min(Math.floor(balance / offer.pricePerSecond), offer.maximumRentTime);
+      const maxSeconds = offer.maximumRentTime;
       let remainingSecs = maxSeconds;
-      if (remainingSecs >= 3600 * 24) {
-        const days = Math.floor(maxSeconds / (3600 * 24));
+      if (remainingSecs >= 86400) {
+        const days = Math.floor(remainingSecs / 86400);
         setMaxDays(days);
-        remainingSecs = remainingSecs - days * (3600 * 24);
+        remainingSecs = remainingSecs - days * 86400;
       }
       if (remainingSecs >= 3600) {
-        const hours = Math.floor(maxSeconds / 3600);
+        const hours = Math.floor(remainingSecs / 3600);
         setMaxHours(hours);
         remainingSecs = remainingSecs - hours * 3600;
       }
       if (remainingSecs >= 60) {
-        const mins = Math.floor(maxSeconds / 60);
+        const mins = Math.floor(remainingSecs / 60);
         setMaxMins(mins);
         remainingSecs = remainingSecs - mins * 60;
       }
       if (remainingSecs > 0) {
-        setMaxSeconds(Math.floor(maxSeconds % 60));
+        setMaxSeconds(Math.floor(remainingSecs % 60));
       }
     }
   };
@@ -409,7 +409,7 @@ export default function RentNFTModal({
                 <span className={classes.amountLabel}>Amount to pay</span>
                 <span className={classes.purpleText}>{`${price} ${rentalToken?.Symbol ?? "USDT"}`}</span>
               </Box>
-              <Box display="flex" flexDirection="column">
+              <Box display="flex" flexDirection="column" textAlign="end">
                 <span className={classes.amountLabel}>Max rental time</span>
                 <span className={classes.purpleText}>
                   {`${formatDuration((offer?.maximumRentTime ?? 0) * 1000) ?? "0 seconds"}`}

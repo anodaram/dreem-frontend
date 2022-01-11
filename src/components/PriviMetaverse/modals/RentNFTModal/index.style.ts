@@ -90,5 +90,6 @@ export const RentNFTModalStyles = makeStyles(theme => ({
     fontSize: "16px",
     fontFamily: "Rany",
     lineHeight: "150%",
+    whiteSpace: "nowrap",
   },
 }));
