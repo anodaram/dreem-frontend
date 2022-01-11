@@ -49,48 +49,49 @@ const ProfileFollowsModal = React.memo(
             <div>No followers</div>
           ) : (
             <div className={classes.usersList}>
-              {list.map((item, index) => (
-                <Box
-                  className={classes.followRow}
-                  padding="16px 24px 8px 16px"
-                  marginTop="2px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  key={index}
-                >
+              {list.map((item, index) => {
+                const avatar = (item.anon ? require(`assets/anonAvatars/${item.urlIpfsImage}`) : item.urlIpfsImage) || getDefaultAvatar();
+                return (
                   <Box
-                    alignItems="center"
+                    className={classes.followRow}
+                    padding="16px 24px 8px 16px"
+                    marginTop="2px"
                     display="flex"
-                    width="100%"
+                    alignItems="center"
                     justifyContent="space-between"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => goToProfile(item.urlSlug ?? item.id)}
+                    key={index}
                   >
-                    <Box display="flex" alignItems="center">
-                      <div>
-                        <div
-                          className={classes.avatar}
-                          style={{
-                            backgroundImage: item.ipfsImage
-                              ? `url("${item.ipfsImage}")`
-                              : `url(${getDefaultAvatar()})`,
-                            backgroundRepeat: "no-repeat",
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                          }}
-                        />
-                      </div>
-                      <Box ml={"14px"}>
-                        <Box color="#ffffff" fontSize={14}>
-                          {item.name ?? item.firstName ?? <StyledSkeleton width={120} animation="wave" />}
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      width="100%"
+                      justifyContent="space-between"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => goToProfile(item.urlSlug ?? item.id)}
+                    >
+                      <Box display="flex" alignItems="center">
+                        <div>
+                          <div
+                            className={classes.avatar}
+                            style={{
+                              backgroundImage: `url(${avatar})`,
+                              backgroundRepeat: "no-repeat",
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                            }}
+                          />
+                        </div>
+                        <Box ml={"14px"}>
+                          <Box color="#ffffff" fontSize={14}>
+                            {item.name ?? item.firstName ?? <StyledSkeleton width={120} animation="wave" />}
+                          </Box>
                         </Box>
                       </Box>
+                      <LeftArrowIcon />
                     </Box>
-                    <LeftArrowIcon />
                   </Box>
-                </Box>
-              ))}
+                );
+              })}
             </div>
           )}
         </LoadingWrapper>

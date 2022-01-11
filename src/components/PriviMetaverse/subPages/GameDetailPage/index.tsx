@@ -1,10 +1,11 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
-// import { useDebounce } from "use-debounce/lib";
+import { useDebounce } from "use-debounce/lib";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useSelector } from "react-redux";
 
-import { useMediaQuery, useTheme } from "@material-ui/core";
-import { IconButton } from "@material-ui/core";
+import { useMediaQuery, useTheme, Select, MenuItem, IconButton } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 
 import GameMediaCard from "components/PriviMetaverse/components/cards/GameMediaCard";
 import Box from "shared/ui-kit/Box";
@@ -13,22 +14,27 @@ import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import { getGameInfo, getCharactersByGame } from "shared/services/API/DreemAPI";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
 import TabsView, { TabItem } from "shared/ui-kit/TabsView";
-import { gameDetailPageStyles, gameDetailTabsStyles } from "./index.styles";
-import MarketplaceFeed from "./components/MarketplaceFeed";
-import Owners from "./components/Owners";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
+import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
+import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
+import SkeletonBox from "shared/ui-kit/SkeletonBox";
+import { RootState } from "store/reducers/Reducer";
+import { toDecimals } from "shared/functions/web3";
+// import MarketplaceFeed from "./components/MarketplaceFeed";
+// import Owners from "./components/Owners";
+import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
-  375: 1,
-  600: 2,
+  400: 1,
+  700: 2,
   1200: 3,
   1440: 4,
 };
 
 const TAB_NFTS = "nfts";
-const TAB_MARKETPLACE_FEED = "marketplace_feed";
-const TAB_OWNERS = "owners";
-
+// const TAB_MARKETPLACE_FEED = "marketplace_feed";
+// const TAB_OWNERS = "owners";
 const GameDetailTabs: TabItem[] = [
   {
     key: TAB_NFTS,
@@ -43,11 +49,44 @@ const GameDetailTabs: TabItem[] = [
   //   title: "owners",
   // },
 ];
+const filterStatusOptions = ["All", "On Sale", "For Rental", "Blocked", "Rented"];
+
+const tableHeaders: Array<CustomTableHeaderInfo> = [
+  {
+    headerName: "Name",
+    headerAlign: "left",
+  },
+  {
+    headerName: "Owner",
+    headerAlign: "center",
+  },
+  {
+    headerName: "Status",
+    headerAlign: "center",
+  },
+  {
+    headerName: "Direct Purchase",
+    headerAlign: "center",
+  },
+  {
+    headerName: "Block to Buy Later",
+    headerAlign: "center",
+  },
+  {
+    headerName: "Rental Fee (per hour)",
+    headerAlign: "center",
+  },
+];
+
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function GameDetailPage() {
   const classes = gameDetailPageStyles();
   const tabsClasses = gameDetailTabsStyles();
+  const filterClasses = useFilterSelectStyles();
+
+  const user = useSelector((state: RootState) => state.user);
+  const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
 
   const history = useHistory();
   const width = useWindowDimensions().width;
@@ -56,17 +95,25 @@ export default function GameDetailPage() {
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const breakTwo = useMediaQuery(theme.breakpoints.up(700));
+  const breakThree = useMediaQuery(theme.breakpoints.up(1200));
+  const breakFour = useMediaQuery(theme.breakpoints.up(1440));
+
   const { collection_id }: { collection_id: string } = useParams();
   const [gameInfo, setGameInfo] = React.useState<any>(undefined);
-  // const [keyword, setKeyword] = React.useState<string>("");
+
   const [nfts, setNfts] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [lastId, setLastId] = React.useState<any>(undefined);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
 
   const [selectedTab, setSelectedTab] = React.useState<string>(TAB_NFTS);
-
-  // const [debouncedKeyword] = useDebounce(keyword, 500);
+  const [filterStatus, setFilterStatus] = React.useState<string>(filterStatusOptions[0]);
+  const [openStatusSelect, setOpenStatusSelect] = React.useState<boolean>(false);
+  const [showSearchBox, setShowSearchBox] = React.useState<boolean>(false);
+  const [searchValue, setSearchValue] = React.useState<string>("");
+  const [isListView, setIsListView] = React.useState<boolean>(false);
+  const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
 
@@ -74,17 +121,12 @@ export default function GameDetailPage() {
     loadGameInfo();
   }, []);
 
-  React.useEffect(
-    () => {
-      setNfts([]);
-      setLastId(undefined);
-      setHasMore(true);
-      loadNfts(true);
-    },
-    [
-      /*debouncedKeyword*/
-    ]
-  );
+  React.useEffect(() => {
+    setNfts([]);
+    setLastId(undefined);
+    setHasMore(true);
+    loadNfts(true);
+  }, [filterStatus, debouncedSearchValue]);
 
   const loadGameInfo = async () => {
     try {
@@ -108,11 +150,16 @@ export default function GameDetailPage() {
     if (loading) return;
     try {
       setLoading(true);
+
+      const status = filterStatus !== filterStatusOptions[0] ? filterStatus : undefined;
+      const search = debouncedSearchValue ? debouncedSearchValue : undefined;
+
       const response = await getCharactersByGame({
         gameId: collection_id,
         lastId: init ? undefined : lastId,
-        searchValue: "", // debouncedKeyword,
+        searchValue: search,
         mode: isProd ? "main" : "test",
+        status,
       });
       if (response.success) {
         const newCharacters = response.data.list;
@@ -132,9 +179,184 @@ export default function GameDetailPage() {
     }
   };
 
+  const nftStatus = nft => {
+    if (!nft) {
+      return "";
+    }
+    if (nft.status) {
+      return nft.status.toUpperCase();
+    }
+    if (nft.sellingOffer?.Price || nft.blockingSaleOffer?.Price || nft.rentSaleOffer?.pricePerSecond) {
+      return "LISTED";
+    }
+    if (nft.blockingBuyOffers?.length || nft.buyingOffers?.length || nft.rentBuyOffers?.length) {
+      return "LISTED";
+    }
+    return "";
+  };
+
+  const userName = nft => {
+    if (!nft) "";
+
+    if (!nft.owner) {
+      if (nft.ownerAddress.toLowerCase() === user.address.toLowerCase()) {
+        return user.firstName || user.lastName
+          ? `${user.firstName} ${user.lastName}`
+          : width > 700
+          ? nft.ownerAddress
+          : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
+            "";
+      }
+      return width > 700
+        ? nft.ownerAddress
+        : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
+            "";
+    } else {
+      let name: string = "";
+      name =
+        nft.owner.firstName || nft.owner.lastName
+          ? `${nft.owner.firstName} ${nft.owner.lastName}`
+          : width > 700
+          ? nft.ownerAddress
+          : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
+            "";
+
+      return name;
+    }
+  };
+
+  const getTokenSymbol = addr => {
+    if (tokenList.length == 0 || !addr) return 0;
+    let token = tokenList.find(token => token.Address === addr);
+    return token?.Symbol || "";
+  };
+
+  const getTokenDecimal = addr => {
+    if (tokenList.length == 0) return 0;
+    let token = tokenList.find(token => token.Address === addr);
+    return token?.Decimals;
+  };
+
+  const tableData = React.useMemo(() => {
+    let data: Array<Array<CustomTableCellInfo>> = [];
+    if (nfts && nfts.length) {
+      data = nfts.map(row => {
+        return [
+          {
+            rawData: row,
+            cell: (
+              <Box display="flex" flexDirection="row" alignItems="center">
+                <Box className={classes.listNFTImage}>
+                  <SkeletonBox
+                    width="100%"
+                    height="100%"
+                    image={row.image}
+                    style={{
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      borderRadius: isMobile ? "6px" : "8px",
+                    }}
+                  />
+                </Box>
+                <Box mx={isMobile ? 1 : 2} width={isMobile ? 120 : 245} fontSize={16} fontWeight={800}>
+                  {row.name}
+                </Box>
+              </Box>
+            ),
+          },
+          {
+            cell: (
+              <Box color="#ffffff70" textAlign="center">
+                {userName(row)}
+              </Box>
+            ),
+          },
+          {
+            cell: (
+              <Box
+                textAlign="center"
+                padding={"5px 8px"}
+                bgcolor={nftStatus(row) ? "#8D65FF" : "transparent"}
+                fontSize={12}
+                borderRadius={6}
+              >
+                {nftStatus(row)}
+              </Box>
+            ),
+          },
+          {
+            cell: (
+              <Box textAlign="center">
+                {row?.sellingOffer?.Price
+                  ? `${row.sellingOffer.Price} ${getTokenSymbol(row.sellingOffer.PaymentToken)}`
+                  : "_"}
+              </Box>
+            ),
+          },
+          {
+            cell: (
+              <Box textAlign="center">
+                {row?.blockingSaleOffer?.Price
+                  ? `${row.blockingSaleOffer.Price} ${getTokenSymbol(
+                      row.blockingSaleOffer.PaymentToken
+                    )} for ${row.blockingSaleOffer.ReservePeriod} Day(s)`
+                  : "_"}
+              </Box>
+            ),
+          },
+          {
+            cell: (
+              <Box textAlign="center">
+                {row?.rentSaleOffer?.pricePerSecond
+                  ? `${(
+                      +toDecimals(
+                        row.rentSaleOffer.pricePerSecond,
+                        getTokenDecimal(row.rentSaleOffer.fundingToken)
+                      ) * 1440
+                    ).toFixed(3)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
+                  : "_"}
+              </Box>
+            ),
+          },
+        ];
+      });
+    }
+
+    return data;
+  }, [nfts]);
+
   const handleClickProject = () => {
     window.open(gameInfo?.Project, "_blank");
   };
+
+  const handleFilterStatus = e => {
+    setLastId(undefined);
+    setFilterStatus(e.target.value);
+    setHasMore(true);
+    setNfts([]);
+  };
+
+  const nftListWithSkeleton = React.useMemo(() => {
+    if (hasMore) {
+      let addedCount = 1;
+      if (breakFour) {
+        addedCount = 4 - (nfts.length % 4);
+      } else if (breakThree) {
+        addedCount = 3 - (nfts.length % 3);
+      } else if (breakTwo) {
+        addedCount = 2 - (nfts.length % 2);
+      }
+
+      const result = [...nfts];
+      for (let index = 0; index < addedCount; index++) {
+        result.push({});
+      }
+
+      return result;
+    } else {
+      return nfts;
+    }
+  }, [nfts, hasMore, breakTwo, breakThree, breakFour]);
 
   return (
     <Box className={classes.root} id="scrollContainer">
@@ -220,6 +442,117 @@ export default function GameDetailPage() {
             extendedClasses={tabsClasses}
           />
 
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            width={1}
+            mt={4}
+            flexDirection={isMobile ? "column" : "row"}
+          >
+            <Box
+              display="flex"
+              alignItems="flex-end"
+              flexWrap="wrap"
+              width={isMobile ? 1 : "auto"}
+              justifyContent={isMobile ? "flex-end" : "flex-start"}
+            >
+              <Select
+                open={openStatusSelect}
+                onClose={() => setOpenStatusSelect(false)}
+                value={filterStatus}
+                onChange={handleFilterStatus}
+                className={classes.select}
+                renderValue={(value: any) => (
+                  <Box display="flex" alignItems="center" onClick={() => setOpenStatusSelect(true)}>
+                    <label>STATUS&nbsp;&nbsp;</label>
+                    <span>{value}</span>
+                  </Box>
+                )}
+                MenuProps={{
+                  classes: filterClasses,
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "left",
+                  },
+                  transformOrigin: {
+                    vertical: "top",
+                    horizontal: "left",
+                  },
+                  getContentAnchorEl: null,
+                }}
+                IconComponent={ArrowIconComponent(setOpenStatusSelect)}
+              >
+                {filterStatusOptions.map((status, index) => (
+                  <MenuItem key={`filter-status-${index}`} value={status}>
+                    {status}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Box>
+            <Box className={classes.optionSection} mt={isMobile ? 1 : 0}>
+              <div className={classes.filterButtonBox}>
+                {showSearchBox && (
+                  <InputWithLabelAndTooltip
+                    type="text"
+                    inputValue={searchValue}
+                    placeHolder="Search"
+                    onInputValueChange={e => {
+                      setLastId(undefined);
+                      setSearchValue(e.target.value);
+                      setHasMore(true);
+                      setNfts([]);
+                    }}
+                    style={{
+                      background: "transparent",
+                      margin: 0,
+                      marginRight: 8,
+                      marginLeft: 8,
+                      padding: 0,
+                      border: "none",
+                      height: "auto",
+                    }}
+                    theme="dark"
+                  />
+                )}
+                <Box
+                  onClick={() => setShowSearchBox(prev => !prev)}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  style={{ cursor: "pointer" }}
+                >
+                  <SearchIcon />
+                </Box>
+              </div>
+              <Box
+                className={classes.controlBox}
+                ml={2}
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+              >
+                <SecondaryButton
+                  className={`${classes.showButton} ${isListView ? classes.showButtonSelected : ""}`}
+                  size="small"
+                  onClick={() => setIsListView(true)}
+                  isRounded
+                >
+                  <UnionIcon />
+                </SecondaryButton>
+                <PrimaryButton
+                  className={`${classes.showButton} ${!isListView ? classes.showButtonSelected : ""}`}
+                  size="small"
+                  onClick={() => setIsListView(false)}
+                  isRounded
+                  style={{ marginLeft: 0 }}
+                >
+                  <DetailIcon />
+                </PrimaryButton>
+              </Box>
+            </Box>
+          </Box>
+
           {selectedTab === TAB_NFTS && (
             <Box
               className={classes.fitContent}
@@ -233,25 +566,71 @@ export default function GameDetailPage() {
                 hasMore={hasMore}
                 loader={
                   loading && (
-                    <Box mt={2}>
-                      <MasonryGrid
-                        gutter={"40px"}
-                        data={Array(loadingCount).fill(0)}
-                        renderItem={(_, index) => <GameMediaCard isLoading={true} key={`game_${index}`} />}
-                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                      />
-                    </Box>
+                    <>
+                      {isListView ? (
+                        <div
+                          style={{
+                            paddingTop: 8,
+                            paddingBottom: 8,
+                          }}
+                        >
+                          {Array(loadingCount)
+                            .fill(0)
+                            .map((_, index) => (
+                              <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
+                                <Skeleton variant="rect" width={60} height={60} />
+                                <Skeleton
+                                  variant="rect"
+                                  width="40%"
+                                  height={24}
+                                  style={{ marginLeft: "8px" }}
+                                />
+                                <Skeleton
+                                  variant="rect"
+                                  width="20%"
+                                  height={24}
+                                  style={{ marginLeft: "8px" }}
+                                />
+                                <Skeleton
+                                  variant="rect"
+                                  width="20%"
+                                  height={24}
+                                  style={{ marginLeft: "8px" }}
+                                />
+                              </Box>
+                            ))}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                    </>
                   )
                 }
               >
-                <Box mt={4}>
-                  <MasonryGrid
-                    gutter={"40px"}
-                    data={nfts}
-                    renderItem={item => <ExploreCard nft={item} />}
-                    columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                  />
-                </Box>
+                {isListView ? (
+                  tableData.length > 0 && (
+                    <div className={classes.table}>
+                      <CustomTable
+                        headers={tableHeaders}
+                        rows={tableData}
+                        placeholderText=""
+                        theme="dreem"
+                        onClickRow={() => {}}
+                      />
+                    </div>
+                  )
+                ) : (
+                  <Box mt={4}>
+                    <MasonryGrid
+                      gutter={"40px"}
+                      data={nftListWithSkeleton}
+                      renderItem={item => (
+                        <ExploreCard nft={item} isLoading={Object.entries(item).length === 0} />
+                      )}
+                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                    />
+                  </Box>
+                )}
               </InfiniteScroll>
               {!loading && nfts?.length < 1 && (
                 <Box textAlign="center" width="100%" mb={10} mt={2}>
@@ -276,5 +655,51 @@ export const ArrowIcon = ({ color = "white" }) => (
       stroke={color}
       strokeWidth="0.4"
     />
+  </svg>
+);
+
+export const ArrowIconComponent = func => () =>
+  (
+    <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
+      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
+          stroke="#2D3047"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </Box>
+  );
+
+export const SearchIcon = ({ color = "white" }) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12.9056 14.3199C11.551 15.3729 9.84871 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8C16 9.84871 15.3729 11.551 14.3199 12.9056L19.7071 18.2929C20.0976 18.6834 20.0976 19.3166 19.7071 19.7071C19.3166 20.0976 18.6834 20.0976 18.2929 19.7071L12.9056 14.3199ZM14 8C14 11.3137 11.3137 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C11.3137 2 14 4.68629 14 8Z"
+      fill={color}
+    />
+  </svg>
+);
+
+export const UnionIcon = () => (
+  <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      opacity="0.8"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M0.5 1.75C0.5 1.19772 0.947715 0.75 1.5 0.75H11.5C12.0523 0.75 12.5 1.19772 12.5 1.75C12.5 2.30228 12.0523 2.75 11.5 2.75H1.5C0.947715 2.75 0.5 2.30228 0.5 1.75ZM0.5 5.75C0.5 5.19772 0.947715 4.75 1.5 4.75H11.5C12.0523 4.75 12.5 5.19772 12.5 5.75C12.5 6.30228 12.0523 6.75 11.5 6.75H1.5C0.947715 6.75 0.5 6.30228 0.5 5.75ZM1.5 8.75C0.947715 8.75 0.5 9.19771 0.5 9.75C0.5 10.3023 0.947715 10.75 1.5 10.75H11.5C12.0523 10.75 12.5 10.3023 12.5 9.75C12.5 9.19771 12.0523 8.75 11.5 8.75H1.5Z"
+    />
+  </svg>
+);
+
+export const DetailIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="6.5" y="0.625" width="6" height="6" rx="1" transform="rotate(90 6.5 0.625)" />
+    <rect x="6.5" y="7.625" width="6" height="6" rx="1" transform="rotate(90 6.5 7.625)" />
+    <rect x="13.5" y="0.625" width="6" height="6" rx="1" transform="rotate(90 13.5 0.625)" />
+    <rect x="13.5" y="7.625" width="6" height="6" rx="1" transform="rotate(90 13.5 7.625)" />
   </svg>
 );

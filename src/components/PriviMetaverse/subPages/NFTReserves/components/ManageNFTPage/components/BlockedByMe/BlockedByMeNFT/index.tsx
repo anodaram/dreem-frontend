@@ -43,6 +43,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
       day: parseInt((value / day_unit).toString()),
       hour: parseInt(((value % day_unit) / hr_unit).toString()),
       min: parseInt(((value / min_unit) % min_unit).toString()),
+      seconds: Math.floor(value % 60),
     };
   };
 
@@ -57,6 +58,10 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
   const isPaid = item.history?.PaidAmount === item.history?.Price;
   const isExpired = item.history?.ReservePeriod * 3600 * 24 * 1000 + item.history?.created - Date.now() <= 0;
   const isClaimed = item.ownerAddress?.toLowerCase() === account?.toLowerCase();
+
+  const chainImage = item.Chain?.toLowerCase().includes('polygon')
+    ? require("assets/tokenImages/POLYGON.png")
+    : require("assets/metaverseImages/bsc.png")
 
   return (
     <Box className={classes.borderContainer}>
@@ -100,20 +105,20 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                 </Box>
               </Box>
 
-              <Box flex={0.5} pl={6} display="flex" alignItems="center">
+              <Box flex={0.5} pl={3} display="flex" alignItems="center">
                 {
                   isExpired ? (
                     isPaid ? (
-                      <Box className={classes.paymentStatus} mr={3} color="#EEFF21">
+                      <Box className={classes.paymentStatus} mr={2} color="#EEFF21">
                         Paid
                       </Box>
                     ) : (
-                      <Box className={classes.paymentStatus} mr={3} color="#FF6868">
+                      <Box className={classes.paymentStatus} mr={2} color="#FF6868">
                         You’ve lost the posibility to buy
                       </Box>
                     )
                   ) : (
-                    <Box className={classes.paymentStatus} mr={3} color="#ffffff">
+                    <Box className={classes.paymentStatus} mr={2} color="#ffffff">
                       Payment In
                     </Box>
                   )
@@ -121,6 +126,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                 <span className={classes.time}>{closeTime?.day} day(s) </span>
                 <span className={classes.time}>{closeTime?.hour} hour(s) </span>
                 <span className={classes.time}>{closeTime?.min} min</span>
+                <span className={classes.time}>{closeTime?.seconds} sec</span>
               </Box>
             </Box>
             <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -149,7 +155,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                           }}
                         >check on {item.Chain}scan
                         <img
-                          src={getChainImageUrl(item?.Chain || item?.chainsFullName)}
+                          src={chainImage}
                           style={{ width: "16px", height: "16px", marginLeft: "8px" }}
                         /></PrimaryButton>
                       </Box>
@@ -176,7 +182,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                           }}
                         >check on {item.Chain}scan
                         <img
-                          src={getChainImageUrl(item?.Chain || item?.chainsFullName)}
+                          src={chainImage}
                           style={{ width: "16px", height: "16px", marginLeft: "8px" }}
                         /></PrimaryButton>
                       </Box>

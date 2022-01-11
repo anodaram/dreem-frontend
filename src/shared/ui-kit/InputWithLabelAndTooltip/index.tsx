@@ -99,7 +99,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: "14px",
     background: "#F7F9FE",
     boxSizing: "border-box",
-    fontFamily: "Agrandir",
+    fontFamily: "Rany",
     marginTop: theme.spacing(1),
     borderRadius: "6px",
     outline: "none",
@@ -112,7 +112,7 @@ const useStyles = makeStyles(theme => ({
     },
     "& *": {
       color: "#181818",
-      fontFamily: "Agrandir",
+      fontFamily: "Rany",
     },
     [theme.breakpoints.down("xs")]: {
       padding: "11.5px 8px",
@@ -124,7 +124,7 @@ const useStyles = makeStyles(theme => ({
     padding: "19px 16px",
     fontSize: "14px",
     color: "white",
-    fontFamily: "Agrandir",
+    fontFamily: "Rany",
     marginTop: theme.spacing(1),
     outline: "none",
     borderRadius: 0,
@@ -139,7 +139,7 @@ const useStyles = makeStyles(theme => ({
     },
     "& *": {
       color: "white",
-      fontFamily: "Agrandir",
+      fontFamily: "Rany",
     },
   },
   inputBoxMusicDao: {

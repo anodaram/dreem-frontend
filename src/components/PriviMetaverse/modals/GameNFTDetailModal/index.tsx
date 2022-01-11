@@ -2,18 +2,16 @@ import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import ReactPlayer from "react-player";
 import Axios from "axios";
-import { useSelector } from "react-redux";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
-import { getUsersInfoList } from "store/selectors";
 import { useTypedSelector } from "store/reducers/Reducer";
 
 import URL from "shared/functions/getURL";
 import { Modal /*, PrimaryButton */ } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
-import Avatar from "shared/ui-kit/Avatar";
-import { getDefaultAvatar, getDefaultBGImage } from "shared/services/user/getUserAvatar";
+import { Avatar } from "shared/ui-kit";
+import { getDefaultAvatar, getDefaultBGImage, getExternalAvatar } from "shared/services/user/getUserAvatar";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
 import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
 import { LoadingWrapper } from "shared/ui-kit/Hocs";
@@ -45,8 +43,6 @@ const GameNFTDetailModal = ({
   const classes = gameNFTDetailModalStyles();
   const history = useHistory();
 
-  const usersInfoList = useSelector(getUsersInfoList);
-  const user = usersInfoList.find(u => u.address.toLowerCase() === nft?.creatorAddress?.toLowerCase());
   const curUser = useTypedSelector(state => state.user);
 
   const { showAlertMessage } = useAlertMessage();
@@ -151,6 +147,18 @@ const GameNFTDetailModal = ({
     shareMedia("GameCharacter", `gameNFTS/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`);
   };
 
+  console.log('383838383883', nft)
+
+  const avatarUrl = React.useMemo(() => {
+    if (nft?.owner?.urlIpfsImage?.startsWith("/assets")) {
+      const lastIndex = nft?.owner?.urlIpfsImage.lastIndexOf("/");
+
+      return require(`assets/anonAvatars/${nft?.owner?.urlIpfsImage.substring(lastIndex + 1)}`);
+    }
+
+    return nft?.owner?.urlIpfsImage;
+  }, [nft?.owner?.urlIpfsImage]);
+
   return (
     <Modal size="medium" isOpen={open} onClose={onClose} showCloseIcon className={classes.root}>
       <Box className={classes.container} height={1}>
@@ -160,19 +168,22 @@ const GameNFTDetailModal = ({
               <Box className={classes.topOptWrap}>
                 <Box
                   className={classes.creatorinfoSection}
-                  onClick={() => user?.urlSlug && history.push(`/profile/${user?.urlSlug}`)}
+                  onClick={() => history.push(`/profile/${nft?.owner?.urlSlug}`)}
                 >
-                  {nft?.creatorAddress && (
-                    <Avatar size={32} rounded bordered image={user?.ipfsImage ?? getDefaultAvatar()} />
+                  {nft?.owner?.urlIpfsImage && (
+                    <Avatar
+                      url={avatarUrl ?? (nft?.owner ? getDefaultAvatar() : getExternalAvatar())}
+                      size="small"
+                    />
                   )}
                   <Box ml={1}>
-                    {user && user?.name && <Box className={classes.typo1}>{user?.name}</Box>}
+                    {nft?.owner?.name && <Box className={classes.typo1}>{nft?.owner?.name}</Box>}
                     <Box
                       className={classes.typo1}
-                      mt={user && user?.name ? 1 : 0}
+                      mt={nft?.owner?.name ? 1 : 0}
                       style={{ color: "#ffffff" }}
                     >
-                      {convertAddress(user?.urlSlug || nft?.creatorAddress)}
+                      {convertAddress(nft?.creatorAddress)}
                     </Box>
                   </Box>
                 </Box>

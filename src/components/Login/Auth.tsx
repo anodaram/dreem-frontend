@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { HashRouter as Router } from "react-router-dom";
 import axios from "axios";
 import io from "socket.io-client";
 
-import { setUser } from "store/actions/User";
+import { setUser, signOut } from "store/actions/User";
 import { useTypedSelector } from "store/reducers/Reducer";
 
 import { NotificationsContextProvider } from "shared/contexts/NotificationsContext";
@@ -14,10 +15,11 @@ import { UserConnectionsContextProvider } from "shared/contexts/UserConnectionsC
 import { TokenConversionContextProvider } from "shared/contexts/TokenConversionContext";
 import { PageRefreshContextProvider } from "shared/contexts/PageRefreshContext";
 import { MessagesContextProvider } from "shared/contexts/MessagesContext";
-import { AuthContextProvider } from "shared/contexts/AuthContext";
+import { AuthContextProvider, useAuth } from "shared/contexts/AuthContext";
 import NavBar from "shared/ui-kit/Navigation/NavBar";
 import URL from "shared/functions/getURL";
 import { IPFSContextProvider } from "shared/contexts/IPFSContext";
+import { useWeb3React } from "@web3-react/core";
 
 export let socket: SocketIOClient.Socket;
 export const setSocket = (sock: SocketIOClient.Socket) => {
@@ -28,10 +30,12 @@ const Auth = () => {
   const dispatch = useDispatch();
   const [numberOfMessages, setNumberOfMessages] = useState<number>(0);
 
+  const { account, active } = useWeb3React();
   const user = useTypedSelector(state => state.user);
+  const { isSignedin, setSignedin } = useAuth();
 
   // NOTE: this hack is required to trigger re-render
-  const [internalSocket, setInternalSocket] = useState<SocketIOClient.Socket | null>(null);
+  const [internalSocket] = useState<SocketIOClient.Socket | null>(null);
 
   useEffect(() => {
     if (user.id) {
@@ -77,27 +81,43 @@ const Auth = () => {
     }
   }, [user.id]);
 
+  const handleLogout = () => {
+    setSignedin(false);
+    dispatch(signOut());
+    localStorage.removeItem("userSlug");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("token");
+    localStorage.removeItem("address");
+    window.location.href = "/";
+  };
+
+  useEffect(() => {
+    (window as any).ethereum.on("accountsChanged", accounts => {
+      if (isSignedin && !accounts.length) {
+        handleLogout();
+      }
+    });
+  });
+
   return (
     <Router>
-      <AuthContextProvider>
-        <IPFSContextProvider>
-          <PageRefreshContextProvider>
-            <ShareMediaContextProvider>
-              <MessagesContextProvider socket={internalSocket} numberMessages={numberOfMessages}>
-                <NotificationsContextProvider socket={internalSocket}>
-                  <UserConnectionsContextProvider>
-                    <TokenConversionContextProvider>
-                      <>
-                        <NavBar />
-                      </>
-                    </TokenConversionContextProvider>
-                  </UserConnectionsContextProvider>
-                </NotificationsContextProvider>
-              </MessagesContextProvider>
-            </ShareMediaContextProvider>
-          </PageRefreshContextProvider>
-        </IPFSContextProvider>
-      </AuthContextProvider>
+      <IPFSContextProvider>
+        <PageRefreshContextProvider>
+          <ShareMediaContextProvider>
+            <MessagesContextProvider socket={internalSocket} numberMessages={numberOfMessages}>
+              <NotificationsContextProvider socket={internalSocket}>
+                <UserConnectionsContextProvider>
+                  <TokenConversionContextProvider>
+                    <>
+                      <NavBar />
+                    </>
+                  </TokenConversionContextProvider>
+                </UserConnectionsContextProvider>
+              </NotificationsContextProvider>
+            </MessagesContextProvider>
+          </ShareMediaContextProvider>
+        </PageRefreshContextProvider>
+      </IPFSContextProvider>
     </Router>
   );
 };

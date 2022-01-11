@@ -39,7 +39,7 @@ export default ({ isOwnership, nft, refresh }) => {
   }, [nft]);
 
   useEffect(() => {
-    setRange(blockingInfo?.TotalCollateralPercent);
+    setRange(blockingInfo?.CollateralPercent);
   }, [blockingInfo]);
 
   const getTokenSymbol = addr => {
@@ -54,7 +54,8 @@ export default ({ isOwnership, nft, refresh }) => {
     return token?.ImageUrl ?? "";
   };
 
-  const collateralPercent = blockingInfo?.TotalCollateralPercent;
+  const collateralPercent = blockingInfo?.CollateralPercent;
+  const totalCollateralPercent = blockingInfo?.TotalCollateralPercent;
 
   const onWithdraw = async () => {
     if (chainId && chainId !== selectedChain?.chainId) {
@@ -127,7 +128,7 @@ export default ({ isOwnership, nft, refresh }) => {
             Manage Collateral
           </Box>
           <Box fontSize={14}>
-            Make sure your’e collateral is above the liquidation level, otherwise you’ll loos your NFT and
+            Make sure you’re collateral is above the liquidation level, otherwise you’ll loos your NFT and
             whole collateral.
           </Box>
         </Box>
@@ -157,24 +158,21 @@ export default ({ isOwnership, nft, refresh }) => {
           <span>
             Your Collateral Percentage
             <span style={{ color: "#E9FF26", marginLeft: 6 }}>
-              {Number(collateralPercent).toFixed(2)}%
+              {Number(totalCollateralPercent).toFixed(2)}%
             </span>
           </span>
-          <span>
-            Liquadation LTV<span style={{ color: "#E9FF26", marginLeft: 6 }}>80%</span>
-          </span>
         </Box>
-        <RangeSlider value={range / 80 * 100} variant="transparent" onChange={(event, newValue) => {}} />
+        <RangeSlider value={range / 80 * 10 } variant="transparent" onChange={(event, newValue) => {}} />
         <Box display="flex" alignItems="center" mt={1}>
-          <Box flex={collateralPercent / 80}>
+          <Box flex={range / 80 }>
             <strong>0%</strong>
           </Box>
-          <Box flex={collateralPercent / 80 * 0.2} className={classes.flexBox}>
+          <Box flex={range / 80 * 60} className={classes.flexBox}>
             <strong>{Number(collateralPercent).toFixed(1)}% Liquidation</strong>
           </Box>
-          <Box flex={collateralPercent / 80 * 0.3} className={classes.flexBox}>{Number(collateralPercent * 1.2).toFixed(1)}% High Risk</Box>
-          <Box flex={collateralPercent / 80 * 0.5}>{Number(collateralPercent * 1.5).toFixed(1)}% Medium Risk</Box>
-          <Box>
+          <Box flex={range / 80 * 80} className={classes.flexBox}>{Number(collateralPercent * 1.2).toFixed(1)}% High Risk</Box>
+          <Box flex={range / 80 * 100} className={classes.flexBox}>{Number(collateralPercent * 1.5).toFixed(1)}% Medium Risk</Box>
+          <Box flex={range / 80 * 120} className={classes.flexBox}>
             <strong>{Number(collateralPercent * 2).toFixed(1)}% Low Risk</strong>
           </Box>
         </Box>
@@ -208,7 +206,7 @@ export default ({ isOwnership, nft, refresh }) => {
             <Box flex={0.8}>
               <img src={getTokenImageUrl(blockingInfo?.PaymentToken)} width={24} />
             </Box>
-            <Box flex={0.2}>{Number(collateralPercent).toFixed(2)} %</Box>
+            <Box flex={0.2}>{Number(totalCollateralPercent).toFixed(2)} %</Box>
             <Box flex={0.2}>{`${
               (blockingInfo?.Price * (blockingInfo?.TotalCollateralPercent)) /
               100

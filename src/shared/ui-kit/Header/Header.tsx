@@ -232,31 +232,6 @@ const Header = props => {
     if (userId && userId.length > 0) {
       if (socket) {
         socket.on("user_connect_status", async connectStatus => {
-          const users = usersInfoList;
-          const index = users.findIndex(u => u.id === connectStatus.userId);
-          if (index >= 0) {
-            const user = users.find(u => u.id === connectStatus.userId);
-            if (user) {
-              user.connected = connectStatus.connected;
-              const uList = [...usersInfoList.slice(0, index), user, ...usersInfoList.slice(index + 1)];
-
-              for (let usr of uList) {
-                if (
-                  usr?.infoImage?.newFileCID &&
-                  usr?.infoImage?.metadata?.properties?.name &&
-                  (!usr.ipfsImage || usr.ipfsImage === "")
-                ) {
-                  usr.ipfsImage = await getPhotoIPFS(
-                    usr.infoImage.newFileCID,
-                    usr.infoImage.metadata.properties.name,
-                    downloadWithNonDecryption
-                  );
-                }
-              }
-
-              dispatch(setUsersInfoList(uList));
-            }
-          }
           if (connectStatus.userId === userId) {
             let setterUser: any = { ...userProfile };
             setterUser.connected = connectStatus.connected;
@@ -266,102 +241,6 @@ const Header = props => {
       }
     }
   }, [userId, userProfile]);
-
-  useEffect(() => {
-    if ((!usersInfoList || usersInfoList?.length === 0) && userSelector.id) {
-      axios
-        .post(`${URL()}/chat/getUsers`)
-        .then(response => {
-          if (response.data.success) {
-            const allUsers = response.data.data;
-            const u = [] as any[];
-            allUsers.forEach(user => {
-              let image = "";
-              if (
-                user.anon != undefined &&
-                user.anon === true &&
-                user.anonAvatar &&
-                user.anonAvatar?.length > 0
-              ) {
-                image = `${require(`assets/anonAvatars/${user.anonAvatar}`)}`;
-              }
-              user.assistances = user.assistances ?? 0;
-              user.rate = user.rate ?? 0;
-
-              u.push(
-                createUserInfo(
-                  user.id,
-                  `${user.firstName ? user.firstName : ""} ${user.lastName ? user.lastName : ""}`,
-                  user.address ?? "",
-                  user.mnemonic ?? "",
-                  image,
-                  user.level ?? 1,
-                  user.numFollowers || 0,
-                  user.numFollowings || 0,
-                  user.creds?.length ?? 0,
-                  user.badges ?? [],
-                  user.urlSlug ??
-                    `${user.firstName ? user.firstName : ""}${user.lastName ? user.lastName : ""}`,
-                  user.twitter ?? "",
-                  user.anon ?? false,
-                  user.verified ?? false,
-                  user.MediaLikes?.length ?? 0,
-                  user.profileViews ?? 0,
-                  user.awards?.length ?? 0,
-                  user.trustScore ?? 0,
-                  user.endorsementScore ?? 0,
-                  user.bio ?? "",
-                  user.isExternalUser ?? false,
-                  user.connected ?? false,
-                  user.rate ?? 0,
-                  user.imageUrl ?? "",
-                  user.assistances ?? 0,
-                  user.anonAvatar ?? "",
-                  user.backgroundURL ?? "",
-                  user.hasPhoto ?? false,
-                  user.myMediasCount ?? 0,
-                  user.url ?? "",
-                  user.wallets ?? [],
-                  user.email ?? "",
-                  user.infoImage ?? {},
-                  false,
-                  user.ipfsImage ?? "",
-                  user.urlIpfsImage ?? ""
-                )
-              );
-            });
-            allUsers.sort((user1, user2) => {
-              const name1 = user1.firstName || user1.urlSlug;
-              const name2 = user2.firstName || user2.urlSlug;
-              if (name1?.startsWith("0x") && name2?.startsWith("0x")) return name1?.localeCompare(name2);
-              if (name1?.startsWith("0x")) return 1;
-              if (name2?.startsWith("0x")) return -1;
-              return capitalize(name1).localeCompare(capitalize(name2));
-            });
-
-            dispatch(setUsersInfoList(u));
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    } else {
-      const allUsers = usersInfoList.filter(user => user.id !== userSelector.id) ?? [];
-      allUsers.forEach(user => {
-        let image = "";
-        if (user.anon != undefined && user.anon === true && user.anonAvatar && user.anonAvatar?.length > 0) {
-          image = `${require(`assets/anonAvatars/${user.anonAvatar}`)}`;
-        } else {
-          if (user.hasPhoto && user.url) {
-            image = `${user.url}?${Date.now()}`;
-          }
-        }
-        user.imageUrl = image;
-        user.assistances = user.assistances ?? 0;
-        user.rate = user.rate ?? 0;
-      });
-    }
-  }, [usersInfoList, userSelector.id]);
 
   useEffect(() => {
     setIsHideHeader(true);

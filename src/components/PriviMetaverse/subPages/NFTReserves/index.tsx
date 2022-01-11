@@ -455,7 +455,7 @@ const NFTReserves = () => {
     } else {
       return reservedNftList;
     }
-  }, [reservedNftList, hasMore, selectedTab, breakTwo, breakThree, breakFour]);
+  }, [reservedNftList, hasMore, breakTwo, breakThree, breakFour]);
 
   const collectionListWithSkeleton = useMemo(() => {
     if (hasMoreCollections) {
@@ -475,7 +475,7 @@ const NFTReserves = () => {
     } else {
       return exploreMetaverses;
     }
-  }, [exploreMetaverses, hasMoreCollections, selectedTab, breakTwo, breakThree]);
+  }, [exploreMetaverses, hasMoreCollections, breakTwo, breakThree]);
 
   return (
     <>

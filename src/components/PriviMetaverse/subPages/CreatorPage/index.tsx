@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { getUsersInfoList } from "store/selectors";
 import { Grid, useTheme, useMediaQuery, Hidden, CircularProgress } from "@material-ui/core";
 
 import * as UserConnectionsAPI from "shared/services/API/UserConnectionsAPI";
@@ -66,7 +65,6 @@ export default function CreatorPage() {
   const width = useWindowDimensions().width;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const users = useSelector(getUsersInfoList);
 
   const { creatorAddress } = useParams<{ creatorAddress: string }>();
   const userSelector = useTypedSelector(state => state.user);
@@ -391,21 +389,6 @@ export default function CreatorPage() {
     try {
       setIsLoadingFollows(true);
       const following = (await UserConnectionsAPI.getFollowings(creator?.userInfo?.id, !!isOwner)) as any[];
-      if (users && users.length > 0 && following && following.length) {
-        following.forEach((followed, index) => {
-          const matchedUser = users.find(u => u.id === followed.id || u.id === followed.id?.user);
-          if (matchedUser) {
-            following[index].ipfsImage = matchedUser.ipfsImage
-              ? matchedUser.ipfsImage
-              : matchedUser.ipfsImage
-                ? matchedUser.ipfsImage
-                : matchedUser.ipfsImage
-                  ? matchedUser.ipfsImage
-                  : require(`assets/anonAvatars/${matchedUser.anonAvatar}`);
-            following[index].urlSlug = matchedUser.urlSlug;
-          }
-        });
-      }
       setFollowsList(following.filter(item => item.isFollowing === 2) || []);
     } catch (error) {
       console.log("error", error);
@@ -418,23 +401,6 @@ export default function CreatorPage() {
     try {
       setIsLoadingFollows(true);
       const followers = (await UserConnectionsAPI.getFollowers(creator?.userInfo?.id, !!isOwner)) as any[];
-      if (users && users.length > 0 && followers && followers.length) {
-        followers.forEach((follower, index) => {
-          const matchedUser = users.find(u => u.id === follower.id || u.id === follower.id?.user);
-
-          if (matchedUser) {
-            followers[index].ipfsImage = matchedUser.ipfsImage
-              ? matchedUser.ipfsImage
-              : matchedUser.ipfsImage
-                ? matchedUser.ipfsImage
-                : matchedUser.ipfsImage
-                  ? matchedUser.ipfsImage
-                  : require(`assets/anonAvatars/${matchedUser.anonAvatar}`);
-            followers[index].urlSlug = matchedUser.urlSlug;
-          }
-        });
-      }
-
       setFollowsList(followers.filter(item => item.isFollower === 2) || []);
     } catch (error) {
       console.log("error", error);
