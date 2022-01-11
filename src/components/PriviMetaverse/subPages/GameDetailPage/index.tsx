@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import { useMediaQuery, useTheme, Select, MenuItem, IconButton } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
-import GameMediaCard from "components/PriviMetaverse/components/cards/GameMediaCard";
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
@@ -565,45 +564,25 @@ export default function GameDetailPage() {
                 next={loadNfts}
                 hasMore={hasMore}
                 loader={
-                  loading && (
-                    <>
-                      {isListView ? (
-                        <div
-                          style={{
-                            paddingTop: 8,
-                            paddingBottom: 8,
-                          }}
-                        >
-                          {Array(loadingCount)
-                            .fill(0)
-                            .map((_, index) => (
-                              <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
-                                <Skeleton variant="rect" width={60} height={60} />
-                                <Skeleton
-                                  variant="rect"
-                                  width="40%"
-                                  height={24}
-                                  style={{ marginLeft: "8px" }}
-                                />
-                                <Skeleton
-                                  variant="rect"
-                                  width="20%"
-                                  height={24}
-                                  style={{ marginLeft: "8px" }}
-                                />
-                                <Skeleton
-                                  variant="rect"
-                                  width="20%"
-                                  height={24}
-                                  style={{ marginLeft: "8px" }}
-                                />
-                              </Box>
-                            ))}
-                        </div>
-                      ) : (
-                        <></>
-                      )}
-                    </>
+                  loading &&
+                  isListView && (
+                    <div
+                      style={{
+                        paddingTop: 8,
+                        paddingBottom: 8,
+                      }}
+                    >
+                      {Array(loadingCount)
+                        .fill(0)
+                        .map((_, index) => (
+                          <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
+                            <Skeleton variant="rect" width={60} height={60} />
+                            <Skeleton variant="rect" width="40%" height={24} style={{ marginLeft: "8px" }} />
+                            <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
+                            <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
+                          </Box>
+                        ))}
+                    </div>
                   )
                 }
               >

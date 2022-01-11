@@ -129,6 +129,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     fontSize: "16px important",
     color: "#212121 !important",
     border: "none !important",
+    padding: "2px 24px !important",
     [theme.breakpoints.down("xs")]: {
       fontSize: "12px !important",
       width: "193px !important",
