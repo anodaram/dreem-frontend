@@ -107,7 +107,7 @@ export default ({ nft, refresh }) => {
             Blocking payment:
           </Box>
           <Box mt={1} fontSize={14} fontFamily="Rany" lineHeight="16px">
-            Your payment has been deposited successfully. You will be able to claim the NFT at the end of the blocking period.
+            Your offer was accepted by the owner. You need to pay remaining amount to buy the NFT at Future price before end of countdown otherwise you will loose your collateral.
           </Box>
           <Box flex={1} mt="27px" display="flex" justifyContent="space-between" alignItems="center">
             <Box display="flex" flexDirection="column" flex={0.3}>
