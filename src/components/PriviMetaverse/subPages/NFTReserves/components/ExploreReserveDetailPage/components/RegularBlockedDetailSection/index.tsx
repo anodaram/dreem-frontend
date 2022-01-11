@@ -107,7 +107,8 @@ export default ({ nft, refresh }) => {
             Blocking payment:
           </Box>
           <Box mt={1} fontSize={14} fontFamily="Rany" lineHeight="16px">
-            Reminder! You've blocked this NFT, but haven't paid yet. In order to successfully block, please pay now.
+            Reminder! You've blocked this NFT, but haven't paid yet. In order to successfully block, please
+            pay now.
           </Box>
           <Box flex={1} mt="27px" display="flex" justifyContent="space-between" alignItems="center">
             <Box display="flex" flexDirection="column" flex={0.3}>
@@ -116,8 +117,8 @@ export default ({ nft, refresh }) => {
                 {`${blockingInfo?.Price} ${getTokenSymbol(blockingInfo?.PaymentToken)}`}
               </Box>
             </Box>
-            <Box display="flex" alignItems="center" flex={0.5} justifyContent="flex-end">
-              <Box fontSize={14} textAlign="center" width="48px" mr="11px">
+            <Box display="flex" alignItems="center" flex={0.6} justifyContent="flex-end">
+              <Box fontSize={14} textAlign="center" minWidth="48px" mr="11px">
                 Time to pay
               </Box>
               <Box className={classes.time}>{closeTime?.day} day(s)</Box>
@@ -157,7 +158,8 @@ export default ({ nft, refresh }) => {
             Offer Paid
           </Box>
           <Box mt={1} fontSize={14} lineHeight="22px" fontFamily="Rany">
-            Your payment has been deposited successfully. You will be able to claim the NFT at the end of the blocking period
+            Your payment has been deposited successfully. You will be able to claim the NFT at the end of the
+            blocking period
           </Box>
           <Box flex={1} mt="27px" display="flex" justifyContent="space-between" alignItems="center">
             <Box
@@ -180,12 +182,7 @@ export default ({ nft, refresh }) => {
               </Box>
             </Box>
           </Box>
-          <PrimaryButton
-            size="medium"
-            className={classes.primaryButton}
-            disabled
-            onClick={() => {}}
-          >
+          <PrimaryButton size="medium" className={classes.primaryButton} disabled onClick={() => {}}>
             CLAIM BLOCKED NFT
           </PrimaryButton>
         </Box>
