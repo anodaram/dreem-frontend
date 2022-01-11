@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { Grid, useTheme, useMediaQuery, Hidden, CircularProgress } from "@material-ui/core";
+import { Grid, useTheme, useMediaQuery, CircularProgress } from "@material-ui/core";
 
 import * as UserConnectionsAPI from "shared/services/API/UserConnectionsAPI";
 import { useTypedSelector } from "store/reducers/Reducer";
 import { setUser } from "store/actions/User";
 import Box from "shared/ui-kit/Box";
-import { CircularLoadingIndicator, PrimaryButton } from "shared/ui-kit";
+import { PrimaryButton } from "shared/ui-kit";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import Avatar from "shared/ui-kit/Avatar";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
@@ -27,12 +27,12 @@ import RealmCard from "components/PriviMetaverse/components/cards/RealmCard";
 import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
+import ImageCropModal from "components/PriviMetaverse/modals/ImageCropModal";
 import EditProfileModal from "../../modals/EditProfileModal";
 import VerifyProfileModal from "../../modals/VerifyProfileModal";
 import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProfileCard";
 import FollowProfileModal from "../../modals/FollowProfileModal";
 import { creatorPageStyles } from "./index.styles";
-import ImageCropModal from "components/PriviMetaverse/modals/ImageCropModal";
 
 const ProfileTabs = [
   {
@@ -81,8 +81,7 @@ export default function CreatorPage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOwner, setIsOwner] = useState<boolean | undefined>();
-  // const [fruit, setFruit] = useState<any>({});
-  const [selectedTab, setSelectedTab] = useState<string>("drafts");
+  const [selectedTab, setSelectedTab] = useState<string>();
   const { followUser, unfollowUser, isUserFollowed } = useUserConnections();
   const [isFollowing, setIsFollowing] = useState<number>(-1);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
@@ -96,7 +95,6 @@ export default function CreatorPage() {
   const inputRef = useRef<any>();
 
   const [curPage, setCurPage] = useState(1);
-  const [lastPage, setLastPage] = useState(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
 
   useEffect(() => {
@@ -113,12 +111,6 @@ export default function CreatorPage() {
   useEffect(() => {
     (async () => {
       try {
-        setLoadingProfile(true);
-        setNftContents([]);
-        setCurPage(1);
-        setLastPage(1);
-        setHasMore(true);
-
         const userResp = await axios.get(`${URL()}/user/getBasicInfo/${creatorAddress}`);
         const userData = userResp.data.data;
 
@@ -126,6 +118,7 @@ export default function CreatorPage() {
           setCreator({
             userInfo: userData,
           });
+          setSelectedTab("drafts");
 
           setLoading(false);
         } else {
@@ -151,10 +144,7 @@ export default function CreatorPage() {
         try {
           setLoading(true);
           setNftContents([]);
-          setNftContents([]);
-          setNftContents([]);
           setCurPage(1);
-          setLastPage(1);
           setHasMore(true);
 
           await loadData();
@@ -166,7 +156,7 @@ export default function CreatorPage() {
         }
       })();
     }
-  }, [selectedTab, creator.userInfo]);
+  }, [selectedTab]);
 
   const loadData = async () => {
     try {
@@ -233,10 +223,9 @@ export default function CreatorPage() {
         );
 
         if (inventoryResp.success) {
-          setNftContents(inventoryResp.data.items);
-          if (inventoryResp.data.page && curPage <= inventoryResp.data.page.max) {
+          setNftContents([...nftContents, ...inventoryResp.data.items]);
+          if (inventoryResp.data.page && curPage < inventoryResp.data.page.max) {
             setCurPage(curPage => curPage + 1);
-            setLastPage(inventoryResp.data.page.max);
           } else {
             setHasMore(false);
           }
@@ -252,6 +241,9 @@ export default function CreatorPage() {
   const handleRefresh = async () => {
     setLoading(true);
     setCurPage(1);
+    setHasMore(true);
+    setNftContents([]);
+
     let filters = ["NFT_WORLD", "DRAFT_WORLD", "NFT_MEDIA"];
     if (selectedTab === "drafts") {
       filters = ["DRAFT_WORLD"];
@@ -267,10 +259,13 @@ export default function CreatorPage() {
       creator.userInfo.id
     );
     if (inventoryResp.success && creator && creator.userInfo) {
-      setNftContents(inventoryResp.data.items);
+      setNftContents([...inventoryResp.data.items]);
       if (inventoryResp.data.page && curPage <= inventoryResp.data.page.max) {
-        setCurPage(curPage => curPage + 1);
-        setLastPage(inventoryResp.data.page.max);
+        if (inventoryResp.data.page && inventoryResp.data.page.max > curPage) {
+          setCurPage(curPage => curPage + 1);
+        } else {
+          setHasMore(false);
+        }
       }
     }
     setLoading(false);
@@ -321,7 +316,11 @@ export default function CreatorPage() {
             dispatch(setUser(setterUser));
             setCreator(prev => ({
               ...prev,
-              userInfo: { ...prev.userInfo, infoImage: setterUser.infoImage, urlIpfsImage: setterUser.urlIpfsImage },
+              userInfo: {
+                ...prev.userInfo,
+                infoImage: setterUser.infoImage,
+                urlIpfsImage: setterUser.urlIpfsImage,
+              },
             }));
           }
           setProfileAvatarChanged(Date.now());
@@ -330,14 +329,6 @@ export default function CreatorPage() {
       .catch(error => {
         console.log("Error", error);
       });
-  };
-
-  const validateFile = file => {
-    const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/x-icon"];
-    if (validTypes.indexOf(file.type) === -1) {
-      return false;
-    }
-    return true;
   };
 
   const getCreatorName = () => {
@@ -369,10 +360,6 @@ export default function CreatorPage() {
   const onVerifyProfileClicked = () => {
     setOpenVerifyProfileModal(true);
   };
-
-  const onAvartaPictureClicked = () => {
-    setOpenAvartaImageCropModal(true);
-  }
 
   const openFollowProfileClicked = isFollowing => {
     setOpenFollowProfileModal(true);
@@ -435,7 +422,7 @@ export default function CreatorPage() {
   return (
     <>
       <div className={classes.root}>
-        <Box className={classes.container}>
+        <Box className={classes.container} id="scrollContainer">
           <Box position="relative" width={1} minHeight={1}>
             <img
               src={require("assets/metaverseImages/profile_decoration_image_1.png")}
@@ -458,7 +445,7 @@ export default function CreatorPage() {
                         onClick={() => {
                           if (isOwner) {
                             if (inputRef && inputRef.current) {
-                              inputRef.current.value = '';
+                              inputRef.current.value = "";
                               inputRef.current.click();
                             }
                           }
@@ -597,8 +584,8 @@ export default function CreatorPage() {
                                 {isFollowing === 0
                                   ? "Follow"
                                   : isFollowing === 1
-                                    ? "Cancel request"
-                                    : "Unfollow"}
+                                  ? "Cancel request"
+                                  : "Unfollow"}
                               </PrimaryButton>
                             ))
                           )}
@@ -675,15 +662,6 @@ export default function CreatorPage() {
                     </Box>
                     <Box className={classes.profileMetaBox} mt={3} maxWidth="460px" width="fit-content">
                       <Box className={classes.followingBox}>
-                        {/* <Hidden xsDown>
-                          <Box display="flex" flexDirection="column" flex="1">
-                            <div className={classes.typo5}>0</div>
-                            <Box className={classes.typo6} mt={1}>
-                              Realms
-                            </Box>
-                          </Box>
-                          <Box className={classes.metaBoxDivider1} />
-                        </Hidden> */}
                         <Box display="flex" flexDirection="column" flex="1">
                           <div className={classes.typo5}>{creator?.userInfo?.numFollowers || "0"}</div>
                           <Box
@@ -708,14 +686,6 @@ export default function CreatorPage() {
                           </Box>
                         </Box>
                       </Box>
-                      {/* <Hidden smUp>
-                        <Box display="flex" flexDirection="column" mt={2}>
-                          <div className={classes.typo5}>0</div>
-                          <Box className={classes.typo6} mt={1}>
-                            Realms
-                          </Box>
-                        </Box>
-                      </Hidden> */}
                     </Box>
                   </Box>
                 </LoadingWrapper>
@@ -729,7 +699,7 @@ export default function CreatorPage() {
                   equalTab
                   mt={4}
                 />
-                <div className={classes.nftContent} id="scrollContainer">
+                <div className={classes.nftContent}>
                   <Box display="flex" flexDirection="column">
                     {selectedTab === "drafts" && (
                       <>
@@ -997,7 +967,10 @@ export default function CreatorPage() {
           open={openAvartaImageCropModal}
           aspect={3 / 3}
           onClose={() => setOpenAvartaImageCropModal(false)}
-          setCroppedImage={(file) => { handleImage(file) }} />
+          setCroppedImage={file => {
+            handleImage(file);
+          }}
+        />
       )}
     </>
   );
