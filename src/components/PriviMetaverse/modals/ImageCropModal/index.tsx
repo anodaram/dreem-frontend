@@ -45,7 +45,6 @@ const ImageCropModal = ({ open, aspect, imageFile, onClose, setCroppedImage }) =
         croppedAreaPixels,
         rotation
       )
-      console.log('donee', { croppedImage })
 
       srcToFile(
         croppedImage,
@@ -62,7 +61,7 @@ const ImageCropModal = ({ open, aspect, imageFile, onClose, setCroppedImage }) =
   }, [imageSrc, croppedAreaPixels, rotation])
 
   const initImageSrc = async (file) => {
-    if (file){
+    if (file) {
       let imageDataUrl = await readFile(file)
 
       // apply rotation if needed
@@ -78,67 +77,76 @@ const ImageCropModal = ({ open, aspect, imageFile, onClose, setCroppedImage }) =
 
   return (
     <Modal size="medium" isOpen={open} onClose={onClose} showCloseIcon className={classes.content}>
-        {imageSrc && (
-          <>
-            <div className={classes.cropContainer}>
-              <Cropper
-                image={imageSrc}
-                crop={crop}
-                rotation={rotation}
-                zoom={zoom}
-                aspect={aspect}
-                onCropChange={setCrop}
-                onRotationChange={setRotation}
-                onCropComplete={onCropComplete}
-                onZoomChange={setZoom}
+      {imageSrc && (
+        <>
+          <div className={classes.cropContainer}>
+            <Cropper
+              image={imageSrc}
+              crop={crop}
+              rotation={rotation}
+              zoom={zoom}
+              aspect={aspect}
+              onCropChange={setCrop}
+              onRotationChange={setRotation}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+            />
+          </div>
+          <div className={classes.controls}>
+            <div className={classes.sliderContainer}>
+              <Typography
+                variant="overline"
+                classes={{ root: classes.sliderLabel }}
+              >
+                Zoom
+              </Typography>
+              <Slider
+                value={zoom}
+                min={1}
+                max={3}
+                step={0.1}
+                aria-labelledby="Zoom"
+                classes={{ root: classes.slider }}
+                onChange={(e, _zoom) => setZoom(Number(_zoom))}
               />
             </div>
-            <div className={classes.controls}>
-              <div className={classes.sliderContainer}>
-                <Typography
-                  variant="overline"
-                  classes={{ root: classes.sliderLabel }}
-                >
-                  Zoom
-                </Typography>
-                <Slider
-                  value={zoom}
-                  min={1}
-                  max={3}
-                  step={0.1}
-                  aria-labelledby="Zoom"
-                  classes={{ root: classes.slider }}
-                  onChange={(e, _zoom) => setZoom(Number(_zoom))}
-                />
-              </div>
-              <div className={classes.sliderContainer}>
-                <Typography
-                  variant="overline"
-                  classes={{ root: classes.sliderLabel }}
-                >
-                  Rotation
-                </Typography>
-                <Slider
-                  value={rotation}
-                  min={0}
-                  max={360}
-                  step={1}
-                  aria-labelledby="Rotation"
-                  classes={{ root: classes.slider }}
-                  onChange={(e, _rotation) => setRotation(Number(_rotation))}
-                />
-              </div>
-              <Button
-                onClick={showCroppedImage}
-                variant="contained"
-                color="primary"
-                classes={{ root: classes.cropButton }}
+            <div className={classes.sliderContainer}>
+              <Typography
+                variant="overline"
+                classes={{ root: classes.sliderLabel }}
               >
-                Confirm
-              </Button>
+                Rotation
+              </Typography>
+              <Slider
+                value={rotation}
+                min={0}
+                max={360}
+                step={1}
+                aria-labelledby="Rotation"
+                classes={{ root: classes.slider }}
+                onChange={(e, _rotation) => setRotation(Number(_rotation))}
+              />
             </div>
-          </>
-        )}
+            <PrimaryButton
+              size="medium"
+              isRounded
+              style={{
+                background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+                borderRadius: 10,
+                minWidth: 160,
+                textTransform: "uppercase",
+                fontSize: 16,
+                fontWeight: 700,
+                fontFamily: "GRIFTER",
+                color: "#212121",
+              }}
+              onClick={showCroppedImage}
+            >
+              Confirm
+            </PrimaryButton>
+          </div>
+        </>
+      )}
     </Modal>
   );
 };

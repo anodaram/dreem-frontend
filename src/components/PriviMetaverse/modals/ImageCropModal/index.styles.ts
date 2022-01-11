@@ -26,10 +26,6 @@ export const useImageCropModalStyles = makeStyles((theme) => ({
       height: 400,
     },
   },
-  cropButton: {
-    flexShrink: 0,
-    marginLeft: 16,
-  },
   controls: {
     padding: 16,
     display: 'flex',
