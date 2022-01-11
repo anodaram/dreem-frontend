@@ -30,13 +30,12 @@ const Auth = () => {
   const dispatch = useDispatch();
   const [numberOfMessages, setNumberOfMessages] = useState<number>(0);
 
-  const { account } = useWeb3React();
+  const { account, active } = useWeb3React();
   const user = useTypedSelector(state => state.user);
   const { isSignedin, setSignedin } = useAuth();
-  const history = useHistory();
 
   // NOTE: this hack is required to trigger re-render
-  const [internalSocket, setInternalSocket] = useState<SocketIOClient.Socket | null>(null);
+  const [internalSocket] = useState<SocketIOClient.Socket | null>(null);
 
   useEffect(() => {
     if (user.id) {
@@ -93,8 +92,12 @@ const Auth = () => {
   };
 
   useEffect(() => {
-    isSignedin && !account && handleLogout();
-  }, [account, isSignedin]);
+    (window as any).ethereum.on("accountsChanged", accounts => {
+      if (isSignedin && !accounts.length) {
+        handleLogout();
+      }
+    });
+  });
 
   return (
     <Router>
