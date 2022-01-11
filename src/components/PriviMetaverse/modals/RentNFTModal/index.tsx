@@ -84,7 +84,7 @@ export default function RentNFTModal({
     })();
 
     getBalance();
-  }, [open]);
+  }, [open, chainId, selectedChain]);
 
   const getBalance = async () => {
     if (tokenList && offer && library) {
@@ -359,7 +359,7 @@ export default function RentNFTModal({
                 placeHolder="00"
               />
             )}
-            {maxHours > 0 && (
+            {(maxDays > 0 || maxHours > 0) && (
               <InputWithLabelAndTooltip
                 inputValue={limitHour}
                 onInputValueChange={e => setLimitHour(e.target.value)}
