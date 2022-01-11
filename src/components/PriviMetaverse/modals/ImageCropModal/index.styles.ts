@@ -5,14 +5,12 @@ export const useImageCropModalStyles = makeStyles((theme) => ({
     backgroundColor: "#ffffff !important",
     boxShadow: "0px 38px 96px 17px rgba(1, 1, 13, 0.25)",
     color: "#181818 !important",
-    width: "788px !important",
-    height: "500px !important",
     borderRadius: "0 !important",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     flexDirection:"column",
-    padding: "58px 32px 16px 32px !important"
+    padding: "58px 32px 16px 32px !important",
   },
   modalContent: {
     display: "flex",
