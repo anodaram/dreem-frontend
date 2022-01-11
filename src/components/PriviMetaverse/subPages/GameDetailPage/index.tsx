@@ -26,8 +26,8 @@ import { toDecimals } from "shared/functions/web3";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
-  375: 1,
-  600: 2,
+  400: 1,
+  700: 2,
   1200: 3,
   1440: 4,
 };
@@ -94,6 +94,10 @@ export default function GameDetailPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const breakTwo = useMediaQuery(theme.breakpoints.up(700));
+  const breakThree = useMediaQuery(theme.breakpoints.up(1200));
+  const breakFour = useMediaQuery(theme.breakpoints.up(1440));
 
   const { collection_id }: { collection_id: string } = useParams();
   const [gameInfo, setGameInfo] = React.useState<any>(undefined);
@@ -331,6 +335,28 @@ export default function GameDetailPage() {
     setHasMore(true);
     setNfts([]);
   };
+
+  const nftListWithSkeleton = React.useMemo(() => {
+    if (hasMore) {
+      let addedCount = 1;
+      if (breakFour) {
+        addedCount = 4 - (nfts.length % 4);
+      } else if (breakThree) {
+        addedCount = 3 - (nfts.length % 3);
+      } else if (breakTwo) {
+        addedCount = 2 - (nfts.length % 2);
+      }
+
+      const result = [...nfts];
+      for (let index = 0; index < addedCount; index++) {
+        result.push({});
+      }
+
+      return result;
+    } else {
+      return nfts;
+    }
+  }, [nfts, hasMore, breakTwo, breakThree, breakFour]);
 
   return (
     <Box className={classes.root} id="scrollContainer">
@@ -575,16 +601,7 @@ export default function GameDetailPage() {
                             ))}
                         </div>
                       ) : (
-                        <Box mt={2}>
-                          <MasonryGrid
-                            gutter={"40px"}
-                            data={Array(loadingCount).fill(0)}
-                            renderItem={(_, index) => (
-                              <GameMediaCard isLoading={true} key={`game_${index}`} />
-                            )}
-                            columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                          />
-                        </Box>
+                        <></>
                       )}
                     </>
                   )
@@ -606,8 +623,10 @@ export default function GameDetailPage() {
                   <Box mt={4}>
                     <MasonryGrid
                       gutter={"40px"}
-                      data={nfts}
-                      renderItem={item => <ExploreCard nft={item} />}
+                      data={nftListWithSkeleton}
+                      renderItem={item => (
+                        <ExploreCard nft={item} isLoading={Object.entries(item).length === 0} />
+                      )}
                       columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                     />
                   </Box>
