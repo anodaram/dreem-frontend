@@ -319,23 +319,20 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                 <CustomTable
                   variant={Variant.Transparent}
                   headers={historyTableHeaders}
-                  rows={historyData.map(item => {
+                  rows={historyData.filter(item => item.status === 'sold' || item.status === 'liquidated' || item.status === 'cancelled').map(item => {
                     const Status = () => {
-                      const isPaid = item?.Price === item?.PaidAmount;
-                      if (isPaid) {
-                        return <Box>PAID</Box>
+                      if (item.status === 'cancelled') {
+                        return <Box color="#ffffff50">CANCELLED</Box>
                       }
 
-                      const isLiquidiated = item?.TotalCollateralPercent === 0;
-                      if (isLiquidiated) {
+                      if (item.status === 'liquidated') {
                         return <Box color="#FF6868">LIQUIDATED</Box>
                       }
 
-                      const isCancelled = item?.cancelled
-                      if (isCancelled) {
-                        return <Box color="#ffffff50">CANCELLED</Box>
+                      if (item.status === 'sold') {
+                        return <Box>PAID</Box>
                       }
-                      
+
                       return null;
                     }
                     return [
