@@ -160,7 +160,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
                 style={{ borderRight: "1px solid #A4A4A420" }}
               >
                 <Box fontSize={16}>Future Price</Box>
-                <Box className={classes.gradientText} fontFamily="Rany" fontSize={18}>
+                <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
                   {`${(blockingInfo?.TotalCollateralPercent / 100) * blockingInfo?.Price} ${getTokenSymbol(
                     blockingInfo?.PaymentToken
                   )}`}
@@ -168,7 +168,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
               </Box>
               <Box display="flex" flexDirection="column" flex={0.5} pl={8}>
                 <Box fontSize={14}>Paid amount to withdraw</Box>
-                <Box className={classes.gradientText} fontFamily="Rany" fontSize={18}>
+                <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
                   {`${
                     ((blockingInfo?.TotalCollateralPercent - blockingInfo?.CollateralPercent) / 100) *
                     blockingInfo?.Price
