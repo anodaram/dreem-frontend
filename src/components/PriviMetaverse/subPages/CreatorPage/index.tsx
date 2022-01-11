@@ -27,12 +27,12 @@ import RealmCard from "components/PriviMetaverse/components/cards/RealmCard";
 import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
+import ImageCropModal from "components/PriviMetaverse/modals/ImageCropModal";
 import EditProfileModal from "../../modals/EditProfileModal";
 import VerifyProfileModal from "../../modals/VerifyProfileModal";
 import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProfileCard";
 import FollowProfileModal from "../../modals/FollowProfileModal";
 import { creatorPageStyles } from "./index.styles";
-import ImageCropModal from "components/PriviMetaverse/modals/ImageCropModal";
 
 const ProfileTabs = [
   {
@@ -662,15 +662,6 @@ export default function CreatorPage() {
                     </Box>
                     <Box className={classes.profileMetaBox} mt={3} maxWidth="460px" width="fit-content">
                       <Box className={classes.followingBox}>
-                        {/* <Hidden xsDown>
-                          <Box display="flex" flexDirection="column" flex="1">
-                            <div className={classes.typo5}>0</div>
-                            <Box className={classes.typo6} mt={1}>
-                              Realms
-                            </Box>
-                          </Box>
-                          <Box className={classes.metaBoxDivider1} />
-                        </Hidden> */}
                         <Box display="flex" flexDirection="column" flex="1">
                           <div className={classes.typo5}>{creator?.userInfo?.numFollowers || "0"}</div>
                           <Box
@@ -695,14 +686,6 @@ export default function CreatorPage() {
                           </Box>
                         </Box>
                       </Box>
-                      {/* <Hidden smUp>
-                        <Box display="flex" flexDirection="column" mt={2}>
-                          <div className={classes.typo5}>0</div>
-                          <Box className={classes.typo6} mt={1}>
-                            Realms
-                          </Box>
-                        </Box>
-                      </Hidden> */}
                     </Box>
                   </Box>
                 </LoadingWrapper>
