@@ -13,7 +13,7 @@ const ORIENTATION_TO_ANGLE = {
   '8': -90,
 }
 
-const ImageCropModal = ({ open, imageFile, onClose, setCroppedImage }) => {
+const ImageCropModal = ({ open, aspect, imageFile, onClose, setCroppedImage }) => {
   const classes = useImageCropModalStyles();
 
   useEffect(() => {
@@ -86,7 +86,7 @@ const ImageCropModal = ({ open, imageFile, onClose, setCroppedImage }) => {
                 crop={crop}
                 rotation={rotation}
                 zoom={zoom}
-                aspect={4 / 3}
+                aspect={aspect}
                 onCropChange={setCrop}
                 onRotationChange={setRotation}
                 onCropComplete={onCropComplete}

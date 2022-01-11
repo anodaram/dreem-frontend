@@ -995,6 +995,7 @@ export default function CreatorPage() {
         <ImageCropModal
           imageFile={imageFile}
           open={openAvartaImageCropModal}
+          aspect={3 / 3}
           onClose={() => setOpenAvartaImageCropModal(false)}
           setCroppedImage={(file) => { handleImage(file) }} />
       )}
