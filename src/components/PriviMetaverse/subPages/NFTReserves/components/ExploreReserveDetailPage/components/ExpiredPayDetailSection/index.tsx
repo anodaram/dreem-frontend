@@ -149,9 +149,8 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
         </Box>
         {isSuccess ? (
           <>
-            <Box mt={1}>
-              You didn’t manage to pay full amount necessary to buy out your NFT. You can withdraw your funds
-              and NFT will be returned to it’s owner.{" "}
+            <Box mt={1} fontSize={14} lineHeight="22px" fontFamily="Rany">
+              Your payment has been deposited successfully. You will be able to claim the NFT at the end of the blocking period
             </Box>
             <Box flex={1} mt="27px" display="flex" justifyContent="space-between" alignItems="center">
               <Box
@@ -161,7 +160,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
                 style={{ borderRight: "1px solid #A4A4A420" }}
               >
                 <Box fontSize={16}>Future Price</Box>
-                <Box color="white" fontFamily="Rany" fontSize={18}>
+                <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
                   {`${(blockingInfo?.TotalCollateralPercent / 100) * blockingInfo?.Price} ${getTokenSymbol(
                     blockingInfo?.PaymentToken
                   )}`}
@@ -169,7 +168,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
               </Box>
               <Box display="flex" flexDirection="column" flex={0.5} pl={8}>
                 <Box fontSize={14}>Paid amount to withdraw</Box>
-                <Box color="white" fontFamily="Rany" fontSize={18}>
+                <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
                   {`${
                     ((blockingInfo?.TotalCollateralPercent - blockingInfo?.CollateralPercent) / 100) *
                     blockingInfo?.Price
