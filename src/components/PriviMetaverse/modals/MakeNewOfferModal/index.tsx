@@ -111,7 +111,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE,
-        toNDecimals(price * (1 + fee), reservePriceToken.Decimals)
+        toNDecimals(price, reservePriceToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -156,7 +156,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
         token_id,
         paymentToken: reservePriceToken?.Address,
         collateralToken: colaterralPriceToken?.Address,
-        price: toNDecimals(price * (1 + fee), reservePriceToken.Decimals),
+        price: toNDecimals(price, reservePriceToken.Decimals),
         beneficiary: account,
         collateralPercent: toNDecimals(collateralPercent, 2),
         collateralInitialAmount: toNDecimals(collateral, colaterralPriceToken.Decimals),

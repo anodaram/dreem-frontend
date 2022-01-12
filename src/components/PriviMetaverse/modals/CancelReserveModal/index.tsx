@@ -40,6 +40,7 @@ export default function CancelReserveModal({
   const { showAlertMessage } = useAlertMessage();
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const fee = useSelector((state: RootState) => state.marketPlace.fee);
 
   useEffect(() => {
     setSelectedChain(getChainForNFT(nft))
@@ -51,7 +52,7 @@ export default function CancelReserveModal({
       if (nft && nft?.blockingSalesHistories) {
         setBlockingInfo(nft?.blockingSalesHistories[nft?.blockingSalesHistories?.length - 1]);
       }
-      const chain = BlockchainNets.find(net => net.value === nft.chain);
+      const chain = BlockchainNets.find(net => net.name.toLowerCase() === nft.Chain.toLowerCase());
       if (chain) {
         const web3APIHandler = chain.apiHandler;
         const web3 = new Web3(library.provider);
@@ -203,7 +204,7 @@ export default function CancelReserveModal({
               (blockingInfo?.Price * penaltyFee) / 100
             } ${getTokenSymbol(blockingInfo?.PaymentToken)}`}</Box>
           </Box>
-          <Box fontSize={12} lineHeight="21px" textAlign="right">
+          <Box fontSize={12} lineHeight="21px" textAlign="right" color="#ffffff">
             incl. {fee * 100}% marketplace fee
           </Box>
         </Box>

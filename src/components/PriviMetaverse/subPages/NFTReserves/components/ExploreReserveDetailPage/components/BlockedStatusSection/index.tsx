@@ -133,10 +133,10 @@ export default ({isOwnership, nft, refresh}) => {
             Collateral status<span style={{ color: "#ffffff", marginLeft: 6 }}>{blockingInfo?.TotalCollateralPercent}%</span>
           </span>
           <span>
-            Collateral needed<span style={{ color: "#D30401", marginLeft: 6 }}>100%</span>
+            Collateral needed<span style={{ color: "#D30401", marginLeft: 6 }}>{blockingInfo?.CollateralPercent}%</span>
           </span>
         </Box>
-        <RangeSlider value={range} onChange={(event, newValue) => {}} />
+        <RangeSlider value={Number(blockingInfo?.TotalCollateralPercent)} onChange={(event, newValue) => {}} />
         <Box display="flex" justifyContent="space-between" alignItems="center" mt={1}>
           <span>
             <strong>0 %</strong>
