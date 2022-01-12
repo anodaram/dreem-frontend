@@ -161,7 +161,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         price: toNDecimals(price, reservePriceToken.Decimals),
         beneficiary: account,
         collateralInitialAmount: toNDecimals(collateral, collateralToken.Decimals),
-        collateralPercent: toNDecimals(Number(nft?.blockingSaleOffer?.CollateralPercent), 2),
+        collateralPercent: toNDecimals((Number(collateral) / Number(nft?.blockingSaleOffer?.Price) * 100), 2),
         reservePeriod: Math.ceil(+nft.blockingSaleOffer.ReservePeriod * 3600 * 24),
         validityPeriod: Number(nft.blockingSaleOffer.AcceptDuration || 0) * 3600 * 24,
         sellerToMatch: nft.blockingSaleOffer.Beneficiary,
@@ -194,7 +194,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         PaymentToken: nft.blockingSaleOffer.PaymentToken,
         Price: nft.blockingSaleOffer.Price,
         Beneficiary: account,
-        CollateralPercent: ((Number(collateral) / Number(nft?.blockingSaleOffer?.Price)) * 100).toFixed(2),
+        CollateralPercent: nft?.blockingSaleOffer?.CollateralPercent,
         TotalCollateralPercent: ((Number(collateral) / Number(nft?.blockingSaleOffer?.Price)) * 100).toFixed(
           2
         ),
@@ -213,7 +213,9 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         Price: nft.blockingSaleOffer.Price,
         Beneficiary: account,
         CollateralPercent: nft.blockingSaleOffer.CollateralPercent,
-        TotalCollateralPercent: nft.blockingSaleOffer.CollateralPercent,
+        TotalCollateralPercent: ((Number(collateral) / Number(nft?.blockingSaleOffer?.Price)) * 100).toFixed(
+          2
+        ),
         ReservePeriod: nft.blockingSaleOffer.ReservePeriod,
         from: nft.blockingSaleOffer.Beneficiary,
         hash: response.hash,

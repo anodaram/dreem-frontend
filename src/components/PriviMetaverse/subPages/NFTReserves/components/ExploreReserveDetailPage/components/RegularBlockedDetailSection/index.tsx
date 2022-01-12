@@ -97,7 +97,7 @@ export default ({ nft, refresh }) => {
             Collateral
           </Box>
           <Box fontFamily="GRIFTER" fontWeight="bold" fontSize="20px">
-            {blockingInfo?.CollateralPercent} %
+            {blockingInfo?.TotalCollateralPercent} %
           </Box>
         </Box>
       </Box>
@@ -168,7 +168,7 @@ export default ({ nft, refresh }) => {
             >
               <Box fontSize={16}>Future Price</Box>
               <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
-                {`${(blockingInfo?.TotalCollateralPercent / 100) * blockingInfo?.Price} ${getTokenSymbol(
+                {`${((Number(blockingInfo?.TotalCollateralPercent) / 100) * Number(blockingInfo?.Price)).toFixed(2)} ${getTokenSymbol(
                   blockingInfo?.PaymentToken
                 )}`}
               </Box>

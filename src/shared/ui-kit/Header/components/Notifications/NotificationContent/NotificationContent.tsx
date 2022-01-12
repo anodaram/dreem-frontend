@@ -265,8 +265,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 254 ? (
         <div>
           <div>
-            <span className={classes.username}>{externalData.user}</span> placed a new blocking offer on <span className={classes.nftName}>{externalData.nft.name}</span>
-            for {externalData.price} for {externalData.duration}
+            <span className={classes.username}>{externalData.user}</span> placed a new blocking offer on <span className={classes.nftName}>{externalData.nft.name}</span> for {externalData.price} for {externalData.duration}
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your management

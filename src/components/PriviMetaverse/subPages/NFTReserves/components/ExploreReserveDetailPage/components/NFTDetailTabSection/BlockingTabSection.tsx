@@ -241,11 +241,11 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                             cell: `${item.Price} ${getTokenSymbol(item.PaymentToken)}`,
                           },
                           {
-                            cell: isOwnership ? `${item.ReservePeriod} Day(s)` : `${item.CollateralPercent} %`,
+                            cell: isOwnership ? `${item.ReservePeriod} Day(s)` : `${item.TotalCollateralPercent} %`,
                           },
                           {
                             cell: isOwnership
-                              ? `${item.CollateralPercent} %`
+                              ? `${item.TotalCollateralPercent} %`
                               : `${item.CollateralAmount} ${getTokenSymbol(item.CollateralToken)}`,
                           },
                           {
@@ -344,10 +344,10 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                         cell: (
                           <span
                             className={classes.gradientText}
-                            onClick={() => visitProfile(item.Beneficiary, history)}
+                            onClick={() => visitProfile(item.Beneficiary || item.to, history)}
                             style={{ cursor: "pointer" }}
                           >
-                            {item.Beneficiary}
+                            {item.Beneficiary || item.to}
                           </span>
                         ),
                       },
@@ -361,7 +361,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                         cell: `${item.ReservePeriod} Day(s)`,
                       },
                       {
-                        cell: `${item.CollateralPercent} %`,
+                        cell: `${item.TotalCollateralPercent} %`,
                       },
                       {
                         cellAlign: "center",

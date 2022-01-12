@@ -30,9 +30,6 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   const [reservePriceToken, setReservePriceToken] = useState<any>(
     tokenList.find(item => item.Address == nft?.blockingSaleOffer?.PaymentToken)
   );
-  const [collateralPercent, setCollateralPercent] = useState<string | number>(
-    nft?.blockingSaleOffer?.CollateralPercent
-  );
   const [totalBalance, setTotalBalance] = useState<string>("0");
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [confirmSuccess, setConfirmSuccess] = useState<boolean>(false);
@@ -185,8 +182,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
         TokenId: token_id,
         TotalCollateralPercent:
           Number(
-            nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].TotalCollateralPercent ||
-              nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].CollateralPercent
+            nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].TotalCollateralPercent
           ) +
           Number(
             ((price || 0) / nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price) * 100
@@ -204,7 +200,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   };
 
   const collateral =
-    (Number(nft?.blockingSaleOffer?.Price) * Number(nft?.blockingSaleOffer?.CollateralPercent)) / 100;
+    (Number(nft?.blockingSaleOffer?.Price) * Number(nft?.blockingSaleOffer?.TotalCollateralPercent)) / 100;
 
   return (
     <>
@@ -304,7 +300,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                   Collateral at{" "}
                   {(
                     (Number(price) / Number(nft?.blockingSaleOffer?.Price)) * 100 +
-                    Number(nft?.blockingSaleOffer?.CollateralPercent)
+                    Number(nft?.blockingSaleOffer?.TotalCollateralPercent)
                   ).toFixed(2)}
                   % / <b>{nft?.blockingSaleOffer?.CollateralPercent}</b>%
                 </Box>
