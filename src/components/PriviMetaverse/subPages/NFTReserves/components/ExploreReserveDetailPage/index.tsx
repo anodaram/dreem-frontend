@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
-import { setTokenList } from "store/actions/MarketPlace";
+import { setMarketFee, setTokenList } from "store/actions/MarketPlace";
 import { BackButton } from "components/PriviMetaverse/components/BackButton";
 import CancelReserveModal from "components/PriviMetaverse/modals/CancelReserveModal";
 import ClaimPaymentModal from "components/PriviMetaverse/modals/ClaimPaymentModal";
@@ -16,7 +16,7 @@ import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import { Modal } from "shared/ui-kit";
 import { ShareWhiteIcon } from "shared/ui-kit/Icons/SvgIcons";
 import DiscordPhotoFullScreen from "shared/ui-kit/Page-components/Discord/DiscordPhotoFullScreen/DiscordPhotoFullScreen";
-import { getGameNFT } from "shared/services/API/ReserveAPI";
+import { getGameNFT, getMarketplaceFee } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
 import { getChainForNFT } from "shared/functions/metamask";
@@ -127,6 +127,11 @@ const ExploreReserveDetailPage = () => {
       setNft({
         ...response.nft,
       });
+    }
+
+    const marketFeeRes = await getMarketplaceFee();
+    if (marketFeeRes.success) {
+      dispatch(setMarketFee(marketFeeRes.data.Fee));
     }
 
     setIsLoading(false);
