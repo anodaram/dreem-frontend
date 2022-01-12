@@ -95,6 +95,42 @@ const reservesManager = (network: string) => {
       }
     });
   };
+
+  const liquidateUndercollateralization = async (
+    web3: Web3,
+    account: string,
+    payload: any,
+    setHash: any
+  ): Promise<any> => {
+    return new Promise(async resolve => {
+      try {
+        const contract = ContractInstance(web3, metadata.abi, contractAddress);
+        console.log("Getting gas....");
+        console.log(payload)
+        const gas = await contract.methods
+          .liquidateUndercollateralization(
+            payload.activeReserveId,
+          )
+          .estimateGas({ from: account });
+        console.log("calced gas price is.... ", gas);
+        const response = await contract.methods
+          .liquidateUndercollateralization(
+            payload.activeReserveId,
+          )
+          .send({ from: account, gas: gas })
+          .on("transactionHash", hash => {
+            setHash(hash);
+          });
+        console.log("transaction succeed");
+        resolve({ success: true, hash: response.transactionHash });
+      } catch (e) {
+        console.log(e);
+        resolve({
+          success: false,
+        });
+      }
+    });
+  };
   
   const decreaseReserveCollateral = async (
     web3: Web3,
@@ -208,7 +244,15 @@ const reservesManager = (network: string) => {
     });
   };
 
-  return { sellerCancelFeePercent, cancelReserve, increaseReserveCollateral, liquidateReserve, payThePrice, decreaseReserveCollateral };
+  return {
+    sellerCancelFeePercent,
+    cancelReserve,
+    increaseReserveCollateral,
+    liquidateReserve,
+    payThePrice,
+    decreaseReserveCollateral,
+    liquidateUndercollateralization
+  };
 };
 
 export default reservesManager;

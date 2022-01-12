@@ -162,7 +162,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
               >
                 <Box fontSize={16}>Future Price</Box>
                 <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
-                  {`${(blockingInfo?.TotalCollateralPercent / 100) * blockingInfo?.Price} ${getTokenSymbol(
+                  {`${((Number(blockingInfo?.TotalCollateralPercent) / 100) * Number(blockingInfo?.Price)).toFixed(2)} ${getTokenSymbol(
                     blockingInfo?.PaymentToken
                   )}`}
                 </Box>
@@ -178,7 +178,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
         ) : (
           <Box mt={1} fontFamily="Rany" fontSize={14} lineHeight="22.4px">
             You didn’t manage to pay full amount necessary to buy out your NFT. You’ve lost a chance to buy it
-            and lost <span style={{ color: "#E9FF26" }}>{blockingInfo?.CollateralPercent}%</span> of
+            and lost <span style={{ color: "#E9FF26" }}>{blockingInfo?.TotalCollateralPercent}%</span> of
             collaterall for blocking Claim the outstanding amount
           </Box>
         )}

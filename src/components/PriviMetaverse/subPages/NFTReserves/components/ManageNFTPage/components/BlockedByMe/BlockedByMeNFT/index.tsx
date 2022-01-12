@@ -52,7 +52,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
     return token?.Symbol || "";
   };
 
-  const collateralPercent = Number(item.history?.TotalCollateralPercent || item.history?.CollateralPercent);
+  const collateralPercent = Number(item.history?.TotalCollateralPercent)
 
   const isPaid = item.history?.PaidAmount === item.history?.Price;
   const isExpired = item.history?.ReservePeriod * 3600 * 24 * 1000 + item.history?.created - Date.now() <= 0;

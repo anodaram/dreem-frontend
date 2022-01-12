@@ -60,8 +60,8 @@ export default ({ nft }) => {
         <Box flex={0.8}>
           <img src={getTokenImage(blockingInfo?.PaymentToken)} width={24} />
         </Box>
-        <Box flex={0.2}>{blockingInfo?.CollateralPercent} %</Box>
-        <Box flex={0.2}>{`${(blockingInfo?.Price * blockingInfo?.CollateralPercent) / 100} ${getTokenSymbol(
+        <Box flex={0.2}>{blockingInfo?.TotalCollateralPercent} %</Box>
+        <Box flex={0.2}>{`${((Number(blockingInfo?.Price) * Number(blockingInfo?.TotalCollateralPercent)) / 100).toFixed(2)} ${getTokenSymbol(
           blockingInfo?.PaymentToken
         )}`}</Box>
       </Box>

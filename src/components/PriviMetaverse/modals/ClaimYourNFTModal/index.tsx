@@ -126,7 +126,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
           Collateral to claim
         </Box>
         <Box>
-          {(Number(nft?.blockingSaleOffer?.Price) * Number(nft?.blockingSaleOffer?.TotalCollateralPercent || nft?.blockingSaleOffer?.CollateralPercent) / 100).toFixed(2)} USDT
+          {(Number(nft?.blockingSaleOffer?.Price) * Number(nft?.blockingSaleOffer?.TotalCollateralPercent) / 100).toFixed(2)} USDT
         </Box>
       </Box>
       <PrimaryButton size="medium" onClick={handleConfirm} className={classes.confirmButton}>
