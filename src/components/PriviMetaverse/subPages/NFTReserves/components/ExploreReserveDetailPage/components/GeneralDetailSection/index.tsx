@@ -23,7 +23,7 @@ import CancelSellingPriceModal from "components/PriviMetaverse/modals/CancelSell
 
 import { exploreOptionDetailPageStyles } from "../../index.styles";
 
-export default ({ isOwnership, nft, setNft, refresh }) => {
+export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
   const classes = exploreOptionDetailPageStyles();
   const { isSignedin } = useAuth();
 
@@ -410,6 +410,7 @@ export default ({ isOwnership, nft, setNft, refresh }) => {
         offer={nft.rentSaleOffer}
         nft={nft}
         setNft={setNft}
+        onSuccess={() => onRent()}
       />
     </>
   );

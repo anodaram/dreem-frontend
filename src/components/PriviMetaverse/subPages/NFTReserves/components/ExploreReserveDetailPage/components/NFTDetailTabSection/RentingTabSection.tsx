@@ -298,7 +298,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                   headers={historyTableHeaders}
                   rows={historyData.map(item => {
                     const token = tokenList.find(v => v.Address === item.fundingToken);
-                    let estimatedCost = item.pricePerSecond * item.rentalTime;
+                    let estimatedCost = +toDecimals(item.pricePerSecond, token?.Decimals) * item.rentalTime;
                     estimatedCost = Math.floor(estimatedCost * Math.pow(10, 8)) / Math.pow(10, 8);
                     return [
                       {
@@ -313,7 +313,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                         ),
                       },
                       {
-                        cell: `${item.pricePerSecond} ${token?.Symbol ?? ""}`,
+                        cell: `${+toDecimals(item.pricePerSecond, token?.Decimals)} ${token?.Symbol ?? ""}`,
                       },
                       {
                         cell: `${estimatedCost} ${token?.Symbol ?? ""}`,

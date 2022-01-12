@@ -2,30 +2,77 @@ import React from "react";
 
 import Box from "shared/ui-kit/Box";
 import { Modal, PrimaryButton } from "shared/ui-kit";
+import { useSelector } from "react-redux";
+import { BlockchainNets } from "shared/constants/constants";
+import { useWeb3React } from "@web3-react/core";
+import { toDecimals } from "shared/functions/web3";
+import { RootState } from "store/reducers/Reducer";
+import { formatDuration } from "shared/helpers/utils";
+
 import { RentSuccessModalStyles } from "./index.style";
 
-export default function RentSuccessModal({ open, handleClose = () => {} }) {
+export default function RentSuccessModal({ open, nft, handleClose = () => {} }) {
   const classes = RentSuccessModalStyles();
+  const { chainId } = useWeb3React();
+
+  const chain = React.useMemo(() => BlockchainNets.find(net => net.chainId === chainId), [chainId]);
+  const rentHistory = React.useMemo(() => (nft?.rentHistories?.length ? nft.rentHistories[0] : {}), [nft]);
+  const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+
+  const getAmount = () => {
+    const a =
+      +toDecimals(rentHistory?.pricePerSecond, getTokenDecimal(rentHistory?.fundingToken)) *
+      rentHistory.rentalTime;
+    return Math.round(a * 100) / 100;
+  };
+
+  const handleOpenToken = () => {
+    window.open(`${chain?.scan?.url}/token/${nft.Address}`, "_blank");
+  };
+
+  const getTokenSymbol = addr => {
+    if (tokenList.length == 0 || !addr) return 0;
+    let token = tokenList.find(token => token.Address === addr);
+    return token?.Symbol || "";
+  };
+
+  const getTokenDecimal = addr => {
+    if (tokenList.length == 0) return null;
+    let token = tokenList.find(token => token.Address === addr);
+    return token?.Decimals ?? 1;
+  };
 
   return (
     <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.container}>
       <Box className={classes.borderBox} mb={5}>
         <Box className={classes.box}>
-          <img src={"https://d3uo2nnehyvpin.cloudfront.net/images/house/house_001_001_010.png"} alt="nft" />
+          <img src={nft.Image} alt="nft" />
           <Box className={classes.tag}>RENTED</Box>
           <Box className={classes.gameName} mt={2}>
-            Game Name
+            {nft.name}
           </Box>
         </Box>
       </Box>
       <Box className={classes.title} mb={1}>
-        You’ve rented GAME NFT.
+        You’ve rented {nft.CollectionName}.
       </Box>
       <Box className={classes.description} mb={5}>
-        Congrat’s you’ve succesfully rented <span>[GAME NFT name]</span> at{" "}
-        <span>[Price per sec]. You can go to</span> Management and enjoy your Synthetic GAME
+        Congrat’s you’ve succesfully rented <span>{nft.CollectionName}</span> at{" "}
+        <span>
+          {rentHistory?.pricePerSecond && `${getAmount()} ${getTokenSymbol(rentHistory.fundingToken)}`}{" "}
+        </span>
+        for{" "}
+        <span>
+          {formatDuration((rentHistory?.rentalTime || 0) * 1000)}.{" "}
+          <span onClick={handleOpenToken} style={{ cursor: "pointer" }}>
+            You can go to
+          </span>
+        </span>{" "}
+        Management and enjoy your {nft.CollectionName}.
       </Box>
-      <PrimaryButton size="medium">done</PrimaryButton>
+      <PrimaryButton size="medium" onClick={() => handleClose()}>
+        done
+      </PrimaryButton>
     </Modal>
   );
 }

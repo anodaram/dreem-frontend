@@ -30,7 +30,7 @@ export const blockedByMeNFTStyles = makeStyles(theme => ({
     fontSize: 14,
     width: 128,
     textTransform: "uppercase",
-    lineHeight: "18px"
+    lineHeight: "18px",
   },
   section: {
     borderRight: "1px solid #ffffff20",
@@ -80,18 +80,18 @@ export const blockedByMeNFTStyles = makeStyles(theme => ({
     },
   },
   flexBox: {
-    width: '90px',
-    textAlign: 'center'
+    width: "90px",
+    textAlign: "center",
   },
   primaryButton: {
     color: "#212121 !important",
-    padding: "0 37px !important",
+    padding: "2px 37px 0px !important",
     height: "40px !important",
     border: "none !important",
     background: "#DDFF57 !important",
     borderRadius: "2px !important",
     marginTop: "8px",
     display: "flex",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 }));

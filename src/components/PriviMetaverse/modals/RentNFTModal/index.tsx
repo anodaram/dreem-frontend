@@ -19,7 +19,14 @@ import { RentNFTModalStyles } from "./index.style";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-export default function RentNFTModal({ open, handleClose = () => {}, offer, nft, setNft }) {
+export default function RentNFTModal({
+  open,
+  handleClose = () => {},
+  onSuccess = () => {},
+  offer,
+  nft,
+  setNft,
+}) {
   const classes = RentNFTModalStyles();
   const { account, library, chainId } = useWeb3React();
   const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
@@ -64,8 +71,20 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
   useEffect(() => {
     if (!open) return;
 
+    (async () => {
+      if (chainId && chainId !== selectedChain?.chainId) {
+        const isHere = await switchNetwork(selectedChain?.chainId || 0);
+        if (!isHere) {
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
+          return;
+        }
+      }
+    })();
+
     getBalance();
-  }, [open, offer, selectedChain]);
+  }, [open, chainId, selectedChain]);
 
   const getBalance = async () => {
     if (tokenList && offer && library) {
@@ -79,11 +98,26 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
       setRentalToken(token);
       setBalance(+toDecimals(balance, decimals));
 
-      const maxSeconds = Math.min(Math.floor(balance / offer.pricePerSecond), offer.maximumRentTime);
-      setMaxDays(Math.floor(maxSeconds / (3600 * 24)));
-      setMaxHours(Math.floor(maxSeconds / 3600));
-      setMaxMins(Math.floor(maxSeconds / 60));
-      setMaxSeconds(Math.floor(maxSeconds % 60));
+      const maxSeconds = offer.maximumRentTime;
+      let remainingSecs = maxSeconds;
+      if (remainingSecs >= 86400) {
+        const days = Math.floor(remainingSecs / 86400);
+        setMaxDays(days);
+        remainingSecs = remainingSecs - days * 86400;
+      }
+      if (remainingSecs >= 3600) {
+        const hours = Math.floor(remainingSecs / 3600);
+        setMaxHours(hours);
+        remainingSecs = remainingSecs - hours * 3600;
+      }
+      if (remainingSecs >= 60) {
+        const mins = Math.floor(remainingSecs / 60);
+        setMaxMins(mins);
+        remainingSecs = remainingSecs - mins * 60;
+      }
+      if (remainingSecs > 0) {
+        setMaxSeconds(Math.floor(remainingSecs % 60));
+      }
     }
   };
 
@@ -106,14 +140,18 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
       }
 
       if (!(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+          variant: "error",
+        });
         return;
       }
 
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
           return;
         }
       }
@@ -164,14 +202,18 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
       }
 
       if (!(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+          variant: "error",
+        });
         return;
       }
 
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
           return;
         }
       }
@@ -233,6 +275,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
           created: new Date().getTime(),
         });
         setNft(newNft);
+        onSuccess();
         handleClose();
       } else {
         setTransactionSuccess(false);
@@ -260,11 +303,14 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
     resetRentalTime();
     if (maxDays > 0) {
       setLimitDays(maxDays);
-    } else if (maxHours > 0) {
+    }
+    if (maxHours > 0) {
       setLimitHour(maxHours);
-    } else if (maxMins > 0) {
+    }
+    if (maxMins > 0) {
       setLimitMin(maxMins);
-    } else {
+    }
+    if (maxSeconds > 0) {
       setLimitSec(maxSeconds);
     }
   };
@@ -287,12 +333,13 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
             You must approve the rental time and price in order to rent this NFT.
           </Box>
           <Box className={classes.subTitle} mb="40px">
-            By approving this, you are agreeing to receive a synthetic NFT to use as the original for the allotted time.
+            By approving this, you are agreeing to receive a synthetic NFT to use as the original for the
+            allotted time.
           </Box>
           <Box display="flex" justifyContent="space-between" mb="7px">
             <Box className={classes.nameField}>Rental Time</Box>
             <Box className={classes.maxTime} onClick={setRentalTimeAsMax}>
-              Max {maxDays > 0 ? `${maxDays} days` : maxHours > 0 ? `${maxHours} hours` : `${maxMins} mins`}
+              Use Max
             </Box>
           </Box>
           <Box display="flex" alignItems="center">
@@ -312,7 +359,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
                 placeHolder="00"
               />
             )}
-            {maxHours > 0 && (
+            {(maxDays > 0 || maxHours > 0) && (
               <InputWithLabelAndTooltip
                 inputValue={limitHour}
                 onInputValueChange={e => setLimitHour(e.target.value)}
@@ -362,7 +409,7 @@ export default function RentNFTModal({ open, handleClose = () => {}, offer, nft,
                 <span className={classes.amountLabel}>Amount to pay</span>
                 <span className={classes.purpleText}>{`${price} ${rentalToken?.Symbol ?? "USDT"}`}</span>
               </Box>
-              <Box display="flex" flexDirection="column">
+              <Box display="flex" flexDirection="column" textAlign="end">
                 <span className={classes.amountLabel}>Max rental time</span>
                 <span className={classes.purpleText}>
                   {`${formatDuration((offer?.maximumRentTime ?? 0) * 1000) ?? "0 seconds"}`}
