@@ -3,10 +3,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
 import moment from "moment";
 import Box from "shared/ui-kit/Box";
-import { Text } from "shared/ui-kit";
+import { useWeb3React } from "@web3-react/core";
+import { PrimaryButton, Text } from "shared/ui-kit";
 import { toDecimals } from "shared/functions/web3";
 import { formatDuration } from "shared/helpers/utils";
 import { resetStatus } from "shared/services/API/ReserveAPI";
+import { BlockchainNets } from "shared/constants/constants";
 
 import { exploreOptionDetailPageStyles } from "../../index.styles";
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -16,7 +18,10 @@ export default ({ nft, setNft, isOwner }) => {
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
   const histories = nft?.rentHistories ?? [];
   const offer = histories.length ? histories[0] : null;
+  const { chainId } = useWeb3React();
   const [remainingTime, setRemainingTime] = useState(0);
+
+  const chain = React.useMemo(() => BlockchainNets.find(net => net.chainId === chainId), [chainId]);
 
   useEffect(() => {
     if (!offer) {
@@ -55,6 +60,10 @@ export default ({ nft, setNft, isOwner }) => {
     if (tokens.length == 0) return 0;
     let token = tokens.find(token => token.Address === addr);
     return token.Decimals;
+  };
+
+  const handleOpenToken = () => {
+    window.open(`${chain?.scan?.url}/token/${nft.Address}`, "_blank");
   };
 
   if (!offer) {
@@ -139,6 +148,35 @@ export default ({ nft, setNft, isOwner }) => {
           </Box>
         </Box>
       </Box>
+      <PrimaryButton
+        size="medium"
+        style={{
+          width: "100%",
+          height: 52,
+          backgroundColor: "#E9FF26",
+          marginTop: 14,
+          textTransform: "uppercase",
+          color: "#212121",
+          borderRadius: 0,
+          alignItems: "center",
+          display: "flex",
+          justifyContent: "center",
+        }}
+        onClick={() => handleOpenToken()}
+      >
+        <img
+          src={
+            nft?.Chain === "BSC"
+              ? require("assets/icons/icon_bscscan.ico")
+              : require("assets/icons/polygon_scan.png")
+          }
+          width={24}
+          style={{
+            marginRight: 12,
+          }}
+        />
+        View Synthetic
+      </PrimaryButton>
     </>
   );
 };
