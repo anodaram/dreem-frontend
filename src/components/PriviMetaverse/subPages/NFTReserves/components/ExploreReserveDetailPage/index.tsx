@@ -21,6 +21,7 @@ import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
 import { getChainForNFT } from "shared/functions/metamask";
 import GameNFTDetailModal from "components/PriviMetaverse/modals/GameNFTDetailModal";
+import RentSuccessModal from "components/PriviMetaverse/modals/RentSuccessModal";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
 import NFTDetailTabSection from "./components/NFTDetailTabSection";
 import GeneralDetailSection from "./components/GeneralDetailSection";
@@ -61,6 +62,7 @@ const ExploreReserveDetailPage = () => {
   const [openClaimPaymentModal, setOpenClaimPaymentModal] = useState<boolean>(false);
   const [openClaimYourNFTModal, setOpenClaimYourNFTModal] = useState<boolean>(false);
   const [openGameDetailModal, setOpenGameDetailModal] = useState<boolean>(false);
+  const [openRentSuccess, setOpenRentSccess] = useState<boolean>(false);
   const [claimType, setClaimType] = useState("");
   const [nft, setNft] = useState<any>({});
   const { account } = useWeb3React();
@@ -332,7 +334,13 @@ const ExploreReserveDetailPage = () => {
                     )}
                   </>
                 ) : (
-                  <GeneralDetailSection isOwnership={isOwner} nft={nft} setNft={setNft} refresh={refresh} />
+                  <GeneralDetailSection
+                    isOwnership={isOwner}
+                    nft={nft}
+                    setNft={setNft}
+                    refresh={refresh}
+                    onRent={() => setOpenRentSccess(true)}
+                  />
                 )
               ) : isBlockedNFT ? (
                 isExpired ? (
@@ -344,7 +352,13 @@ const ExploreReserveDetailPage = () => {
                 <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} />
               ) : (
                 <>
-                  <GeneralDetailSection isOwnership={isOwner} nft={nft} setNft={setNft} refresh={refresh} />
+                  <GeneralDetailSection
+                    isOwnership={isOwner}
+                    nft={nft}
+                    setNft={setNft}
+                    refresh={refresh}
+                    onRent={() => setOpenRentSccess(true)}
+                  />
                 </>
               )}
             </Box>
@@ -413,6 +427,9 @@ const ExploreReserveDetailPage = () => {
             url={nft?.content_url}
           />
         </Modal>
+      )}
+      {openRentSuccess && (
+        <RentSuccessModal open={openRentSuccess} handleClose={() => setOpenRentSccess(false)} nft={nft} />
       )}
     </Box>
   );
