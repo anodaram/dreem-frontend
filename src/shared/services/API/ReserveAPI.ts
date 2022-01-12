@@ -13,6 +13,16 @@ export async function getAllGameNFTs(payload: any): Promise<any> {
   }
 }
 
+export async function getMarketplaceFee(): Promise<any> {
+  try {
+    const response = await axios.get(`${URL()}/metaverseReserve/getFee`);
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
 export async function getGameNFT(payload: any): Promise<any> {
   try {
     const response = await axios.get(`${URL()}/metaverseReserve/getGameNFT`, {
@@ -276,7 +286,6 @@ export async function rentNFT(payload: any): Promise<any> {
     throw new Error(e.message);
   }
 }
-
 
 export async function resetStatus(payload: any): Promise<any> {
   try {
