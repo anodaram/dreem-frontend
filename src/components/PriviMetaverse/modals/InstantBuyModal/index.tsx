@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -19,7 +19,9 @@ const isProd = process.env.REACT_APP_ENV === "prod";
 export default function InstantBuyModal({ open, handleClose, onConfirm, offer, nft }) {
   const classes = InstantBuyModalStyles();
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const marketFee = useSelector((state: RootState) => state.marketPlace.fee);
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
+  const offerPrice = useMemo(() => (offer?.Price || 0) * (1 + marketFee), [offer, marketFee]);
   const { account, library, chainId } = useWeb3React();
   const { collection_id, token_id } = useParams();
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
@@ -35,13 +37,13 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
   }, [open]);
 
   useEffect(() => {
-    setSelectedChain(getChainForNFT(nft))
-  }, [nft])
+    setSelectedChain(getChainForNFT(nft));
+  }, [nft]);
 
   const getTokenName = addr => {
     if (tokens.length == 0 || !addr) return "";
     let token = tokens.find(token => token.Address === addr);
-    return token?.Symbol || '';
+    return token?.Symbol || "";
   };
 
   const getTokenDecimals = addr => {
@@ -62,7 +64,9 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
           return;
         }
       }
@@ -70,7 +74,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
       const web3 = new Web3(library.provider);
       let balance = await web3APIHandler.Erc20[getTokenName(offer.PaymentToken)].balanceOf(web3, { account });
       let decimals = await web3APIHandler.Erc20[getTokenName(offer.PaymentToken)].decimals(web3, { account });
-      if (balance / 10 ** decimals < (offer.Price || 0)) {
+      if (balance / 10 ** decimals < offerPrice) {
         showAlertMessage(`Insufficient balance to approve`, { variant: "error" });
         setTransactionSuccess(false);
         return;
@@ -79,7 +83,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.OPEN_SALES_MANAGER,
-        toNDecimals(offer.Price, getTokenDecimals(offer.PaymentToken))
+        toNDecimals(offerPrice, getTokenDecimals(offer.PaymentToken))
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -87,7 +91,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${offer.Price} ${getTokenName(offer.PaymentToken)}!`, {
+      showAlertMessage(`Successfully approved ${offerPrice} ${getTokenName(offer.PaymentToken)}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);
@@ -117,7 +121,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
         collection_id: nft.Address,
         token_id,
         paymentToken: offer.PaymentToken,
-        price: toNDecimals(offer.Price, getTokenDecimals(offer.PaymentToken)),
+        price: toNDecimals(offerPrice, getTokenDecimals(offer.PaymentToken)),
         beneficiary: account,
         sellerToMatch: offer.Beneficiary,
       },
@@ -138,7 +142,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
         offerId,
         CollectionId: collection_id,
         TokenId: token_id,
-        Price: offer.Price,
+        Price: offerPrice,
         PaymentToken: offer.PaymentToken,
         Beneficiary: account,
         from: offer.Beneficiary,
@@ -175,11 +179,14 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
         </Box>
         <Box className={classes.borderBox}>
           <Box className={classes.box}>
-            <span style={{ fontSize: "16px", color: "#ffffff"  }}>Amount to pay</span>
+            <span style={{ fontSize: "16px", color: "#ffffff" }}>Amount to pay</span>
             <span className={classes.purpleText} style={{ fontFamily: "Rany" }}>
               {`${offer?.Price} ${getTokenName(offer?.PaymentToken)}`}
             </span>
           </Box>
+        </Box>
+        <Box textAlign="end" fontSize={12} fontFamily="Rany" mt={1} color="white">
+          incl. {marketFee}% marketplace fee
         </Box>
         <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
           <SecondaryButton

@@ -232,7 +232,7 @@ export interface RootState {
   };
   marketPlace: {
     tokenList: any[];
-    fee: number
+    fee: number;
   };
 }
 

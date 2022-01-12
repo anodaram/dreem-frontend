@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector } from "react-redux";
@@ -27,6 +27,8 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
   const { showAlertMessage } = useAlertMessage();
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const marketFee = useSelector((state: RootState) => state.marketPlace.fee);
+  const offerPrice = useMemo(() => (offer?.Price || 0) * (1 + marketFee), [offer, marketFee]);
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const { collection_id, token_id } = useParams();
 
@@ -57,7 +59,9 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
-        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+          variant: "error",
+        });
         return;
       }
     }
@@ -97,7 +101,9 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
-        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+          variant: "error",
+        });
         return;
       }
     }
@@ -114,7 +120,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
           collection_id: nft.Address,
           token_id,
           paymentToken: offer.PaymentToken,
-          price: toNDecimals(offer.Price, getTokenDecimal(offer.PaymentToken)),
+          price: toNDecimals(offerPrice, getTokenDecimal(offer.PaymentToken)),
           beneficiary: account,
           buyerToMatch: offer.Beneficiary,
         },
@@ -136,7 +142,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
           CollectionId: collection_id,
           TokenId: token_id,
           PaymentToken: offer.PaymentToken,
-          Price: offer.Price,
+          Price: offerPrice,
           Beneficiary: offer.Beneficiary,
           from: account,
           to: offer.Beneficiary,
@@ -150,7 +156,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
         newNft.salesHistories.unshift({
           id: offerId,
           PaymentToken: offer.PaymentToken,
-          Price: offer.Price,
+          Price: offerPrice,
           Beneficiary: offer.Beneficiary,
           from: account,
           hash: contractResponse.hash,
@@ -164,14 +170,6 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
       }
     } catch (err) {
       showAlertMessage("Failed to accept blocking offer, Please try again", { variant: "error" });
-    }
-  };
-
-  const handleClickLink = _hash => {
-    if (selectedChain.name === "POLYGON") {
-      window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/tx/${_hash}`, "_blank");
-    } else if (selectedChain.name === "ETHEREUM") {
-      window.open(`https://${!isProd ? "rinkeby." : ""}etherscan.io/tx/${_hash}`, "_blank");
     }
   };
 
@@ -195,10 +193,13 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
           <Box className={classes.borderBox}>
             <Box className={classes.box}>
               <span className={classes.infoLabel}>Price</span>
-              <span className={classes.infoValue}>{`${offer.Price} ${getTokenSymbol(
+              <span className={classes.infoValue}>{`${offerPrice} ${getTokenSymbol(
                 offer.PaymentToken
               )}`}</span>
             </Box>
+          </Box>
+          <Box textAlign="end" fontSize={12} fontFamily="Rany" mt={1} color="white">
+            incl. {marketFee}% marketplace fee
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton
