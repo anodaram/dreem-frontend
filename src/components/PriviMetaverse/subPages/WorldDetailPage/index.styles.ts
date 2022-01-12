@@ -61,14 +61,22 @@ export const worldDetailPageStyles = makeStyles(theme => ({
   content: {
     background: "#151515",
     marginTop: 80,
+    paddingTop: 80,
     paddingBottom: 96,
     position: "relative",
+    minHeight: 800,
   },
   tabSection: {
     position: "absolute",
     top: -32,
     background: "#151515",
     width: 1280,
+  },
+  bgImgTriangle: {
+    position: "absolute",
+    width: 635,
+    right: -300,
+    bottom: 160,
   },
   typo1: {
     fontSize: 14,

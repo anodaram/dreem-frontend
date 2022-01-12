@@ -6,9 +6,13 @@ import Avatar from "shared/ui-kit/Avatar";
 import { getDefaultAvatar, getDefaultBGImage } from "shared/services/user/getUserAvatar";
 import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
 import TabsView, { TabItem } from "shared/ui-kit/TabsView";
+import LandForSale from "./components/LandForSale";
+import LandOwners from "./components/LandOwners";
+import Assets from "./components/Assets";
 import { worldDetailPageStyles } from "./index.styles";
 
 import SeedImg from "assets/metaverseImages/dreem_seed_image.png";
+import ShapeImgTriangle from "assets/metaverseImages/shape_home_2.png";
 
 const Tabs: TabItem[] = [
   {
@@ -25,7 +29,7 @@ const Tabs: TabItem[] = [
   },
 ];
 
-export default function RealmDetailPage() {
+export default function WorldDetailPage() {
   const classes = worldDetailPageStyles();
 
   const [fruitData, setFruitData] = useState<any>({});
@@ -145,6 +149,7 @@ export default function RealmDetailPage() {
           </Box>
         </Box>
         <Box className={classes.content}>
+          <img className={classes.bgImgTriangle} src={ShapeImgTriangle} alt="triangle image" />
           <Box className={classes.fitContent}>
             <Box className={classes.tabSection}>
               <TabsView
@@ -154,6 +159,13 @@ export default function RealmDetailPage() {
                 }}
               />
             </Box>
+            {selectedTab === "sale" ? (
+              <LandForSale />
+            ) : selectedTab === "owners" ? (
+              <LandOwners />
+            ) : (
+              <Assets />
+            )}
           </Box>
         </Box>
       </Box>
