@@ -57,6 +57,7 @@ export const SET_ALL_LOAN = "SET_ALL_LOAN";
 export const SET_RESERVE = "SET_RESERVE";
 export const SET_ALL_RESERVE = "SET_ALL_RESERVE";
 export const REMOVE_RESERVE = "REMOVE_RESERVE";
+export const SET_MARKET_FEE = "SET_MARKET_FEE";
 
 // PODS MANAGER
 export const SET_MY_PODS_LIST = "SET_MY_PODS_LIST";
