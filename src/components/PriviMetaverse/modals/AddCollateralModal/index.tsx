@@ -167,7 +167,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
       account!,
       {
         activeReserveId,
-        amount: toNDecimals(price, reservePriceToken.Decimals),
+        amount: toNDecimals(price * (1 + fee), reservePriceToken.Decimals),
       },
       setHash
     );
@@ -234,6 +234,9 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                     {`${collateral} ${getTokenName(nft?.blockingSaleOffer?.PaymentToken)}`}
                   </span>
                 </Box>
+              </Box>
+              <Box fontSize={12} textAlign="right" lineHeight="21px">
+                incl. {fee * 100}% marketplace fee
               </Box>
               <Grid
                 container

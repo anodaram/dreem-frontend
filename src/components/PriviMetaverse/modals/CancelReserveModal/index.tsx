@@ -16,7 +16,6 @@ import { closeBlockingHistory } from "shared/services/API/ReserveAPI";
 import TransactionProgressModal from "../TransactionProgressModal";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
-const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
 
 export default function CancelReserveModal({
   open,
@@ -30,7 +29,6 @@ export default function CancelReserveModal({
   nft?: any;
 }) {
   const classes = CancelReserveModalStyles();
-  const [isCancelled, setCancelled] = useState(false);
   const [blockingInfo, setBlockingInfo] = useState<any>(null);
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const { collection_id, token_id } = useParams();
@@ -103,7 +101,7 @@ export default function CancelReserveModal({
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER,
-        toNDecimals((blockingInfo?.Price * penaltyFee) / 100, decimals)
+        toNDecimals((blockingInfo?.Price * penaltyFee) * (1 + fee) / 100, decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -204,6 +202,9 @@ export default function CancelReserveModal({
             <Box className={classes.collateralAmount}>{`${
               (blockingInfo?.Price * penaltyFee) / 100
             } ${getTokenSymbol(blockingInfo?.PaymentToken)}`}</Box>
+          </Box>
+          <Box fontSize={12} lineHeight="21px" textAlign="right">
+            incl. {fee * 100}% marketplace fee
           </Box>
         </Box>
         <Box>

@@ -105,7 +105,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER,
-        toNDecimals(info.Price, decimals)
+        toNDecimals(info.Price * (1 + fee), decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -191,7 +191,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
           <Box fontSize="24px" color="#ffffff" marginTop="50px" fontFamily="GRIFTER" style={{ textTransform: "uppercase" }}>
             Payment
           </Box>
-          <Box className={classes.nameField}></Box>
+          <Box className={classes.nameField}>Pay reserved price for your  NFT in one payment or few installment.</Box>
           <Box className={classes.availableCollateral} display="flex">
             <Box>
               <Box className={classes.collateralText} style={{ marginRight: "40px" }}>
@@ -210,10 +210,21 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
           color="#ffffff50"
           marginTop="14px"
         >
-          <Box display="flex" alignItems="center" gridColumnGap="10px" fontSize="14px">
-            <span>Wallet Balance</span>
-            <Box className={classes.usdWrap} display="flex" alignItems="center">
-              <Box fontWeight="700">{`${typeUnitValue(totalBalance, 1)} ${getTokenSymbol(nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaymentToken)}`} </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            gridColumnGap="10px"
+            fontSize="14px"
+          >
+            <Box>
+              <span>Wallet Balance</span>
+              <Box className={classes.usdWrap} display="flex" alignItems="center">
+                <Box fontWeight="700">{`${typeUnitValue(totalBalance, 1)} ${getTokenSymbol(nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaymentToken)}`} </Box>
+              </Box>
+            </Box>
+            <Box fontSize={12}>
+              incl. {fee * 100}% marketplace fee
             </Box>
           </Box>
         </Box>

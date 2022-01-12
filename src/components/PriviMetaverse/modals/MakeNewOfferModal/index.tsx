@@ -10,7 +10,6 @@ import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
-import { BlockchainNets } from "shared/constants/constants";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
 import { toDecimals, toNDecimals } from "shared/functions/web3";
 import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
@@ -112,7 +111,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE,
-        toNDecimals(price, reservePriceToken.Decimals)
+        toNDecimals(price * (1 + fee), reservePriceToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -157,7 +156,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
         token_id,
         paymentToken: reservePriceToken?.Address,
         collateralToken: colaterralPriceToken?.Address,
-        price: toNDecimals(price, reservePriceToken.Decimals),
+        price: toNDecimals(price * (1 + fee), reservePriceToken.Decimals),
         beneficiary: account,
         collateralPercent: toNDecimals(collateralPercent, 2),
         collateralInitialAmount: toNDecimals(collateral, colaterralPriceToken.Decimals),
