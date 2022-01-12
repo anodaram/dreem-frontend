@@ -68,9 +68,9 @@ export default ({
 
   const handleOpenAddress = () => {
     if (item.Chain?.toLowerCase() === "mumbai" || item.Chain?.toLowerCase() === "polygon") {
-      window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/tx/${item?.history?.hash}`, "_blank");
+      window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/token/${item?.Address}`, "_blank");
     } else {
-      window.open(`https://${!isProd ? "testnet." : ""}bscscan.com/tx/${item?.history?.hash}`, "_blank");
+      window.open(`https://${!isProd ? "testnet." : ""}bscscan.com/token/${item?.Address}`, "_blank");
     }
   };
 
