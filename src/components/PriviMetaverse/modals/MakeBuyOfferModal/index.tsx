@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
@@ -16,7 +16,7 @@ import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import { BlockchainNets } from "shared/constants/constants";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { toDecimals, toNDecimals } from "shared/functions/web3";
-import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
+import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import { createBuyOffer } from "shared/services/API/ReserveAPI";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
 import { getNextDay } from "shared/helpers/utils";
@@ -29,9 +29,11 @@ const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
 export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
   const classes = MakeBuyOfferModalStyles();
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const marketFee = useSelector((state: RootState) => state.marketPlace.fee);
+  const [price, setPrice] = useState<number>();
+  const offerPrice = useMemo(() => (price || 0) * (1 + marketFee), [price, marketFee]);
   const [token, setToken] = useState<any>(tokens[0]);
   const [totalBalance, setTotalBalance] = useState<string>("0");
-  const [price, setPrice] = useState<number>();
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const { showAlertMessage } = useAlertMessage();
 
@@ -87,7 +89,9 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
     if (chainId && chainId !== nftChain?.chainId) {
       const isHere = await switchNetwork(nftChain?.chainId || 0);
       if (!isHere) {
-        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+          variant: "error",
+        });
         return;
       }
 
@@ -100,7 +104,9 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
   const handleApprove = async () => {
     try {
       if (!price) {
-        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+          variant: "error",
+        });
         return;
       }
 
@@ -113,7 +119,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
       let balance = await web3APIHandler.Erc20[token.Symbol].balanceOf(web3, { account });
       let decimals = await web3APIHandler.Erc20[token.Symbol].decimals(web3, { account });
       balance = balance / Math.pow(10, decimals);
-      if (balance < (price || 0)) {
+      if (balance < (offerPrice || 0)) {
         showAlertMessage(`Insufficient balance to approve`, { variant: "error" });
         setTransactionSuccess(false);
         return;
@@ -122,7 +128,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.OPEN_SALES_MANAGER,
-        toNDecimals(price, token.Decimals)
+        toNDecimals(offerPrice, token.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -130,7 +136,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${price} ${token.Symbol}!`, {
+      showAlertMessage(`Successfully approved ${offerPrice} ${token.Symbol}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);
@@ -147,7 +153,9 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
   const handleConfirm = async () => {
     try {
       if (!price) {
-        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+          variant: "error",
+        });
         return;
       }
       const targetChain = await checkNetworkFromNFT();
@@ -164,7 +172,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
           collection_id: nft.Address,
           token_id,
           paymentToken: token.Address,
-          price: toNDecimals(price, token.Decimals),
+          price: toNDecimals(offerPrice, token.Decimals),
           beneficiary: account,
           sellerToMatch: "0x0000000000000000000000000000000000000000",
         },
@@ -176,7 +184,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
         const offerId = web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address"],
-            [nft.Address, token_id, token.Address, toNDecimals(price, token.Decimals), account]
+            [nft.Address, token_id, token.Address, toNDecimals(offerPrice, token.Decimals), account]
           )
         );
 
@@ -185,7 +193,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
           offerId,
           CollectionId: collection_id,
           TokenId: token_id,
-          Price: price,
+          Price: offerPrice,
           PaymentToken: token.Address,
           Beneficiary: account,
           Expiration: getNextDay(date),
@@ -194,7 +202,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
         let newNft = { ...nft };
         newNft.buyingOffers.unshift({
           id: offerId,
-          Price: price,
+          Price: offerPrice,
           PaymentToken: token.Address,
           Beneficiary: account,
           Expiration: getNextDay(date),
@@ -283,6 +291,9 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
               disabled={isApproved}
             />
           </MuiPickersUtilsProvider>
+          <Box textAlign="end" fontSize={12} fontFamily="Rany" mt={1} color="white">
+            incl. {marketFee}% marketplace fee
+          </Box>
         </Box>
         <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
           <SecondaryButton
