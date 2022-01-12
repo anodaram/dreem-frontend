@@ -7,6 +7,8 @@ import { BlockchainNets } from "shared/constants/constants";
 import { useWeb3React } from "@web3-react/core";
 import { toDecimals } from "shared/functions/web3";
 import { RootState } from "store/reducers/Reducer";
+import { formatDuration } from "shared/helpers/utils";
+
 import { RentSuccessModalStyles } from "./index.style";
 
 export default function RentSuccessModal({ open, nft, handleClose = () => {} }) {
@@ -14,7 +16,7 @@ export default function RentSuccessModal({ open, nft, handleClose = () => {} }) 
   const { chainId } = useWeb3React();
 
   const chain = React.useMemo(() => BlockchainNets.find(net => net.chainId === chainId), [chainId]);
-  const rentHistory = nft?.rentHistories?.length ? nft.rentHistories[0] : {};
+  const rentHistory = React.useMemo(() => (nft?.rentHistories?.length ? nft.rentHistories[0] : {}), [nft]);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
 
   const getAmount = () => {
@@ -25,7 +27,7 @@ export default function RentSuccessModal({ open, nft, handleClose = () => {} }) 
   };
 
   const handleOpenToken = () => {
-    window.open(`${chain?.scan?.url}/token/${nft.Address}?a=${nft.tokenId}`, "_blank");
+    window.open(`${chain?.scan?.url}/token/${nft.Address}`, "_blank");
   };
 
   const getTokenSymbol = addr => {
@@ -47,7 +49,7 @@ export default function RentSuccessModal({ open, nft, handleClose = () => {} }) 
           <img src={nft.Image} alt="nft" />
           <Box className={classes.tag}>RENTED</Box>
           <Box className={classes.gameName} mt={2}>
-            {nft.CollectionName}
+            {nft.name}
           </Box>
         </Box>
       </Box>
@@ -57,12 +59,16 @@ export default function RentSuccessModal({ open, nft, handleClose = () => {} }) 
       <Box className={classes.description} mb={5}>
         Congrat’s you’ve succesfully rented <span>{nft.CollectionName}</span> at{" "}
         <span>
-          {rentHistory?.pricePerSecond && `${getAmount()} ${getTokenSymbol(rentHistory.fundingToken)}`}.{" "}
+          {rentHistory?.pricePerSecond && `${getAmount()} ${getTokenSymbol(rentHistory.fundingToken)}`}{" "}
+        </span>
+        for{" "}
+        <span>
+          {formatDuration((rentHistory?.rentalTime || 0) * 1000)}.{" "}
           <span onClick={handleOpenToken} style={{ cursor: "pointer" }}>
             You can go to
           </span>
         </span>{" "}
-        Management and enjoy your Synthetic GAME
+        Management and enjoy your {nft.CollectionName}.
       </Box>
       <PrimaryButton size="medium" onClick={() => handleClose()}>
         done
