@@ -325,7 +325,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                         return <Box color="#ffffff50">CANCELLED</Box>
                       }
 
-                      if (item.status === 'LIQUIDIATED') {
+                      if (item.status === 'LIQUIDATED') {
                         return <Box color="#FF6868">LIQUIDATED</Box>
                       }
 
