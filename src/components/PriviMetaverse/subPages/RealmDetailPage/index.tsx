@@ -33,14 +33,14 @@ import { realmDetailPageStyles } from "./index.styles";
 const COLUMNS_COUNT_BREAK_POINTS_THREE = {
   375: 1,
   600: 3,
-  1000: 3,
+  1200: 3,
   1440: 3,
 };
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
   600: 3,
-  1000: 3,
+  1200: 3,
   1440: 4,
 };
 
