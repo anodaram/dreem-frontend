@@ -29,6 +29,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
   const [price, setPrice] = useState<number>(nft?.blockingSaleOffer?.Price);
   const [selectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const fee = useSelector((state: RootState) => state.marketPlace.fee);
   const [collateralToken, setCollateralToken] = useState<any>(tokenList[0]);
   const [reservePriceToken, setReservePriceToken] = useState<any>(tokenList[0]);
   const [collateral, setCollateral] = useState<number>(
@@ -160,7 +161,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         collateralToken: reservePriceToken?.Address,
         price: toNDecimals(price, reservePriceToken.Decimals),
         beneficiary: account,
-        collateralInitialAmount: toNDecimals(collateral, collateralToken.Decimals),
+        collateralInitialAmount: toNDecimals(Number(collateral) * (1 + fee), collateralToken.Decimals),
         collateralPercent: toNDecimals((Number(collateral) / Number(nft?.blockingSaleOffer?.Price) * 100), 2),
         reservePeriod: Math.ceil(+nft.blockingSaleOffer.ReservePeriod * 3600 * 24),
         validityPeriod: Number(nft.blockingSaleOffer.AcceptDuration || 0) * 3600 * 24,

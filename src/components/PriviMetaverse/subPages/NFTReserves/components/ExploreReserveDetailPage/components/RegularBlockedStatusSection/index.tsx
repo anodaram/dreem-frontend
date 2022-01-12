@@ -85,7 +85,7 @@ export default ({ isOwnership, nft, refresh }) => {
       account!,
       {
         activeReserveId,
-        amount: toNDecimals(Number(blockingInfo?.Price) * (1 + fee) * Number(blockingInfo?.TotalCollateralPercent) / 100, reservePriceToken.Decimals),
+        amount: toNDecimals(Number(blockingInfo?.Price) * Number(blockingInfo?.TotalCollateralPercent) / 100, reservePriceToken.Decimals),
       },
       setHash
     );

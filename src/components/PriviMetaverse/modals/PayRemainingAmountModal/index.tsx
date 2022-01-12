@@ -104,7 +104,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER,
-        toNDecimals(info.Price * (1 + fee), decimals)
+        toNDecimals(Number(info.Price) * (1 + fee), decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
