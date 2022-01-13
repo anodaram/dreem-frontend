@@ -124,7 +124,7 @@ export const FailIcon = () => (
     <path
       d="M38 66L66.9985 37M38.0005 37.0007L67 65.9997"
       stroke="url(#paint0_linear_2783_19464)"
-      stroke-width="6"
+      strokeWidth="6"
       stroke-linecap="square"
     />
     <defs>
@@ -136,8 +136,8 @@ export const FailIcon = () => (
         y2="-16.6175"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#C22684" />
-        <stop offset="1" stop-color="#F84B4B" />
+        <stop stopColor="#C22684" />
+        <stop offset="1" stopColor="#F84B4B" />
       </linearGradient>
     </defs>
   </svg>
@@ -149,7 +149,7 @@ export const SuccessIcon = () => (
     <path
       d="M37.707 51.4668L46.9238 60.6836L65.2949 42.3125"
       stroke="url(#paint0_linear_2783_19321)"
-      stroke-width="8"
+      strokeWidth="8"
       stroke-linecap="square"
     />
     <defs>
@@ -161,8 +161,8 @@ export const SuccessIcon = () => (
         y2="44.3317"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#EEFF21" />
-        <stop offset="1" stop-color="#B7FF5C" />
+        <stop stopColor="#EEFF21" />
+        <stop offset="1" stopColor="#B7FF5C" />
       </linearGradient>
     </defs>
   </svg>

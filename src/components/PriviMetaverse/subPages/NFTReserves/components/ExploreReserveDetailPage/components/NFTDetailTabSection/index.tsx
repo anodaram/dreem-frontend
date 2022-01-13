@@ -100,8 +100,8 @@ export const TagIcon = () => (
         y2="9.00697"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#ED7B7B" />
-        <stop offset="1" stop-color="#EDFF1C" />
+        <stop stopColor="#ED7B7B" />
+        <stop offset="1" stopColor="#EDFF1C" />
       </linearGradient>
       <linearGradient
         id="paint1_linear_4081_4331"
@@ -111,8 +111,8 @@ export const TagIcon = () => (
         y2="9.36213"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#ED7B7B" />
-        <stop offset="1" stop-color="#EDFF1C" />
+        <stop stopColor="#ED7B7B" />
+        <stop offset="1" stopColor="#EDFF1C" />
       </linearGradient>
     </defs>
   </svg>
@@ -133,8 +133,8 @@ export const HistoryIcon = () => (
         y2="8.0646"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#ED7B7B" />
-        <stop offset="1" stop-color="#EDFF1C" />
+        <stop stopColor="#ED7B7B" />
+        <stop offset="1" stopColor="#EDFF1C" />
       </linearGradient>
     </defs>
   </svg>
