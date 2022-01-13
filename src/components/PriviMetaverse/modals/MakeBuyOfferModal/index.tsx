@@ -172,7 +172,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
           collection_id: nft.Address,
           token_id,
           paymentToken: token.Address,
-          price: toNDecimals(offerPrice, token.Decimals),
+          price: toNDecimals(price, token.Decimals),
           beneficiary: account,
           sellerToMatch: "0x0000000000000000000000000000000000000000",
         },
@@ -193,7 +193,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
           offerId,
           CollectionId: collection_id,
           TokenId: token_id,
-          Price: offerPrice,
+          Price: price,
           PaymentToken: token.Address,
           Beneficiary: account,
           Expiration: getNextDay(date),
@@ -202,7 +202,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
         let newNft = { ...nft };
         newNft.buyingOffers.unshift({
           id: offerId,
-          Price: offerPrice,
+          Price: price,
           PaymentToken: token.Address,
           Beneficiary: account,
           Expiration: getNextDay(date),
