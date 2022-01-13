@@ -114,7 +114,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
           token_id,
           paymentToken: offer.PaymentToken,
           collateralToken: offer.CollateralToken,
-          price: toNDecimals(Number(offer.Price) * (1 + fee), getTokenDecimal(offer.PaymentToken)),
+          price: toNDecimals(Number(offer.Price), getTokenDecimal(offer.PaymentToken)),
           beneficiary: account,
           collateralPercent: toNDecimals(offer.CollateralPercent, 2),
           reservePeriod: Math.ceil(+offer.ReservePeriod * 3600 * 24),
