@@ -102,7 +102,7 @@ export default function CancelReserveModal({
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER,
-        toNDecimals(blockingInfo?.Price * (penaltyFee / 100 + fee), decimals)
+        toNDecimals(Number(blockingInfo?.Price) * penaltyFee / 100 * (1 + fee), decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -111,7 +111,7 @@ export default function CancelReserveModal({
       }
       setIsApproved(true);
       showAlertMessage(
-        `Successfully approved ${(blockingInfo?.Price * penaltyFee) / 100} ${getTokenSymbol(
+        `Successfully approved ${(Number(blockingInfo?.Price) * penaltyFee) / 100 * (1 + fee)} ${getTokenSymbol(
           blockingInfo?.PaymentToken
         )}!`,
         {

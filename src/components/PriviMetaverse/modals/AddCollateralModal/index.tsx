@@ -123,7 +123,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER,
-        toNDecimals(price, reservePriceToken.Decimals)
+        toNDecimals(price * (1 + fee), reservePriceToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -131,7 +131,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${price} ${reservePriceToken.Symbol}!`, {
+      showAlertMessage(`Successfully approved ${price * (1 + fee)} ${reservePriceToken.Symbol}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);

@@ -116,7 +116,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE,
-        toNDecimals(price, reservePriceToken.Decimals)
+        toNDecimals(Number(collateral) * (1 + fee), reservePriceToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -124,7 +124,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${price} ${reservePriceToken.Symbol}!`, {
+      showAlertMessage(`Successfully approved ${Number(collateral) * (1 + fee)} ${reservePriceToken.Symbol}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);

@@ -112,7 +112,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${info.Price} ${symbol}!`, {
+      showAlertMessage(`Successfully approved ${Number(info.Price) * (1 + fee)} ${symbol}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);
