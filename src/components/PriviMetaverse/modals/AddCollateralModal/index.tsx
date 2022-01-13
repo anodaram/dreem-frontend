@@ -37,12 +37,19 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   const [hash, setHash] = useState<string>("");
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
+  const [blockingInfo, setBlockingInfo] = useState<any>(null);
   const { showAlertMessage } = useAlertMessage();
   const isProd = process.env.REACT_APP_ENV === "prod";
 
   useEffect(() => {
     setReservePriceToken(tokenList[0]);
   }, [tokenList]);
+
+  useEffect(() => {
+    if (nft?.blockingSalesHistories?.length > 0) {
+      setBlockingInfo(nft.blockingSalesHistories[nft.blockingSalesHistories.length - 1])
+    }
+  }, [nft])
 
   useEffect(() => {
     if (!open) {
@@ -157,8 +164,8 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
         [
           nft.Address,
           token_id,
-          nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].from,
-          nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Beneficiary,
+          blockingInfo?.from,
+          blockingInfo?.Beneficiary,
         ]
       )
     );
@@ -177,18 +184,14 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
       setTransactionSuccess(true);
 
       await updateBlockingHistory({
-        ...nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1],
+        ...blockingInfo,
         mode: isProd ? "main" : "test",
         CollectionId: collection_id,
         TokenId: token_id,
         TotalCollateralPercent:
-          Number(
-            nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].TotalCollateralPercent
-          ) +
-          Number(
-            ((price || 0) / nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price) * 100
-          ),
-        PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaidAmount || 0,
+          Number(blockingInfo?.TotalCollateralPercent) +
+          Number(((price || 0) / Number(blockingInfo?.Price)) * 100),
+        PaidAmount: blockingInfo?.PaidAmount || 0,
         notificationMode: 2,
       });
 
@@ -201,7 +204,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   };
 
   const collateral =
-    (Number(nft?.blockingSaleOffer?.Price) * Number(nft?.blockingSaleOffer?.TotalCollateralPercent)) / 100;
+    (Number(blockingInfo?.Price) * Number(blockingInfo?.TotalCollateralPercent)) / 100;
 
   return (
     <>
@@ -303,10 +306,10 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                 <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
                   Collateral at{" "}
                   {(
-                    (Number(price) / Number(nft?.blockingSaleOffer?.Price)) * 100 +
-                    Number(nft?.blockingSaleOffer?.TotalCollateralPercent)
+                    (Number(price) / Number(blockingInfo?.Price)) * 100 +
+                    Number(blockingInfo?.TotalCollateralPercent)
                   ).toFixed(2)}
-                  % / <b>{nft?.blockingSaleOffer?.CollateralPercent}</b>%
+                  % / <b>{blockingInfo?.CollateralPercent}</b>%
                 </Box>
                 <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
                   {price} USDT

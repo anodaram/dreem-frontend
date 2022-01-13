@@ -40,7 +40,7 @@ export default ({ isOwnership, nft, refresh }) => {
   }, [nft]);
 
   useEffect(() => {
-    setRange(blockingInfo?.CollateralPercent);
+    setRange(blockingInfo?.TotalCollateralPercent);
   }, [blockingInfo]);
 
   const getTokenSymbol = addr => {
