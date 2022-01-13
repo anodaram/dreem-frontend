@@ -1,11 +1,11 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-export const avatarCardStyles = makeStyles(theme => ({
+export const cardStyles = makeStyles(theme => ({
   card: {
     position: "relative",
     borderRadius: 12,
     border: "2px solid #EDFF1C",
-    background: "black",
+    background: "#151515",
     height: 460,
     display: "flex",
     flexDirection: "column",
