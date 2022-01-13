@@ -16,7 +16,6 @@ import { closeBlockingHistory } from "shared/services/API/ReserveAPI";
 import TransactionProgressModal from "../TransactionProgressModal";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
-const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
 
 export default function CancelReserveModal({
   open,
@@ -30,7 +29,6 @@ export default function CancelReserveModal({
   nft?: any;
 }) {
   const classes = CancelReserveModalStyles();
-  const [isCancelled, setCancelled] = useState(false);
   const [blockingInfo, setBlockingInfo] = useState<any>(null);
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const { collection_id, token_id } = useParams();
@@ -42,6 +40,7 @@ export default function CancelReserveModal({
   const { showAlertMessage } = useAlertMessage();
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const fee = useSelector((state: RootState) => state.marketPlace.fee);
 
   useEffect(() => {
     setSelectedChain(getChainForNFT(nft))
@@ -53,7 +52,7 @@ export default function CancelReserveModal({
       if (nft && nft?.blockingSalesHistories) {
         setBlockingInfo(nft?.blockingSalesHistories[nft?.blockingSalesHistories?.length - 1]);
       }
-      const chain = BlockchainNets.find(net => net.value === nft.chain);
+      const chain = BlockchainNets.find(net => net.name.toLowerCase() === nft.Chain.toLowerCase());
       if (chain) {
         const web3APIHandler = chain.apiHandler;
         const web3 = new Web3(library.provider);
@@ -103,7 +102,7 @@ export default function CancelReserveModal({
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER,
-        toNDecimals((blockingInfo?.Price * penaltyFee) / 100, decimals)
+        toNDecimals(blockingInfo?.Price * (penaltyFee / 100 + fee), decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -204,6 +203,9 @@ export default function CancelReserveModal({
             <Box className={classes.collateralAmount}>{`${
               (blockingInfo?.Price * penaltyFee) / 100
             } ${getTokenSymbol(blockingInfo?.PaymentToken)}`}</Box>
+          </Box>
+          <Box fontSize={12} lineHeight="21px" textAlign="right" color="#ffffff">
+            incl. {fee * 100}% marketplace fee
           </Box>
         </Box>
         <Box>

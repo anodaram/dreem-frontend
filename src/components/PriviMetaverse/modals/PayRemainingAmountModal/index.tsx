@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
-import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { PrimaryButton } from "shared/ui-kit";
 import { PayRemainingAmountModalStyles } from "./index.style";
 import { typeUnitValue } from "shared/helpers/utils";
 import { useParams } from "react-router";
@@ -22,16 +22,15 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
   const classes = PayRemainingAmountModalStyles();
   const { collection_id, token_id } = useParams();
   const { account, library, chainId } = useWeb3React();
-  const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
   const [totalBalance, setTotalBalance] = useState<string>('0')
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const [isApproved, setIsApproved] = useState<boolean>(false);
-  const [confirmSuccess, setConfirmSuccess] = useState<boolean>(false);
   const [hash, setHash] = useState<string>("");
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const { showAlertMessage } = useAlertMessage();
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const fee = useSelector((state: RootState) => state.marketPlace.fee);
 
   useEffect(() => {
     if (!open) {
@@ -105,7 +104,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER,
-        toNDecimals(info.Price, decimals)
+        toNDecimals(Number(info.Price) * (1 + fee), decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -191,7 +190,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
           <Box fontSize="24px" color="#ffffff" marginTop="50px" fontFamily="GRIFTER" style={{ textTransform: "uppercase" }}>
             Payment
           </Box>
-          <Box className={classes.nameField}></Box>
+          <Box className={classes.nameField}>Pay reserved price for your  NFT in one payment or few installment.</Box>
           <Box className={classes.availableCollateral} display="flex">
             <Box>
               <Box className={classes.collateralText} style={{ marginRight: "40px" }}>
@@ -210,10 +209,21 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
           color="#ffffff50"
           marginTop="14px"
         >
-          <Box display="flex" alignItems="center" gridColumnGap="10px" fontSize="14px">
-            <span>Wallet Balance</span>
-            <Box className={classes.usdWrap} display="flex" alignItems="center">
-              <Box fontWeight="700">{`${typeUnitValue(totalBalance, 1)} ${getTokenSymbol(nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaymentToken)}`} </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            gridColumnGap="10px"
+            fontSize="14px"
+          >
+            <Box>
+              <span>Wallet Balance</span>
+              <Box className={classes.usdWrap} display="flex" alignItems="center">
+                <Box fontWeight="700">{`${typeUnitValue(totalBalance, 1)} ${getTokenSymbol(nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaymentToken)}`} </Box>
+              </Box>
+            </Box>
+            <Box fontSize={12} color="#ffffff">
+              incl. {fee * 100}% marketplace fee
             </Box>
           </Box>
         </Box>

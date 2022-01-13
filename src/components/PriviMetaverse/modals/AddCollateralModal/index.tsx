@@ -27,6 +27,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   const [price, setPrice] = useState<number>(0);
   const [selectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const fee = useSelector((state: RootState) => state.marketPlace.fee);
   const [reservePriceToken, setReservePriceToken] = useState<any>(
     tokenList.find(item => item.Address == nft?.blockingSaleOffer?.PaymentToken)
   );
@@ -167,7 +168,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
       account!,
       {
         activeReserveId,
-        amount: toNDecimals(price, reservePriceToken.Decimals),
+        amount: toNDecimals(price * (1 + fee), reservePriceToken.Decimals),
       },
       setHash
     );
@@ -234,6 +235,9 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                     {`${collateral} ${getTokenName(nft?.blockingSaleOffer?.PaymentToken)}`}
                   </span>
                 </Box>
+              </Box>
+              <Box fontSize={12} textAlign="right" lineHeight="21px" color="#ffffff">
+                incl. {fee * 100}% marketplace fee
               </Box>
               <Grid
                 container

@@ -10,7 +10,6 @@ import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
-import { BlockchainNets } from "shared/constants/constants";
 import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
 import { toDecimals, toNDecimals } from "shared/functions/web3";
 import { getChainForNFT, switchNetwork, checkChainID } from "shared/functions/metamask";
