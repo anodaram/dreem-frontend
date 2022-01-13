@@ -11,6 +11,7 @@ import { RootState } from "store/reducers/Reducer";
 import RangeSlider from "shared/ui-kit/RangeSlider";
 import { blockedByMeNFTStyles } from "./index.styles";
 
+const isProd = process.env.REACT_APP_ENV === "prod";
 export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
   const classes = blockedByMeNFTStyles();
   const history = useHistory();
@@ -27,6 +28,16 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
     }, 1000);
     return () => clearInterval(interval);
   }, [item]);
+
+  
+  const handleClickAddress = () => {
+    const address = item?.Address || "";
+    if (item?.Chain?.toLowerCase() === "polygon") {
+      window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/address/${address}`, "_blank");
+    } else if (item?.Chain.toLowerCase() === "bsc") {
+      window.open(`https://bscscan.com/address/${address}`, "_blank");
+    }
+  };
 
   const getRemainingTime = _blockingInfo => {
     let value = Math.max(
@@ -97,9 +108,9 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                 <Box className={classes.header}>Collateral</Box>
                 <Box>
                   {`${
-                    (item.history?.Price *
+                    ((item.history?.Price *
                       (item.history?.TotalCollateralPercent || item.history?.CollateralPercent)) /
-                    100
+                    100).toFixed(2)
                   } ${getTokenSymbol(item.history?.PaymentToken)}`}
                 </Box>
               </Box>
@@ -132,8 +143,6 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                 <Box>
                   {item.history?.TotalCollateralPercent
                     ? Number(item.history?.TotalCollateralPercent).toFixed(2)
-                    : item.history?.CollateralPercent
-                    ? Number(item.history?.CollateralPercent).toFixed(2)
                     : "0.00"}
                   %
                 </Box>
@@ -146,9 +155,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                       <PrimaryButton
                         size="medium"
                         className={classes.primaryButton}
-                        onClick={() => {
-                          history.push(`/gameNFTS/${item.Slug}/${item.id}`);
-                        }}
+                        onClick={() => handleClickAddress()}
                       >
                         check on {item.Chain}scan
                         <img src={chainImage} style={{ width: "16px", height: "16px", marginLeft: "8px" }} />
@@ -173,9 +180,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                     <PrimaryButton
                       size="medium"
                       className={classes.primaryButton}
-                      onClick={() => {
-                        history.push(`/gameNFTS/${item.Slug}/${item.id}`);
-                      }}
+                      onClick={() => handleClickAddress()}
                     >
                       check on {item.Chain}scan
                       <img src={chainImage} style={{ width: "16px", height: "16px", marginLeft: "8px" }} />
