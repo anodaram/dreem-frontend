@@ -5,11 +5,11 @@ import { Skeleton } from "@material-ui/lab";
 import { PrimaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
-import { avatarCardStyles } from "./index.styles";
+import { cardStyles } from "./index.styles";
 
-export default function AvatarCard(props) {
+export default function LandForSaleCard(props) {
   const { isLoading, item } = props;
-  const classes = avatarCardStyles();
+  const classes = cardStyles();
 
   return (
     <Box className={classes.card}>

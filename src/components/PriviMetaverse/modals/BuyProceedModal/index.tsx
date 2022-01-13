@@ -142,7 +142,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
           CollectionId: collection_id,
           TokenId: token_id,
           PaymentToken: offer.PaymentToken,
-          Price: offerPrice,
+          Price: offer?.Price,
           Beneficiary: offer.Beneficiary,
           from: account,
           to: offer.Beneficiary,
