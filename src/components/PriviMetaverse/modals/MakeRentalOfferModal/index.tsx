@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
@@ -36,6 +36,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
   const [pricePerSec, setPricePerSec] = useState<number>();
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const marketFee = useSelector((state: RootState) => state.marketPlace.fee);
   const [rentalToken, setRentalToken] = useState<any>(tokenList[0]);
 
   const [hash, setHash] = useState<string>("");
@@ -45,6 +46,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
 
   const rentalSeconds = Math.floor((rentalTime || 0) * SECONDS_PER_DAY);
   const price = (pricePerSec || 0) * rentalSeconds;
+  const offerPrice = useMemo(() => (price || 0) * (1 + marketFee), [price, marketFee]);
 
   useEffect(() => {
     setRentalToken(tokenList[0]);
@@ -68,7 +70,9 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
       }
 
       if (!pricePerSec || !rentalTime) {
-        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+          variant: "error",
+        });
         return;
       }
 
@@ -80,7 +84,9 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
       if (chainId && chainId !== nftChain?.chainId) {
         const isHere = await switchNetwork(nftChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
           return;
         }
         setSelectedChain(nftChain);
@@ -103,7 +109,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RENTAL_MANAGER,
-        toNDecimals(price, rentalToken.Decimals)
+        toNDecimals(offerPrice, rentalToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -132,7 +138,9 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
       }
 
       if (!pricePerSec || !rentalTime) {
-        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+          variant: "error",
+        });
         return;
       }
 
@@ -294,6 +302,9 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
                 disabled={isApproved}
               />
             </MuiPickersUtilsProvider>
+          </Box>
+          <Box textAlign="end" fontSize={12} fontFamily="Rany" mt={1} color="white">
+            incl. {marketFee}% marketplace fee
           </Box>
         </Box>
         <Box className={classes.footer}>
