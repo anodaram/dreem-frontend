@@ -197,7 +197,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
                 Amount to pay
               </Box>
               <Box className={classes.collateralAmount} style={{ marginRight: "40px" }}>
-                {`${nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price } ${getTokenSymbol(nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaymentToken)}`}
+                {`${Number(nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price) * (1 + fee) } ${getTokenSymbol(nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaymentToken)}`}
               </Box>
             </Box>
           </Box>

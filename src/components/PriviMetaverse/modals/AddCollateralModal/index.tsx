@@ -239,9 +239,6 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                   </span>
                 </Box>
               </Box>
-              <Box fontSize={12} textAlign="right" lineHeight="21px" color="#ffffff">
-                incl. {fee * 100}% marketplace fee
-              </Box>
               <Grid
                 container
                 spacing={2}
