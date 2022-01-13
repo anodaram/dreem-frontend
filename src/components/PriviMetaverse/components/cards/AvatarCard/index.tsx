@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { PrimaryButton } from "shared/ui-kit";
-import Box from "shared/ui-kit/Box";
-
-import { avatarCardStyles } from "./index.styles";
+import { useParams } from "react-router";
 
 import { Skeleton } from "@material-ui/lab";
 
+import { PrimaryButton } from "shared/ui-kit";
+import Box from "shared/ui-kit/Box";
 import CharacterDetailModal from "components/PriviMetaverse/modals/CharacterDetailModal";
-import { useParams } from "react-router";
+import { avatarCardStyles } from "./index.styles";
 
 export default function AvatarCard(props) {
   const { isLoading, item } = props;
@@ -20,7 +19,7 @@ export default function AvatarCard(props) {
     if (item?.id) {
       setMedia(item);
       if (characterId) {
-        console.log(characterId, item.id)
+        console.log(characterId, item.id);
         setOpenCharacterDetailModal(item.id == characterId);
       }
     }
