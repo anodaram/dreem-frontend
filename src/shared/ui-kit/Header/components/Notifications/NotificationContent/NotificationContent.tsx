@@ -374,7 +374,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
             Go to Manage Futures
           </b>
         </div>
-      ) : type === 266 ? (
+      ) : type === 272 ? (
         <div>
           <div>
             <span className={classes.username}>{externalData.user}</span> has cancelled the block of{" "}
@@ -385,7 +385,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
             Go to Manage Futures
           </b>
         </div>
-      ) : type === 267 ? (
+      ) : type === 273 ? (
         <div>
           <div>
             <span className={classes.username}>{externalData.user}</span> has canceled the block on{" "}
