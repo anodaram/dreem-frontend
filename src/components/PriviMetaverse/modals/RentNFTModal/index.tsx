@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 import { useParams } from "react-router";
@@ -50,6 +50,7 @@ export default function RentNFTModal({
 
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const marketFee = useSelector((state: RootState) => state.marketPlace.fee);
 
   const [hash, setHash] = useState<string>("");
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
@@ -64,7 +65,15 @@ export default function RentNFTModal({
 
   const price = offer
     ? (+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime).toFixed(3)
-    : 0;
+    : "0";
+
+  const offerPrice = useMemo(
+    () =>
+      +toDecimals(offer?.pricePerSecond ?? 0, getTokenDecimal(offer?.fundingToken)) *
+      rentalTime *
+      (1 + marketFee),
+    [offer, marketFee]
+  );
 
   useEffect(() => setSelectedChain(getChainForNFT(nft)), [nft]);
 
@@ -163,8 +172,9 @@ export default function RentNFTModal({
       let balance = await web3APIHandler.Erc20[rentalToken.Symbol].balanceOf(web3, { account });
       let decimals = await web3APIHandler.Erc20[rentalToken.Symbol].decimals(web3, { account });
       balance = balance / Math.pow(10, decimals);
+      const approvePrice = parseFloat(price) * (1 + marketFee);
 
-      if (balance < (price || 0)) {
+      if (balance < (approvePrice || 0)) {
         showAlertMessage(`Insufficient balance to approve`, { variant: "error" });
         setTransactionSuccess(false);
         return;
@@ -173,7 +183,7 @@ export default function RentNFTModal({
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RENTAL_MANAGER,
-        toNDecimals(price, rentalToken.Decimals)
+        toNDecimals(approvePrice, rentalToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -181,7 +191,7 @@ export default function RentNFTModal({
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${price} ${rentalToken.Symbol}!`, {
+      showAlertMessage(`Successfully approved ${approvePrice} ${rentalToken.Symbol}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);
@@ -417,18 +427,25 @@ export default function RentNFTModal({
               </Box>
             </Box>
           </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            gridColumnGap="10px"
-            fontSize="14px"
-            color="#E9FF26"
-            my={2}
-            ml={2}
-          >
-            <span>Wallet Balance</span>
-            <Box fontWeight="700">{`${balance.toFixed() ?? "0.00"} ${rentalToken?.Symbol ?? "USDT"}`}</Box>
+
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Box
+              display="flex"
+              alignItems="center"
+              gridColumnGap="10px"
+              fontSize="14px"
+              color="#E9FF26"
+              my={2}
+              ml={2}
+            >
+              <span>Wallet Balance</span>
+              <Box fontWeight="700">{`${balance.toFixed() ?? "0.00"} ${rentalToken?.Symbol ?? "USDT"}`}</Box>
+            </Box>
+            <Box textAlign="end" fontSize={12} fontFamily="Rany" color="white">
+              incl. {marketFee}% marketplace fee
+            </Box>
           </Box>
+
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton
               size="medium"
