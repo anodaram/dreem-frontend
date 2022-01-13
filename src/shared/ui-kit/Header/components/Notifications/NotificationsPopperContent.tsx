@@ -126,7 +126,7 @@ const RemoveIcon = () => (
     <path
       d="M20.5416 2.45801L2.45825 20.5414M2.45827 2.45801L20.5416 20.5414"
       stroke="white"
-      stroke-width="3"
+      strokeWidth="3"
       stroke-linecap="square"
     />
   </svg>
