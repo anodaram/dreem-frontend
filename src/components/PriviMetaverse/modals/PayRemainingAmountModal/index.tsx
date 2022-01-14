@@ -165,9 +165,8 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
         mode: isProd ? "main" : "test",
         CollectionId: collection_id,
         TokenId: token_id,
-        PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price,
-        TotalCollateralPercent: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].TotalCollateralPercent,
         offerer: account!,
+        status: "SOLD",
         notificationMode: 1
       });
 
