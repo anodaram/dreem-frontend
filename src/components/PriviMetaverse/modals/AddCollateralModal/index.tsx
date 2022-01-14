@@ -191,7 +191,6 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
         TotalCollateralPercent:
           Number(blockingInfo?.TotalCollateralPercent) +
           Number(((price || 0) / Number(blockingInfo?.Price)) * 100),
-        PaidAmount: blockingInfo?.PaidAmount || 0,
         notificationMode: 2,
       });
 

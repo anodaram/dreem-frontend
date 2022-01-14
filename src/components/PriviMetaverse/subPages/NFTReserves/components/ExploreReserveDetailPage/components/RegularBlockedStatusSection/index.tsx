@@ -99,7 +99,6 @@ export default ({ isOwnership, nft, refresh }) => {
         CollectionId: collection_id,
         TokenId: token_id,
         TotalCollateralPercent: 0,
-        PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaidAmount || 0,
         notificationMode: 0,
         offerer: account!
       });
