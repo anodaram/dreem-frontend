@@ -113,22 +113,22 @@ const reserveMarketplace = (network: string) => {
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
         console.log("Getting gas....");
         console.log(payload)
-        const gas = await contract.methods
-          .approveReserveToBuy(
-            payload.collection_id,
-            payload.token_id,
-            payload.paymentToken,
-            payload.collateralToken,
-            payload.price,
-            payload.beneficiary,
-            payload.collateralPercent,
-            payload.collateralInitialAmount,
-            payload.reservePeriod,
-            payload.validityPeriod,
-            payload.sellerToMatch
-          )
-          .estimateGas({ from: account });
-        console.log("calced gas price is.... ", gas);
+        // const gas = await contract.methods
+        //   .approveReserveToBuy(
+        //     payload.collection_id,
+        //     payload.token_id,
+        //     payload.paymentToken,
+        //     payload.collateralToken,
+        //     payload.price,
+        //     payload.beneficiary,
+        //     payload.collateralPercent,
+        //     payload.collateralInitialAmount,
+        //     payload.reservePeriod,
+        //     payload.validityPeriod,
+        //     payload.sellerToMatch
+        //   )
+        //   .estimateGas({ from: account });
+        // console.log("calced gas price is.... ", gas);
         const response = await contract.methods
           .approveReserveToBuy(
             payload.collection_id,
@@ -143,7 +143,7 @@ const reserveMarketplace = (network: string) => {
             payload.validityPeriod,
             payload.sellerToMatch
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: 300000 })
           .on("transactionHash", hash => {
             setHash(hash);
           });

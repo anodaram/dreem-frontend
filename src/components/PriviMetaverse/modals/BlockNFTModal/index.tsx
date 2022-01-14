@@ -161,7 +161,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         collateralToken: reservePriceToken?.Address,
         price: toNDecimals(price, reservePriceToken.Decimals),
         beneficiary: account,
-        collateralInitialAmount: toNDecimals(Number(collateral) * (1 + fee), collateralToken.Decimals),
+        collateralInitialAmount: toNDecimals(Number(collateral), collateralToken.Decimals),
         collateralPercent: toNDecimals((Number(collateral) / Number(nft?.blockingSaleOffer?.Price) * 100), 2),
         reservePeriod: Math.ceil(+nft.blockingSaleOffer.ReservePeriod * 3600 * 24),
         validityPeriod: Number(nft.blockingSaleOffer.AcceptDuration || 0) * 3600 * 24,
