@@ -2,7 +2,7 @@ import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDebounce } from "use-debounce/lib";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useMediaQuery, useTheme, Select, MenuItem, IconButton } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
@@ -20,9 +20,11 @@ import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/
 import SkeletonBox from "shared/ui-kit/SkeletonBox";
 import { RootState } from "store/reducers/Reducer";
 import { toDecimals } from "shared/functions/web3";
-// import MarketplaceFeed from "./components/MarketplaceFeed";
 // import Owners from "./components/Owners";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
+import MarketplaceFeed from "./components/MarketplaceFeed";
+import { getAllTokenInfos } from "shared/services/API/TokenAPI";
+import { setTokenList } from "store/actions/MarketPlace";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   400: 1,
@@ -32,17 +34,17 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
 };
 
 const TAB_NFTS = "nfts";
-// const TAB_MARKETPLACE_FEED = "marketplace_feed";
+const TAB_MARKETPLACE_FEED = "marketplace_feed";
 // const TAB_OWNERS = "owners";
 const GameDetailTabs: TabItem[] = [
   {
     key: TAB_NFTS,
     title: "NFTs",
   },
-  // {
-  //   key: TAB_MARKETPLACE_FEED,
-  //   title: "MARKETPLACE FEED",
-  // },
+  {
+    key: TAB_MARKETPLACE_FEED,
+    title: "MARKETPLACE FEED",
+  },
   // {
   //   key: TAB_OWNERS,
   //   title: "owners",
@@ -115,9 +117,19 @@ export default function GameDetailPage() {
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
+  const dispatch = useDispatch();
+  
+  const getTokenList = async () => {
+    getAllTokenInfos().then(res => {
+      if (res.success) {
+        dispatch(setTokenList(res.tokens.filter(t => t.Symbol === "USDT")));
+      }
+    });
+  };
 
   React.useEffect(() => {
     loadGameInfo();
+    getTokenList();
   }, []);
 
   React.useEffect(() => {
@@ -440,7 +452,8 @@ export default function GameDetailPage() {
             }}
             extendedClasses={tabsClasses}
           />
-
+        {selectedTab === TAB_NFTS && (
+          <>
           <Box
             display="flex"
             alignItems="center"
@@ -552,7 +565,7 @@ export default function GameDetailPage() {
             </Box>
           </Box>
 
-          {selectedTab === TAB_NFTS && (
+          
             <Box
               className={classes.fitContent}
               style={{ paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}
@@ -617,9 +630,10 @@ export default function GameDetailPage() {
                 </Box>
               )}
             </Box>
+            </>
           )}
-          {/* {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed />}
-          {selectedTab === TAB_OWNERS && <Owners />} */}
+          {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed Chain={gameInfo.Chain}/>}
+          {/* {selectedTab === TAB_OWNERS && <Owners />} */}
         </Box>
       </Box>
     </Box>
