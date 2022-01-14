@@ -143,7 +143,7 @@ const reserveMarketplace = (network: string) => {
             payload.validityPeriod,
             payload.sellerToMatch
           )
-          .send({ from: account, gas: 300000 })
+          .send({ from: account, gas })
           .on("transactionHash", hash => {
             setHash(hash);
           });
