@@ -175,7 +175,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
       account!,
       {
         activeReserveId,
-        amount: toNDecimals(price * (1 + fee), reservePriceToken.Decimals),
+        amount: toNDecimals(price, reservePriceToken.Decimals),
       },
       setHash
     );

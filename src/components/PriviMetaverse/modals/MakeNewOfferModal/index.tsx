@@ -157,7 +157,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
         token_id,
         paymentToken: reservePriceToken?.Address,
         collateralToken: colaterralPriceToken?.Address,
-        price: toNDecimals(price * (1 + fee), reservePriceToken.Decimals),
+        price: toNDecimals(price, reservePriceToken.Decimals),
         beneficiary: account,
         collateralPercent: toNDecimals(collateralPercent, 2),
         collateralInitialAmount: toNDecimals(collateral, colaterralPriceToken.Decimals),
