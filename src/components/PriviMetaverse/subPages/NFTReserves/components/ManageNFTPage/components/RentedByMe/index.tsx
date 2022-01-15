@@ -6,7 +6,6 @@ import Box from "shared/ui-kit/Box";
 import { getLockedNFTsByOwner } from "shared/services/API/ReserveAPI";
 import { useAuth } from "shared/contexts/AuthContext";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
-import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import RentededByMeNFT from "./RentedByMeNFT";
 import { RentedByMeStyles } from "./index.styles";
 

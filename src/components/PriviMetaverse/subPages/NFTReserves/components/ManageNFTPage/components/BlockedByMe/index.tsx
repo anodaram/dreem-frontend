@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import BlockedByMeNFT from "./BlockedByMeNFT";
+
+import { Skeleton } from "@material-ui/lab";
 
 import Box from "shared/ui-kit/Box";
 import { getLockedNFTsByOwner } from "shared/services/API/ReserveAPI";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import { useAuth } from "shared/contexts/AuthContext";
-import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
+import BlockedByMeNFT from "./BlockedByMeNFT";
 import { BlockedByMeStyles } from "./index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -63,14 +64,24 @@ const BlockedByMe = () => {
   const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
 
   return isLoading ? (
-    <Box mt={2}>
-      <MasonryGrid
-        gutter={"40px"}
-        data={Array(loadingCount).fill(0)}
-        renderItem={(_, index) => <BlockedByMeNFT isLoading={true} item={{}} />}
-        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-      />
-    </Box>
+    <div
+      style={{
+        marginTop: 32,
+        paddingTop: 8,
+        paddingBottom: 8,
+      }}
+    >
+      {Array(loadingCount)
+        .fill(0)
+        .map((_, index) => (
+          <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
+            <Skeleton variant="rect" width={60} height={60} />
+            <Skeleton variant="rect" width="40%" height={24} style={{ marginLeft: "8px" }} />
+            <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
+            <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
+          </Box>
+        ))}
+    </div>
   ) : (
     <Box mb={8}>
       <Box className={classes.title}>Active</Box>
