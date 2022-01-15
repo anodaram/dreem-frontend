@@ -59,7 +59,7 @@ export default function RealmExtensionProfileCard({
   const handleRemove = async () => {
     const confirm = await confirmAlert({
       title: "Remove realm",
-      subTitle: "You sure about removing this realm?",
+      subTitle: "Are you sure about removing this realm?",
     });
 
     if (confirm) {
