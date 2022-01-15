@@ -45,7 +45,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const { showAlertMessage } = useAlertMessage();
 
-  const rentalSeconds = Math.floor((rentalTime || 0) * SECONDS_PER_HOUR);
+  const rentalSeconds = (rentalTime || 0) * SECONDS_PER_HOUR;
   const price = (pricePerHour || 0) * (rentalTime || 0);
   const offerPrice = useMemo(() => (price || 0) * (1 + marketFee), [price, marketFee]);
 
@@ -166,6 +166,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         },
         setHash
       );
+      console.log(response)
 
       if (response.success) {
         const offer = response.offer;
