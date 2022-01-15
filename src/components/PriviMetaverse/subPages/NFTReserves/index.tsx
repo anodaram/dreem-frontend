@@ -46,6 +46,7 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   1440: 4,
 };
 
+const SECONDS_PER_HOUR = 3600;
 const PAGE_SIZE = 8;
 
 const TAB_NFTS = "nfts";
@@ -375,7 +376,7 @@ const NFTReserves = () => {
                 {row?.blockingSaleOffer?.Price
                   ? `${row.blockingSaleOffer.Price} ${getTokenSymbol(
                       row.blockingSaleOffer.PaymentToken
-                    )} for ${row.blockingSaleOffer.ReservePeriod} Day(s)`
+                    )} for ${row.blockingSaleOffer.ReservePeriod} Hour(s)`
                   : "_"}
               </Box>
             ),
@@ -383,12 +384,12 @@ const NFTReserves = () => {
           {
             cell: (
               <Box textAlign="center">
-                {row?.rentSaleOffer?.pricePerSecond
+                {row?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
                   ? `${(
                       +toDecimals(
                         row.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(row.rentSaleOffer.fundingToken)
-                      ) * 1440
+                      ) * SECONDS_PER_HOUR
                     ).toFixed(3)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
                   : "_"}
               </Box>

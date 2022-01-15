@@ -22,7 +22,8 @@ import { getNextDay } from "shared/helpers/utils";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { MakeRentalOfferModalStyles } from "./index.style";
 
-const SECONDS_PER_DAY = 86400;
+const SECONDS_PER_HOUR = 3600;
+const PRECISSION = 1.01;
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft, setNft }) {
@@ -33,7 +34,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [date, setDate] = useState<any>();
   const [rentalTime, setRentalTime] = useState<number>();
-  const [pricePerSec, setPricePerSec] = useState<number>();
+  const [pricePerHour, setPricePerHour] = useState<number>();
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const marketFee = useSelector((state: RootState) => state.marketPlace.fee);
@@ -44,8 +45,8 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const { showAlertMessage } = useAlertMessage();
 
-  const rentalSeconds = Math.floor((rentalTime || 0) * SECONDS_PER_DAY);
-  const price = (pricePerSec || 0) * rentalSeconds;
+  const rentalSeconds = Math.floor((rentalTime || 0) * SECONDS_PER_HOUR);
+  const price = (pricePerHour || 0) * (rentalTime || 0);
   const offerPrice = useMemo(() => (price || 0) * (1 + marketFee), [price, marketFee]);
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         return;
       }
 
-      if (!pricePerSec || !rentalTime) {
+      if (!pricePerHour || !rentalTime) {
         showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
           variant: "error",
         });
@@ -109,7 +110,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RENTAL_MANAGER,
-        toNDecimals(offerPrice, rentalToken.Decimals)
+        toNDecimals(offerPrice*PRECISSION, rentalToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -137,7 +138,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         return;
       }
 
-      if (!pricePerSec || !rentalTime) {
+      if (!pricePerHour || !rentalTime) {
         showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
           variant: "error",
         });
@@ -158,7 +159,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
           collectionId: nft.Address,
           tokenId: token_id,
           rentalTime: rentalSeconds,
-          pricePerSecond: toNDecimals(pricePerSec, rentalToken.Decimals),
+          pricePerSecond: toNDecimals(pricePerHour/SECONDS_PER_HOUR, rentalToken.Decimals),
           rentalExpiration: getNextDay(date),
           operator: nft.ownerAddress,
           fundingToken: rentalToken.Address,
@@ -234,7 +235,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
           </Box>
           <Grid container spacing={2}>
             <Grid item sm={7}>
-              <Box className={classes.nameField}>Price per second</Box>
+              <Box className={classes.nameField}>Price Per Hour</Box>
             </Grid>
             <Grid item sm={5}>
               <Box className={classes.nameField}>Rental Token</Box>
@@ -243,8 +244,8 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
           <Grid container spacing={2}>
             <Grid item sm={7}>
               <InputWithLabelAndTooltip
-                inputValue={pricePerSec}
-                onInputValueChange={e => setPricePerSec(e.target.value)}
+                inputValue={pricePerHour}
+                onInputValueChange={e => setPricePerHour(e.target.value)}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"
@@ -278,7 +279,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
             type="number"
             theme="light"
             minValue={0}
-            endAdornment={<div className={classes.purpleText}>DAYS</div>}
+            endAdornment={<div className={classes.purpleText}>HOURS</div>}
             disabled={isApproved}
             placeHolder={"00"}
           />
@@ -311,7 +312,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
           <Box display="flex" justifyContent="space-between">
             <Box className={classes.totalText}>Total</Box>
             <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}>
-              {`${price} ${rentalToken?.Symbol}`}
+              {`${offerPrice} ${rentalToken?.Symbol}`}
             </Box>
           </Box>
           <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>

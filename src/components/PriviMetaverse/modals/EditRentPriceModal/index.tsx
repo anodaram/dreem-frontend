@@ -23,12 +23,13 @@ import TransactionProgressModal from "../TransactionProgressModal";
 import { EditRentPriceModalStyles } from "./index.style";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
+const SECONDS_PER_HOUR = 3600;
 
 export default function EditRentPriceModal({ open, offer, handleClose = () => {}, nft, setNft }) {
   const classes = EditRentPriceModalStyles();
   const { account, library, chainId } = useWeb3React();
   const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
-  const [pricePerSec, setPricePerSec] = useState<number>();
+  const [pricePerHour, setPricePerHour] = useState<number>();
 
   const [maxRentalTime, setMaxRentalTime] = useState<any>();
   const [limitDays, setLimitDays] = useState<number>(0);
@@ -69,7 +70,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
       return;
     }
 
-    if (!pricePerSec || !(limitDays || limitHour || limitMin || limitSec)) {
+    if (!pricePerHour || !(limitDays || limitHour || limitMin || limitSec)) {
       showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
       return;
     }
@@ -118,7 +119,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
         return;
       }
 
-      if (!pricePerSec || !(limitDays || limitHour || limitMin || limitSec)) {
+      if (!pricePerHour || !(limitDays || limitHour || limitMin || limitSec)) {
         showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
         return;
       }
@@ -137,7 +138,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
           collectionId: nft.Address,
           tokenId: token_id,
           maximumRentalTime: toSeconds(limitDays, limitHour, limitMin, limitSec),
-          pricePerSecond: toNDecimals(pricePerSec, rentalToken.Decimals),
+          pricePerSecond: toNDecimals(pricePerHour/SECONDS_PER_HOUR, rentalToken.Decimals),
           rentalExpiration: getNextDay(maxRentalTime),
           fundingToken: rentalToken.Address,
         },
@@ -291,7 +292,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
           <Box className={classes.title}>Edit Rental Price</Box>
           <Grid container spacing={2}>
             <Grid item sm={7}>
-              <Box className={classes.nameField}>Price Per Second</Box>
+              <Box className={classes.nameField}>Price Per Hour</Box>
             </Grid>
             <Grid item sm={5}>
               <Box className={classes.nameField}>Token</Box>
@@ -300,8 +301,8 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
           <Grid container spacing={2}>
             <Grid item sm={7}>
               <InputWithLabelAndTooltip
-                inputValue={pricePerSec}
-                onInputValueChange={e => setPricePerSec(e.target.value)}
+                inputValue={pricePerHour}
+                onInputValueChange={e => setPricePerHour(e.target.value)}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"

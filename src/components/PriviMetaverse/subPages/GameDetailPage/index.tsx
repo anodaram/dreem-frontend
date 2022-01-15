@@ -26,6 +26,8 @@ import MarketplaceFeed from "./components/MarketplaceFeed";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { setTokenList } from "store/actions/MarketPlace";
 
+const SECONDS_PER_HOUR = 3600;
+
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   400: 1,
   700: 2,
@@ -318,12 +320,12 @@ export default function GameDetailPage() {
           {
             cell: (
               <Box textAlign="center">
-                {row?.rentSaleOffer?.pricePerSecond
+                {row?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
                   ? `${(
                       +toDecimals(
                         row.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(row.rentSaleOffer.fundingToken)
-                      ) * 1440
+                      ) * SECONDS_PER_HOUR
                     ).toFixed(3)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
                   : "_"}
               </Box>

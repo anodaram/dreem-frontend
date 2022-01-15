@@ -18,7 +18,7 @@ import { RootState } from "store/reducers/Reducer";
 import { useSelector } from "react-redux";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
-const SECONDS_PER_DAY = 86400;
+const SECONDS_PER_HOUR = 3600;
 
 export default function RentProceedModal({ open, offer, handleClose = () => {}, nft, setNft }) {
   const classes = RentProceedModalStyles();
@@ -204,21 +204,21 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
           <Box className={classes.borderBox}>
             <Box className={classes.box}>
               <Box className={classes.infoRow}>
-                <span className={classes.infoLabel}>Price per second</span>
+                <span className={classes.infoLabel}>Price Per Hour</span>
                 <span className={classes.infoValue}>
-                  {`${toDecimals(offer.pricePerSecond, getTokenDecimal(offer.fundingToken))} ${getTokenSymbol(
+                  {`${toDecimals(offer.pricePerSecond*SECONDS_PER_HOUR, getTokenDecimal(offer.fundingToken))} ${getTokenSymbol(
                     offer.fundingToken
                   )}`}
                 </span>
               </Box>
               <Box className={classes.infoRow} mt={1}>
-                <span className={classes.infoLabel}>Rental time</span>
-                <span className={classes.infoValue}>{`${(offer.rentalTime / SECONDS_PER_DAY).toFixed(
+                <span className={classes.infoLabel}>Rental Time</span>
+                <span className={classes.infoValue}>{`${(offer.rentalTime / SECONDS_PER_HOUR).toFixed(
                   3
-                )} Days`}</span>
+                )} Hours`}</span>
               </Box>
               <Box className={classes.infoRow} mt={1}>
-                <span className={classes.infoLabel}>Total cost</span>
+                <span className={classes.infoLabel}>Total Cost</span>
                 <span className={classes.infoValue}>
                   {`${toDecimals(
                     offer.pricePerSecond * offer.rentalTime,

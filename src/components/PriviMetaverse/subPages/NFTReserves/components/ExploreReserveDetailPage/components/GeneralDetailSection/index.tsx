@@ -44,6 +44,8 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
   const [openRentNFTModal, setOpenRentNFTModal] = useState<boolean>(false);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
 
+  const SECONDS_PER_HOUR = 3600;
+
   const getTokenSymbol = addr => {
     if (tokenList.length == 0 || !addr) return 0;
     let token = tokenList.find(token => token.Address === addr);
@@ -241,18 +243,18 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
         <Box textAlign="right">
           {isOwnership && nft?.rentSaleOffer?.pricePerSecond && (
             <Text className={classes.pricingText2}>
-              {nft?.rentSaleOffer?.pricePerSecond &&
+              {nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR &&
                 `${(
                   +toDecimals(
                     nft.rentSaleOffer.pricePerSecond,
                     getTokenDecimal(nft.rentSaleOffer.fundingToken)
-                  ) * 1440
-                ).toFixed(2)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
+                  ) * SECONDS_PER_HOUR
+                ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
             </Text>
           )}
           <Box display="flex" justifyContent="flex-end" alignItems="center">
             {isOwnership ? (
-              nft?.rentSaleOffer?.pricePerSecond ? (
+              nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR ? (
                 <Box display="flex" alignItems="space-between" marginTop="10px">
                   <PrimaryButton
                     size="small"
@@ -276,12 +278,12 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
               ) : (
                 <>
                   <Text className={classes.pricingText2}>
-                    {nft?.rentSaleOffer?.pricePerSecond &&
+                    {nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR &&
                       `${(
                         +toDecimals(
                           nft.rentSaleOffer.pricePerSecond,
                           getTokenDecimal(nft.rentSaleOffer.fundingToken)
-                        ) * 1440
+                        ) * SECONDS_PER_HOUR
                       ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
                   </Text>
                   &nbsp;
@@ -299,12 +301,12 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
             ) : nft?.rentSaleOffer?.pricePerSecond && isSignedin ? (
               <>
                 <Text className={!nft?.status ? classes.pricingText2 : classes.pricingText2Disable}>
-                  {nft?.rentSaleOffer?.pricePerSecond &&
+                  {nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR &&
                     `${(
                       +toDecimals(
                         nft.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(nft.rentSaleOffer.fundingToken)
-                      ) * 1440
+                      ) * SECONDS_PER_HOUR
                     ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
                 </Text>
                 &nbsp;

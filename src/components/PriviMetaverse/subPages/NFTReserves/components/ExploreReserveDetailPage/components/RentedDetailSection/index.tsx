@@ -93,7 +93,7 @@ export default ({ nft, setNft, isOwner }) => {
             justifyContent="space-between"
             style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.5)" }}
           >
-            <span>Price per Second</span>
+            <span>Price Per Hour</span>
             <Box
               className={classes.gradientText}
               textAlign="end"

@@ -15,6 +15,8 @@ import { visitChainLink } from "shared/helpers";
 
 import { cardStyles } from "./index.style";
 
+const SECONDS_PER_HOUR = 3600;
+
 const CARD_COLORS = {
   LISTED: "rgba(31, 200, 139, 0.98)",
   RENTED: "#8D65FF",
@@ -166,12 +168,12 @@ const ExploreCard = ({ nft, isLoading = false }) => {
             <div className={classes.cardContentDiv}>
               <span className={classes.cardContentText}>Rental Fee (per hour)</span>
               <span className={classes.cardContentAmount}>
-                {nft?.rentSaleOffer?.pricePerSecond
+                {nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
                   ? `${(
                       +toDecimals(
                         nft.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(nft.rentSaleOffer.fundingToken)
-                      ) * 1440
+                      ) * SECONDS_PER_HOUR
                     ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`
                   : "_"}
               </span>
