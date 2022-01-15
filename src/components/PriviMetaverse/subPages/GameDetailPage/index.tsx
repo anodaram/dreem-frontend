@@ -120,7 +120,7 @@ export default function GameDetailPage() {
 
   const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
   const dispatch = useDispatch();
-  
+
   const getTokenList = async () => {
     getAllTokenInfos().then(res => {
       if (res.success) {
@@ -454,187 +454,201 @@ export default function GameDetailPage() {
             }}
             extendedClasses={tabsClasses}
           />
-        {selectedTab === TAB_NFTS && (
-          <>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            width={1}
-            mt={4}
-            flexDirection={isMobile ? "column" : "row"}
-          >
-            <Box
-              display="flex"
-              alignItems="flex-end"
-              flexWrap="wrap"
-              width={isMobile ? 1 : "auto"}
-              justifyContent={isMobile ? "flex-end" : "flex-start"}
-            >
-              <Select
-                open={openStatusSelect}
-                onClose={() => setOpenStatusSelect(false)}
-                value={filterStatus}
-                onChange={handleFilterStatus}
-                className={classes.select}
-                renderValue={(value: any) => (
-                  <Box display="flex" alignItems="center" onClick={() => setOpenStatusSelect(true)}>
-                    <label>STATUS&nbsp;&nbsp;</label>
-                    <span>{value}</span>
-                  </Box>
-                )}
-                MenuProps={{
-                  classes: filterClasses,
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "left",
-                  },
-                  transformOrigin: {
-                    vertical: "top",
-                    horizontal: "left",
-                  },
-                  getContentAnchorEl: null,
-                }}
-                IconComponent={ArrowIconComponent(setOpenStatusSelect)}
-              >
-                {filterStatusOptions.map((status, index) => (
-                  <MenuItem key={`filter-status-${index}`} value={status}>
-                    {status}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Box>
-            <Box className={classes.optionSection} mt={isMobile ? 1 : 0}>
-              <div className={classes.filterButtonBox}>
-                {showSearchBox && (
-                  <InputWithLabelAndTooltip
-                    type="text"
-                    inputValue={searchValue}
-                    placeHolder="Search"
-                    onInputValueChange={e => {
-                      setLastId(undefined);
-                      setSearchValue(e.target.value);
-                      setHasMore(true);
-                      setNfts([]);
-                    }}
-                    style={{
-                      background: "transparent",
-                      margin: 0,
-                      marginRight: 8,
-                      marginLeft: 8,
-                      padding: 0,
-                      border: "none",
-                      height: "auto",
-                    }}
-                    theme="dark"
-                  />
-                )}
-                <Box
-                  onClick={() => setShowSearchBox(prev => !prev)}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  style={{ cursor: "pointer" }}
-                >
-                  <SearchIcon />
-                </Box>
-              </div>
+          {selectedTab === TAB_NFTS && (
+            <>
               <Box
-                className={classes.controlBox}
-                ml={2}
                 display="flex"
-                flexDirection="row"
                 alignItems="center"
+                justifyContent="space-between"
+                width={1}
+                mt={4}
+                flexDirection={isMobile ? "column" : "row"}
               >
-                <SecondaryButton
-                  className={`${classes.showButton} ${isListView ? classes.showButtonSelected : ""}`}
-                  size="small"
-                  onClick={() => setIsListView(true)}
-                  isRounded
+                <Box
+                  display="flex"
+                  alignItems="flex-end"
+                  flexWrap="wrap"
+                  width={isMobile ? 1 : "auto"}
+                  justifyContent={isMobile ? "flex-end" : "flex-start"}
                 >
-                  <UnionIcon />
-                </SecondaryButton>
-                <PrimaryButton
-                  className={`${classes.showButton} ${!isListView ? classes.showButtonSelected : ""}`}
-                  size="small"
-                  onClick={() => setIsListView(false)}
-                  isRounded
-                  style={{ marginLeft: 0 }}
-                >
-                  <DetailIcon />
-                </PrimaryButton>
-              </Box>
-            </Box>
-          </Box>
-
-          
-            <Box
-              className={classes.fitContent}
-              style={{ paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}
-            >
-              <InfiniteScroll
-                hasChildren={nfts?.length > 0}
-                dataLength={nfts?.length}
-                scrollableTarget={"scrollContainer"}
-                next={loadNfts}
-                hasMore={hasMore}
-                loader={
-                  loading &&
-                  isListView && (
-                    <div
-                      style={{
-                        paddingTop: 8,
-                        paddingBottom: 8,
-                      }}
-                    >
-                      {Array(loadingCount)
-                        .fill(0)
-                        .map((_, index) => (
-                          <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
-                            <Skeleton variant="rect" width={60} height={60} />
-                            <Skeleton variant="rect" width="40%" height={24} style={{ marginLeft: "8px" }} />
-                            <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
-                            <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
-                          </Box>
-                        ))}
-                    </div>
-                  )
-                }
-              >
-                {isListView ? (
-                  tableData.length > 0 && (
-                    <div className={classes.table}>
-                      <CustomTable
-                        headers={tableHeaders}
-                        rows={tableData}
-                        placeholderText=""
-                        theme="dreem"
-                        onClickRow={() => {}}
+                  <Select
+                    open={openStatusSelect}
+                    onClose={() => setOpenStatusSelect(false)}
+                    value={filterStatus}
+                    onChange={handleFilterStatus}
+                    className={classes.select}
+                    renderValue={(value: any) => (
+                      <Box display="flex" alignItems="center" onClick={() => setOpenStatusSelect(true)}>
+                        <label>STATUS&nbsp;&nbsp;</label>
+                        <span>{value}</span>
+                      </Box>
+                    )}
+                    MenuProps={{
+                      classes: filterClasses,
+                      anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "left",
+                      },
+                      transformOrigin: {
+                        vertical: "top",
+                        horizontal: "left",
+                      },
+                      getContentAnchorEl: null,
+                    }}
+                    IconComponent={ArrowIconComponent(setOpenStatusSelect)}
+                  >
+                    {filterStatusOptions.map((status, index) => (
+                      <MenuItem key={`filter-status-${index}`} value={status}>
+                        {status}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Box>
+                <Box className={classes.optionSection} mt={isMobile ? 1 : 0}>
+                  <div className={classes.filterButtonBox}>
+                    {showSearchBox && (
+                      <InputWithLabelAndTooltip
+                        type="text"
+                        inputValue={searchValue}
+                        placeHolder="Search"
+                        onInputValueChange={e => {
+                          setLastId(undefined);
+                          setSearchValue(e.target.value);
+                          setHasMore(true);
+                          setNfts([]);
+                        }}
+                        style={{
+                          background: "transparent",
+                          margin: 0,
+                          marginRight: 8,
+                          marginLeft: 8,
+                          padding: 0,
+                          border: "none",
+                          height: "auto",
+                        }}
+                        theme="dark"
                       />
-                    </div>
-                  )
-                ) : (
-                  <Box mt={4}>
-                    <MasonryGrid
-                      gutter={"40px"}
-                      data={nftListWithSkeleton}
-                      renderItem={item => (
-                        <ExploreCard nft={item} isLoading={Object.entries(item).length === 0} />
-                      )}
-                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                    />
+                    )}
+                    <Box
+                      onClick={() => setShowSearchBox(prev => !prev)}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <SearchIcon />
+                    </Box>
+                  </div>
+                  <Box
+                    className={classes.controlBox}
+                    ml={2}
+                    display="flex"
+                    flexDirection="row"
+                    alignItems="center"
+                  >
+                    <SecondaryButton
+                      className={`${classes.showButton} ${isListView ? classes.showButtonSelected : ""}`}
+                      size="small"
+                      onClick={() => setIsListView(true)}
+                      isRounded
+                    >
+                      <UnionIcon />
+                    </SecondaryButton>
+                    <PrimaryButton
+                      className={`${classes.showButton} ${!isListView ? classes.showButtonSelected : ""}`}
+                      size="small"
+                      onClick={() => setIsListView(false)}
+                      isRounded
+                      style={{ marginLeft: 0 }}
+                    >
+                      <DetailIcon />
+                    </PrimaryButton>
+                  </Box>
+                </Box>
+              </Box>
+
+              <Box
+                className={classes.fitContent}
+                style={{ paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}
+              >
+                <InfiniteScroll
+                  hasChildren={nfts?.length > 0}
+                  dataLength={nfts?.length}
+                  scrollableTarget={"scrollContainer"}
+                  next={loadNfts}
+                  hasMore={hasMore}
+                  loader={
+                    loading &&
+                    isListView && (
+                      <div
+                        style={{
+                          paddingTop: 8,
+                          paddingBottom: 8,
+                        }}
+                      >
+                        {Array(loadingCount)
+                          .fill(0)
+                          .map((_, index) => (
+                            <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
+                              <Skeleton variant="rect" width={60} height={60} />
+                              <Skeleton
+                                variant="rect"
+                                width="40%"
+                                height={24}
+                                style={{ marginLeft: "8px" }}
+                              />
+                              <Skeleton
+                                variant="rect"
+                                width="20%"
+                                height={24}
+                                style={{ marginLeft: "8px" }}
+                              />
+                              <Skeleton
+                                variant="rect"
+                                width="20%"
+                                height={24}
+                                style={{ marginLeft: "8px" }}
+                              />
+                            </Box>
+                          ))}
+                      </div>
+                    )
+                  }
+                >
+                  {isListView ? (
+                    tableData.length > 0 && (
+                      <div className={classes.table}>
+                        <CustomTable
+                          headers={tableHeaders}
+                          rows={tableData}
+                          placeholderText=""
+                          theme="dreem"
+                          onClickRow={() => {}}
+                        />
+                      </div>
+                    )
+                  ) : (
+                    <Box mt={4} px={1}>
+                      <MasonryGrid
+                        gutter={"40px"}
+                        data={nftListWithSkeleton}
+                        renderItem={item => (
+                          <ExploreCard nft={item} isLoading={Object.entries(item).length === 0} />
+                        )}
+                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                      />
+                    </Box>
+                  )}
+                </InfiniteScroll>
+                {!loading && nfts?.length < 1 && (
+                  <Box textAlign="center" width="100%" mb={10} mt={2}>
+                    No NFTs
                   </Box>
                 )}
-              </InfiniteScroll>
-              {!loading && nfts?.length < 1 && (
-                <Box textAlign="center" width="100%" mb={10} mt={2}>
-                  No NFTs
-                </Box>
-              )}
-            </Box>
+              </Box>
             </>
           )}
-          {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed Chain={gameInfo.Chain}/>}
+          {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed Chain={gameInfo.Chain} />}
           {/* {selectedTab === TAB_OWNERS && <Owners />} */}
         </Box>
       </Box>
