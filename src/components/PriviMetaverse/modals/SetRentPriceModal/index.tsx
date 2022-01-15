@@ -209,7 +209,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
               <Box className={classes.nameField}>
                 <span>Price Per Hour</span>
                 <InfoTooltip
-                  tooltip={"To be streamed from the renters wallet to yours on a second by second basis"}
+                  tooltip={"Will be paid in full by the renter's wallet when rental period starts"}
                 />
               </Box>
               <InputWithLabelAndTooltip
