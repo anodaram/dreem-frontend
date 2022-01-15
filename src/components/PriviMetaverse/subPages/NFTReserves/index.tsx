@@ -512,7 +512,7 @@ const NFTReserves = () => {
                   className={classes.primaryButton}
                   onClick={() => setOpenHowWorksModal(true)}
                 >
-                  HOW IT WORKS?
+                  HOW IT WORKS
                 </SecondaryButton>
                 {isSignedin && (
                   <SecondaryButton
