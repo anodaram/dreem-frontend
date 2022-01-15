@@ -277,7 +277,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
                 theme="light"
                 minValue={0}
                 disabled={isApproved}
-                placeHolder={"0.001"}
+                placeHolder={"0"}
               />
             </Grid>
             <Grid item xs={6} sm={5}>
