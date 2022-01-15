@@ -203,7 +203,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
                 theme="light"
                 minValue={0}
                 disabled={isApproved}
-                placeHolder={"0.001"}
+                placeHolder={"10"}
               />
             </Grid>
             <Grid item xs={6} sm={5}>
@@ -233,7 +233,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
             minValue={0}
             endAdornment={<div className={classes.purpleText}>DAYS</div>}
             disabled={isApproved}
-            placeHolder={"00"}
+            placeHolder={"10"}
           />
           <Box className={classes.nameField}>Collateral (%)</Box>
           <InputWithLabelAndTooltip
@@ -245,7 +245,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
             theme="light"
             minValue={0}
             disabled={isApproved}
-            placeHolder={"0"}
+            placeHolder={"10%"}
           />
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton
