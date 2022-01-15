@@ -84,8 +84,6 @@ export default ({isOwnership, nft, refresh}) => {
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
-
       await closeBlockingHistory({
         ...blockingInfo,
         mode: isProd ? "main" : "test",
@@ -97,6 +95,7 @@ export default ({isOwnership, nft, refresh}) => {
         notificationMode: 3
       });
 
+      setTransactionSuccess(true);
       refresh()
     } else {
       setTransactionSuccess(false);

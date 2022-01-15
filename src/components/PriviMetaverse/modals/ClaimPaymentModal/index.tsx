@@ -72,8 +72,6 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
-
       await successFinishBlocking({
         mode: isProd ? "main" : "test",
         CollectionId: collection_id,
@@ -84,6 +82,7 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
         notificationMode: 0,
       });
 
+      setTransactionSuccess(true);
       onConfirm();
       handleClose();
     } else {

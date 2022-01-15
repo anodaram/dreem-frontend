@@ -177,12 +177,12 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         reservePeriod: Math.ceil(+nft.blockingSaleOffer.ReservePeriod * 3600 * 24),
         validityPeriod: Number(nft.blockingSaleOffer.AcceptDuration || 0) * 3600 * 24,
         sellerToMatch: nft.blockingSaleOffer.Beneficiary,
+        mode: 0
       },
       setHash
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
       const offerId = web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "uint256", "address", "uint80", "uint64"],
@@ -233,6 +233,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         hash: response.hash,
         created: new Date().getTime(),
       });
+      setTransactionSuccess(true);
       setNft(newNft);
       onConfirm();
     } else {

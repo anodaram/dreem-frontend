@@ -158,8 +158,6 @@ export default function CancelReserveModal({
       );
 
       if (contractResponse.success) {
-        setTransactionSuccess(true);
-
         await closeBlockingHistory({
           ...blockingInfo,
           mode: isProd ? "main" : "test",
@@ -170,6 +168,8 @@ export default function CancelReserveModal({
           offerer: account!,
           notificationMode: 0,
         });
+
+        setTransactionSuccess(true);
         handleClose();
         onConfirm();
         //   handleRefresh();

@@ -128,12 +128,12 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
           reservePeriod: Math.ceil(+(period || 0) * 3600 * 24),
           validityPeriod: 3 * 3600 * 24,
           buyerToMatch: "0x0000000000000000000000000000000000000000",
+          mode: 1
         },
         setHash
       );
 
       if (contractResponse.success) {
-        setTransactionSuccess(true);
         const offerId = web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address", "uint80", "uint64"],
@@ -173,6 +173,8 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
           hash,
           created: new Date().getTime(),
         };
+
+        setTransactionSuccess(true);
         setNft(newNft);
         handleClose();
       } else {

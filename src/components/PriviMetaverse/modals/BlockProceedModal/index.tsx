@@ -120,12 +120,12 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
           reservePeriod: Math.ceil(+offer.ReservePeriod * 3600 * 24),
           validityPeriod: Number(offer.AcceptDuration || 0) * 3600 * 24,
           buyerToMatch: offer.Beneficiary,
+          mode: 0
         },
         setHash
       );
 
       if (contractResponse.success) {
-        setTransactionSuccess(true);
         const offerId = web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address", "uint80", "uint64", "address"],
@@ -175,6 +175,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
           hash: contractResponse.hash,
           created: new Date().getTime(),
         });
+        setTransactionSuccess(true);
         setNft(newNft);
         handleRefresh()
         handleClose();

@@ -181,7 +181,6 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
 
       await updateBlockingHistory({
         ...blockingInfo,
@@ -194,6 +193,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
         notificationMode: 2,
       });
 
+      setTransactionSuccess(true);
       refresh();
       handleClose();
     } else {
