@@ -32,6 +32,7 @@ import RegularBlockedDetailSection from "./components/RegularBlockedDetailSectio
 import RegularBlockedStatusSection from "./components/RegularBlockedStatusSection";
 import ExpiredPayDetailSection from "./components/ExpiredPayDetailSection";
 import ExpiredPayStatusSection from "./components/ExpiredPayStatusSection";
+import AcceptingOfferSection from "./components/AcceptingOfferSection";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
 import { exploreOptionDetailPageStyles } from "./index.styles";
 
@@ -99,7 +100,7 @@ const ExploreReserveDetailPage = () => {
           _blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + _blockingInfo?.created - Date.now() < 0
         );
         setIsExpiredPaySuccess(_blockingInfo.PaidAmount === _blockingInfo.Price);
-        setIsBuyer((account || "").toLocaleLowerCase === _blockingInfo.to)
+        setIsBuyer((account || "").toLocaleLowerCase === _blockingInfo.to);
       }
     }
   }, [nft]);
@@ -366,6 +367,7 @@ const ExploreReserveDetailPage = () => {
                     refresh={refresh}
                     onRent={() => setOpenRentSccess(true)}
                   />
+                  {/* <AcceptingOfferSection /> */}
                 </>
               )}
             </Box>
@@ -376,7 +378,7 @@ const ExploreReserveDetailPage = () => {
             ) : (
               <NFTDetailTabSection isOwnership={isOwner} nft={nft} setNft={setNft} handleRefresh={refresh} />
             )
-          ) : isBlockedNFT && isBuyer? (
+          ) : isBlockedNFT && isBuyer ? (
             isExpired ? (
               isExpiredPaySuccess ? null : (
                 <ExpiredPayStatusSection nft={nft} />
