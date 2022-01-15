@@ -45,6 +45,7 @@ const ExploreReserveDetailPage = () => {
   const { shareMedia } = useShareMedia();
 
   const [isOwner, setIsOwner] = useState<boolean>(false);
+  const [isBuyer, setIsBuyer] = useState<boolean>(false);
   const [isListed, setIsListed] = useState<boolean>(false);
   const [isBlockedNFT, setIsBlockedNFT] = useState<boolean>(false);
   const [isRentedNFT, setIsRentedNFT] = useState<boolean>(false);
@@ -98,6 +99,7 @@ const ExploreReserveDetailPage = () => {
           _blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + _blockingInfo?.created - Date.now() < 0
         );
         setIsExpiredPaySuccess(_blockingInfo.PaidAmount === _blockingInfo.Price);
+        setIsBuyer((account || "").toLocaleLowerCase === _blockingInfo.to)
       }
     }
   }, [nft]);
@@ -347,7 +349,7 @@ const ExploreReserveDetailPage = () => {
                     onRent={() => setOpenRentSccess(true)}
                   />
                 )
-              ) : isBlockedNFT ? (
+              ) : isBlockedNFT && isBuyer ? (
                 isExpired ? (
                   <ExpiredPayDetailSection nft={nft} refresh={refresh} isSuccess={isExpiredPaySuccess} />
                 ) : (
@@ -374,7 +376,7 @@ const ExploreReserveDetailPage = () => {
             ) : (
               <NFTDetailTabSection isOwnership={isOwner} nft={nft} setNft={setNft} handleRefresh={refresh} />
             )
-          ) : isBlockedNFT ? (
+          ) : isBlockedNFT && isBuyer? (
             isExpired ? (
               isExpiredPaySuccess ? null : (
                 <ExpiredPayStatusSection nft={nft} />
