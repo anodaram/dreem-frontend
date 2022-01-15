@@ -20,7 +20,7 @@ import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/
 import SkeletonBox from "shared/ui-kit/SkeletonBox";
 import { RootState } from "store/reducers/Reducer";
 import { toDecimals } from "shared/functions/web3";
-// import Owners from "./components/Owners";
+import Owners from "./components/Owners";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 import MarketplaceFeed from "./components/MarketplaceFeed";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
@@ -37,7 +37,7 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
 
 const TAB_NFTS = "nfts";
 const TAB_MARKETPLACE_FEED = "marketplace_feed";
-// const TAB_OWNERS = "owners";
+const TAB_OWNERS = "owners";
 const GameDetailTabs: TabItem[] = [
   {
     key: TAB_NFTS,
@@ -47,10 +47,10 @@ const GameDetailTabs: TabItem[] = [
     key: TAB_MARKETPLACE_FEED,
     title: "MARKETPLACE FEED",
   },
-  // {
-  //   key: TAB_OWNERS,
-  //   title: "owners",
-  // },
+  {
+    key: TAB_OWNERS,
+    title: "owners",
+  },
 ];
 const filterStatusOptions = ["All", "On Sale", "For Rental", "Blocked", "Rented"];
 
@@ -648,8 +648,8 @@ export default function GameDetailPage() {
               </Box>
             </>
           )}
-          {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed Chain={gameInfo.Chain} />}
-          {/* {selectedTab === TAB_OWNERS && <Owners />} */}
+          {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed Chain={gameInfo.Chain}/>}
+          {selectedTab === TAB_OWNERS && <Owners />}
         </Box>
       </Box>
     </Box>
