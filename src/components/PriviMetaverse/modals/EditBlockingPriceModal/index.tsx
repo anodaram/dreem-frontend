@@ -192,7 +192,6 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
       );
 
       if (contractResponse.success) {
-        setTransactionSuccess(true);
         const offerId = web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address", "uint80", "uint64"],
@@ -232,6 +231,8 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
           hash,
           created: new Date().getTime(),
         };
+        
+        setTransactionSuccess(true);
         setNft(newNft);
         handleClose();
       } else {

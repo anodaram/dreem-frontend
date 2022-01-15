@@ -171,7 +171,6 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
       const offerId = web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "uint256", "address", "uint80", "uint64"],
@@ -222,6 +221,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         hash: response.hash,
         created: new Date().getTime(),
       });
+      setTransactionSuccess(true);
       setNft(newNft);
       onConfirm();
     } else {

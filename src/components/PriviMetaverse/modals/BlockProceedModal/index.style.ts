@@ -21,12 +21,6 @@ export const BlockProceedModalStyles = makeStyles(theme => ({
     letterSpacing: "0.02em",
     lineHeight: "150%",
   },
-  divider: {
-    background: "#431AB7",
-    opacity: 0.2,
-    margin: "13px 0",
-    height: 1,
-  },
   infoLabel: {
     fontSize: 16,
     lineHeight: "24px",

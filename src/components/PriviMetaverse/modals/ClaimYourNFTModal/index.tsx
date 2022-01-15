@@ -75,8 +75,6 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
-
       await closeBlockingHistory({
         ...blockingInfo,
         mode: isProd ? "main" : "test",
@@ -88,6 +86,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
         notificationMode: 2
       });
 
+      setTransactionSuccess(true);
       onConfirm();
       handleClose();
     } else {

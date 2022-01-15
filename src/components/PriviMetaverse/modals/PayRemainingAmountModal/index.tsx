@@ -158,8 +158,6 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
-
       await updateBlockingHistory({
         ...nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1],
         mode: isProd ? "main" : "test",
@@ -171,6 +169,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
         notificationMode: 1
       });
 
+      setTransactionSuccess(true);
       onConfirm();
       handleClose();
     } else {

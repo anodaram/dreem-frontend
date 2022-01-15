@@ -147,9 +147,14 @@ const reserveMarketplace = (network: string) => {
           .on("transactionHash", hash => {
             setHash(hash);
           });
-        console.log("transaction succeed", response);
-        console.log(response?.events?.PurchaseReserved)
-        resolve({ success: true, hash: response.transactionHash });
+        console.log(response?.events?.PurchaseReserved || response?.events?.PurchaseReserveProposed)
+        if (response?.events?.PurchaseReserved || response?.events?.PurchaseReserveProposed) {
+          resolve({ success: true, hash: response.transactionHash });
+        } else {
+          resolve({
+            success: false,
+          });
+        }
       } catch (e) {
         console.log(e);
         resolve({
