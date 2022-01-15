@@ -442,7 +442,7 @@ export default function RentNFTModal({
               <Box fontWeight="700">{`${balance.toFixed() ?? "0.00"} ${rentalToken?.Symbol ?? "USDT"}`}</Box>
             </Box>
             <Box textAlign="end" fontSize={12} fontFamily="Rany" color="white">
-              incl. {marketFee}% marketplace fee
+              incl. {marketFee*100}% marketplace fee
             </Box>
           </Box>
 

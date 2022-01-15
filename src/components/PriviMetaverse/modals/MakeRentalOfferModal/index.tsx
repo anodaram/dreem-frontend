@@ -306,7 +306,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
             </MuiPickersUtilsProvider>
           </Box>
           <Box textAlign="end" fontSize={12} fontFamily="Rany" mt={1} color="white">
-            incl. {marketFee}% marketplace fee
+            incl. {marketFee*100}% marketplace fee
           </Box>
         </Box>
         <Box className={classes.footer}>
