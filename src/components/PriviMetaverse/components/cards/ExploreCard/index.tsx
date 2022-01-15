@@ -131,14 +131,14 @@ const ExploreCard = ({ nft, isLoading = false }) => {
           </div>
           <div className={classes.cardTitle}>
             <div className={classes.cardNftName}>{`${nft.name}`}</div>
-            <Box display="flex" justifyContent="space-between">
+            <Box display="flex" justifyContent="space-between" alignItems={"center"}>
               <Box onClick={handleOpenProfile} className={classes.userName}>
                 <Avatar size="small" url={avtarUrl} />
                 <span>{userName}</span>
               </Box>
               <img
                 src={getChainImageUrl(nft?.Chain || nft?.chainsFullName)}
-                style={{ width: "25px", height: "25px" }}
+                style={{ width: "18px", height: "18px" }}
                 onClick={e => {
                   handleClickLink(e, nft);
                 }}
@@ -159,9 +159,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
               <span className={classes.cardContentText}>Block to Buy Later</span>
               <span className={classes.cardContentAmount}>
                 {nft?.blockingSaleOffer?.Price
-                  ? `${nft.blockingSaleOffer.Price} ${getTokenSymbol(
-                      nft.blockingSaleOffer.PaymentToken
-                    )}`
+                  ? `${nft.blockingSaleOffer.Price} ${getTokenSymbol(nft.blockingSaleOffer.PaymentToken)}`
                   : "_"}
               </span>
             </div>
