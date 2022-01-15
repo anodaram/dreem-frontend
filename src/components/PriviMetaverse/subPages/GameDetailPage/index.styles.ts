@@ -17,10 +17,11 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     color: "#ffffff",
   },
   fitContent: {
-    maxWidth: 1280,
+    maxWidth: 1440,
     marginLeft: "auto",
     marginRight: "auto",
     [theme.breakpoints.down("md")]: {
+      maxWidth: 1280,
       paddingLeft: 60,
       paddingRight: 60,
     },
