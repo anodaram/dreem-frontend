@@ -338,7 +338,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {collateral} USDT
+                  {collateral || 0} USDT
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
@@ -351,6 +351,18 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
                   1.15 USDT
+                </Box>
+              </Box>
+              <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
+                <Box
+                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
+                >
+                  TOTAL
+                </Box>
+                <Box
+                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
+                >
+                  {(collateral || 0) + 1.15} USDT
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
