@@ -243,7 +243,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
         <Box textAlign="right">
           {isOwnership && nft?.rentSaleOffer?.pricePerSecond && (
             <Text className={classes.pricingText2}>
-              {nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR &&
+              {nft?.rentSaleOffer?.pricePerSecond &&
                 `${(
                   +toDecimals(
                     nft.rentSaleOffer.pricePerSecond,
@@ -254,7 +254,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
           )}
           <Box display="flex" justifyContent="flex-end" alignItems="center">
             {isOwnership ? (
-              nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR ? (
+              nft?.rentSaleOffer?.pricePerSecond ? (
                 <Box display="flex" alignItems="space-between" marginTop="10px">
                   <PrimaryButton
                     size="small"
@@ -278,7 +278,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
               ) : (
                 <>
                   <Text className={classes.pricingText2}>
-                    {nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR &&
+                    {nft?.rentSaleOffer?.pricePerSecond &&
                       `${(
                         +toDecimals(
                           nft.rentSaleOffer.pricePerSecond,
@@ -301,7 +301,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
             ) : nft?.rentSaleOffer?.pricePerSecond && isSignedin ? (
               <>
                 <Text className={!nft?.status ? classes.pricingText2 : classes.pricingText2Disable}>
-                  {nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR &&
+                  {nft?.rentSaleOffer?.pricePerSecond &&
                     `${(
                       +toDecimals(
                         nft.rentSaleOffer.pricePerSecond,
