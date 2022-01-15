@@ -164,6 +164,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
         reservePeriod: Number(blockingPeriod) * 3600 * 24,
         validityPeriod: Number(disappearDays || 0) * 3600 * 24,
         sellerToMatch: "0x0000000000000000000000000000000000000000",
+        mode: 1
       },
       setHash
     );

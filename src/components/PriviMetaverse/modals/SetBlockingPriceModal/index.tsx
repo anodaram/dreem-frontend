@@ -128,6 +128,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
           reservePeriod: Math.ceil(+(period || 0) * 3600 * 24),
           validityPeriod: 3 * 3600 * 24,
           buyerToMatch: "0x0000000000000000000000000000000000000000",
+          mode: 1
         },
         setHash
       );

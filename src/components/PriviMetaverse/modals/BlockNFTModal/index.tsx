@@ -166,6 +166,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         reservePeriod: Math.ceil(+nft.blockingSaleOffer.ReservePeriod * 3600 * 24),
         validityPeriod: Number(nft.blockingSaleOffer.AcceptDuration || 0) * 3600 * 24,
         sellerToMatch: nft.blockingSaleOffer.Beneficiary,
+        mode: 0
       },
       setHash
     );

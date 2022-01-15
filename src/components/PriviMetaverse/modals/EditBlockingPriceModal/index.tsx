@@ -187,6 +187,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
           reservePeriod: Number(period) * 3600 * 24,
           validityPeriod: 3 * 3600 * 24,
           buyerToMatch: "0x0000000000000000000000000000000000000000",
+          mode: 1
         },
         setHash
       );
@@ -231,7 +232,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
           hash,
           created: new Date().getTime(),
         };
-        
+
         setTransactionSuccess(true);
         setNft(newNft);
         handleClose();
