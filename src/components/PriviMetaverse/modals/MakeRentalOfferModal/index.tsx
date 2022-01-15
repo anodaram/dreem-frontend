@@ -110,7 +110,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RENTAL_MANAGER,
-        toNDecimals(offerPrice*PRECISSION, rentalToken.Decimals)
+        toNDecimals(offerPrice * PRECISSION, rentalToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -159,14 +159,14 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
           collectionId: nft.Address,
           tokenId: token_id,
           rentalTime: rentalSeconds,
-          pricePerSecond: toNDecimals(pricePerHour/SECONDS_PER_HOUR, rentalToken.Decimals),
+          pricePerSecond: toNDecimals(pricePerHour / SECONDS_PER_HOUR, rentalToken.Decimals),
           rentalExpiration: getNextDay(date),
           operator: nft.ownerAddress,
           fundingToken: rentalToken.Address,
         },
         setHash
       );
-      console.log(response)
+      console.log(response);
 
       if (response.success) {
         const offer = response.offer;
@@ -305,9 +305,6 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
               />
             </MuiPickersUtilsProvider>
           </Box>
-          <Box textAlign="end" fontSize={12} fontFamily="Rany" mt={1} color="white">
-            incl. {marketFee*100}% marketplace fee
-          </Box>
         </Box>
         <Box className={classes.footer}>
           <Box display="flex" justifyContent="space-between">
@@ -315,6 +312,9 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
             <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}>
               {`${offerPrice} ${rentalToken?.Symbol}`}
             </Box>
+          </Box>
+          <Box textAlign="end" fontSize={12} fontFamily="Rany" mt={1} color="white">
+            incl. {marketFee}% marketplace fee
           </Box>
           <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
             <PrimaryButton

@@ -46,7 +46,7 @@ export default function RentSuccessModal({ open, nft, handleClose = () => {} }) 
     <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.container}>
       <Box className={classes.borderBox} mb={5}>
         <Box className={classes.box}>
-          <img src={nft.Image} alt="nft" />
+          <img src={nft.image} alt="nft" />
           <Box className={classes.tag}>RENTED</Box>
           <Box className={classes.gameName} mt={2}>
             {nft.name}
