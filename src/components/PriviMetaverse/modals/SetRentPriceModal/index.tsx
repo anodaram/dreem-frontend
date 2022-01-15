@@ -221,7 +221,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
                 theme="light"
                 minValue={0.001}
                 disabled={isApproved}
-                placeHolder={"0.001"}
+                placeHolder={"0"}
               />
             </Grid>
             <Grid item xs={6} sm={5}>

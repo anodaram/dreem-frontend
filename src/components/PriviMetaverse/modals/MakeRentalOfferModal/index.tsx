@@ -253,7 +253,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
                 theme="light"
                 minValue={0}
                 disabled={isApproved}
-                placeHolder={"0.001"}
+                placeHolder={"0"}
               />
             </Grid>
             <Grid item sm={5}>

@@ -309,7 +309,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
                 theme="light"
                 minValue={0}
                 disabled={isApproved}
-                placeHolder={"0.001"}
+                placeHolder={"0"}
               />
             </Grid>
             <Grid item sm={5}>
