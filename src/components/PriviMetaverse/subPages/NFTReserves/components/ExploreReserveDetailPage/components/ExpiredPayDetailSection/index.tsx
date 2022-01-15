@@ -60,6 +60,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
       account!,
       {
         activeReserveId,
+        mode: isSuccess ? 0 : 1 
       },
       setHash
     );

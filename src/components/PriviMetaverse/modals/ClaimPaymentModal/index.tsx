@@ -67,6 +67,7 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
       account!,
       {
         activeReserveId,
+        mode: 0
       },
       setHash
     );
