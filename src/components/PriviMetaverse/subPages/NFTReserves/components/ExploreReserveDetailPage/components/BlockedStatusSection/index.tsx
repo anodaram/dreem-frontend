@@ -118,7 +118,7 @@ export default ({isOwnership, nft, refresh}) => {
           >
             Buyer status of reservance
           </Box>
-          <Box fontSize={14} color="#ffffff" fontFamily="Rany" mt={1}>If buyer is collateral is too small you can claim liquidation and cancel reservation.</Box>
+          <Box fontSize={14} color="#ffffff" fontFamily="Rany" mt={1}>If the blocker’s collateral falls below the collateral level you set you can claim liquidation and cancel the block</Box>
         </Box>
         <PrimaryButton
           size="medium"
