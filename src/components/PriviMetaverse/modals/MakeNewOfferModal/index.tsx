@@ -236,10 +236,10 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
               </Box>
               <Grid container spacing={2}>
                 <Grid item sm={7}>
-                  <Box className={classes.nameField}>Price Offer</Box>
+                  <Box className={classes.nameField}>Blocking Offer</Box>
                 </Grid>
                 <Grid item sm={5}>
-                  <Box className={classes.nameField}>Reserve Token</Box>
+                  <Box className={classes.nameField}>Token</Box>
                 </Grid>
               </Grid>
               <Grid container spacing={2}>
@@ -271,7 +271,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                   />
                 </Grid>
               </Grid>
-              <Box className={classes.nameField}>Blocking Period</Box>
+              <Box className={classes.nameField}>How many days do you want to block the NFT?</Box>
               <InputWithLabelAndTooltip
                 inputValue={blockingPeriod}
                 onInputValueChange={e => setBlockingPeriod(Number(e.target.value))}
@@ -284,7 +284,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                 disabled={isApproved}
                 placeHolder={"00"}
               />
-              <Box className={classes.nameField}>Collateral % to Block Price</Box>
+              <Box className={classes.nameField}>What % of your Buying Offer do you want to provide as collateral?</Box>
               <InputWithLabelAndTooltip
                 inputValue={collateralPercent}
                 onInputValueChange={e => setCollateralPercent(e.target.value)}
@@ -348,7 +348,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                 </Box>
               </Box>
 
-              <Box className={classes.nameField}>Offer will disapppear if not accepted within</Box>
+              <Box className={classes.nameField}>Offer will disappear if not accepted within</Box>
               <InputWithLabelAndTooltip
                 inputValue={disappearDays}
                 onInputValueChange={e => setDisappearDays(e.target.value)}
@@ -366,9 +366,9 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
               <Box className={classes.totalText}>Total</Box>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
-                  Your collateral at{" "}
+                  Your collateral is at{" "}
                   {(((collateral || 0) / (!price || price == 0 ? 1 : price)) * 100).toFixed(2)}% of{" "}
-                  {collateralPercent}% required
+                  {collateralPercent}% required to block
                   {((collateral || 0) / (!price || price == 0 ? 1 : price)) * 100 <
                     (collateralPercent || 0) && (
                     <Box style={{ color: "red" }}>You need to add more collateral</Box>
