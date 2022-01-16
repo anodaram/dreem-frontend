@@ -70,6 +70,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
       account!,
       {
         activeReserveId,
+        mode: 1
       },
       setHash
     );

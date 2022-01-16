@@ -45,8 +45,12 @@ const reserveMarketplace = (network: string) => {
             setHash(hash);
           });
 
-        console.log("transaction succeed... ", response);
-        resolve({ success: true });
+        console.log("transaction succeed... ", response.events);
+        if (response?.events?.PurchaseReserveProposalCanceled) {
+          resolve({ success: true });
+        } else {
+          resolve({ success: false });
+        }
       } catch (e) {
         console.log(e);
         resolve({ success: false });
@@ -93,8 +97,12 @@ const reserveMarketplace = (network: string) => {
             setHash(hash);
           });
 
-        console.log("transaction succeed... ", response);
-        resolve({ success: true });
+        console.log("transaction succeed... ", response?.events);
+        if (response?.events?.SaleReserveProposalCanceled) {
+          resolve({ success: true });
+        } else {
+          resolve({ success: false });
+        }
       } catch (e) {
         console.log(e);
         resolve({ success: false });

@@ -51,8 +51,12 @@ const reservesManager = (network: string) => {
             setHash(hash);
           });
 
-        console.log("transaction succeed... ", response);
-        resolve({ success: true });
+        console.log("transaction succeed... ", response?.events);
+        if (response?.events?.ReserveCanceled) {
+          resolve({ success: true });
+        } else {
+          resolve({ success: false });
+        }
       } catch (e) {
         console.log(e);
         resolve({ success: false });
@@ -85,8 +89,17 @@ const reservesManager = (network: string) => {
           .on("transactionHash", hash => {
             setHash(hash);
           });
-        console.log("transaction succeed");
-        resolve({ success: true, hash: response.transactionHash });
+        console.log("transaction succeed", response?.events);
+        if (
+          payload.mode === 0 && response?.events?.PurchaseExecuted ||
+          payload.mode === 1 && response?.events?.PurchaseCanceled
+        ) {
+          resolve({ success: true, hash: response.transactionHash });
+        } else {
+          resolve({
+            success: false,
+          });
+        }
       } catch (e) {
         console.log(e);
         resolve({
@@ -121,8 +134,14 @@ const reservesManager = (network: string) => {
           .on("transactionHash", hash => {
             setHash(hash);
           });
-        console.log("transaction succeed");
-        resolve({ success: true, hash: response.transactionHash });
+        console.log("transaction succeed", response?.events);
+        if (response?.events?.CollateralClaimed) {
+          resolve({ success: true, hash: response.transactionHash });
+        } else {
+          resolve({
+            success: false,
+          });
+        }
       } catch (e) {
         console.log(e);
         resolve({
@@ -159,8 +178,12 @@ const reservesManager = (network: string) => {
           .on("transactionHash", hash => {
             setHash(hash);
           });
-        console.log("transaction succeed");
-        resolve({ success: true, hash: response.transactionHash });
+        console.log("transaction succeed", response?.events);
+        if (response?.events?.CollateralDecreased) {
+          resolve({ success: true, hash: response.transactionHash });
+        } else {
+          resolve({ success: false });
+        }
       } catch (e) {
         console.log(e);
         resolve({
@@ -197,8 +220,12 @@ const reservesManager = (network: string) => {
           .on("transactionHash", hash => {
             setHash(hash);
           });
-        console.log("transaction succeed");
-        resolve({ success: true, hash: response.transactionHash });
+        console.log("transaction succeed", response?.events);
+        if (response?.events?.CollateralIncreased) {
+          resolve({ success: true, hash: response.transactionHash });
+        } else {
+          resolve({ success: false });
+        }
       } catch (e) {
         console.log(e);
         resolve({
@@ -233,8 +260,12 @@ const reservesManager = (network: string) => {
           .on("transactionHash", hash => {
             setHash(hash);
           });
-        console.log("transaction succeed");
-        resolve({ success: true, hash: response.transactionHash });
+        console.log("transaction succeed", response?.events);
+        if (response?.events?.ReservePricePaid) {
+          resolve({ success: true, hash: response.transactionHash });
+        } else {
+          resolve({ success: false });
+        }
       } catch (e) {
         console.log(e);
         resolve({
