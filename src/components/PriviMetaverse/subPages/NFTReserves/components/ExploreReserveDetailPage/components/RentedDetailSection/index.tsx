@@ -63,7 +63,7 @@ export default ({ nft, setNft, isOwner }) => {
   };
 
   const handleOpenToken = () => {
-    window.open(`${chain?.scan?.url}/token/${nft.Address}`, "_blank");
+    window.open(`${chain?.scan?.url}/token/${offer.syntheticId}?a=${offer.tokenId}`, "_blank");
   };
 
   if (!offer) {
