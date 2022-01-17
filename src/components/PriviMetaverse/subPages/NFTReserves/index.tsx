@@ -25,6 +25,7 @@ import SkeletonBox from "shared/ui-kit/SkeletonBox";
 import { useAuth } from "shared/contexts/AuthContext";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import TabsView, { TabItem } from "shared/ui-kit/TabsView";
+import { NftStates } from "shared/constants/constants";
 
 import { ReactComponent as BinanceIcon } from "assets/icons/bsc.svg";
 import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
@@ -64,7 +65,7 @@ const FilterOptionsTabs: TabItem[] = [
 ];
 
 const filterChainOptions = ["All", "BSC", "Polygon"];
-const filterStatusOptions = ["All", "On Sale", "For Rental", "Blocked", "Rented"];
+const filterStatusOptions = ["All", "For Sale", "For Rental", "For Blocking", "Blocked", "Rented"];
 
 const getChainImage = chain => {
   if (chain === filterChainOptions[1]) {
@@ -218,18 +219,13 @@ const NFTReserves = () => {
 
   const nftStatus = nft => {
     if (!nft) {
-      return "";
+      return [];
     }
     if (nft.status) {
-      return nft.status.toUpperCase();
+      return (Array.isArray(nft.status) ? nft.status : [nft.status]).filter(s => NftStates.includes(s));
     }
-    if (nft.sellingOffer?.Price || nft.blockingSaleOffer?.Price || nft.rentSaleOffer?.pricePerSecond) {
-      return "LISTED";
-    }
-    if (nft.blockingBuyOffers?.length || nft.buyingOffers?.length || nft.rentBuyOffers?.length) {
-      return "LISTED";
-    }
-    return "";
+
+    return [];
   };
 
   const userName = nft => {
@@ -353,11 +349,11 @@ const NFTReserves = () => {
               <Box
                 textAlign="center"
                 padding={"5px 8px"}
-                bgcolor={nftStatus(row) ? "#8D65FF" : "transparent"}
+                bgcolor={nftStatus(row).length ? "#8D65FF" : "transparent"}
                 fontSize={12}
                 borderRadius={6}
               >
-                {nftStatus(row)}
+                {nftStatus(row).join(', ')}
               </Box>
             ),
           },

@@ -25,6 +25,7 @@ import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } fro
 import MarketplaceFeed from "./components/MarketplaceFeed";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { setTokenList } from "store/actions/MarketPlace";
+import { NftStates } from "shared/constants/constants";
 
 const SECONDS_PER_HOUR = 3600;
 
@@ -194,18 +195,13 @@ export default function GameDetailPage() {
 
   const nftStatus = nft => {
     if (!nft) {
-      return "";
+      return [];
     }
     if (nft.status) {
-      return nft.status.toUpperCase();
+      return (Array.isArray(nft.status) ? nft.status : [nft.status]).filter(s => NftStates.includes(s));
     }
-    if (nft.sellingOffer?.Price || nft.blockingSaleOffer?.Price || nft.rentSaleOffer?.pricePerSecond) {
-      return "LISTED";
-    }
-    if (nft.blockingBuyOffers?.length || nft.buyingOffers?.length || nft.rentBuyOffers?.length) {
-      return "LISTED";
-    }
-    return "";
+
+    return [];
   };
 
   const userName = nft => {
@@ -293,7 +289,7 @@ export default function GameDetailPage() {
                 fontSize={12}
                 borderRadius={6}
               >
-                {nftStatus(row)}
+                {nftStatus(row).join(', ')}
               </Box>
             ),
           },
@@ -648,7 +644,7 @@ export default function GameDetailPage() {
               </Box>
             </>
           )}
-          {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed Chain={gameInfo.Chain}/>}
+          {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed Chain={gameInfo.Chain} />}
           {selectedTab === TAB_OWNERS && <Owners />}
         </Box>
       </Box>
