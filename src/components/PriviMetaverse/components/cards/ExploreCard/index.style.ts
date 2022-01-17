@@ -37,11 +37,16 @@ export const cardStyles = makeStyles(theme => ({
     marginTop: "16px",
     marginBottom: "16px",
   },
+  nftStates: {
+    position: "absolute",
+    right: 4,
+    top: 12,
+  },
   cardOptionButton: {
     float: "right",
     display: "flex",
-    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     padding: "6px 8px",
     background: "rgba(190, 167, 255, 0.6)",
     borderRadius: "5.90529px",
@@ -49,14 +54,11 @@ export const cardStyles = makeStyles(theme => ({
     order: 1,
     flexGrow: 0,
     color: "#212121",
-    margin: "0px 5.96494px",
+    margin: "2px 5.96494px",
     fontFamily: "GRIFTER",
     fontStyle: "10px",
     fontWeight: "bold",
     fontSize: "8.26741px",
-    position: "absolute",
-    right: 4,
-    top: 16,
   },
 
   category: {
