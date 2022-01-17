@@ -5,7 +5,7 @@ import { exploreOptionDetailPageStyles } from '../../index.styles';
 import RangeSlider from "shared/ui-kit/RangeSlider";
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/reducers/Reducer';
-import { checkChainID } from 'shared/functions/metamask';
+import { checkChainID, getChainForNFT } from 'shared/functions/metamask';
 import Web3 from "web3";
 import { BlockchainNets } from "shared/constants/constants";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -25,7 +25,7 @@ export default ({isOwnership, nft, refresh}) => {
   const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
   const { collection_id, token_id } = useParams();
 
-  const [selectedChain, setSelectedChain] = useState<any>(filteredBlockchainNets[0]);
+  const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const [hash, setHash] = useState<string>("");
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
