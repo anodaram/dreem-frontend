@@ -355,6 +355,7 @@ const ExploreReserveDetailPage = () => {
                     nft={nft}
                     setNft={setNft}
                     refresh={refresh}
+                    isBlocked={isBlockedNFT}
                     onRent={() => setOpenRentSccess(true)}
                     isSpectator={!isOwner && !isBuyer && !isRenter}
                   />
@@ -374,6 +375,7 @@ const ExploreReserveDetailPage = () => {
                   setNft={setNft}
                   refresh={refresh}
                   onRent={() => setOpenRentSccess(true)}
+                  isBlocked={isBlockedNFT}
                   isSpectator={!isOwner && !isBuyer && !isRenter}
                 />
               )}
