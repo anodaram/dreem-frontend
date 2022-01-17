@@ -76,15 +76,15 @@ const OwnersPanel = () => {
   };
 
   useEffect(() => {
-    refreshData(selectedTab);
+    refreshData();
   }, [filterChain, selectedTab]);
 
-  const refreshData = (selectedTab) => {
+  const refreshData = () => {
     setUserNFTs([]);
-    getData(selectedTab === 2 ? 'Blocking' : selectedTab === 1 ? 'Renting' : 'Owned');
+    getData();
   }
 
-  const getData = async (type) => {
+  const getData = async () => {
     if (isSignedin) {
       try {
         const selectedChain =
@@ -96,10 +96,17 @@ const OwnersPanel = () => {
         const response = await getOwnedNFTs({
           mode: isProd ? "main" : "test",
           network: selectedChain,
-          type
+          type: selectedTab === 2 ? 'Blocking' : 'Owned'
         });
         let nfts = response.data ?? [];
-        setUserNFTs(nfts.filter(nft => nft.ownerAddress?.toLowerCase() === account?.toLowerCase()));
+        nfts = nfts.filter(nft => nft.ownerAddress?.toLowerCase() === account?.toLowerCase());
+        if (selectedTab === 0) {
+          setUserNFTs(nfts.filter((nft) => nft.status !== "Rented" && nft.status !== "Blocked"));
+        } else if (selectedTab === 1) {
+          setUserNFTs(nfts.filter((nft) => nft.status === "Rented" ));
+        } else {
+          setUserNFTs(nfts);
+        }
       } catch (err) {}
       setLoading(false);
     }
@@ -112,11 +119,11 @@ const OwnersPanel = () => {
       }
       if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight - 100) {
         if (hasMore) {
-          getData(selectedTab === 2 ? 'Blocking' : selectedTab === 1 ? 'Renting' : 'Owned');
+          getData();
         }
       }
     },
-    [hasMore, getData, selectedTab]
+    [hasMore, getData]
   );
 
   const totalSaleRevenue = useMemo(() => {
@@ -270,7 +277,7 @@ const OwnersPanel = () => {
         </Box>
         <Box>
           <PrimaryButton
-            onClick={() => { refreshData(selectedTab); }}
+            onClick={() => { refreshData(); }}
             size="small"
             style={{
               background: "#3b4834",
