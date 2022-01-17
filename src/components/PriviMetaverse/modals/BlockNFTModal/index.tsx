@@ -346,12 +346,12 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  Marketplace fee (2.5%)
+                  Marketplace fee ({fee * 100}%)
                 </Box>
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  1.15 USDT
+                  {Number(collateral) * fee} USDT
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
@@ -363,7 +363,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {(collateral || 0) + 1.15} USDT
+                  {(collateral || 0) * (1 + fee)} USDT
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
