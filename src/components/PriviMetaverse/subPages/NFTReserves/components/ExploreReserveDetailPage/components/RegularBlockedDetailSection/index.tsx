@@ -169,7 +169,7 @@ export default ({ nft, refresh }) => {
             >
               <Box fontSize={16}>Blocking Price</Box>
               <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
-                {`${((Number(blockingInfo?.TotalCollateralPercent) / 100) * Number(blockingInfo?.Price)).toFixed(2)} ${getTokenSymbol(
+                {`${(Number(blockingInfo?.Price)).toFixed(2)} ${getTokenSymbol(
                   blockingInfo?.PaymentToken
                 )}`}
               </Box>
