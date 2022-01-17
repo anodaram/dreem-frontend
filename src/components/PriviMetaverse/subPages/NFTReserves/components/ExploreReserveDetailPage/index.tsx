@@ -32,7 +32,6 @@ import RegularBlockedDetailSection from "./components/RegularBlockedDetailSectio
 import RegularBlockedStatusSection from "./components/RegularBlockedStatusSection";
 import ExpiredPayDetailSection from "./components/ExpiredPayDetailSection";
 import ExpiredPayStatusSection from "./components/ExpiredPayStatusSection";
-import AcceptingOfferSection from "./components/AcceptingOfferSection";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
 import { exploreOptionDetailPageStyles } from "./index.styles";
 
@@ -357,6 +356,7 @@ const ExploreReserveDetailPage = () => {
                     setNft={setNft}
                     refresh={refresh}
                     onRent={() => setOpenRentSccess(true)}
+                    isSpectator={!isOwner && !isBuyer && !isRenter}
                   />
                 )
               ) : isBlockedNFT && isBuyer ? (
@@ -368,16 +368,14 @@ const ExploreReserveDetailPage = () => {
               ) : isRentedNFT && (isRenter || isOwner) ? (
                 <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} />
               ) : (
-                <>
-                  <GeneralDetailSection
-                    isOwnership={isOwner}
-                    nft={nft}
-                    setNft={setNft}
-                    refresh={refresh}
-                    onRent={() => setOpenRentSccess(true)}
-                  />
-                  <AcceptingOfferSection />
-                </>
+                <GeneralDetailSection
+                  isOwnership={isOwner}
+                  nft={nft}
+                  setNft={setNft}
+                  refresh={refresh}
+                  onRent={() => setOpenRentSccess(true)}
+                  isSpectator={!isOwner && !isBuyer && !isRenter}
+                />
               )}
             </Box>
           </Box>

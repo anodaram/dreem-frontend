@@ -6,9 +6,11 @@ import { useModalStyles } from "./index.styles";
 
 export default function NoLiquidationPossibleModal({
   open,
+  collateral,
   onClose,
 }: {
   open: boolean;
+  collateral: Number;
   onClose: () => void;
 }) {
   const classes = useModalStyles();
@@ -21,7 +23,7 @@ export default function NoLiquidationPossibleModal({
       </Box>
       <Box className={classes.header1} mt={2} mb={2}>
         The buyer has provided sufficient collateral. You can only liquidate a blocked reservation if the
-        level of collateral is under [xx%]
+        level of collateral is under {collateral}%
       </Box>
     </Modal>
   );
