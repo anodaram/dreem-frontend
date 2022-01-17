@@ -272,7 +272,7 @@ export default function RentNFTModal({
         }
         setTransactionSuccess(true);
         
-        const syntheticAddress: any = await getSyntheticNftAddress();
+        const syntheticResponse: any = await getSyntheticNftAddress();
 
         const nftRentedOffer = {
           mode: isProd ? "main" : "test",
@@ -283,7 +283,7 @@ export default function RentNFTModal({
           rentalExpiration: offer.rentalExpiration,
           rentalTime: offer.rentalTime,
           syntheticID: offer.syntheticID,
-          syntheticAddress: syntheticAddress,
+          syntheticAddress: syntheticResponse.nftAddress,
           tokenId: offer.tokenId,
           offerer: account,
           hash: offer.hash,
