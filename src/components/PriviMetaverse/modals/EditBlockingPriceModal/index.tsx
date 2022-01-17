@@ -185,7 +185,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
           beneficiary: account,
           collateralPercent: toNDecimals(collateralPercent, 2),
           reservePeriod: Number(period) * 3600 * 24,
-          validityPeriod: 3 * 3600 * 24,
+          validityPeriod: 365 * 3600 * 24,
           buyerToMatch: "0x0000000000000000000000000000000000000000",
           mode: 1
         },
