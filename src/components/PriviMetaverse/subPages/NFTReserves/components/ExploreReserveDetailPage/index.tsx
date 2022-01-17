@@ -47,6 +47,7 @@ const ExploreReserveDetailPage = () => {
 
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isBuyer, setIsBuyer] = useState<boolean>(false);
+  const [isRenter, setIsRenter] = useState<boolean>(false);
   const [isListed, setIsListed] = useState<boolean>(false);
   const [isBlockedNFT, setIsBlockedNFT] = useState<boolean>(false);
   const [isRentedNFT, setIsRentedNFT] = useState<boolean>(false);
@@ -88,8 +89,10 @@ const ExploreReserveDetailPage = () => {
   useEffect(() => {
     if (nft) {
       setIsOwner((account || "").toLowerCase() === (nft.ownerAddress || "").toLowerCase());
-      setIsBlockedNFT(nft.status === "Blocked");
-      setIsRentedNFT(nft.status === "Rented");
+      if (nft.status) {
+        setIsBlockedNFT(nft.status.split(",").includes("Blocked"));
+        setIsRentedNFT(nft.status.split(",").includes("Rented"));
+      }
       setIsListed(
         nft.sellingOffer?.Price || nft.blockingSaleOffer?.Price || nft.rentSaleOffer?.pricePerSecond
       );
@@ -101,6 +104,12 @@ const ExploreReserveDetailPage = () => {
         );
         setIsExpiredPaySuccess(_blockingInfo.PaidAmount === _blockingInfo.Price);
         setIsBuyer((account || "").toLowerCase() === (_blockingInfo?.to || "").toLowerCase());
+
+      }
+      if (nft.rentHistories?.length > 0) {
+        let _rentInfo = nft.rentHistories[nft.rentHistories.length - 1];
+
+        setIsRenter((account || "").toLowerCase() === _rentInfo.offerer.toLowerCase())
       }
     }
   }, [nft]);
@@ -356,7 +365,7 @@ const ExploreReserveDetailPage = () => {
                 ) : (
                   <RegularBlockedDetailSection nft={nft} refresh={refresh} />
                 )
-              ) : isRentedNFT ? (
+              ) : isRentedNFT && (isRenter || isOwner) ? (
                 <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} />
               ) : (
                 <>
@@ -367,7 +376,7 @@ const ExploreReserveDetailPage = () => {
                     refresh={refresh}
                     onRent={() => setOpenRentSccess(true)}
                   />
-                  {/* <AcceptingOfferSection /> */}
+                  <AcceptingOfferSection />
                 </>
               )}
             </Box>
