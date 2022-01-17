@@ -80,7 +80,7 @@ export default ({ nft, setNft, isOwner }) => {
   };
 
   const handleOpenToken = async () => {
-    let syntheticAddress: any = offer.syntheticAddress
+    let syntheticAddress: any = nft.syntheticAddress
     if (!syntheticAddress) {
       let response = await getSyntheticNftAddress();
       syntheticAddress = response.nftAddress;

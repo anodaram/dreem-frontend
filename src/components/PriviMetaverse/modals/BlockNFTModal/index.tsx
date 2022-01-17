@@ -62,6 +62,12 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
     setBalance();
   }, [open, reservePriceToken, selectedChain]);
 
+  const getTokenSymbol = addr => {
+    if (tokenList.length == 0) return 0;
+    let token = tokenList.find(token => token.Address === addr);
+    return token?.Symbol || "";
+  };
+
   const setBalance = async () => {
     if (reservePriceToken) {
       const targetChain = BlockchainNets.find(net => net.name.toLowerCase() === nft.Chain.toLowerCase());
@@ -272,7 +278,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                   {nft?.blockingSaleOffer?.Price}
                 </Box>
                 <Box fontSize={14} color="#ffffff">
-                  USDT
+                  {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
               <Box className={classes.nameField}>
@@ -314,7 +320,9 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box display="flex" alignItems="center" gridColumnGap="10px" fontSize="14px">
                   <span>Wallet Balance</span>
                   <Box className={classes.usdWrap} display="flex" alignItems="center" color="#E9FF26">
-                    <Box fontWeight="700">{totalBalance} USDT</Box>
+                    <Box fontWeight="700">
+                      {totalBalance} {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
+                    </Box>
                   </Box>
                 </Box>
                 <Box display="flex" alignItems="center" fontSize="16px">
@@ -339,7 +347,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {collateral || 0} USDT
+                  {collateral || 0} {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
@@ -351,7 +359,8 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {(Number(collateral || 0) * fee).toFixed(6)} USDT
+                  {(Number(collateral || 0) * fee).toFixed(6)}{" "}
+                  {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
@@ -363,7 +372,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {((collateral || 0) * (1 + fee)).toFixed(6)} USDT
+                  {(collateral || 0) * (1 + fee)} {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>

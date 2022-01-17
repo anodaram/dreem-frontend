@@ -8,12 +8,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
 import { useParams } from "react-router";
 import Web3 from "web3";
-import { BlockchainNets } from "shared/constants/constants";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { useWeb3React } from "@web3-react/core";
 import TransactionProgressModal from "components/PriviMetaverse/modals/TransactionProgressModal";
 import { successFinishBlocking } from "shared/services/API/ReserveAPI";
-import { checkChainID } from "shared/functions/metamask";
+import { checkChainID, getChainForNFT } from "shared/functions/metamask";
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, onConfirm }) {
@@ -22,9 +21,7 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
   const { collection_id, token_id } = useParams();
   const { account, library, chainId } = useWeb3React();
-  const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
-  const [price, setPrice] = useState<number>(0);
-  const [selectedChain, setSelectedChain] = useState<any>(filteredBlockchainNets[0]);
+  const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const [hash, setHash] = useState<string>("");
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);

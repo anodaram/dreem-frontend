@@ -100,7 +100,7 @@ const ExploreReserveDetailPage = () => {
           _blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + _blockingInfo?.created - Date.now() < 0
         );
         setIsExpiredPaySuccess(_blockingInfo.PaidAmount === _blockingInfo.Price);
-        setIsBuyer((account || "").toLowerCase() === _blockingInfo.to.toLowerCase());
+        setIsBuyer((account || "").toLowerCase() === (_blockingInfo?.to || "").toLowerCase());
       }
     }
   }, [nft]);
@@ -438,7 +438,7 @@ const ExploreReserveDetailPage = () => {
         </Modal>
       )}
       {openRentSuccess && (
-        <RentSuccessModal open={openRentSuccess} handleClose={() => setOpenRentSccess(false)} nft={nft} />
+        <RentSuccessModal open={openRentSuccess} handleClose={() => setOpenRentSccess(false)} nft={nft} setNft={setNft}/>
       )}
     </Box>
   );
