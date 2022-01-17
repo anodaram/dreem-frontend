@@ -438,7 +438,7 @@ const ExploreReserveDetailPage = () => {
         </Modal>
       )}
       {openRentSuccess && (
-        <RentSuccessModal open={openRentSuccess} handleClose={() => setOpenRentSccess(false)} nft={nft} />
+        <RentSuccessModal open={openRentSuccess} handleClose={() => setOpenRentSccess(false)} nft={nft} setNft={setNft}/>
       )}
     </Box>
   );
