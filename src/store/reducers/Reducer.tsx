@@ -233,6 +233,7 @@ export interface RootState {
   marketPlace: {
     tokenList: any[];
     fee: number;
+    selectedTab: number;
   };
 }
 

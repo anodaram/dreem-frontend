@@ -2,17 +2,20 @@ import * as actionTypes from "../actions/ActionTypes";
 import { RootState } from "./Reducer";
 
 type rootState = RootState["marketPlace"];
-interface State extends rootState {}
-interface Action extends rootState {
-  type: string;
+interface State extends rootState {
   tokenList: any[];
   fee: number;
+  selectedTab: number;
+}
+interface Action extends rootState {
+  type: string;
 }
 
 // Set initial state for SelectedSwapTabsValue
-const initialState = {
+const initialState: State = {
   tokenList: [],
   fee: 0,
+  selectedTab: 0,
 };
 
 // Set a SelectedSwapPool into the global state
@@ -30,6 +33,13 @@ const setMarketFee = (state: State, action: any) => {
   };
 };
 
+const setSelTabMarket = (state: State, action: any) => {
+  return {
+    ...state,
+    selectedTab: action.selectedTab,
+  };
+};
+
 // Return the SelectedSwapPool state
 const reducer = (state = initialState, action: Action) => {
   switch (action.type) {
@@ -37,6 +47,8 @@ const reducer = (state = initialState, action: Action) => {
       return setTokenList(state, action);
     case actionTypes.SET_MARKET_FEE:
       return setMarketFee(state, action);
+    case actionTypes.SET_SELTAB_MARKET:
+      return setSelTabMarket(state, action);
     default:
       return state;
   }

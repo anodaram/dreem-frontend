@@ -183,7 +183,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         reservePeriod: Math.ceil(+nft.blockingSaleOffer.ReservePeriod * 3600 * 24),
         validityPeriod: Number(nft.blockingSaleOffer.AcceptDuration || 0) * 3600 * 24,
         sellerToMatch: nft.blockingSaleOffer.Beneficiary,
-        mode: 0
+        mode: 0,
       },
       setHash
     );
@@ -320,7 +320,9 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box display="flex" alignItems="center" gridColumnGap="10px" fontSize="14px">
                   <span>Wallet Balance</span>
                   <Box className={classes.usdWrap} display="flex" alignItems="center" color="#E9FF26">
-                    <Box fontWeight="700">{totalBalance} {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}</Box>
+                    <Box fontWeight="700">
+                      {totalBalance} {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
+                    </Box>
                   </Box>
                 </Box>
                 <Box display="flex" alignItems="center" fontSize="16px">
@@ -357,7 +359,8 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {Number(collateral) * fee} {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
+                  {(Number(collateral || 0) * fee).toFixed(6)}{" "}
+                  {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
