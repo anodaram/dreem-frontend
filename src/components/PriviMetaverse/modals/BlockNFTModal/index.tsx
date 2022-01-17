@@ -177,7 +177,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         reservePeriod: Math.ceil(+nft.blockingSaleOffer.ReservePeriod * 3600 * 24),
         validityPeriod: Number(nft.blockingSaleOffer.AcceptDuration || 0) * 3600 * 24,
         sellerToMatch: nft.blockingSaleOffer.Beneficiary,
-        mode: 0
+        mode: 0,
       },
       setHash
     );
@@ -339,7 +339,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {collateral || 0} USDT
+                  {(collateral || 0).toFixed(6)} USDT
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
@@ -351,7 +351,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {Number(collateral) * fee} USDT
+                  {(Number(collateral || 0) * fee).toFixed(6)} USDT
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
@@ -363,7 +363,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {(collateral || 0) * (1 + fee)} USDT
+                  {((collateral || 0) * (1 + fee)).toFixed(6)} USDT
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
