@@ -10,11 +10,11 @@ import { RootState } from "store/reducers/Reducer";
 import { formatDuration } from "shared/helpers/utils";
 
 import { RentSuccessModalStyles } from "./index.style";
+import Web3 from "web3";
 
-export default function RentSuccessModal({ open, nft, handleClose = () => {} }) {
+export default function RentSuccessModal({ open, nft, setNft, handleClose = () => {} }) {
   const classes = RentSuccessModalStyles();
-  const { chainId } = useWeb3React();
-
+  const { library, account, chainId } = useWeb3React();
   const chain = React.useMemo(() => BlockchainNets.find(net => net.chainId === chainId), [chainId]);
   const rentHistory = React.useMemo(() => (nft?.rentHistories?.length ? nft.rentHistories[0] : {}), [nft]);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
@@ -24,10 +24,6 @@ export default function RentSuccessModal({ open, nft, handleClose = () => {} }) 
       +toDecimals(rentHistory?.pricePerSecond, getTokenDecimal(rentHistory?.fundingToken)) *
       rentHistory.rentalTime;
     return Math.round(a * 100) / 100;
-  };
-
-  const handleOpenToken = () => {
-    window.open(`${chain?.scan?.url}/token/${nft.Address}`, "_blank");
   };
 
   const getTokenSymbol = addr => {
@@ -42,6 +38,32 @@ export default function RentSuccessModal({ open, nft, handleClose = () => {} }) 
     return token?.Decimals ?? 1;
   };
 
+
+  const getSyntheticNftAddress = async () => {
+    try {
+      const web3APIHandler = chain.apiHandler;
+      const web3 = new Web3(library.provider);
+      const response = await web3APIHandler.RentalManager.getSyntheticNFTAddress(
+        web3,
+        {
+          collectionId: nft.Address,
+        },
+      );
+      return response;
+    } catch (err) {
+      return '';
+    }
+  };
+
+  const handleOpenToken = async () => {
+    let syntheticAddress: any = nft.syntheticAddress
+    if (!syntheticAddress) {
+      let response = await getSyntheticNftAddress();
+      syntheticAddress = response.nftAddress;
+      setNft({...nft, syntheticAddress})
+    }
+    window.open(`${chain?.scan?.url}/token/${syntheticAddress}?a=${nft.syntheticID}`, "_blank");
+  };
   return (
     <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.container}>
       <Box className={classes.borderBox} mb={5}>
