@@ -82,7 +82,8 @@ export default ({ nft, setNft, isOwner }) => {
   const handleOpenToken = async () => {
     let syntheticAddress: any = offer.syntheticAddress
     if (!syntheticAddress) {
-      syntheticAddress = await getSyntheticNftAddress();
+      let response = await getSyntheticNftAddress();
+      syntheticAddress = response.nftAddress;
       setNft({...nft, syntheticAddress})
     }
     window.open(`${chain?.scan?.url}/token/${syntheticAddress}?a=${offer.syntheticID}`, "_blank");
