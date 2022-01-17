@@ -115,7 +115,7 @@ export default ({isOwnership, nft, refresh}) => {
               textTransform: "uppercase"
             }}
           >
-            Buyer status of reservance
+            Buyer status of reservation
           </Box>
           <Box fontSize={14} color="#ffffff" fontFamily="Rany" mt={1}>If the blocker’s collateral falls below the collateral level you set you can claim liquidation and cancel the block</Box>
         </Box>
