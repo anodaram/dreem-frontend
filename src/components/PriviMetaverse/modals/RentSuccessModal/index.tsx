@@ -63,12 +63,11 @@ export default function RentSuccessModal({ open, nft, handleClose = () => {} }) 
         </span>
         for{" "}
         <span>
-          {formatDuration((rentHistory?.rentalTime || 0) * 1000)}.{" "}
+          {formatDuration((rentHistory?.rentalTime || 0) * 1000)}.{" You received "}
           <span onClick={handleOpenToken} style={{ cursor: "pointer" }}>
-            You can go to
+            a synthetic NFT.
           </span>
-        </span>{" "}
-        Management and enjoy your {nft.CollectionName}.
+        </span>
       </Box>
       <PrimaryButton size="medium" onClick={() => handleClose()}>
         done
