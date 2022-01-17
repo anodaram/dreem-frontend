@@ -218,7 +218,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
           Beneficiary: account,
           CollateralPercent: collateralPercent,
           ReservePeriod: period,
-          AcceptDuration: 1000,
+          AcceptDuration: 365 * 3600 * 24,
           hash,
         });
         let newNft = { ...nft };

@@ -205,6 +205,22 @@ export default function RentNFTModal({
     }
   };
 
+  const getSyntheticNftAddress = async () => {
+    try {
+      const web3APIHandler = selectedChain.apiHandler;
+      const web3 = new Web3(library.provider);
+      const response = await web3APIHandler.RentalManager.getSyntheticNFTAddress(
+        web3,
+        {
+          collectionId: nft.Address,
+        },
+      );
+      return response;
+    } catch (err) {
+      return '';
+    }
+  };
+
   const handleConfirm = async () => {
     try {
       if (!isApproved) {
@@ -248,12 +264,15 @@ export default function RentNFTModal({
 
       if (response.success) {
         const offer = response.offer;
+        console.log(offer)
         if (!offer) {
           setTransactionSuccess(false);
           showAlertMessage("Failed to rent NFT", { variant: "error" });
           return;
         }
         setTransactionSuccess(true);
+        
+        const syntheticResponse: any = await getSyntheticNftAddress();
 
         const nftRentedOffer = {
           mode: isProd ? "main" : "test",
@@ -264,6 +283,7 @@ export default function RentNFTModal({
           rentalExpiration: offer.rentalExpiration,
           rentalTime: offer.rentalTime,
           syntheticID: offer.syntheticID,
+          syntheticAddress: syntheticResponse.nftAddress,
           tokenId: offer.tokenId,
           offerer: account,
           hash: offer.hash,
@@ -277,6 +297,7 @@ export default function RentNFTModal({
           id: offer.syntheticID,
           fundingToken: rentalToken.Address,
           operator: offer.operator,
+          syntheticId: offer.syntheticId,
           pricePerSecond: offer.pricePerSecond,
           rentalExpiration: offer.rentalExpiration,
           rentalTime: offer.rentalTime,

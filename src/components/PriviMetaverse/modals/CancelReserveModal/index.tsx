@@ -193,7 +193,7 @@ export default function CancelReserveModal({
             Cancel Reserve
           </Box>
           <Box className={classes.nameField}>
-            Repay your collaterall to be able to recoverand withdraw your NFT
+            Repay your collaterall to be able to recover and withdraw your NFT
           </Box>
           <Box className={classes.nameField}>
             By recovering your NFT before end of  the auction  you’ll have to pay penalty fee of {penaltyFee}%
@@ -201,7 +201,7 @@ export default function CancelReserveModal({
           <Box className={classes.availableCollateral}>
             <Box className={classes.collateralText}>{"Penalty Fee"}</Box>
             <Box className={classes.collateralAmount}>{`${
-              (blockingInfo?.Price * penaltyFee) / 100
+              (blockingInfo?.Price * penaltyFee) / 100 * (1 + fee)
             } ${getTokenSymbol(blockingInfo?.PaymentToken)}`}</Box>
           </Box>
           <Box fontSize={12} lineHeight="21px" textAlign="right" color="#ffffff">
