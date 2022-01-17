@@ -74,7 +74,7 @@ export default ({ nft, refresh }) => {
           style={{ borderRight: "1px solid #9EACF220", fontSize: 14 }}
         >
           <Box className={classes.gradientText} fontSize="14px" mb="4px">
-            Option Time
+            Blocking Period
           </Box>
           <Box fontFamily="GRIFTER" fontWeight="bold" fontSize="20px">{`${
             blockingInfo?.ReservePeriod
