@@ -76,15 +76,15 @@ const OwnersPanel = () => {
   };
 
   useEffect(() => {
-    refreshData();
-  }, [filterChain]);
+    refreshData(selectedTab);
+  }, [filterChain, selectedTab]);
 
-  const refreshData = () => {
+  const refreshData = (selectedTab) => {
     setUserNFTs([]);
-    getData();
-  };
+    getData(selectedTab === 2 ? 'Blocking' : selectedTab === 1 ? 'Renting' : 'Owned');
+  }
 
-  const getData = async () => {
+  const getData = async (type) => {
     if (isSignedin) {
       try {
         const selectedChain =
@@ -96,6 +96,7 @@ const OwnersPanel = () => {
         const response = await getOwnedNFTs({
           mode: isProd ? "main" : "test",
           network: selectedChain,
+          type
         });
         let nfts = response.data ?? [];
         setUserNFTs(nfts.filter(nft => nft.ownerAddress?.toLowerCase() === account?.toLowerCase()));
@@ -111,23 +112,12 @@ const OwnersPanel = () => {
       }
       if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight - 100) {
         if (hasMore) {
-          getData();
+          getData(selectedTab === 2 ? 'Blocking' : selectedTab === 1 ? 'Renting' : 'Owned');
         }
       }
     },
-    [hasMore, getData]
+    [hasMore, getData, selectedTab]
   );
-
-  const filteredNFTs = useMemo(() => {
-    if (selectedTab === 0) {
-      return userNFTs.filter(nft => nft.status !== "Rented" && nft.status !== "Blocked");
-    } else if (selectedTab === 1) {
-      return userNFTs.filter(nft => nft.status === "Rented");
-    } else if (selectedTab === 2) {
-      return userNFTs.filter(nft => nft.status === "Blocked");
-    }
-    return userNFTs;
-  }, [userNFTs, selectedTab]);
 
   const totalSaleRevenue = useMemo(() => {
     return (userNFTs || []).reduce(
@@ -280,9 +270,7 @@ const OwnersPanel = () => {
         </Box>
         <Box>
           <PrimaryButton
-            onClick={() => {
-              refreshData();
-            }}
+            onClick={() => { refreshData(selectedTab); }}
             size="small"
             style={{
               background: "#3b4834",
@@ -307,11 +295,11 @@ const OwnersPanel = () => {
         </Box>
       </Box>
       <Box sx={{ flexGrow: 1, width: "100%", paddingBottom: isMobile ? 70 : isTablet ? 50 : 0 }}>
-        {filteredNFTs && filteredNFTs.length ? (
+        {userNFTs && userNFTs.length ? (
           <>
             <MasonryGrid
               gutter={"24px"}
-              data={filteredNFTs}
+              data={userNFTs}
               renderItem={item => <ExploreCard nft={item} key={item.id} />}
               columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
             />

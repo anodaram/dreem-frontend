@@ -66,7 +66,6 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
       if (isSuccess) {
         await successFinishBlocking({
           mode: isProd ? "main" : "test",
@@ -74,7 +73,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
           TokenId: token_id,
           Id: blockingInfo.id,
           Beneficiary: blockingInfo.Beneficiary,
-          offerer: account,
+          offerer: blockingInfo.from,
           notificationMode: 1,
         });
       } else {
@@ -85,11 +84,12 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
           TokenId: token_id,
           Id: activeReserveId,
           Beneficiary: blockingInfo.Beneficiary,
-          offerer: account,
+          offerer: blockingInfo.from,
           notificationMode: 1,
         });
       }
 
+      setTransactionSuccess(true);
       refresh();
       // handleClose();
     } else {
