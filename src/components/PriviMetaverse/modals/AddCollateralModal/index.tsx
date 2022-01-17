@@ -288,7 +288,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                 <Box display="flex" alignItems="center" gridColumnGap="10px" fontSize="14px">
                   <span>Wallet Balance</span>
                   <Box className={classes.usdWrap} display="flex" alignItems="center" color="#E9FF26">
-                    <Box fontWeight="700">{totalBalance} USDT</Box>
+                    <Box fontWeight="700">{totalBalance} {getTokenName(nft?.blockingSaleOffer?.PaymentToken)}</Box>
                   </Box>
                 </Box>
                 <Box display="flex" alignItems="center" fontSize="16px">
@@ -308,7 +308,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                   % / <b>{blockingInfo?.CollateralPercent}</b>%
                 </Box>
                 <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
-                  {price} USDT
+                  {price} {getTokenName(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
 
