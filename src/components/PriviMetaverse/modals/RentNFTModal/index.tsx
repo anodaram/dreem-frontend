@@ -248,6 +248,7 @@ export default function RentNFTModal({
 
       if (response.success) {
         const offer = response.offer;
+        console.log(offer)
         if (!offer) {
           setTransactionSuccess(false);
           showAlertMessage("Failed to rent NFT", { variant: "error" });
@@ -277,6 +278,7 @@ export default function RentNFTModal({
           id: offer.syntheticID,
           fundingToken: rentalToken.Address,
           operator: offer.operator,
+          syntheticId: offer.syntheticId,
           pricePerSecond: offer.pricePerSecond,
           rentalExpiration: offer.rentalExpiration,
           rentalTime: offer.rentalTime,
