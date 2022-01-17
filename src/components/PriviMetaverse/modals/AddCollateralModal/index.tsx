@@ -308,7 +308,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                   % / <b>{blockingInfo?.CollateralPercent}</b>%
                 </Box>
                 <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
-                  {price} USDT
+                  {Number(price)+collateral} USDT
                 </Box>
               </Box>
 
