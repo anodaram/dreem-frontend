@@ -339,7 +339,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {(collateral || 0).toFixed(6)} USDT
+                  {collateral || 0} USDT
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
