@@ -123,6 +123,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
           price: toNDecimals(offerPrice, getTokenDecimal(offer.PaymentToken)),
           beneficiary: account,
           buyerToMatch: offer.Beneficiary,
+          mode: 1
         },
         setHash
       );
