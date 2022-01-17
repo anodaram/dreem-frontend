@@ -39,7 +39,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default ({ nft, refresh }) => {
+export default ({ nft, refresh, isBlocked }) => {
   const classes = useStyles();
   const [blockingInfo, setBlockingInfo] = useState<any>(null);
   const [closeTime, setCloseTime] = useState<any>(null);
@@ -87,7 +87,7 @@ export default ({ nft, refresh }) => {
   return (
     <>
       <Box display="flex" flexDirection={"column"} py={10}>
-        <Box className={classes.title}>This NFT is blocked at this moment. It will be available again in:</Box>
+        <Box className={classes.title}>This NFT is {isBlocked ? 'blocked' : 'rented'} at this moment. It will be available again in:</Box>
         <Box className={classes.timerSection}>
           <Box>
             {closeTime?.day} <span>days</span>
