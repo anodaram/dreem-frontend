@@ -161,7 +161,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
                 flex={0.5}
                 style={{ borderRight: "1px solid #A4A4A420" }}
               >
-                <Box fontSize={16}>Future Price</Box>
+                <Box fontSize={16}>Blocking Price</Box>
                 <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
                   {`${((Number(blockingInfo?.TotalCollateralPercent) / 100) * Number(blockingInfo?.Price)).toFixed(2)} ${getTokenSymbol(
                     blockingInfo?.PaymentToken

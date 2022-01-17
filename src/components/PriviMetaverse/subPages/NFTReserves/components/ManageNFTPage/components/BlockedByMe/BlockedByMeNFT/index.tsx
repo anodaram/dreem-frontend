@@ -101,7 +101,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
             <Box className={classes.nftName}>{item?.name}</Box>
             <Box display="flex" alignItems="center" flex={1}>
               <Box display="flex" flexDirection="column" flex={0.25} className={classes.section}>
-                <Box className={classes.header}>Future Price</Box>
+                <Box className={classes.header}>Blocking Price</Box>
                 <Box>{`${item.history?.Price} ${getTokenSymbol(item.history?.PaymentToken)}`}</Box>
               </Box>
               <Box display="flex" flexDirection="column" flex={0.25} pl={6} className={classes.section}>

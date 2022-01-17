@@ -111,7 +111,7 @@ export default ({ nft, refresh }) => {
           </Box>
           <Box flex={1} mt="27px" display="flex" justifyContent="space-between" alignItems="center">
             <Box display="flex" flexDirection="column" flex={0.3}>
-              <Box fontSize={16}>Future price</Box>
+              <Box fontSize={16}>Blocking price</Box>
               <Box className={classes.gradientText} fontFamily="GRIFTER" fontSize={20} mt={1}>
                 {`${blockingInfo?.Price} ${getTokenSymbol(blockingInfo?.PaymentToken)}`}
               </Box>
@@ -167,7 +167,7 @@ export default ({ nft, refresh }) => {
               flex={0.5}
               style={{ borderRight: "1px solid #A4A4A420" }}
             >
-              <Box fontSize={16}>Future Price</Box>
+              <Box fontSize={16}>Blocking Price</Box>
               <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
                 {`${((Number(blockingInfo?.TotalCollateralPercent) / 100) * Number(blockingInfo?.Price)).toFixed(2)} ${getTokenSymbol(
                   blockingInfo?.PaymentToken
