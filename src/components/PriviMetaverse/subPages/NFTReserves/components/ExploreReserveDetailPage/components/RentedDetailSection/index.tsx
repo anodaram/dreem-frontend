@@ -11,6 +11,7 @@ import { resetStatus } from "shared/services/API/ReserveAPI";
 import { BlockchainNets } from "shared/constants/constants";
 
 import { exploreOptionDetailPageStyles } from "../../index.styles";
+import Web3 from "web3";
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default ({ nft, setNft, isOwner }) => {
@@ -18,7 +19,7 @@ export default ({ nft, setNft, isOwner }) => {
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
   const histories = nft?.rentHistories ?? [];
   const offer = histories.length ? histories[0] : null;
-  const { chainId } = useWeb3React();
+  const { library, account, chainId } = useWeb3React();
   const [remainingTime, setRemainingTime] = useState(0);
 
   const chain = React.useMemo(() => BlockchainNets.find(net => net.chainId === chainId), [chainId]);
@@ -62,8 +63,29 @@ export default ({ nft, setNft, isOwner }) => {
     return token.Decimals;
   };
 
-  const handleOpenToken = () => {
-    window.open(`${chain?.scan?.url}/token/${offer.syntheticId}?a=${offer.syntheticId}`, "_blank");
+  const getSyntheticNftAddress = async () => {
+    try {
+      const web3APIHandler = chain.apiHandler;
+      const web3 = new Web3(library.provider);
+      const response = await web3APIHandler.RentalManager.getSyntheticNFTAddress(
+        web3,
+        {
+          collectionId: nft.Address,
+        },
+      );
+      return response;
+    } catch (err) {
+      return '';
+    }
+  };
+
+  const handleOpenToken = async () => {
+    let syntheticAddress: any = offer.syntheticAddress
+    if (!syntheticAddress) {
+      syntheticAddress = await getSyntheticNftAddress();
+      setNft({...nft, syntheticAddress})
+    }
+    window.open(`${chain?.scan?.url}/token/${syntheticAddress}?a=${offer.syntheticID}`, "_blank");
   };
 
   if (!offer) {

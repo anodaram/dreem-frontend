@@ -272,7 +272,27 @@ const rentalManager = (network: string) => {
       }
     });
   };
-  return { listOffer, cancelListOffer, rentalOffer, cancelRentalOffer, acceptRentalOffer, rentNFT };
+
+  const getSyntheticNFTAddress = async (web3: Web3, payload: any): Promise<any> => {
+    return new Promise(async resolve => {
+      try {
+        const contract = ContractInstance(web3, metadata.abi, contractAddress);
+
+        const response = await contract.methods
+          .getSyntheticNFTAddress(
+            payload.collectionId,
+          )
+          .call();
+
+        resolve({success: true, nftAddress: response});
+      } catch (e) {
+        console.log(e);
+        resolve({ success: false });
+      }
+    });
+  };
+
+  return { listOffer, cancelListOffer, rentalOffer, cancelRentalOffer, acceptRentalOffer, rentNFT, getSyntheticNFTAddress };
 };
 
 export default rentalManager;
