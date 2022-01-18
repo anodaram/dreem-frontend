@@ -44,14 +44,14 @@ const GameDetailTabs: TabItem[] = [
     key: TAB_NFTS,
     title: "NFTs",
   },
-  {
-    key: TAB_MARKETPLACE_FEED,
-    title: "MARKETPLACE FEED",
-  },
-  {
-    key: TAB_OWNERS,
-    title: "owners",
-  },
+  // {
+  //   key: TAB_MARKETPLACE_FEED,
+  //   title: "MARKETPLACE FEED",
+  // },
+  // {
+  //   key: TAB_OWNERS,
+  //   title: "owners",
+  // },
 ];
 const filterStatusOptions = ["All", "On Sale", "For Rental", "Blocked", "Rented"];
 
@@ -285,7 +285,10 @@ export default function GameDetailPage() {
               <Box display="flex">
                 {nftStatus(row).length > 0 &&
                   nftStatus(row).map(status => (
-                    <span className={classes.cardOptionButton} style={{ background: NFT_STATUS_COLORS[status] }}>
+                    <span
+                      className={classes.cardOptionButton}
+                      style={{ background: NFT_STATUS_COLORS[status] }}
+                    >
                       {status}
                     </span>
                   ))}
