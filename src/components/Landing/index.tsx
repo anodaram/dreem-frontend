@@ -145,7 +145,7 @@ const LandingPage = () => {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
-      axios.post(`${METAVERSE_URL()}/auth/getSessionHash/`, {}, config).then(res => {
+      axios.post(`${METAVERSE_URL()}/getSessionHash/`, {}, config).then(res => {
         let data: any = res.data?.data?.stamp;
         if (data) {
           customProtocolCheck(
