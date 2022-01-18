@@ -7,8 +7,14 @@ import { exploreOptionDetailPageStyles } from "../../index.styles";
 import moment from "moment";
 import { RootState } from "store/reducers/Reducer";
 import { useSelector } from "react-redux";
+import AcceptingOfferSection from "../AcceptingOfferSection";
 
-export default ({ nft, refresh }) => {
+export default ({ nft, refresh, isSpectator, isBlocked }: {
+  nft: any;
+  refresh: () => void;
+  isSpectator?: boolean;
+  isBlocked?: boolean;
+}) => {
   const classes = exploreOptionDetailPageStyles();
   const [openPayRemainingAmountModal, setOpenPayRemainingAmountModal] = useState(false);
   const [blockingInfo, setBlockingInfo] = useState<any>(null);
@@ -60,6 +66,10 @@ export default ({ nft, refresh }) => {
     let token = tokenList.find(token => token.Address === addr);
     return token?.Symbol || "";
   };
+
+  if (isSpectator) {
+    return <AcceptingOfferSection nft={nft} refresh={refresh} isBlocked={isBlocked} />
+  }
 
   return (
     <>

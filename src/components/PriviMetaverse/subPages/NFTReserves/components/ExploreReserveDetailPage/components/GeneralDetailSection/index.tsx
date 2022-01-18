@@ -20,6 +20,7 @@ import CancelBlockingPriceModal from "components/PriviMetaverse/modals/CancelBlo
 import CancelRentPriceModal from "components/PriviMetaverse/modals/CancelRentPriceModal";
 import SetSellingPriceModal from "components/PriviMetaverse/modals/SetSellingPriceModal";
 import CancelSellingPriceModal from "components/PriviMetaverse/modals/CancelSellingPriceModal";
+import AcceptingOfferSection from "../AcceptingOfferSection";
 
 import { exploreOptionDetailPageStyles } from "../../index.styles";
 
