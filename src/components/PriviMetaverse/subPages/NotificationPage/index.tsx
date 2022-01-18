@@ -34,10 +34,14 @@ const NotificationItem = ({ notification }) => {
 
   useEffect(() => {
     (async () => {
-      if (notification && notification.avatar) {
-        setAvatar(notification.avatar);
+      if (notification && notification.typeItemId === "NftMarketplace") {
+        setAvatar(notification.externalData.nft.image);
       } else {
-        setAvatar(getDefaultAvatar());
+        if (notification && notification.avatar) {
+          setAvatar(notification.avatar);
+        } else {
+          setAvatar(getDefaultAvatar());
+        }
       }
     })();
   }, [notification]);
