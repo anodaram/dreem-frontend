@@ -65,9 +65,9 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
 
   const collateralPercent = Number(item.history?.TotalCollateralPercent)
 
-  const isPaid = item.history?.PaidAmount === item.history?.Price;
   const isExpired = item.history?.ReservePeriod * 3600 * 24 * 1000 + item.history?.created - Date.now() <= 0;
   const isClaimed = item.ownerAddress?.toLowerCase() === account?.toLowerCase();
+  const isPaid = item.history?.status === 'SOLD'
 
   const chainImage = item.Chain?.toLowerCase().includes("polygon")
     ? require("assets/tokenImages/POLYGON.png")
@@ -170,22 +170,10 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                           history.push(`/gameNFTS/${item.Slug}/${item.id}`);
                         }}
                       >
-                        CLAIM OUTSTANDING COLLATERAL
+                        CLAIM YOUR NFT
                       </PrimaryButton>
                     </Box>
                   )
-                ) : isClaimed ? (
-                  <Box mr={4.5}>
-                    <Box className={classes.gradientText}>Already Claimed</Box>
-                    <PrimaryButton
-                      size="medium"
-                      className={classes.primaryButton}
-                      onClick={() => handleClickAddress()}
-                    >
-                      check on {item.Chain}scan
-                      <img src={chainImage} style={{ width: "16px", height: "16px", marginLeft: "8px" }} />
-                    </PrimaryButton>
-                  </Box>
                 ) : (
                   <Box mr={4.5}>
                     <PrimaryButton
@@ -195,7 +183,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                         history.push(`/gameNFTS/${item.Slug}/${item.id}`);
                       }}
                     >
-                      CLAIM YOUR NFT
+                      CLAIM OUTSTANDING COLLATERAL
                     </PrimaryButton>
                   </Box>
                 )
