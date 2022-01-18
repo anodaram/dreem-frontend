@@ -37,8 +37,8 @@ const openSalesManager = network => {
           });
 
         console.log("transaction succeed", response?.events);
-        if (payload.mode === 0 && response?.events?.PurchaseProposed ||
-            payload.mode === 1 && response?.events?.SaleCompleted )
+        if ( payload.mode === 1 && response?.events?.PurchaseCompleted ||
+            payload.mode === 0 && response?.events?.PurchaseProposed )
           {
             resolve({ success: true, hash: response.transactionHash });
           } else {
@@ -84,7 +84,7 @@ const openSalesManager = network => {
           });
         console.log("transaction succeed", response?.events);
         if (payload.mode === 0 && response?.events?.SaleProposed ||
-            payload.mode === 1 && response?.events?.PurchaseCompleted )
+            payload.mode === 1 && response?.events?.SaleCompleted )
           {
             resolve({ success: true, hash: response.transactionHash });
           } else {
