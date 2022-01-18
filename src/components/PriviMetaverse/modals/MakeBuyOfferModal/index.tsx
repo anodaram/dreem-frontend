@@ -175,6 +175,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
           price: toNDecimals(price, token.Decimals),
           beneficiary: account,
           sellerToMatch: "0x0000000000000000000000000000000000000000",
+          mode: 0
         },
         setHash
       );
