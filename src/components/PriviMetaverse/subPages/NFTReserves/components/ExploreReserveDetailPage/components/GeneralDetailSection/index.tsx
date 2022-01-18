@@ -24,7 +24,7 @@ import AcceptingOfferSection from "../AcceptingOfferSection";
 
 import { exploreOptionDetailPageStyles } from "../../index.styles";
 
-export default ({ isOwnership, nft, setNft, refresh, onRent, isSpectator, isBlocked }) => {
+export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
   const classes = exploreOptionDetailPageStyles();
   const { isSignedin } = useAuth();
 
@@ -63,10 +63,6 @@ export default ({ isOwnership, nft, setNft, refresh, onRent, isSpectator, isBloc
     setOpenInstantModal(false);
     refresh();
   };
-
-  if (isSpectator) {
-    return <AcceptingOfferSection nft={nft} refresh={refresh} isBlocked={isBlocked} />
-  }
 
   return (
     <>
