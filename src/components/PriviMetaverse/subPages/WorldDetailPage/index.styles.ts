@@ -8,6 +8,9 @@ export const worldDetailPageStyles = makeStyles(theme => ({
     backgroundRepeat: "inherit",
     backgroundSize: "100% 100%",
     position: "relative",
+    [theme.breakpoints.down("sm")]: {
+      height: "145%",
+    },
   },
   container: {
     width: "100%",
@@ -25,6 +28,9 @@ export const worldDetailPageStyles = makeStyles(theme => ({
     maxWidth: 1280,
     marginLeft: "auto",
     marginRight: "auto",
+    [theme.breakpoints.down("sm")]: {
+      padding: "0px 48px",
+    },
   },
   flexBox: {
     display: "flex",
@@ -34,6 +40,10 @@ export const worldDetailPageStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      alignItems: "start",
+    },
   },
   iconBtn: {
     display: "flex",
@@ -53,10 +63,19 @@ export const worldDetailPageStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "space-between",
     marginTop: 40,
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      marginTop: 0,
+    },
   },
   worldImage: {
     width: 600,
     height: 600,
+    [theme.breakpoints.down("sm")]: {
+      width: 675,
+      height: 450,
+      marginBottom: 40,
+    },
   },
   content: {
     background: "#151515",
@@ -71,6 +90,9 @@ export const worldDetailPageStyles = makeStyles(theme => ({
     top: -32,
     background: "#151515",
     width: 1280,
+    [theme.breakpoints.down("sm")]: {
+      width: "88%",
+    },
   },
   bgImgTriangle: {
     position: "absolute",
