@@ -109,6 +109,24 @@ export const getCollections = async (
   }
 };
 
+export const getCollection = async collectionId => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.get(
+      `${METAVERSE_URL()}/web/public/collections/${collectionId}/`,
+      config
+    );
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const uploadWorld = async payload => {
   try {
     const formData = new FormData();

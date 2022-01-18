@@ -30,6 +30,7 @@ import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import ImageCropModal from "components/PriviMetaverse/modals/ImageCropModal";
 import EditProfileModal from "../../modals/EditProfileModal";
 import VerifyProfileModal from "../../modals/VerifyProfileModal";
+import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
 import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProfileCard";
 import FollowProfileModal from "../../modals/FollowProfileModal";
 import { creatorPageStyles } from "./index.styles";
@@ -71,6 +72,7 @@ export default function CreatorPage() {
   const [creator, setCreator] = useState<any>({});
   const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [collections, setCollections] = useState<any[]>([]);
   const [nftContents, setNftContents] = useState<any[]>([]);
   const [likedRealms, setLikedRealms] = useState<any[]>([]);
   const [likedAvatars, setLikedAvatars] = useState<any[]>([]);
@@ -213,6 +215,16 @@ export default function CreatorPage() {
       }
 
       if (filters.length) {
+
+        MetaverseAPI.getCollections(12, curPage, "ASC")
+        .then(res => {
+          if (res.success) {
+            const items = res.data.elements;
+            if (items && items.length > 0) {
+              setCollections([...collections, ...res.data.elements]);
+            }
+          }
+        })
         const inventoryResp = await MetaverseAPI.getWorlds(
           12,
           curPage,
@@ -703,6 +715,48 @@ export default function CreatorPage() {
                   <Box display="flex" flexDirection="column">
                     {selectedTab === "drafts" && (
                       <>
+                        <Box mt={3} mb={2} className={classes.typo7}>
+                          Collections
+                        </Box>
+                        <InfiniteScroll
+                          hasChildren={collections?.length > 0}
+                          dataLength={collections?.length}
+                          scrollableTarget={"scrollContainer"}
+                          next={loadData}
+                          hasMore={hasMore}
+                          loader={
+                            loading && (
+                              <Box mt={2}>
+                                <MasonryGrid
+                                  gutter={"16px"}
+                                  data={Array(loadingCount).fill(0)}
+                                  renderItem={(item, _) => (
+                                    <RealmExtensionProfileCard nft={{}} isLoading={true} />
+                                  )}
+                                  columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
+                                />
+                              </Box>
+                            )
+                          }
+                        >
+                          <Grid container spacing={3} style={{ marginBottom: 24 }}>
+                            {collections?.map((item, index) => (
+                              <Grid item key={`trending-pod-${index}`} md={4} sm={6} xs={12}>
+                                <CollectionCard
+                                  item={{ ...item }}
+                                  hideInfo
+                                  handleRefresh={handleRefresh}
+                                />
+                              </Grid>
+                            ))}
+                          </Grid>
+                        </InfiniteScroll>
+                        {!loading && collections?.length < 1 && (
+                          <Box textAlign="center" width="100%" mb={10} mt={2}>
+                            No Collections
+                          </Box>
+                        )}
+
                         <Box mt={3} mb={2} className={classes.typo7}>
                           Created Drafts And Extensions
                         </Box>

@@ -8,6 +8,7 @@ import GettingStartedPage from "./subPages/GettingStartedPage";
 import CreatingRealmPage from "./subPages/CreatingRealmPage";
 import CreatingExtensionPage from "./subPages/CreatingExtensionPage";
 import LandingPage from "components/Landing";
+import CollectionDetailPage from "./subPages/CollectionDetailPage";
 import RealmDetailPage from "./subPages/RealmDetailPage";
 import MainPage from "./subPages/MainPage";
 import ExplorePage from "./subPages/ExplorePage";
@@ -32,6 +33,7 @@ export default function PriviMetaverseRouter(props) {
       <Switch>
         <Route exact path="/play" component={LandingPage} />
         <Route exact path="/create" component={ManageContentPage} />
+        <Route exact path="/collection/:id" component={CollectionDetailPage} />
         <Route exact path="/realms/map/:id" component={RealmMapPage} />
         <Route exact path="/realms/:id" component={RealmDetailPage} />
         <Route exact path="/realms/:id/:character_id" component={RealmDetailPage} />
