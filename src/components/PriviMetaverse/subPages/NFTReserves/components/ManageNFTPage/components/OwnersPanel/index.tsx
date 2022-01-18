@@ -98,9 +98,8 @@ const OwnersPanel = () => {
           network: selectedChain,
           type: selectedTab === 2 ? "Blocking" : selectedTab === 1 ? "Rental" : "Owned",
         });
-        let nfts = response.data ?? [];
-        nfts = nfts.filter(nft => nft.ownerAddress?.toLowerCase() === account?.toLowerCase());
 
+        let nfts = response.data ?? [];
         const loadNftStatus = nft =>
           !nft.status ? [] : Array.isArray(nft.status) ? nft.status : nft.status.split(", ");
         if (selectedTab === 0) {
