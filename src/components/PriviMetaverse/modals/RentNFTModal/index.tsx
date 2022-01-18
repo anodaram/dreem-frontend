@@ -67,14 +67,6 @@ export default function RentNFTModal({
     ? (+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime).toFixed(3)
     : "0";
 
-  const offerPrice = useMemo(
-    () =>
-      +toDecimals(offer?.pricePerSecond ?? 0, getTokenDecimal(offer?.fundingToken)) *
-      rentalTime *
-      (1 + marketFee),
-    [offer, marketFee]
-  );
-
   useEffect(() => setSelectedChain(getChainForNFT(nft)), [nft]);
 
   useEffect(() => {
@@ -172,7 +164,7 @@ export default function RentNFTModal({
       let balance = await web3APIHandler.Erc20[rentalToken.Symbol].balanceOf(web3, { account });
       let decimals = await web3APIHandler.Erc20[rentalToken.Symbol].decimals(web3, { account });
       balance = balance / Math.pow(10, decimals);
-      const approvePrice = parseFloat(price) * (1 + marketFee);
+      const approvePrice = parseFloat(price) * (1.01 + marketFee);
 
       if (balance < (approvePrice || 0)) {
         showAlertMessage(`Insufficient balance to approve`, { variant: "error" });

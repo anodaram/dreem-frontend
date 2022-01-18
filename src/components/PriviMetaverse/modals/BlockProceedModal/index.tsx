@@ -159,7 +159,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
           notificationMode: 2
         });
         let newNft = { ...nft };
-        newNft.status = "Blocked";
+        newNft.status = ["Blocked"];
         newNft.blockingBuyOffers = newNft.blockingBuyOffers.filter(
           el => el.Beneficiary !== offer.Beneficiary
         );

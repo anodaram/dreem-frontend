@@ -82,7 +82,7 @@ const OwnersPanel = () => {
   const refreshData = () => {
     setUserNFTs([]);
     getData();
-  }
+  };
 
   const getData = async () => {
     if (isSignedin) {
@@ -96,14 +96,19 @@ const OwnersPanel = () => {
         const response = await getOwnedNFTs({
           mode: isProd ? "main" : "test",
           network: selectedChain,
-          type: selectedTab === 2 ? 'Blocking' : 'Owned'
+          type: selectedTab === 2 ? "Blocking" : selectedTab === 1 ? "Rental" : "Owned",
         });
         let nfts = response.data ?? [];
         nfts = nfts.filter(nft => nft.ownerAddress?.toLowerCase() === account?.toLowerCase());
         if (selectedTab === 0) {
-          setUserNFTs(nfts.filter((nft) => nft.status !== "Rented" && nft.status !== "Blocked"));
+          setUserNFTs(
+            nfts.filter(
+              nft =>
+                nft.status && nft.status && nft.status.filter(s => s !== "Rented" && s !== "Blocked").length
+            )
+          );
         } else if (selectedTab === 1) {
-          setUserNFTs(nfts.filter((nft) => nft.status === "Rented" ));
+          setUserNFTs(nfts.filter(nft => nft.status && nft.status.filter(s => s === "Rented").length));
         } else {
           setUserNFTs(nfts);
         }
@@ -277,7 +282,9 @@ const OwnersPanel = () => {
         </Box>
         <Box>
           <PrimaryButton
-            onClick={() => { refreshData(); }}
+            onClick={() => {
+              refreshData();
+            }}
             size="small"
             style={{
               background: "#3b4834",

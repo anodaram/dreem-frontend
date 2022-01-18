@@ -223,7 +223,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         notificationMode: 1,
       });
       let newNft = { ...nft };
-      newNft.status = "Blocked";
+      newNft.status = ["Blocked"];
       newNft.blockingBuyOffers = newNft.blockingBuyOffers.filter(el => el.Beneficiary !== account);
       newNft.blockingSalesHistories.unshift({
         id: offerId,
