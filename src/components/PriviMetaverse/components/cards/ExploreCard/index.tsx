@@ -8,7 +8,7 @@ import { RootState } from "store/reducers/Reducer";
 import { toDecimals } from "shared/functions/web3";
 
 import Box from "shared/ui-kit/Box";
-import { Avatar } from "shared/ui-kit";
+import { Avatar, NFT_STATUS_COLORS } from "shared/ui-kit";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
 import { NftStates } from "shared/constants/constants";
@@ -17,19 +17,6 @@ import { visitChainLink } from "shared/helpers";
 import { cardStyles } from "./index.style";
 
 const SECONDS_PER_HOUR = 3600;
-
-const CARD_COLORS = {
-  "For Sale":
-    "conic-gradient(from 31.61deg at 50% 50%, #53961E -73.13deg, #6CCB0D 15deg, rgba(90, 150, 13, 0.76) 103.13deg, #66B337 210deg, #53961E 286.87deg, #6CCB0D 375deg)",
-  "For Rental":
-    "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)",
-  Rented:
-    "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)",
-  "For Blocking":
-    "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
-  Blocked:
-    "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
-};
 
 const ExploreCard = ({ nft, isLoading = false }) => {
   const history = useHistory();
@@ -128,7 +115,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
             <Box className={classes.nftStates} display="flex" flexDirection="column">
               {nftStatus.length > 0 &&
                 nftStatus.map(status => (
-                  <span className={classes.cardOptionButton} style={{ background: CARD_COLORS[status] }}>
+                  <span className={classes.cardOptionButton} style={{ background: NFT_STATUS_COLORS[status] }}>
                     {status}
                   </span>
                 ))}

@@ -105,7 +105,6 @@ const ExploreReserveDetailPage = () => {
       }
       if (nft.rentHistories?.length > 0) {
         let _rentInfo = nft.rentHistories[nft.rentHistories.length - 1];
-
         setIsRenter((account || "").toLowerCase() === _rentInfo.offerer.toLowerCase());
       }
     }

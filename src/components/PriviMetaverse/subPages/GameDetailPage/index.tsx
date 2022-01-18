@@ -15,7 +15,7 @@ import { getChainImageUrl } from "shared/functions/chainFucntions";
 import TabsView, { TabItem } from "shared/ui-kit/TabsView";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
-import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { NFT_STATUS_COLORS, PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
 import SkeletonBox from "shared/ui-kit/SkeletonBox";
 import { RootState } from "store/reducers/Reducer";
@@ -282,14 +282,13 @@ export default function GameDetailPage() {
           },
           {
             cell: (
-              <Box
-                textAlign="center"
-                padding={"5px 8px"}
-                bgcolor={nftStatus(row) ? "#8D65FF" : "transparent"}
-                fontSize={12}
-                borderRadius={6}
-              >
-                {nftStatus(row).join(', ')}
+              <Box display="flex">
+                {nftStatus(row).length > 0 &&
+                  nftStatus(row).map(status => (
+                    <span className={classes.cardOptionButton} style={{ background: NFT_STATUS_COLORS[status] }}>
+                      {status}
+                    </span>
+                  ))}
               </Box>
             ),
           },
