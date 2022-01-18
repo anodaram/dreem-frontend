@@ -40,8 +40,8 @@ const BlockedByMe = () => {
         type: "Blocked",
       });
       const nfts = response.nfts.map(item => {
-        const histories = item?.blockingSalesHistories;
-        const activeHistory = histories[0];
+        const histories = item?.blockingSalesHistories || [];
+        const activeHistory = histories[histories.length - 1];
         return {
           ...item,
           history: activeHistory,
