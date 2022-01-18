@@ -17,5 +17,8 @@ export const useStyles = makeStyles(theme => ({
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
     "-webkit-text-fill-color": "transparent",
     "-webkit-background-clip": "text",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 24,
+    },
   },
 }));

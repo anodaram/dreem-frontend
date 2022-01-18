@@ -101,6 +101,9 @@ export const worldDetailPageStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       width: "88%",
     },
+    [theme.breakpoints.down("xs")]: {
+      width: "91%",
+    },
   },
   bgImgTriangle: {
     position: "absolute",

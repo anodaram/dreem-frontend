@@ -119,7 +119,13 @@ export default function WorldDetailPage() {
             )}
           </Box>
           <Box className={classes.worldInfoSection}>
-            <Box display="flex" flexDirection="column" alignSelf="flex-start" pt={5} width={525}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignSelf="flex-start"
+              pt={5}
+              width={isMobile ? 348 : 525}
+            >
               <Box className={classes.typo1}>ID #322</Box>
               <Box className={classes.typo3} mt={1}>
                 World Name
