@@ -75,10 +75,10 @@ export default function HomePage() {
   React.useEffect(() => {
     if (!underMaintenanceSelector.underMaintenance) {
       setLoadingTrending(true);
-      MetaverseAPI.getWorlds(5, 1, "rating", ["NFT_WORLD", "DRAFT_WORLD"], true)
+      MetaverseAPI.getWorlds(5, 1, "rating", ["WORLD"], true)
         .then(res => {
           if (res.success) {
-            setTrendingContents(res.data.items);
+            setTrendingContents(res.data.elements);
           }
         })
         .finally(() => setLoadingTrending(false));
@@ -95,13 +95,13 @@ export default function HomePage() {
 
   const getContents = curPage => {
     setLoadingNewest(true);
-    MetaverseAPI.getWorlds(12, curPage, "timestamp", ["NFT_WORLD", "DRAFT_WORLD"], true)
+    MetaverseAPI.getWorlds(12, curPage, "timestamp", ["WORLD"], true)
       .then(res => {
         if (res.success) {
-          const items = res.data.items;
+          const items = res.data.elements;
           const pageInfo = res.data.page;
           if (items && items.length > 0) {
-            setNewestContents([...newestContents, ...res.data.items]);
+            setNewestContents([...newestContents, ...res.data.elements]);
           }
           setCurPage(pageInfo.cur + 1);
           setHasMore(pageInfo.cur < pageInfo.max);

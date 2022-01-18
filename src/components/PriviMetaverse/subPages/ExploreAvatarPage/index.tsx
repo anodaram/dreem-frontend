@@ -53,7 +53,7 @@ export default function ExploreAvatarPage() {
       setLoading(true);
       const response = await MetaverseAPI.getWorlds(12, page, "timestamp", ["CHARACTER"]);
       if (response.success) {
-        const newAvatars = response.data.items;
+        const newAvatars = response.data.elements;
         setAvatars(prev => (init ? newAvatars : [...prev, ...newAvatars]));
         setPage(prev => prev + 1);
         setHasMore(response.data.page.cur < response.data.page.max);

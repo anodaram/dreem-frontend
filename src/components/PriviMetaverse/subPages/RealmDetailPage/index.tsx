@@ -109,7 +109,7 @@ export default function RealmDetailPage() {
         });
       setIsLoadingCharacters(true);
       MetaverseAPI.getCharacters(realmId)
-        .then(res => setCharacters(res.data))
+        .then(res => setCharacters(res.data.elements))
         .finally(() => setIsLoadingCharacters(false));
     }
   }, [realmId]);
@@ -361,7 +361,8 @@ export default function RealmDetailPage() {
                   muted
                   loop
                   style={{
-                    backgroundImage: `url("${realmData.worldImages[0]}")`,
+                    // backgroundImage: `url("${realmData.worldImages[0]}")`,
+                    backgroundImage: `url("${realmData.worldImage}")`,
                     backgroundSize: "cover",
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center",

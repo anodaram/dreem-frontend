@@ -243,7 +243,7 @@ const CharacterDetailModal = ({
                 <Box className={classes.nftPreviewSection}>
                   <Fragment>
                     <model-viewer
-                      src={nft?.ipfsModel}
+                      src={nft?.characterModel}
                       ar
                       ar-modes="webxr scene-viewer quick-look"
                       seamless-poster
@@ -259,19 +259,19 @@ const CharacterDetailModal = ({
                 </Box>
               )}
               <Box className={classes.typo2} mt={isMobile ? 4 : 6} color="#fff">
-                {nft?.name}
+                {nft?.characterName}
               </Box>
               <Box display="flex" alignItems="center" mt={1} color="#fff">
-                <Avatar size={32} rounded image={nft?.owner.user.avatarUrl || getDefaultAvatar()} />
+                <Avatar size={32} rounded image={nft?.submitter.user.avatarUrl || getDefaultAvatar()} />
                 <Box className={classes.typo5} ml={1}>
-                  {nft?.owner.character.name}
+                  {nft?.submitter.character.name}
                 </Box>
               </Box>
               <Box className={classes.typo3} fontWeight={800} mt={6}>
                 Description
               </Box>
               <Box className={classes.typo5} mt={1.5} color="#fff" mb={4}>
-                {nft?.description}
+                {nft?.characterDescription}
               </Box>
               <Box className={classes.typo3} fontWeight={800} mt={6}>
                 TRAITS

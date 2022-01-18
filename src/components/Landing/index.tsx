@@ -67,12 +67,12 @@ const LandingPage = () => {
         if (res.isSignedIn) {
           setSignedin(true);
           // setIsAuthorized(true);
-          const data = res.privian.user;
+          const data = res.data.user;
           dispatch(setUser(data));
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
-          localStorage.setItem("userId", data.id);
-          localStorage.setItem("userSlug", data.urlSlug ?? data.id);
+          localStorage.setItem("userId", data.priviId);
+          localStorage.setItem("userSlug", data.urlSlug ?? data.priviId);
 
           axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
           dispatch(setLoginBool(true));
@@ -102,12 +102,12 @@ const LandingPage = () => {
       if (res.isSignedIn) {
         setSignedin(true);
         // setIsAuthorized(true);
-        const data = res.userData;
+        const data = res.data.user;
         dispatch(setUser(data));
         localStorage.setItem("token", res.accessToken);
         localStorage.setItem("address", account);
-        localStorage.setItem("userId", data.id);
-        localStorage.setItem("userSlug", data.urlSlug ?? data.id);
+        localStorage.setItem("userId", data.priviId);
+        localStorage.setItem("userSlug", data.urlSlug ?? data.priviId);
 
         axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
         dispatch(setLoginBool(true));
@@ -145,7 +145,7 @@ const LandingPage = () => {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
-      axios.post(`${METAVERSE_URL()}/getSessionHash/`, {}, config).then(res => {
+      axios.post(`${METAVERSE_URL()}/auth/getSessionHash/`, {}, config).then(res => {
         let data: any = res.data?.data?.stamp;
         if (data) {
           customProtocolCheck(

@@ -281,15 +281,15 @@ const Header = props => {
       .then(res => {
         if (res.isSignedIn) {
           setSignedin(true);
-          let data = res.privian.user;
+          let data = res.data.user;
           data.infoImage = {
-            avatarUrl: res.privian.user.avatarUrl,
+            avatarUrl: res.data.user.avatarUrl,
           };
           dispatch(setUser(data));
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
-          localStorage.setItem("userId", data.id);
-          localStorage.setItem("userSlug", data.urlSlug ?? data.id);
+          localStorage.setItem("userId", data.priviId);
+          localStorage.setItem("userSlug", data.urlSlug ?? data.priviId);
 
           axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
           dispatch(setLoginBool(true));
@@ -318,11 +318,11 @@ const Header = props => {
       const res = await API.signUpWithAddressAndName(account, account, signature, "Dreem");
       if (res.isSignedIn) {
         setSignedin(true);
-        dispatch(setUser(res.userData));
+        dispatch(setUser(res.data.user));
         localStorage.setItem("token", res.accessToken);
         localStorage.setItem("address", account);
-        localStorage.setItem("userId", res.userData.id);
-        localStorage.setItem("userSlug", res.userData.urlSlug ?? res.userData.id);
+        localStorage.setItem("userId", res.data.user.priviId);
+        localStorage.setItem("userSlug", res.userData.urlSlug ?? res.data.user.priviId);
 
         axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
         dispatch(setLoginBool(true));

@@ -127,7 +127,7 @@ const RoadMap = {
 const FILE_LINK_MAC = "https://dreem.fra1.digitaloceanspaces.com/Dreem.dmg";
 const FILE_LINK_WINDOWS = "https://dreem.fra1.digitaloceanspaces.com/Dreem.msi";
 
-const filters = ["DRAFT_WORLD", "NFT_WORLD"];
+const filters = ["WORLD"];
 
 export default function HomePage() {
   const classes = homePageStyles();
@@ -186,7 +186,7 @@ export default function HomePage() {
       MetaverseAPI.getFeaturedWorlds(filters)
         .then(res => {
           if (res.success) {
-            setFeaturedRealms(res.data.items);
+            setFeaturedRealms(res.data.elements);
           }
         })
         .finally(() => setLoadingFeatured(false));
@@ -195,9 +195,9 @@ export default function HomePage() {
       MetaverseAPI.getWorlds(9, 1, "timestamp", filters, true, undefined, undefined, false)
         .then(res => {
           if (res.success) {
-            const items = res.data.items;
+            const items = res.data.elements;
             if (items && items.length > 0) {
-              setExploreReamls(res.data.items);
+              setExploreReamls(res.data.elements);
             }
           }
         })
@@ -206,7 +206,7 @@ export default function HomePage() {
       setLoadingExploreCharacters(true);
       MetaverseAPI.getCharacters(null, true)
         .then(res => {
-          setExploreCharacters(res.data);
+          setExploreCharacters(res.data.elements);
         })
         .finally(() => setLoadingExploreCharacters(false));
     }
@@ -241,15 +241,15 @@ export default function HomePage() {
       .then(res => {
         if (res.isSignedIn) {
           setSignedin(true);
-          let data = res.privian.user;
+          let data = res.data.user;
           data.infoImage = {
-            avatarUrl: res.privian.user.avatarUrl,
+            avatarUrl: res.data.user.avatarUrl,
           };
           dispatch(setUser(data));
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
-          localStorage.setItem("userId", data.id);
-          localStorage.setItem("userSlug", data.urlSlug ?? data.id);
+          localStorage.setItem("userId", data.priviId);
+          localStorage.setItem("userSlug", data.urlSlug ?? data.priviId);
 
           axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
           dispatch(setLoginBool(true));
@@ -278,15 +278,15 @@ export default function HomePage() {
       const res = await API.signUpWithAddressAndName(account, account, signature, "Dreem");
       if (res.isSignedIn) {
         setSignedin(true);
-        let data = res.privian.user;
+        let data = res.data.user;
         data.infoImage = {
-          avatarUrl: res.privian.user.avatarUrl,
+          avatarUrl: res.data.user.avatarUrl,
         };
         dispatch(setUser(data));
         localStorage.setItem("token", res.accessToken);
         localStorage.setItem("address", account);
-        localStorage.setItem("userId", data.id);
-        localStorage.setItem("userSlug", data.urlSlug ?? data.id);
+        localStorage.setItem("userId", data.priviId);
+        localStorage.setItem("userSlug", data.urlSlug ?? data.priviId);
 
         axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
         dispatch(setLoginBool(true));

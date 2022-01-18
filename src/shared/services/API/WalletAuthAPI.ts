@@ -15,7 +15,7 @@ export async function signInWithMetamaskWallet(
   }
   return new Promise<any>((resolve, reject) => {
     axios
-      .post(`${METAVERSE_URL()}/signInWithMetamaskWallet/`, { address, signature, domain })
+      .post(`${METAVERSE_URL()}/auth/signInWithMetamaskWallet/`, { address, signature, domain })
       .then(res => {
         resolve(res.data);
       })

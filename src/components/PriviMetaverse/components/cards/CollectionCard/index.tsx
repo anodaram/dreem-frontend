@@ -7,9 +7,17 @@ import { getDefaultImageUrl } from "shared/services/user/getUserAvatar";
 import { collectionCardStyles } from "./index.styles";
 
 export default function CollectionCard(props) {
+  const { isLoading, item } = props;
   const classes = collectionCardStyles(props);
 
   const [isSelected, setIsSelected] = useState<boolean>(false);
+  const [media, setMedia] = React.useState<any>(props.item ?? {});
+
+  React.useEffect(() => {
+    if (item?.id) {
+      setMedia(item);
+    }
+  }, [item?.id]);
 
   const onClick = () => {
     if (props.onClick) {
@@ -38,15 +46,15 @@ export default function CollectionCard(props) {
           <Box
             className={classes.image}
             style={{
-              backgroundImage: `url(${getDefaultImageUrl()})`,
+              backgroundImage: `url(${media?.image})`,
             }}
           />
           <Box className={classes.info}>
-            <Tooltip title={"collection name"}>
-              <Box className={classes.name}>collection name</Box>
+            <Tooltip title={media.name}>
+              <Box className={classes.name}>{media.name}</Box>
             </Tooltip>
             <Box className={classes.description}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Venenatis ut justo.
+              {media.description}
             </Box>
           </Box>
         </>

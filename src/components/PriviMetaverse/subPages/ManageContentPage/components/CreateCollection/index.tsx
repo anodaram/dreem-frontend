@@ -79,6 +79,23 @@ const CreateCollection = ({
 
   const handleWorld = async () => {
     if (validate()) {
+      let payload: any = {};
+
+      payload = {
+        erc721CollectionName: title,
+        erc721CollectionSymbol: symbol,
+        erc721CollectionDescription: description,
+        erc721CollectionImage: image,
+      };
+
+      MetaverseAPI.uploadCollection(payload)
+        .then(async res => {
+          if (!res.success) return;
+
+        })
+        .catch(err => {
+          showAlertMessage(`Failed to create collection`, { variant: "error" });
+        });
     }
   };
 

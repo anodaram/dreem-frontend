@@ -160,12 +160,12 @@ export default function CreatorPage() {
 
   const loadData = async () => {
     try {
-      let filters: string[] = [];
+      let filters: string[] = ["WORLD"];
       let itemIds: Number[] = [];
       if (selectedTab === "drafts") {
-        filters = ["DRAFT_WORLD"];
+        filters = ["WORLD"];
       } else if (selectedTab === "realms") {
-        filters = ["NFT_WORLD"];
+        filters = ["WORLD"];
       } else if (selectedTab === "liked") {
         // get liked realms
         const respRealmIds = await axios.get(`${URL()}/dreemRealm/getLikedRealms`, {
@@ -186,7 +186,7 @@ export default function CreatorPage() {
             undefined,
             itemIds
           );
-          setLikedRealms(realmsResp.data.items);
+          setLikedRealms(realmsResp.data.elements);
         } else {
           setLikedRealms([]);
         }
@@ -203,7 +203,7 @@ export default function CreatorPage() {
             itemIds.push(parseInt(id));
           }
           const avatarResp = await MetaverseAPI.getCharacters(undefined, undefined, itemIds);
-          setLikedAvatars(avatarResp.data);
+          setLikedAvatars(avatarResp.data.elements);
         } else {
           setLikedAvatars([]);
         }
@@ -223,7 +223,7 @@ export default function CreatorPage() {
         );
 
         if (inventoryResp.success) {
-          setNftContents([...nftContents, ...inventoryResp.data.items]);
+          setNftContents([...nftContents, ...inventoryResp.data.elements]);
           if (inventoryResp.data.page && curPage < inventoryResp.data.page.max) {
             setCurPage(curPage => curPage + 1);
           } else {
@@ -244,12 +244,12 @@ export default function CreatorPage() {
     setHasMore(true);
     setNftContents([]);
 
-    let filters = ["NFT_WORLD", "DRAFT_WORLD", "NFT_MEDIA"];
-    if (selectedTab === "drafts") {
-      filters = ["DRAFT_WORLD"];
-    } else if (selectedTab === "realms") {
-      filters = ["NFT_WORLD"];
-    }
+    let filters = ["WORLD"];
+    // if (selectedTab === "drafts") {
+    //   filters = ["DRAFT_WORLD"];
+    // } else if (selectedTab === "realms") {
+    //   filters = ["NFT_WORLD"];
+    // }
     const inventoryResp = await MetaverseAPI.getWorlds(
       12,
       1,
@@ -259,7 +259,7 @@ export default function CreatorPage() {
       creator.userInfo.id
     );
     if (inventoryResp.success && creator && creator.userInfo) {
-      setNftContents([...inventoryResp.data.items]);
+      setNftContents([...inventoryResp.data.elements]);
       if (inventoryResp.data.page && curPage <= inventoryResp.data.page.max) {
         if (inventoryResp.data.page && inventoryResp.data.page.max > curPage) {
           setCurPage(curPage => curPage + 1);

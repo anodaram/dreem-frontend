@@ -51,8 +51,8 @@ export default function RealmCard(props) {
                   ? props.item.worldBannerImage
                     ? `url("${props.item.worldBannerImage}")`
                     : `url(${getDefaultImageUrl()})`
-                  : props.item.worldImages
-                  ? `url("${props.item.worldImages}")`
+                  : props.item.worldImage
+                  ? `url("${props.item.worldImage}")`
                   : `url(${getDefaultImageUrl()})`,
             }}
           >

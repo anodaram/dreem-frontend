@@ -17,22 +17,22 @@ import { setLoginBool } from "store/actions/LoginBool";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import NoMetamaskModal from "components/Connect/modals/NoMetamaskModal";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
-// import InfiniteScroll from "react-infinite-scroll-component";
-// import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
-// import useWindowDimensions from "shared/hooks/useWindowDimensions";
-// import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
-// import CreateCollection from "./components/CreateCollection";
-// import CreateNFT from "./components/CreateNFT";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
+import useWindowDimensions from "shared/hooks/useWindowDimensions";
+import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
+import CreateCollection from "./components/CreateCollection";
+import CreateNFT from "./components/CreateNFT";
 import { RootState } from "../../../../store/reducers/Reducer";
 import CreateRealmModal from "../../modals/CreateRealmModal";
 import { manageContentPageStyles } from "./index.styles";
 
-// const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
-//   375: 1,
-//   600: 2,
-//   1000: 3,
-//   1440: 3,
-// };
+const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
+  375: 1,
+  600: 2,
+  1000: 3,
+  1440: 3,
+};
 
 export default function ManageContentPage() {
   const dispatch = useDispatch();
@@ -49,30 +49,34 @@ export default function ManageContentPage() {
   const [metaDataForModal, setMetaDataForModal] = useState<any>(null);
   const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
 
-  // const width = useWindowDimensions().width;
-  // const [step, setStep] = useState<number>(0);
-  // const [hasUnderMaintenanceInfo, setHasUnderMaintenanceInfo] = useState(false);
-  // const [openCreateCollectionModal, setOpenCreateCollectionModal] = useState<boolean>(false);
-  // const loadingCount = React.useMemo(() => (width > 1000 ? 6 : width > 600 ? 3 : 6), [width]);
-  // const [currentCollection, setCurrentCollection] = useState<any>(null);
-  // const [collections, setCollections] = useState<any[]>([1, 2, 3, 4, 5, 6, 7]);
-  // const [curPage, setCurPage] = React.useState(1);
-  // const [lastPage, setLastPage] = React.useState(0);
-  // const [loadingCollection, setLoadingCollection] = React.useState<boolean>(false);
+  const width = useWindowDimensions().width;
+  const [step, setStep] = useState<number>(0);
+  const [hasUnderMaintenanceInfo, setHasUnderMaintenanceInfo] = useState(false);
+  const [openCreateCollectionModal, setOpenCreateCollectionModal] = useState<boolean>(false);
+  const loadingCount = React.useMemo(() => (width > 1000 ? 6 : width > 600 ? 3 : 6), [width]);
+  const [currentCollection, setCurrentCollection] = useState<any>(null);
+  const [collections, setCollections] = useState<any[]>([]);
+  const [curPage, setCurPage] = React.useState(1);
+  const [lastPage, setLastPage] = React.useState(0);
+  const [loadingCollection, setLoadingCollection] = React.useState<boolean>(false);
 
-  // useEffect(() => {
-  //   if (underMaintenanceSelector && Object.keys(underMaintenanceSelector).length > 0) {
-  //     setHasUnderMaintenanceInfo(true);
-  //   }
-  // }, [underMaintenanceSelector]);
+  useEffect(() => {
+    if (underMaintenanceSelector && Object.keys(underMaintenanceSelector).length > 0) {
+      setHasUnderMaintenanceInfo(true);
+    }
+  }, [underMaintenanceSelector]);
 
-  // useEffect(() => {
-  //   if (step === 2) {
-  //     handleOpenCollectionModal();
-  //   } else if (step === 3) {
-  //     handleOpenRealmModal();
-  //   }
-  // }, [step]);
+  useEffect(() => {
+    if (step === 2) {
+      handleOpenCollectionModal();
+    } else if (step === 3) {
+      handleOpenRealmModal();
+    }
+  }, [step]);
+  
+  useEffect(() => {
+    loadMore()
+  }, []);
 
   const signInWithMetamask = () => {
     if (!account) return;
@@ -83,12 +87,12 @@ export default function ManageContentPage() {
       .then(res => {
         if (res.isSignedIn) {
           setSignedin(true);
-          const data = res.privian.user;
+          const data = res.data.user;
           dispatch(setUser(data));
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
-          localStorage.setItem("userId", data.id);
-          localStorage.setItem("userSlug", data.urlSlug ?? data.id);
+          localStorage.setItem("userId", data.priviId);
+          localStorage.setItem("userSlug", data.urlSlug ?? data.priviId);
 
           axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
           dispatch(setLoginBool(true));
@@ -115,12 +119,12 @@ export default function ManageContentPage() {
       const res = await API.signUpWithAddressAndName(account, account, signature, "Dreem");
       if (res.isSignedIn) {
         setSignedin(true);
-        const data = res.privian.user;
+        const data = res.data.user;
         dispatch(setUser(data));
         localStorage.setItem("token", res.accessToken);
         localStorage.setItem("address", account);
-        localStorage.setItem("userId", data.id);
-        localStorage.setItem("userSlug", data.urlSlug ?? data.id);
+        localStorage.setItem("userId", data.priviId);
+        localStorage.setItem("userSlug", data.urlSlug ?? data.priviId);
 
         axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
         dispatch(setLoginBool(true));
@@ -175,39 +179,39 @@ export default function ManageContentPage() {
     }
   };
 
-  // const handleOpenCollectionModal = () => {
-  //   setOpenCreateCollectionModal(true);
-  // };
+  const handleOpenCollectionModal = () => {
+    setOpenCreateCollectionModal(true);
+  };
 
-  // const handleNext = () => {
-  //   setStep(prev => prev + 1);
-  // };
+  const handleNext = () => {
+    setStep(prev => prev + 1);
+  };
 
-  // const handlePrev = () => {
-  //   setStep(prev => prev - 1);
-  // };
+  const handlePrev = () => {
+    setStep(prev => prev - 1);
+  };
 
-  // const loadMore = () => {
-  //   setLoadingCollection(true);
-  // MetaverseAPI.getWorlds(12, curPage, "timestamp", ["DRAFT_WORLD", "NFT_WORLD"], true)
-  //   .then(res => {
-  //     if (res.success) {
-  //       const items = res.data.items;
-  //       if (items && items.length > 0) {
-  //         setCollections([...collections, ...res.data.items]);
-  //         if (res.data.page && curPage <= res.data.page.max) {
-  //           setCurPage(curPage => curPage + 1);
-  //           setLastPage(res.data.page.max);
-  //         }
-  //       }
-  //     }
-  //   })
-  //   .finally(() => setLoadingCollection(false));
-  // };
+  const loadMore = () => {
+    setLoadingCollection(true);
+    MetaverseAPI.getCollections(12, curPage, "ASC")
+    .then(res => {
+      if (res.success) {
+        const items = res.data.elements;
+        if (items && items.length > 0) {
+          setCollections([...collections, ...res.data.elements]);
+          if (res.data.page && curPage <= res.data.page.max) {
+            setCurPage(curPage => curPage + 1);
+            setLastPage(res.data.page.max);
+          }
+        }
+      }
+    })
+    .finally(() => setLoadingCollection(false));
+  };
 
   return (
     <>
-      <div className={classes.root}>
+      {/* <div className={classes.root}>
         <div className={classes.mainContent}>
           <div className={classes.typo2}>Create your own Dreem</div>
           <Box className={classes.typo3} mt={"24px"} mb={"50px"}>
@@ -265,8 +269,8 @@ export default function ManageContentPage() {
             </PrimaryButton>
           )}
         </div>
-      </div>
-      {/* <div className={classes.root} id="scrollContainer">
+      </div> */}
+      <div className={classes.root} id="scrollContainer">
         {step === 0 && (
           <div className={classes.mainContent}>
             <div className={classes.typo2}>Create your own Dreem</div>
@@ -441,7 +445,7 @@ export default function ManageContentPage() {
             </PrimaryButton>
           </Box>
         ) : null}
-      </div> */}
+      </div>
       {openCreateNftModal && (
         <CreateRealmModal
           open={openCreateNftModal}
@@ -454,13 +458,13 @@ export default function ManageContentPage() {
   );
 }
 
-// const PlusIcon = () => (
-//   <svg width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-//     <path
-//       d="M6.5 12.0488V2.04883M1.5 7.04883L11.5 7.04883"
-//       stroke="#151515"
-//       strokeWidth="2.5"
-//       strokeLinecap="square"
-//     />
-//   </svg>
-// );
+const PlusIcon = () => (
+  <svg width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M6.5 12.0488V2.04883M1.5 7.04883L11.5 7.04883"
+      stroke="#151515"
+      strokeWidth="2.5"
+      strokeLinecap="square"
+    />
+  </svg>
+);

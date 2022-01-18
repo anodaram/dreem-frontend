@@ -25,7 +25,7 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   1440: 3,
 };
 
-const filters = ["DRAFT_WORLD", "NFT_WORLD"];
+const filters = ["WORLD"];
 
 export default function ExplorePage() {
   const classes = explorePageStyles();
@@ -66,9 +66,9 @@ export default function ExplorePage() {
     MetaverseAPI.getWorlds(12, curPage, "timestamp", filters, true, undefined, undefined, false)
       .then(res => {
         if (res.success) {
-          const items = res.data.items;
+          const items = res.data.elements;
           if (items && items.length > 0) {
-            setExploreReamls([...exploreRealms, ...res.data.items]);
+            setExploreReamls([...exploreRealms, ...res.data.elements]);
             if (res.data.page && curPage <= res.data.page.max) {
               setCurPage(curPage => curPage + 1);
               setLastPage(res.data.page.max);
@@ -84,7 +84,7 @@ export default function ExplorePage() {
     MetaverseAPI.getFeaturedWorlds(filters)
       .then(res => {
         if (res.success) {
-          setFeaturedRealms(res.data.items);
+          setFeaturedRealms(res.data.elements);
         }
       })
       .finally(() => setLoadingFeatured(false));
