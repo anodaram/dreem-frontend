@@ -72,7 +72,13 @@ export default function WorldDetailPage() {
                 <img src={getDefaultBGImage()} className={classes.worldImage} alt="nft image" />
               </Box>
             )}
-            <Box display="flex" alignItems="center" justifyContent="space-between" width={450}>
+            <Box
+              display="flex"
+              alignItems={isMobile ? "start" : "center"}
+              justifyContent="space-between"
+              flexDirection={isMobile ? "column" : "row"}
+              width={450}
+            >
               <Box display="flex" alignItems="center">
                 <Avatar size={42} rounded image={getDefaultAvatar()} />
                 <Box display="flex" flexDirection="column" ml={1}>
@@ -80,7 +86,7 @@ export default function WorldDetailPage() {
                   <Box className={classes.typo2}>0xcsdw20x...0xcsdw2</Box>
                 </Box>
               </Box>
-              <Box width={2} height={40} bgcolor="#ffffff20" />
+              <Box width={isMobile ? 0 : 2} height={isMobile ? 20 : 40} bgcolor="#ffffff20" />
               <Box display="flex" alignItems="center">
                 <Avatar size={42} rounded bordered image={getDefaultAvatar()} />
                 <Box display="flex" flexDirection="column" ml={0.5}>

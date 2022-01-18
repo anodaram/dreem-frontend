@@ -31,6 +31,9 @@ export const worldDetailPageStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       padding: "0px 48px",
     },
+    [theme.breakpoints.down("xs")]: {
+      padding: "0px 16px",
+    },
   },
   flexBox: {
     display: "flex",
@@ -76,6 +79,11 @@ export const worldDetailPageStyles = makeStyles(theme => ({
       height: 450,
       marginBottom: 40,
     },
+    [theme.breakpoints.down("xs")]: {
+      width: 345,
+      height: 320,
+      marginBottom: 40,
+    },
   },
   content: {
     background: "#151515",
@@ -119,6 +127,9 @@ export const worldDetailPageStyles = makeStyles(theme => ({
     textTransform: "uppercase",
     lineHeight: "100%",
     letterSpacing: "0.02em",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 34,
+    },
   },
   typo4: {
     fontSize: 16,
