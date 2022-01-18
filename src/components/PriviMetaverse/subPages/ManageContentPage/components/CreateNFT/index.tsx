@@ -6,7 +6,7 @@ import { useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem 
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import { Modal, PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import { switchNetwork } from "shared/functions/metamask";
 import { BlockchainNets } from "shared/constants/constants";
