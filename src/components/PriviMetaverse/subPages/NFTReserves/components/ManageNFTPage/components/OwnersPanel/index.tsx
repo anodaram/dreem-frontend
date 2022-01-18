@@ -100,15 +100,15 @@ const OwnersPanel = () => {
         });
         let nfts = response.data ?? [];
         nfts = nfts.filter(nft => nft.ownerAddress?.toLowerCase() === account?.toLowerCase());
+
+        const loadNftStatus = nft =>
+          !nft.status ? [] : Array.isArray(nft.status) ? nft.status : nft.status.split(", ");
         if (selectedTab === 0) {
           setUserNFTs(
-            nfts.filter(
-              nft =>
-                nft.status && nft.status && nft.status.filter(s => s !== "Rented" && s !== "Blocked").length
-            )
+            nfts.filter(nft => loadNftStatus(nft).filter(s => s !== "Rented" && s !== "Blocked").length)
           );
         } else if (selectedTab === 1) {
-          setUserNFTs(nfts.filter(nft => nft.status && nft.status.filter(s => s === "Rented").length));
+          setUserNFTs(nfts.filter(nft => loadNftStatus(nft).filter(s => s === "Rented").length));
         } else {
           setUserNFTs(nfts);
         }
