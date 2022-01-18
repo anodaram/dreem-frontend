@@ -1,43 +1,53 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Moment from "react-moment";
+
+import { Hidden } from "@material-ui/core";
 
 import Box from "shared/ui-kit/Box";
-
-import { notificationPageStyles } from "./index.styles";
 import { useNotifications } from "shared/contexts/NotificationsContext";
 import { Avatar, Color, FontSize, grid } from "shared/ui-kit";
 import { NotificationContent } from "shared/ui-kit/Header/components/Notifications/NotificationContent";
 import { NotificationButtons } from "shared/ui-kit/Header/components/Notifications/NotificationButtons";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
-import Moment from "react-moment";
-import { Hidden } from "@material-ui/core";
+import { notificationPageStyles } from "./index.styles";
+
+const trashIcon = require("assets/icons/trash-red.svg");
 
 export default function NotificationPage() {
   const classes = notificationPageStyles();
 
-  const { notifications } = useNotifications();
+  const { notifications, removeNotification } = useNotifications();
 
   return (
     <Box className={classes.content}>
       <Box className={classes.background}>
         <Box className={classes.title}>Notifications</Box>
-        {notifications.map(n => (
-          <NotificationItem notification={n} />
-        ))}
+        {notifications.length > 0 ? (
+          notifications.map(n => (
+            <NotificationItem notification={n} removeNotification={removeNotification} />
+          ))
+        ) : (
+          <Box>No unread notifications</Box>
+        )}
       </Box>
     </Box>
   );
 }
 
-const NotificationItem = ({ notification }) => {
+const NotificationItem = ({ notification, removeNotification }) => {
   const [avatar, setAvatar] = useState<string>("");
 
   useEffect(() => {
     (async () => {
-      if (notification && notification.avatar) {
-        setAvatar(notification.avatar);
+      if (notification && notification.typeItemId === "NftMarketplace") {
+        setAvatar(notification.externalData.nft.image);
       } else {
-        setAvatar(getDefaultAvatar());
+        if (notification && notification.avatar) {
+          setAvatar(notification.avatar);
+        } else {
+          setAvatar(getDefaultAvatar());
+        }
       }
     })();
   }, [notification]);
@@ -72,6 +82,22 @@ const NotificationItem = ({ notification }) => {
           <Moment format="YYYY-MM-DD hh:mm:ss">{new Date(notification.date)}</Moment>
         </TimeLabel>
       </Hidden>
+      <Box
+        style={{
+          width: 20,
+          height: 20,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundImage: `url(${trashIcon})`,
+          marginBottom: 4,
+          marginLeft: 10,
+          cursor: "pointer",
+        }}
+        onClick={() => {
+          removeNotification(notification.id);
+        }}
+      />
     </NotificationContainer>
   );
 };

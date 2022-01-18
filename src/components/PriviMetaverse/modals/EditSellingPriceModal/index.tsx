@@ -175,6 +175,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
         price: toNDecimals(inputBalance, reservePriceToken.Decimals),
         beneficiary: account,
         buyerToMatch: "0x0000000000000000000000000000000000000000",
+        mode: 0
       },
       setHash
     );

@@ -12,9 +12,17 @@ import { BlockchainNets } from "shared/constants/constants";
 
 import { exploreOptionDetailPageStyles } from "../../index.styles";
 import Web3 from "web3";
+import AcceptingOfferSection from "../AcceptingOfferSection";
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-export default ({ nft, setNft, isOwner }) => {
+export default ({ nft, setNft, isOwner, refresh, isSpectator, isBlocked }: {
+  nft: any;
+  setNft: (arg: any) => void;
+  isOwner: boolean;
+  refresh: () => void;
+  isSpectator?: boolean;
+  isBlocked?: boolean;
+}) => {
   const classes = exploreOptionDetailPageStyles();
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
   const histories = nft?.rentHistories ?? [];
@@ -91,6 +99,10 @@ export default ({ nft, setNft, isOwner }) => {
 
   if (!offer) {
     return null;
+  }
+
+  if (isSpectator) {
+    return <AcceptingOfferSection nft={nft} refresh={refresh} isBlocked={isBlocked} />
   }
 
   return (

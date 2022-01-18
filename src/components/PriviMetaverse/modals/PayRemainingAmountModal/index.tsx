@@ -218,7 +218,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
           >
             <Box display="flex">
               <span>Wallet Balance</span>
-              <Box className={classes.usdWrap} display="flex" alignItems="center" ml={2}>
+              <Box className={classes.usdWrap} display="flex" alignItems="center" ml={2} color="#E9FF26">
                 <Box fontWeight="700">{`${typeUnitValue(totalBalance, 1)} ${getTokenSymbol(nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaymentToken)}`} </Box>
               </Box>
             </Box>

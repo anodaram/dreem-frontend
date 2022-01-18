@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { Notification } from "shared/services/API/NotificationsAPI";
@@ -42,6 +42,24 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
     dispatch(setSelectedUser(itemId));
   };
 
+  const offerPeriod = useMemo(() => {
+    if (!externalData.duration) {
+      return "0 hours";
+    }
+
+    let days;
+    let hours = Number(externalData.duration * 24);
+    if (hours > 24) {
+      days = hours / 24;
+    }
+    hours = hours % 24;
+
+    let strDays = days ? days + " days" : "";
+    let strHours = hours ? hours + " hours" : "";
+
+    return strDays + " " + strHours;
+  }, [externalData]);
+
   const goToNFTDetail = () => {
     history.push(`/gameNFTS/${externalData.nft.collection}/${externalData.nft.id}`);
   };
@@ -63,7 +81,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             <span className={classes.username}>{externalData.user}</span> placed a new rental offer on{" "}
             <span className={classes.nftName}>{externalData.nft.name}</span> for {externalData.price} USDT
-            over {Number(externalData.duration).toFixed(2)} days 👀
+            over {offerPeriod} 👀
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your NFT
@@ -73,7 +91,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
         <div>
           <div>
             You have accepted <span className={classes.username}>{externalData.user}</span>'s rental offer for{" "}
-            {externalData.price} USDT over {Number(externalData.duration).toFixed(2)} days on your{" "}
+            {externalData.price} USDT over {offerPeriod} on your{" "}
             <span className={classes.nftName}>{externalData.nft.name}</span>
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
@@ -92,9 +110,9 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 237 ? (
         <div>
           <div>
-            <span className={classes.username}>{externalData.user}</span> accepted your rental offer of
-            <span className={classes.nftName}>{externalData.nft.name}</span> at {externalData.price} USDT for
-            {Number(externalData.duration).toFixed(2)} days 😀
+            <span className={classes.username}>{externalData.user}</span> accepted your rental offer of{" "}
+            <span className={classes.nftName}>{externalData.nft.name}</span> at {externalData.price} USDT for{" "}
+            {offerPeriod} 😀
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your NFT
