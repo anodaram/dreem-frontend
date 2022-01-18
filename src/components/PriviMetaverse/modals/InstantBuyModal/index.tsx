@@ -186,7 +186,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
           </Box>
         </Box>
         <Box textAlign="end" fontSize={12} fontFamily="Rany" mt={1} color="white">
-          incl. {marketFee}% marketplace fee
+          incl. {marketFee*100}% marketplace fee
         </Box>
         <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
           <SecondaryButton

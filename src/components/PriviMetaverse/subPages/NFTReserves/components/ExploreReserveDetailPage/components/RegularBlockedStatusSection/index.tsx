@@ -99,7 +99,6 @@ export default ({ isOwnership, nft, refresh }) => {
         CollectionId: collection_id,
         TokenId: token_id,
         TotalCollateralPercent: 0,
-        PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].PaidAmount || 0,
         notificationMode: 0,
         offerer: account!
       });
@@ -130,8 +129,8 @@ export default ({ isOwnership, nft, refresh }) => {
             Manage Collateral
           </Box>
           <Box fontSize={14}>
-            Make sure you’re collateral is above the liquidation level, otherwise you’ll loos your NFT and
-            whole collateral.
+            Make sure your collateral is above the liquidation level, otherwise 
+            you’ll lose your blocked NFT and lose your collateral
           </Box>
         </Box>
         {blockingInfo?.PaidAmount !== blockingInfo?.Price ? (

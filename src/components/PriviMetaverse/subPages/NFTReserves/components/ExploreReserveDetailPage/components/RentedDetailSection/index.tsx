@@ -11,14 +11,23 @@ import { resetStatus } from "shared/services/API/ReserveAPI";
 import { BlockchainNets } from "shared/constants/constants";
 
 import { exploreOptionDetailPageStyles } from "../../index.styles";
+import Web3 from "web3";
+import AcceptingOfferSection from "../AcceptingOfferSection";
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-export default ({ nft, setNft, isOwner }) => {
+export default ({ nft, setNft, isOwner, refresh, isSpectator, isBlocked }: {
+  nft: any;
+  setNft: (arg: any) => void;
+  isOwner: boolean;
+  refresh: () => void;
+  isSpectator?: boolean;
+  isBlocked?: boolean;
+}) => {
   const classes = exploreOptionDetailPageStyles();
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
   const histories = nft?.rentHistories ?? [];
   const offer = histories.length ? histories[0] : null;
-  const { chainId } = useWeb3React();
+  const { library, account, chainId } = useWeb3React();
   const [remainingTime, setRemainingTime] = useState(0);
 
   const chain = React.useMemo(() => BlockchainNets.find(net => net.chainId === chainId), [chainId]);
@@ -62,12 +71,38 @@ export default ({ nft, setNft, isOwner }) => {
     return token.Decimals;
   };
 
-  const handleOpenToken = () => {
-    window.open(`${chain?.scan?.url}/token/${nft.Address}`, "_blank");
+  const getSyntheticNftAddress = async () => {
+    try {
+      const web3APIHandler = chain.apiHandler;
+      const web3 = new Web3(library.provider);
+      const response = await web3APIHandler.RentalManager.getSyntheticNFTAddress(
+        web3,
+        {
+          collectionId: nft.Address,
+        },
+      );
+      return response;
+    } catch (err) {
+      return '';
+    }
+  };
+
+  const handleOpenToken = async () => {
+    let syntheticAddress: any = nft.syntheticAddress
+    if (!syntheticAddress) {
+      let response = await getSyntheticNftAddress();
+      syntheticAddress = response.nftAddress;
+      setNft({...nft, syntheticAddress})
+    }
+    window.open(`${chain?.scan?.url}/token/${syntheticAddress}?a=${offer.syntheticID}`, "_blank");
   };
 
   if (!offer) {
     return null;
+  }
+
+  if (isSpectator) {
+    return <AcceptingOfferSection nft={nft} refresh={refresh} isBlocked={isBlocked} />
   }
 
   return (
@@ -93,7 +128,7 @@ export default ({ nft, setNft, isOwner }) => {
             justifyContent="space-between"
             style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.5)" }}
           >
-            <span>Price per Second</span>
+            <span>Price Per Hour</span>
             <Box
               className={classes.gradientText}
               textAlign="end"

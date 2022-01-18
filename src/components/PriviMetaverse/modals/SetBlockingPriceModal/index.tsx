@@ -128,12 +128,12 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
           reservePeriod: Math.ceil(+(period || 0) * 3600 * 24),
           validityPeriod: 3 * 3600 * 24,
           buyerToMatch: "0x0000000000000000000000000000000000000000",
+          mode: 1
         },
         setHash
       );
 
       if (contractResponse.success) {
-        setTransactionSuccess(true);
         const offerId = web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address", "uint80", "uint64"],
@@ -173,6 +173,8 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
           hash,
           created: new Date().getTime(),
         };
+
+        setTransactionSuccess(true);
         setNft(newNft);
         handleClose();
       } else {
@@ -203,7 +205,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
                 theme="light"
                 minValue={0}
                 disabled={isApproved}
-                placeHolder={"0.001"}
+                placeHolder={"10"}
               />
             </Grid>
             <Grid item xs={6} sm={5}>
@@ -233,7 +235,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
             minValue={0}
             endAdornment={<div className={classes.purpleText}>DAYS</div>}
             disabled={isApproved}
-            placeHolder={"00"}
+            placeHolder={"10"}
           />
           <Box className={classes.nameField}>Collateral (%)</Box>
           <InputWithLabelAndTooltip
@@ -245,7 +247,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
             theme="light"
             minValue={0}
             disabled={isApproved}
-            placeHolder={"0"}
+            placeHolder={"10%"}
           />
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton

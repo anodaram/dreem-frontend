@@ -223,7 +223,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
   return step == 0 ? (
     <>
       <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.cancelModal}>
-        <span className={classes.cancelTitle}>You sure about editing price? </span>
+        <span className={classes.cancelTitle}>Are you sure about editing price? </span>
         <span className={classes.cancelDesc}>
             This will require a few changes to the smart contract, this may take a few moments
         </span>
@@ -277,7 +277,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
                 theme="light"
                 minValue={0}
                 disabled={isApproved}
-                placeHolder={"0.001"}
+                placeHolder={"0"}
               />
             </Grid>
             <Grid item xs={6} sm={5}>

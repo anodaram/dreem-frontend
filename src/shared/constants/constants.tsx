@@ -28,6 +28,8 @@ export const walletConnect = {
   },
 };
 
+export const NftStates = ["For Sale", "For Blocking", "For Rental", "Blocked", "Rented"];
+
 export const priviTokenList = [
   "BAL",
   "BAT",

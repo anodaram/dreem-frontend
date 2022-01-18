@@ -150,7 +150,7 @@ export default ({
                       history.push(`/gameNFTS/${item.Slug}/${item.id}`);
                     }}
                   >
-                    Rent back
+                    Rent again
                   </PrimaryButton>
                 </Box>
               ) : (

@@ -62,13 +62,21 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
     setBalance();
   }, [open, reservePriceToken, selectedChain]);
 
+  const getTokenSymbol = addr => {
+    if (tokenList.length == 0) return 0;
+    let token = tokenList.find(token => token.Address === addr);
+    return token?.Symbol || "";
+  };
+
   const setBalance = async () => {
     if (reservePriceToken) {
       const targetChain = BlockchainNets.find(net => net.name.toLowerCase() === nft.Chain.toLowerCase());
       if (chainId && chainId !== targetChain?.chainId) {
         const isHere = await switchNetwork(targetChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
           return;
         }
       }
@@ -89,14 +97,18 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
   const handleApprove = async () => {
     try {
       if (!price || !collateral) {
-        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+          variant: "error",
+        });
         return;
       }
 
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
           return;
         }
       }
@@ -124,9 +136,12 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${Number(collateral) * (1 + fee)} ${reservePriceToken.Symbol}!`, {
-        variant: "success",
-      });
+      showAlertMessage(
+        `Successfully approved ${Number(collateral) * (1 + fee)} ${reservePriceToken.Symbol}!`,
+        {
+          variant: "success",
+        }
+      );
       setTransactionSuccess(null);
       setOpenTransactionModal(false);
     } catch (error) {
@@ -140,7 +155,9 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
 
   const handleConfirm = async () => {
     if (!price || !collateral) {
-      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+        variant: "error",
+      });
       return;
     }
 
@@ -161,17 +178,17 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         collateralToken: reservePriceToken?.Address,
         price: toNDecimals(price, reservePriceToken.Decimals),
         beneficiary: account,
-        collateralInitialAmount: toNDecimals(Number(collateral) * (1 + fee), collateralToken.Decimals),
-        collateralPercent: toNDecimals((Number(collateral) / Number(nft?.blockingSaleOffer?.Price) * 100), 2),
+        collateralInitialAmount: toNDecimals(Number(collateral), collateralToken.Decimals),
+        collateralPercent: toNDecimals(nft?.blockingSaleOffer?.CollateralPercent, 2),
         reservePeriod: Math.ceil(+nft.blockingSaleOffer.ReservePeriod * 3600 * 24),
         validityPeriod: Number(nft.blockingSaleOffer.AcceptDuration || 0) * 3600 * 24,
         sellerToMatch: nft.blockingSaleOffer.Beneficiary,
+        mode: 0,
       },
       setHash
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
       const offerId = web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "uint256", "address", "uint80", "uint64"],
@@ -222,6 +239,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         hash: response.hash,
         created: new Date().getTime(),
       });
+      setTransactionSuccess(true);
       setNft(newNft);
       onConfirm();
     } else {
@@ -260,7 +278,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                   {nft?.blockingSaleOffer?.Price}
                 </Box>
                 <Box fontSize={14} color="#ffffff">
-                  USDT
+                  {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
               <Box className={classes.nameField}>
@@ -302,7 +320,9 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box display="flex" alignItems="center" gridColumnGap="10px" fontSize="14px">
                   <span>Wallet Balance</span>
                   <Box className={classes.usdWrap} display="flex" alignItems="center" color="#E9FF26">
-                    <Box fontWeight="700">{totalBalance} USDT</Box>
+                    <Box fontWeight="700">
+                      {totalBalance} {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
+                    </Box>
                   </Box>
                 </Box>
                 <Box display="flex" alignItems="center" fontSize="16px">
@@ -312,7 +332,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
             </Box>
             <Box className={classes.footer}>
               <Box className={classes.totalText}>Total</Box>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
+              <Box display="flex" alignItems="center" justifyContent="space-between" mt={1}>
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
@@ -327,10 +347,35 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {collateral} USDT
+                  {collateral || 0} {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
-
+              <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
+                <Box
+                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
+                >
+                  Marketplace fee ({fee * 100}%)
+                </Box>
+                <Box
+                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
+                >
+                  {(Number(collateral || 0) * fee).toFixed(6)}{" "}
+                  {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
+                </Box>
+              </Box>
+              <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
+                <Box
+                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
+                >
+                  TOTAL
+                </Box>
+                <Box
+                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
+                >
+                  {((collateral || 0) * (1 + fee)).toFixed(6)}{" "}
+                  {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
+                </Box>
+              </Box>
               <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
                 <SecondaryButton
                   size="medium"

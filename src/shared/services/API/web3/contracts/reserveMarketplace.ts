@@ -45,8 +45,12 @@ const reserveMarketplace = (network: string) => {
             setHash(hash);
           });
 
-        console.log("transaction succeed... ", response);
-        resolve({ success: true });
+        console.log("transaction succeed... ", response.events);
+        if (response?.events?.PurchaseReserveProposalCanceled) {
+          resolve({ success: true });
+        } else {
+          resolve({ success: false });
+        }
       } catch (e) {
         console.log(e);
         resolve({ success: false });
@@ -93,8 +97,12 @@ const reserveMarketplace = (network: string) => {
             setHash(hash);
           });
 
-        console.log("transaction succeed... ", response);
-        resolve({ success: true });
+        console.log("transaction succeed... ", response?.events);
+        if (response?.events?.SaleReserveProposalCanceled) {
+          resolve({ success: true });
+        } else {
+          resolve({ success: false });
+        }
       } catch (e) {
         console.log(e);
         resolve({ success: false });
@@ -143,13 +151,21 @@ const reserveMarketplace = (network: string) => {
             payload.validityPeriod,
             payload.sellerToMatch
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas })
           .on("transactionHash", hash => {
             setHash(hash);
           });
-        console.log("transaction succeed", response);
-        console.log(response?.events?.PurchaseReserved)
-        resolve({ success: true, hash: response.transactionHash });
+        console.log(response?.events)
+        if (
+          payload.mode === 0 && response?.events?.PurchaseReserved ||       // Buyer accepts owner's blocking offer
+          payload.mode === 1 && response?.events?.PurchaseReserveProposed   // Buyer makes a new blocking offer
+        ) {
+          resolve({ success: true, hash: response.transactionHash });
+        } else {
+          resolve({
+            success: false,
+          });
+        }
       } catch (e) {
         console.log(e);
         resolve({
@@ -203,9 +219,11 @@ const reserveMarketplace = (network: string) => {
             setHash(hash);
           });
         console.log("transaction succeed", response.events);
-        const offer = response.events.SaleReserveProposed?.returnValues
-                    || response.events.SaleReserved?.returnValues;
-        if (offer) {
+        const offer = response?.events?.SaleReserveProposed || response?.events?.SaleReserved;
+        if (
+          payload.mode === 0 && response?.events?.SaleReserved ||       // Owner accepts buyer's blocking offer
+          payload.mode === 1 && response?.events?.SaleReserveProposed   // Owner sets the blocking price
+        ) {
           resolve({ success: true, offer, hash: response.transactionHash });
         } else {
           resolve({ success: false, offer, hash: response.transactionHash });

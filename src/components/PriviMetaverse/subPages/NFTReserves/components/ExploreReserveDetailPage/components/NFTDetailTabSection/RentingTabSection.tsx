@@ -54,7 +54,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
       headerName: "USER",
     },
     {
-      headerName: "PRICE PER SECOND",
+      headerName: "PRICE PER HOUR",
       headerAlign: "center",
     },
     {
@@ -78,7 +78,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
       headerName: "USER",
     },
     {
-      headerName: "PRICE PER SECOND",
+      headerName: "PRICE PER HOUR",
       headerAlign: "center",
     },
     {

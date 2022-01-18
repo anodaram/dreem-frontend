@@ -129,7 +129,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 241 ? (
         <div>
           <div>
-            Time is up <img src={require("assets/emojiIcons/stopwatch.png")} /> on the{" "}
+            Time is up <img src={require("assets/emojiIcons/stopwatch.png")} width={14} /> on the{" "}
             <span className={classes.nftName}>{externalData.nft.name}</span> block. Head to Game NFTs to find
             more stuff to block!
           </div>
@@ -151,7 +151,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
         <div>
           <div>
             Look at you taking care of your NFTs{" "}
-            <img src={require("assets/emojiIcons/passport_control.png")} />{" "}
+            <img src={require("assets/emojiIcons/passport_control.png")} width={14} />{" "}
             <span className={classes.nftName}>{externalData.nft.name}</span> is back in your possession
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
@@ -162,7 +162,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
         <div>
           <div>
             You have successfully blocked <span className={classes.nftName}>{externalData.nft.name}</span>{" "}
-            <img src={require("assets/emojiIcons/gorilla.png")} />
+            <img src={require("assets/emojiIcons/gorilla.png")} width={14} />
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your NFT Reserve
@@ -173,7 +173,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             <span className={classes.username}>{externalData.user}</span> just accepted your blocking offer of{" "}
             <span className={classes.nftName}>{externalData.nft.name}</span> for {externalData.price} USDT{" "}
-            <img src={require("assets/emojiIcons/muscle.png")} />
+            <img src={require("assets/emojiIcons/muscle.png")} width={14} />
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your management
@@ -204,7 +204,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             Your blocked NFT <span className={classes.nftName}>{externalData.nft.name}</span> was fully paid
             by <span className={classes.username}>{externalData.user}</span>{" "}
-            <img src={require("assets/emojiIcons/white_check_mark.png")} />
+            <img src={require("assets/emojiIcons/white_check_mark.png")} width={14} />
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your management
@@ -215,7 +215,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             You have successfully paid for the blocked{" "}
             <span className={classes.nftName}>{externalData.nft.name}</span>{" "}
-            <img src={require("assets/emojiIcons/white_check_mark.png")} />
+            <img src={require("assets/emojiIcons/white_check_mark.png")} width={14} />
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to NFT
@@ -256,7 +256,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             Congratulations! You are now the owner of{" "}
             <span className={classes.nftName}>{externalData.nft.name}</span>, it is unblocked and fully paid{" "}
-            <img src={require("assets/emojiIcons/bomb.png")} />
+            <img src={require("assets/emojiIcons/bomb.png")} width={14} />
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your management
@@ -265,7 +265,9 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 254 ? (
         <div>
           <div>
-            <span className={classes.username}>{externalData.user}</span> placed a new blocking offer on <span className={classes.nftName}>{externalData.nft.name}</span> for {externalData.price} for {externalData.duration}
+            <span className={classes.username}>{externalData.user}</span> placed a new blocking offer on{" "}
+            <span className={classes.nftName}>{externalData.nft.name}</span> for {externalData.price} for{" "}
+            {externalData.duration}
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your management
@@ -275,7 +277,8 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
         <div>
           <div>
             You have successfully blocked <span className={classes.nftName}>{externalData.nft.name}</span>{" "}
-            <img src={require("assets/emojiIcons/partying_face.png")} />, head to Manage Your NFTs to peep it.
+            <img src={require("assets/emojiIcons/partying_face.png")} width={14} />, head to Manage Your NFTs
+            to peep it.
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to NFT management
@@ -336,7 +339,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
             You have successfully accepted the blocking offer of{" "}
             <span className={classes.nftName}>{externalData.nft.name}</span> from{" "}
             <span className={classes.username}>{externalData.user}</span>{" "}
-            <img src={require("assets/emojiIcons/tada.png")} />
+            <img src={require("assets/emojiIcons/tada.png")} width={14} />
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to NFT management
@@ -347,7 +350,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             <span className={classes.username}>{externalData.user}</span> has taken back control of the{" "}
             <span className={classes.nftName}>{externalData.nft.name}</span> bc you have not paid the blocking
-            price <img src={require("assets/emojiIcons/pleading_face.png")} />
+            price <img src={require("assets/emojiIcons/pleading_face.png")} width={14} />
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to Manage Futures
@@ -358,7 +361,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             The collateral on your <span className={classes.nftName}>{externalData.nft.name}</span> block was
             transferred to you, the buyer got liquidated{" "}
-            <img src={require("assets/emojiIcons/no_mouth.png")} />
+            <img src={require("assets/emojiIcons/no_mouth.png")} width={14} />
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to Manage Futures
@@ -367,8 +370,8 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
       ) : type === 265 ? (
         <div>
           <div>
-            <img src={require("assets/emojiIcons/unamused.png")} /> … you just got liquidated because you were
-            under collateralized.
+            <img src={require("assets/emojiIcons/unamused.png")} width={14} /> … you just got liquidated
+            because you were under collateralized.
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to Manage Futures
@@ -379,7 +382,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             <span className={classes.username}>{externalData.user}</span> has cancelled the block of{" "}
             <span className={classes.nftName}>{externalData.nft.name}</span>, head to Manage Your NFTs to find
-            yourself a new blocker <img src={require("assets/emojiIcons/eyes.png")} />
+            yourself a new blocker <img src={require("assets/emojiIcons/eyes.png")} width={14} />
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to Manage Futures

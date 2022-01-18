@@ -20,6 +20,7 @@ import CancelBlockingPriceModal from "components/PriviMetaverse/modals/CancelBlo
 import CancelRentPriceModal from "components/PriviMetaverse/modals/CancelRentPriceModal";
 import SetSellingPriceModal from "components/PriviMetaverse/modals/SetSellingPriceModal";
 import CancelSellingPriceModal from "components/PriviMetaverse/modals/CancelSellingPriceModal";
+import AcceptingOfferSection from "../AcceptingOfferSection";
 
 import { exploreOptionDetailPageStyles } from "../../index.styles";
 
@@ -43,6 +44,8 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
 
   const [openRentNFTModal, setOpenRentNFTModal] = useState<boolean>(false);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+
+  const SECONDS_PER_HOUR = 3600;
 
   const getTokenSymbol = addr => {
     if (tokenList.length == 0 || !addr) return 0;
@@ -246,8 +249,8 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
                   +toDecimals(
                     nft.rentSaleOffer.pricePerSecond,
                     getTokenDecimal(nft.rentSaleOffer.fundingToken)
-                  ) * 1440
-                ).toFixed(2)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
+                  ) * SECONDS_PER_HOUR
+                ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
             </Text>
           )}
           <Box display="flex" justifyContent="flex-end" alignItems="center">
@@ -281,7 +284,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
                         +toDecimals(
                           nft.rentSaleOffer.pricePerSecond,
                           getTokenDecimal(nft.rentSaleOffer.fundingToken)
-                        ) * 1440
+                        ) * SECONDS_PER_HOUR
                       ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
                   </Text>
                   &nbsp;
@@ -304,7 +307,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
                       +toDecimals(
                         nft.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(nft.rentSaleOffer.fundingToken)
-                      ) * 1440
+                      ) * SECONDS_PER_HOUR
                     ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
                 </Text>
                 &nbsp;

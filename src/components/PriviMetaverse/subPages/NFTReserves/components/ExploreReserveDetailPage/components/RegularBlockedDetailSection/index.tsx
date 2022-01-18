@@ -7,8 +7,14 @@ import { exploreOptionDetailPageStyles } from "../../index.styles";
 import moment from "moment";
 import { RootState } from "store/reducers/Reducer";
 import { useSelector } from "react-redux";
+import AcceptingOfferSection from "../AcceptingOfferSection";
 
-export default ({ nft, refresh }) => {
+export default ({ nft, refresh, isSpectator, isBlocked }: {
+  nft: any;
+  refresh: () => void;
+  isSpectator?: boolean;
+  isBlocked?: boolean;
+}) => {
   const classes = exploreOptionDetailPageStyles();
   const [openPayRemainingAmountModal, setOpenPayRemainingAmountModal] = useState(false);
   const [blockingInfo, setBlockingInfo] = useState<any>(null);
@@ -61,6 +67,10 @@ export default ({ nft, refresh }) => {
     return token?.Symbol || "";
   };
 
+  if (isSpectator) {
+    return <AcceptingOfferSection nft={nft} refresh={refresh} isBlocked={isBlocked} />
+  }
+
   return (
     <>
       <Box display="flex" justifyContent="space-between">
@@ -107,12 +117,11 @@ export default ({ nft, refresh }) => {
             Blocking payment:
           </Box>
           <Box mt={1} fontSize={14} fontFamily="Rany" lineHeight="16px">
-            Reminder! You've blocked this NFT, but haven't paid yet. In order to successfully block, please
-            pay now.
+            Reminder! You've blocked this NFT, but haven't paid yet. In order to successfully buy the NFT, pay now.
           </Box>
           <Box flex={1} mt="27px" display="flex" justifyContent="space-between" alignItems="center">
             <Box display="flex" flexDirection="column" flex={0.3}>
-              <Box fontSize={16}>Future price</Box>
+              <Box fontSize={16}>Blocking price</Box>
               <Box className={classes.gradientText} fontFamily="GRIFTER" fontSize={20} mt={1}>
                 {`${blockingInfo?.Price} ${getTokenSymbol(blockingInfo?.PaymentToken)}`}
               </Box>
@@ -168,9 +177,9 @@ export default ({ nft, refresh }) => {
               flex={0.5}
               style={{ borderRight: "1px solid #A4A4A420" }}
             >
-              <Box fontSize={16}>Future Price</Box>
+              <Box fontSize={16}>Blocking Price</Box>
               <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
-                {`${((Number(blockingInfo?.TotalCollateralPercent) / 100) * Number(blockingInfo?.Price)).toFixed(2)} ${getTokenSymbol(
+                {`${(Number(blockingInfo?.Price)).toFixed(2)} ${getTokenSymbol(
                   blockingInfo?.PaymentToken
                 )}`}
               </Box>

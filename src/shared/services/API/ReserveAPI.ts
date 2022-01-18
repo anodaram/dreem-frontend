@@ -298,3 +298,15 @@ export async function resetStatus(payload: any): Promise<any> {
     throw new Error(e.message);
   }
 }
+
+export async function updateSyntheticAddress(payload: any): Promise<any> {
+  try {
+    const response = await axios.post(`${URL()}/metaverseReserve/updateSyntheticAddress`, {
+      ...payload,
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}

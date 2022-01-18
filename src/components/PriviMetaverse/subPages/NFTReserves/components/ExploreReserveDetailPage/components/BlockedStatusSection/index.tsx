@@ -5,11 +5,11 @@ import { exploreOptionDetailPageStyles } from '../../index.styles';
 import RangeSlider from "shared/ui-kit/RangeSlider";
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/reducers/Reducer';
-import { checkChainID } from 'shared/functions/metamask';
+import { checkChainID, getChainForNFT } from 'shared/functions/metamask';
 import Web3 from "web3";
-import { BlockchainNets } from "shared/constants/constants";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import TransactionProgressModal from "components/PriviMetaverse/modals/TransactionProgressModal";
+import NoLiquidationPossibleModal from "components/PriviMetaverse/modals/NoLiquidationPossibleModal";
 
 // import ProcessingPaymentModal from "components/PriviMetaverse/modals/ProcessingPaymentModal";
 import { closeBlockingHistory } from "shared/services/API/ReserveAPI";
@@ -22,13 +22,13 @@ export default ({isOwnership, nft, refresh}) => {
   const classes = exploreOptionDetailPageStyles();
   const [blockingInfo, setBlockingInfo] = useState<any>(null);
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
   const { collection_id, token_id } = useParams();
 
-  const [selectedChain, setSelectedChain] = useState<any>(filteredBlockchainNets[0]);
+  const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const [hash, setHash] = useState<string>("");
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
+  const [openNoLiquidationPossibleModal, setOpenNoLiquidationPossibleModal] = useState(false);
   const { showAlertMessage } = useAlertMessage();
   const { account, library, chainId } = useWeb3React();
 
@@ -84,8 +84,6 @@ export default ({isOwnership, nft, refresh}) => {
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
-
       await closeBlockingHistory({
         ...blockingInfo,
         mode: isProd ? "main" : "test",
@@ -97,9 +95,11 @@ export default ({isOwnership, nft, refresh}) => {
         notificationMode: 3
       });
 
+      setTransactionSuccess(true);
       refresh()
     } else {
       setTransactionSuccess(false);
+      setOpenNoLiquidationPossibleModal(true);
       showAlertMessage(`Liquidation Failed! ${nft?.owner?.name} holds enough collateral and could not be liquidated.`, { variant: "error" });
     }
   }
@@ -116,9 +116,9 @@ export default ({isOwnership, nft, refresh}) => {
               textTransform: "uppercase"
             }}
           >
-            Buyer status of reservance
+            Buyer status of reservation
           </Box>
-          <Box fontSize={14} color="#ffffff" fontFamily="Rany" mt={1}>If buyer is collateral is too small you can claim liquidation and cancel reservation.</Box>
+          <Box fontSize={14} color="#ffffff" fontFamily="Rany" mt={1}>If the blocker’s collateral falls below the collateral level you set you can claim liquidation and cancel the block</Box>
         </Box>
         <PrimaryButton
           size="medium"
@@ -191,6 +191,13 @@ export default ({isOwnership, nft, refresh}) => {
           txSuccess={transactionSuccess}
           hash={hash}
           network={selectedChain?.value.replace(" blockchain", "") || ""}
+        />
+      )}
+      {openNoLiquidationPossibleModal && (
+        <NoLiquidationPossibleModal
+          open={openNoLiquidationPossibleModal}
+          onClose={() => setOpenNoLiquidationPossibleModal(false)}
+          collateral={blockingInfo?.CollateralPercent}
         />
       )}
     </Box>

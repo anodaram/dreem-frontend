@@ -15,17 +15,17 @@ export default ({ isOwnership, nft, setNft, handleRefresh }) => {
     () => [
       {
         key: "buying",
-        title: "Buying",
+        title: "Buy",
         badge: nft?.buyingOffers?.length || 0,
       },
       {
         key: "renting",
-        title: "Renting",
+        title: "Rent",
         badge: nft?.rentBuyOffers?.length || 0,
       },
       {
         key: "blocking",
-        title: "Blocking",
+        title: "Block",
         badge: nft?.blockingBuyOffers?.length || 0,
       },
     ],

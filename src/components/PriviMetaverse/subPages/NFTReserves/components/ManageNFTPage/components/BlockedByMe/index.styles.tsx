@@ -15,4 +15,17 @@ export const BlockedByMeStyles = makeStyles(theme => ({
     color: "#ffffff",
     marginTop: 32,
   },
+  listLoading: {
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+    border: "2px solid #F2C525",
+    borderRadius: 16,
+    padding: 12,
+    background: "rgba(255, 255, 255, 0.1) !important",
+    "& .MuiSkeleton-root": {
+      backgroundColor: "#505050",
+      borderRadius: 6,
+    },
+  },
 }));

@@ -5,16 +5,15 @@ import { RootState } from "store/reducers/Reducer";
 import { useParams } from "react-router";
 import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
-import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { PrimaryButton } from "shared/ui-kit";
 import { ClaimYourNFTModalStyles } from "./index.style";
 import Web3 from "web3";
-import { BlockchainNets } from "shared/constants/constants";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import TransactionProgressModal from "components/PriviMetaverse/modals/TransactionProgressModal";
 
 // import ProcessingPaymentModal from "components/PriviMetaverse/modals/ProcessingPaymentModal";
 import { closeBlockingHistory } from "shared/services/API/ReserveAPI";
-import { checkChainID } from "shared/functions/metamask";
+import { checkChainID, getChainForNFT } from "shared/functions/metamask";
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function ClaimYourNFTModal({ open, claimType, handleClose = () => { }, onConfirm, nft }) {
@@ -23,9 +22,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
   const { collection_id, token_id } = useParams();
   const { account, library, chainId } = useWeb3React();
-  const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
-  const [price, setPrice] = useState<number>(0);
-  const [selectedChain, setSelectedChain] = useState<any>(filteredBlockchainNets[0]);
+  const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const [hash, setHash] = useState<string>("");
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
@@ -43,7 +40,11 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
     }
   }, [open]);
 
-  const handleAddToken = () => { };
+  const getTokenName = addr => {
+    if (tokens.length == 0 || !addr) return "";
+    let token = tokens.find(token => token.Address === addr);
+    return token?.Symbol || "USDT";
+  };
 
   const handleConfirm = async () => {
     setOpenTransactionModal(true);
@@ -70,13 +71,12 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
       account!,
       {
         activeReserveId,
+        mode: 1
       },
       setHash
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
-
       await closeBlockingHistory({
         ...blockingInfo,
         mode: isProd ? "main" : "test",
@@ -88,6 +88,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
         notificationMode: 2
       });
 
+      setTransactionSuccess(true);
       onConfirm();
       handleClose();
     } else {
@@ -126,7 +127,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
           Collateral to claim
         </Box>
         <Box>
-          {(Number(blockingInfo?.Price) * Number(blockingInfo?.TotalCollateralPercent) / 100).toFixed(2)} USDT
+          {(Number(blockingInfo?.Price) * Number(blockingInfo?.TotalCollateralPercent) / 100).toFixed(2)} {getTokenName(blockingInfo?.PaymentToken)}
         </Box>
       </Box>
       <PrimaryButton size="medium" onClick={handleConfirm} className={classes.confirmButton}>

@@ -175,13 +175,12 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
       account!,
       {
         activeReserveId,
-        amount: toNDecimals(price * (1 + fee), reservePriceToken.Decimals),
+        amount: toNDecimals(price, reservePriceToken.Decimals),
       },
       setHash
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
 
       await updateBlockingHistory({
         ...blockingInfo,
@@ -191,10 +190,10 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
         TotalCollateralPercent:
           Number(blockingInfo?.TotalCollateralPercent) +
           Number(((price || 0) / Number(blockingInfo?.Price)) * 100),
-        PaidAmount: blockingInfo?.PaidAmount || 0,
         notificationMode: 2,
       });
 
+      setTransactionSuccess(true);
       refresh();
       handleClose();
     } else {
@@ -289,7 +288,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                 <Box display="flex" alignItems="center" gridColumnGap="10px" fontSize="14px">
                   <span>Wallet Balance</span>
                   <Box className={classes.usdWrap} display="flex" alignItems="center" color="#E9FF26">
-                    <Box fontWeight="700">{totalBalance} USDT</Box>
+                    <Box fontWeight="700">{totalBalance} {getTokenName(nft?.blockingSaleOffer?.PaymentToken)}</Box>
                   </Box>
                 </Box>
                 <Box display="flex" alignItems="center" fontSize="16px">
@@ -309,7 +308,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                   % / <b>{blockingInfo?.CollateralPercent}</b>%
                 </Box>
                 <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
-                  {price} USDT
+                  {Number(price)+collateral} {getTokenName(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
 

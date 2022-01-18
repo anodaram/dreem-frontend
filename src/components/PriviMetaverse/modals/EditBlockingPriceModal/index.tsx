@@ -185,14 +185,14 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
           beneficiary: account,
           collateralPercent: toNDecimals(collateralPercent, 2),
           reservePeriod: Number(period) * 3600 * 24,
-          validityPeriod: 3 * 3600 * 24,
+          validityPeriod: 365 * 3600 * 24,
           buyerToMatch: "0x0000000000000000000000000000000000000000",
+          mode: 1
         },
         setHash
       );
 
       if (contractResponse.success) {
-        setTransactionSuccess(true);
         const offerId = web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address", "uint80", "uint64"],
@@ -218,7 +218,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
           Beneficiary: account,
           CollateralPercent: collateralPercent,
           ReservePeriod: period,
-          AcceptDuration: 1000,
+          AcceptDuration: 365 * 3600 * 24,
           hash,
         });
         let newNft = { ...nft };
@@ -232,6 +232,8 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
           hash,
           created: new Date().getTime(),
         };
+
+        setTransactionSuccess(true);
         setNft(newNft);
         handleClose();
       } else {
@@ -253,7 +255,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
           showCloseIcon
           className={classes.cancelModal}
         >
-          <span className={classes.cancelTitle}>Your sure about editing this blocking price? </span>
+          <span className={classes.cancelTitle}>Are you sure about editing this blocking price? </span>
           <span className={classes.cancelDesc}>
              This will require a few changes to the smart contract, this may take a few moments
           </span>

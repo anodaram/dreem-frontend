@@ -74,7 +74,7 @@ const ProfileFollowsModal = React.memo(
                           <div
                             className={classes.avatar}
                             style={{
-                              backgroundImage: `url(${avatar})`,
+                              backgroundImage: `url('${avatar}')`,
                               backgroundRepeat: "no-repeat",
                               backgroundSize: "cover",
                               backgroundPosition: "center",

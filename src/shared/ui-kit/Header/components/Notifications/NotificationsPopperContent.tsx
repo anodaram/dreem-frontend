@@ -114,7 +114,7 @@ export const NotificationsPopperContent: React.FunctionComponent<NotificationsPo
         </>
       ) : (
         <Box display="flex" justifyContent="center" color="#ffffff" py={2}>
-          No Notifications
+          No unread notifications
         </Box>
       )}
     </div>

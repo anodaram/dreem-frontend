@@ -24,3 +24,27 @@ export async function getCharactersByGame(payload: any): Promise<any> {
     throw new Error(e.message);
   }
 }
+
+export async function getNftGameFeed(payload: any): Promise<any> {
+  try {
+    const response = await axios.get(`${URL()}/metaverseReserve/getNftGameFeed`, {
+      params: payload,
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
+export async function getOwnersByGame(payload: any): Promise<any> {
+  try {
+    const response = await axios.get(`${URL()}/metaverseReserve/getOwnersByGame`, {
+      params: payload,
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}

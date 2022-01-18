@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import cls from "classnames";
+import styled from "styled-components";
 
 import { Grid, useTheme, useMediaQuery } from "@material-ui/core";
 import { useWeb3React } from "@web3-react/core";
 
 import { RootState } from "store/reducers/Reducer";
+import { setSelTabMarket } from "store/actions/MarketPlace";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
-import styled from "styled-components";
-
 import Box from "shared/ui-kit/Box";
 import { CircularLoadingIndicator, PrimaryButton } from "shared/ui-kit";
 import { BlockchainNets } from "shared/constants/constants";
@@ -17,9 +17,6 @@ import { getOwnedNFTs } from "shared/services/API/ReserveAPI";
 import { toDecimals } from "shared/functions/web3";
 import { useAuth } from "shared/contexts/AuthContext";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
-import { ReactComponent as EthereumIcon } from "assets/icons/ETHToken.svg";
-import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
-
 import { ownersPanelStyles } from "./index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -34,24 +31,28 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
 };
 
 export const ArrowIcon = func => () =>
-(
-  <Box style={{ cursor: "pointer" }} onClick={() => func(true)}>
-    <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
-        stroke="#2D3047"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  </Box>
-);
+  (
+    <Box style={{ cursor: "pointer" }} onClick={() => func(true)}>
+      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
+          stroke="#2D3047"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </Box>
+  );
 
 const OwnersPanel = () => {
   const classes = ownersPanelStyles();
   const theme = useTheme();
   const { isSignedin } = useAuth();
+  const dispatch = useDispatch();
+
+  const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const selTab = useSelector((state: RootState) => state.marketPlace.selectedTab);
 
   const width = useWindowDimensions().width;
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -64,11 +65,9 @@ const OwnersPanel = () => {
   const [filterChain, setFilterChain] = useState<string>(filterChainOptions[0]);
   const [isFilterChain, setIsFilterChain] = useState<boolean>(false);
 
-  const [selectedTab, setSelectedTab] = useState<number>(0);
+  const [selectedTab, setSelectedTab] = useState<number>(selTab || 0);
   const TABS = ["Owned NFTs", "Rented NFTs", "Blocked NFTs"];
   const { account } = useWeb3React();
-
-  const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
 
   const getTokenDecimal = (chain, addr) => {
     if (tokens.length == 0) return 0;
@@ -78,7 +77,7 @@ const OwnersPanel = () => {
 
   useEffect(() => {
     refreshData();
-  }, [filterChain]);
+  }, [filterChain, selectedTab]);
 
   const refreshData = () => {
     setUserNFTs([]);
@@ -97,10 +96,18 @@ const OwnersPanel = () => {
         const response = await getOwnedNFTs({
           mode: isProd ? "main" : "test",
           network: selectedChain,
+          type: selectedTab === 2 ? 'Blocking' : 'Owned'
         });
         let nfts = response.data ?? [];
-        setUserNFTs(nfts.filter(nft => nft.ownerAddress?.toLowerCase() === account?.toLowerCase()));
-      } catch (err) { }
+        nfts = nfts.filter(nft => nft.ownerAddress?.toLowerCase() === account?.toLowerCase());
+        if (selectedTab === 0) {
+          setUserNFTs(nfts.filter((nft) => nft.status !== "Rented" && nft.status !== "Blocked"));
+        } else if (selectedTab === 1) {
+          setUserNFTs(nfts.filter((nft) => nft.status === "Rented" ));
+        } else {
+          setUserNFTs(nfts);
+        }
+      } catch (err) {}
       setLoading(false);
     }
   };
@@ -118,17 +125,6 @@ const OwnersPanel = () => {
     },
     [hasMore, getData]
   );
-
-  const filteredNFTs = useMemo(() => {
-    if (selectedTab === 0) {
-      return userNFTs.filter(nft => nft.status !== "Rented" && nft.status !== "Blocked");
-    } else if (selectedTab === 1) {
-      return userNFTs.filter(nft => nft.status === "Rented");
-    } else if (selectedTab === 2) {
-      return userNFTs.filter(nft => nft.status === "Blocked");
-    }
-    return userNFTs;
-  }, [userNFTs, selectedTab]);
 
   const totalSaleRevenue = useMemo(() => {
     return (userNFTs || []).reduce(
@@ -270,7 +266,10 @@ const OwnersPanel = () => {
             <Box
               key={tab}
               className={cls({ [classes.selectedTabSection]: selectedTab === index }, classes.tabSection)}
-              onClick={() => setSelectedTab(index)}
+              onClick={() => {
+                setSelectedTab(index);
+                dispatch(setSelTabMarket(index));
+              }}
             >
               {tab}
             </Box>
@@ -295,20 +294,19 @@ const OwnersPanel = () => {
               borderRadius: 0,
             }}
           >
-            <IconButtonWrapper
-              style={{ marginLeft: -10 }}
-              rotate={loading}>
+            <IconButtonWrapper style={{ marginLeft: -10 }} rotate={loading}>
               <RefreshIcon />
             </IconButtonWrapper>
-            Sync NFTs</PrimaryButton>
+            Sync NFTs
+          </PrimaryButton>
         </Box>
       </Box>
       <Box sx={{ flexGrow: 1, width: "100%", paddingBottom: isMobile ? 70 : isTablet ? 50 : 0 }}>
-        {filteredNFTs && filteredNFTs.length ? (
+        {userNFTs && userNFTs.length ? (
           <>
             <MasonryGrid
               gutter={"24px"}
-              data={filteredNFTs}
+              data={userNFTs}
               renderItem={item => <ExploreCard nft={item} key={item.id} />}
               columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
             />
@@ -347,26 +345,42 @@ const OwnersPanel = () => {
 export default OwnersPanel;
 
 const RefreshIcon = () => {
-  return <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M15 8.25051C14.8166 6.93068 14.2043 5.70776 13.2575 4.77013C12.3107 3.83251 11.0818 3.2322 9.76025 3.06168C8.43869 2.89115 7.09772 3.15987 5.9439 3.82645C4.79009 4.49302 3.88744 5.52046 3.375 6.75051M3 3.75051V6.75051H6" stroke="#E9FF26" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M3 9.75C3.18342 11.0698 3.7957 12.2928 4.74252 13.2304C5.68934 14.168 6.91818 14.7683 8.23975 14.9388C9.56131 15.1094 10.9023 14.8406 12.0561 14.1741C13.2099 13.5075 14.1126 12.48 14.625 11.25M15 14.25V11.25H12" stroke="#E9FF26" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round" />
-  </svg>
-}
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M15 8.25051C14.8166 6.93068 14.2043 5.70776 13.2575 4.77013C12.3107 3.83251 11.0818 3.2322 9.76025 3.06168C8.43869 2.89115 7.09772 3.15987 5.9439 3.82645C4.79009 4.49302 3.88744 5.52046 3.375 6.75051M3 3.75051V6.75051H6"
+        stroke="#E9FF26"
+        stroke-width="1.125"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M3 9.75C3.18342 11.0698 3.7957 12.2928 4.74252 13.2304C5.68934 14.168 6.91818 14.7683 8.23975 14.9388C9.56131 15.1094 10.9023 14.8406 12.0561 14.1741C13.2099 13.5075 14.1126 12.48 14.625 11.25M15 14.25V11.25H12"
+        stroke="#E9FF26"
+        stroke-width="1.125"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
 
 const IconButtonWrapper = styled.div<{ rotate: boolean }>`
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: ${props => (props.rotate ? `rotate 1.5s linear 0s infinite` : "")};
-    -webkit-animation: ${props => (props.rotate ? `rotate 1.5s linear 0s infinite` : "")};
-    -moz-animation: ${props => (props.rotate ? `rotate 1.5s linear 0s infinite` : "")};
-   @keyframes rotate
-      {
-      0%   {}
-      100% {-webkit-transform: rotate(-360deg);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ${props => (props.rotate ? `rotate 1.5s linear 0s infinite` : "")};
+  -webkit-animation: ${props => (props.rotate ? `rotate 1.5s linear 0s infinite` : "")};
+  -moz-animation: ${props => (props.rotate ? `rotate 1.5s linear 0s infinite` : "")};
+  @keyframes rotate {
+    0% {
+    }
+    100% {
+      -webkit-transform: rotate(-360deg);
       -moz-transform: rotate(-360deg);
-      transform: rotate(-360deg);}
-      }
-   `;
+      transform: rotate(-360deg);
+    }
+  }
+`;

@@ -156,7 +156,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
         newNft.salesHistories.unshift({
           id: offerId,
           PaymentToken: offer.PaymentToken,
-          Price: offerPrice,
+          Price: offer?.Price,
           Beneficiary: offer.Beneficiary,
           from: account,
           hash: contractResponse.hash,
@@ -193,13 +193,13 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
           <Box className={classes.borderBox}>
             <Box className={classes.box}>
               <span className={classes.infoLabel}>Price</span>
-              <span className={classes.infoValue}>{`${offerPrice} ${getTokenSymbol(
-                offer.PaymentToken
-              )}`}</span>
+              <span className={classes.infoValue}>{`${
+                parseFloat(`${offer?.Price}`).toFixed(3) || 0
+              } ${getTokenSymbol(offer.PaymentToken)}`}</span>
             </Box>
           </Box>
           <Box textAlign="end" fontSize={12} fontFamily="Rany" mt={1} color="white">
-            incl. {marketFee}% marketplace fee
+            incl. {marketFee*100}% marketplace fee
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton

@@ -60,12 +60,12 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
       account!,
       {
         activeReserveId,
+        mode: isSuccess ? 0 : 1 
       },
       setHash
     );
 
     if (response.success) {
-      setTransactionSuccess(true);
       if (isSuccess) {
         await successFinishBlocking({
           mode: isProd ? "main" : "test",
@@ -73,7 +73,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
           TokenId: token_id,
           Id: blockingInfo.id,
           Beneficiary: blockingInfo.Beneficiary,
-          offerer: account,
+          offerer: blockingInfo.from,
           notificationMode: 1,
         });
       } else {
@@ -84,11 +84,12 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
           TokenId: token_id,
           Id: activeReserveId,
           Beneficiary: blockingInfo.Beneficiary,
-          offerer: account,
+          offerer: blockingInfo.from,
           notificationMode: 1,
         });
       }
 
+      setTransactionSuccess(true);
       refresh();
       // handleClose();
     } else {
@@ -126,7 +127,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
           style={{ borderRight: "1px solid #9EACF220", fontSize: 14 }}
         >
           <Box className={classes.gradientText} fontSize="14px" mb="4px">
-            Option Time
+            Blocking Period
           </Box>
           <Box fontFamily="GRIFTER" fontWeight="bold" fontSize="20px">{`${
             blockingInfo?.ReservePeriod
@@ -160,7 +161,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
                 flex={0.5}
                 style={{ borderRight: "1px solid #A4A4A420" }}
               >
-                <Box fontSize={16}>Future Price</Box>
+                <Box fontSize={16}>Blocking Price</Box>
                 <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
                   {`${((Number(blockingInfo?.TotalCollateralPercent) / 100) * Number(blockingInfo?.Price)).toFixed(2)} ${getTokenSymbol(
                     blockingInfo?.PaymentToken

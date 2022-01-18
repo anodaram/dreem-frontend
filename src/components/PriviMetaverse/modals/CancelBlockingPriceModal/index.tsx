@@ -94,7 +94,7 @@ export default function CancelBlockingPriceModal({ open, handleClose, offer, nft
   return (
     <>
       <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.cancelModal}>
-        <span className={classes.cancelTitle}>You sure about cancelling this blocking offer? </span>
+        <span className={classes.cancelTitle}>Are you sure about cancelling this blocking offer? </span>
         <span className={classes.cancelDesc}>
           This will require a few changes to the smart contract, this may take a few moments
         </span>

@@ -45,6 +45,8 @@ const ExploreReserveDetailPage = () => {
   const { shareMedia } = useShareMedia();
 
   const [isOwner, setIsOwner] = useState<boolean>(false);
+  const [isBuyer, setIsBuyer] = useState<boolean>(false);
+  const [isRenter, setIsRenter] = useState<boolean>(false);
   const [isListed, setIsListed] = useState<boolean>(false);
   const [isBlockedNFT, setIsBlockedNFT] = useState<boolean>(false);
   const [isRentedNFT, setIsRentedNFT] = useState<boolean>(false);
@@ -86,8 +88,10 @@ const ExploreReserveDetailPage = () => {
   useEffect(() => {
     if (nft) {
       setIsOwner((account || "").toLowerCase() === (nft.ownerAddress || "").toLowerCase());
-      setIsBlockedNFT(nft.status === "Blocked");
-      setIsRentedNFT(nft.status === "Rented");
+      if (nft.status) {
+        setIsBlockedNFT(nft.status.split(",").includes("Blocked"));
+        setIsRentedNFT(nft.status.split(",").includes("Rented"));
+      }
       setIsListed(
         nft.sellingOffer?.Price || nft.blockingSaleOffer?.Price || nft.rentSaleOffer?.pricePerSecond
       );
@@ -98,6 +102,13 @@ const ExploreReserveDetailPage = () => {
           _blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + _blockingInfo?.created - Date.now() < 0
         );
         setIsExpiredPaySuccess(_blockingInfo.PaidAmount === _blockingInfo.Price);
+        setIsBuyer((account || "").toLowerCase() === (_blockingInfo?.to || "").toLowerCase());
+
+      }
+      if (nft.rentHistories?.length > 0) {
+        let _rentInfo = nft.rentHistories[nft.rentHistories.length - 1];
+
+        setIsRenter((account || "").toLowerCase() === _rentInfo.offerer.toLowerCase())
       }
     }
   }, [nft]);
@@ -303,6 +314,7 @@ const ExploreReserveDetailPage = () => {
               </Box>
               <hr className={classes.divider} />
               {isOwner ? (
+                // Owner pages
                 isBlockedNFT ? (
                   <>
                     <BlockedDetailSection nft={nft} refresh={refresh} />
@@ -338,6 +350,8 @@ const ExploreReserveDetailPage = () => {
                       </PrimaryButton>
                     )}
                   </>
+                ) : isRentedNFT ? (
+                  <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} refresh={refresh}/>
                 ) : (
                   <GeneralDetailSection
                     isOwnership={isOwner}
@@ -347,16 +361,45 @@ const ExploreReserveDetailPage = () => {
                     onRent={() => setOpenRentSccess(true)}
                   />
                 )
-              ) : isBlockedNFT ? (
-                isExpired ? (
-                  <ExpiredPayDetailSection nft={nft} refresh={refresh} isSuccess={isExpiredPaySuccess} />
+              ) : isBuyer ? (
+                // Buyer pages
+                isBlockedNFT ? (
+                  isExpired ? (
+                    <ExpiredPayDetailSection nft={nft} refresh={refresh} isSuccess={isExpiredPaySuccess} />
+                  ) : (
+                    <RegularBlockedDetailSection nft={nft} refresh={refresh} />
+                  )
                 ) : (
-                  <RegularBlockedDetailSection nft={nft} refresh={refresh} />
+                  <GeneralDetailSection
+                    isOwnership={isOwner}
+                    nft={nft}
+                    setNft={setNft}
+                    refresh={refresh}
+                    onRent={() => setOpenRentSccess(true)}
+                  />
                 )
-              ) : isRentedNFT ? (
-                <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} />
+              ) : isRenter ? (
+                // Renter pages
+                <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} refresh={refresh}/>
               ) : (
-                <>
+                // Spectator pages
+                isBlockedNFT ? (
+                  <RegularBlockedDetailSection
+                    nft={nft}
+                    refresh={refresh}
+                    isSpectator
+                    isBlocked
+                  />
+                ) : isRentedNFT ? (
+                  <RentedDetailSection
+                    nft={nft}
+                    setNft={setNft}
+                    isOwner={false}
+                    isSpectator
+                    isBlocked={false}
+                    refresh={refresh}
+                  />
+                ) : (
                   <GeneralDetailSection
                     isOwnership={isOwner}
                     nft={nft}
@@ -364,7 +407,7 @@ const ExploreReserveDetailPage = () => {
                     refresh={refresh}
                     onRent={() => setOpenRentSccess(true)}
                   />
-                </>
+                )
               )}
             </Box>
           </Box>
@@ -374,7 +417,7 @@ const ExploreReserveDetailPage = () => {
             ) : (
               <NFTDetailTabSection isOwnership={isOwner} nft={nft} setNft={setNft} handleRefresh={refresh} />
             )
-          ) : isBlockedNFT ? (
+          ) : isBlockedNFT && isBuyer ? (
             isExpired ? (
               isExpiredPaySuccess ? null : (
                 <ExpiredPayStatusSection nft={nft} />
@@ -434,7 +477,7 @@ const ExploreReserveDetailPage = () => {
         </Modal>
       )}
       {openRentSuccess && (
-        <RentSuccessModal open={openRentSuccess} handleClose={() => setOpenRentSccess(false)} nft={nft} />
+        <RentSuccessModal open={openRentSuccess} handleClose={() => setOpenRentSccess(false)} nft={nft} setNft={setNft}/>
       )}
     </Box>
   );
