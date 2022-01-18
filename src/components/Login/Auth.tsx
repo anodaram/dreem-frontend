@@ -81,6 +81,13 @@ const Auth = () => {
     }
   }, [user.id]);
 
+  useEffect(() => {
+    if (account && user?.address && user?.address.toLowerCase() !== account.toLowerCase()) {
+      handleLogout();
+      return;
+    }
+  }, [account]);
+
   const handleLogout = () => {
     setSignedin(false);
     dispatch(signOut());
