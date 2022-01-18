@@ -42,23 +42,34 @@ const useStyles = makeStyles({
 export default ({ nft, refresh, isBlocked }) => {
   const classes = useStyles();
   const [blockingInfo, setBlockingInfo] = useState<any>(null);
+  const [rentalInfo, setRentalInfo] = useState<any>();
   const [closeTime, setCloseTime] = useState<any>(null);
 
   useEffect(() => {
-    if (nft && nft?.blockingSalesHistories?.length) {
+    if (isBlocked && nft && nft?.blockingSalesHistories?.length) {
       setBlockingInfo(nft.blockingSalesHistories[nft.blockingSalesHistories.length - 1]);
+    } else if (nft && nft.rentHistories?.length) {
+      setRentalInfo(nft.rentHistories[nft.rentHistories.length - 1]);
     }
   }, [nft]);
 
   useEffect(() => {
+    if (isBlocked && !blockingInfo) return;
+    else if (!rentalInfo) return;
+
+    let time = 0;
+    if (isBlocked && blockingInfo) {
+      time = Math.max(blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + blockingInfo?.created - Date.now(), 0);
+    } else if (rentalInfo) {
+      time = Math.max(rentalInfo.created + +rentalInfo.rentalTime * 1000 - Date.now(), 0);
+    }
     const interval = setInterval(() => {
-      if (blockingInfo) {
-        let formatDate = getRemainingTime(blockingInfo);
-        setCloseTime(formatDate);
-      }
+      time = time - 1000;
+      let formatDate = formatRemainingTime(time);
+      setCloseTime(formatDate);
     }, 1000);
     return () => clearInterval(interval);
-  }, [blockingInfo]);
+  }, [blockingInfo, rentalInfo]);
 
   useEffect(() => {
     if (closeTime?.totalSeconds === 0) {
@@ -66,11 +77,7 @@ export default ({ nft, refresh, isBlocked }) => {
     }
   }, [closeTime]);
 
-  const getRemainingTime = _blockingInfo => {
-    let value = Math.max(
-      _blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + _blockingInfo?.created - Date.now(),
-      0
-    );
+  const formatRemainingTime = value => {
     value = value / 1000;
     let day_unit = 3600 * 24;
     let hr_unit = 3600;
@@ -87,7 +94,9 @@ export default ({ nft, refresh, isBlocked }) => {
   return (
     <>
       <Box display="flex" flexDirection={"column"} py={10}>
-        <Box className={classes.title}>This NFT is {isBlocked ? 'blocked' : 'rented'} at this moment. It will be available again in:</Box>
+        <Box className={classes.title}>
+          This NFT is {isBlocked ? "blocked" : "rented"} at this moment. It will be available again in:
+        </Box>
         <Box className={classes.timerSection}>
           <Box>
             {closeTime?.day} <span>days</span>
