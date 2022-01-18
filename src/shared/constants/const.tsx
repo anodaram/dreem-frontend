@@ -73,6 +73,19 @@ export enum Color {
   NestedAMMPurple = "#47295B",
 }
 
+export const NFT_STATUS_COLORS = {
+  "For Sale":
+    "conic-gradient(from 31.61deg at 50% 50%, #53961E -73.13deg, #6CCB0D 15deg, rgba(90, 150, 13, 0.76) 103.13deg, #66B337 210deg, #53961E 286.87deg, #6CCB0D 375deg)",
+  "For Rental":
+    "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)",
+  Rented:
+    "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)",
+  "For Blocking":
+    "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
+  Blocked:
+    "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
+};
+
 export enum Gradient {
   Mint = "linear-gradient(97.4deg, #23D0C6 14.43%, #00CC8F 85.96%)",
   Magenta = "linear-gradient(97.4deg, #FF79D1 14.43%, #DB00FF 79.45%)",
