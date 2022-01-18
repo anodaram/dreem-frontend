@@ -124,6 +124,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
         price: toNDecimals(offer.Price, getTokenDecimals(offer.PaymentToken)),
         beneficiary: account,
         sellerToMatch: offer.Beneficiary,
+        mode: 1
       },
       setHash
     );

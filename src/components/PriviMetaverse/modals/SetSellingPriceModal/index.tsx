@@ -128,6 +128,7 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
         price: toNDecimals(inputBalance, token.Decimals),
         beneficiary: account,
         buyerToMatch: "0x0000000000000000000000000000000000000000",
+        mode: 0
       },
       setHash
     );

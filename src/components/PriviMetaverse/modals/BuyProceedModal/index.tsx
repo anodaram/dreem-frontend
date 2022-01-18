@@ -120,9 +120,10 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
           collection_id: nft.Address,
           token_id,
           paymentToken: offer.PaymentToken,
-          price: toNDecimals(offerPrice, getTokenDecimal(offer.PaymentToken)),
+          price: toNDecimals(offer?.Price, getTokenDecimal(offer.PaymentToken)),
           beneficiary: account,
           buyerToMatch: offer.Beneficiary,
+          mode: 1
         },
         setHash
       );

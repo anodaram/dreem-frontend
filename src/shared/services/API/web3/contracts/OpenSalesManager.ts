@@ -35,9 +35,15 @@ const openSalesManager = network => {
           .on("transactionHash", hash => {
             setHash(hash);
           });
-        console.log("transaction succeed");
 
-        resolve({ success: true, hash: response.transactionHash });
+        console.log("transaction succeed", response?.events);
+        if ( payload.mode === 1 && response?.events?.PurchaseCompleted ||
+            payload.mode === 0 && response?.events?.PurchaseProposed )
+          {
+            resolve({ success: true, hash: response.transactionHash });
+          } else {
+            resolve({ success: false })
+          }
       } catch (e) {
         console.log(e);
         resolve({
@@ -76,9 +82,14 @@ const openSalesManager = network => {
           .on("transactionHash", hash => {
             setHash(hash);
           });
-        console.log("transaction succeed");
-
-        resolve({ success: true, hash: response.transactionHash });
+        console.log("transaction succeed", response?.events);
+        if (payload.mode === 0 && response?.events?.SaleProposed ||
+            payload.mode === 1 && response?.events?.SaleCompleted )
+          {
+            resolve({ success: true, hash: response.transactionHash });
+          } else {
+            resolve({ success: false })
+          }
       } catch (e) {
         console.log(e);
         resolve({
@@ -115,9 +126,13 @@ const openSalesManager = network => {
           .on("transactionHash", hash => {
             setHash(hash);
           });
-        console.log("transaction succeed");
+        console.log("transaction succeed", response?.events);
 
-        resolve({ success: true });
+        if (response?.events?.SaleCanceled) {
+          resolve({ success: true });
+        } else {
+          resolve({ success: false });
+        }
       } catch (e) {
         console.log(e);
         resolve({
@@ -154,9 +169,13 @@ const openSalesManager = network => {
           .on("transactionHash", hash => {
             setHash(hash);
           });
-        console.log("transaction succeed");
+        console.log("transaction succeed", response?.events);
 
-        resolve({ success: true });
+        if (response?.events?.PurchaseCanceled) {
+          resolve({ success: true });
+        } else {
+          resolve({ success: false });
+        }
       } catch (e) {
         console.log(e);
         resolve({

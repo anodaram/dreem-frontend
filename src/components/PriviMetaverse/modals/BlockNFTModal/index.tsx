@@ -223,7 +223,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         notificationMode: 1,
       });
       let newNft = { ...nft };
-      newNft.status = "Blocked";
+      newNft.status = ["Blocked"];
       newNft.blockingBuyOffers = newNft.blockingBuyOffers.filter(el => el.Beneficiary !== account);
       newNft.blockingSalesHistories.unshift({
         id: offerId,
@@ -372,7 +372,8 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {(collateral || 0) * (1 + fee)} {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
+                  {((collateral || 0) * (1 + fee)).toFixed(6)}{" "}
+                  {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
