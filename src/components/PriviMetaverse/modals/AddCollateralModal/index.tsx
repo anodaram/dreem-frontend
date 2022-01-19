@@ -133,7 +133,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${price * (1 + fee)} ${reservePriceToken.Symbol}!`, {
+      showAlertMessage(`Successfully approved ${ (price * (1 + fee)* PRECISSION).toFixed(2)} ${reservePriceToken.Symbol}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);

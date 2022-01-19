@@ -120,7 +120,7 @@ export default function CancelReserveModal({
       }
       setIsApproved(true);
       showAlertMessage(
-        `Successfully approved ${(Number(blockingInfo?.Price) * penaltyFee) / 100 * (1 + fee) *PRECISSION} ${getTokenSymbol(
+        `Successfully approved ${((Number(blockingInfo?.Price) * penaltyFee) / 100 * (1 + fee) *PRECISSION).toFixed(2)} ${getTokenSymbol(
           blockingInfo?.PaymentToken
         )}!`,
         {

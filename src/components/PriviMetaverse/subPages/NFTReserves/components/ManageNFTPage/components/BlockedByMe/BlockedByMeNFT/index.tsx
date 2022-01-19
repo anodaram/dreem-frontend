@@ -190,16 +190,16 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
               ) : (
                 <Box display="flex" flexDirection="column" flex={1} mr={4} mt={0.5}>
                   <RangeSlider
-                    value={Number(totalCollateralPercent)}
+                    value={Number(collateralPercent/totalCollateralPercent-1)*100+20}
                     variant="transparent"
                     onChange={(event, newValue) => {}}
                   />
                   <Box display="flex" width={1} mt={1.5} fontSize={12}>
-                    <Box flex={Number(collateralPercent)}>
+                    <Box flex={20}>
                       <strong>0%</strong>
                     </Box>
                     <Box
-                      flex={Number(collateralPercent) * 0.5}
+                      flex={30}
                       ml={"-26px"}
                       display={"flex"}
                       flexDirection={"column"}
@@ -208,7 +208,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                       <span style={{ marginLeft: -8, marginTop: 4 }}>High Risk</span>
                     </Box>
                     <Box
-                      flex={Number(collateralPercent) * 0.3}
+                      flex={25}
                       ml={"-26px"}
                       display={"flex"}
                       flexDirection={"column"}
@@ -217,7 +217,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                       <span style={{ marginLeft: -16, marginTop: 4 }}>Medium Risk</span>
                     </Box>
                     <Box
-                      flex={100 - Number(collateralPercent) * 1.8}
+                      flex={25}
                       ml={"-26px"}
                       display={"flex"}
                       flexDirection={"column"}

@@ -139,7 +139,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
       }
       setIsApproved(true);
       showAlertMessage(
-        `Successfully approved ${Number(collateral) * (1 + fee)} ${reservePriceToken.Symbol}!`,
+        `Successfully approved ${(Number(collateral) * (1 + fee)* PRECISSION).toFixed(2)} ${reservePriceToken.Symbol}!`,
         {
           variant: "success",
         }
@@ -361,7 +361,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {(Number(collateral || 0) * fee).toFixed(6)}{" "}
+                  {(Number(collateral || 0) * fee).toFixed(2)}{" "}
                   {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
@@ -374,7 +374,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {((collateral || 0) * (1 + fee)).toFixed(6)}{" "}
+                  {((collateral || 0) * (1 + fee)).toFixed(2)}{" "}
                   {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
