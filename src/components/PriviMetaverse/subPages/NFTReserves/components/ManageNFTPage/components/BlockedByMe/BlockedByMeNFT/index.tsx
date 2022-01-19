@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { useWeb3React } from "@web3-react/core";
 
+import { useMediaQuery, useTheme } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
 import { PrimaryButton } from "shared/ui-kit";
@@ -16,6 +17,11 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
   const classes = blockedByMeNFTStyles();
   const history = useHistory();
   const { account } = useWeb3React();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [closeTime, setCloseTime] = useState<any>(null);
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
 
