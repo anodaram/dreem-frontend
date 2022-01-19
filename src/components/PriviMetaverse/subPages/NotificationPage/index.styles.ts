@@ -19,7 +19,7 @@ export const notificationPageStyles = makeStyles(theme => ({
     background: "linear-gradient(180deg, rgba(0, 0, 0, 0) 9.5%, #17151A 69.7%)",
     width: "100%",
     height: "100%",
-    padding: "160px 160px",
+    padding: "160px 160px 64px",
     [theme.breakpoints.down("md")]: {
       padding: "160px 60px",
     },
@@ -31,13 +31,12 @@ export const notificationPageStyles = makeStyles(theme => ({
     },
   },
   title: {
-    textAlign: 'center',
-    textTransform: 'uppercase',
+    textAlign: "center",
+    textTransform: "uppercase",
     fontSize: 30,
     fontWeight: 800,
     lineHeight: "39px",
     color: "#EEFF21",
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
-
 }));

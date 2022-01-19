@@ -1,0 +1,85 @@
+{
+  "address": "0x0F94FaB8db8c66B597Ce5d27b2FF0962c9f16435",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "price",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "currentPrice",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x4bfc44a4521b7ff0f078d0fd2d0d203568cfe23e125ac7e64dfa6988cd90678a",
+  "receipt": {
+    "to": null,
+    "from": "0x155a5d138EB739004F8a6314eFa78b1eCF087d74",
+    "contractAddress": "0x0F94FaB8db8c66B597Ce5d27b2FF0962c9f16435",
+    "transactionIndex": 35,
+    "gasUsed": "91899",
+    "logsBloom": "0x00000000000000000000000000000000000000000004000000000000000000400000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000800000000000400000000100000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000004000000000000000000000000000000000000000000204000000000000000000001000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000100000",
+    "blockHash": "0x5ac579161e8158a9d26ff5807b56d82711b3e884bea2114e35e14529f7265557",
+    "transactionHash": "0x4bfc44a4521b7ff0f078d0fd2d0d203568cfe23e125ac7e64dfa6988cd90678a",
+    "logs": [
+      {
+        "transactionIndex": 35,
+        "blockNumber": 23879195,
+        "transactionHash": "0x4bfc44a4521b7ff0f078d0fd2d0d203568cfe23e125ac7e64dfa6988cd90678a",
+        "address": "0x0000000000000000000000000000000000001010",
+        "topics": [
+          "0x4dfe1bbbcf077ddc3e01291eea2d5c70c2b422b415d95645b9adcfd678cb1d63",
+          "0x0000000000000000000000000000000000000000000000000000000000001010",
+          "0x000000000000000000000000155a5d138eb739004f8a6314efa78b1ecf087d74",
+          "0x0000000000000000000000007c7379531b2aee82e4ca06d4175d13b9cbeafd49"
+        ],
+        "data": "0x000000000000000000000000000000000000000000000000000a73c4de3b62e3000000000000000000000000000000000000000000000002120f3d8238e933f6000000000000000000000000000000000000000000009179d045777155da835e0000000000000000000000000000000000000000000000021204c9bd5aadd113000000000000000000000000000000000000000000009179d04feb363415e641",
+        "logIndex": 154,
+        "blockHash": "0x5ac579161e8158a9d26ff5807b56d82711b3e884bea2114e35e14529f7265557"
+      }
+    ],
+    "blockNumber": 23879195,
+    "cumulativeGasUsed": "5328141",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "solcInputHash": "5f09e85700ea7f64d8c269aef506ebf5",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.4+commit.c7e474f2\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"price\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"currentPrice\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"price(address)\":{\"returns\":{\"currentPrice\":\"Price denominated in USD, with 6 decimals, for the given token address\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"price(address)\":{\"notice\":\"get the price of a token\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/oracles/mocks/PriceOracle.sol\":\"PriceOracle\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/oracles/mocks/PriceOracle.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\ncontract PriceOracle {\\n    /**\\n     * @notice get the price of a token\\n     * @return currentPrice Price denominated in USD, with 6 decimals, for the given token address\\n     */\\n    function price(address) external pure returns (uint256 currentPrice) {\\n        return 1;\\n    }\\n}\\n\",\"keccak256\":\"0x7302b143f887b6ef0810be7b4bab7e49b9cbc0863a91255a7dcbcb2975ce4688\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060b28061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063aea9107814602d575b600080fd5b603e60383660046050565b50600190565b60405190815260200160405180910390f35b6000602082840312156060578081fd5b81356001600160a01b03811681146075578182fd5b939250505056fea2646970667358221220fc8a9c45b64f5c9c9dcf5756b4ae865916e4fe5c2cec03ac7603c6a71f8a03a264736f6c63430008040033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c8063aea9107814602d575b600080fd5b603e60383660046050565b50600190565b60405190815260200160405180910390f35b6000602082840312156060578081fd5b81356001600160a01b03811681146075578182fd5b939250505056fea2646970667358221220fc8a9c45b64f5c9c9dcf5756b4ae865916e4fe5c2cec03ac7603c6a71f8a03a264736f6c63430008040033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "price(address)": {
+        "returns": {
+          "currentPrice": "Price denominated in USD, with 6 decimals, for the given token address"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "price(address)": {
+        "notice": "get the price of a token"
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

@@ -163,18 +163,15 @@ export default ({ isOwnership, nft, refresh }) => {
             </span>
           </span>
         </Box>
-        <RangeSlider value={range / 80 * 10 } variant="transparent" onChange={(event, newValue) => {}} />
-        <Box display="flex" alignItems="center" mt={1}>
-          <Box flex={range / 80 }>
-            <strong>0%</strong>
+        <RangeSlider value={ (totalCollateralPercent / collateralPercent -1) * 100 + 20  } variant="transparent" onChange={(event, newValue) => {}} />
+        <Box style={{ display: "flex", alignItems: "center", width: "100%" }}>
+          <Box flex={ 20 }>
+                <strong>0%</strong>
           </Box>
-          <Box flex={range / 80 * 60} className={classes.flexBox}>
-            <strong>{Number(collateralPercent).toFixed(1)}% Liquidation</strong>
-          </Box>
-          <Box flex={range / 80 * 80} className={classes.flexBox}>{Number(collateralPercent * 1.2).toFixed(1)}% High Risk</Box>
-          <Box flex={range / 80 * 100} className={classes.flexBox}>{Number(collateralPercent * 1.5).toFixed(1)}% Medium Risk</Box>
-          <Box flex={range / 80 * 120} className={classes.flexBox}>
-            <strong>{Number(collateralPercent * 2).toFixed(1)}% Low Risk</strong>
+          <Box flex={30} >{Number(collateralPercent).toFixed(1)}% High Risk</Box>
+          <Box flex={25} >{Number(collateralPercent * 1.5).toFixed(1)}% Medium Risk</Box>
+          <Box flex={25}>
+            <strong>{Number(collateralPercent * 1.8).toFixed(1)}% Low Risk</strong>
           </Box>
         </Box>
       </Box>

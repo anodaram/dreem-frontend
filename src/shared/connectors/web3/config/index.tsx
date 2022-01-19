@@ -1,5 +1,5 @@
 // Using `require` as `import` does not support dynamic loading (yet).
-// const configEnv = require(`./${process.env.NODE_ENV}.json`);
-const configEnv = require('./test.json');
+const env = process.env.REACT_APP_ENV ?? 'dev';
+const configEnv = require(`./${env}.json`);
 const config = { ...configEnv };
 export default config;

@@ -27,14 +27,14 @@ const useStyles = makeStyles({
     "-webkit-text-fill-color": "transparent",
     "-webkit-background-clip": "text",
     fontSize: 36,
-    fontFamily: "Grifter",
+    fontFamily: "Rany",
     fontWeight: 700,
     lineHeight: "33px",
     border: "2px solid",
     borderImageSlice: 1,
     borderImageSource: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
     "& span": {
-      fontSize: 16,
+      fontSize: 20,
     },
   },
 });
@@ -42,35 +42,51 @@ const useStyles = makeStyles({
 export default ({ nft, refresh, isBlocked }) => {
   const classes = useStyles();
   const [blockingInfo, setBlockingInfo] = useState<any>(null);
+  const [rentalInfo, setRentalInfo] = useState<any>();
   const [closeTime, setCloseTime] = useState<any>(null);
 
   useEffect(() => {
-    if (nft && nft?.blockingSalesHistories?.length) {
+    if (isBlocked && nft && nft?.blockingSalesHistories?.length) {
       setBlockingInfo(nft.blockingSalesHistories[nft.blockingSalesHistories.length - 1]);
+    } else if (nft && nft.rentHistories?.length) {
+      setRentalInfo(nft.rentHistories[nft.rentHistories.length - 1]);
     }
   }, [nft]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (blockingInfo) {
-        let formatDate = getRemainingTime(blockingInfo);
-        setCloseTime(formatDate);
+    if (isBlocked && blockingInfo) {
+      let time = Math.max(
+        blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + blockingInfo?.created - Date.now(),
+        0
+      );
+
+      if (time > 0) {
+        const interval = setInterval(() => {
+          time = time - 1000;
+          let formatDate = formatRemainingTime(time);
+          setCloseTime(formatDate);
+        }, 1000);
+        return () => clearInterval(interval);
       }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [blockingInfo]);
+    }
+  }, [isBlocked, blockingInfo]);
 
   useEffect(() => {
-    if (closeTime?.totalSeconds === 0) {
-      refresh();
-    }
-  }, [closeTime]);
+    if (rentalInfo) {
+      let time = Math.max(rentalInfo.created + +rentalInfo.rentalTime * 1000 - Date.now(), 0);
 
-  const getRemainingTime = _blockingInfo => {
-    let value = Math.max(
-      _blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + _blockingInfo?.created - Date.now(),
-      0
-    );
+      if (time > 0) {
+        const interval = setInterval(() => {
+          time = time - 1000;
+          let formatDate = formatRemainingTime(time);
+          setCloseTime(formatDate);
+        }, 1000);
+        return () => clearInterval(interval);
+      }
+    }
+  }, [rentalInfo]);
+
+  const formatRemainingTime = value => {
     value = value / 1000;
     let day_unit = 3600 * 24;
     let hr_unit = 3600;
@@ -87,19 +103,21 @@ export default ({ nft, refresh, isBlocked }) => {
   return (
     <>
       <Box display="flex" flexDirection={"column"} py={10}>
-        <Box className={classes.title}>This NFT is {isBlocked ? 'blocked' : 'rented'} at this moment. It will be available again in:</Box>
+        <Box className={classes.title}>
+          This NFT is {isBlocked ? "blocked" : "rented"} at this moment. It will be available again in:
+        </Box>
         <Box className={classes.timerSection}>
           <Box>
-            {closeTime?.day} <span>days</span>
+            {closeTime?.day || 0} <span>days</span>
           </Box>
           <Box>
-            {closeTime?.hour} <span>hours</span>
+            {closeTime?.hour || 0} <span>hours</span>
           </Box>
           <Box>
-            {closeTime?.min} <span>min</span>
+            {closeTime?.min || 0} <span>min</span>
           </Box>
           <Box>
-            {closeTime?.second} <span>sec</span>
+            {closeTime?.second || 0} <span>sec</span>
           </Box>
         </Box>
       </Box>
