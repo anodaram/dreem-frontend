@@ -15,7 +15,7 @@ const chainInfoMap = {
   },
   80001: {
     chainName: "Mumbai Testnet",
-    rpcUrls: ["https://rpc-mumbai.matic.today/"],
+    rpcUrls: ["https://rpc-mumbai.maticvigil.com/"],
     nativeCurrency: {
       name: "MATIC",
       symbol: "MATIC",
