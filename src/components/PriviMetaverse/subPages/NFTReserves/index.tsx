@@ -65,7 +65,7 @@ const FilterOptionsTabs: TabItem[] = [
 ];
 
 const filterChainOptions = ["All", "BSC", "Polygon"];
-const filterStatusOptions = ["All", "For Sale", "For Rental", "For Blocking", "Blocked", "Rented"];
+const filterStatusOptions = ["All", ...NftStates];
 
 const getChainImage = chain => {
   if (chain === filterChainOptions[1]) {
