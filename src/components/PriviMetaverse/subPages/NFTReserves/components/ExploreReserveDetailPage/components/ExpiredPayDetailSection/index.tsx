@@ -75,6 +75,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
           Beneficiary: blockingInfo.Beneficiary,
           offerer: blockingInfo.from,
           notificationMode: 1,
+          hash: response.hash
         });
       } else {
         await closeBlockingHistory({
@@ -86,6 +87,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
           Beneficiary: blockingInfo.Beneficiary,
           offerer: blockingInfo.from,
           notificationMode: 1,
+          hash: response.hash
         });
       }
 

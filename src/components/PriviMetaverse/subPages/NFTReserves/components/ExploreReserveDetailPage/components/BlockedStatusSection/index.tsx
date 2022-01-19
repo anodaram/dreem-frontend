@@ -92,7 +92,8 @@ export default ({isOwnership, nft, refresh}) => {
         Id: activeReserveId,
         Beneficiary: blockingInfo.Beneficiary,
         offerer: account!,
-        notificationMode: 3
+        notificationMode: 3,
+        hash: response.hash
       });
 
       setTransactionSuccess(true);

@@ -169,6 +169,7 @@ export default function CancelReserveModal({
           Beneficiary: blockingInfo.Beneficiary,
           offerer: account!,
           notificationMode: 0,
+          hash: contractResponse.hash
         });
 
         setTransactionSuccess(true);
