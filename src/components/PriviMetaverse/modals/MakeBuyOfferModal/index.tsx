@@ -45,6 +45,8 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
   const [date, setDate] = useState<any>(new Date());
   const { collection_id, token_id }: { collection_id: string; token_id: string } = useParams();
 
+  const PRECISSION = 1.01;
+
   useEffect(() => {
     setToken(tokens[0]);
   }, [tokens]);
@@ -128,7 +130,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.OPEN_SALES_MANAGER,
-        toNDecimals(offerPrice, token.Decimals)
+        toNDecimals(offerPrice * PRECISSION, token.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
