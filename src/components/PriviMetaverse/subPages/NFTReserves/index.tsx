@@ -230,7 +230,7 @@ const NFTReserves = () => {
 
   const userName = nft => {
     if (!nft.owner) {
-      if (nft.ownerAddress.toLowerCase() === user.address.toLowerCase()) {
+      if (nft.ownerAddress?.toLowerCase() === user.address.toLowerCase()) {
         return user.firstName || user.lastName
           ? `${user.firstName} ${user.lastName}`
           : width > 700
