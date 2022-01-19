@@ -226,7 +226,7 @@ const OwnersPanel = () => {
         mb={3}
         style={{
           display: "flex",
-          alignItems: "flex-start",
+          alignItems: "stretch",
           flexDirection: isMobile ? "column" : "row",
           justifyContent: "space-between",
           rowGap: "12px",
@@ -283,7 +283,11 @@ const OwnersPanel = () => {
             </Box>
           ))}
         </Box>
-        <Box>
+        <Box style={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "flex-end",
+        }}>
           <PrimaryButton
             onClick={() => {
               refreshData();
