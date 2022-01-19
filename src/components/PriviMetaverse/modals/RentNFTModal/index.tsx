@@ -66,7 +66,7 @@ export default function RentNFTModal({
   };
 
   const price = offer
-    ? (+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime).toFixed(3)
+    ? (+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime).toFixed(2)
     : "0";
 
   useEffect(() => setSelectedChain(getChainForNFT(nft)), [nft]);

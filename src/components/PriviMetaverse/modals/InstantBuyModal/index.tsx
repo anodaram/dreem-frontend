@@ -93,7 +93,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${offerPrice.toFixed(6)} ${getTokenName(offer.PaymentToken)}!`, {
+      showAlertMessage(`Successfully approved ${offerPrice.toFixed(2)} ${getTokenName(offer.PaymentToken)}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);
@@ -184,7 +184,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
           <Box className={classes.box}>
             <span style={{ fontSize: "16px", color: "#ffffff" }}>Amount to pay</span>
             <span className={classes.purpleText} style={{ fontFamily: "Rany" }}>
-              {`${offerPrice.toFixed(6)} ${getTokenName(offer?.PaymentToken)}`}
+              {`${offerPrice.toFixed(2)} ${getTokenName(offer?.PaymentToken)}`}
             </span>
           </Box>
         </Box>
