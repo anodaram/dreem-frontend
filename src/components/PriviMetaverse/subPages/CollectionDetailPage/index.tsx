@@ -39,26 +39,15 @@ const COLUMNS_COUNT_BREAK_POINTS_THREE = {
   1440: 3,
 };
 
-const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
-  375: 1,
-  600: 3,
-  1200: 3,
-  1440: 4,
-};
-
-const RealmDetailTabs: TabItem[] = [
+const collectionDetailTabs: TabItem[] = [
   {
-    key: "avatars",
-    title: "Avatars",
+    key: "minted",
+    title: "Minted",
   },
   {
-    key: "extensions",
-    title: "Extensions",
-  },
-  {
-    key: "voting",
-    title: "Voting",
-  },
+    key: "drafts",
+    title: "Drafts",
+  }
 ];
 
 export default function CollectionDetailPage() {
@@ -87,7 +76,7 @@ export default function CollectionDetailPage() {
   const { shareMedia } = useShareMedia();
 
   const loadingCount = React.useMemo(
-    () => (width > 1440 ? 4 : width > 1000 ? 3 : width > 600 ? 2 : 1),
+    () => (width > 1440 ? 3 : width > 1000 ? 3 : width > 600 ? 2 : 1),
     [width]
   );
 
@@ -100,13 +89,16 @@ export default function CollectionDetailPage() {
 
   const loadCollection = collectionId => {
     setIsLoading(true);
+    setLoading(true);
     MetaverseAPI.getCollection(collectionId)
       .then(res => {
-        console.log('-----', res)
         setCollectionData(res.data);
         setNftData(res.data?.itemVersions?.elements);
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+        setLoading(false);
+      });
   };
 
   const handleRefresh = async () => {

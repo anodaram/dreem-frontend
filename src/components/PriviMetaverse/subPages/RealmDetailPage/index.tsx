@@ -362,7 +362,7 @@ export default function RealmDetailPage() {
                   loop
                   style={{
                     // backgroundImage: `url("${realmData.worldImages[0]}")`,
-                    backgroundImage: `url("${realmData.worldImage}")`,
+                    backgroundImage: `url("${realmData.worldVideo}")`,
                     backgroundSize: "cover",
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center",

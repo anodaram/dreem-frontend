@@ -48,8 +48,8 @@ export default function RealmCard(props) {
             style={{
               backgroundImage:
                 props.item && props.isFeature
-                  ? props.item.worldBannerImage
-                    ? `url("${props.item.worldBannerImage}")`
+                  ? props.item.worldImage
+                    ? `url("${props.item.worldImage}")`
                     : `url(${getDefaultImageUrl()})`
                   : props.item.worldImage
                   ? `url("${props.item.worldImage}")`

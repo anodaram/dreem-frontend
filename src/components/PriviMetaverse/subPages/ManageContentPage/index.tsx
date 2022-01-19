@@ -193,7 +193,7 @@ export default function ManageContentPage() {
 
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, curPage, "ASC")
+    MetaverseAPI.getCollections(12, curPage, "DESC")
     .then(res => {
       if (res.success) {
         const items = res.data.elements;

@@ -43,7 +43,7 @@ export default function CreatingRealmPage() {
   const loadingCount = React.useMemo(() => (width > 1000 ? 6 : width > 600 ? 3 : 6), [width]);
 
   const [currentCollection, setCurrentCollection] = useState<any>();
-  const [collections, setCollections] = useState<any[]>([1, 2, 3, 4, 5, 6, 7]);
+  const [collections, setCollections] = useState<any[]>([]);
   const [curPage, setCurPage] = React.useState(1);
   const [lastPage, setLastPage] = React.useState(0);
   const [loadingCollection, setLoadingCollection] = React.useState<boolean>(false);
@@ -61,6 +61,10 @@ export default function CreatingRealmPage() {
       handleOpenRealmModal();
     }
   }, [step]);
+
+  useEffect(() => {
+    loadMore()
+  }, []);
 
   const handleOpenRealmModal = async () => {
     setIsLoadingMetaData(true);
@@ -94,20 +98,20 @@ export default function CreatingRealmPage() {
 
   const loadMore = () => {
     setLoadingCollection(true);
-    // MetaverseAPI.getWorlds(12, curPage, "timestamp", ["DRAFT_WORLD", "NFT_WORLD"], true)
-    //   .then(res => {
-    //     if (res.success) {
-    //       const items = res.data.items;
-    //       if (items && items.length > 0) {
-    //         setCollections([...collections, ...res.data.items]);
-    //         if (res.data.page && curPage <= res.data.page.max) {
-    //           setCurPage(curPage => curPage + 1);
-    //           setLastPage(res.data.page.max);
-    //         }
-    //       }
-    //     }
-    //   })
-    //   .finally(() => setLoadingCollection(false));
+    MetaverseAPI.getCollections(12, curPage, "DESC")
+    .then(res => {
+      if (res.success) {
+        const items = res.data.elements;
+        if (items && items.length > 0) {
+          setCollections([...collections, ...res.data.elements]);
+          if (res.data.page && curPage <= res.data.page.max) {
+            setCurPage(curPage => curPage + 1);
+            setLastPage(res.data.page.max);
+          }
+        }
+      }
+    })
+    .finally(() => setLoadingCollection(false));
   };
 
   return (
