@@ -32,6 +32,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
     if (nft?.blockingSalesHistories?.length > 0) {
       setBlockingInfo(nft.blockingSalesHistories[nft.blockingSalesHistories.length - 1])
     }
+    setSelectedChain(getChainForNFT(nft))
   }, [nft])
 
   useEffect(() => {
