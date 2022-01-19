@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
-import clsx from "clsx";
 
-import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled } from "@material-ui/core";
+import { useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import { Modal, PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import { switchNetwork } from "shared/functions/metamask";
 import { BlockchainNets } from "shared/constants/constants";
@@ -15,8 +14,9 @@ import { onUploadNonEncrypt } from "shared/ipfs/upload";
 import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProgressModal";
 import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingModal";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
-import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
+import { FilterWorldAssetOptions } from "shared/constants/constants";
+import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 const CreateNFT = ({
   metaData,
@@ -28,6 +28,7 @@ const CreateNFT = ({
   handleCancel: () => void;
 }) => {
   const classes = useModalStyles();
+  const filterClasses = useFilterSelectStyles();
   const { showAlertMessage } = useAlertMessage();
 
   const theme = useTheme();
@@ -66,6 +67,11 @@ const CreateNFT = ({
   const [progress, setProgress] = useState(0);
   const [isUpload, setIsUpload] = useState(true);
   const [sizeSpec, setSizeSpec] = useState<any>(metaData);
+
+  const [openAssetSelect, setOpenAssetSelect] = useState<boolean>(false);
+  const [openCollectionSelect, setOpenCollectionSelect] = useState<boolean>(false);
+  const [filterAsset, setFilterAsset] = useState<string>(FilterWorldAssetOptions[0]);
+  const [filterCollection, setFilterCollection] = useState<string>("");
 
   useEffect(() => {
     setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");
@@ -344,6 +350,78 @@ const CreateNFT = ({
       >
         <div className={classes.modalContent}>
           <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Box className={classes.itemTitle} mb={1}>
+              Asset Type
+            </Box>
+            <InfoTooltip tooltip={""} />
+          </Box>
+          <Select
+            open={openAssetSelect}
+            onClose={() => setOpenAssetSelect(false)}
+            value={filterAsset}
+            onChange={e => setFilterAsset(String(e.target.value))}
+            className={classes.select}
+            renderValue={(value: any) => (
+              <Box display="flex" alignItems="center" onClick={() => setOpenAssetSelect(true)}>
+                <span>{value}</span>
+              </Box>
+            )}
+            MenuProps={{
+              classes: filterClasses,
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "left",
+              },
+              transformOrigin: {
+                vertical: "top",
+                horizontal: "left",
+              },
+              getContentAnchorEl: null,
+            }}
+          >
+            {FilterWorldAssetOptions.map((asset, index) => (
+              <MenuItem key={`filter-chain-${index}`} value={asset}>
+                {asset}
+              </MenuItem>
+            ))}
+          </Select>
+          <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+            <Box className={classes.itemTitle} mb={1}>
+              Collection
+            </Box>
+            <InfoTooltip tooltip={""} />
+          </Box>
+          <Select
+            open={openCollectionSelect}
+            onClose={() => setOpenCollectionSelect(false)}
+            value={filterCollection}
+            onChange={e => setFilterCollection(String(e.target.value))}
+            className={classes.select}
+            renderValue={(value: any) => (
+              <Box display="flex" alignItems="center" onClick={() => setOpenCollectionSelect(true)}>
+                <span>{value}</span>
+              </Box>
+            )}
+            MenuProps={{
+              classes: filterClasses,
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "left",
+              },
+              transformOrigin: {
+                vertical: "top",
+                horizontal: "left",
+              },
+              getContentAnchorEl: null,
+            }}
+          >
+            {[].map((collection, index) => (
+              <MenuItem key={`filter-chain-${index}`} value={collection}>
+                {collection}
+              </MenuItem>
+            ))}
+          </Select>
+          <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
             <Box className={classes.itemTitle} mb={1}>
               NFT Name
             </Box>

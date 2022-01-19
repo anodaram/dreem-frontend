@@ -73,9 +73,9 @@ export default function ManageContentPage() {
       handleOpenRealmModal();
     }
   }, [step]);
-  
+
   useEffect(() => {
-    loadMore()
+    loadMore();
   }, []);
 
   const signInWithMetamask = () => {
@@ -339,7 +339,7 @@ export default function ManageContentPage() {
         {step === 1 && (
           <div className={classes.otherContent}>
             <div className={classes.typo1}>Creating new NFT</div>
-            <Box className={classes.typo3} mt={"12px"} mb={"24px"}>
+            <Box className={classes.typo3} mb={3}>
               Select or create a collection to create NFT in
             </Box>
             <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
@@ -414,8 +414,8 @@ export default function ManageContentPage() {
         )}
         {step === 2 && (
           <div className={classes.otherContent}>
-            <div className={classes.typo1}>Creating new collection</div>
-            <Box className={classes.typo3} mt={"12px"} mb={"24px"}>
+            <div className={classes.typo1}>Creating New Collection</div>
+            <Box className={classes.typo3} mb={3}>
               Fill all the details of your new collection
             </Box>
             <CreateCollection handleNext={() => {}} handleCancel={handlePrev} />
@@ -423,9 +423,9 @@ export default function ManageContentPage() {
         )}
         {step === 3 && (
           <div className={classes.otherContent}>
-            <div className={classes.typo1}>Creating new NFT</div>
-            <Box className={classes.typo3} mt={"12px"} mb={"24px"}>
-              Fill all the details of your new nft.
+            <div className={classes.typo1}>Creating New Draft</div>
+            <Box className={classes.typo3} mb={3}>
+              Fill all the details of your new nft
             </Box>
             <CreateNFT metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev} />
           </div>

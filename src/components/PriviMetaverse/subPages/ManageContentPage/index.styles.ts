@@ -162,7 +162,6 @@ export const manageContentPageStyles = makeStyles(theme => ({
     textAlign: "center",
     fontFamily: "GRIFTER",
     textTransform: "uppercase",
-    marginBottom: 8,
     [theme.breakpoints.down("sm")]: {
       fontSize: 30,
       lineHeight: "30px",

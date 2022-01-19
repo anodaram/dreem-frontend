@@ -508,3 +508,5 @@ export const EUROPEAN_COUNTRIES = [
     id: "VA",
   },
 ];
+
+export const FilterWorldAssetOptions = ["WORLD", "CHARACTER", "TEXTURE", "MATERIAL"];
