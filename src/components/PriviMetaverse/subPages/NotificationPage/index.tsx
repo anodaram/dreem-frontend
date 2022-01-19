@@ -70,13 +70,13 @@ const NotificationItem = ({ notification, removeNotification }) => {
         </NotificationMessage>
         <NotificationButtons
           notification={notification}
-          onDismissNotification={() => { }}
-          refreshAllProfile={() => { }}
-          viewMore={() => { }}
-          setSelectedNotification={() => { }}
-          handleShowContributionModal={() => { }}
-          handleClosePopper={() => { }}
-          handleHidePopper={() => { }}
+          onDismissNotification={() => {}}
+          refreshAllProfile={() => {}}
+          viewMore={() => {}}
+          setSelectedNotification={() => {}}
+          handleShowContributionModal={() => {}}
+          handleClosePopper={() => {}}
+          handleHidePopper={() => {}}
         />
       </ContentContainer>
       <Hidden smDown>

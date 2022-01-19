@@ -43,7 +43,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
   };
 
   const offerPeriod = useMemo(() => {
-    if (!externalData?.duration) {
+    if (!externalData.duration) {
       return "0 hours";
     }
 
