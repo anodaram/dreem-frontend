@@ -32,6 +32,8 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
   const fee = useSelector((state: RootState) => state.marketPlace.fee);
 
+  const PRECISSION = 1.01;
+
   useEffect(() => {
     if (!open) {
       setIsApproved(false);
@@ -104,7 +106,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER,
-        toNDecimals(Number(info.Price) * (1 + fee), decimals)
+        toNDecimals(Number(info.Price) * (1 + fee) * PRECISSION, decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -166,7 +168,8 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
         PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price,
         offerer: account!,
         status: "SOLD",
-        notificationMode: 1
+        notificationMode: 1,
+        hash: response.hash,
       });
 
       setTransactionSuccess(true);

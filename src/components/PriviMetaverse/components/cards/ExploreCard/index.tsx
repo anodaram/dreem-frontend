@@ -98,6 +98,8 @@ const ExploreCard = ({ nft, isLoading = false }) => {
     return [];
   }, [nft]);
 
+  const isBlocked = useMemo(() => nftStatus.includes("Blocked"), [nftStatus])
+
   return (
     <div className={classes.outerCard} style={{ marginBottom: 0 }} onClick={handleOpenExplore}>
       {isLoading ? (
@@ -142,7 +144,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
             <div className={classes.cardContentDiv}>
               <span className={classes.cardContentText}>Direct Purchase</span>
               <span className={classes.cardContentAmount}>
-                {nft?.sellingOffer?.Price
+                {!isBlocked && nft?.sellingOffer?.Price
                   ? `${nft.sellingOffer.Price} ${getTokenSymbol(nft.sellingOffer.PaymentToken)}`
                   : "_"}
               </span>
@@ -150,7 +152,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
             <div className={classes.cardContentDiv}>
               <span className={classes.cardContentText}>Block to Buy Later</span>
               <span className={classes.cardContentAmount}>
-                {nft?.blockingSaleOffer?.Price
+                {!isBlocked && nft?.blockingSaleOffer?.Price
                   ? `${nft.blockingSaleOffer.Price} ${getTokenSymbol(nft.blockingSaleOffer.PaymentToken)}`
                   : "_"}
               </span>
@@ -158,7 +160,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
             <div className={classes.cardContentDiv}>
               <span className={classes.cardContentText}>Rental Fee (per hour)</span>
               <span className={classes.cardContentAmount}>
-                {nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
+                {!isBlocked && nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
                   ? `${(
                       +toDecimals(
                         nft.rentSaleOffer.pricePerSecond,

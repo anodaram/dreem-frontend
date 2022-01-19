@@ -106,7 +106,7 @@ const OwnersPanel = () => {
           setUserNFTs(
             nfts.filter(
               nft =>
-                !nft.status ||
+                !nft.status || Array.isArray(nft.status) && !nft.status?.length ||
                 loadNftStatus(nft).filter(s => s !== "Rented" && s !== "Blocked").length
             )
           );

@@ -53,7 +53,7 @@ const reservesManager = (network: string) => {
 
         console.log("transaction succeed... ", response?.events);
         if (response?.events?.ReserveCanceled) {
-          resolve({ success: true });
+          resolve({ success: true, hash: response.transactionHash });
         } else {
           resolve({ success: false });
         }

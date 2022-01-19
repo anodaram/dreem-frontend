@@ -17,6 +17,8 @@ import TransactionProgressModal from "../TransactionProgressModal";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
+const PRECISSION = 1.01;
+
 export default function CancelReserveModal({
   open,
   handleClose = () => {},
@@ -109,7 +111,7 @@ export default function CancelReserveModal({
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER,
-        toNDecimals(Number(blockingInfo?.Price) * penaltyFee / 100 * (1 + fee), decimals)
+        toNDecimals(Number(blockingInfo?.Price) * penaltyFee / 100 * (1 + fee) *PRECISSION, decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -118,7 +120,7 @@ export default function CancelReserveModal({
       }
       setIsApproved(true);
       showAlertMessage(
-        `Successfully approved ${(Number(blockingInfo?.Price) * penaltyFee) / 100 * (1 + fee)} ${getTokenSymbol(
+        `Successfully approved ${(Number(blockingInfo?.Price) * penaltyFee) / 100 * (1 + fee) *PRECISSION} ${getTokenSymbol(
           blockingInfo?.PaymentToken
         )}!`,
         {
@@ -174,6 +176,7 @@ export default function CancelReserveModal({
           Beneficiary: blockingInfo.Beneficiary,
           offerer: account!,
           notificationMode: 0,
+          hash: contractResponse.hash
         });
 
         setTransactionSuccess(true);

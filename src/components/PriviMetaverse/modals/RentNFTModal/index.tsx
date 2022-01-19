@@ -19,6 +19,8 @@ import { RentNFTModalStyles } from "./index.style";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
+const PRECISSION = 1.01;
+
 export default function RentNFTModal({
   open,
   handleClose = () => {},
@@ -164,7 +166,7 @@ export default function RentNFTModal({
       let balance = await web3APIHandler.Erc20[rentalToken.Symbol].balanceOf(web3, { account });
       let decimals = await web3APIHandler.Erc20[rentalToken.Symbol].decimals(web3, { account });
       balance = balance / Math.pow(10, decimals);
-      const approvePrice = parseFloat(price) * (1.01 + marketFee);
+      const approvePrice = parseFloat(price) * (1.01 + marketFee) * PRECISSION;
 
       if (balance < (approvePrice || 0)) {
         showAlertMessage(`Insufficient balance to approve`, { variant: "error" });

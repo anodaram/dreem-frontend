@@ -5,7 +5,7 @@ declare const window: any;
 const chainInfoMap = {
   137: {
     chainName: "Polygon Mainnet",
-    rpcUrls: ["https://polygon-rpc.com/"],
+    rpcUrls: ["https://rpc-mainnet.maticvigil.com/"],
     nativeCurrency: {
       name: "MATIC",
       symbol: "MATIC",
@@ -15,7 +15,7 @@ const chainInfoMap = {
   },
   80001: {
     chainName: "Mumbai Testnet",
-    rpcUrls: ["https://rpc-mumbai.matic.today/"],
+    rpcUrls: ["https://rpc-mumbai.maticvigil.com/"],
     nativeCurrency: {
       name: "MATIC",
       symbol: "MATIC",

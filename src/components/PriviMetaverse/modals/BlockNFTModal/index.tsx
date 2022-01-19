@@ -44,6 +44,8 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
   const { showAlertMessage } = useAlertMessage();
   const isProd = process.env.REACT_APP_ENV === "prod";
 
+  const PRECISSION = 1.01;
+
   useEffect(() => {
     setCollateralToken(tokenList[0]);
     setReservePriceToken(tokenList.find(token => token.Address === nft?.blockingSaleOffer?.PaymentToken));
@@ -128,7 +130,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE,
-        toNDecimals(Number(collateral) * (1 + fee), reservePriceToken.Decimals)
+        toNDecimals(Number(collateral) * (1 + fee) * PRECISSION, reservePriceToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
