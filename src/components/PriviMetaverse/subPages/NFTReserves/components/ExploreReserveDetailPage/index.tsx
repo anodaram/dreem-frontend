@@ -34,7 +34,6 @@ import ExpiredPayDetailSection from "./components/ExpiredPayDetailSection";
 import ExpiredPayStatusSection from "./components/ExpiredPayStatusSection";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
 import { exploreOptionDetailPageStyles } from "./index.styles";
-import AcceptingOfferSection from "./components/AcceptingOfferSection";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -348,7 +347,7 @@ const ExploreReserveDetailPage = () => {
                     )}
                   </>
                 ) : isRentedNFT ? (
-                  <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} refresh={refresh}/>
+                  <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} refresh={refresh} />
                 ) : (
                   <GeneralDetailSection
                     isOwnership={isOwner}
@@ -377,34 +376,27 @@ const ExploreReserveDetailPage = () => {
                 )
               ) : isRenter ? (
                 // Renter pages
-                <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} refresh={refresh}/>
+                <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} refresh={refresh} />
+              ) : // Spectator pages
+              isBlockedNFT ? (
+                <RegularBlockedDetailSection nft={nft} refresh={refresh} isSpectator isBlocked />
+              ) : isRentedNFT ? (
+                <RentedDetailSection
+                  nft={nft}
+                  setNft={setNft}
+                  isOwner={false}
+                  isSpectator
+                  isBlocked={false}
+                  refresh={refresh}
+                />
               ) : (
-                // Spectator pages
-                isBlockedNFT ? (
-                  <RegularBlockedDetailSection
-                    nft={nft}
-                    refresh={refresh}
-                    isSpectator
-                    isBlocked
-                  />
-                ) : isRentedNFT ? (
-                  <RentedDetailSection
-                    nft={nft}
-                    setNft={setNft}
-                    isOwner={false}
-                    isSpectator
-                    isBlocked={false}
-                    refresh={refresh}
-                  />
-                ) : (
-                  <GeneralDetailSection
-                    isOwnership={isOwner}
-                    nft={nft}
-                    setNft={setNft}
-                    refresh={refresh}
-                    onRent={() => setOpenRentSccess(true)}
-                  />
-                )
+                <GeneralDetailSection
+                  isOwnership={isOwner}
+                  nft={nft}
+                  setNft={setNft}
+                  refresh={refresh}
+                  onRent={() => setOpenRentSccess(true)}
+                />
               )}
             </Box>
           </Box>

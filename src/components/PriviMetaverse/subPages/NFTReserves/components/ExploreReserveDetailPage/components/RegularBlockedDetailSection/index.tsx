@@ -9,7 +9,12 @@ import { RootState } from "store/reducers/Reducer";
 import { useSelector } from "react-redux";
 import AcceptingOfferSection from "../AcceptingOfferSection";
 
-export default ({ nft, refresh, isSpectator, isBlocked }: {
+export default ({
+  nft,
+  refresh,
+  isSpectator,
+  isBlocked,
+}: {
   nft: any;
   refresh: () => void;
   isSpectator?: boolean;
@@ -37,12 +42,6 @@ export default ({ nft, refresh, isSpectator, isBlocked }: {
     return () => clearInterval(interval);
   }, [blockingInfo]);
 
-  useEffect(() => {
-    if (closeTime?.totalSeconds === 0) {
-      refresh();
-    }
-  }, [closeTime]);
-
   const getRemainingTime = _blockingInfo => {
     let value = Math.max(
       _blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + _blockingInfo?.created - Date.now(),
@@ -68,7 +67,7 @@ export default ({ nft, refresh, isSpectator, isBlocked }: {
   };
 
   if (isSpectator) {
-    return <AcceptingOfferSection nft={nft} refresh={refresh} isBlocked={isBlocked} />
+    return <AcceptingOfferSection nft={nft} refresh={refresh} isBlocked={isBlocked} />;
   }
 
   return (
@@ -117,7 +116,8 @@ export default ({ nft, refresh, isSpectator, isBlocked }: {
             Blocking payment:
           </Box>
           <Box mt={1} fontSize={14} fontFamily="Rany" lineHeight="16px">
-            Reminder! You've blocked this NFT, but haven't paid yet. In order to successfully buy the NFT, pay now.
+            Reminder! You've blocked this NFT, but haven't paid yet. In order to successfully buy the NFT, pay
+            now.
           </Box>
           <Box flex={1} mt="27px" display="flex" justifyContent="space-between" alignItems="center">
             <Box display="flex" flexDirection="column" flex={0.3}>
@@ -179,9 +179,7 @@ export default ({ nft, refresh, isSpectator, isBlocked }: {
             >
               <Box fontSize={16}>Blocking Price</Box>
               <Box className={classes.gradientText} fontFamily="Rany" fontSize={18} mt={1}>
-                {`${(Number(blockingInfo?.Price)).toFixed(2)} ${getTokenSymbol(
-                  blockingInfo?.PaymentToken
-                )}`}
+                {`${Number(blockingInfo?.Price).toFixed(2)} ${getTokenSymbol(blockingInfo?.PaymentToken)}`}
               </Box>
             </Box>
             <Box display="flex" flexDirection="column" flex={0.5} pl={8}>

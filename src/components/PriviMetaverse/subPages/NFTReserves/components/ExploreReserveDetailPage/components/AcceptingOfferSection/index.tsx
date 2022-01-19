@@ -27,14 +27,14 @@ const useStyles = makeStyles({
     "-webkit-text-fill-color": "transparent",
     "-webkit-background-clip": "text",
     fontSize: 36,
-    fontFamily: "Grifter",
+    fontFamily: "Rany",
     fontWeight: 700,
     lineHeight: "33px",
     border: "2px solid",
     borderImageSlice: 1,
     borderImageSource: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
     "& span": {
-      fontSize: 16,
+      fontSize: 20,
     },
   },
 });
@@ -54,28 +54,37 @@ export default ({ nft, refresh, isBlocked }) => {
   }, [nft]);
 
   useEffect(() => {
-    if (isBlocked && !blockingInfo) return;
-    else if (!rentalInfo) return;
-
-    let time = 0;
     if (isBlocked && blockingInfo) {
-      time = Math.max(blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + blockingInfo?.created - Date.now(), 0);
-    } else if (rentalInfo) {
-      time = Math.max(rentalInfo.created + +rentalInfo.rentalTime * 1000 - Date.now(), 0);
+      let time = Math.max(
+        blockingInfo?.ReservePeriod * 3600 * 24 * 1000 + blockingInfo?.created - Date.now(),
+        0
+      );
+
+      if (time > 0) {
+        const interval = setInterval(() => {
+          time = time - 1000;
+          let formatDate = formatRemainingTime(time);
+          setCloseTime(formatDate);
+        }, 1000);
+        return () => clearInterval(interval);
+      }
     }
-    const interval = setInterval(() => {
-      time = time - 1000;
-      let formatDate = formatRemainingTime(time);
-      setCloseTime(formatDate);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [blockingInfo, rentalInfo]);
+  }, [isBlocked, blockingInfo]);
 
   useEffect(() => {
-    if (closeTime?.totalSeconds === 0) {
-      refresh();
+    if (rentalInfo) {
+      let time = Math.max(rentalInfo.created + +rentalInfo.rentalTime * 1000 - Date.now(), 0);
+
+      if (time > 0) {
+        const interval = setInterval(() => {
+          time = time - 1000;
+          let formatDate = formatRemainingTime(time);
+          setCloseTime(formatDate);
+        }, 1000);
+        return () => clearInterval(interval);
+      }
     }
-  }, [closeTime]);
+  }, [rentalInfo]);
 
   const formatRemainingTime = value => {
     value = value / 1000;
@@ -99,16 +108,16 @@ export default ({ nft, refresh, isBlocked }) => {
         </Box>
         <Box className={classes.timerSection}>
           <Box>
-            {closeTime?.day} <span>days</span>
+            {closeTime?.day || 0} <span>days</span>
           </Box>
           <Box>
-            {closeTime?.hour} <span>hours</span>
+            {closeTime?.hour || 0} <span>hours</span>
           </Box>
           <Box>
-            {closeTime?.min} <span>min</span>
+            {closeTime?.min || 0} <span>min</span>
           </Box>
           <Box>
-            {closeTime?.second} <span>sec</span>
+            {closeTime?.second || 0} <span>sec</span>
           </Box>
         </Box>
       </Box>
