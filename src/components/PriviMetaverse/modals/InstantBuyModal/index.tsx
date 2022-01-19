@@ -93,7 +93,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${offerPrice.toFixed(2)} ${getTokenName(offer.PaymentToken)}!`, {
+      showAlertMessage(`Successfully approved ${(offerPrice* PRECISSION).toFixed(2)} ${getTokenName(offer.PaymentToken)}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);

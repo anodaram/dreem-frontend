@@ -139,7 +139,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
       }
       setIsApproved(true);
       showAlertMessage(
-        `Successfully approved ${Number(collateral) * (1 + fee)} ${reservePriceToken.Symbol}!`,
+        `Successfully approved ${(Number(collateral) * (1 + fee)* PRECISSION).toFixed(2)} ${reservePriceToken.Symbol}!`,
         {
           variant: "success",
         }
