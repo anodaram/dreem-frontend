@@ -14,7 +14,7 @@ import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal"
 
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
-import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { NFT_STATUS_COLORS, PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import { getAllGameNFTs } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
@@ -346,14 +346,16 @@ const NFTReserves = () => {
           },
           {
             cell: (
-              <Box
-                textAlign="center"
-                padding={"5px 8px"}
-                bgcolor={nftStatus(row).length ? "#8D65FF" : "transparent"}
-                fontSize={12}
-                borderRadius={6}
-              >
-                {nftStatus(row).join(', ')}
+              <Box display="flex">
+                {nftStatus(row).length > 0 &&
+                  nftStatus(row).map(status => (
+                    <span
+                      className={classes.cardOptionButton}
+                      style={{ background: NFT_STATUS_COLORS[status] }}
+                    >
+                      {status}
+                    </span>
+                  ))}
               </Box>
             ),
           },
@@ -369,7 +371,7 @@ const NFTReserves = () => {
           {
             cell: (
               <Box textAlign="center">
-                {row?.blockingSaleOffer?.Price
+                {!nftStatus(row).includes("Blocked") && row?.blockingSaleOffer?.Price
                   ? `${row.blockingSaleOffer.Price} ${getTokenSymbol(
                       row.blockingSaleOffer.PaymentToken
                     )} for ${row.blockingSaleOffer.ReservePeriod} Hour(s)`
