@@ -663,7 +663,7 @@ const NFTReserves = () => {
                     <SearchIcon />
                   </Box>
                 </div>
-                {selectedTab === TAB_NFTS && (
+                {!isMobile && selectedTab === TAB_NFTS && (
                   <Box
                     className={classes.controlBox}
                     ml={2}
