@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { useMediaQuery, useTheme } from "@material-ui/core";
+
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import Avatar from "shared/ui-kit/Avatar";
@@ -32,6 +34,10 @@ const Tabs: TabItem[] = [
 export default function WorldDetailPage() {
   const classes = worldDetailPageStyles();
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [fruitData, setFruitData] = useState<any>({});
   const [selectedTab, setSelectedTab] = useState<string>("sale");
 
@@ -41,7 +47,38 @@ export default function WorldDetailPage() {
         <img src={SeedImg} className={classes.seedImage} alt="seed image" />
         <Box className={classes.fitContent}>
           <Box className={classes.userInfoSection}>
-            <Box display="flex" alignItems="center" justifyContent="space-between" width={450}>
+            {(isMobile || isTablet) && (
+              <Box>
+                <Box display="flex" alignItems="center" justifyContent="right" mb={3}>
+                  <div className={classes.iconBtn} onClick={() => {}}>
+                    <PolygonIcon />
+                  </div>
+                  <div className={classes.iconBtn} onClick={() => {}}>
+                    <OpenSeaIcon />
+                  </div>
+                  <Box className={classes.iconBtn}>
+                    <FruitSelect
+                      fruitObject={fruitData}
+                      onGiveFruit={() => {}}
+                      fruitWidth={32}
+                      fruitHeight={32}
+                      style={{ background: "transparent" }}
+                    />
+                  </Box>
+                  <div className={classes.iconBtn} onClick={() => {}}>
+                    <ShareIcon />
+                  </div>
+                </Box>
+                <img src={getDefaultBGImage()} className={classes.worldImage} alt="nft image" />
+              </Box>
+            )}
+            <Box
+              display="flex"
+              alignItems={isMobile ? "start" : "center"}
+              justifyContent="space-between"
+              flexDirection={isMobile ? "column" : "row"}
+              width={450}
+            >
               <Box display="flex" alignItems="center">
                 <Avatar size={42} rounded image={getDefaultAvatar()} />
                 <Box display="flex" flexDirection="column" ml={1}>
@@ -49,7 +86,7 @@ export default function WorldDetailPage() {
                   <Box className={classes.typo2}>0xcsdw20x...0xcsdw2</Box>
                 </Box>
               </Box>
-              <Box width={2} height={40} bgcolor="#ffffff20" />
+              <Box width={isMobile ? 0 : 2} height={isMobile ? 20 : 40} bgcolor="#ffffff20" />
               <Box display="flex" alignItems="center">
                 <Avatar size={42} rounded bordered image={getDefaultAvatar()} />
                 <Box display="flex" flexDirection="column" ml={0.5}>
@@ -58,29 +95,37 @@ export default function WorldDetailPage() {
                 </Box>
               </Box>
             </Box>
-            <Box display="flex" alignItems="center" justifyContent="space-between">
-              <div className={classes.iconBtn} onClick={() => {}}>
-                <PolygonIcon />
-              </div>
-              <div className={classes.iconBtn} onClick={() => {}}>
-                <OpenSeaIcon />
-              </div>
-              <Box className={classes.iconBtn}>
-                <FruitSelect
-                  fruitObject={fruitData}
-                  onGiveFruit={() => {}}
-                  fruitWidth={32}
-                  fruitHeight={32}
-                  style={{ background: "transparent" }}
-                />
+            {!isMobile && !isTablet && (
+              <Box display="flex" alignItems="center" justifyContent="space-between">
+                <div className={classes.iconBtn} onClick={() => {}}>
+                  <PolygonIcon />
+                </div>
+                <div className={classes.iconBtn} onClick={() => {}}>
+                  <OpenSeaIcon />
+                </div>
+                <Box className={classes.iconBtn}>
+                  <FruitSelect
+                    fruitObject={fruitData}
+                    onGiveFruit={() => {}}
+                    fruitWidth={32}
+                    fruitHeight={32}
+                    style={{ background: "transparent" }}
+                  />
+                </Box>
+                <div className={classes.iconBtn} onClick={() => {}}>
+                  <ShareIcon />
+                </div>
               </Box>
-              <div className={classes.iconBtn} onClick={() => {}}>
-                <ShareIcon />
-              </div>
-            </Box>
+            )}
           </Box>
           <Box className={classes.worldInfoSection}>
-            <Box display="flex" flexDirection="column" alignSelf="flex-start" pt={5} width={525}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignSelf="flex-start"
+              pt={5}
+              width={isMobile ? 348 : 525}
+            >
               <Box className={classes.typo1}>ID #322</Box>
               <Box className={classes.typo3} mt={1}>
                 World Name
@@ -145,7 +190,9 @@ export default function WorldDetailPage() {
                 </Box>
               </PrimaryButton>
             </Box>
-            <img src={getDefaultBGImage()} className={classes.worldImage} alt="nft image" />
+            {!isMobile && !isTablet && (
+              <img src={getDefaultBGImage()} className={classes.worldImage} alt="nft image" />
+            )}
           </Box>
         </Box>
         <Box className={classes.content}>

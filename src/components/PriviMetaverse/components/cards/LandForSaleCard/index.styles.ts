@@ -13,7 +13,7 @@ export const cardStyles = makeStyles(theme => ({
       height: 400,
     },
     [theme.breakpoints.down("xs")]: {
-      height: 380,
+      height: 430,
     },
   },
   container: {
@@ -35,11 +35,6 @@ export const cardStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       fontSize: "14px !important",
       height: "37px !important",
-    },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "12px !important",
-      height: "27px !important",
-      lineHeight: "31px !important",
     },
   },
   image: {
@@ -63,12 +58,6 @@ export const cardStyles = makeStyles(theme => ({
     lineHeight: "120%",
     textTransform: "uppercase",
     color: "#FFFFFF",
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "14px",
-    },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "12px",
-    },
   },
   zone: {
     fontSize: "14px",
