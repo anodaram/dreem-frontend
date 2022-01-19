@@ -270,5 +270,69 @@ export const useModalStyles = makeStyles(theme => ({
     position: "absolute",
     bottom: "-10px",
     left: "calc(50% - 46px)"
-  }
+  },
+  select: {
+    background: "rgba(218, 230, 229, 0.06)",
+    border: "1px solid rgba(218, 218, 219, 0.59)",
+    padding: "14px 18px",
+    color: "#fff",
+    "& *": {
+      color: "#fff !important",
+    },
+    "& + &": {
+      marginLeft: 10,
+    },
+    "& .MuiSelect-root": {
+      padding: "0px 4px",
+      fontFamily: "Rany",
+      fontWeight: 700,
+      fontSize: 14,
+      color: "rgba(255, 255, 255, 0.5)",
+      marginRight: 8,
+      "&:focus": {
+        backgroundColor: "unset",
+      },
+      "& svg": {
+        width: 18,
+        height: 18,
+      },
+      "& span": {
+        fontSize: 14,
+        fontWeight: 700,
+        color: "#E9FF26",
+      },
+    },
+  },
 }));
+
+export const useFilterSelectStyles = makeStyles({
+  paper: {
+    marginTop: "10px",
+    marginLeft: "-13px",
+    background: "#212121",
+    boxShadow: "0px 15px 35px -31px rgba(13, 12, 62, 0.19)",
+    color: "rgba(255, 255, 255, 0.5)",
+    "& svg": {
+      width: 18,
+      height: 18,
+      marginRight: 8,
+    },
+  },
+  list: {
+    padding: "20px 8px!important",
+    paddingRight: 8,
+    "& .MuiListItem-root": {
+      marginBottom: 10,
+      padding: "2px 8px",
+      minWidth: "200px",
+      Height: "36px",
+      "&:last-child": {
+        marginBottom: 0,
+      },
+      "&:hover": {
+        color: "white",
+        border: "solid 1px #E9FF26",
+      },
+    },
+  },
+});

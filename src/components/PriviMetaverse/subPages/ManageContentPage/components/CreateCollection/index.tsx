@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 
 import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled } from "@material-ui/core";
@@ -19,6 +20,7 @@ const CreateCollection = ({
   handleNext: () => void;
   handleCancel: () => void;
 }) => {
+  const history = useHistory();
   const classes = useModalStyles();
   const { showAlertMessage } = useAlertMessage();
 
@@ -91,7 +93,15 @@ const CreateCollection = ({
       MetaverseAPI.uploadCollection(payload)
         .then(async res => {
           if (!res.success) return;
-
+          else{
+            showAlertMessage(`Successfully collection created`, { variant: "success" });
+            handleCancel()
+            history.push(
+              `/collection/${
+                res.data.id
+              }`
+            )
+          }
         })
         .catch(err => {
           showAlertMessage(`Failed to create collection`, { variant: "error" });

@@ -157,7 +157,7 @@ export default function CollectionDetailPage() {
           <Box className={classes.typo3} mb={3}>
             Fill all the details of your new nft
           </Box>
-          <CreateNFT metaData={metaDataForModal} handleNext={() => {}} handleCancel={() => handleCancelCreateItem()} collection={collectionData.id} isCollectionPage={true}/>
+          <CreateNFT metaData={metaDataForModal} handleNext={() => {}} handleCancel={() => handleCancelCreateItem()} handleRefresh={()=>handleRefresh()} collection={collectionData.id} isCollectionPage={true}/>
         </div>
         :
         <Box className={classes.container} id="scrollContainer">
