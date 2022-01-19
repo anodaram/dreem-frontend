@@ -73,7 +73,7 @@ export default function Owners() {
         { cell: <p className={classes.whiteText}>{key + 1}</p> },
         { cell: <p className={classes.accTitle}>{`${row.address.substring(0, 6)}...${row.address.substring(row.address.length - 4, row.address.length)}`}</p> },
         { cell: <p className={classes.whiteText}>{row.count}</p> },
-        { cell: <p className={classes.whiteText}>{totalGameCount == 0 ? 0 : (row.count / totalGameCount).toFixed(5)} %</p> },
+        { cell: <p className={classes.whiteText}>{totalGameCount == 0 ? 0 : (row.count / totalGameCount).toFixed(2)} %</p> },
       ]);
     }
 

@@ -138,7 +138,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${offerPrice} ${token.Symbol}!`, {
+      showAlertMessage(`Successfully approved ${(offerPrice* PRECISSION).toFixed(2)} ${token.Symbol}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);

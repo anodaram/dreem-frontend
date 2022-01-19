@@ -118,7 +118,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${price} ${rentalToken.Symbol}!`, {
+      showAlertMessage(`Successfully approved ${(offerPrice* PRECISSION).toFixed(2)} ${rentalToken.Symbol}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);
