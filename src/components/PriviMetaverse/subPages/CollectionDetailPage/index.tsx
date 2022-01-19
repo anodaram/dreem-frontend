@@ -11,6 +11,7 @@ import NotAppModal from "components/PriviMetaverse/modals/NotAppModal";
 import RealmCard from "components/PriviMetaverse/components/cards/RealmCard";
 import OpenDesktopModal from "components/PriviMetaverse/modals/OpenDesktopModal";
 import CreateExtensionDraftModal from "components/PriviMetaverse/modals/CreateExtensionDraftModal";
+import CreateNFT from "../ManageContentPage/components/CreateNFT";
 
 import { METAVERSE_URL } from "shared/functions/getURL";
 import Box from "shared/ui-kit/Box";
@@ -72,6 +73,8 @@ export default function CollectionDetailPage() {
   const [hasMore, setHasMore] = React.useState<boolean>(true);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [selectedTab, setSelectedTab] = React.useState<string>();
+  const [openCreateCollectionModal, setOpenCreateCollectionModal] = React.useState<boolean>(false);
+  const [metaDataForModal, setMetaDataForModal] = React.useState<any>(null);
 
   const { shareMedia } = useShareMedia();
 
@@ -110,6 +113,23 @@ export default function CollectionDetailPage() {
     setLoading(false);
   };
 
+  const handleCreateItemModal = async () => {
+    setOpenCreateCollectionModal(true)
+    const res = await MetaverseAPI.getUploadMetadata();
+    if (res && res.success) {
+      if (res.data.uploading?.enabled) {
+        setMetaDataForModal(res.data);
+      } else {
+        showAlertMessage(`${res.data.uploading?.message}`, { variant: "error" });
+      }
+    } else {
+      showAlertMessage(`Server is down. Please wait...`, { variant: "error" });
+    }
+  };
+
+  const handleCancelCreateItem = () => {
+    setOpenCreateCollectionModal(false)
+  }
 
   const loadData = async () => {
     try {
@@ -131,15 +151,27 @@ export default function CollectionDetailPage() {
 
   return (
     <Box className={classes.root}>
-      <Box className={classes.container} id="scrollContainer">
+      {openCreateCollectionModal ?
+        <div className={classes.otherContent}>
+          <div className={classes.typo1}>Creating New Draft</div>
+          <Box className={classes.typo3} mb={3}>
+            Fill all the details of your new nft
+          </Box>
+          <CreateNFT metaData={metaDataForModal} handleNext={() => {}} handleCancel={() => handleCancelCreateItem()} collection={collectionData.id} isCollectionPage={true}/>
+        </div>
+        :
+        <Box className={classes.container} id="scrollContainer">
         <Box className={classes.fitContent} mb={2}>
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2.5}>
             <Box className={classes.title}>{collectionData.name || ""}</Box>
+            <div className={classes.createCollectionBtn} onClick={() => handleCreateItemModal()}>
+              <PlusIcon />
+              create new item
+            </div>
           </Box>
           <Box className={classes.symbol}>{collectionData.symbol || ""}</Box>
           <Box className={classes.description}>{collectionData.description || ""}</Box>
         </Box>
-
         <InfiniteScroll
           hasChildren={nftData?.length > 0}
           dataLength={nftData?.length}
@@ -179,6 +211,18 @@ export default function CollectionDetailPage() {
           </Box>
         )}
       </Box>
+      }
     </Box>
   );
 }
+
+const PlusIcon = () => (
+  <svg width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M6.5 12.0488V2.04883M1.5 7.04883L11.5 7.04883"
+      stroke="#151515"
+      strokeWidth="2.5"
+      strokeLinecap="square"
+    />
+  </svg>
+);

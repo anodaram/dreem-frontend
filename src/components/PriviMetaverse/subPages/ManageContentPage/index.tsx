@@ -427,7 +427,7 @@ export default function ManageContentPage() {
             <Box className={classes.typo3} mb={3}>
               Fill all the details of your new nft
             </Box>
-            <CreateNFT metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev} />
+            <CreateNFT metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev} collection={null} isCollectionPage={false}/>
           </div>
         )}
         {step > 1 || (step === 1 && collections.length) ? (

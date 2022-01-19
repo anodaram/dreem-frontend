@@ -68,6 +68,23 @@ export const collectionDetailPageStyles = makeStyles(theme => ({
       fontSize: 34,
     },
   },
+  createCollectionBtn: {
+    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+    borderRadius: 12,
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: "19.2px",
+    fontFamily: "GRIFTER",
+    padding: "14px 18px",
+    color: "#212121",
+    cursor: "pointer",
+    textTransform: "uppercase",
+    display: "flex",
+    alignItems: "center",
+    "& svg": {
+      marginRight: 12,
+    },
+  },
   description: {
     fontSize: "16px",
     fontWeight: 400,
@@ -92,5 +109,68 @@ export const collectionDetailPageStyles = makeStyles(theme => ({
     lineHeight: "190%",
     color: "#E9FF26",
     marginBottom: 26,
-  }
+  },
+  otherContent: {
+    marginTop: 120,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    maxWidth: 1600,
+    marginLeft: "auto",
+    marginRight: "auto",
+    padding: "0 96px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "0 24px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: "0 16px",
+    },
+  },
+  typo1: {
+    fontSize: 40,
+    fontWeight: "bold",
+    lineHeight: "120%",
+    textAlign: "center",
+    fontFamily: "GRIFTER",
+    textTransform: "uppercase",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 30,
+      lineHeight: "30px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 22,
+      lineHeight: "22px",
+      width: 280,
+    },
+  },
+  typo2: {
+    fontSize: 62,
+    fontWeight: 700,
+    lineHeight: "62px",
+    textAlign: "center",
+    fontFamily: "GRIFTER",
+    textTransform: "uppercase",
+    marginBottom: 8,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "48px",
+      lineHeight: "48px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "34px",
+      lineHeight: "34px",
+      width: 280,
+    },
+  },
+  typo3: {
+    fontSize: 16,
+    fontWeight: 400,
+    lineHeight: "175%",
+    fontFamily: "Rany",
+    textAlign: "center",
+    [theme.breakpoints.down("xs")]: {
+      textAlign: "center",
+      width: 280,
+    },
+  },
 }));

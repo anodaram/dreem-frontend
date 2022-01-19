@@ -22,10 +22,14 @@ const CreateNFT = ({
   metaData,
   handleNext,
   handleCancel,
+  collection,
+  isCollectionPage
 }: {
   metaData: any;
   handleNext: () => void;
   handleCancel: () => void;
+  collection: any,
+  isCollectionPage: boolean
 }) => {
   const classes = useModalStyles();
   const filterClasses = useFilterSelectStyles();
@@ -67,12 +71,12 @@ const CreateNFT = ({
   const [progress, setProgress] = useState(0);
   const [isUpload, setIsUpload] = useState(true);
   const [sizeSpec, setSizeSpec] = useState<any>(metaData);
+  const [collectionId, setCollectionId] = useState<any>(metaData);
 
   const [openAssetSelect, setOpenAssetSelect] = useState<boolean>(false);
   const [openCollectionSelect, setOpenCollectionSelect] = useState<boolean>(false);
   const [filterAsset, setFilterAsset] = useState<string>(FilterWorldAssetOptions[0]);
   const [filterCollection, setFilterCollection] = useState<string>("");
-
   useEffect(() => {
     setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");
   }, []);
@@ -349,78 +353,84 @@ const CreateNFT = ({
         }}
       >
         <div className={classes.modalContent}>
-          <Box display="flex" alignItems="center" justifyContent="space-between">
-            <Box className={classes.itemTitle} mb={1}>
-              Asset Type
-            </Box>
-            <InfoTooltip tooltip={""} />
-          </Box>
-          <Select
-            open={openAssetSelect}
-            onClose={() => setOpenAssetSelect(false)}
-            value={filterAsset}
-            onChange={e => setFilterAsset(String(e.target.value))}
-            className={classes.select}
-            renderValue={(value: any) => (
-              <Box display="flex" alignItems="center" onClick={() => setOpenAssetSelect(true)}>
-                <span>{value}</span>
+          {isCollectionPage ?
+          <>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+              <Box className={classes.itemTitle} mb={1}>
+                Asset Type
               </Box>
-            )}
-            MenuProps={{
-              classes: filterClasses,
-              anchorOrigin: {
-                vertical: "bottom",
-                horizontal: "left",
-              },
-              transformOrigin: {
-                vertical: "top",
-                horizontal: "left",
-              },
-              getContentAnchorEl: null,
-            }}
-          >
-            {FilterWorldAssetOptions.map((asset, index) => (
-              <MenuItem key={`filter-chain-${index}`} value={asset}>
-                {asset}
-              </MenuItem>
-            ))}
-          </Select>
-          <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
-            <Box className={classes.itemTitle} mb={1}>
-              Collection
+              <InfoTooltip tooltip={""} />
             </Box>
-            <InfoTooltip tooltip={""} />
-          </Box>
-          <Select
-            open={openCollectionSelect}
-            onClose={() => setOpenCollectionSelect(false)}
-            value={filterCollection}
-            onChange={e => setFilterCollection(String(e.target.value))}
-            className={classes.select}
-            renderValue={(value: any) => (
-              <Box display="flex" alignItems="center" onClick={() => setOpenCollectionSelect(true)}>
-                <span>{value}</span>
+            <Select
+              open={openAssetSelect}
+              onClose={() => setOpenAssetSelect(false)}
+              value={filterAsset}
+              onChange={e => setFilterAsset(String(e.target.value))}
+              className={classes.select}
+              renderValue={(value: any) => (
+                <Box display="flex" alignItems="center" onClick={() => setOpenAssetSelect(true)}>
+                  <span>{value}</span>
+                </Box>
+              )}
+              MenuProps={{
+                classes: filterClasses,
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "left",
+                },
+                transformOrigin: {
+                  vertical: "top",
+                  horizontal: "left",
+                },
+                getContentAnchorEl: null,
+              }}
+            >
+              {FilterWorldAssetOptions.map((asset, index) => (
+                <MenuItem key={`filter-chain-${index}`} value={asset}>
+                  {asset}
+                </MenuItem>
+              ))}
+            </Select>
+          </> :
+          <>
+            <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+              <Box className={classes.itemTitle} mb={1}>
+                Collection
               </Box>
-            )}
-            MenuProps={{
-              classes: filterClasses,
-              anchorOrigin: {
-                vertical: "bottom",
-                horizontal: "left",
-              },
-              transformOrigin: {
-                vertical: "top",
-                horizontal: "left",
-              },
-              getContentAnchorEl: null,
-            }}
-          >
-            {[].map((collection, index) => (
-              <MenuItem key={`filter-chain-${index}`} value={collection}>
-                {collection}
-              </MenuItem>
-            ))}
-          </Select>
+              <InfoTooltip tooltip={""} />
+            </Box>
+            <Select
+              open={openCollectionSelect}
+              onClose={() => setOpenCollectionSelect(false)}
+              value={filterCollection}
+              onChange={e => setFilterCollection(String(e.target.value))}
+              className={classes.select}
+              renderValue={(value: any) => (
+                <Box display="flex" alignItems="center" onClick={() => setOpenCollectionSelect(true)}>
+                  <span>{value}</span>
+                </Box>
+              )}
+              MenuProps={{
+                classes: filterClasses,
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "left",
+                },
+                transformOrigin: {
+                  vertical: "top",
+                  horizontal: "left",
+                },
+                getContentAnchorEl: null,
+              }}
+            >
+              {[].map((collection, index) => (
+                <MenuItem key={`filter-chain-${index}`} value={collection}>
+                  {collection}
+                </MenuItem>
+              ))}
+            </Select>
+          </>
+          }
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
             <Box className={classes.itemTitle} mb={1}>
               NFT Name
