@@ -196,40 +196,25 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
               ) : (
                 <Box display="flex" flexDirection="column" flex={1} mr={4} mt={0.5}>
                   <RangeSlider
-                    value={Number(totalCollateralPercent)}
+                    value={(Number(totalCollateralPercent) / Number(collateralPercent) - 1) * 100 + 20}
                     variant="transparent"
                     onChange={(event, newValue) => {}}
                   />
-                  <Box display="flex" width={1} mt={1.5} fontSize={12}>
-                    <Box flex={Number(collateralPercent)}>
+                  <Box display="flex" width={1} mt={1.5} fontSize={14}>
+                    <Box flex={20}>
                       <strong>0%</strong>
                     </Box>
-                    <Box
-                      flex={Number(collateralPercent) * 0.5}
-                      ml={"-26px"}
-                      display={"flex"}
-                      flexDirection={"column"}
-                    >
+                    <Box flex={30} ml={"-26px"} display={"flex"} flexDirection={"column"}>
                       <span>{Number(collateralPercent).toFixed(1)}%</span>
                       <span style={{ marginLeft: -8, marginTop: 4 }}>High Risk</span>
                     </Box>
-                    <Box
-                      flex={Number(collateralPercent) * 0.3}
-                      ml={"-26px"}
-                      display={"flex"}
-                      flexDirection={"column"}
-                    >
+                    <Box flex={25} ml={"-26px"} display={"flex"} flexDirection={"column"}>
                       <span>{Number(collateralPercent * 1.5).toFixed(1)}%</span>
                       <span style={{ marginLeft: -16, marginTop: 4 }}>Medium Risk</span>
                     </Box>
-                    <Box
-                      flex={100 - Number(collateralPercent) * 1.8}
-                      ml={"-26px"}
-                      display={"flex"}
-                      flexDirection={"column"}
-                    >
+                    <Box flex={25} ml={"-26px"} display={"flex"} flexDirection={"column"}>
                       <span>
-                        <strong>{Number(collateralPercent * 1.8).toFixed(1)}%</strong>
+                        <strong>{Number(collateralPercent * 1.75).toFixed(1)}%</strong>
                       </span>
                       <span style={{ marginLeft: -7, marginTop: 4 }}>
                         <strong>Low Risk</strong>
