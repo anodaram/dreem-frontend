@@ -118,7 +118,6 @@ export const useManageNFTPageStyles = makeStyles(theme => ({
     "-webkit-background-clip": "text",
     [theme.breakpoints.down("xs")]: {
       fontSize: 28,
-      marginTop: 16,
     },
   },
   fitContent: {

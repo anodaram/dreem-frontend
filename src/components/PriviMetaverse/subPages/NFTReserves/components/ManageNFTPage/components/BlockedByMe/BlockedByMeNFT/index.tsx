@@ -106,12 +106,19 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
               height="150px"
             >
               <Box className={classes.nftName}>{item?.name}</Box>
-              <Box display="flex" alignItems="center" flex={1} flexDirection={isTablet ? "column" : "row"}>
+              <Box
+                display="flex"
+                alignItems="center"
+                flex={1}
+                flexDirection={isTablet ? "column" : "row"}
+                mt={isMobile ? 2 : 0}
+              >
                 <Box
                   display={"flex"}
-                  alignItems={"center"}
+                  alignItems={isMobile ? "start" : "center"}
                   flex={isTablet ? 1 : 0.5}
                   width={isTablet ? 1 : 0.5}
+                  flexDirection={isMobile ? "column" : "row"}
                 >
                   <Box
                     display="flex"
@@ -126,7 +133,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                     display="flex"
                     flexDirection="column"
                     flex={isTablet ? 0.5 : 0.25}
-                    pl={6}
+                    pl={isMobile ? 0 : 6}
                     className={classes.section}
                   >
                     <Box className={classes.header}>Collateral</Box>
@@ -139,33 +146,35 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                     </Box>
                   </Box>
                 </Box>
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  flex={0.5}
-                  pl={isTablet ? 0 : 3}
-                  mt={isTablet ? 3 : 0}
-                >
-                  {isExpired ? (
-                    isPaid ? (
-                      <Box className={classes.paymentStatus} mr={2} color="#EEFF21">
-                        Paid
-                      </Box>
+                {!isMobile && (
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    flex={0.5}
+                    pl={isTablet ? 0 : 3}
+                    mt={isTablet ? 3 : 0}
+                  >
+                    {isExpired ? (
+                      isPaid ? (
+                        <Box className={classes.paymentStatus} mr={2} color="#EEFF21">
+                          Paid
+                        </Box>
+                      ) : (
+                        <Box className={classes.paymentStatus} mr={2} color="#FF6868">
+                          You’ve lost the posibility to buy
+                        </Box>
+                      )
                     ) : (
-                      <Box className={classes.paymentStatus} mr={2} color="#FF6868">
-                        You’ve lost the posibility to buy
+                      <Box className={classes.paymentStatus} mr={2} color="#ffffff">
+                        Payment In
                       </Box>
-                    )
-                  ) : (
-                    <Box className={classes.paymentStatus} mr={2} color="#ffffff">
-                      Payment In
-                    </Box>
-                  )}
-                  <span className={classes.time}>{closeTime?.day} day(s) </span>
-                  <span className={classes.time}>{closeTime?.hour} hour(s) </span>
-                  <span className={classes.time}>{closeTime?.min} min</span>
-                  <span className={classes.time}>{closeTime?.seconds} sec</span>
-                </Box>
+                    )}
+                    <span className={classes.time}>{closeTime?.day} day(s) </span>
+                    <span className={classes.time}>{closeTime?.hour} hour(s) </span>
+                    <span className={classes.time}>{closeTime?.min} min</span>
+                    <span className={classes.time}>{closeTime?.seconds} sec</span>
+                  </Box>
+                )}
               </Box>
               {!isMobile && !isTablet && (
                 <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -262,9 +271,52 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
               }}
             />
           </Box>
+          {isMobile && (
+            <Box
+              display="flex"
+              flexDirection={"column"}
+              flex={0.5}
+              pl={isTablet ? 0 : 3}
+              mt={isTablet ? 3 : 0}
+            >
+              {isExpired ? (
+                isPaid ? (
+                  <Box className={classes.paymentStatus} mr={2} color="#EEFF21">
+                    Paid
+                  </Box>
+                ) : (
+                  <Box className={classes.paymentStatus} mr={2} color="#FF6868">
+                    You’ve lost the posibility to buy
+                  </Box>
+                )
+              ) : (
+                <Box className={classes.paymentStatus} mr={2} color="#ffffff">
+                  Payment In
+                </Box>
+              )}
+              <Box display={"flex"}>
+                <span className={classes.time}>{closeTime?.day} day(s) </span>
+                <span className={classes.time}>{closeTime?.hour} hour(s) </span>
+                <span className={classes.time}>{closeTime?.min} min</span>
+                <span className={classes.time}>{closeTime?.seconds} sec</span>
+              </Box>
+            </Box>
+          )}
           {isTablet && (
-            <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Box display="flex" flexDirection="column" mx={3} mb={3}>
+            <Box
+              display="flex"
+              alignItems={isMobile ? "start" : "center"}
+              justifyContent="space-between"
+              flexDirection={isMobile ? "column" : "row"}
+              width={1}
+            >
+              <Box
+                display="flex"
+                flexDirection="column"
+                mx={isMobile ? 0 : 3}
+                mb={isMobile ? 0 : 3}
+                mt={isMobile ? 3 : 0}
+              >
                 <Box className={classes.header}>Collateral Pct.</Box>
                 <Box>
                   {item.history?.TotalCollateralPercent
@@ -314,7 +366,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                   </Box>
                 )
               ) : (
-                <Box display="flex" flexDirection="column" flex={1} mr={4} mt={1.5}>
+                <Box display="flex" flexDirection="column" flex={1} mr={4} mt={1.5} width={1}>
                   <RangeSlider
                     value={(Number(totalCollateralPercent) / Number(collateralPercent) - 1) * 100 + 20}
                     variant="transparent"
