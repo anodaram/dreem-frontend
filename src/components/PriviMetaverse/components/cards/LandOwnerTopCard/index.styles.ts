@@ -12,9 +12,6 @@ export const cardStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       height: 300,
     },
-    [theme.breakpoints.down("xs")]: {
-      height: 250,
-    },
   },
   container: {
     display: "flex",

@@ -23,6 +23,28 @@ export async function getMarketplaceFee(): Promise<any> {
   }
 }
 
+export async function getPenaltyFee(): Promise<any> {
+  try {
+    const response = await axios.get(`${URL()}/metaverseReserve/getPenaltyFee`);
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
+export async function storePenaltyFee(fee): Promise<any> {
+  try {
+    const response = await axios.post(`${URL()}/metaverseReserve/setPenaltyFee`, {
+      fee
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
 export async function getGameNFT(payload: any): Promise<any> {
   try {
     const response = await axios.get(`${URL()}/metaverseReserve/getGameNFT`, {

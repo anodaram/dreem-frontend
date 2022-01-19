@@ -70,9 +70,6 @@ export const avatarCardStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       fontSize: "14px",
     },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "12px",
-    },
   },
   skeleton: {
     display: "flex",

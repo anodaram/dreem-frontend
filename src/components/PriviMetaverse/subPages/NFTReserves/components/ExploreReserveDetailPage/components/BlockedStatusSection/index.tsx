@@ -100,7 +100,7 @@ export default ({isOwnership, nft, refresh}) => {
     } else {
       setTransactionSuccess(false);
       setOpenNoLiquidationPossibleModal(true);
-      showAlertMessage(`Liquidation Failed! ${nft?.owner?.name} holds enough collateral and could not be liquidated.`, { variant: "error" });
+      //showAlertMessage(`Liquidation Failed! ${nft?.owner?.name} holds enough collateral and could not be liquidated.`, { variant: "error" });
     }
   }
 

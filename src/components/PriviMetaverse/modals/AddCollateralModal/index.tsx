@@ -41,6 +41,8 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   const { showAlertMessage } = useAlertMessage();
   const isProd = process.env.REACT_APP_ENV === "prod";
 
+  const PRECISSION = 1.01;
+
   useEffect(() => {
     setReservePriceToken(tokenList[0]);
   }, [tokenList]);
@@ -123,7 +125,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER,
-        toNDecimals(price * (1 + fee), reservePriceToken.Decimals)
+        toNDecimals(price * (1 + fee) * PRECISSION, reservePriceToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
