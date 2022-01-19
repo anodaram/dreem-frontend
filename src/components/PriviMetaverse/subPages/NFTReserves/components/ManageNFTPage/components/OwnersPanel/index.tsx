@@ -104,7 +104,11 @@ const OwnersPanel = () => {
           !nft.status ? [] : Array.isArray(nft.status) ? nft.status : nft.status.split(", ");
         if (selectedTab === 0) {
           setUserNFTs(
-            nfts.filter(nft => loadNftStatus(nft).filter(s => s !== "Rented" && s !== "Blocked").length)
+            nfts.filter(
+              nft =>
+                !nft.status ||
+                loadNftStatus(nft).filter(s => s !== "Rented" && s !== "Blocked").length
+            )
           );
         } else if (selectedTab === 1) {
           setUserNFTs(nfts.filter(nft => loadNftStatus(nft).filter(s => s === "Rented").length));
