@@ -29,7 +29,6 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
     return () => clearInterval(interval);
   }, [item]);
 
-  
   const handleClickAddress = () => {
     const address = item?.Address || "";
     if (item?.Chain?.toLowerCase() === "polygon") {
@@ -63,11 +62,12 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
     return token?.Symbol || "";
   };
 
-  const collateralPercent = Number(item.history?.TotalCollateralPercent)
+  const totalCollateralPercent = Number(item.history?.TotalCollateralPercent);
+  const collateralPercent = Number(item.history?.CollateralPercent);
 
   const isExpired = item.history?.ReservePeriod * 3600 * 24 * 1000 + item.history?.created - Date.now() <= 0;
   const isClaimed = item.ownerAddress?.toLowerCase() === account?.toLowerCase();
-  const isPaid = item.history?.status === 'SOLD'
+  const isPaid = item.history?.status === "SOLD";
 
   const chainImage = item.Chain?.toLowerCase().includes("polygon")
     ? require("assets/tokenImages/POLYGON.png")
@@ -107,11 +107,11 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
               <Box display="flex" flexDirection="column" flex={0.25} pl={6} className={classes.section}>
                 <Box className={classes.header}>Collateral</Box>
                 <Box>
-                  {`${
-                    ((item.history?.Price *
+                  {`${(
+                    (item.history?.Price *
                       (item.history?.TotalCollateralPercent || item.history?.CollateralPercent)) /
-                    100).toFixed(2)
-                  } ${getTokenSymbol(item.history?.PaymentToken)}`}
+                    100
+                  ).toFixed(2)} ${getTokenSymbol(item.history?.PaymentToken)}`}
                 </Box>
               </Box>
 
@@ -190,25 +190,44 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
               ) : (
                 <Box display="flex" flexDirection="column" flex={1} mr={4} mt={0.5}>
                   <RangeSlider
-                    value={(collateralPercent / 80) * 100}
+                    value={Number(totalCollateralPercent)}
                     variant="transparent"
                     onChange={(event, newValue) => {}}
                   />
-                  <Box display="flex" alignItems="center" justifyContent="space-between" mt={1} width="100%">
-                    <Box flex={collateralPercent / 80}>
+                  <Box display="flex" width={1} mt={1.5} fontSize={12}>
+                    <Box flex={Number(collateralPercent)}>
                       <strong>0%</strong>
                     </Box>
-                    <Box flex={(collateralPercent / 80) * 0.2} className={classes.flexBox}>
-                      <strong>{Number(collateralPercent).toFixed(1)}% Liquidation</strong>
+                    <Box
+                      flex={Number(collateralPercent) * 0.5}
+                      ml={"-26px"}
+                      display={"flex"}
+                      flexDirection={"column"}
+                    >
+                      <span>{Number(collateralPercent).toFixed(1)}%</span>
+                      <span style={{ marginLeft: -8, marginTop: 4 }}>High Risk</span>
                     </Box>
-                    <Box flex={(collateralPercent / 80) * 0.3} className={classes.flexBox}>
-                      {Number(collateralPercent * 1.2).toFixed(1)}% High Risk
+                    <Box
+                      flex={Number(collateralPercent) * 0.3}
+                      ml={"-26px"}
+                      display={"flex"}
+                      flexDirection={"column"}
+                    >
+                      <span>{Number(collateralPercent * 1.5).toFixed(1)}%</span>
+                      <span style={{ marginLeft: -16, marginTop: 4 }}>Medium Risk</span>
                     </Box>
-                    <Box flex={(collateralPercent / 80) * 0.5}>
-                      {Number(collateralPercent * 1.5).toFixed(1)}% Medium Risk
-                    </Box>
-                    <Box>
-                      <strong>{Number(collateralPercent * 2).toFixed(1)}% Low Risk</strong>
+                    <Box
+                      flex={100 - Number(collateralPercent) * 1.8}
+                      ml={"-26px"}
+                      display={"flex"}
+                      flexDirection={"column"}
+                    >
+                      <span>
+                        <strong>{Number(collateralPercent * 1.8).toFixed(1)}%</strong>
+                      </span>
+                      <span style={{ marginLeft: -7, marginTop: 4 }}>
+                        <strong>Low Risk</strong>
+                      </span>
                     </Box>
                   </Box>
                 </Box>
