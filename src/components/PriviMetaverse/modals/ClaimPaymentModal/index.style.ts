@@ -14,7 +14,7 @@ export const ClaimPaymentModalStyles = makeStyles(theme => ({
   },
   infoPanel: {
     marginTop: 17,
-    marginBottom: 34,
+    marginBottom: 8,
     padding: 19,
     display: "flex",
     flexDirection: "column",
