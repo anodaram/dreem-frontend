@@ -144,7 +144,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
             <div className={classes.cardContentDiv}>
               <span className={classes.cardContentText}>Direct Purchase</span>
               <span className={classes.cardContentAmount}>
-                {nft?.sellingOffer?.Price
+                {!isBlocked && nft?.sellingOffer?.Price
                   ? `${nft.sellingOffer.Price} ${getTokenSymbol(nft.sellingOffer.PaymentToken)}`
                   : "_"}
               </span>
@@ -160,7 +160,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
             <div className={classes.cardContentDiv}>
               <span className={classes.cardContentText}>Rental Fee (per hour)</span>
               <span className={classes.cardContentAmount}>
-                {nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
+                {!isBlocked && nft?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
                   ? `${(
                       +toDecimals(
                         nft.rentSaleOffer.pricePerSecond,

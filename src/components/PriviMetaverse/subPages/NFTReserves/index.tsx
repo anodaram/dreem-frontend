@@ -362,7 +362,7 @@ const NFTReserves = () => {
           {
             cell: (
               <Box textAlign="center">
-                {row?.sellingOffer?.Price
+                {!nftStatus(row).includes("Blocked") && row?.sellingOffer?.Price
                   ? `${row.sellingOffer.Price} ${getTokenSymbol(row.sellingOffer.PaymentToken)}`
                   : "_"}
               </Box>
@@ -382,7 +382,7 @@ const NFTReserves = () => {
           {
             cell: (
               <Box textAlign="center">
-                {row?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
+                {!nftStatus(row).includes("Blocked") && row?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
                   ? `${(
                       +toDecimals(
                         row.rentSaleOffer.pricePerSecond,
