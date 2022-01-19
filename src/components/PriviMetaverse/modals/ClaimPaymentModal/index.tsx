@@ -79,6 +79,7 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
         Beneficiary: blockingInfo.Beneficiary,
         offerer: account!,
         notificationMode: 0,
+        hash: response.hash
       });
 
       setTransactionSuccess(true);
@@ -124,7 +125,7 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
           <span className={classes.infoLabel}>Payment</span>
           <span className={classes.infoValue}>{`${blockingInfo?.Price*(1-fee)} ${getTokenSymbol(blockingInfo?.PaymentToken)}`}</span>
         </Box>
-        <Box fontSize={12} lineHeight="21px" textAlign="right" color="#ffffff">
+        <Box fontSize={12} mb={4} lineHeight="21px" textAlign="right" color="#ffffff">
             incl. {fee * 100}% marketplace fee
         </Box>
         <Box display="flex" alignItems="center" justifyContent="center" mt={3}>

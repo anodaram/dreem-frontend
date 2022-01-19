@@ -168,7 +168,8 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
         PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price,
         offerer: account!,
         status: "SOLD",
-        notificationMode: 1
+        notificationMode: 1,
+        hash: response.hash,
       });
 
       setTransactionSuccess(true);
