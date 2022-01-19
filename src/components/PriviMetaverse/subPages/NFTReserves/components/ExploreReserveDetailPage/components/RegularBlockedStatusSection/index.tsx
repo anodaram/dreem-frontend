@@ -177,19 +177,24 @@ export default ({ isOwnership, nft, refresh }) => {
           <Box flex={Number(collateralPercent)}>
             <strong>0%</strong>
           </Box>
-          <Box flex={Number(collateralPercent) * 0.5} ml={-2} display={"flex"} flexDirection={"column"}>
+          <Box flex={Number(collateralPercent) * 0.5} ml={"-26px"} display={"flex"} flexDirection={"column"}>
             <span>{Number(collateralPercent).toFixed(1)}%</span>
-            <span style={{ marginLeft: -10, marginTop: 4 }}>High Risk</span>
+            <span style={{ marginLeft: -8, marginTop: 4 }}>High Risk</span>
           </Box>
-          <Box flex={Number(collateralPercent) * 0.3} ml={-2} display={"flex"} flexDirection={"column"}>
+          <Box flex={Number(collateralPercent) * 0.3} ml={"-26px"} display={"flex"} flexDirection={"column"}>
             <span>{Number(collateralPercent * 1.5).toFixed(1)}%</span>
-            <span style={{ marginLeft: -10, marginTop: 4 }}>Medium Risk</span>
+            <span style={{ marginLeft: -16, marginTop: 4 }}>Medium Risk</span>
           </Box>
-          <Box flex={100 - Number(collateralPercent) * 1.8} ml={-2} display={"flex"} flexDirection={"column"}>
+          <Box
+            flex={100 - Number(collateralPercent) * 1.8}
+            ml={"-26px"}
+            display={"flex"}
+            flexDirection={"column"}
+          >
             <span>
               <strong>{Number(collateralPercent * 1.8).toFixed(1)}%</strong>
             </span>
-            <span style={{ marginLeft: -10, marginTop: 4 }}>
+            <span style={{ marginLeft: -7, marginTop: 4 }}>
               <strong>Low Risk</strong>
             </span>
           </Box>
