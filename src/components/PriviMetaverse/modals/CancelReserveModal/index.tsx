@@ -12,7 +12,7 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import Web3 from "web3";
 import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import { toNDecimals } from "shared/functions/web3";
-import { closeBlockingHistory } from "shared/services/API/ReserveAPI";
+import { closeBlockingHistory, getPenaltyFee, storePenaltyFee } from "shared/services/API/ReserveAPI";
 import TransactionProgressModal from "../TransactionProgressModal";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -52,13 +52,20 @@ export default function CancelReserveModal({
       if (nft && nft?.blockingSalesHistories) {
         setBlockingInfo(nft?.blockingSalesHistories[nft?.blockingSalesHistories?.length - 1]);
       }
-      const chain = BlockchainNets.find(net => net.name.toLowerCase() === nft.Chain.toLowerCase());
-      if (chain) {
-        const web3APIHandler = chain.apiHandler;
-        const web3 = new Web3(library.provider);
+      
+      const penaltyFeeRes = await getPenaltyFee();
+      if (penaltyFeeRes.success && penaltyFeeRes.data?.Fee) {
+        setPenaltyFee(Number(penaltyFeeRes.data.Fee));
+      } else {
+        const chain = BlockchainNets.find(net => net.name.toLowerCase() === nft.Chain.toLowerCase());
+        if (chain) {
+          const web3APIHandler = chain.apiHandler;
+          const web3 = new Web3(library.provider);
 
-        const contractResponse = await web3APIHandler.ReservesManager.sellerCancelFeePercent(web3);
-        setPenaltyFee(contractResponse.response);
+          const contractResponse = await web3APIHandler.ReservesManager.sellerCancelFeePercent(web3);
+          setPenaltyFee(contractResponse.response);
+          storePenaltyFee(contractResponse.response)
+        }
       }
     })();
   }, [open, nft]);
