@@ -114,7 +114,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${Number(info.Price) * (1 + fee)} ${symbol}!`, {
+      showAlertMessage(`Successfully approved ${(Number(info.Price) * (1 + fee)* PRECISSION).toFixed(2)} ${symbol}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);
@@ -168,7 +168,8 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
         PaidAmount: nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1].Price,
         offerer: account!,
         status: "SOLD",
-        notificationMode: 1
+        notificationMode: 1,
+        hash: response.hash,
       });
 
       setTransactionSuccess(true);

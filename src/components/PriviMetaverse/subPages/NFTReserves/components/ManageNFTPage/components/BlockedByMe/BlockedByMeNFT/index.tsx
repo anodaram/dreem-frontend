@@ -368,11 +368,11 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
               ) : (
                 <Box display="flex" flexDirection="column" flex={1} mr={4} mt={1.5} width={1}>
                   <RangeSlider
-                    value={(Number(totalCollateralPercent) / Number(collateralPercent) - 1) * 100 + 20}
+                    value={Number(collateralPercent / totalCollateralPercent - 1) * 100 + 20}
                     variant="transparent"
                     onChange={(event, newValue) => {}}
                   />
-                  <Box display="flex" width={1} mt={1.5} fontSize={14}>
+                  <Box display="flex" width={1} mt={1.5} fontSize={12}>
                     <Box flex={20}>
                       <strong>0%</strong>
                     </Box>

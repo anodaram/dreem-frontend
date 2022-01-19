@@ -86,7 +86,8 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
         Id: activeReserveId,
         Beneficiary: blockingInfo.Beneficiary,
         offerer: account!,
-        notificationMode: 2
+        notificationMode: 2,
+        hash: response.hash
       });
 
       setTransactionSuccess(true);

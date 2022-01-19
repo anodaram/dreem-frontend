@@ -23,13 +23,15 @@ export default function NotificationPage() {
     <Box className={classes.content}>
       <Box className={classes.background}>
         <Box className={classes.title}>Notifications</Box>
-        {notifications.length > 0 ? (
-          notifications.map(n => (
-            <NotificationItem notification={n} removeNotification={removeNotification} />
-          ))
-        ) : (
-          <Box>No unread notifications</Box>
-        )}
+        <Box className={classes.container}>
+          {notifications.length > 0 ? (
+            notifications.map(n => (
+              <NotificationItem notification={n} removeNotification={removeNotification} />
+            ))
+          ) : (
+            <Box>No unread notifications</Box>
+          )}
+        </Box>
       </Box>
     </Box>
   );

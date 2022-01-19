@@ -122,7 +122,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${price * (1 + fee)} ${reservePriceToken.Symbol}!`, {
+      showAlertMessage(`Successfully approved ${(price * (1 + fee)* PRECISSION).toFixed(2)} ${reservePriceToken.Symbol}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);

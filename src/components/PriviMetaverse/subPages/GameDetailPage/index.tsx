@@ -324,7 +324,7 @@ export default function GameDetailPage() {
                         row.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(row.rentSaleOffer.fundingToken)
                       ) * SECONDS_PER_HOUR
-                    ).toFixed(3)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
+                    ).toFixed(2)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
                   : "_"}
               </Box>
             ),

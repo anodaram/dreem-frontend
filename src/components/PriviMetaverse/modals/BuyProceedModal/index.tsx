@@ -195,7 +195,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
             <Box className={classes.box}>
               <span className={classes.infoLabel}>Price</span>
               <span className={classes.infoValue}>{`${
-                parseFloat(`${offer?.Price}`).toFixed(3) || 0
+                parseFloat(`${offer?.Price}`).toFixed(2) || 0
               } ${getTokenSymbol(offer.PaymentToken)}`}</span>
             </Box>
           </Box>

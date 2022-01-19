@@ -187,7 +187,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                   rows={offers.map(item => {
                     const token = tokenList.find(v => v.Address === item.fundingToken);
                     let estimatedCost = +toDecimals(item.pricePerSecond, token?.Decimals) * item.rentalTime;
-                    estimatedCost = +estimatedCost.toFixed(8);
+                    estimatedCost = +estimatedCost.toFixed(2);
                     return [
                       {
                         cell:

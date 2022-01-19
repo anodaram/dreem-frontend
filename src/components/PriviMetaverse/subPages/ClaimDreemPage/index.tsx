@@ -93,7 +93,7 @@ export default function ClaimDreemPage() {
       row.push({
         cell: (
           <Box fontSize={13} fontWeight={800} fontFamily="Rany" color="#fff">
-            {+(transaction.amount ?? 0).toFixed(3)} DREEM
+            {+(transaction.amount ?? 0).toFixed(2)} DREEM
           </Box>
         ),
         cellAlign: "left",
@@ -268,7 +268,7 @@ export default function ClaimDreemPage() {
                 Total Value
               </Box>
               <Box className={classes.typo5} style={{ fontWeight: 700 }}>
-                {+totalValue.toFixed(3)} <span>DREEM</span>
+                {+totalValue.toFixed(2)} <span>DREEM</span>
               </Box>
             </Box>
           </Box>
