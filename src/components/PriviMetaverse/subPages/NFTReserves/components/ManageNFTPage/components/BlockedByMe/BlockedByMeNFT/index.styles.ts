@@ -31,11 +31,17 @@ export const blockedByMeNFTStyles = makeStyles(theme => ({
     width: 128,
     textTransform: "uppercase",
     lineHeight: "18px",
+    [theme.breakpoints.down("sm")]: {
+      width: 96,
+    },
   },
   section: {
     borderRight: "1px solid #ffffff20",
     fontFamily: "GRIFTER",
     fontWeight: 700,
+    [theme.breakpoints.down("sm")]: {
+      borderRight: "none",
+    },
   },
   time: {
     padding: "8px 13px",
