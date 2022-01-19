@@ -19,6 +19,7 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
   const classes = ClaimPaymentModalStyles();
   const [blockingInfo, setBlockingInfo] = useState<any>(null);
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const fee = useSelector((state: RootState) => state.marketPlace.fee);
   const { collection_id, token_id } = useParams();
   const { account, library, chainId } = useWeb3React();
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
@@ -116,12 +117,15 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
         >
           Claim Payment
         </Box>
-        <Box className={classes.description}>
-          Repay your collateral to be able to recover and withdraw your NFT
-        </Box>
+        { <Box className={classes.description}>
+          Claim payment for your blocked NFT
+        </Box> }
         <Box className={classes.infoPanel}>
           <span className={classes.infoLabel}>Payment</span>
-          <span className={classes.infoValue}>{`${blockingInfo?.Price} ${getTokenSymbol(blockingInfo?.PaymentToken)}`}</span>
+          <span className={classes.infoValue}>{`${blockingInfo?.Price*(1-fee)} ${getTokenSymbol(blockingInfo?.PaymentToken)}`}</span>
+        </Box>
+        <Box fontSize={12} lineHeight="21px" textAlign="right" color="#ffffff">
+            incl. {fee * 100}% marketplace fee
         </Box>
         <Box display="flex" alignItems="center" justifyContent="center" mt={3}>
           <PrimaryButton size="medium" className={classes.primaryButton} onClick={handleConfirm}>
