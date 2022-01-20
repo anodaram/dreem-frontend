@@ -9,7 +9,7 @@ import BinanceExtensionLogo from "assets/walletImages/Binance.svg";
 import PriviWalletLogo from "assets/tokenImages/PRIVI.png";
 import WaxWalletLogo from "assets/walletImages/waxWallet.png";
 import PolkadotWalletLogo from "assets/walletImages/polkadot.svg";
-import { polygonAPI, ethAPI, binanceAPI } from "shared/services/API/web3";
+import { polygonAPI, binanceAPI } from "shared/services/API/web3";
 import Web3Config from "shared/connectors/web3/config";
 
 export const PRIVI_ADDRESS = "0x4c6a375e66440949149720f273d69fcd11b1564b";
@@ -137,15 +137,6 @@ export const BlockchainNets: any =
           scan: { name: "POLYGONSCAN", url: "https://polygonscan.com" },
         },
         {
-          name: "ETHEREUM",
-          value: "Ethereum Chain",
-          image: "tokenImages/ETH.png",
-          chainId: 1,
-          config: Web3Config.Ethereum,
-          apiHandler: ethAPI,
-          scan: { name: "ETHERSCAN", url: "https://etherscan.io" },
-        },
-        {
           name: "BSC",
           value: "Binance Smart Chain",
           image: "tokenImages/BNB.png",
@@ -173,15 +164,6 @@ export const BlockchainNets: any =
           scan: { name: "POLYGONSCAN", url: "https://mumbai.polygonscan.com" },
         },
         {
-          name: "ETHEREUM",
-          value: "Ethereum Chain",
-          image: "tokenImages/ETH.png",
-          chainId: 4,
-          config: Web3Config.Ethereum,
-          apiHandler: ethAPI,
-          scan: { name: "ETHERSCAN", url: "https://rinkeby.etherscan.io" },
-        },
-        {
           name: "BSC",
           value: "Binance Smart Chain",
           image: "tokenImages/BNB.png",
@@ -191,25 +173,6 @@ export const BlockchainNets: any =
           scan: { name: "BINANCESCAN", url: "https://testnet.bscscan.com" },
         },
       ];
-
-export const LoanBlockchainNet: any = [
-  {
-    name: "ETH",
-    value: "Ethereum Chain",
-    image: "tokenImages/ETH.png",
-    chainId: 4,
-    config: Web3Config.Ethereum,
-    apiHandler: ethAPI,
-  },
-  {
-    name: "POLYGON",
-    value: "Polygon Chain",
-    image: "tokenImages/POLYGON.png",
-    chainId: 80001,
-    config: Web3Config.Polygon,
-    apiHandler: polygonAPI,
-  },
-];
 
 export const TradeTraxTokenList = [
   { name: "USDT", value: "USDT", image: "tokenImages/USDp.svg" },
