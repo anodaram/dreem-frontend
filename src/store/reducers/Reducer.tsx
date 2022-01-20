@@ -234,7 +234,7 @@ export interface RootState {
     tokenList: any[];
     fee: number;
     selectedTabMarketMain: string;
-    selectedTabMarketManageNFTMain: number | string;
+    selectedTabMarketManageNFTMain: string;
     selectedTabMarketManageNFTSub: number;
   };
 }

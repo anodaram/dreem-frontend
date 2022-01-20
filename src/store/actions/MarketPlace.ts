@@ -15,7 +15,7 @@ export const setSelTabMarketMain = (selectedTab: string) => ({
   selectedTabMarketMain: selectedTab,
 });
 
-export const setSelTabMarketManageNFTMain = (selectedTab: number | string) => ({
+export const setSelTabMarketManageNFTMain = (selectedTab: string) => ({
   type: actionTypes.SET_SELTAB_MARKET_MANAGE_NFT_MAIN,
   selectedTabMarketManageNFTMain: selectedTab,
 });

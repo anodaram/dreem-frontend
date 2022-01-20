@@ -6,7 +6,7 @@ interface State extends rootState {
   tokenList: any[];
   fee: number;
   selectedTabMarketMain: string;
-  selectedTabMarketManageNFTMain: number | string;
+  selectedTabMarketManageNFTMain: string;
   selectedTabMarketManageNFTSub: number;
 }
 interface Action extends rootState {
@@ -18,7 +18,7 @@ const initialState: State = {
   tokenList: [],
   fee: 0,
   selectedTabMarketMain: "",
-  selectedTabMarketManageNFTMain: 0 || "",
+  selectedTabMarketManageNFTMain: "",
   selectedTabMarketManageNFTSub: 0,
 };
 
