@@ -3,6 +3,21 @@ import URL, { METAVERSE_URL } from "shared/functions/getURL";
 
 const isDev = process.env.REACT_APP_ENV === "dev";
 
+export const getUserInfo = async priviId => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.get(`${METAVERSE_URL()}/web/public/user/${priviId}/`, config);
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    console.log("error in getUserInfo:", error);
+  }
+};
+
 export const getFeaturedWorlds = async filters => {
   try {
     const token = localStorage.getItem("token");

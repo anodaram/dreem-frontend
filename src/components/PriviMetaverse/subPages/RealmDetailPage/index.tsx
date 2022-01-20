@@ -252,7 +252,7 @@ export default function RealmDetailPage() {
               onClick={() => {
                 history.push(
                   `/profile/${
-                    realmData?.submitter?.user?.address || realmData?.submitter?.user?.address
+                    realmData?.submitter?.user?.address
                   }`
                 );
               }}

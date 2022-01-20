@@ -69,6 +69,7 @@ export default function CreatorPage() {
 
   const { creatorAddress } = useParams<{ creatorAddress: string }>();
   const userSelector = useTypedSelector(state => state.user);
+  const [userInfo, setUserInfo] = useState<any>({});
   const [creator, setCreator] = useState<any>({});
   const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -106,16 +107,27 @@ export default function CreatorPage() {
   useEffect(() => {
     // check owner
     if (userSelector && userSelector.urlSlug) {
-      setIsOwner(userSelector.urlSlug === creator?.userInfo?.urlSlug);
+      setIsOwner(userSelector.address === userInfo?.user?.address);
     }
-  }, [creator?.userInfo?.urlSlug, userSelector.urlSlug]);
+  }, [userInfo?.user?.address, userSelector.address]);
 
   useEffect(() => {
     setSelectedTab("");
     
     (async () => {
       try {
-        const userResp = await axios.get(`${URL()}/user/getBasicInfo/${creatorAddress}`);
+        MetaverseAPI.getUserInfo(creatorAddress)
+          .then(res => {
+            if (res.success) {
+              setUserInfo(res.data);
+            } else {
+              throw new Error("Can't find user from privi database");
+            }
+          })
+          .catch(err => {
+            console.error(err);
+          });
+        const userResp = await axios.get(`${URL()}/user/getBasicInfo/${creatorAddress}/`);
         const userData = userResp.data.data;
 
         if (userResp.data.success) {
@@ -348,7 +360,7 @@ export default function CreatorPage() {
   };
 
   const getCreatorName = () => {
-    const creatorName = creator?.userInfo?.name;
+    const creatorName = userInfo?.user?.firstName + userInfo?.user?.lastName;
     if (!creatorName) {
       return "";
     } else if (creatorName > MAX_NAME_LENGTH) {
@@ -457,7 +469,7 @@ export default function CreatorPage() {
                     <Box className={classes.avatarBox}>
                       <Avatar
                         size={isMobile ? 83 : 126}
-                        image={creator?.userInfo?.urlIpfsImage || getDefaultAvatar()}
+                        image={userInfo?.user?.avatarUrl || getDefaultAvatar()}
                         onClick={() => {
                           if (isOwner) {
                             if (inputRef && inputRef.current) {
@@ -609,18 +621,18 @@ export default function CreatorPage() {
                       </Box>
                     </Box>
                     <Box className={classes.profileMetaBox} mt={2}>
-                      <Box className={classes.typo3}>{`@${getCreatorSlug()}`}</Box>
+                      <Box className={classes.typo3}>{`@${userInfo?.user?.priviId}`}</Box>
                       <Box className={classes.metaBoxDivider} />
-                      {creator?.userInfo?.address && (
+                      {userInfo?.user?.address && (
                         <Box display="flex" alignItems="center">
                           <img src={require("assets/walletImages/metamask.svg")} width={25} />
                           <Box ml={1} className={classes.typo4}>
-                            {`${creator?.userInfo?.address?.substring(
+                            {`${userInfo?.user?.address?.substring(
                               0,
                               6
-                            )}...${creator?.userInfo?.address?.substring(
-                              creator?.userInfo?.address?.length - 11,
-                              creator?.userInfo?.address.length
+                            )}...${userInfo?.user?.address?.substring(
+                              userInfo?.user?.address?.length - 11,
+                              userInfo?.user?.address.length
                             )} `}
                           </Box>
                         </Box>
