@@ -7,7 +7,7 @@ import { Grid, useTheme, useMediaQuery } from "@material-ui/core";
 import { useWeb3React } from "@web3-react/core";
 
 import { RootState } from "store/reducers/Reducer";
-import { setSelTabMarket } from "store/actions/MarketPlace";
+import { setSelTabMarketManageNFTSub } from "store/actions/MarketPlace";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
 import Box from "shared/ui-kit/Box";
 import { CircularLoadingIndicator, PrimaryButton } from "shared/ui-kit";
@@ -52,7 +52,7 @@ const OwnersPanel = () => {
   const dispatch = useDispatch();
 
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const selTab = useSelector((state: RootState) => state.marketPlace.selectedTab);
+  const selTab = useSelector((state: RootState) => state.marketPlace.selectedTabMarketManageNFTSub);
 
   const width = useWindowDimensions().width;
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -106,7 +106,8 @@ const OwnersPanel = () => {
           setUserNFTs(
             nfts.filter(
               nft =>
-                !nft.status || Array.isArray(nft.status) && !nft.status?.length ||
+                !nft.status ||
+                (Array.isArray(nft.status) && !nft.status?.length) ||
                 loadNftStatus(nft).filter(s => s !== "Rented" && s !== "Blocked").length
             )
           );
@@ -276,18 +277,20 @@ const OwnersPanel = () => {
               className={cls({ [classes.selectedTabSection]: selectedTab === index }, classes.tabSection)}
               onClick={() => {
                 setSelectedTab(index);
-                dispatch(setSelTabMarket(index));
+                dispatch(setSelTabMarketManageNFTSub(index));
               }}
             >
               {tab}
             </Box>
           ))}
         </Box>
-        <Box style={{
-          flex: 1,
-          display: "flex",
-          justifyContent: "flex-end",
-        }}>
+        <Box
+          style={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
           <PrimaryButton
             onClick={() => {
               refreshData();

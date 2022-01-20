@@ -5,7 +5,9 @@ type rootState = RootState["marketPlace"];
 interface State extends rootState {
   tokenList: any[];
   fee: number;
-  selectedTab: number;
+  selectedTabMarketMain: string;
+  selectedTabMarketManageNFTMain: string;
+  selectedTabMarketManageNFTSub: number;
 }
 interface Action extends rootState {
   type: string;
@@ -15,7 +17,9 @@ interface Action extends rootState {
 const initialState: State = {
   tokenList: [],
   fee: 0,
-  selectedTab: 0,
+  selectedTabMarketMain: "",
+  selectedTabMarketManageNFTMain: "",
+  selectedTabMarketManageNFTSub: 0,
 };
 
 // Set a SelectedSwapPool into the global state
@@ -33,10 +37,24 @@ const setMarketFee = (state: State, action: any) => {
   };
 };
 
-const setSelTabMarket = (state: State, action: any) => {
+const setSelTabMarketMain = (state: State, action: any) => {
   return {
     ...state,
-    selectedTab: action.selectedTab,
+    selectedTabMarketMain: action.selectedTabMarketMain,
+  };
+};
+
+const setSelTabMarketManageNFTMain = (state: State, action: any) => {
+  return {
+    ...state,
+    selectedTabMarketManageNFTMain: action.selectedTabMarketManageNFTMain,
+  };
+};
+
+const setSelTabMarketManageNFTSub = (state: State, action: any) => {
+  return {
+    ...state,
+    selectedTabMarketManageNFTSub: action.selectedTabMarketManageNFTSub,
   };
 };
 
@@ -47,8 +65,12 @@ const reducer = (state = initialState, action: Action) => {
       return setTokenList(state, action);
     case actionTypes.SET_MARKET_FEE:
       return setMarketFee(state, action);
-    case actionTypes.SET_SELTAB_MARKET:
-      return setSelTabMarket(state, action);
+    case actionTypes.SET_SELTAB_MARKET_MAIN:
+      return setSelTabMarketMain(state, action);
+    case actionTypes.SET_SELTAB_MARKET_MANAGE_NFT_MAIN:
+      return setSelTabMarketManageNFTMain(state, action);
+    case actionTypes.SET_SELTAB_MARKET_MANAGE_NFT_SUB:
+      return setSelTabMarketManageNFTSub(state, action);
     default:
       return state;
   }
