@@ -10,7 +10,7 @@ export const setMarketFee = (fee: any) => ({
   fee,
 });
 
-export const setSelTabMarketMain = (selectedTab: number | string) => ({
+export const setSelTabMarketMain = (selectedTab: string) => ({
   type: actionTypes.SET_SELTAB_MARKET_MAIN,
   selectedTabMarketMain: selectedTab,
 });
