@@ -287,58 +287,62 @@ const CreateNFT = ({
       setProgress(0);
       MetaverseAPI.uploadWorld(payload)
         .then(async res => {
-          if (!res.success) return;
-
-          if (isDraft) {
-            setProgress(100);
+          if (!res.success) {
+            showAlertMessage(`Failed to upload world`, { variant: "error" });
             setShowUploadingModal(false);
-            showAlertMessage(`Created draft successfully`, { variant: "success" });
-            handleCancel();
-            handleRefresh()
-          } else {
-            const metadata = await onUploadNonEncrypt(res.data.metadata, file =>
-              uploadWithNonEncryption(file)
-            );
-            setProgress(100);
-            setShowUploadingModal(false);
+          } else{
 
-            const targetChain = BlockchainNets.find(net => net.value === chain);
-
-            if (chainId && chainId !== targetChain?.chainId) {
-              const isHere = await switchNetwork(targetChain?.chainId || 0);
-              if (!isHere) {
-                showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
-                return;
-              }
-            }
-
-            const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metadata.newFileCID}`;
-            const web3APIHandler = targetChain.apiHandler;
-            const web3 = new Web3(library.provider);
-            const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
-              web3,
-              account,
-              {
-                to: account,
-                uri,
-              },
-              setTxModalOpen,
-              setTxHash
-            );
-
-            if (contractRes.success) {
-              setTxSuccess(true);
-              showAlertMessage(`Successfully world minted`, { variant: "success" });
-
-              await MetaverseAPI.convertToNFTWorld(
-                res.data.worldData.id,
-                contractRes.contractAddress,
-                targetChain.name,
-                contractRes.tokenId,
-                metadata.newFileCID
-              );
+            if (isDraft) {
+              setProgress(100);
+              setShowUploadingModal(false);
+              showAlertMessage(`Created draft successfully`, { variant: "success" });
+              handleCancel();
+              handleRefresh()
             } else {
-              setTxSuccess(false);
+              const metadata = await onUploadNonEncrypt(res.data.metadata, file =>
+                uploadWithNonEncryption(file)
+              );
+              setProgress(100);
+              setShowUploadingModal(false);
+
+              const targetChain = BlockchainNets.find(net => net.value === chain);
+
+              if (chainId && chainId !== targetChain?.chainId) {
+                const isHere = await switchNetwork(targetChain?.chainId || 0);
+                if (!isHere) {
+                  showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+                  return;
+                }
+              }
+
+              const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metadata.newFileCID}`;
+              const web3APIHandler = targetChain.apiHandler;
+              const web3 = new Web3(library.provider);
+              const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
+                web3,
+                account,
+                {
+                  to: account,
+                  uri,
+                },
+                setTxModalOpen,
+                setTxHash
+              );
+
+              if (contractRes.success) {
+                setTxSuccess(true);
+                showAlertMessage(`Successfully world minted`, { variant: "success" });
+
+                await MetaverseAPI.convertToNFTWorld(
+                  res.data.worldData.id,
+                  contractRes.contractAddress,
+                  targetChain.name,
+                  contractRes.tokenId,
+                  metadata.newFileCID
+                );
+              } else {
+                setTxSuccess(false);
+              }
             }
           }
         })
