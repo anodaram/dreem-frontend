@@ -10,11 +10,18 @@ export const blockedByMeNFTStyles = makeStyles(theme => ({
     padding: 28,
     backgroundColor: "#2c2c2c",
     borderRadius: 14,
+    [theme.breakpoints.down("xs")]: {
+      padding: "28px 12px",
+    },
   },
   nftImage: {
     width: 157,
     height: 157,
     borderRadius: 8,
+    [theme.breakpoints.down("xs")]: {
+      width: 141,
+      height: 141,
+    },
   },
   header: {
     opacity: 0.8,
@@ -31,11 +38,17 @@ export const blockedByMeNFTStyles = makeStyles(theme => ({
     width: 128,
     textTransform: "uppercase",
     lineHeight: "18px",
+    [theme.breakpoints.down("sm")]: {
+      width: 96,
+    },
   },
   section: {
     borderRight: "1px solid #ffffff20",
     fontFamily: "GRIFTER",
     fontWeight: 700,
+    [theme.breakpoints.down("sm")]: {
+      borderRight: "none",
+    },
   },
   time: {
     padding: "8px 13px",
