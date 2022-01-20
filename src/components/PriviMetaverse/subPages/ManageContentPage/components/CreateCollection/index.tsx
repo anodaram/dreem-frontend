@@ -12,7 +12,7 @@ import { BlockchainNets } from "shared/constants/constants";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
-import {LoadingArrow} from "shared/ui-kit/Hocs/LoadingArrow";
+import LoadingProgressModal from "components/PriviMetaverse/modals/LoadingProgressModal";
 
 const CreateCollection = ({
   handleNext,
@@ -228,8 +228,8 @@ const CreateCollection = ({
         style={{ display: "none" }}
         onChange={onImageInput}
       />
-      {isUploading && (
-        <LoadingArrow loading={isUploading} />
+      {!isUploading && (
+        <LoadingProgressModal open={!isUploading} title="Creating a new collection" onClose={()=>{setIsUploading(false)}}/>
       )}
     </Box>
   );
