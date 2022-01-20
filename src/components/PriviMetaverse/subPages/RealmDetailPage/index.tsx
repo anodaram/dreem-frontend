@@ -45,10 +45,10 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
 };
 
 const RealmDetailTabs: TabItem[] = [
-  {
-    key: "avatars",
-    title: "Avatars",
-  },
+  // {
+  //   key: "avatars",
+  //   title: "Avatars",
+  // },
   {
     key: "extensions",
     title: "Extensions",
@@ -77,9 +77,9 @@ export default function RealmDetailPage() {
   const [fruitData, setFruitData] = React.useState<any>({});
   const [realmData, setRealmData] = React.useState<any>({});
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [characters, setCharacters] = React.useState<any[]>([]);
-  const [selectedTab, setSelectedTab] = React.useState<string>("avatars");
-  const [isLoadingCharacters, setIsLoadingCharacters] = React.useState<boolean>(true);
+  // const [characters, setCharacters] = React.useState<any[]>([]);
+  const [selectedTab, setSelectedTab] = React.useState<string>("extensions");
+  // const [isLoadingCharacters, setIsLoadingCharacters] = React.useState<boolean>(true);
   const [isLoadingMetaData, setIsLoadingMetaData] = React.useState<boolean>(false);
 
   const [metaDataForModal, setMetaDataForModal] = React.useState<any>(null);
@@ -107,10 +107,10 @@ export default function RealmDetailPage() {
         .then(res => {
           setFruitData(res.data.data);
         });
-      setIsLoadingCharacters(true);
-      MetaverseAPI.getCharacters(realmId)
-        .then(res => setCharacters(res.data.elements))
-        .finally(() => setIsLoadingCharacters(false));
+      // setIsLoadingCharacters(true);
+      // MetaverseAPI.getCharacters(realmId)
+      //   .then(res => setCharacters(res.data.elements))
+      //   .finally(() => setIsLoadingCharacters(false));
     }
   }, [realmId]);
 
@@ -246,13 +246,13 @@ export default function RealmDetailPage() {
               </Box>
             </Hidden>
           </Box>
-          {realmData?.worldCreator?.user && (
+          {realmData?.submitter?.user && (
             <Box
               className={classes.creatorinfoSection}
               onClick={() => {
                 history.push(
                   `/profile/${
-                    realmData?.worldCreator?.user?.urlSlug || realmData?.worldCreator?.user?.address
+                    realmData?.submitter?.user?.address || realmData?.submitter?.user?.address
                   }`
                 );
               }}
@@ -260,11 +260,11 @@ export default function RealmDetailPage() {
               <Avatar
                 size={32}
                 rounded
-                image={realmData?.worldCreator?.user?.avatarUrl || getDefaultAvatar()}
+                image={realmData?.submitter?.user?.avatarUrl || getDefaultAvatar()}
               />
               <Box ml={1} className={classes.name}>
-                {`${realmData?.worldCreator?.user?.firstName ?? ""} ${
-                  realmData?.worldCreator?.user?.lastName ?? ""
+                {`${realmData?.submitter?.user?.firstName ?? ""} ${
+                  realmData?.submitter?.user?.lastName ?? ""
                 }`}
               </Box>
             </Box>
@@ -385,7 +385,7 @@ export default function RealmDetailPage() {
               }}
             />
             <Box marginTop={5.65} marginBottom={4.5}>
-              {selectedTab === "avatars" ? (
+              {/* {selectedTab === "avatars" ? (
                 <>
                   <Box className={classes.gradientText}>Avatars</Box>
                   <Box mt={4}>
@@ -396,8 +396,8 @@ export default function RealmDetailPage() {
                       columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                     />
                   </Box>
-                </>
-              ) : selectedTab === "extensions" ? (
+                </> */}
+              { selectedTab === "extensions" ? (
                 <>
                   <Box className={classes.extensionHeader}>
                     <Box className={classes.gradientText}>Extensions</Box>
@@ -428,7 +428,7 @@ export default function RealmDetailPage() {
                       ))}
                   </Box>
                   <Box mt={4}>
-                    {realmData && realmData.extensions.length ? (
+                    {realmData && realmData.extensions?.length ? (
                       <MasonryGrid
                         gutter={"16px"}
                         data={isLoading ? Array(loadingCount).fill(3) : realmData.extensions}

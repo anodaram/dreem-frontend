@@ -198,8 +198,8 @@ export default function ExplorePage() {
                                     key={page}
                                     className={classes.carouselItem}
                                     style={{
-                                      backgroundImage: featuredRealms[page]?.worldImages
-                                        ? `url("${featuredRealms[page]?.worldImages}")`
+                                      backgroundImage: featuredRealms[page]?.worldImage
+                                        ? `url("${featuredRealms[page]?.worldImage}")`
                                         : `url(${getDefaultImageUrl()})`,
                                       border: isActivePage ? "2px solid #E1E736" : "none",
                                     }}

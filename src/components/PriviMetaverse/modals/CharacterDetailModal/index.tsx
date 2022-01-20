@@ -264,7 +264,7 @@ const CharacterDetailModal = ({
               <Box display="flex" alignItems="center" mt={1} color="#fff">
                 <Avatar size={32} rounded image={nft?.submitter.user.avatarUrl || getDefaultAvatar()} />
                 <Box className={classes.typo5} ml={1}>
-                  {nft?.submitter.character.name}
+                  {nft?.submitter.user.name}
                 </Box>
               </Box>
               <Box className={classes.typo3} fontWeight={800} mt={6}>
@@ -391,7 +391,7 @@ const CharacterDetailModal = ({
             <Box className={classes.nftPreviewSection}>
               <Fragment>
                 <model-viewer
-                  src={nft?.ipfsModel}
+                  src={nft?.characterModel}
                   ar
                   ar-modes="webxr scene-viewer quick-look"
                   seamless-poster

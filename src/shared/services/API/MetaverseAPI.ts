@@ -39,7 +39,8 @@ export const getWorlds = async (
   onlyPublic = false,
   ownerId?: string,
   itemIds?: any,
-  isExtension?: boolean
+  isExtension?: boolean,
+  featured = false
 ) => {
   try {
     let params: any = {};
@@ -54,6 +55,7 @@ export const getWorlds = async (
     params = ownerId ? { ...params, ownerId } : params;
     params = itemIds && itemIds.length > 0 ? { ...params, itemIds } : params;
     params = isExtension !== undefined ? { ...params, isExtension } : params;
+    params = featured !== undefined ? { ...params, featured } : params;
 
     const token = localStorage.getItem("token");
     const config = {
@@ -224,9 +226,9 @@ export const getCharacters = async (worldId?: any, featured: undefined | boolean
   // if (worldId) {
   //   body.worldIds = [Number(worldId)];
   // }
-  // if (featured) {
-  //   body.featured = featured;
-  // }
+  if (featured) {
+    body.featured = featured;
+  }
   // if (ids) {
   //   body.charactersId = ids;
   // }
