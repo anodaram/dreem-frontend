@@ -62,7 +62,9 @@ export default ({ isOwnership, nft, refresh }) => {
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
-        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+          variant: "error",
+        });
         return;
       }
     }
@@ -71,7 +73,7 @@ export default ({ isOwnership, nft, refresh }) => {
     const web3APIHandler = selectedChain.apiHandler;
     const web3 = new Web3(library.provider);
 
-    const reservePriceToken = tokens.find(item => item.Address == blockingInfo?.PaymentToken)
+    const reservePriceToken = tokens.find(item => item.Address == blockingInfo?.PaymentToken);
 
     const activeReserveId = web3.utils.keccak256(
       web3.eth.abi.encodeParameters(
@@ -85,14 +87,17 @@ export default ({ isOwnership, nft, refresh }) => {
       account!,
       {
         activeReserveId,
-        amount: toNDecimals(Number(blockingInfo?.Price) * Number(blockingInfo?.TotalCollateralPercent) / 100, reservePriceToken.Decimals),
+        amount: toNDecimals(
+          (Number(blockingInfo?.Price) * Number(blockingInfo?.TotalCollateralPercent)) / 100,
+          reservePriceToken.Decimals
+        ),
       },
       setHash
     );
 
     if (response.success) {
       setTransactionSuccess(true);
-      
+
       await updateBlockingHistory({
         ...nft?.blockingSalesHistories[nft?.blockingSalesHistories.length - 1],
         mode: isProd ? "main" : "test",
@@ -100,7 +105,7 @@ export default ({ isOwnership, nft, refresh }) => {
         TokenId: token_id,
         TotalCollateralPercent: 0,
         notificationMode: 0,
-        offerer: account!
+        offerer: account!,
       });
 
       refresh();
@@ -129,8 +134,8 @@ export default ({ isOwnership, nft, refresh }) => {
             Manage Collateral
           </Box>
           <Box fontSize={14}>
-            Make sure your collateral is above the liquidation level, otherwise 
-            you’ll lose your blocked NFT and lose your collateral
+            Make sure your collateral is above the liquidation level, otherwise you’ll lose your blocked NFT
+            and lose your collateral
           </Box>
         </Box>
         {blockingInfo?.PaidAmount !== blockingInfo?.Price ? (
@@ -163,15 +168,35 @@ export default ({ isOwnership, nft, refresh }) => {
             </span>
           </span>
         </Box>
-        <RangeSlider value={ (totalCollateralPercent / collateralPercent -1) * 100 + 20  } variant="transparent" onChange={(event, newValue) => {}} />
-        <Box style={{ display: "flex", alignItems: "center", width: "100%" }}>
-          <Box flex={ 20 }>
-                <strong>0%</strong>
+        <RangeSlider
+          value={(Number(totalCollateralPercent)/Number(collateralPercent)-1)*100+20}
+          variant="transparent"
+          onChange={(event, newValue) => {}}
+        />
+        <Box display="flex" width={1} mt={1.5} fontSize={14}>
+          <Box flex={20}>
+            <strong>0%</strong>
           </Box>
-          <Box flex={30} >{Number(collateralPercent).toFixed(1)}% High Risk</Box>
-          <Box flex={25} >{Number(collateralPercent * 1.5).toFixed(1)}% Medium Risk</Box>
-          <Box flex={25}>
-            <strong>{Number(collateralPercent * 1.8).toFixed(1)}% Low Risk</strong>
+          <Box flex={30} ml={"-26px"} display={"flex"} flexDirection={"column"}>
+            <span>{Number(collateralPercent).toFixed(1)}%</span>
+            <span style={{ marginLeft: -8, marginTop: 4 }}>High Risk</span>
+          </Box>
+          <Box flex={25} ml={"-26px"} display={"flex"} flexDirection={"column"}>
+            <span>{Number(collateralPercent * 1.5).toFixed(1)}%</span>
+            <span style={{ marginLeft: -16, marginTop: 4 }}>Medium Risk</span>
+          </Box>
+          <Box
+            flex={25}
+            ml={"-26px"}
+            display={"flex"}
+            flexDirection={"column"}
+          >
+            <span>
+              <strong>{Number(collateralPercent * 1.75).toFixed(1)}%</strong>
+            </span>
+            <span style={{ marginLeft: -7, marginTop: 4 }}>
+              <strong>Low Risk</strong>
+            </span>
           </Box>
         </Box>
       </Box>
@@ -206,12 +231,11 @@ export default ({ isOwnership, nft, refresh }) => {
             </Box>
             <Box flex={0.2}>{Number(totalCollateralPercent).toFixed(2)} %</Box>
             <Box flex={0.2}>{`${
-              (blockingInfo?.Price * (blockingInfo?.TotalCollateralPercent)) /
-              100
+              (blockingInfo?.Price * blockingInfo?.TotalCollateralPercent) / 100
             } ${getTokenSymbol(blockingInfo?.PaymentToken)}`}</Box>
           </Box>
         </>
-      ): (
+      ) : (
         <Box
           display="flex"
           alignItems="center"
@@ -222,14 +246,14 @@ export default ({ isOwnership, nft, refresh }) => {
           color="#E9FF26"
           mt={4}
           style={{
-            textTransform: "uppercase"
+            textTransform: "uppercase",
           }}
         >
           <CheckIcon />
           <span>collateral withdrawn</span>
         </Box>
       )}
-      
+
       <AddCollateralModal
         open={openCollateralModal}
         handleClose={() => setOpenCollateralModal(false)}
@@ -255,12 +279,24 @@ export default ({ isOwnership, nft, refresh }) => {
 
 const CheckIcon = () => (
   <svg width="40" height="31" viewBox="0 0 40 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M6 15.1543L15.2168 24.3711L33.5879 6" stroke="url(#paint0_linear_5033_87025)" stroke-width="8" stroke-linecap="square"/>
+    <path
+      d="M6 15.1543L15.2168 24.3711L33.5879 6"
+      stroke="url(#paint0_linear_5033_87025)"
+      stroke-width="8"
+      stroke-linecap="square"
+    />
     <defs>
-      <linearGradient id="paint0_linear_5033_87025" x1="5.1682" y1="6" x2="38.4456" y2="8.01924" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#EEFF21"/>
-        <stop offset="1" stop-color="#B7FF5C"/>
+      <linearGradient
+        id="paint0_linear_5033_87025"
+        x1="5.1682"
+        y1="6"
+        x2="38.4456"
+        y2="8.01924"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop stop-color="#EEFF21" />
+        <stop offset="1" stop-color="#B7FF5C" />
       </linearGradient>
     </defs>
   </svg>
-)
+);

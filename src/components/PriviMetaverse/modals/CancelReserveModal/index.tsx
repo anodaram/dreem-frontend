@@ -12,10 +12,12 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import Web3 from "web3";
 import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import { toNDecimals } from "shared/functions/web3";
-import { closeBlockingHistory } from "shared/services/API/ReserveAPI";
+import { closeBlockingHistory, getPenaltyFee, storePenaltyFee } from "shared/services/API/ReserveAPI";
 import TransactionProgressModal from "../TransactionProgressModal";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
+
+const PRECISSION = 1.01;
 
 export default function CancelReserveModal({
   open,
@@ -52,13 +54,20 @@ export default function CancelReserveModal({
       if (nft && nft?.blockingSalesHistories) {
         setBlockingInfo(nft?.blockingSalesHistories[nft?.blockingSalesHistories?.length - 1]);
       }
-      const chain = BlockchainNets.find(net => net.name.toLowerCase() === nft.Chain.toLowerCase());
-      if (chain) {
-        const web3APIHandler = chain.apiHandler;
-        const web3 = new Web3(library.provider);
+      
+      const penaltyFeeRes = await getPenaltyFee();
+      if (penaltyFeeRes.success && penaltyFeeRes.data?.Fee) {
+        setPenaltyFee(Number(penaltyFeeRes.data.Fee));
+      } else {
+        const chain = BlockchainNets.find(net => net.name.toLowerCase() === nft.Chain.toLowerCase());
+        if (chain) {
+          const web3APIHandler = chain.apiHandler;
+          const web3 = new Web3(library.provider);
 
-        const contractResponse = await web3APIHandler.ReservesManager.sellerCancelFeePercent(web3);
-        setPenaltyFee(contractResponse.response);
+          const contractResponse = await web3APIHandler.ReservesManager.sellerCancelFeePercent(web3);
+          setPenaltyFee(contractResponse.response);
+          storePenaltyFee(contractResponse.response)
+        }
       }
     })();
   }, [open, nft]);
@@ -102,7 +111,7 @@ export default function CancelReserveModal({
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER,
-        toNDecimals(Number(blockingInfo?.Price) * penaltyFee / 100 * (1 + fee), decimals)
+        toNDecimals(Number(blockingInfo?.Price) * penaltyFee / 100 * (1 + fee) *PRECISSION, decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -111,7 +120,7 @@ export default function CancelReserveModal({
       }
       setIsApproved(true);
       showAlertMessage(
-        `Successfully approved ${(Number(blockingInfo?.Price) * penaltyFee) / 100 * (1 + fee)} ${getTokenSymbol(
+        `Successfully approved ${((Number(blockingInfo?.Price) * penaltyFee) / 100 * (1 + fee) *PRECISSION).toFixed(2)} ${getTokenSymbol(
           blockingInfo?.PaymentToken
         )}!`,
         {
@@ -167,6 +176,7 @@ export default function CancelReserveModal({
           Beneficiary: blockingInfo.Beneficiary,
           offerer: account!,
           notificationMode: 0,
+          hash: contractResponse.hash
         });
 
         setTransactionSuccess(true);

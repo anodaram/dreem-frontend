@@ -279,24 +279,24 @@ export default function RealmDetailPage() {
                     Enter realm
                   </Box>
                 </PrimaryButton>
-                {false && (
-                  <SecondaryButton
-                    size="medium"
-                    onClick={() => history.push("/creating_extension")}
-                    style={{
-                      background: "transparent",
-                      textTransform: "uppercase",
-                      height: 40,
-                      minWidth: 250,
-                      color: "#fff",
-                      borderRadius: "100px",
-                      marginLeft: 0,
-                      marginTop: -48,
-                    }}
-                  >
-                    Apply Extension
-                  </SecondaryButton>
-                )}
+                {/* {false && (
+                  // <SecondaryButton
+                  //   size="medium"
+                  //   onClick={() => history.push("/creating_extension")}
+                  //   style={{
+                  //     background: "transparent",
+                  //     textTransform: "uppercase",
+                  //     height: 40,
+                  //     minWidth: 250,
+                  //     color: "#fff",
+                  //     borderRadius: "100px",
+                  //     marginLeft: 0,
+                  //     marginTop: -48,
+                  //   }}
+                  // >
+                  //   Apply Extension
+                  // </SecondaryButton>
+                )} */}
               </Hidden>
             )}
             <Hidden mdUp>
@@ -336,7 +336,7 @@ export default function RealmDetailPage() {
                       Enter realm
                     </Box>
                   </PrimaryButton>
-                  <SecondaryButton
+                  {/* <SecondaryButton
                     size="medium"
                     onClick={() => history.push("/creating_extension")}
                     style={{
@@ -350,7 +350,7 @@ export default function RealmDetailPage() {
                     }}
                   >
                     Apply Extension
-                  </SecondaryButton>
+                  </SecondaryButton> */}
                 </Hidden>
               </Box>
             )}

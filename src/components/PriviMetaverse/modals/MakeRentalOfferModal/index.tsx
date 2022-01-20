@@ -118,9 +118,12 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${price} ${rentalToken.Symbol}!`, {
-        variant: "success",
-      });
+      showAlertMessage(
+        `Successfully approved ${(offerPrice * PRECISSION).toFixed(2)} ${rentalToken.Symbol}!`,
+        {
+          variant: "success",
+        }
+      );
       setTransactionSuccess(null);
       setOpenTransactionModal(false);
     } catch (error) {
@@ -290,7 +293,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
               <KeyboardDatePicker
                 disableToolbar
                 variant="inline"
-                format="MM/dd/yyyy"
+                format="dd/MMM/yyyy"
                 margin="dense"
                 id="date-picker-inline"
                 value={date}

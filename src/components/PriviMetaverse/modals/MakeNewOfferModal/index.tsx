@@ -44,6 +44,8 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
   const { showAlertMessage } = useAlertMessage();
   const isProd = process.env.REACT_APP_ENV === "prod";
 
+  const PRECISSION = 1.01;
+
   useEffect(() => {
     setReservePriceToken(tokenList[0]);
     setColaterralPriceToken(tokenList[0]);
@@ -112,7 +114,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE,
-        toNDecimals(price * (1 + fee), reservePriceToken.Decimals)
+        toNDecimals(price * (1 + fee) * PRECISSION, reservePriceToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -120,7 +122,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${price * (1 + fee)} ${reservePriceToken.Symbol}!`, {
+      showAlertMessage(`Successfully approved ${(price * (1 + fee)* PRECISSION).toFixed(2)} ${reservePriceToken.Symbol}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);

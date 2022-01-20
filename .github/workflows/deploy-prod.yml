@@ -39,9 +39,11 @@ jobs:
     - run: yarn
     - run: yarn build
       env:
+          REACT_APP_ENV: prod
           NODE_OPTIONS: '--max_old_space_size=8192'
-          REACT_APP_PRIVI_BACKEND_URL: 'https://be.dreem.xyz/backend'
+          REACT_APP_PRIVI_BACKEND_URL: 'https://dreem-backend-dg86a.ondigitalocean.app'
           REACT_APP_PRIVI_METAVERSE_URL: 'https://web.dreem.xyz'
+          REACT_APP_PRIVI_METAVERSE_MAINTENCE_URL: 'https://privi-maintenance-e9oap.ondigitalocean.app/maintenance?name=metaverse'
           CI: false
     - run: ls -a
     - run: rm -fr .git/

@@ -134,8 +134,8 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
             <AccordionSummary
               expandIcon={
                 <Box display="flex" alignItems="center" fontSize={14} width={56}>
-                  <Box color="white" mr={1}>
-                    {isOfferExpanded ? "Hide" : "Show"}
+                  <Box color="white" mr={1} style={{ transform: isOfferExpanded ? "none" : "rotate(180deg)" }}>
+                    Hide
                   </Box>
                   {isOfferExpanded ? <ShowIcon /> : <HideIcon />}
                 </Box>
@@ -187,7 +187,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                   rows={offers.map(item => {
                     const token = tokenList.find(v => v.Address === item.fundingToken);
                     let estimatedCost = +toDecimals(item.pricePerSecond, token?.Decimals) * item.rentalTime;
-                    estimatedCost = +estimatedCost.toFixed(8);
+                    estimatedCost = +estimatedCost.toFixed(2);
                     return [
                       {
                         cell:
@@ -276,8 +276,8 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
             <AccordionSummary
               expandIcon={
                 <Box display="flex" alignItems="center" fontSize={14} width={56}>
-                  <Box color="white" mr={1}>
-                    {isHistoryExpaned ? "Hide" : "Show"}
+                  <Box color="white" mr={1} style={{ transform: isHistoryExpaned ? "none" : "rotate(180deg)" }}>
+                    Hide
                   </Box>
                   {isHistoryExpaned ? <ShowIcon /> : <HideIcon />}
                 </Box>
@@ -322,7 +322,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                         cell: `${formatDuration(+item.rentalTime * 1000)}`,
                       },
                       {
-                        cell: <Moment format="DD-MM-YYYY">{new Date(+item.rentalExpiration)}</Moment>,
+                        cell: <Moment format="DD/MMM/YYYY">{new Date(+item.rentalExpiration)}</Moment>,
                       },
                       {
                         cellAlign: "center",

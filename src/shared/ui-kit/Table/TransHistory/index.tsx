@@ -140,7 +140,7 @@ const TransHistory = ({ filter, transactions }: { filter?: boolean; transactions
           cellAlign: "center",
         });
         row.push({
-          cell: <Moment format="ddd, DD MMM-h:mm A">{transaction.Date * 1000}</Moment>,
+          cell: <Moment format="DD/MMM/YYYY HH:mm:ss">{transaction.Date * 1000}</Moment>,
           cellAlign: "center",
         });
         row.push({
@@ -185,7 +185,7 @@ const TransHistory = ({ filter, transactions }: { filter?: boolean; transactions
           cellAlign: "left",
         });
         row.push({
-          cell: <Moment format="DD/MM/YYYY - h:mm a">{transaction.Date * 1000}</Moment>,
+          cell: <Moment format="DD/MMM/YYYY HH:mm:ss">{transaction.Date * 1000}</Moment>,
           cellAlign: "left",
         });
         row.push({
@@ -319,7 +319,7 @@ const TransHistory = ({ filter, transactions }: { filter?: boolean; transactions
             <DateInput
               width={210}
               height={45}
-              format="dd.MM.yyyy"
+              format="dd/MMM/yyyy"
               value={selectedDate}
               onChange={handleDateChange}
             />

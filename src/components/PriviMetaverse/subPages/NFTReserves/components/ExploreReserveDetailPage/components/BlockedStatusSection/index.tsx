@@ -92,7 +92,8 @@ export default ({isOwnership, nft, refresh}) => {
         Id: activeReserveId,
         Beneficiary: blockingInfo.Beneficiary,
         offerer: account!,
-        notificationMode: 3
+        notificationMode: 3,
+        hash: response.hash
       });
 
       setTransactionSuccess(true);
@@ -100,7 +101,7 @@ export default ({isOwnership, nft, refresh}) => {
     } else {
       setTransactionSuccess(false);
       setOpenNoLiquidationPossibleModal(true);
-      showAlertMessage(`Liquidation Failed! ${nft?.owner?.name} holds enough collateral and could not be liquidated.`, { variant: "error" });
+      //showAlertMessage(`Liquidation Failed! ${nft?.owner?.name} holds enough collateral and could not be liquidated.`, { variant: "error" });
     }
   }
 

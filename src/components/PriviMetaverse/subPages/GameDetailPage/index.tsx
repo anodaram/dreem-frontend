@@ -13,6 +13,7 @@ import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import { getGameInfo, getCharactersByGame } from "shared/services/API/DreemAPI";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
 import TabsView, { TabItem } from "shared/ui-kit/TabsView";
+import Owners from "./components/Owners";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { NFT_STATUS_COLORS, PrimaryButton, SecondaryButton } from "shared/ui-kit";
@@ -20,12 +21,11 @@ import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/
 import SkeletonBox from "shared/ui-kit/SkeletonBox";
 import { RootState } from "store/reducers/Reducer";
 import { toDecimals } from "shared/functions/web3";
-import Owners from "./components/Owners";
-import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 import MarketplaceFeed from "./components/MarketplaceFeed";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { setTokenList } from "store/actions/MarketPlace";
 import { NftStates } from "shared/constants/constants";
+import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 
 const SECONDS_PER_HOUR = 3600;
 
@@ -53,7 +53,7 @@ const GameDetailTabs: TabItem[] = [
   //   title: "owners",
   // },
 ];
-const filterStatusOptions = ["All", "On Sale", "For Rental", "Blocked", "Rented"];
+const filterStatusOptions = ["All", ...NftStates];
 
 const tableHeaders: Array<CustomTableHeaderInfo> = [
   {
@@ -307,7 +307,7 @@ export default function GameDetailPage() {
           {
             cell: (
               <Box textAlign="center">
-                {row?.blockingSaleOffer?.Price
+                {!nftStatus(row).includesrow?.blockingSaleOffer?.Price
                   ? `${row.blockingSaleOffer.Price} ${getTokenSymbol(
                       row.blockingSaleOffer.PaymentToken
                     )} for ${row.blockingSaleOffer.ReservePeriod} Day(s)`
@@ -324,7 +324,7 @@ export default function GameDetailPage() {
                         row.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(row.rentSaleOffer.fundingToken)
                       ) * SECONDS_PER_HOUR
-                    ).toFixed(3)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
+                    ).toFixed(2)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
                   : "_"}
               </Box>
             ),

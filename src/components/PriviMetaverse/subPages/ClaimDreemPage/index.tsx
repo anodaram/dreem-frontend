@@ -93,7 +93,7 @@ export default function ClaimDreemPage() {
       row.push({
         cell: (
           <Box fontSize={13} fontWeight={800} fontFamily="Rany" color="#fff">
-            {+(transaction.amount ?? 0).toFixed(3)} DREEM
+            {+(transaction.amount ?? 0).toFixed(2)} DREEM
           </Box>
         ),
         cellAlign: "left",
@@ -107,7 +107,11 @@ export default function ClaimDreemPage() {
         cellAlign: "left",
       });
       row.push({
-        cell: <Moment fromNow>{transaction.createdAt}</Moment>,
+        cell: (
+          <Moment fromNow format="DD/MMM/YYYY">
+            {transaction.createdAt}
+          </Moment>
+        ),
         cellAlign: "left",
       });
       row.push({
@@ -149,7 +153,9 @@ export default function ClaimDreemPage() {
       if (chainId && chainId !== targetChain?.chainId) {
         const isHere = await switchNetwork(targetChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
           return;
         }
       }
@@ -268,7 +274,7 @@ export default function ClaimDreemPage() {
                 Total Value
               </Box>
               <Box className={classes.typo5} style={{ fontWeight: 700 }}>
-                {+totalValue.toFixed(3)} <span>DREEM</span>
+                {+totalValue.toFixed(2)} <span>DREEM</span>
               </Box>
             </Box>
           </Box>

@@ -16,6 +16,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
 const isProd = process.env.REACT_APP_ENV === "prod";
 
+const PRECISSION = 1.01;
+
 export default function InstantBuyModal({ open, handleClose, onConfirm, offer, nft }) {
   const classes = InstantBuyModalStyles();
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
@@ -83,7 +85,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.OPEN_SALES_MANAGER,
-        toNDecimals(offerPrice, getTokenDecimals(offer.PaymentToken))
+        toNDecimals(offerPrice *PRECISSION, getTokenDecimals(offer.PaymentToken))
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -91,7 +93,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${offerPrice} ${getTokenName(offer.PaymentToken)}!`, {
+      showAlertMessage(`Successfully approved ${(offerPrice* PRECISSION).toFixed(2)} ${getTokenName(offer.PaymentToken)}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);
@@ -182,7 +184,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
           <Box className={classes.box}>
             <span style={{ fontSize: "16px", color: "#ffffff" }}>Amount to pay</span>
             <span className={classes.purpleText} style={{ fontFamily: "Rany" }}>
-              {`${offer?.Price} ${getTokenName(offer?.PaymentToken)}`}
+              {`${offerPrice.toFixed(2)} ${getTokenName(offer?.PaymentToken)}`}
             </span>
           </Box>
         </Box>

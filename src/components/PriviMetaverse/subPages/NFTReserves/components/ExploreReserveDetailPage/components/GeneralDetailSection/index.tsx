@@ -80,7 +80,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
       <Box display="flex" justifyContent="space-between" my={3.5}>
         <Text className={classes.pricingText1}>Selling Price:</Text>
         <Box textAlign="right">
-          {isOwnership && nft?.sellingOffer?.Price && (
+          {(!isSignedin || isOwnership) && nft?.sellingOffer?.Price && (
             <Text className={classes.pricingText2}>
               {nft?.sellingOffer?.Price &&
                 `${nft.sellingOffer.Price} ${getTokenSymbol(nft.sellingOffer.PaymentToken)}`}
@@ -148,9 +148,11 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
                 </PrimaryButton>
               </>
             ) : (
-              <Text className={!nft?.status ? classes.pricingText2 : classes.pricingText2Disable}>
-                Not Available
-              </Text>
+              !nft?.sellingOffer?.Price && (
+                <Text className={!nft?.status ? classes.pricingText2 : classes.pricingText2Disable}>
+                  Not Available
+                </Text>
+              )
             )}
           </Box>
         </Box>
@@ -159,7 +161,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
       <Box display="flex" justifyContent="space-between" mb={3.5} mt={2.5}>
         <Text className={classes.pricingText1}>Blocking Price:</Text>
         <Box textAlign="right">
-          {isOwnership && nft?.blockingSaleOffer?.Price && (
+          {(!isSignedin || isOwnership) && nft?.blockingSaleOffer?.Price && (
             <Text className={classes.pricingText2}>
               {nft?.blockingSaleOffer?.Price &&
                 `${nft.blockingSaleOffer.Price} ${getTokenSymbol(nft.blockingSaleOffer.PaymentToken)} for ${
@@ -230,9 +232,11 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
                 </PrimaryButton>
               </>
             ) : (
-              <Text className={!nft?.status ? classes.pricingText2 : classes.pricingText2Disable}>
-                Not Available
-              </Text>
+              !nft?.blockingSaleOffer?.Price && (
+                <Text className={!nft?.status ? classes.pricingText2 : classes.pricingText2Disable}>
+                  Not Available
+                </Text>
+              )
             )}
           </Box>
         </Box>
@@ -241,7 +245,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
       <Box display="flex" justifyContent="space-between" mb={3.5} mt={2.5}>
         <Text className={classes.pricingText1}>Rental Fee (per hour):</Text>
         <Box textAlign="right">
-          {isOwnership && nft?.rentSaleOffer?.pricePerSecond && (
+          {(!isSignedin || isOwnership) && nft?.rentSaleOffer?.pricePerSecond && (
             <Text className={classes.pricingText2}>
               {nft?.rentSaleOffer?.pricePerSecond &&
                 `${(
@@ -249,7 +253,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
                     nft.rentSaleOffer.pricePerSecond,
                     getTokenDecimal(nft.rentSaleOffer.fundingToken)
                   ) * SECONDS_PER_HOUR
-                ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
+                ).toFixed(2)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
             </Text>
           )}
           <Box display="flex" justifyContent="flex-end" alignItems="center">
@@ -284,7 +288,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
                           nft.rentSaleOffer.pricePerSecond,
                           getTokenDecimal(nft.rentSaleOffer.fundingToken)
                         ) * SECONDS_PER_HOUR
-                      ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
+                      ).toFixed(2)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
                   </Text>
                   &nbsp;
                   <PrimaryButton
@@ -307,7 +311,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
                         nft.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(nft.rentSaleOffer.fundingToken)
                       ) * SECONDS_PER_HOUR
-                    ).toFixed(3)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
+                    ).toFixed(2)} ${getTokenSymbol(nft.rentSaleOffer.fundingToken)}`}
                 </Text>
                 &nbsp;
                 <PrimaryButton
@@ -321,9 +325,11 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
                 </PrimaryButton>
               </>
             ) : (
-              <Text className={!nft?.status ? classes.pricingText2 : classes.pricingText2Disable}>
-                Not Available
-              </Text>
+              !nft?.rentSaleOffer?.pricePerSecond && (
+                <Text className={!nft?.status ? classes.pricingText2 : classes.pricingText2Disable}>
+                  Not Available
+                </Text>
+              )
             )}
           </Box>
         </Box>

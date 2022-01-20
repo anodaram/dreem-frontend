@@ -111,6 +111,8 @@ export default function CreatorPage() {
   }, [creator?.userInfo?.urlSlug, userSelector.urlSlug]);
 
   useEffect(() => {
+    setSelectedTab("");
+    
     (async () => {
       try {
         const userResp = await axios.get(`${URL()}/user/getBasicInfo/${creatorAddress}`);

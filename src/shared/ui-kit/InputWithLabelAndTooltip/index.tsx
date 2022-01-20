@@ -334,7 +334,7 @@ export default function InputWithLabelAndTooltip({
         <DateInput
           theme={theme}
           minDate={minDate || new Date().setDate(new Date().getDate() + 1)}
-          format="MM.dd.yyyy"
+          format="dd/MMM/yyyy"
           placeholder="Select date..."
           value={inputValue}
           onChange={onInputValueChange}

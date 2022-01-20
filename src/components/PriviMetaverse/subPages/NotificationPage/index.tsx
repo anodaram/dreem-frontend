@@ -23,13 +23,15 @@ export default function NotificationPage() {
     <Box className={classes.content}>
       <Box className={classes.background}>
         <Box className={classes.title}>Notifications</Box>
-        {notifications.length > 0 ? (
-          notifications.map(n => (
-            <NotificationItem notification={n} removeNotification={removeNotification} />
-          ))
-        ) : (
-          <Box>No unread notifications</Box>
-        )}
+        <Box className={classes.container}>
+          {notifications.length > 0 ? (
+            notifications.map(n => (
+              <NotificationItem notification={n} removeNotification={removeNotification} />
+            ))
+          ) : (
+            <Box>No unread notifications</Box>
+          )}
+        </Box>
       </Box>
     </Box>
   );
@@ -60,7 +62,7 @@ const NotificationItem = ({ notification, removeNotification }) => {
       <ContentContainer>
         <Hidden mdUp>
           <TimeLabel>
-            <Moment format="YYYY-MM-DD hh:mm:ss">{new Date(notification.date)}</Moment>
+            <Moment format="DD/MMM/YYYY HH:mm:ss">{new Date(notification.date)}</Moment>
           </TimeLabel>
         </Hidden>
         <NotificationMessage theme="dark">
@@ -79,7 +81,7 @@ const NotificationItem = ({ notification, removeNotification }) => {
       </ContentContainer>
       <Hidden smDown>
         <TimeLabel>
-          <Moment format="YYYY-MM-DD hh:mm:ss">{new Date(notification.date)}</Moment>
+          <Moment format="DD/MMM/YYYY HH:mm:ss">{new Date(notification.date)}</Moment>
         </TimeLabel>
       </Hidden>
       <Box

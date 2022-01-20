@@ -4,7 +4,7 @@ import config from "shared/connectors/web3/config";
 
 const reservesManager = (network: string) => {
   const metadata = require("shared/connectors/web3/contracts/reserve/ReservesManager.json");
-  const protocolParam = require("shared/connectors/web3/contracts/reserve/ProtocolParameters.json");
+  const protocolParam = require("shared/connectors/web3/contracts/reserve/ReserveProtocolParameters.json");
   const contractAddress = config[network].CONTRACT_ADDRESSES.RESERVES_MANAGER;
   const protocolAddress = config[network].CONTRACT_ADDRESSES.RESERVES_PROTOCOL_PARAMETERS;
 
@@ -53,7 +53,7 @@ const reservesManager = (network: string) => {
 
         console.log("transaction succeed... ", response?.events);
         if (response?.events?.ReserveCanceled) {
-          resolve({ success: true });
+          resolve({ success: true, hash: response.transactionHash });
         } else {
           resolve({ success: false });
         }

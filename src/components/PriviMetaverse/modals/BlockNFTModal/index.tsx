@@ -44,6 +44,8 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
   const { showAlertMessage } = useAlertMessage();
   const isProd = process.env.REACT_APP_ENV === "prod";
 
+  const PRECISSION = 1.01;
+
   useEffect(() => {
     setCollateralToken(tokenList[0]);
     setReservePriceToken(tokenList.find(token => token.Address === nft?.blockingSaleOffer?.PaymentToken));
@@ -128,7 +130,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE,
-        toNDecimals(Number(collateral) * (1 + fee), reservePriceToken.Decimals)
+        toNDecimals(Number(collateral) * (1 + fee) * PRECISSION, reservePriceToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -137,7 +139,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
       }
       setIsApproved(true);
       showAlertMessage(
-        `Successfully approved ${Number(collateral) * (1 + fee)} ${reservePriceToken.Symbol}!`,
+        `Successfully approved ${(Number(collateral) * (1 + fee)* PRECISSION).toFixed(2)} ${reservePriceToken.Symbol}!`,
         {
           variant: "success",
         }
@@ -359,7 +361,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {(Number(collateral || 0) * fee).toFixed(6)}{" "}
+                  {(Number(collateral || 0) * fee).toFixed(2)}{" "}
                   {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
@@ -372,7 +374,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Box
                   style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
                 >
-                  {((collateral || 0) * (1 + fee)).toFixed(6)}{" "}
+                  {((collateral || 0) * (1 + fee)).toFixed(2)}{" "}
                   {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>

@@ -14,7 +14,7 @@ import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal"
 
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
-import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { NFT_STATUS_COLORS, PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import { getAllGameNFTs } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
@@ -65,7 +65,7 @@ const FilterOptionsTabs: TabItem[] = [
 ];
 
 const filterChainOptions = ["All", "BSC", "Polygon"];
-const filterStatusOptions = ["All", "For Sale", "For Rental", "For Blocking", "Blocked", "Rented"];
+const filterStatusOptions = ["All", ...NftStates];
 
 const getChainImage = chain => {
   if (chain === filterChainOptions[1]) {
@@ -230,7 +230,7 @@ const NFTReserves = () => {
 
   const userName = nft => {
     if (!nft.owner) {
-      if (nft.ownerAddress.toLowerCase() === user.address.toLowerCase()) {
+      if (nft.ownerAddress?.toLowerCase() === user.address.toLowerCase()) {
         return user.firstName || user.lastName
           ? `${user.firstName} ${user.lastName}`
           : width > 700
@@ -346,21 +346,23 @@ const NFTReserves = () => {
           },
           {
             cell: (
-              <Box
-                textAlign="center"
-                padding={"5px 8px"}
-                bgcolor={nftStatus(row).length ? "#8D65FF" : "transparent"}
-                fontSize={12}
-                borderRadius={6}
-              >
-                {nftStatus(row).join(', ')}
+              <Box display="flex">
+                {nftStatus(row).length > 0 &&
+                  nftStatus(row).map(status => (
+                    <span
+                      className={classes.cardOptionButton}
+                      style={{ background: NFT_STATUS_COLORS[status] }}
+                    >
+                      {status}
+                    </span>
+                  ))}
               </Box>
             ),
           },
           {
             cell: (
               <Box textAlign="center">
-                {row?.sellingOffer?.Price
+                {!nftStatus(row).includes("Blocked") && row?.sellingOffer?.Price
                   ? `${row.sellingOffer.Price} ${getTokenSymbol(row.sellingOffer.PaymentToken)}`
                   : "_"}
               </Box>
@@ -369,7 +371,7 @@ const NFTReserves = () => {
           {
             cell: (
               <Box textAlign="center">
-                {row?.blockingSaleOffer?.Price
+                {!nftStatus(row).includes("Blocked") && row?.blockingSaleOffer?.Price
                   ? `${row.blockingSaleOffer.Price} ${getTokenSymbol(
                       row.blockingSaleOffer.PaymentToken
                     )} for ${row.blockingSaleOffer.ReservePeriod} Hour(s)`
@@ -380,13 +382,13 @@ const NFTReserves = () => {
           {
             cell: (
               <Box textAlign="center">
-                {row?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
+                {!nftStatus(row).includes("Blocked") && row?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
                   ? `${(
                       +toDecimals(
                         row.rentSaleOffer.pricePerSecond,
                         getTokenDecimal(row.rentSaleOffer.fundingToken)
                       ) * SECONDS_PER_HOUR
-                    ).toFixed(3)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
+                    ).toFixed(2)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
                   : "_"}
               </Box>
             ),
@@ -661,7 +663,7 @@ const NFTReserves = () => {
                     <SearchIcon />
                   </Box>
                 </div>
-                {selectedTab === TAB_NFTS && (
+                {!isMobile && selectedTab === TAB_NFTS && (
                   <Box
                     className={classes.controlBox}
                     ml={2}

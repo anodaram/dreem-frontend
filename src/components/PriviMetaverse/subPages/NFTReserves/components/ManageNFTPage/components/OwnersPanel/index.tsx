@@ -104,7 +104,11 @@ const OwnersPanel = () => {
           !nft.status ? [] : Array.isArray(nft.status) ? nft.status : nft.status.split(", ");
         if (selectedTab === 0) {
           setUserNFTs(
-            nfts.filter(nft => loadNftStatus(nft).filter(s => s !== "Rented" && s !== "Blocked").length)
+            nfts.filter(
+              nft =>
+                !nft.status || Array.isArray(nft.status) && !nft.status?.length ||
+                loadNftStatus(nft).filter(s => s !== "Rented" && s !== "Blocked").length
+            )
           );
         } else if (selectedTab === 1) {
           setUserNFTs(nfts.filter(nft => loadNftStatus(nft).filter(s => s === "Rented").length));
@@ -222,7 +226,7 @@ const OwnersPanel = () => {
         mb={3}
         style={{
           display: "flex",
-          alignItems: "flex-start",
+          alignItems: "stretch",
           flexDirection: isMobile ? "column" : "row",
           justifyContent: "space-between",
           rowGap: "12px",
@@ -279,7 +283,11 @@ const OwnersPanel = () => {
             </Box>
           ))}
         </Box>
-        <Box>
+        <Box style={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "flex-end",
+        }}>
           <PrimaryButton
             onClick={() => {
               refreshData();

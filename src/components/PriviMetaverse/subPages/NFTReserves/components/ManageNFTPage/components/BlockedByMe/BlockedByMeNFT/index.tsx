@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { useWeb3React } from "@web3-react/core";
 
+import { useMediaQuery, useTheme } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
 import { PrimaryButton } from "shared/ui-kit";
@@ -16,6 +17,11 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
   const classes = blockedByMeNFTStyles();
   const history = useHistory();
   const { account } = useWeb3React();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [closeTime, setCloseTime] = useState<any>(null);
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
 
@@ -29,7 +35,6 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
     return () => clearInterval(interval);
   }, [item]);
 
-  
   const handleClickAddress = () => {
     const address = item?.Address || "";
     if (item?.Chain?.toLowerCase() === "polygon") {
@@ -63,11 +68,12 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
     return token?.Symbol || "";
   };
 
-  const collateralPercent = Number(item.history?.TotalCollateralPercent)
+  const totalCollateralPercent = Number(item.history?.TotalCollateralPercent);
+  const collateralPercent = Number(item.history?.CollateralPercent);
 
   const isExpired = item.history?.ReservePeriod * 3600 * 24 * 1000 + item.history?.created - Date.now() <= 0;
   const isClaimed = item.ownerAddress?.toLowerCase() === account?.toLowerCase();
-  const isPaid = item.history?.status === 'SOLD'
+  const isPaid = item.history?.status === "SOLD";
 
   const chainImage = item.Chain?.toLowerCase().includes("polygon")
     ? require("assets/tokenImages/POLYGON.png")
@@ -84,61 +90,233 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
           <Skeleton variant="rect" width="80%" height={24} style={{ marginTop: "8px" }} />
         </Box>
       ) : (
-        <Box display="flex" alignItems="center" color="#fff" width="100%" className={classes.container}>
-          <img
-            src={item?.image ?? require(`assets/backgrounds/digital_art_1.png`)}
-            className={classes.nftImage}
-            alt={item.nftName}
-          />
-          <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-between"
-            ml={4}
-            flex={1}
-            height="150px"
-          >
-            <Box className={classes.nftName}>{item?.name}</Box>
-            <Box display="flex" alignItems="center" flex={1}>
-              <Box display="flex" flexDirection="column" flex={0.25} className={classes.section}>
-                <Box className={classes.header}>Blocking Price</Box>
-                <Box>{`${item.history?.Price} ${getTokenSymbol(item.history?.PaymentToken)}`}</Box>
-              </Box>
-              <Box display="flex" flexDirection="column" flex={0.25} pl={6} className={classes.section}>
-                <Box className={classes.header}>Collateral</Box>
-                <Box>
-                  {`${
-                    ((item.history?.Price *
-                      (item.history?.TotalCollateralPercent || item.history?.CollateralPercent)) /
-                    100).toFixed(2)
-                  } ${getTokenSymbol(item.history?.PaymentToken)}`}
+        <Box display={"flex"} flexDirection={"column"} className={classes.container}>
+          <Box display="flex" alignItems="center" color="#fff" width="100%">
+            <img
+              src={item?.image ?? require(`assets/backgrounds/digital_art_1.png`)}
+              className={classes.nftImage}
+              alt={item.nftName}
+            />
+            <Box
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-between"
+              ml={4}
+              flex={1}
+              height="150px"
+            >
+              <Box className={classes.nftName}>{item?.name}</Box>
+              <Box
+                display="flex"
+                alignItems="center"
+                flex={1}
+                flexDirection={isTablet ? "column" : "row"}
+                mt={isMobile ? 2 : 0}
+              >
+                <Box
+                  display={"flex"}
+                  alignItems={isMobile ? "start" : "center"}
+                  flex={isTablet ? 1 : 0.5}
+                  width={isTablet ? 1 : 0.5}
+                  flexDirection={isMobile ? "column" : "row"}
+                >
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    flex={isTablet ? 0.5 : 0.25}
+                    className={classes.section}
+                  >
+                    <Box className={classes.header}>Blocking Price</Box>
+                    <Box>{`${item.history?.Price} ${getTokenSymbol(item.history?.PaymentToken)}`}</Box>
+                  </Box>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    flex={isTablet ? 0.5 : 0.25}
+                    pl={isMobile ? 0 : 6}
+                    className={classes.section}
+                  >
+                    <Box className={classes.header}>Collateral</Box>
+                    <Box>
+                      {`${(
+                        (item.history?.Price *
+                          (item.history?.TotalCollateralPercent || item.history?.CollateralPercent)) /
+                        100
+                      ).toFixed(2)} ${getTokenSymbol(item.history?.PaymentToken)}`}
+                    </Box>
+                  </Box>
                 </Box>
-              </Box>
-
-              <Box flex={0.5} pl={3} display="flex" alignItems="center">
-                {isExpired ? (
-                  isPaid ? (
-                    <Box className={classes.paymentStatus} mr={2} color="#EEFF21">
-                      Paid
-                    </Box>
-                  ) : (
-                    <Box className={classes.paymentStatus} mr={2} color="#FF6868">
-                      You’ve lost the posibility to buy
-                    </Box>
-                  )
-                ) : (
-                  <Box className={classes.paymentStatus} mr={2} color="#ffffff">
-                    Payment In
+                {!isMobile && (
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    flex={0.5}
+                    pl={isTablet ? 0 : 3}
+                    mt={isTablet ? 3 : 0}
+                  >
+                    {isExpired ? (
+                      isPaid ? (
+                        <Box className={classes.paymentStatus} mr={2} color="#EEFF21">
+                          Paid
+                        </Box>
+                      ) : (
+                        <Box className={classes.paymentStatus} mr={2} color="#FF6868">
+                          You’ve lost the posibility to buy
+                        </Box>
+                      )
+                    ) : (
+                      <Box className={classes.paymentStatus} mr={2} color="#ffffff">
+                        Payment In
+                      </Box>
+                    )}
+                    <span className={classes.time}>{closeTime?.day} day(s) </span>
+                    <span className={classes.time}>{closeTime?.hour} hour(s) </span>
+                    <span className={classes.time}>{closeTime?.min} min</span>
+                    <span className={classes.time}>{closeTime?.seconds} sec</span>
                   </Box>
                 )}
+              </Box>
+              {!isMobile && !isTablet && (
+                <Box display="flex" alignItems="center" justifyContent="space-between">
+                  <Box display="flex" flexDirection="column" mr={8}>
+                    <Box className={classes.header}>Collateral Pct.</Box>
+                    <Box>
+                      {item.history?.TotalCollateralPercent
+                        ? Number(item.history?.TotalCollateralPercent).toFixed(2)
+                        : "0.00"}
+                      %
+                    </Box>
+                  </Box>
+                  {isExpired ? (
+                    isPaid ? (
+                      isClaimed ? (
+                        <Box mr={4.5}>
+                          <Box className={classes.gradientText}>Already Claimed</Box>
+                          <PrimaryButton
+                            size="medium"
+                            className={classes.primaryButton}
+                            onClick={() => handleClickAddress()}
+                          >
+                            check on {item.Chain}scan
+                            <img
+                              src={chainImage}
+                              style={{ width: "16px", height: "16px", marginLeft: "8px" }}
+                            />
+                          </PrimaryButton>
+                        </Box>
+                      ) : (
+                        <Box mr={4.5}>
+                          <PrimaryButton
+                            size="medium"
+                            className={classes.primaryButton}
+                            onClick={() => {
+                              history.push(`/gameNFTS/${item.Slug}/${item.id}`);
+                            }}
+                          >
+                            CLAIM YOUR NFT
+                          </PrimaryButton>
+                        </Box>
+                      )
+                    ) : (
+                      <Box mr={4.5}>
+                        <PrimaryButton
+                          size="medium"
+                          className={classes.primaryButton}
+                          onClick={() => {
+                            history.push(`/gameNFTS/${item.Slug}/${item.id}`);
+                          }}
+                        >
+                          CLAIM OUTSTANDING COLLATERAL
+                        </PrimaryButton>
+                      </Box>
+                    )
+                  ) : (
+                    <Box display="flex" flexDirection="column" flex={1} mr={4} mt={1.5}>
+                      <RangeSlider
+                        value={(Number(totalCollateralPercent) / Number(collateralPercent) - 1) * 100 + 20}
+                        variant="transparent"
+                        onChange={(event, newValue) => {}}
+                      />
+                      <Box display="flex" width={1} mt={1.5} fontSize={14}>
+                        <Box flex={20}>
+                          <strong>0%</strong>
+                        </Box>
+                        <Box flex={30} ml={"-26px"} display={"flex"} flexDirection={"column"}>
+                          <span>{Number(collateralPercent).toFixed(1)}%</span>
+                          <span style={{ marginLeft: -8, marginTop: 4 }}>High Risk</span>
+                        </Box>
+                        <Box flex={25} ml={"-26px"} display={"flex"} flexDirection={"column"}>
+                          <span>{Number(collateralPercent * 1.5).toFixed(1)}%</span>
+                          <span style={{ marginLeft: -16, marginTop: 4 }}>Medium Risk</span>
+                        </Box>
+                        <Box flex={25} ml={"-26px"} display={"flex"} flexDirection={"column"}>
+                          <span>
+                            <strong>{Number(collateralPercent * 1.75).toFixed(1)}%</strong>
+                          </span>
+                          <span style={{ marginLeft: -7, marginTop: 4 }}>
+                            <strong>Low Risk</strong>
+                          </span>
+                        </Box>
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
+              )}
+            </Box>
+            <img
+              src={require(`assets/icons/arrow_white_right.png`)}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                history.push(`/gameNFTS/${item.Slug}/${item.id}`);
+              }}
+            />
+          </Box>
+          {isMobile && (
+            <Box
+              display="flex"
+              flexDirection={"column"}
+              flex={0.5}
+              pl={isTablet ? 0 : 3}
+              mt={isTablet ? 3 : 0}
+            >
+              {isExpired ? (
+                isPaid ? (
+                  <Box className={classes.paymentStatus} mr={2} color="#EEFF21">
+                    Paid
+                  </Box>
+                ) : (
+                  <Box className={classes.paymentStatus} mr={2} color="#FF6868">
+                    You’ve lost the posibility to buy
+                  </Box>
+                )
+              ) : (
+                <Box className={classes.paymentStatus} mr={2} color="#ffffff">
+                  Payment In
+                </Box>
+              )}
+              <Box display={"flex"}>
                 <span className={classes.time}>{closeTime?.day} day(s) </span>
                 <span className={classes.time}>{closeTime?.hour} hour(s) </span>
                 <span className={classes.time}>{closeTime?.min} min</span>
                 <span className={classes.time}>{closeTime?.seconds} sec</span>
               </Box>
             </Box>
-            <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Box display="flex" flexDirection="column" mr={8}>
+          )}
+          {isTablet && (
+            <Box
+              display="flex"
+              alignItems={isMobile ? "start" : "center"}
+              justifyContent="space-between"
+              flexDirection={isMobile ? "column" : "row"}
+              width={1}
+            >
+              <Box
+                display="flex"
+                flexDirection="column"
+                mx={isMobile ? 0 : 3}
+                mb={isMobile ? 0 : 3}
+                mt={isMobile ? 3 : 0}
+              >
                 <Box className={classes.header}>Collateral Pct.</Box>
                 <Box>
                   {item.history?.TotalCollateralPercent
@@ -188,40 +366,37 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                   </Box>
                 )
               ) : (
-                <Box display="flex" flexDirection="column" flex={1} mr={4} mt={0.5}>
+                <Box display="flex" flexDirection="column" flex={1} mr={4} mt={1.5} width={1}>
                   <RangeSlider
-                    value={(collateralPercent / 80) * 100}
+                    value={Number(collateralPercent / totalCollateralPercent - 1) * 100 + 20}
                     variant="transparent"
                     onChange={(event, newValue) => {}}
                   />
-                  <Box display="flex" alignItems="center" justifyContent="space-between" mt={1} width="100%">
-                    <Box flex={collateralPercent / 80}>
+                  <Box display="flex" width={1} mt={1.5} fontSize={12}>
+                    <Box flex={20}>
                       <strong>0%</strong>
                     </Box>
-                    <Box flex={(collateralPercent / 80) * 0.2} className={classes.flexBox}>
-                      <strong>{Number(collateralPercent).toFixed(1)}% Liquidation</strong>
+                    <Box flex={30} ml={"-26px"} display={"flex"} flexDirection={"column"}>
+                      <span>{Number(collateralPercent).toFixed(1)}%</span>
+                      <span style={{ marginLeft: -8, marginTop: 4 }}>High Risk</span>
                     </Box>
-                    <Box flex={(collateralPercent / 80) * 0.3} className={classes.flexBox}>
-                      {Number(collateralPercent * 1.2).toFixed(1)}% High Risk
+                    <Box flex={25} ml={"-26px"} display={"flex"} flexDirection={"column"}>
+                      <span>{Number(collateralPercent * 1.5).toFixed(1)}%</span>
+                      <span style={{ marginLeft: -16, marginTop: 4 }}>Medium Risk</span>
                     </Box>
-                    <Box flex={(collateralPercent / 80) * 0.5}>
-                      {Number(collateralPercent * 1.5).toFixed(1)}% Medium Risk
-                    </Box>
-                    <Box>
-                      <strong>{Number(collateralPercent * 2).toFixed(1)}% Low Risk</strong>
+                    <Box flex={25} ml={"-26px"} display={"flex"} flexDirection={"column"}>
+                      <span>
+                        <strong>{Number(collateralPercent * 1.75).toFixed(1)}%</strong>
+                      </span>
+                      <span style={{ marginLeft: -7, marginTop: 4 }}>
+                        <strong>Low Risk</strong>
+                      </span>
                     </Box>
                   </Box>
                 </Box>
               )}
             </Box>
-          </Box>
-          <img
-            src={require(`assets/icons/arrow_white_right.png`)}
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              history.push(`/gameNFTS/${item.Slug}/${item.id}`);
-            }}
-          />
+          )}
         </Box>
       )}
     </Box>
