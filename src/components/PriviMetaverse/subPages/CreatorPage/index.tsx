@@ -540,7 +540,7 @@ export default function CreatorPage() {
                               padding: "7px 10px",
                               minWidth: 43,
                             }}
-                            onClick={() => shareMedia("Creator", `profile/${creator?.userInfo?.urlSlug}`)}
+                            onClick={() => shareMedia("Creator", `profile/${userInfo?.user?.address}`)}
                           >
                             <ShapeIcon />
                           </PrimaryButton>
