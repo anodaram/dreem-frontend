@@ -177,7 +177,7 @@ export default function GameDetailPage() {
       });
       if (response.success) {
         const newCharacters = response.data.list;
-        const newLastId = response.data.lastId;
+        const newLastId = response.data.list[response.data.list.length - 1].id;
         const newhasMore = response.data.hasMore;
 
         setNfts(prev => (init ? newCharacters : [...prev, ...newCharacters]));
