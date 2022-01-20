@@ -296,6 +296,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
               type="number"
               theme="light"
               minValue={0}
+              maxValue={23}
               endAdornment={<div className={classes.suffixText}>HRS</div>}
               disabled={isApproved}
               style={{ marginLeft: "8px" }}
@@ -309,6 +310,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
               type="number"
               theme="light"
               minValue={0}
+              maxValue={59}
               endAdornment={<div className={classes.suffixText}>MINS</div>}
               disabled={isApproved}
               style={{ marginLeft: "8px" }}
@@ -322,6 +324,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
               type="number"
               theme="light"
               minValue={0}
+              maxValue={59}
               endAdornment={<div className={classes.suffixText}>SEC</div>}
               disabled={isApproved}
               style={{ marginLeft: "8px" }}

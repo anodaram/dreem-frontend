@@ -43,7 +43,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
   };
 
   const offerPeriod = useMemo(() => {
-    if (!externalData.duration) {
+    if (!externalData?.duration) {
       return "0 hours";
     }
 
@@ -285,7 +285,7 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
           <div>
             <span className={classes.username}>{externalData.user}</span> placed a new blocking offer on{" "}
             <span className={classes.nftName}>{externalData.nft.name}</span> for {externalData.price} for{" "}
-            {externalData.duration}
+            {externalData?.duration}
           </div>
           <b style={{ color: "rgba(233, 255, 38, 1)" }} onClick={() => goToNFTDetail()}>
             Go to your management

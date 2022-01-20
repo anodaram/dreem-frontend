@@ -111,8 +111,8 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
             <AccordionSummary
               expandIcon={
                 <Box display="flex" alignItems="center" fontSize={14} width={56}>
-                  <Box color="white" mr={1}>
-                    {isOfferExpanded ? "Hide" : "Show"}
+                  <Box color="white" mr={1} style={{ transform: isOfferExpanded ? "none" : "rotate(180deg)" }}>
+                    Hide
                   </Box>
                   {isOfferExpanded ? <ShowIcon /> : <HideIcon />}
                 </Box>
@@ -164,80 +164,80 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                   rows={
                     offerData
                       ? offerData.map(item => [
-                          {
-                            cell:
-                              item.Beneficiary === account ? (
-                                <Box display="flex" alignItems="center">
-                                  <span>Your Offer</span>
-                                  <PrimaryButton
-                                    size="small"
-                                    className={classes.cancelOfferButton}
-                                    onClick={() => handleCancelOffer(item)}
-                                  >
-                                    CANCEL OFFER
-                                  </PrimaryButton>
-                                </Box>
-                              ) : (
-                                <Box
-                                  className={classes.gradientText}
-                                  display="flex"
-                                  alignItems="center"
-                                  style={{ maxWidth: "250px" }}
+                        {
+                          cell:
+                            item.Beneficiary === account ? (
+                              <Box display="flex" alignItems="center">
+                                <span>Your Offer</span>
+                                <PrimaryButton
+                                  size="small"
+                                  className={classes.cancelOfferButton}
+                                  onClick={() => handleCancelOffer(item)}
                                 >
-                                  <span
-                                    style={{
-                                      width: "100%",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      cursor: "pointer",
-                                    }}
-                                    onClick={() => visitProfile(item.Beneficiary, history)}
-                                  >
-                                    {item.Beneficiary}
-                                  </span>
-                                </Box>
-                              ),
-                          },
-                          {
-                            cell: `${item.Price} ${getTokenSymbol(item.PaymentToken)}`,
-                          },
-                          {
-                            cell: moment(new Date(item.Expiration)).format("DD-MM-YYYY"),
-                          },
-                          {
-                            cellAlign: isOwnership ? "left" : "center",
-                            cell: (
+                                  CANCEL OFFER
+                                </PrimaryButton>
+                              </Box>
+                            ) : (
                               <Box
+                                className={classes.gradientText}
                                 display="flex"
                                 alignItems="center"
-                                justifyContent={isOwnership ? "space-between" : "center"}
-                                ml={isOwnership ? 4.5 : 0}
+                                style={{ maxWidth: "250px" }}
                               >
-                                <img
-                                  src={
-                                    selectedChain.name === "POLYGON"
-                                      ? require("assets/icons/polygon_scan.png")
-                                      : require("assets/icons/icon_bscscan.ico")
-                                  }
-                                  width={24}
-                                  onClick={() => {
-                                    handleClickLink(item.hash);
+                                <span
+                                  style={{
+                                    width: "100%",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    cursor: "pointer",
                                   }}
-                                  style={{ cursor: "pointer" }}
-                                />
-                                {isOwnership && (
-                                  <PrimaryButton
-                                    size="small"
-                                    className={classes.primaryBtn}
-                                    onClick={() => handleAcceptOffer(item)}
-                                  >
-                                    ACCEPT
-                                  </PrimaryButton>
-                                )}
+                                  onClick={() => visitProfile(item.Beneficiary, history)}
+                                >
+                                  {item.Beneficiary}
+                                </span>
                               </Box>
                             ),
-                          },
-                        ])
+                        },
+                        {
+                          cell: `${item.Price} ${getTokenSymbol(item.PaymentToken)}`,
+                        },
+                        {
+                          cell: moment(new Date(item.Expiration)).format("DD-MM-YYYY"),
+                        },
+                        {
+                          cellAlign: isOwnership ? "left" : "center",
+                          cell: (
+                            <Box
+                              display="flex"
+                              alignItems="center"
+                              justifyContent={isOwnership ? "space-between" : "center"}
+                              ml={isOwnership ? 4.5 : 0}
+                            >
+                              <img
+                                src={
+                                  selectedChain.name === "POLYGON"
+                                    ? require("assets/icons/polygon_scan.png")
+                                    : require("assets/icons/icon_bscscan.ico")
+                                }
+                                width={24}
+                                onClick={() => {
+                                  handleClickLink(item.hash);
+                                }}
+                                style={{ cursor: "pointer" }}
+                              />
+                              {isOwnership && (
+                                <PrimaryButton
+                                  size="small"
+                                  className={classes.primaryBtn}
+                                  onClick={() => handleAcceptOffer(item)}
+                                >
+                                  ACCEPT
+                                </PrimaryButton>
+                              )}
+                            </Box>
+                          ),
+                        },
+                      ])
                       : []
                   }
                   placeholderText="No History"
@@ -253,8 +253,8 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
             <AccordionSummary
               expandIcon={
                 <Box display="flex" alignItems="center" fontSize={14} width={56}>
-                  <Box color="white" mr={1}>
-                    {isHistoryExpaned ? "Hide" : "Show"}
+                  <Box color="white" mr={1} style={{ transform: isHistoryExpaned ? "none" : "rotate(180deg)" }}>
+                    Hide
                   </Box>
                   {isHistoryExpaned ? <ShowIcon /> : <HideIcon />}
                 </Box>
@@ -276,43 +276,43 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                   rows={
                     historyData
                       ? historyData.map(item => [
-                          {
-                            cell: (
-                              <Box className={classes.gradientText} component="span">
-                                {item.Beneficiary}
-                              </Box>
-                            ),
-                          },
-                          {
-                            cell: `${item.Price} ${getTokenSymbol(item.PaymentToken)}`,
-                          },
-                          {
-                            cell: moment(new Date(item.created)).format("DD-MM-YYYY"),
-                          },
-                          {
-                            cellAlign: "center",
-                            cell: (
-                              <div
+                        {
+                          cell: (
+                            <Box className={classes.gradientText} component="span">
+                              {item.Beneficiary}
+                            </Box>
+                          ),
+                        },
+                        {
+                          cell: `${item.Price} ${getTokenSymbol(item.PaymentToken)}`,
+                        },
+                        {
+                          cell: moment(new Date(item.created)).format("DD-MM-YYYY"),
+                        },
+                        {
+                          cellAlign: "center",
+                          cell: (
+                            <div
+                              onClick={() => {
+                                handleClickLink(item.hash);
+                              }}
+                            >
+                              <img
+                                src={
+                                  selectedChain.name === "POLYGON"
+                                    ? require("assets/icons/polygon_scan.png")
+                                    : require("assets/icons/icon_bscscan.ico")
+                                }
+                                width={24}
                                 onClick={() => {
                                   handleClickLink(item.hash);
                                 }}
-                              >
-                                <img
-                                  src={
-                                    selectedChain.name === "POLYGON"
-                                      ? require("assets/icons/polygon_scan.png")
-                                      : require("assets/icons/icon_bscscan.ico")
-                                  }
-                                  width={24}
-                                  onClick={() => {
-                                    handleClickLink(item.hash);
-                                  }}
-                                  style={{ cursor: "pointer" }}
-                                />
-                              </div>
-                            ),
-                          },
-                        ])
+                                style={{ cursor: "pointer" }}
+                              />
+                            </div>
+                          ),
+                        },
+                      ])
                       : []
                   }
                   placeholderText="No History"

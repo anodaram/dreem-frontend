@@ -38,61 +38,61 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const offerTableHeaders: Array<CustomTableHeaderInfo> = isOwnership
     ? [
-        {
-          headerName: "USER",
-        },
-        {
-          headerName: "PRICE",
-          headerAlign: "center",
-        },
-        {
-          headerName: "PERIOD",
-          headerAlign: "center",
-        },
-        {
-          headerName: "COLLATERAL %",
-          headerAlign: "center",
-        },
-        {
-          headerName: "EXPIRATION",
-          headerAlign: "center",
-        },
-        {
-          headerName:
-            nft.Chain?.toLowerCase() === "mumbai" || nft.Chain?.toLowerCase() === "polygon"
-              ? "POLYGONSCAN"
-              : "BSCSCAN",
-          headerAlign: isOwnership ? "left" : "center",
-        },
-      ]
+      {
+        headerName: "USER",
+      },
+      {
+        headerName: "PRICE",
+        headerAlign: "center",
+      },
+      {
+        headerName: "PERIOD",
+        headerAlign: "center",
+      },
+      {
+        headerName: "COLLATERAL %",
+        headerAlign: "center",
+      },
+      {
+        headerName: "EXPIRATION",
+        headerAlign: "center",
+      },
+      {
+        headerName:
+          nft.Chain?.toLowerCase() === "mumbai" || nft.Chain?.toLowerCase() === "polygon"
+            ? "POLYGONSCAN"
+            : "BSCSCAN",
+        headerAlign: isOwnership ? "left" : "center",
+      },
+    ]
     : [
-        {
-          headerName: "USER",
-        },
-        {
-          headerName: "PRICE",
-          headerAlign: "center",
-        },
-        {
-          headerName: "COLLATERAL %",
-          headerAlign: "center",
-        },
-        {
-          headerName: "SETTLEMENT",
-          headerAlign: "center",
-        },
-        {
-          headerName: "DURATION",
-          headerAlign: "center",
-        },
-        {
-          headerName:
-            nft.Chain?.toLowerCase() === "mumbai" || nft.Chain?.toLowerCase() === "polygon"
-              ? "POLYGONSCAN"
-              : "BSCSCAN",
-          headerAlign: isOwnership ? "left" : "center",
-        },
-      ];
+      {
+        headerName: "USER",
+      },
+      {
+        headerName: "PRICE",
+        headerAlign: "center",
+      },
+      {
+        headerName: "COLLATERAL %",
+        headerAlign: "center",
+      },
+      {
+        headerName: "SETTLEMENT",
+        headerAlign: "center",
+      },
+      {
+        headerName: "DURATION",
+        headerAlign: "center",
+      },
+      {
+        headerName:
+          nft.Chain?.toLowerCase() === "mumbai" || nft.Chain?.toLowerCase() === "polygon"
+            ? "POLYGONSCAN"
+            : "BSCSCAN",
+        headerAlign: isOwnership ? "left" : "center",
+      },
+    ];
 
   const historyTableHeaders: Array<CustomTableHeaderInfo> = [
     {
@@ -153,9 +153,9 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
           <Accordion expanded={isOfferExpanded} onChange={(e, expanded) => setIsOfferExpanded(expanded)}>
             <AccordionSummary
               expandIcon={
-                <Box display="flex" alignItems="center" fontSize={14} width={56}>
-                  <Box color="white" mr={1}>
-                    {isOfferExpanded ? "Hide" : "Show"}
+                <Box display="flex" alignItems="center" fontSize={14} width={56} >
+                  <Box color="white" mr={1} style={{ transform: isOfferExpanded ? "none" : "rotate(180deg)" }}>
+                    Hide
                   </Box>
                   {isOfferExpanded ? <ShowIcon /> : <HideIcon />}
                 </Box>
@@ -207,83 +207,83 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
                   rows={
                     offerData
                       ? offerData.map(item => [
-                          {
-                            cell:
-                              item.Beneficiary === account ? (
-                                <Box display="flex" alignItems="center">
-                                  <span>Your Offer</span>
-                                  <PrimaryButton
-                                    size="small"
-                                    className={classes.cancelOfferButton}
-                                    onClick={() => handleCancelOffer(item)}
-                                  >
-                                    CANCEL OFFER
-                                  </PrimaryButton>
-                                </Box>
-                              ) : (
-                                <Box display="flex" alignItems="center" style={{ maxWidth: "250px" }}>
-                                  <span
-                                    className={classes.gradientText}
-                                    style={{
-                                      width: "100%",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      cursor: "pointer",
-                                    }}
-                                    onClick={() => visitProfile(item.Beneficiary, history)}
-                                  >
-                                    {item.Beneficiary}
-                                  </span>
-                                </Box>
-                              ),
-                          },
-                          {
-                            cell: `${item.Price} ${getTokenSymbol(item.PaymentToken)}`,
-                          },
-                          {
-                            cell: isOwnership ? `${item.ReservePeriod} Day(s)` : `${item.TotalCollateralPercent} %`,
-                          },
-                          {
-                            cell: isOwnership
-                              ? `${item.TotalCollateralPercent} %`
-                              : `${item.CollateralAmount} ${getTokenSymbol(item.CollateralToken)}`,
-                          },
-                          {
-                            cell: isOwnership ? `${item.AcceptDuration} Day(s)` : `${item.ReservePeriod} Day(s)`,
-                          },
-                          {
-                            cellAlign: isOwnership ? "left" : "center",
-                            cell: (
-                              <Box
-                                display="flex"
-                                alignItems="center"
-                                justifyContent={isOwnership ? "space-between" : "center"}
-                                ml={isOwnership ? 4.5 : 0}
-                              >
-                                <img
-                                  src={
-                                    selectedChain.name === "POLYGON"
-                                      ? require("assets/icons/polygon_scan.png")
-                                      : require("assets/icons/icon_bscscan.ico")
-                                  }
-                                  width={24}
-                                  onClick={() => {
-                                    handleClickLink(item.hash);
+                        {
+                          cell:
+                            item.Beneficiary === account ? (
+                              <Box display="flex" alignItems="center">
+                                <span>Your Offer</span>
+                                <PrimaryButton
+                                  size="small"
+                                  className={classes.cancelOfferButton}
+                                  onClick={() => handleCancelOffer(item)}
+                                >
+                                  CANCEL OFFER
+                                </PrimaryButton>
+                              </Box>
+                            ) : (
+                              <Box display="flex" alignItems="center" style={{ maxWidth: "250px" }}>
+                                <span
+                                  className={classes.gradientText}
+                                  style={{
+                                    width: "100%",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    cursor: "pointer",
                                   }}
-                                />
-                                {isOwnership && (
-                                  <PrimaryButton
-                                    size="small"
-                                    className={classes.primaryBtn}
-                                    onClick={() => handleAcceptOffer(item)}
-                                  >
-                                    ACCEPT
-                                  </PrimaryButton>
-                                )}
+                                  onClick={() => visitProfile(item.Beneficiary, history)}
+                                >
+                                  {item.Beneficiary}
+                                </span>
                               </Box>
                             ),
-                          },
-                        ])
+                        },
+                        {
+                          cell: `${item.Price} ${getTokenSymbol(item.PaymentToken)}`,
+                        },
+                        {
+                          cell: isOwnership ? `${item.ReservePeriod} Day(s)` : `${item.TotalCollateralPercent} %`,
+                        },
+                        {
+                          cell: isOwnership
+                            ? `${item.TotalCollateralPercent} %`
+                            : `${item.CollateralAmount} ${getTokenSymbol(item.CollateralToken)}`,
+                        },
+                        {
+                          cell: isOwnership ? `${item.AcceptDuration} Day(s)` : `${item.ReservePeriod} Day(s)`,
+                        },
+                        {
+                          cellAlign: isOwnership ? "left" : "center",
+                          cell: (
+                            <Box
+                              display="flex"
+                              alignItems="center"
+                              justifyContent={isOwnership ? "space-between" : "center"}
+                              ml={isOwnership ? 4.5 : 0}
+                            >
+                              <img
+                                src={
+                                  selectedChain.name === "POLYGON"
+                                    ? require("assets/icons/polygon_scan.png")
+                                    : require("assets/icons/icon_bscscan.ico")
+                                }
+                                width={24}
+                                onClick={() => {
+                                  handleClickLink(item.hash);
+                                }}
+                              />
+                              {isOwnership && (
+                                <PrimaryButton
+                                  size="small"
+                                  className={classes.primaryBtn}
+                                  onClick={() => handleAcceptOffer(item)}
+                                >
+                                  ACCEPT
+                                </PrimaryButton>
+                              )}
+                            </Box>
+                          ),
+                        },
+                      ])
                       : []
                   }
                   placeholderText="No History"
@@ -299,8 +299,8 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
             <AccordionSummary
               expandIcon={
                 <Box display="flex" alignItems="center" fontSize={14} width={56}>
-                  <Box color="white" mr={1}>
-                    {isHistoryExpaned ? "Hide" : "Show"}
+                  <Box color="white" mr={1} style={{ transform: isHistoryExpaned ? "none" : "rotate(180deg)" }}>
+                    Hide
                   </Box>
                   {isHistoryExpaned ? <ShowIcon /> : <HideIcon />}
                 </Box>
