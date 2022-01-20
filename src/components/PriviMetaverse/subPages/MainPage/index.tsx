@@ -204,7 +204,7 @@ export default function HomePage() {
         .finally(() => setLoadingExplore(false));
 
       setLoadingExploreCharacters(true);
-      MetaverseAPI.getCharacters(null, true)
+      MetaverseAPI.getCharacters(null, true, null, true)
         .then(res => {
           setExploreCharacters(res.data.elements);
         })

@@ -29,6 +29,7 @@ export const getFeaturedWorlds = async filters => {
       {
         featured: true,
         filters,
+        isPublic: true,
         page: {
           page : 1,
           size : 10000,
@@ -51,7 +52,7 @@ export const getWorlds = async (
   pageNum = 1,
   sorting = "timestamp",
   filters = ["WORLD"],
-  onlyPublic = false,
+  isPublic = true,
   ownerId?: string,
   itemIds?: any,
   isExtension?: boolean,
@@ -66,7 +67,7 @@ export const getWorlds = async (
     };
     params = { ...params, page };
     params = filters ? { ...params, filters } : params;
-    params = onlyPublic ? { ...params, onlyPublic } : params;
+    params = isPublic ? { ...params, isPublic } : params;
     params = ownerId ? { ...params, ownerId } : params;
     params = itemIds && itemIds.length > 0 ? { ...params, itemIds } : params;
     params = isExtension !== undefined ? { ...params, isExtension } : params;
@@ -236,7 +237,7 @@ export const getWorld = async worldId => {
   }
 };
 
-export const getCharacters = async (worldId?: any, featured: undefined | boolean = undefined, ids?: any) => {
+export const getCharacters = async (worldId?: any, featured: undefined | boolean = undefined, ids?: any, isPublic: undefined | boolean = true) => {
   const body: any = {};
   // if (worldId) {
   //   body.worldIds = [Number(worldId)];
@@ -244,9 +245,12 @@ export const getCharacters = async (worldId?: any, featured: undefined | boolean
   if (featured) {
     body.featured = featured;
   }
-  // if (ids) {
-  //   body.charactersId = ids;
-  // }
+  if (ids) {
+    body.charactersId = ids;
+  }
+  if (isPublic) {
+    body.isPublic = isPublic;
+  }
   let pageData = {
     page : 1,
     size : 10000,

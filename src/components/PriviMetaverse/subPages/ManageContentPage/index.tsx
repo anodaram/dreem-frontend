@@ -191,6 +191,26 @@ export default function ManageContentPage() {
     setStep(prev => prev - 1);
   };
 
+  const handleRefreshCollection = () => {
+    setStep(1)
+    setCurPage(1)
+    setLoadingCollection(true);
+    MetaverseAPI.getCollections(12, 1, "DESC")
+    .then(res => {
+      if (res.success) {
+        const items = res.data.elements;
+        if (items && items.length > 0) {
+          setCollections(res.data.elements);
+          if (res.data.page && curPage <= res.data.page.max) {
+            setCurPage(curPage => curPage + 1);
+            setLastPage(res.data.page.max);
+          }
+        }
+      }
+    })
+    .finally(() => setLoadingCollection(false));
+  };
+
   const loadMore = () => {
     setLoadingCollection(true);
     MetaverseAPI.getCollections(12, curPage, "DESC")
@@ -418,7 +438,7 @@ export default function ManageContentPage() {
             <Box className={classes.typo3} mb={3}>
               Fill all the details of your new collection
             </Box>
-            <CreateCollection handleNext={() => {}} handleCancel={handlePrev} />
+            <CreateCollection handleNext={() => {}} handleCancel={handlePrev} handleRefresh={handleRefreshCollection} />
           </div>
         )}
         {step === 3 && (

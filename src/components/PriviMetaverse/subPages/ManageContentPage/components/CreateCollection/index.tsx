@@ -12,13 +12,16 @@ import { BlockchainNets } from "shared/constants/constants";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
+import {LoadingArrow} from "shared/ui-kit/Hocs/LoadingArrow";
 
 const CreateCollection = ({
   handleNext,
   handleCancel,
+  handleRefresh
 }: {
   handleNext: () => void;
   handleCancel: () => void;
+  handleRefresh: () => void;
 }) => {
   const history = useHistory();
   const classes = useModalStyles();
@@ -33,6 +36,7 @@ const CreateCollection = ({
   const [symbol, setSymbol] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const { chainId, account, library } = useWeb3React();
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -81,8 +85,8 @@ const CreateCollection = ({
 
   const handleWorld = async () => {
     if (validate()) {
+      setIsUploading(true)
       let payload: any = {};
-
       payload = {
         erc721CollectionName: title,
         erc721CollectionSymbol: symbol,
@@ -92,15 +96,13 @@ const CreateCollection = ({
 
       MetaverseAPI.uploadCollection(payload)
         .then(async res => {
-          if (!res.success) return;
-          else{
+          setIsUploading(false)
+          if (!res.success) {
+            showAlertMessage(`Failed to create collection`, { variant: "error" });
+          } else{
             showAlertMessage(`Successfully collection created`, { variant: "success" });
             handleCancel()
-            history.push(
-              `/collection/${
-                res.data.id
-              }`
-            )
+            handleRefresh()
           }
         })
         .catch(err => {
@@ -226,6 +228,9 @@ const CreateCollection = ({
         style={{ display: "none" }}
         onChange={onImageInput}
       />
+      {isUploading && (
+        <LoadingArrow loading={isUploading} />
+      )}
     </Box>
   );
 };
