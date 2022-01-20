@@ -10,7 +10,17 @@ export const setMarketFee = (fee: any) => ({
   fee,
 });
 
-export const setSelTabMarket = (selectedTab: number) => ({
-  type: actionTypes.SET_SELTAB_MARKET,
-  selectedTab,
+export const setSelTabMarketMain = (selectedTab: number | string) => ({
+  type: actionTypes.SET_SELTAB_MARKET_MAIN,
+  selectedTabMarketMain: selectedTab,
+});
+
+export const setSelTabMarketManageNFTMain = (selectedTab: number | string) => ({
+  type: actionTypes.SET_SELTAB_MARKET_MANAGE_NFT_MAIN,
+  selectedTabMarketManageNFTMain: selectedTab,
+});
+
+export const setSelTabMarketManageNFTSub = (selectedTab: number) => ({
+  type: actionTypes.SET_SELTAB_MARKET_MANAGE_NFT_SUB,
+  selectedTabMarketManageNFTSub: selectedTab,
 });
