@@ -43,21 +43,23 @@ export const NotificationContent: React.FunctionComponent<NotificationContentPro
   };
 
   const offerPeriod = useMemo(() => {
-    if (!externalData?.duration) {
-      return "0 hours";
+    if (externalData) {
+      if (!externalData.duration) {
+        return "0 hours";
+      }
+
+      let days;
+      let hours = Number(externalData.duration * 24);
+      if (hours > 24) {
+        days = hours / 24;
+      }
+      hours = hours % 24;
+
+      let strDays = days ? days + " days" : "";
+      let strHours = hours ? hours + " hours" : "";
+
+      return strDays + " " + strHours;
     }
-
-    let days;
-    let hours = Number(externalData.duration * 24);
-    if (hours > 24) {
-      days = hours / 24;
-    }
-    hours = hours % 24;
-
-    let strDays = days ? days + " days" : "";
-    let strHours = hours ? hours + " hours" : "";
-
-    return strDays + " " + strHours;
   }, [externalData]);
 
   const goToNFTDetail = () => {

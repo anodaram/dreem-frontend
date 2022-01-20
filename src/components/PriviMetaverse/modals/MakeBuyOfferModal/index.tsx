@@ -138,7 +138,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${(offerPrice* PRECISSION).toFixed(2)} ${token.Symbol}!`, {
+      showAlertMessage(`Successfully approved ${(offerPrice * PRECISSION).toFixed(2)} ${token.Symbol}!`, {
         variant: "success",
       });
       setTransactionSuccess(null);
@@ -177,7 +177,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
           price: toNDecimals(price, token.Decimals),
           beneficiary: account,
           sellerToMatch: "0x0000000000000000000000000000000000000000",
-          mode: 0
+          mode: 0,
         },
         setHash
       );
@@ -280,7 +280,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
             <KeyboardDatePicker
               disableToolbar
               variant="inline"
-              format="MM/dd/yyyy"
+              format="dd/MMM/yyyy"
               margin="dense"
               id="date-picker-inline"
               value={date}
@@ -295,7 +295,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
             />
           </MuiPickersUtilsProvider>
           <Box textAlign="end" fontSize={12} fontFamily="Rany" mt={1} color="white">
-            incl. {marketFee*100}% marketplace fee
+            incl. {marketFee * 100}% marketplace fee
           </Box>
         </Box>
         <Box display="flex" alignItems="center" justifyContent="flex-end" mt={3}>
