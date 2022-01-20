@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { useHistory, useParams } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
+import { RootState } from "store/reducers/Reducer";
 import Box from "shared/ui-kit/Box";
 import { BackButton } from "components/PriviMetaverse/components/BackButton";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
-import { setTokenList } from "store/actions/MarketPlace";
+import { setTokenList, setSelTabMarketManageNFTMain } from "store/actions/MarketPlace";
 import TabsView, { TabItem } from "shared/ui-kit/TabsView";
 import OwnersPanel from "./components/OwnersPanel";
 import RentedByMe from "./components/RentedByMe";
@@ -36,7 +37,9 @@ const ManageNFTPage = () => {
   const tabsClasses = useTabsStyles();
   const history = useHistory();
 
-  const [selectedTab, setSelectedTab] = React.useState<string>(TAB_OWNERS);
+  const selTab = useSelector((state: RootState) => state.marketPlace.selectedTabMarketManageNFTMain);
+
+  const [selectedTab, setSelectedTab] = React.useState<string>(selTab || TAB_OWNERS);
   const params: { tab?: string } = useParams();
   const dispatch = useDispatch();
 
@@ -77,8 +80,10 @@ const ManageNFTPage = () => {
             tabs={Tabs}
             onSelectTab={tab => {
               setSelectedTab(tab.key);
+              dispatch(setSelTabMarketManageNFTMain(tab.key));
             }}
             extendedClasses={tabsClasses}
+            seletedTabIndex={Tabs.findIndex(tab => tab.key === selectedTab)}
           />
         </Box>
         {selectedTab === TAB_OWNERS && <OwnersPanel />}
