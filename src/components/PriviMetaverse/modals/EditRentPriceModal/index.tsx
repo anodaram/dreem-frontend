@@ -71,7 +71,9 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
     }
 
     if (!pricePerHour || !(limitDays || limitHour || limitMin || limitSec)) {
-      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+        variant: "error",
+      });
       return;
     }
 
@@ -79,7 +81,9 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
           return;
         }
       }
@@ -120,7 +124,9 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
       }
 
       if (!pricePerHour || !(limitDays || limitHour || limitMin || limitSec)) {
-        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+        showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+          variant: "error",
+        });
         return;
       }
 
@@ -138,7 +144,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
           collectionId: nft.Address,
           tokenId: token_id,
           maximumRentalTime: toSeconds(limitDays, limitHour, limitMin, limitSec),
-          pricePerSecond: toNDecimals(pricePerHour/SECONDS_PER_HOUR, rentalToken.Decimals),
+          pricePerSecond: toNDecimals(pricePerHour / SECONDS_PER_HOUR, rentalToken.Decimals),
           rentalExpiration: getNextDay(maxRentalTime),
           fundingToken: rentalToken.Address,
         },
@@ -333,7 +339,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
               <KeyboardDatePicker
                 disableToolbar
                 variant="inline"
-                format="MM/dd/yyyy"
+                format="dd/MMM/yyyy"
                 margin="dense"
                 id="date-picker-inline"
                 value={maxRentalTime}

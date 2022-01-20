@@ -322,7 +322,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                         cell: `${formatDuration(+item.rentalTime * 1000)}`,
                       },
                       {
-                        cell: <Moment format="DD-MM-YYYY">{new Date(+item.rentalExpiration)}</Moment>,
+                        cell: <Moment format="DD/MMM/YYYY">{new Date(+item.rentalExpiration)}</Moment>,
                       },
                       {
                         cellAlign: "center",

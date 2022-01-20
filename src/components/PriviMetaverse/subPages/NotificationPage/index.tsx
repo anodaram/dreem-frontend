@@ -62,7 +62,7 @@ const NotificationItem = ({ notification, removeNotification }) => {
       <ContentContainer>
         <Hidden mdUp>
           <TimeLabel>
-            <Moment format="YYYY-MM-DD hh:mm:ss">{new Date(notification.date)}</Moment>
+            <Moment format="DD/MMM/YYYY HH:mm:ss">{new Date(notification.date)}</Moment>
           </TimeLabel>
         </Hidden>
         <NotificationMessage theme="dark">
@@ -81,7 +81,7 @@ const NotificationItem = ({ notification, removeNotification }) => {
       </ContentContainer>
       <Hidden smDown>
         <TimeLabel>
-          <Moment format="YYYY-MM-DD hh:mm:ss">{new Date(notification.date)}</Moment>
+          <Moment format="DD/MMM/YYYY HH:mm:ss">{new Date(notification.date)}</Moment>
         </TimeLabel>
       </Hidden>
       <Box

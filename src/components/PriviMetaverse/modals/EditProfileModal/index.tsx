@@ -228,7 +228,7 @@ const EditProfileModal = (props: any) => {
             </Box>
             <Box className={`${classes.inputBox} ${classes.timeSelect}`}>
               <DateInput
-                format={"dd.MM.yyyy"}
+                format={"dd/MMM/yyyy"}
                 placeholder="Select your date of birthday"
                 value={user.dob}
                 maxDate={new Date().getTime()}
