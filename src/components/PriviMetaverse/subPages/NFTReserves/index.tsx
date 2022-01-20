@@ -259,8 +259,8 @@ const NFTReserves = () => {
   const getData = async (isInit = false) => {
     if (!isInit && (!hasMore || loading)) return;
 
-    const network = filterChain !== filterChainOptions[0] && isFilterChain ? filterChain : undefined;
-    const status = isFilterStatus && filterStatus !== filterStatusOptions[0] ? filterStatus : undefined;
+    const network = filterChain !== filterChainOptions[0] ? filterChain : undefined;
+    const status = filterStatus !== filterStatusOptions[0] ? filterStatus : undefined;
     const search = debouncedSearchValue ? debouncedSearchValue : undefined;
 
     try {
