@@ -145,7 +145,11 @@ const ExploreReserveDetailPage = () => {
   };
 
   const goBack = () => {
-    history.goBack();
+    if (history.action === 'POP') {
+      history.push("/gameNFTS/");
+    } else {
+      history.goBack();
+    }
   };
 
   const handleClaimPayment = () => {
