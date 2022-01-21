@@ -24,3 +24,13 @@ export const setSelTabMarketManageNFTSub = (selectedTab: number) => ({
   type: actionTypes.SET_SELTAB_MARKET_MANAGE_NFT_SUB,
   selectedTabMarketManageNFTSub: selectedTab,
 });
+
+export const setCollectionNFTList = (collectionNFTList: any[]) => ({
+  type: actionTypes.SET_COLLECTION_NFT_LIST,
+  collectionNFTList: collectionNFTList,
+});
+
+export const setScrollPosition = (scrollPosition: number) => ({
+  type: actionTypes.SET_SCROLL_POSITION,
+  scrollPosition: scrollPosition,
+});

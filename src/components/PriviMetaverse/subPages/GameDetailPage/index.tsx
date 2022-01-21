@@ -23,7 +23,7 @@ import { RootState } from "store/reducers/Reducer";
 import { toDecimals } from "shared/functions/web3";
 import MarketplaceFeed from "./components/MarketplaceFeed";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
-import { setTokenList } from "store/actions/MarketPlace";
+import { setTokenList, setCollectionNFTList, setScrollPosition } from "store/actions/MarketPlace";
 import { NftStates } from "shared/constants/constants";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 
@@ -91,6 +91,8 @@ export default function GameDetailPage() {
 
   const user = useSelector((state: RootState) => state.user);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const collectionNFTList = useSelector((state: RootState) => state.marketPlace.collectionNFTList);
+  const scrollPosition = useSelector((state: RootState) => state.marketPlace.scrollPosition);
 
   const history = useHistory();
   const width = useWindowDimensions().width;
@@ -106,7 +108,7 @@ export default function GameDetailPage() {
   const { collection_id }: { collection_id: string } = useParams();
   const [gameInfo, setGameInfo] = React.useState<any>(undefined);
 
-  const [nfts, setNfts] = React.useState<any[]>([]);
+  const [nfts, setNfts] = React.useState<any[]>(collectionNFTList || []);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [lastId, setLastId] = React.useState<any>(undefined);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
@@ -129,6 +131,12 @@ export default function GameDetailPage() {
       }
     });
   };
+
+  React.useEffect(() => {
+    if (collectionNFTList && collectionNFTList.length > 0) {
+      setNfts([...collectionNFTList]);
+    }
+  }, [collectionNFTList]);
 
   React.useEffect(() => {
     loadGameInfo();
@@ -181,6 +189,7 @@ export default function GameDetailPage() {
         const newhasMore = response.data.hasMore;
 
         setNfts(prev => (init ? newCharacters : [...prev, ...newCharacters]));
+        dispatch(setCollectionNFTList([...collectionNFTList, ...newCharacters]));
         setLastId(newLastId);
         setHasMore(newhasMore);
       } else {
@@ -369,8 +378,19 @@ export default function GameDetailPage() {
     }
   }, [nfts, hasMore, breakTwo, breakThree, breakFour]);
 
+  const handleScroll = e => {
+    dispatch(setScrollPosition(e.target.scrollTop));
+  };
+
+  const handleOpenExplore = row => {
+    if (!row || !row[0].rawData) return;
+
+    const nft = row[0].rawData;
+    history.push(`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
+  };
+
   return (
-    <Box className={classes.root} id="scrollContainer">
+    <Box className={classes.root} id="scrollContainer" onScroll={handleScroll}>
       <Box
         className={classes.headerBG}
         style={{
@@ -575,6 +595,7 @@ export default function GameDetailPage() {
                   scrollableTarget={"scrollContainer"}
                   next={loadNfts}
                   hasMore={hasMore}
+                  initialScrollY={scrollPosition - 100}
                   loader={
                     loading &&
                     isListView && (
@@ -621,7 +642,7 @@ export default function GameDetailPage() {
                           rows={tableData}
                           placeholderText=""
                           theme="dreem"
-                          onClickRow={() => {}}
+                          onClickRow={handleOpenExplore}
                         />
                       </div>
                     )
