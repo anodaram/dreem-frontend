@@ -11,6 +11,7 @@ import { ReactComponent as InstagramIcon } from "assets/snsIcons/instagram.svg";
 import { ReactComponent as DiscordIcon } from "assets/snsIcons/discord.svg";
 import { ReactComponent as TelegramIcon } from "assets/snsIcons/telegram.svg";
 import { ReactComponent as GitbookIcon } from "assets/snsIcons/gitbook.svg";
+import { ReactComponent as MediumIcon } from "assets/snsIcons/medium.svg";
 // import { ReactComponent as JuiceLogoIcon } from "assets/logos/juice_logo.svg";
 import Box from "shared/ui-kit/Box";
 import { footerStyles } from "./index.styles";
@@ -23,7 +24,7 @@ import {
   handleInstagramLink,
   // handleLinkedinLink,
   // handleTiktokLink,
-  // handleMediumLink,
+  handleMediumLink,
   handleAboutLink,
   handleGitbookLink,
   // handleNewsletterLink,
@@ -61,6 +62,9 @@ const Footer = () => {
               </Box>
               <Box className={classes.snsBox} onClick={handleYoutubeLink}>
                 <YoutubeIcon width="26px" />
+              </Box>
+              <Box className={classes.snsBox} onClick={handleMediumLink}>
+                <MediumIcon />
               </Box>
             </Box>
             <Box className={classes.flexBox} mt={2}>

@@ -16,6 +16,7 @@ type TabViewProps = {
   onSelectTab: (tab: TabItem) => void;
   renderTab?: (tab: TabItem) => React.ReactNode;
   extendedClasses?: any;
+  seletedTabIndex?: number;
 } & BoxProps;
 
 const TabsView: React.FC<TabViewProps> = ({
@@ -25,12 +26,15 @@ const TabsView: React.FC<TabViewProps> = ({
   onSelectTab,
   renderTab,
   extendedClasses,
+  seletedTabIndex,
   ...props
 }: TabViewProps) => {
   // extend classes when given
   const classes = extendedClasses ? { ...tabViewStyles(), ...extendedClasses } : tabViewStyles();
 
-  const [selectedTab, setSelectedTab] = useState<number>(0);
+  const [selectedTab, setSelectedTab] = useState<number>(
+    seletedTabIndex && seletedTabIndex > 0 ? seletedTabIndex : 0
+  );
   const handleSelectTab = (index: number, tab: TabItem) => {
     setSelectedTab(index);
     onSelectTab && onSelectTab(tab);

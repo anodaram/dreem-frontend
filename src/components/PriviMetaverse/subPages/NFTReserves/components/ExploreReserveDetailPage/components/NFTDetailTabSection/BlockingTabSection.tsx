@@ -154,7 +154,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
             <AccordionSummary
               expandIcon={
                 <Box display="flex" alignItems="center" fontSize={14} width={56} >
-                  <Box color="white" mr={1} style={{ transform: isOfferExpanded ? "none" : "rotate(180deg)" }}>
+                  <Box color="white" mr={1} >
                     Hide
                   </Box>
                   {isOfferExpanded ? <ShowIcon /> : <HideIcon />}
@@ -299,7 +299,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft, handleRefres
             <AccordionSummary
               expandIcon={
                 <Box display="flex" alignItems="center" fontSize={14} width={56}>
-                  <Box color="white" mr={1} style={{ transform: isHistoryExpaned ? "none" : "rotate(180deg)" }}>
+                  <Box color="white" mr={1} >
                     Hide
                   </Box>
                   {isHistoryExpaned ? <ShowIcon /> : <HideIcon />}

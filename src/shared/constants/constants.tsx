@@ -206,7 +206,7 @@ export const handleTiktokLink = () => {
 };
 
 export const handleMediumLink = () => {
-  window.open("https://privi.gitbook.io/juice/", "_blank");
+  window.open("https://medium.com/@dreem.xyz", "_blank");
 };
 
 export const handleDiscordLink = () => {

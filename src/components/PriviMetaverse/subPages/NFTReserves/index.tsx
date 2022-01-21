@@ -7,11 +7,8 @@ import { useTheme, useMediaQuery, Select, MenuItem } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
 import { RootState } from "store/reducers/Reducer";
-import { setTokenList } from "store/actions/MarketPlace";
-import ExploreCard from "../../components/cards/ExploreCard";
+import { setTokenList, setSelTabMarketMain } from "store/actions/MarketPlace";
 import MetaverseCard from "components/PriviMetaverse/components/cards/MetaverseCard";
-import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
-
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import { NFT_STATUS_COLORS, PrimaryButton, SecondaryButton } from "shared/ui-kit";
@@ -26,11 +23,12 @@ import { useAuth } from "shared/contexts/AuthContext";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import TabsView, { TabItem } from "shared/ui-kit/TabsView";
 import { NftStates } from "shared/constants/constants";
+import ExploreCard from "../../components/cards/ExploreCard";
+import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
+import { useFilterSelectStyles, useNFTOptionsStyles, useTabsStyles } from "./index.styles";
 
 import { ReactComponent as BinanceIcon } from "assets/icons/bsc.svg";
 import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
-
-import { useFilterSelectStyles, useNFTOptionsStyles, useTabsStyles } from "./index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -100,6 +98,10 @@ const NFTReserves = () => {
   const filterClasses = useFilterSelectStyles();
   const tabsClasses = useTabsStyles();
 
+  const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const selTab = useSelector((state: RootState) => state.marketPlace.selectedTabMarketMain);
+  const user = useSelector((state: RootState) => state.user);
+
   const width = useWindowDimensions().width;
   const loadingCount = useMemo(() => (width > 1440 ? 4 : width > 700 ? 3 : width > 400 ? 2 : 1), [width]);
 
@@ -122,7 +124,7 @@ const NFTReserves = () => {
   const [loadingCollections, setLoadingCollections] = useState<boolean>(false);
   const [isListView, setIsListView] = useState<boolean>(false);
 
-  const [selectedTab, setSelectedTab] = useState<string>(TAB_NFTS);
+  const [selectedTab, setSelectedTab] = useState<string>(selTab || TAB_NFTS);
 
   const [showSearchBox, setShowSearchBox] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -137,9 +139,6 @@ const NFTReserves = () => {
   const [openStatusSelect, setOpenStatusSelect] = useState<boolean>(false);
 
   const [openHowWorksModal, setOpenHowWorksModal] = useState<boolean>(false);
-
-  const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const user = useSelector((state: RootState) => state.user);
 
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     {
@@ -259,8 +258,8 @@ const NFTReserves = () => {
   const getData = async (isInit = false) => {
     if (!isInit && (!hasMore || loading)) return;
 
-    const network = filterChain !== filterChainOptions[0] && isFilterChain ? filterChain : undefined;
-    const status = isFilterStatus && filterStatus !== filterStatusOptions[0] ? filterStatus : undefined;
+    const network = filterChain !== filterChainOptions[0] ? filterChain : undefined;
+    const status = filterStatus !== filterStatusOptions[0] ? filterStatus : undefined;
     const search = debouncedSearchValue ? debouncedSearchValue : undefined;
 
     try {
@@ -536,8 +535,10 @@ const NFTReserves = () => {
                 tabs={FilterOptionsTabs}
                 onSelectTab={tab => {
                   setSelectedTab(tab.key);
+                  dispatch(setSelTabMarketMain(tab.key));
                 }}
                 extendedClasses={tabsClasses}
+                seletedTabIndex={FilterOptionsTabs.findIndex(tab => tab.key === selectedTab)}
               />
             </Box>
 

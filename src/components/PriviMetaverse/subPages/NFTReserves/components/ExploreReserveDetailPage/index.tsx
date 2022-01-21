@@ -137,7 +137,7 @@ const ExploreReserveDetailPage = () => {
     }
 
     const marketFeeRes = await getMarketplaceFee();
-    if (marketFeeRes.success) {
+    if (marketFeeRes.success && marketFeeRes.data) {
       dispatch(setMarketFee(marketFeeRes.data.Fee));
     }
 
@@ -210,6 +210,7 @@ const ExploreReserveDetailPage = () => {
               mr={isMobileScreen ? 0 : isTableScreen ? 2 : 5}
               borderRadius="20px"
               style={{
+                minWidth: "40%",
                 backgroundImage: `url("${nft?.image}")`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "contain",
@@ -232,7 +233,7 @@ const ExploreReserveDetailPage = () => {
                 </Box>
               )}
             </Box>
-            <Box ml={isMobileScreen ? 0 : isTableScreen ? 2 : 5} py={2} style={{ flex: "1" }} width={1}>
+            <Box ml={isMobileScreen ? 0 : isTableScreen ? 2 : 5} py={2} style={{ flex: "1", overflow: "auto" }} width={1}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 {isListed ? (
                   <Box className={classes.status}>
@@ -259,14 +260,11 @@ const ExploreReserveDetailPage = () => {
                 alignItems="flex-start"
                 justifyContent="space-between"
               >
-                <Box display="flex" flexDirection={isMobileScreen ? "column" : "row"} alignItems="center">
-                  <Box display="flex" flexDirection="row" alignItems="center">
-                    <Box display="flex" flexDirection="column" ml={0.25} mr={1.25}>
-                      <Text color={Color.Black} className={classes.creatorName} style={{ marginBottom: 4 }}>
-                        {nft.name}
-                      </Text>
-                    </Box>
-                  </Box>
+                <Box flex={1} display="flex" flexDirection={isMobileScreen ? "column" : "row"} alignItems="center" ml={0.25} mr={1.25}
+                style={{ overflow:"hidden" }}>
+                  <Text color={Color.Black} className={classes.creatorName} style={{ marginBottom: 4 }} title={nft.name}>
+                    {nft.name}
+                  </Text>
                 </Box>
                 <Box display="flex" flexDirection="row" alignItems="center">
                   <SecondaryButton
