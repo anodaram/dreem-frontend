@@ -382,6 +382,13 @@ export default function GameDetailPage() {
     dispatch(setScrollPosition(e.target.scrollTop));
   };
 
+  const handleOpenExplore = row => {
+    if (!row || !row[0].rawData) return;
+
+    const nft = row[0].rawData;
+    history.push(`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
+  };
+
   return (
     <Box className={classes.root} id="scrollContainer" onScroll={handleScroll}>
       <Box
@@ -635,7 +642,7 @@ export default function GameDetailPage() {
                           rows={tableData}
                           placeholderText=""
                           theme="dreem"
-                          onClickRow={() => {}}
+                          onClickRow={handleOpenExplore}
                         />
                       </div>
                     )
