@@ -265,7 +265,7 @@ const ExploreReserveDetailPage = () => {
                 justifyContent="space-between"
               >
                 <Box flex={1} display="flex" flexDirection={isMobileScreen ? "column" : "row"} alignItems="center" ml={0.25} mr={1.25}
-                  style={{ overflow: "hidden" }}>
+                style={{ overflow:"hidden" }}>
                   <Text color={Color.Black} className={classes.creatorName} style={{ marginBottom: 4 }} title={nft.name}>
                     {nft.name}
                   </Text>
@@ -301,8 +301,8 @@ const ExploreReserveDetailPage = () => {
                   <Text className={classes.gradientText}>
                     {nft?.owner?.name ||
                       nft?.ownerAddress?.substr(0, 18) +
-                      "..." +
-                      nft?.ownerAddress?.substr(nft?.ownerAddress?.length - 3, 3)}
+                        "..." +
+                        nft?.ownerAddress?.substr(nft?.ownerAddress?.length - 3, 3)}
                   </Text>
                 </Box>
                 <SecondaryButton size="small" onClick={handleClickLink} className={classes.checkOnBtn}>
@@ -380,26 +380,26 @@ const ExploreReserveDetailPage = () => {
                 // Renter pages
                 <RentedDetailSection nft={nft} setNft={setNft} isOwner={isOwner} refresh={refresh} />
               ) : // Spectator pages
-                isBlockedNFT ? (
-                  <RegularBlockedDetailSection nft={nft} refresh={refresh} isSpectator isBlocked />
-                ) : isRentedNFT ? (
-                  <RentedDetailSection
-                    nft={nft}
-                    setNft={setNft}
-                    isOwner={false}
-                    isSpectator
-                    isBlocked={false}
-                    refresh={refresh}
-                  />
-                ) : (
-                  <GeneralDetailSection
-                    isOwnership={isOwner}
-                    nft={nft}
-                    setNft={setNft}
-                    refresh={refresh}
-                    onRent={() => setOpenRentSccess(true)}
-                  />
-                )}
+              isBlockedNFT ? (
+                <RegularBlockedDetailSection nft={nft} refresh={refresh} isSpectator isBlocked />
+              ) : isRentedNFT ? (
+                <RentedDetailSection
+                  nft={nft}
+                  setNft={setNft}
+                  isOwner={false}
+                  isSpectator
+                  isBlocked={false}
+                  refresh={refresh}
+                />
+              ) : (
+                <GeneralDetailSection
+                  isOwnership={isOwner}
+                  nft={nft}
+                  setNft={setNft}
+                  refresh={refresh}
+                  onRent={() => setOpenRentSccess(true)}
+                />
+              )}
             </Box>
           </Box>
           {isOwner ? (
@@ -445,7 +445,7 @@ const ExploreReserveDetailPage = () => {
           open={openGameDetailModal}
           nft={nft}
           onClose={() => setOpenGameDetailModal(false)}
-          onFruit={() => { }}
+          onFruit={() => {}}
         />
       )}
       {openModalPhotoFullScreen && (
