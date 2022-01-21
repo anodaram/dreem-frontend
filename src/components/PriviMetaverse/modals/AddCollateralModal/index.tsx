@@ -27,7 +27,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   const [price, setPrice] = useState<number>(0);
   const [selectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const fee = useSelector((state: RootState) => Number(Number(state.marketPlace.fee)));
+  const fee = useSelector((state: RootState) => Number(state.marketPlace.fee));
   const [reservePriceToken, setReservePriceToken] = useState<any>(
     tokenList.find(item => item.Address == nft?.blockingSaleOffer?.PaymentToken)
   );

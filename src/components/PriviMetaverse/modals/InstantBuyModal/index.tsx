@@ -21,7 +21,7 @@ const PRECISSION = 1.01;
 export default function InstantBuyModal({ open, handleClose, onConfirm, offer, nft }) {
   const classes = InstantBuyModalStyles();
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const marketFee = useSelector((state: RootState) => Number(state.marketPlace.fee));
+  const marketFee = useSelector((state: RootState) => state.marketPlace.fee);
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const offerPrice = useMemo(() => (offer?.Price || 0) * (1 + marketFee), [offer, marketFee]);
   const { account, library, chainId } = useWeb3React();

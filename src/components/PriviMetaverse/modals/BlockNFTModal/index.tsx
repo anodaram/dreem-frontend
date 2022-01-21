@@ -29,7 +29,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
   const [price, setPrice] = useState<number>(nft?.blockingSaleOffer?.Price);
   const [selectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const fee = useSelector((state: RootState) => Number(state.marketPlace.fee));
+  const fee = useSelector((state: RootState) => state.marketPlace.fee);
   const [collateralToken, setCollateralToken] = useState<any>(tokenList[0]);
   const [reservePriceToken, setReservePriceToken] = useState<any>(tokenList[0]);
   const [collateral, setCollateral] = useState<number>(

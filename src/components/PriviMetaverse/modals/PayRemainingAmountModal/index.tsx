@@ -30,7 +30,7 @@ export default function PayRemainingAmountModal({ open, nft, handleClose = () =>
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const { showAlertMessage } = useAlertMessage();
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const fee = useSelector((state: RootState) => Number(state.marketPlace.fee));
+  const fee = useSelector((state: RootState) => state.marketPlace.fee);
 
   const PRECISSION = 1.01;
 

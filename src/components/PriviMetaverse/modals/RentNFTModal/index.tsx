@@ -52,7 +52,7 @@ export default function RentNFTModal({
 
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const marketFee = useSelector((state: RootState) => Number(state.marketPlace.fee));
+  const marketFee = useSelector((state: RootState) => state.marketPlace.fee);
 
   const [hash, setHash] = useState<string>("");
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);

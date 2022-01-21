@@ -19,7 +19,7 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
   const classes = ClaimPaymentModalStyles();
   const [blockingInfo, setBlockingInfo] = useState<any>(null);
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const fee = useSelector((state: RootState) => Number(state.marketPlace.fee));
+  const fee = useSelector((state: RootState) => state.marketPlace.fee);
   const { collection_id, token_id } = useParams();
   const { account, library, chainId } = useWeb3React();
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));

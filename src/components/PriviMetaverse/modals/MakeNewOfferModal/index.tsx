@@ -29,7 +29,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
   const [collateral, setCollateral] = useState<number>();
   const [selectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const fee = useSelector((state: RootState) => Number(state.marketPlace.fee));
+  const fee = useSelector((state: RootState) => state.marketPlace.fee);
   const [reservePriceToken, setReservePriceToken] = useState<any>(tokenList[0]);
   const [colaterralPriceToken, setColaterralPriceToken] = useState<any>(tokenList[0]);
   const [collateralPercent, setCollateralPercent] = useState<number>();

@@ -29,7 +29,7 @@ const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
 export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
   const classes = MakeBuyOfferModalStyles();
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const marketFee = useSelector((state: RootState) => Number(state.marketPlace.fee));
+  const marketFee = useSelector((state: RootState) => state.marketPlace.fee);
   const [price, setPrice] = useState<number>();
   const offerPrice = useMemo(() => (price || 0) * (1 + marketFee), [price, marketFee]);
   const [token, setToken] = useState<any>(tokens[0]);

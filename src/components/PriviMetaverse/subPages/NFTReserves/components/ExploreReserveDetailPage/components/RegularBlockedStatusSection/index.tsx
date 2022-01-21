@@ -31,7 +31,7 @@ export default ({ isOwnership, nft, refresh }) => {
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
 
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const fee = useSelector((state: RootState) => Number(state.marketPlace.fee));
+  const fee = useSelector((state: RootState) => state.marketPlace.fee);
 
   useEffect(() => {
     if (nft && nft?.blockingSalesHistories) {
