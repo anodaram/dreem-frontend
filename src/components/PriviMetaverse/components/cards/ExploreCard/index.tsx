@@ -15,17 +15,25 @@ import { NftStates } from "shared/constants/constants";
 import { visitChainLink } from "shared/helpers";
 
 import { cardStyles } from "./index.style";
+import { useLocation } from "react-router-dom";
 
 const SECONDS_PER_HOUR = 3600;
 
 const ExploreCard = ({ nft, isLoading = false }) => {
   const history = useHistory();
+  const { pathname } = useLocation();
   const classes = cardStyles();
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const user: any = useSelector((state: RootState) => state.user);
 
   const handleOpenExplore = () => {
     history.push(`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
+  };
+
+  const handleOpenExploreNewTab = () => {
+    const url = window.location.href.replace(pathname,`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
+    window.open(url, "_blank");
+    return false;
   };
 
   const getTokenSymbol = addr => {
@@ -101,7 +109,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
   const isBlocked = useMemo(() => nftStatus.includes("Blocked"), [nftStatus]);
 
   return (
-    <div className={classes.outerCard} style={{ marginBottom: 0 }} onClick={handleOpenExplore}>
+    <div className={classes.outerCard} style={{ marginBottom: 0 }} onClick={handleOpenExplore} onContextMenu={handleOpenExploreNewTab}>
       {isLoading ? (
         <Box className={classes.skeleton}>
           <Skeleton variant="rect" width="100%" height={330} />
