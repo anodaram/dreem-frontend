@@ -35,8 +35,8 @@ export const UserConnectionsContextProvider: React.FunctionComponent = ({ childr
 
   useEffect(() => {
     if (currentUser.id) {
-      getFollowers(currentUser.id, true).then(setFollowers);
-      getFollowings(currentUser.id, true).then(setFollowings);
+      // getFollowers(currentUser.id, true).then(setFollowers);
+      // getFollowings(currentUser.id, true).then(setFollowings);
     }
   }, [currentUser.id]);
 
