@@ -359,6 +359,7 @@ export const getUploadMetadata = async () => {
       "key" : "upload_metadata"
     },
     config);
+    console.log('----resp', resp)
     if (resp.data) {
       return resp.data;
     }

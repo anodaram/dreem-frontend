@@ -53,7 +53,7 @@ export default function RealmExtensionProfileCard({
 
   React.useEffect(() => {
     setData(nft);
-    setIsPublic(nft.worldIsPublic);
+    setIsPublic(nft.isPublic);
   }, [nft]);
 
   const handleRemove = async () => {

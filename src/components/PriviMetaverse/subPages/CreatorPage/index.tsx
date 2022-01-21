@@ -106,7 +106,7 @@ export default function CreatorPage() {
 
   useEffect(() => {
     // check owner
-    if (userSelector && userSelector.urlSlug) {
+    if (userSelector && userSelector.address) {
       setIsOwner(userSelector.address === userInfo?.user?.address);
     }
   }, [userInfo?.user?.address, userSelector.address]);

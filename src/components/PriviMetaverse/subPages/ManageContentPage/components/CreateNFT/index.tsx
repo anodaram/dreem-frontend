@@ -73,7 +73,7 @@ const CreateNFT = ({
   const [progress, setProgress] = useState(0);
   const [isUpload, setIsUpload] = useState(true);
   const [sizeSpec, setSizeSpec] = useState<any>(metaData);
-  const [collectionId, setCollectionId] = useState<any>(collection);
+  const [collectionData, setCollectionData] = useState<any>(collection);
 
   const [openAssetSelect, setOpenAssetSelect] = useState<boolean>(false);
   const [openCollectionSelect, setOpenCollectionSelect] = useState<boolean>(false);
@@ -200,6 +200,10 @@ const CreateNFT = ({
   const validate = () => {
     let sizeSpec = metaData;
     // if (!title || !description || !image || !unity || !symbol || !entity) {
+    if (!collectionData) {
+      showAlertMessage(`Please select collection first`, { variant: "error" });
+      return false;
+    }
     if (!title || !description || !image || !unity) {
       showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
       return false;
@@ -249,6 +253,7 @@ const CreateNFT = ({
     } else if (
       !sizeSpec?.worldLevel.supportedFormats.toString().includes(unity.name.split(".").reverse()[0])
     ) {
+      console.log(sizeSpec, metaData, unity.name.split(".").reverse()[0])
       showAlertMessage(`World file is invalid.`, { variant: "error" });
       return false;
     } else if (unity.size > sizeSpec?.worldLevel.limit.maxBytes) {
@@ -272,7 +277,7 @@ const CreateNFT = ({
       let payload: any = {};
 
       payload = {
-        collectionId: collectionId,
+        collectionId: collectionData.id,
         worldTitle: title,
         worldDescription: description,
         worldImage: image,
@@ -362,7 +367,7 @@ const CreateNFT = ({
         }}
       >
         <div className={classes.modalContent}>
-          {isCollectionPage ?
+          {/* {isCollectionPage ?
           <>
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Box className={classes.itemTitle} mb={1}>
@@ -439,7 +444,7 @@ const CreateNFT = ({
               ))}
             </Select>
           </>
-          }
+          } */}
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
             <Box className={classes.itemTitle} mb={1}>
               NFT Name

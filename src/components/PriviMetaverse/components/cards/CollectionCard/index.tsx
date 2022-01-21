@@ -19,21 +19,8 @@ import EditRealmModal from "../../../modals/EditRealmModal";
 import EditExtensionModal from "../../../modals/EditExtensionModal";
 import { collectionCardStyles } from "./index.styles";
 
-export default function RealmExtensionProfileCard({
-  item,
-  hideInfo,
-  isHomePage,
-  handleRefresh,
-  isLoading,
-  onClick
-}: {
-  item?: any;
-  hideInfo?: boolean;
-  isHomePage?: boolean;
-  handleRefresh?: () => void;
-  isLoading?: boolean;
-  onClick?: () => void;
-}) {
+export default function CollectionCard(props) {
+  const { isLoading, item } = props;
   const history = useHistory();
   const styles = collectionCardStyles();
   const { shareMedia } = useShareMedia();
@@ -52,23 +39,27 @@ export default function RealmExtensionProfileCard({
   const [openEditRealmModal, setOpenEditRealmModal] = useState<boolean>(false);
   const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
   const [imageIPFS, setImageIPFS] = useState<any>();
+  const [isSelected, setIsSelected] = useState<boolean>(false);
+
 
   React.useEffect(() => {
     setData(item);
   }, [item]);
-
-  const handleOpen = (collectionId : any) => {
-    history.push(
-      `/collection/${
-        collectionId
-      }`
-    )
-  };
-
+  const onClick = () => {
+    if (props.onClick) {
+      props.onClick();
+      setIsSelected(isSelected => !isSelected);
+    }
+  }
   const isOwner = item && item.creatorId === userSelector.id;
 
   return (
-    <div className={styles.cardBorderWrapper}>
+    <div className={styles.cardBorderWrapper} onClick={onClick}
+      style={{
+        border: isSelected ? "3px solid #E9FF26" : "unset",
+        boxShadow: isSelected ? "0px 0px 14px 1px #DCFF35" : "unset",
+      }}
+      >
       {isLoading ? (
         <Box className={styles.skeleton}>
           <Skeleton variant="rect" width="100%" />
@@ -77,7 +68,7 @@ export default function RealmExtensionProfileCard({
         </Box>
       ) : (
         <div className={styles.card}>
-          <div className={styles.imageContent} onClick={() => handleOpen(data.id)}>
+          <div className={styles.imageContent}>
             <div
               className={styles.collectionImage}
               style={{

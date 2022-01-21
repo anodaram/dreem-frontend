@@ -23,6 +23,7 @@ import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
 import CreateCollection from "./components/CreateCollection";
 import CreateNFT from "./components/CreateNFT";
+import SelectType from "./components/SelectType";
 import { RootState } from "../../../../store/reducers/Reducer";
 import CreateRealmModal from "../../modals/CreateRealmModal";
 import { manageContentPageStyles } from "./index.styles";
@@ -59,6 +60,7 @@ export default function ManageContentPage() {
   const [curPage, setCurPage] = React.useState(1);
   const [lastPage, setLastPage] = React.useState(0);
   const [loadingCollection, setLoadingCollection] = React.useState<boolean>(false);
+  const [selectedAsset, setSelectedAsset] = useState<string>();
 
   useEffect(() => {
     if (underMaintenanceSelector && Object.keys(underMaintenanceSelector).length > 0) {
@@ -184,6 +186,7 @@ export default function ManageContentPage() {
   };
 
   const handleNext = () => {
+    console.log('-----', currentCollection)
     setStep(prev => prev + 1);
   };
 
@@ -191,8 +194,13 @@ export default function ManageContentPage() {
     setStep(prev => prev - 1);
   };
 
+  const handleAsset = (asset) => {
+    setSelectedAsset(asset);
+    setStep(prev => prev + 1);
+  };
+
   const handleRefreshCollection = () => {
-    setStep(1)
+    setStep(2)
     setCurPage(1)
     setLoadingCollection(true);
     MetaverseAPI.getCollections(12, 1, "DESC")
@@ -321,7 +329,7 @@ export default function ManageContentPage() {
                   </Box>
                 ) : (
                   <div className={classes.createBtn} onClick={() => setStep(1)}>
-                    Create NFT
+                    Create
                   </div>
                 )}
                 <Box mx={1}></Box>
@@ -357,6 +365,9 @@ export default function ManageContentPage() {
           </div>
         )}
         {step === 1 && (
+          <SelectType handleNext={(asset) => {handleAsset(asset)}}/>
+        )}
+        {step === 2 && (
           <div className={classes.otherContent}>
             <div className={classes.typo1}>Creating new NFT</div>
             <Box className={classes.typo3} mb={3}>
@@ -364,7 +375,7 @@ export default function ManageContentPage() {
             </Box>
             <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
               <Box className={classes.typo4}>All of your collections</Box>
-              <div className={classes.createCollectionBtn} onClick={() => setStep(2)}>
+              <div className={classes.createCollectionBtn} onClick={() => setStep(4)}>
                 <PlusIcon />
                 create new collection
               </div>
@@ -432,13 +443,13 @@ export default function ManageContentPage() {
             )}
           </div>
         )}
-        {step === 2 && (
+        {step === 4 && (
           <div className={classes.otherContent}>
             <div className={classes.typo1}>Creating New Collection</div>
             <Box className={classes.typo3} mb={3}>
               Fill all the details of your new collection
             </Box>
-            <CreateCollection handleNext={() => {}} handleCancel={handlePrev} handleRefresh={handleRefreshCollection} />
+            <CreateCollection handleNext={() => {}} handleCancel={()=>setStep(2)} handleRefresh={handleRefreshCollection} />
           </div>
         )}
         {step === 3 && (
@@ -447,10 +458,10 @@ export default function ManageContentPage() {
             <Box className={classes.typo3} mb={3}>
               Fill all the details of your new nft
             </Box>
-            <CreateNFT metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev} handleRefresh={() => {}} collection={null} isCollectionPage={false}/>
+            <CreateNFT metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev} handleRefresh={() => {}} collection={currentCollection} isCollectionPage={false}/>
           </div>
         )}
-        {step > 1 || (step === 1 && collections.length) ? (
+        {step > 2 || (step === 2 && collections.length) ? (
           <Box className={classes.footer}>
             <div className={classes.howToCreateBtn} onClick={handlePrev}>
               back
@@ -466,13 +477,13 @@ export default function ManageContentPage() {
           </Box>
         ) : null}
       </div>
-      {openCreateNftModal && (
+      {/* {openCreateNftModal && (
         <CreateRealmModal
           open={openCreateNftModal}
           onClose={() => setOpenCreateNftModal(false)}
           metaData={metaDataForModal}
         />
-      )}
+      )} */}
       {noMetamask && <NoMetamaskModal open={noMetamask} onClose={() => setNoMetamask(false)} />}
     </>
   );
