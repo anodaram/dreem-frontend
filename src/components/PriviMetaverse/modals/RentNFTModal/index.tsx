@@ -166,7 +166,7 @@ export default function RentNFTModal({
       let balance = await web3APIHandler.Erc20[rentalToken.Symbol].balanceOf(web3, { account });
       let decimals = await web3APIHandler.Erc20[rentalToken.Symbol].decimals(web3, { account });
       balance = balance / Math.pow(10, decimals);
-      const approvePrice = parseFloat(price) * (marketFee);
+      const approvePrice = parseFloat(price) * (1.01 + marketFee);
 
       if (balance < (approvePrice || 0)) {
         showAlertMessage(`Insufficient balance to approve`, { variant: "error" });
@@ -177,7 +177,7 @@ export default function RentNFTModal({
         web3,
         account!,
         web3Config.CONTRACT_ADDRESSES.RENTAL_MANAGER,
-        toNDecimals(approvePrice*PRECISSION, rentalToken.Decimals)
+        toNDecimals(approvePrice * PRECISSION, rentalToken.Decimals)
       );
       if (!approved) {
         showAlertMessage(`Can't proceed to approve`, { variant: "error" });
@@ -185,9 +185,12 @@ export default function RentNFTModal({
         return;
       }
       setIsApproved(true);
-      showAlertMessage(`Successfully approved ${(approvePrice* PRECISSION).toFixed(2)} ${rentalToken.Symbol}!`, {
-        variant: "success",
-      });
+      showAlertMessage(
+        `Successfully approved ${(approvePrice * PRECISSION).toFixed(2)} ${rentalToken.Symbol}!`,
+        {
+          variant: "success",
+        }
+      );
       setTransactionSuccess(null);
       setOpenTransactionModal(false);
     } catch (error) {
@@ -203,15 +206,12 @@ export default function RentNFTModal({
     try {
       const web3APIHandler = selectedChain.apiHandler;
       const web3 = new Web3(library.provider);
-      const response = await web3APIHandler.RentalManager.getSyntheticNFTAddress(
-        web3,
-        {
-          collectionId: nft.Address,
-        },
-      );
+      const response = await web3APIHandler.RentalManager.getSyntheticNFTAddress(web3, {
+        collectionId: nft.Address,
+      });
       return response;
     } catch (err) {
-      return '';
+      return "";
     }
   };
 
@@ -258,14 +258,14 @@ export default function RentNFTModal({
 
       if (response.success) {
         const offer = response.offer;
-        console.log(offer)
+        console.log(offer);
         if (!offer) {
           setTransactionSuccess(false);
           showAlertMessage("Failed to rent NFT", { variant: "error" });
           return;
         }
         setTransactionSuccess(true);
-        
+
         const syntheticResponse: any = await getSyntheticNftAddress();
 
         const nftRentedOffer = {
@@ -457,7 +457,7 @@ export default function RentNFTModal({
               <Box fontWeight="700">{`${balance.toFixed() ?? "0.00"} ${rentalToken?.Symbol ?? "USDT"}`}</Box>
             </Box>
             <Box textAlign="end" fontSize={12} fontFamily="Rany" color="white">
-              incl. {marketFee*100}% marketplace fee
+              incl. {marketFee * 100}% marketplace fee
             </Box>
           </Box>
 

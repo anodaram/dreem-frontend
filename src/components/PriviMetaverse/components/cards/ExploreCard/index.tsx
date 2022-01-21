@@ -106,7 +106,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
     return [];
   }, [nft]);
 
-  const isBlocked = useMemo(() => nftStatus.includes("Blocked"), [nftStatus])
+  const isBlocked = useMemo(() => nftStatus.includes("Blocked"), [nftStatus]);
 
   return (
     <div className={classes.outerCard} style={{ marginBottom: 0 }} onClick={handleOpenExplore} onContextMenu={handleOpenExploreNewTab}>
@@ -125,7 +125,10 @@ const ExploreCard = ({ nft, isLoading = false }) => {
             <Box className={classes.nftStates} display="flex" flexDirection="column">
               {nftStatus.length > 0 &&
                 nftStatus.map(status => (
-                  <span className={classes.cardOptionButton} style={{ background: NFT_STATUS_COLORS[status] }}>
+                  <span
+                    className={classes.cardOptionButton}
+                    style={{ background: NFT_STATUS_COLORS[status] }}
+                  >
                     {status}
                   </span>
                 ))}

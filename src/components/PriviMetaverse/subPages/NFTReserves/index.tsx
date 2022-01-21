@@ -276,7 +276,7 @@ const NFTReserves = () => {
 
       const newNfts = response.nfts;
       if (!lastNFTId.current) {
-        setReservedNftList([...response.nfts]);
+        setReservedNftList([...newNfts]);
       } else {
         setReservedNftList([...reservedNftList, ...newNfts]);
       }
@@ -301,7 +301,7 @@ const NFTReserves = () => {
       .then(res => {
         if (res && res.success) {
           const items = res.data.items;
-          setExploreMetaverses(prev => [...prev, ...items]);
+          setExploreMetaverses(prev => (isInit ? items : [...prev, ...items]));
           setHasMoreCollections(res.data.hasMore);
           lastNFTId.current = res.data.lastId;
         }

@@ -231,11 +231,13 @@ export interface RootState {
     newChatInList: any;
   };
   marketPlace: {
+    collectionNFTList: any[];
     tokenList: any[];
     fee: number;
     selectedTabMarketMain: string;
     selectedTabMarketManageNFTMain: string;
     selectedTabMarketManageNFTSub: number;
+    scrollPosition: number;
   };
 }
 
