@@ -29,7 +29,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
   const { showAlertMessage } = useAlertMessage();
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const fee = useSelector((state: RootState) => state.marketPlace.fee);
+  const fee = useSelector((state: RootState) => Number(state.marketPlace.fee));
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const { collection_id, token_id } = useParams();
 

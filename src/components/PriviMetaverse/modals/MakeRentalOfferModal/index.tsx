@@ -37,7 +37,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
   const [pricePerHour, setPricePerHour] = useState<number>();
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const marketFee = useSelector((state: RootState) => state.marketPlace.fee);
+  const marketFee = useSelector((state: RootState) => Number(state.marketPlace.fee));
   const [rentalToken, setRentalToken] = useState<any>(tokenList[0]);
 
   const [hash, setHash] = useState<string>("");

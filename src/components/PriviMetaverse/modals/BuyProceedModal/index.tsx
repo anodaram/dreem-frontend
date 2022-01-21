@@ -27,7 +27,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
   const { showAlertMessage } = useAlertMessage();
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const marketFee = useSelector((state: RootState) => state.marketPlace.fee);
+  const marketFee = useSelector((state: RootState) => Number(state.marketPlace.fee));
   const offerPrice = useMemo(() => (offer?.Price || 0) * (1 + marketFee), [offer, marketFee]);
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const { collection_id, token_id } = useParams();
