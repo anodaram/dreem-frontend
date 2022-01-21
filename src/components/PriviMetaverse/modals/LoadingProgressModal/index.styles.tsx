@@ -4,8 +4,17 @@ import { Color } from "shared/ui-kit";
 export const useLoadingProgressModalStyles = makeStyles(theme => ({
   root: {
     textAlign: "center",
-    padding: "60px 146px !important",
-    maxWidth: "680px !important",
+    padding: "100px 146px !important",
+    maxWidth: "755px !important",
+    height: "612px",
+    background: "rgba(11, 21, 28, 0.6)!important;",
+    borderRadius: "0px!important",
+    [theme.breakpoints.down("sm")]: {
+      padding: "24px 18px!important",
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: "11px 12px!important",
+    },
   },
   title: {
     fontSize: 24,
@@ -20,12 +29,12 @@ export const useLoadingProgressModalStyles = makeStyles(theme => ({
     fontSize: 16,
     fontWeight: 400,
     lineHeight: "24px",
-    color: "#ffffff50",
+    color: "#FFFFFF",
   },
   header2: {
     fontSize: 18,
     fontWeight: 400,
-    color: "#E9FF26",
+    color: "#FFFFFF",
   },
   header3: {
     fontSize: 28,
@@ -35,10 +44,22 @@ export const useLoadingProgressModalStyles = makeStyles(theme => ({
       color: Color.MusicDAOGray,
     },
   },
-  greenBox: {
-    background: "linear-gradient(0deg, #F2FBF6, #F2FBF6), #17172D",
-    borderRadius: theme.spacing(1.5),
-    padding: theme.spacing(2),
+  button: {
+    width: "249px",
+    position: "absolute",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: theme.spacing(1),
+    bottom: "61px",
+    left: "calc(50% - 249px/2)",
+    height: "48px",
+    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+    borderRadius: "1000px",
+    color: "#000000",
+    fontSize: "18px",
+    fontWeight: "bold"
   },
   customButtonBox: {
     cursor: "pointer",
@@ -56,23 +77,6 @@ export const useLoadingProgressModalStyles = makeStyles(theme => ({
       height: "100%",
       zIndex: 0,
     },
-  },
-  grayBorderBox: {
-    border: "1px solid #CCD1DE",
-    borderRadius: theme.spacing(2.5),
-    padding: theme.spacing(2),
-  },
-  ethImg: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "absolute",
-    left: "calc(50% - 34px)",
-    top: "calc(50% - 40px)",
-    borderRadius: "50%",
-    padding: "10px",
-    width: "70px",
-    height: "70px",
   },
   "@keyframes rotating": {
     from: {

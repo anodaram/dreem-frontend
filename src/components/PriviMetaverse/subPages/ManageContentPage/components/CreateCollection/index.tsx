@@ -112,6 +112,9 @@ const CreateCollection = ({
   };
 
   return (
+    isUploading ? (
+      <LoadingProgressModal open={isUploading} type="collection" onClose={()=>{setIsUploading(false)}}/>
+    ) :
     <Box
       className={classes.content}
       style={{
@@ -228,9 +231,6 @@ const CreateCollection = ({
         style={{ display: "none" }}
         onChange={onImageInput}
       />
-      {!isUploading && (
-        <LoadingProgressModal open={!isUploading} title="Creating a new collection" onClose={()=>{setIsUploading(false)}}/>
-      )}
     </Box>
   );
 };
