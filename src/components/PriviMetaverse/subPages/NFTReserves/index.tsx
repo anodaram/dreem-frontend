@@ -2,12 +2,18 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "use-debounce/lib";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import { useTheme, useMediaQuery, Select, MenuItem } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
 import { RootState } from "store/reducers/Reducer";
-import { setTokenList, setSelTabMarketMain } from "store/actions/MarketPlace";
+import {
+  setTokenList,
+  setSelTabMarketMain,
+  setCollectionNFTList,
+  setScrollPosition,
+} from "store/actions/MarketPlace";
 import MetaverseCard from "components/PriviMetaverse/components/cards/MetaverseCard";
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
@@ -400,10 +406,10 @@ const NFTReserves = () => {
   }, [reservedNftList]);
 
   const handleScroll = e => {
-    if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight - 100) {
-      if (selectedTab === TAB_NFTS) getData();
-      else getCollectionData();
-    }
+    // if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight - 100) {
+    //   if (selectedTab === TAB_NFTS) getData();
+    //   else getCollectionData();
+    // }
   };
 
   const handleFilterChain = e => {
@@ -488,7 +494,7 @@ const NFTReserves = () => {
           </>
         )}
         <Box className={classes.limitedContent}>
-          <div className={classes.content} onScroll={handleScroll}>
+          <div className={classes.content} id={"scrollContainer"} onScroll={handleScroll}>
             <div className={classes.titleBar}>
               <Box display="flex" flexDirection="column" alignItems="center">
                 <div className={classes.title}>Not your average NFT marketplace</div>
@@ -695,64 +701,101 @@ const NFTReserves = () => {
             </Box>
             <div className={classes.explorerContent}>
               {selectedTab === TAB_NFTS ? (
-                isListView ? (
-                  tableData.length > 0 && (
-                    <div className={classes.table}>
-                      <CustomTable
-                        headers={tableHeaders}
-                        rows={tableData}
-                        placeholderText=""
-                        theme="dreem"
-                        onClickRow={handleOpenExplore}
+                <InfiniteScroll
+                  hasChildren={reservedNftList?.length > 0}
+                  dataLength={reservedNftList?.length}
+                  scrollableTarget={"scrollContainer"}
+                  next={getData}
+                  hasMore={hasMore}
+                  // initialScrollY={scrollPosition - 100}
+                  loader={
+                    loading &&
+                    isListView && (
+                      <div
+                        style={{
+                          paddingTop: 8,
+                          paddingBottom: 8,
+                        }}
+                      >
+                        {Array(loadingCount)
+                          .fill(0)
+                          .map((_, index) => (
+                            <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
+                              <Skeleton variant="rect" width={60} height={60} />
+                              <Skeleton
+                                variant="rect"
+                                width="40%"
+                                height={24}
+                                style={{ marginLeft: "8px" }}
+                              />
+                              <Skeleton
+                                variant="rect"
+                                width="20%"
+                                height={24}
+                                style={{ marginLeft: "8px" }}
+                              />
+                              <Skeleton
+                                variant="rect"
+                                width="20%"
+                                height={24}
+                                style={{ marginLeft: "8px" }}
+                              />
+                            </Box>
+                          ))}
+                      </div>
+                    )
+                  }
+                >
+                  {isListView ? (
+                    tableData.length > 0 && (
+                      <div className={classes.table}>
+                        <CustomTable
+                          headers={tableHeaders}
+                          rows={tableData}
+                          placeholderText=""
+                          theme="dreem"
+                          onClickRow={handleOpenExplore}
+                        />
+                      </div>
+                    )
+                  ) : (
+                    <Box sx={{ flexGrow: 1, width: "100%" }}>
+                      <MasonryGrid
+                        gutter={"24px"}
+                        data={nftListWithSkeleton}
+                        renderItem={item => (
+                          <ExploreCard nft={item} isLoading={Object.entries(item).length === 0} />
+                        )}
+                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                       />
-                    </div>
-                  )
-                ) : (
+                    </Box>
+                  )}
+                </InfiniteScroll>
+              ) : (
+                <InfiniteScroll
+                  hasChildren={exploreMetaverses?.length > 0}
+                  dataLength={exploreMetaverses?.length}
+                  scrollableTarget={"scrollContainer"}
+                  next={getCollectionData}
+                  hasMore={hasMoreCollections}
+                  // initialScrollY={scrollPosition - 100}
+                  loader={<></>}
+                >
                   <Box sx={{ flexGrow: 1, width: "100%" }}>
                     <MasonryGrid
-                      gutter={"24px"}
-                      data={nftListWithSkeleton}
-                      renderItem={item => (
-                        <ExploreCard nft={item} isLoading={Object.entries(item).length === 0} />
+                      gutter={"40px"}
+                      data={collectionListWithSkeleton}
+                      renderItem={(item, index) => (
+                        <MetaverseCard
+                          item={item}
+                          key={`game_${index}`}
+                          isLoading={Object.entries(item).length === 0}
+                        />
                       )}
-                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
                     />
                   </Box>
-                )
-              ) : (
-                <Box sx={{ flexGrow: 1, width: "100%" }}>
-                  <MasonryGrid
-                    gutter={"40px"}
-                    data={collectionListWithSkeleton}
-                    renderItem={(item, index) => (
-                      <MetaverseCard
-                        item={item}
-                        key={`game_${index}`}
-                        isLoading={Object.entries(item).length === 0}
-                      />
-                    )}
-                    columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
-                  />
-                </Box>
-              )}
-              {loading && selectedTab === TAB_NFTS && isListView && (
-                <div
-                  style={{
-                    paddingTop: 8,
-                    paddingBottom: 8,
-                  }}
-                >
-                  {Array(loadingCount)
-                    .fill(0)
-                    .map((_, index) => (
-                      <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
-                        <Skeleton variant="rect" width={60} height={60} />
-                        <Skeleton variant="rect" width="40%" height={24} style={{ marginLeft: "8px" }} />
-                        <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
-                        <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
-                      </Box>
-                    ))}
-                </div>
+                </InfiniteScroll>
               )}
             </div>
           </div>
