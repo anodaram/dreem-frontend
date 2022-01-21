@@ -3,13 +3,15 @@ import { RootState } from "./Reducer";
 
 type rootState = RootState["marketPlace"];
 interface State extends rootState {
+  allNFTList: any[];
   collectionNFTList: any[];
   tokenList: any[];
   fee: number;
   selectedTabMarketMain: string;
   selectedTabMarketManageNFTMain: string;
   selectedTabMarketManageNFTSub: number;
-  scrollPosition: number;
+  scrollPositionInCollection: number;
+  scrollPositionInAllNFT: number;
 }
 interface Action extends rootState {
   type: string;
@@ -17,13 +19,15 @@ interface Action extends rootState {
 
 // Set initial state for SelectedSwapTabsValue
 const initialState: State = {
+  allNFTList: [],
   collectionNFTList: [],
   tokenList: [],
   fee: 0,
   selectedTabMarketMain: "",
   selectedTabMarketManageNFTMain: "",
   selectedTabMarketManageNFTSub: 0,
-  scrollPosition: 0,
+  scrollPositionInCollection: 0,
+  scrollPositionInAllNFT: 0,
 };
 
 // Set a SelectedSwapPool into the global state
@@ -69,10 +73,24 @@ const setCollectionNFTList = (state: State, action: Action) => {
   };
 };
 
-const setScrollPosition = (state: State, action: Action) => {
+const setAllNFTList = (state: State, action: Action) => {
   return {
     ...state,
-    scrollPosition: action.scrollPosition,
+    allNFTList: action.allNFTList,
+  };
+};
+
+const setScrollPositionInCollection = (state: State, action: Action) => {
+  return {
+    ...state,
+    scrollPositionInCollection: action.scrollPositionInCollection,
+  };
+};
+
+const setScrollPositionInAllNFT = (state: State, action: Action) => {
+  return {
+    ...state,
+    scrollPositionInAllNFT: action.scrollPositionInAllNFT,
   };
 };
 
@@ -89,10 +107,14 @@ const reducer = (state = initialState, action: Action) => {
       return setSelTabMarketManageNFTMain(state, action);
     case actionTypes.SET_SELTAB_MARKET_MANAGE_NFT_SUB:
       return setSelTabMarketManageNFTSub(state, action);
+    case actionTypes.SET_ALL_NFT_LIST:
+      return setAllNFTList(state, action);
     case actionTypes.SET_COLLECTION_NFT_LIST:
       return setCollectionNFTList(state, action);
-    case actionTypes.SET_SCROLL_POSITION:
-      return setScrollPosition(state, action);
+    case actionTypes.SET_SCROLL_POSITION_IN_COLLECTION:
+      return setScrollPositionInCollection(state, action);
+    case actionTypes.SET_SCROLL_POSITION_IN_ALL_NFT:
+      return setScrollPositionInAllNFT(state, action);
     default:
       return state;
   }

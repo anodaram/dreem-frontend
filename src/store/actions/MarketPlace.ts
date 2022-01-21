@@ -30,7 +30,17 @@ export const setCollectionNFTList = (collectionNFTList: any[]) => ({
   collectionNFTList: collectionNFTList,
 });
 
-export const setScrollPosition = (scrollPosition: number) => ({
-  type: actionTypes.SET_SCROLL_POSITION,
-  scrollPosition: scrollPosition,
+export const setAllNFTList = (allNFTList: any[]) => ({
+  type: actionTypes.SET_ALL_NFT_LIST,
+  allNFTList: allNFTList,
+});
+
+export const setScrollPositionInCollection = (scrollPositionInCollection: number) => ({
+  type: actionTypes.SET_SCROLL_POSITION_IN_COLLECTION,
+  scrollPositionInCollection: scrollPositionInCollection,
+});
+
+export const setScrollPositionInAllNFT = (scrollPositionInAllNFT: number) => ({
+  type: actionTypes.SET_SCROLL_POSITION_IN_ALL_NFT,
+  scrollPositionInAllNFT: scrollPositionInAllNFT,
 });

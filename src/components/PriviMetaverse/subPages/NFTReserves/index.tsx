@@ -12,7 +12,9 @@ import {
   setTokenList,
   setSelTabMarketMain,
   setCollectionNFTList,
-  setScrollPosition,
+  setAllNFTList,
+  setScrollPositionInCollection,
+  setScrollPositionInAllNFT,
 } from "store/actions/MarketPlace";
 import MetaverseCard from "components/PriviMetaverse/components/cards/MetaverseCard";
 import Box from "shared/ui-kit/Box";
@@ -107,6 +109,8 @@ const NFTReserves = () => {
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const selTab = useSelector((state: RootState) => state.marketPlace.selectedTabMarketMain);
   const user = useSelector((state: RootState) => state.user);
+  const allNFTList = useSelector((state: RootState) => state.marketPlace.allNFTList);
+  const scrollPosition = useSelector((state: RootState) => state.marketPlace.scrollPositionInAllNFT);
 
   const width = useWindowDimensions().width;
   const loadingCount = useMemo(() => (width > 1440 ? 4 : width > 700 ? 3 : width > 400 ? 2 : 1), [width]);
@@ -120,7 +124,7 @@ const NFTReserves = () => {
   const breakFour = useMediaQuery(theme.breakpoints.up(1440));
 
   const [exploreMetaverses, setExploreMetaverses] = useState<any[]>([]);
-  const [reservedNftList, setReservedNftList] = useState<any[]>([]);
+  const [reservedNftList, setReservedNftList] = useState<any[]>(allNFTList || []);
 
   const lastNFTId = useRef();
   const lastCollectionId = useRef();
@@ -186,6 +190,8 @@ const NFTReserves = () => {
   };
 
   useEffect(() => {
+    dispatch(setCollectionNFTList([]));
+    dispatch(setScrollPositionInCollection(0));
     getTokenList();
   }, []);
 
@@ -286,6 +292,7 @@ const NFTReserves = () => {
       } else {
         setReservedNftList([...reservedNftList, ...newNfts]);
       }
+      dispatch(setAllNFTList([...allNFTList, ...newNfts]));
       setHasMore(newNfts.length);
       if (newNfts.length) {
         lastNFTId.current = newNfts[newNfts.length - 1].RandomId;
@@ -406,10 +413,7 @@ const NFTReserves = () => {
   }, [reservedNftList]);
 
   const handleScroll = e => {
-    // if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight - 100) {
-    //   if (selectedTab === TAB_NFTS) getData();
-    //   else getCollectionData();
-    // }
+    dispatch(setScrollPositionInAllNFT(e.target.scrollTop));
   };
 
   const handleFilterChain = e => {
@@ -707,7 +711,7 @@ const NFTReserves = () => {
                   scrollableTarget={"scrollContainer"}
                   next={getData}
                   hasMore={hasMore}
-                  // initialScrollY={scrollPosition - 100}
+                  initialScrollY={scrollPosition - 100}
                   loader={
                     loading &&
                     isListView && (
