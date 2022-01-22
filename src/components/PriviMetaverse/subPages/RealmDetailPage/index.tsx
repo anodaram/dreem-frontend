@@ -45,14 +45,14 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
 };
 
 const RealmDetailTabs: TabItem[] = [
-  {
-    key: "avatars",
-    title: "Avatars",
-  },
   // {
-  //   key: "extensions",
-  //   title: "Extensions",
+  //   key: "avatars",
+  //   title: "Avatars",
   // },
+  {
+    key: "extensions",
+    title: "Extensions",
+  },
   // {
   //   key: "voting",
   //   title: "Voting",
