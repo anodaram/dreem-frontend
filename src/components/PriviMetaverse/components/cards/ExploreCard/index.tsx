@@ -31,7 +31,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
   };
 
   const handleOpenExploreNewTab = () => {
-    const url = window.location.href.replace(pathname,`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
+    const url = window.location.href.replace(pathname, `/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
     window.open(url, "_blank");
     return false;
   };
@@ -109,7 +109,12 @@ const ExploreCard = ({ nft, isLoading = false }) => {
   const isBlocked = useMemo(() => nftStatus.includes("Blocked"), [nftStatus]);
 
   return (
-    <div className={classes.outerCard} style={{ marginBottom: 0 }} onClick={handleOpenExplore} onContextMenu={handleOpenExploreNewTab}>
+    <div
+      className={classes.outerCard}
+      style={{ marginBottom: 0 }}
+      onClick={handleOpenExplore}
+      onContextMenu={handleOpenExploreNewTab}
+    >
       {isLoading ? (
         <Box className={classes.skeleton}>
           <Skeleton variant="rect" width="100%" height={330} />
@@ -121,7 +126,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
       ) : (
         <>
           <div className={classes.cardImg}>
-            <img src={nft.image || nft.content_url} style={{ width: "100%" }} />
+            <img src={!nft?.animation_url ? nft?.image : nft?.CardImage} style={{ width: "100%" }} />
             <Box className={classes.nftStates} display="flex" flexDirection="column">
               {nftStatus.length > 0 &&
                 nftStatus.map(status => (
