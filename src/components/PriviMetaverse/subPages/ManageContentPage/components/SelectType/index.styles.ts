@@ -71,6 +71,6 @@ export const useModalStyles = makeStyles(theme => ({
     fontSize: 13,
     textTransform: "uppercase",
     fontFamily: "GRIFTER",
-    color: "#FFFFFF"
+    color: "#000000"
   },
 }));
