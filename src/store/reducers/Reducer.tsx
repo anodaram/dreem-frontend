@@ -232,12 +232,14 @@ export interface RootState {
   };
   marketPlace: {
     collectionNFTList: any[];
+    allNFTList: any[];
     tokenList: any[];
     fee: number;
     selectedTabMarketMain: string;
     selectedTabMarketManageNFTMain: string;
     selectedTabMarketManageNFTSub: number;
-    scrollPosition: number;
+    scrollPositionInCollection: number;
+    scrollPositionInAllNFT: number;
   };
 }
 

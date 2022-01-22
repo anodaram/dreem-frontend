@@ -23,7 +23,7 @@ import { RootState } from "store/reducers/Reducer";
 import { toDecimals } from "shared/functions/web3";
 import MarketplaceFeed from "./components/MarketplaceFeed";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
-import { setTokenList, setCollectionNFTList, setScrollPosition } from "store/actions/MarketPlace";
+import { setTokenList, setCollectionNFTList, setScrollPositionInCollection } from "store/actions/MarketPlace";
 import { NftStates } from "shared/constants/constants";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 
@@ -92,7 +92,7 @@ export default function GameDetailPage() {
   const user = useSelector((state: RootState) => state.user);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const collectionNFTList = useSelector((state: RootState) => state.marketPlace.collectionNFTList);
-  const scrollPosition = useSelector((state: RootState) => state.marketPlace.scrollPosition);
+  const scrollPosition = useSelector((state: RootState) => state.marketPlace.scrollPositionInCollection);
 
   const history = useHistory();
   const width = useWindowDimensions().width;
@@ -379,7 +379,7 @@ export default function GameDetailPage() {
   }, [nfts, hasMore, breakTwo, breakThree, breakFour]);
 
   const handleScroll = e => {
-    dispatch(setScrollPosition(e.target.scrollTop));
+    dispatch(setScrollPositionInCollection(e.target.scrollTop));
   };
 
   const handleOpenExplore = row => {
