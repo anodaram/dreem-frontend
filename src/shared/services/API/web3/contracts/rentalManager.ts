@@ -186,7 +186,7 @@ const rentalManager = (network: string) => {
   const acceptRentalOffer = async (web3: Web3, account: string, payload: any, setHash: any): Promise<any> => {
     return new Promise(async resolve => {
       try {
-        console.log('payload', payload)
+        console.log("payload", payload);
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
         const gas = await contract.methods
           .acceptRentalOffer(
@@ -278,13 +278,9 @@ const rentalManager = (network: string) => {
       try {
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
 
-        const response = await contract.methods
-          .getSyntheticNFTAddress(
-            payload.collectionId,
-          )
-          .call();
+        const response = await contract.methods.getSyntheticNFTAddress(payload.collectionId).call();
 
-        resolve({success: true, nftAddress: response});
+        resolve({ success: true, nftAddress: response });
       } catch (e) {
         console.log(e);
         resolve({ success: false });
@@ -292,7 +288,45 @@ const rentalManager = (network: string) => {
     });
   };
 
-  return { listOffer, cancelListOffer, rentalOffer, cancelRentalOffer, acceptRentalOffer, rentNFT, getSyntheticNFTAddress };
+  const rentedTokenSyntheticID = async (web3: Web3, { address, tokenId }: any): Promise<any> => {
+    return new Promise(async resolve => {
+      try {
+        const contract = ContractInstance(web3, metadata.abi, contractAddress);
+        const response = await contract.methods.rentedTokenSyntheticID(address, tokenId).call();
+
+        resolve({ success: true, nftAddress: response });
+      } catch (e) {
+        console.log(e);
+        resolve({ success: false });
+      }
+    });
+  };
+
+  const rentedTokenData = async (web3: Web3, { address, tokenId }: any): Promise<any> => {
+    return new Promise(async resolve => {
+      try {
+        const contract = ContractInstance(web3, metadata.abi, contractAddress);
+        const response = await contract.methods.rentedTokenData(address, tokenId).call();
+
+        resolve({ success: true, rentalInfos: response });
+      } catch (e) {
+        console.log(e);
+        resolve({ success: false });
+      }
+    });
+  };
+
+  return {
+    listOffer,
+    cancelListOffer,
+    rentedTokenData,
+    rentedTokenSyntheticID,
+    rentalOffer,
+    cancelRentalOffer,
+    acceptRentalOffer,
+    rentNFT,
+    getSyntheticNFTAddress,
+  };
 };
 
 export default rentalManager;
