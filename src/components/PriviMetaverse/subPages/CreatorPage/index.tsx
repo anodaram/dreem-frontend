@@ -1,14 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Grid, useTheme, useMediaQuery, CircularProgress } from "@material-ui/core";
 
 import * as UserConnectionsAPI from "shared/services/API/UserConnectionsAPI";
 import { useTypedSelector } from "store/reducers/Reducer";
 import { setUser } from "store/actions/User";
+import { setSelTabProfile } from "store/actions/SelectedProfilePage";
+import { RootState } from "store/reducers/Reducer";
 import Box from "shared/ui-kit/Box";
 import { PrimaryButton } from "shared/ui-kit";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
@@ -61,6 +63,7 @@ const COLUMNS_COUNT_BREAK_POINTS_THREE = {
 export default function CreatorPage() {
   const classes = creatorPageStyles();
   const dispatch = useDispatch();
+  const selTab = useSelector((state: RootState) => state.selectedProfilePage.selectedTabProfile);
 
   const width = useWindowDimensions().width;
   const theme = useTheme();
@@ -81,7 +84,7 @@ export default function CreatorPage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOwner, setIsOwner] = useState<boolean | undefined>();
-  const [selectedTab, setSelectedTab] = useState<string>();
+  const [selectedTab, setSelectedTab] = useState<string>(selTab || "drafts");
   const { followUser, unfollowUser, isUserFollowed } = useUserConnections();
   const [isFollowing, setIsFollowing] = useState<number>(-1);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
@@ -110,7 +113,7 @@ export default function CreatorPage() {
 
   useEffect(() => {
     setSelectedTab("");
-    
+
     (async () => {
       try {
         const userResp = await axios.get(`${URL()}/user/getBasicInfo/${creatorAddress}`);
@@ -120,7 +123,7 @@ export default function CreatorPage() {
           setCreator({
             userInfo: userData,
           });
-          setSelectedTab("drafts");
+          setSelectedTab(selTab || "drafts");
 
           setLoading(false);
         } else {
@@ -697,9 +700,11 @@ export default function CreatorPage() {
                   tabs={ProfileTabs}
                   onSelectTab={tab => {
                     setSelectedTab(tab.key);
+                    dispatch(setSelTabProfile(tab.key));
                   }}
                   equalTab
                   mt={4}
+                  seletedTabIndex={ProfileTabs.findIndex(tab => tab.key === selectedTab)}
                 />
                 <div className={classes.nftContent}>
                   <Box display="flex" flexDirection="column">
