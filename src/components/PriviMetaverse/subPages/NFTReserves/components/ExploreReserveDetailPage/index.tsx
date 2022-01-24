@@ -39,6 +39,7 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { RootState } from "store/reducers/Reducer";
 import { ContractInstance } from "shared/connectors/web3/functions";
 import NFTReserveMarketplaceContract from "shared/connectors/web3/contracts/reserve/ReserveMarketplace.json";
+import { getNFTOwnerAddress } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -76,7 +77,6 @@ const ExploreReserveDetailPage = () => {
   const [openClaimYourNFTModal, setOpenClaimYourNFTModal] = useState<boolean>(false);
   const [openGameDetailModal, setOpenGameDetailModal] = useState<boolean>(false);
   const [openRentSuccess, setOpenRentSccess] = useState<boolean>(false);
-  const [blockingInfo, setBlockingInfo] = useState<any>(null);
   const [claimType, setClaimType] = useState("");
   const [nft, setNft] = useState<any>({});
 
@@ -264,24 +264,21 @@ const ExploreReserveDetailPage = () => {
       setSyncing(false);
       return;
     }
-    const nftRes = await getGameNFT({
-      mode: isProd ? "main" : "test",
-      collectionId: collection_id,
-      tokenId: token_id,
-    });
+    
+    const ownerAddress = await getNFTOwnerAddress(chainId, nft.Address, token_id)
+    console.log('ownerAddress... ', ownerAddress)
 
-    if (nftRes.success) {
-      const updatedNFT = nftRes.nft;
-      if (updatedNFT.currentOwner === web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER.toLowerCase()) {
+    if (ownerAddress) {
+      if (ownerAddress === web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER.toLowerCase()) {
         const contract = ContractInstance(web3, NFTReserveMarketplaceContract.abi, web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE);
 
         contract.getPastEvents(
           "PurchaseReserved",
           {
-            fromBlock: updatedNFT?.blockingSaleOffer?.blockNumber
+            fromBlock: nft?.blockingSaleOffer?.blockNumber
           },
           async (error, events) => {
-            console.log('events... ', events, updatedNFT )
+            console.log('events... ', events, nft )
             const event = (events || []).find(e => e.returnValues?.collection.toLowerCase() === nft?.Address.toLowerCase() && e.returnValues.tokenId === nft?.tokenId)
 
             if (event) {
@@ -325,6 +322,7 @@ const ExploreReserveDetailPage = () => {
                   from: blockedInfo.seller,
                   to: blockedInfo.buyer,
                   notificationMode: -1,
+                  ownerAddress
                 });
 
                 if (offerRes.success) {
