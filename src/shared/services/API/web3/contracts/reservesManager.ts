@@ -274,6 +274,31 @@ const reservesManager = (network: string) => {
       }
     });
   };
+  
+  const getActiveReserves = async (
+    web3: Web3,
+    payload: any
+  ) => {
+    return new Promise(async resolve => {
+      try {
+        const contract = ContractInstance(web3, metadata.abi, contractAddress);
+        console.log("payload", payload);
+        const response = await contract.methods
+          .activeReserves(
+            payload.activeReserveId
+          )
+          .call()
+        
+        console.log("transaction succeed", response);
+        resolve({ success: true, offer: response });
+      } catch (e) {
+        console.log(e);
+        resolve({
+          success: false,
+        });
+      }
+    });
+  };
 
   return {
     sellerCancelFeePercent,
@@ -282,7 +307,8 @@ const reservesManager = (network: string) => {
     liquidateReserve,
     payThePrice,
     decreaseReserveCollateral,
-    liquidateUndercollateralization
+    liquidateUndercollateralization,
+    getActiveReserves
   };
 };
 
