@@ -13,7 +13,7 @@ import Box from "shared/ui-kit/Box";
 import { CircularLoadingIndicator, PrimaryButton } from "shared/ui-kit";
 import { BlockchainNets } from "shared/constants/constants";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
-import { getOwnedNFTs } from "shared/services/API/ReserveAPI";
+import { getNFTFromMoralis, getOwnedNFTs } from "shared/services/API/ReserveAPI";
 import { toDecimals } from "shared/functions/web3";
 import { useAuth } from "shared/contexts/AuthContext";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
@@ -82,6 +82,48 @@ const OwnersPanel = () => {
   const refreshData = () => {
     setUserNFTs([]);
     getData();
+  };
+
+  const clickRefreshBtn = () => {
+    setUserNFTs([]);
+    getRefreshedData();
+  }
+
+  const getRefreshedData = async () => {
+    if (isSignedin) {
+      try {
+        const selectedChain =
+          filterChain === filterChainOptions[0]
+            ? undefined
+            : filteredBlockchainNets.find(net => net.name === filterChain.toUpperCase())?.chainName;
+
+        setLoading(true);
+        const response = await getNFTFromMoralis({
+          mode: isProd ? "main" : "test",
+          network: selectedChain,
+          type: selectedTab === 2 ? "Blocking" : selectedTab === 1 ? "Rental" : "Owned",
+        });
+
+        let nfts = response.data ?? [];
+        const loadNftStatus = nft =>
+          !nft.status ? [] : Array.isArray(nft.status) ? nft.status : nft.status.split(", ");
+        if (selectedTab === 0) {
+          setUserNFTs(
+            nfts.filter(
+              nft =>
+                !nft.status ||
+                (Array.isArray(nft.status) && !nft.status?.length) ||
+                loadNftStatus(nft).filter(s => s !== "Rented" && s !== "Blocked").length
+            )
+          );
+        } else if (selectedTab === 1) {
+          setUserNFTs(nfts.filter(nft => loadNftStatus(nft).filter(s => s === "Rented").length));
+        } else {
+          setUserNFTs(nfts);
+        }
+      } catch (err) {}
+      setLoading(false);
+    }
   };
 
   const getData = async () => {
@@ -293,7 +335,7 @@ const OwnersPanel = () => {
         >
           <PrimaryButton
             onClick={() => {
-              refreshData();
+              clickRefreshBtn();
             }}
             size="small"
             style={{
