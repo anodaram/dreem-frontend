@@ -17,11 +17,8 @@ export async function visitProfile(address: string, history: any): Promise<any> 
 
 export async function userTrackDownload(): Promise<any> {
   try {
-    const userId: string = localStorage.getItem("userId") || "";
-    if (userId) {
-      let url = `${URL()}/user/userTrackDownload/${userId}`;
-      await axios.get(url);
-    }
+    let url = `${URL()}/user/userTrackDownload`;
+    await axios.post(url);
   } catch (e) {
     console.log(e);
   }
@@ -29,11 +26,8 @@ export async function userTrackDownload(): Promise<any> {
 
 export async function userTrackMarketPlace(): Promise<any> {
   try {
-    const userId: string = localStorage.getItem("userId") || "";
-    if (userId) {
-      let url = `${URL()}/user/userTrackMarketPlace/${userId}`;
-      await axios.get(url);
-    }
+    let url = `${URL()}/user/userTrackMarketPlace`;
+    await axios.post(url);
   } catch (e) {
     console.log(e);
   }
