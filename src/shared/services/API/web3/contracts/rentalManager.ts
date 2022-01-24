@@ -288,11 +288,11 @@ const rentalManager = (network: string) => {
     });
   };
 
-  const rentedTokenSyntheticID = async (web3: Web3, { address, tokenId }: any): Promise<any> => {
+  const rentedTokenSyntheticID = async (web3: Web3, { collectionId, tokenId }: any): Promise<any> => {
     return new Promise(async resolve => {
       try {
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
-        const response = await contract.methods.rentedTokenSyntheticID(address, tokenId).call();
+        const response = await contract.methods.rentedTokenSyntheticID(collectionId, tokenId).call();
 
         resolve({ success: true, nftAddress: response });
       } catch (e) {
@@ -302,11 +302,11 @@ const rentalManager = (network: string) => {
     });
   };
 
-  const rentedTokenData = async (web3: Web3, { address, tokenId }: any): Promise<any> => {
+  const rentedTokenData = async (web3: Web3, { collectionId, tokenId }: any): Promise<any> => {
     return new Promise(async resolve => {
       try {
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
-        const response = await contract.methods.rentedTokenData(address, tokenId).call();
+        const response = await contract.methods.rentedTokenData(collectionId, tokenId).call();
 
         resolve({ success: true, rentalInfos: response });
       } catch (e) {

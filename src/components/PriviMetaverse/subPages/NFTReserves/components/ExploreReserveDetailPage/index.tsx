@@ -17,7 +17,7 @@ import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import { Modal } from "shared/ui-kit";
 import { ShareWhiteIcon } from "shared/ui-kit/Icons/SvgIcons";
 import DiscordPhotoFullScreen from "shared/ui-kit/Page-components/Discord/DiscordPhotoFullScreen/DiscordPhotoFullScreen";
-import { getGameNFT, getMarketplaceFee } from "shared/services/API/ReserveAPI";
+import { getGameNFT, getMarketplaceFee, syncUpNFT } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
 import { getChainForNFT } from "shared/functions/metamask";
@@ -46,6 +46,7 @@ const ExploreReserveDetailPage = () => {
   const { shareMedia } = useShareMedia();
 
   const { library } = useWeb3React();
+  const [syncing, setSyncing] = useState<boolean>(false);
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isBuyer, setIsBuyer] = useState<boolean>(false);
   const [isRenter, setIsRenter] = useState<boolean>(false);
@@ -167,23 +168,52 @@ const ExploreReserveDetailPage = () => {
     const web3APIHandler = nftChain.apiHandler;
     const web3 = new Web3(library.provider);
     const payloads = {
-      address: nft.Address,
-      tokenId: parseInt(nft.tokenId),
+      collectionId: nft.Address,
+      tokenId: Number(nft.tokenId),
     };
+
     Promise.all([
       web3APIHandler.RentalManager.rentedTokenData(web3, payloads),
       web3APIHandler.RentalManager.rentedTokenSyntheticID(web3, payloads),
-    ]).then(([rentalInfosRes, syntheticIdRes]) => {
+      web3APIHandler.RentalManager.getSyntheticNFTAddress(web3, payloads),
+    ]).then(([{ rentalInfos }, { nftAddress }, syntheticNFTRes]) => {
+      web3APIHandler.SyntheticNFTManager.ownerOf(web3, {
+        contractAddress: syntheticNFTRes.nftAddress,
+        tokenId: Number(nftAddress),
+      }).then(res => {
+        syncUpNFT({
+          mode: isProd ? "main" : "test",
+          collectionId: nft.collectionId,
+          tokenId: nft.tokenId,
+          rentalInfos: {
+            collection: rentalInfos.collection,
+            tokenId: rentalInfos.tokenId,
+            maximumRentTime: Number(rentalInfos.maximumRentTime),
+            pricePerSecond: Number(rentalInfos.pricePerSecond),
+            rentalExpiration: Number(rentalInfos.rentalExpiration),
+            fundingToken: rentalInfos.fundingToken,
+            owner: rentalInfos.owner,
+            renter: res.rentalInfos,
+            syntehticId: nftAddress,
+          },
+        })
+          .then(() => {
+            setSyncing(false);
+            getData();
+          })
+          .catch(err => console.log(err));
+      });
     });
   };
 
-  const syncNft = async () => {
+  const syncNft = () => {
     if (!nft) return;
 
     const nftChain = getChainForNFT(nft);
     if (!nftChain) return;
 
-    await syncRentalInfos(nftChain);
+    setSyncing(true);
+    syncRentalInfos(nftChain);
   };
 
   const refresh = () => {
@@ -294,7 +324,7 @@ const ExploreReserveDetailPage = () => {
                     onClick={() => syncNft()}
                     ml={2}
                   >
-                    <IconButtonWrapper style={{ marginLeft: -10 }} rotate={false}>
+                    <IconButtonWrapper style={{ marginLeft: -10 }} rotate={syncing}>
                       <RefreshIcon />
                     </IconButtonWrapper>
                     Sync NFT
