@@ -29,6 +29,14 @@ export const useModalStyles = makeStyles(theme => ({
     fontWeight: 400,
     color: "#E9FF26",
   },
+  header3: {
+    fontSize: 16,
+    fontWeight: 500,
+    fontFamily: "Rany",
+    color: "#fff",
+    marginBottom: 20,
+    textTransform: "uppercase",
+  },
   ethImg: {
     display: "flex",
     alignItems: "center",
@@ -69,5 +77,33 @@ export const useModalStyles = makeStyles(theme => ({
     WebkitAnimation: "$rotating 0.5s linear infinite",
     animation: "$rotating 0.5s linear infinite",
     MozAnimation: "$rotating 0.5s linear infinite",
+  },
+  nftImage: {
+    width: 397,
+    height: 258,
+    border: "3px solid #E9FF26",
+  },
+  shareSection: {
+    borderTop: "1px solid rgba(218, 230, 229, 0.06)",
+    paddingTop: 20,
+    marginTop: 30,
+  },
+  snsIconList: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    "& div:not(:last-child)": {
+      marginRight: theme.spacing(4),
+    },
+  },
+  snsBox: {
+    width: 48,
+    height: 48,
+    background: "#E9FF26",
+    borderRadius: "50%",
+    justifyContent: "center",
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
   },
 }));

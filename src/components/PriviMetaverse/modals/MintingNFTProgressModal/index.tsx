@@ -4,23 +4,41 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import Box from "shared/ui-kit/Box";
 import { Modal, PrimaryButton } from "shared/ui-kit";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
+import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
+import {
+  handleDiscordLink,
+  handleTelegramLink,
+  handleYoutubeLink,
+  handleTwitterLink,
+  handleInstagramLink,
+  handleGitbookLink,
+} from "shared/constants/constants";
 import { useModalStyles } from "./index.styles";
+
+import { ReactComponent as TelegramIcon } from "assets/snsIcons/telegram.svg";
+import { ReactComponent as TwitterIcon } from "assets/snsIcons/twitter.svg";
+import { ReactComponent as DiscordIcon } from "assets/snsIcons/discord.svg";
+import { ReactComponent as InstagramIcon } from "assets/snsIcons/instagram.svg";
+import { ReactComponent as YoutubeIcon } from "assets/snsIcons/youtube.svg";
+import { ReactComponent as GitbookIcon } from "assets/snsIcons/gitbook.svg";
 
 require("dotenv").config();
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-export default function TransactionProcessingOperationModal({
+export default function MintingNFTProgressModal({
   open,
   onClose,
   txSuccess,
   hash,
   network,
+  nftImage,
 }: {
   open: boolean;
   onClose: () => void;
   txSuccess: boolean | null;
   hash: string;
   network?: string;
+  nftImage: string;
 }) {
   const classes = useModalStyles();
   const { showAlertMessage } = useAlertMessage();
@@ -45,7 +63,7 @@ export default function TransactionProcessingOperationModal({
   return (
     <Modal showCloseIcon isOpen={open} onClose={onClose} className={classes.root} size="small">
       {txSuccess === true ? (
-        <img src={require("assets/metaverseImages/result_success.png")} width="135px" height="135px" />
+        <img src={nftImage || getDefaultBGImage()} className={classes.nftImage} />
       ) : txSuccess === false ? (
         <img src={require("assets/metaverseImages/result_fail.png")} width="135px" height="135px" />
       ) : (
@@ -62,16 +80,16 @@ export default function TransactionProcessingOperationModal({
       )}
       <Box className={classes.title} mt={4}>
         {txSuccess === true
-          ? "succesfully created"
+          ? "Awesome! New NFT created."
           : txSuccess === false
           ? "Transaction failed"
-          : "Processing"}
+          : "Minting your NFT"}
       </Box>
       <Box className={classes.header1} mt={2} mb={2}>
         {txSuccess === true ? (
           <>
-            Everything went well. <br />
-            You can check your transaction link below.
+            Cool! Everything wen’t well and you can enjoy your creation, <br />
+            share it and let it out in the world!
           </>
         ) : txSuccess === false ? (
           <>
@@ -81,12 +99,13 @@ export default function TransactionProcessingOperationModal({
           </>
         ) : (
           <>
-            We are currently uploading your draft files. <br />
+            Transaction is proceeding on {network && isEth ? "Ethereum" : isBsc ? "BSC" : "Polygon"} Chain.{" "}
+            <br />
             This can take a moment, please be patient...
           </>
         )}
       </Box>
-      {(txSuccess === true || txSuccess === false) && hash && (
+      {hash && (
         <>
           <CopyToClipboard
             text={hash}
@@ -104,59 +123,27 @@ export default function TransactionProcessingOperationModal({
               <CopyIcon />
             </Box>
           </CopyToClipboard>
-          <PrimaryButton
-            size="medium"
-            style={{
-              background: "transparent",
-              marginTop: "24px",
-              color: "#ffffff",
-              textTransform: "uppercase",
-              padding: "4px 24px",
-              height: 48,
-              border: "2px solid #858a8d",
-            }}
-            isRounded
-            onClick={handleOpenTx}
-          >
-            Check on {network && isEth ? "Ethereum" : isBsc ? "BSC" : "Polygon"} Scan
-          </PrimaryButton>
+          {!(txSuccess === true || txSuccess === false) && (
+            <PrimaryButton
+              size="medium"
+              style={{
+                background: "transparent",
+                marginTop: "24px",
+                color: "#ffffff",
+                textTransform: "uppercase",
+                padding: "4px 24px",
+                height: 48,
+                border: "2px solid #858a8d",
+              }}
+              isRounded
+              onClick={handleOpenTx}
+            >
+              Check on {network && isEth ? "Ethereum" : isBsc ? "BSC" : "Polygon"} Scan
+            </PrimaryButton>
+          )}
         </>
       )}
-      {txSuccess === true ? (
-        <Box mt={2}>
-          <PrimaryButton
-            size="medium"
-            style={{
-              background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
-              color: "#212121",
-              height: 48,
-              minWidth: 249,
-              borderRadius: "100px",
-              textTransform: "uppercase",
-              fontSize: 18,
-              paddingTop: 5,
-            }}
-            onClick={() => {}}
-          >
-            Go To Profile
-          </PrimaryButton>
-          <PrimaryButton
-            size="medium"
-            style={{
-              background: "transparent",
-              color: "#ffffff",
-              textTransform: "uppercase",
-              padding: "4px 24px",
-              height: 48,
-              border: "2px solid #858a8d",
-            }}
-            isRounded
-            onClick={() => {}}
-          >
-            HOME
-          </PrimaryButton>
-        </Box>
-      ) : (
+      {txSuccess === false && (
         <PrimaryButton
           size="medium"
           style={{
@@ -174,6 +161,31 @@ export default function TransactionProcessingOperationModal({
         >
           Back To Home
         </PrimaryButton>
+      )}
+      {txSuccess === true && (
+        <Box className={classes.shareSection}>
+          <Box className={classes.header3}>Share on</Box>
+          <Box className={classes.snsIconList}>
+            <Box className={classes.snsBox} onClick={handleTelegramLink}>
+              <TelegramIcon />
+            </Box>
+            <Box className={classes.snsBox} onClick={handleTwitterLink}>
+              <TwitterIcon />
+            </Box>
+            <Box className={classes.snsBox} onClick={handleYoutubeLink}>
+              <YoutubeIcon width="26px" />
+            </Box>
+            <Box className={classes.snsBox} onClick={handleDiscordLink}>
+              <DiscordIcon />
+            </Box>
+            <Box className={classes.snsBox} onClick={handleInstagramLink}>
+              <InstagramIcon />
+            </Box>
+            <Box className={classes.snsBox} onClick={handleGitbookLink}>
+              <GitbookIcon />
+            </Box>
+          </Box>
+        </Box>
       )}
     </Modal>
   );
