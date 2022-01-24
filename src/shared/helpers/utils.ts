@@ -1,4 +1,5 @@
 import moment from "moment";
+import axios from 'axios';
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -158,4 +159,14 @@ export const visitChainLink = (chain, address, isAddress = true) => {
 
 export const getAbbrAddress = (address, start, end) => {
   return `${address?.substring(0, start)}...${address?.substring(address?.length - end, address.length)}`
+}
+
+export const getNFTOwnerAddress = async (chainId, address, tokenId) => {
+  const COVAL_API_ENDPOINT = "https://api.covalenthq.com/v1";
+  const COVALENT_API_KEY = process.env.COVALENT_API_KEY;
+  const meta = await axios.get(
+          `${COVAL_API_ENDPOINT}/${chainId}/tokens/${address}/nft_metadata/${tokenId}/?key=${COVALENT_API_KEY}`
+          )
+
+  return meta?.data.data.items[0].nft_data[0].owner_address
 }
