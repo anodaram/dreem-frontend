@@ -319,7 +319,9 @@ const CreateRealm = ({
                 contractRes.contractAddress,
                 targetChain.name,
                 contractRes.tokenId,
-                metadata.newFileCID
+                metadata.newFileCID,
+                contractRes.owner,
+                contractRes.royaltyAddress
               );
             } else {
               setTxSuccess(false);

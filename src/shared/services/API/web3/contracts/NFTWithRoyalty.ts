@@ -16,15 +16,15 @@ const nftWithRoyalty = network => {
   ): Promise<any> => {
     return new Promise(async resolve => {
       try {
-        const { to, uri } = payload;
+        const { collectionAddress, to, uri } = payload;
 
-        const contract = ContractInstance(web3, metadata.abi, contractAddress);
+        const contract = ContractInstance(web3, metadata.abi, collectionAddress);
 
-        console.log("Getting gas....");
-        const gas = await contract.methods.mint(to, uri).estimateGas({ from: account });
+        console.log("Getting gas....", contract, collectionAddress, to, account, uri);
+        const gas = await contract.methods.mintWithRoyalty(to, uri, '0x0000000000000000000000000000000000000000', 0, '').estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
-          .mint(to, uri)
+          .mintWithRoyalty(to, uri, '0x0000000000000000000000000000000000000000', 0, '')
           .send({ from: account, gas: gas })
           .on("transactionHash", function (hash) {
             console.log("transaction hash:", hash);
@@ -32,8 +32,8 @@ const nftWithRoyalty = network => {
             setTxHash(hash);
           });
         console.log("transaction succeed", response);
-
-        resolve({ success: true, contractAddress, tokenId: response.events.Transfer.returnValues.tokenId });
+        const returnValues = response.events.RoyaltyNFT.returnValues;
+        resolve({ success: true, collectionAddress, tokenId: returnValues.initialId, owner: returnValues.owner, royaltyAddress: returnValues.royaltyAddress });
       } catch (e) {
         console.log(e);
         resolve({ success: false });

@@ -40,6 +40,7 @@ export const onUploadNonEncrypt = async (file, uploadWithNonEncryption) => {
     console.log("----------Upload Start----------");
 
     TimeLogger.start("Upload IPFS");
+    console.log('------ file', file)
     const { added } = await uploadWithNonEncryption(file);
     TimeLogger.end("Upload IPFS");
 

@@ -287,19 +287,22 @@ export const getCharacterData = async characterId => {
   }
 };
 
-export const convertToNFTWorld = async (worldId, contractAddress, chain, nftId, metadataCID) => {
+export const convertToNFTWorld = async (worldId, contractAddress, chain, nftId, metadataCID, owner, royaltyAddress) => {
   try {
     const token = localStorage.getItem("token");
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
     const resp = await axios.post(
-      `${METAVERSE_URL()}/web/public/itemVersions/${worldId}/nft/`,
+      `${METAVERSE_URL()}/web/itemVersions/${worldId}/mint/`,
       {
-        contractAddress,
-        chain,
-        nftId,
-        metadataCID,
+        collectionAddress : contractAddress,
+        tokenId : nftId,
+        ownerAddress : owner,
+        metadataUrl : metadataCID,
+        chain : chain,
+        royaltyPercentage : 15,
+        royaltyAddress : royaltyAddress
       },
       config
     );

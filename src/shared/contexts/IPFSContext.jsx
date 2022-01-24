@@ -41,6 +41,7 @@ export const IPFSContextProvider = ({ children }) => {
   };
 
   const uploadWithFileName = async file => {
+    console.log('------ file3', file, ipfs)
     if (file) {
       setIsUpload(true);
       setShowUploadingModal(true);
@@ -50,6 +51,10 @@ export const IPFSContextProvider = ({ children }) => {
         let objectString = JSON.stringify(file);
 
         try {
+          // const token = localStorage.getItem("token");
+          // const config = {
+          //   headers: token ? { Authorization: `Bearer ${token}` } : {},
+          // };
           const added = await ipfs.add(objectString);
           console.log("The File is Uploaded Successfully to IPFS");
           setProgress(100);
@@ -112,6 +117,7 @@ export const IPFSContextProvider = ({ children }) => {
   const uploadFile = async file => {
     return new Promise(async (resolve, reject) => {
       TimeLogger.start("Upload2IPFS");
+      console.log('------ file2', file)
       const added = await uploadWithFileName(file);
       TimeLogger.end("Upload2IPFS");
       resolve(added);

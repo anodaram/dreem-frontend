@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 
-import { useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem } from "@material-ui/core";
+import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -55,7 +55,9 @@ const CreateNFT = ({
   const [isPublic, setIsPublic] = useState<boolean>(true);
 
   const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
-  const [isDraft, setIsDraft] = useState<boolean>(true);
+  const [isDraft, setIsDraft] = useState<boolean>(collection?.kind=="DRAFT" ? true : false);
+  console.log(isDraft, collection?.kind)
+  console.log(collection)
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -275,6 +277,8 @@ const CreateNFT = ({
   const handleWorld = async () => {
     if (validate()) {
       let payload: any = {};
+      let collectionAddr = collectionData.address;
+      let tokenId;
 
       payload = {
         collectionId: collectionData.id,
@@ -297,13 +301,17 @@ const CreateNFT = ({
             setShowUploadingModal(false);
           } else{
 
-            if (isDraft) {
-              setProgress(100);
+            // if (isDraft) {
+            //   setProgress(100);
+            //   setShowUploadingModal(false);
+            //   showAlertMessage(`Created draft successfully`, { variant: "success" });
+            //   handleCancel();
+            //   handleRefresh()
+            // } else {
+
               setShowUploadingModal(false);
               showAlertMessage(`Created draft successfully`, { variant: "success" });
-              handleCancel();
-              handleRefresh()
-            } else {
+              console.log('----metadata', res.data.metadata, chainId, BlockchainNets.find(net => net.value === chain))
               const metadata = await onUploadNonEncrypt(res.data.metadata, file =>
                 uploadWithNonEncryption(file)
               );
@@ -323,10 +331,44 @@ const CreateNFT = ({
               const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metadata.newFileCID}`;
               const web3APIHandler = targetChain.apiHandler;
               const web3 = new Web3(library.provider);
+              console.log('----metadata:', metadata, isDraft)
+
+            if (isDraft) {
+              console.log('here-----')
+              const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
+                web3,
+                account,
+                {
+                  name: collectionData.name,
+                  symbol: collectionData.symbol,
+                  uri,
+                },
+                setTxModalOpen,
+                setTxHash
+              );
+              if (resRoyalty.success) {
+                setTxSuccess(true);
+                showAlertMessage(`Successfully world minted`, { variant: "success" });
+
+                await MetaverseAPI.convertToNFTWorld(
+                  res.data.item.id,
+                  resRoyalty.contractAddress,
+                  targetChain.name,
+                  resRoyalty.tokenId,
+                  metadata.newFileCID,
+                  account,
+                  '0x0000000000000000000000000000000000000000'
+                );
+                handleRefresh()
+              } else {
+                setTxSuccess(false);
+              }
+            } else {
               const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
                 web3,
                 account,
                 {
+                  collectionAddress: collectionAddr,
                   to: account,
                   uri,
                 },
@@ -337,14 +379,17 @@ const CreateNFT = ({
               if (contractRes.success) {
                 setTxSuccess(true);
                 showAlertMessage(`Successfully world minted`, { variant: "success" });
-
+                console.log(contractRes)
                 await MetaverseAPI.convertToNFTWorld(
-                  res.data.worldData.id,
-                  contractRes.contractAddress,
+                  res.data.item.id,
+                  contractRes.collectionAddress,
                   targetChain.name,
                   contractRes.tokenId,
-                  metadata.newFileCID
+                  metadata.newFileCID,
+                  contractRes.owner,
+                  contractRes.royaltyAddress
                 );
+                handleRefresh()
               } else {
                 setTxSuccess(false);
               }
@@ -354,6 +399,7 @@ const CreateNFT = ({
         .catch(err => {
           setShowUploadingModal(false);
           showAlertMessage(`Failed to upload world`, { variant: "error" });
+          console.log(err)
         });
     }
   };
@@ -668,6 +714,29 @@ const CreateNFT = ({
               <Box pt={0.5}>Add Data File</Box>
             )}
           </PrimaryButton>
+          <Box className={classes.switchWrapper}>
+            <Box display="flex" alignItems="center">
+              <p style={{ marginRight: 16 }}>Make your file Public</p>
+              <InfoTooltip
+                tooltip={
+                  "This allows you to make your realm, which in this case is a work in progress/draft, available for people to test and give feedback (public). Or just internal for you (private), only to be set public later"
+                }
+              />
+            </Box>
+            <FormControlLabel
+              control={
+                <IOSSwitch
+                  defaultChecked
+                  checked={isPublic}
+                  onChange={() => {
+                    setIsPublic(prev => !prev);
+                  }}
+                />
+              }
+              label={isPublic ? "Yes" : "No"}
+              labelPlacement="start"
+            />
+          </Box>
 
           <Box className={classes.buttons} mt={7}>
             <SecondaryButton size="medium" onClick={handleCancel}>

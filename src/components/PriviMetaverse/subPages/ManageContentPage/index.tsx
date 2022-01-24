@@ -449,7 +449,7 @@ export default function ManageContentPage() {
             <Box className={classes.typo3} mb={3}>
               Fill all the details of your new collection
             </Box>
-            <CreateCollection handleNext={() => {}} handleCancel={()=>setStep(2)} handleRefresh={handleRefreshCollection} />
+            <CreateCollection handleNext={() => {}} handleCancel={()=>setStep(2)} handleRefresh={()=>handleRefreshCollection()} />
           </div>
         )}
         {step === 3 && (
@@ -458,7 +458,7 @@ export default function ManageContentPage() {
             <Box className={classes.typo3} mb={3}>
               Fill all the details of your new nft
             </Box>
-            <CreateNFT metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev} handleRefresh={() => {}} collection={currentCollection} isCollectionPage={false}/>
+            <CreateNFT metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()} collection={currentCollection} isCollectionPage={false}/>
           </div>
         )}
         {step > 2 || (step === 2 && collections.length) ? (
