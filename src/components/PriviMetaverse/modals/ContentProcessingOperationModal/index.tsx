@@ -7,7 +7,7 @@ import { useModalStyles } from "./index.styles";
 require("dotenv").config();
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-export default function TransactionProcessingOperationModal({
+export default function ContentProcessingOperationModal({
   open,
   onClose,
   txSuccess,
