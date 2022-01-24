@@ -16,10 +16,10 @@ import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import { Modal } from "shared/ui-kit";
 import { ShareWhiteIcon } from "shared/ui-kit/Icons/SvgIcons";
 import DiscordPhotoFullScreen from "shared/ui-kit/Page-components/Discord/DiscordPhotoFullScreen/DiscordPhotoFullScreen";
-import { getGameNFT, getMarketplaceFee } from "shared/services/API/ReserveAPI";
+import { acceptBlockingOffer, getGameNFT, getMarketplaceFee } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
-import { getChainForNFT } from "shared/functions/metamask";
+import { checkChainID, getChainForNFT } from "shared/functions/metamask";
 import GameNFTDetailModal from "components/PriviMetaverse/modals/GameNFTDetailModal";
 import RentSuccessModal from "components/PriviMetaverse/modals/RentSuccessModal";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
@@ -34,6 +34,11 @@ import ExpiredPayDetailSection from "./components/ExpiredPayDetailSection";
 import ExpiredPayStatusSection from "./components/ExpiredPayStatusSection";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
 import { exploreOptionDetailPageStyles } from "./index.styles";
+import { useAlertMessage } from "shared/hooks/useAlertMessage";
+import Web3 from "web3";
+import { RootState } from "store/reducers/Reducer";
+import { ContractInstance } from "shared/connectors/web3/functions";
+import NFTReserveMarketplaceContract from "shared/connectors/web3/contracts/reserve/ReserveMarketplace.json";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -43,6 +48,7 @@ const ExploreReserveDetailPage = () => {
   const { collection_id, token_id }: { collection_id: string; token_id: string } = useParams();
 
   const { shareMedia } = useShareMedia();
+  const { account, library, chainId } = useWeb3React();
 
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isBuyer, setIsBuyer] = useState<boolean>(false);
@@ -52,8 +58,12 @@ const ExploreReserveDetailPage = () => {
   const [isRentedNFT, setIsRentedNFT] = useState<boolean>(false);
   const [isExpired, setIsExpired] = useState<boolean>(false);
   const [isExpiredPaySuccess, setIsExpiredPaySuccess] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [selectedChain, setSelectedChain] = useState<any>(null);
+  const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
 
   const history = useHistory();
+  const { showAlertMessage } = useAlertMessage();
 
   const theme = useTheme();
   const isMobileScreen = useMediaQuery(theme.breakpoints.down("xs"));
@@ -65,9 +75,9 @@ const ExploreReserveDetailPage = () => {
   const [openClaimYourNFTModal, setOpenClaimYourNFTModal] = useState<boolean>(false);
   const [openGameDetailModal, setOpenGameDetailModal] = useState<boolean>(false);
   const [openRentSuccess, setOpenRentSccess] = useState<boolean>(false);
+  const [blockingInfo, setBlockingInfo] = useState<any>(null);
   const [claimType, setClaimType] = useState("");
   const [nft, setNft] = useState<any>({});
-  const { account } = useWeb3React();
 
   const [openModalPhotoFullScreen, setOpenModalPhotoFullScreen] = useState<boolean>(false);
 
@@ -134,6 +144,10 @@ const ExploreReserveDetailPage = () => {
       setNft({
         ...response.nft,
       });
+      setSelectedChain(getChainForNFT(response.nft))
+      if (nft?.blockingSalesHistories?.length > 0) {
+        setBlockingInfo(nft.blockingSalesHistories[nft.blockingSalesHistories.length - 1])
+      }
     }
 
     const marketFeeRes = await getMarketplaceFee();
@@ -178,6 +192,94 @@ const ExploreReserveDetailPage = () => {
       );
     }
   };
+
+  const getTokenDecimal = addr => {
+    if (tokens.length == 0 || !addr) return 0;
+    let token = tokens.find(token => token.Address === addr);
+    return token.Decimals;
+  };
+
+  const handleConfirmRefresh = async () => {
+    const web3Config = selectedChain.config;
+    const web3APIHandler = selectedChain.apiHandler;
+    const web3 = new Web3(library.provider);
+
+    setIsRefreshing(true);
+    if (!checkChainID(chainId)) {
+      showAlertMessage(`network error`, { variant: "error" });
+      setIsRefreshing(false);
+      return;
+    }
+    const nftRes = await getGameNFT({
+      mode: isProd ? "main" : "test",
+      collectionId: collection_id,
+      tokenId: token_id,
+    });
+
+    if (nftRes.success) {
+      const updatedNFT = nftRes.nft;
+      if (updatedNFT.currentOwner === web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER.toLowerCase()) {
+        const contract = ContractInstance(web3, NFTReserveMarketplaceContract.abi, web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE);
+
+        contract.getPastEvents(
+          "PurchaseReserved",
+          {
+            fromBlock: nft?.blockingSaleOffer?.blockNumber
+          },
+          async (error, events) => {
+            const event = (events || []).find(e => e.returnValues?.collection.toLowerCase() === nft?.Address.toLowerCase() && e.returnValues.tokenId === nft?.tokenId)
+
+            if (event) {
+              const offer = event.returnValues;
+
+              console.log('offer... ', offer)
+              const activeReserveId = web3.utils.keccak256(
+                web3.eth.abi.encodeParameters(
+                  ["address", "uint256", "address", "address"],
+                  [
+                    nft.Address,
+                    token_id,
+                    offer?.seller,
+                    offer?.buyer,
+                  ]
+                )
+              );
+              
+              console.log('activeReserveId... ', activeReserveId)
+              const response = await web3APIHandler.ReservesManager.getActiveReserves(
+                web3,
+                {
+                  activeReserveId
+                }
+              );
+
+              if (response.success) {
+                const blockedInfo = response.offer;
+
+                await acceptBlockingOffer({
+                  mode: isProd ? "main" : "test",
+                  CollectionId: collection_id,
+                  TokenId: blockedInfo.tokenId,
+                  AcceptDuration: nft.blockingSaleOffer.AcceptDuration,
+                  PaymentToken: nft.blockingSaleOffer.PaymentToken,
+                  Price: nft.blockingSaleOffer.Price,
+                  Beneficiary: blockedInfo.buyer,
+                  CollateralPercent: nft?.blockingSaleOffer?.CollateralPercent,
+                  TotalCollateralPercent: blockedInfo.collateralPercent,
+                  ReservePeriod: nft.blockingSaleOffer.ReservePeriod,
+                  from: blockedInfo.seller,
+                  to: blockedInfo.buyer,
+                  notificationMode: -1,
+                });
+              }
+            }
+          }
+        );
+      }
+    }
+    
+    setIsRefreshing(false);
+  }
 
   return (
     <Box style={{ position: "relative", flex: 1, display: "flex", justifyContent: "center" }}>
@@ -288,6 +390,13 @@ const ExploreReserveDetailPage = () => {
                   </Text>
                 </Box>
                 <Box display="flex" flexDirection="row" alignItems="center">
+                  <SecondaryButton
+                    className={classes.detailsButton}
+                    size="small"
+                    onClick={() => handleConfirmRefresh()}
+                  >
+                    Sync NFT
+                  </SecondaryButton>
                   <SecondaryButton
                     className={classes.detailsButton}
                     size="small"

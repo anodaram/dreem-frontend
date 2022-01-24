@@ -160,7 +160,8 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
           CollateralPercent: collateralPercent,
           ReservePeriod: period,
           AcceptDuration: 1000,
-          hash,
+          hash: contractResponse.hash,
+          blockNumber: contractResponse.offer?.blockNumber
         });
         let newNft = { ...nft };
         newNft.blockingSaleOffer = {
