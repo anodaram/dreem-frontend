@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import Web3 from "web3";
+import styled from "styled-components";
 import { useParams, useHistory } from "react-router-dom";
+import { useMediaQuery, useTheme } from "@material-ui/core";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch, useSelector } from "react-redux";
-
-import { useMediaQuery, useTheme } from "@material-ui/core";
 
 import { setMarketFee, setTokenList } from "store/actions/MarketPlace";
 import { BackButton } from "components/PriviMetaverse/components/BackButton";
@@ -16,7 +17,7 @@ import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import { Modal } from "shared/ui-kit";
 import { ShareWhiteIcon } from "shared/ui-kit/Icons/SvgIcons";
 import DiscordPhotoFullScreen from "shared/ui-kit/Page-components/Discord/DiscordPhotoFullScreen/DiscordPhotoFullScreen";
-import { acceptBlockingOffer, getGameNFT, getMarketplaceFee } from "shared/services/API/ReserveAPI";
+import { getGameNFT, getMarketplaceFee, syncUpNFT, acceptBlockingOffer } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
 import { checkChainID, getChainForNFT } from "shared/functions/metamask";
@@ -35,7 +36,6 @@ import ExpiredPayStatusSection from "./components/ExpiredPayStatusSection";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
 import { exploreOptionDetailPageStyles } from "./index.styles";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import Web3 from "web3";
 import { RootState } from "store/reducers/Reducer";
 import { ContractInstance } from "shared/connectors/web3/functions";
 import NFTReserveMarketplaceContract from "shared/connectors/web3/contracts/reserve/ReserveMarketplace.json";
@@ -50,6 +50,7 @@ const ExploreReserveDetailPage = () => {
   const { shareMedia } = useShareMedia();
   const { account, library, chainId } = useWeb3React();
 
+  const [syncing, setSyncing] = useState<boolean>(false);
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isBuyer, setIsBuyer] = useState<boolean>(false);
   const [isRenter, setIsRenter] = useState<boolean>(false);
@@ -145,9 +146,6 @@ const ExploreReserveDetailPage = () => {
         ...response.nft,
       });
       setSelectedChain(getChainForNFT(response.nft))
-      if (nft?.blockingSalesHistories?.length > 0) {
-        setBlockingInfo(nft.blockingSalesHistories[nft.blockingSalesHistories.length - 1])
-      }
     }
 
     const marketFeeRes = await getMarketplaceFee();
@@ -173,6 +171,62 @@ const ExploreReserveDetailPage = () => {
   const handleClaimCollateral = type => {
     setOpenClaimYourNFTModal(true);
     setClaimType(type);
+  };
+
+  const syncRentalInfos = async (nftChain: any) => {
+    const web3APIHandler = nftChain.apiHandler;
+    const web3 = new Web3(library.provider);
+    const payloads = {
+      collectionId: nft.Address,
+      tokenId: Number(nft.tokenId),
+    };
+
+    Promise.all([
+      web3APIHandler.RentalManager.rentedTokenData(web3, payloads),
+      web3APIHandler.RentalManager.rentedTokenSyntheticID(web3, payloads),
+      web3APIHandler.RentalManager.getSyntheticNFTAddress(web3, payloads),
+    ]).then(([{ rentalInfos }, { nftAddress }, syntheticNFTRes]) => {
+      web3APIHandler.SyntheticNFTManager.ownerOf(web3, {
+        contractAddress: syntheticNFTRes.nftAddress,
+        tokenId: Number(nftAddress),
+      }).then(res => {
+        syncUpNFT({
+          mode: isProd ? "main" : "test",
+          collectionId: nft.collectionId,
+          tokenId: nft.tokenId,
+          rentalInfos: {
+            collection: rentalInfos.collection,
+            tokenId: rentalInfos.tokenId,
+            maximumRentTime: Number(rentalInfos.maximumRentTime),
+            pricePerSecond: Number(rentalInfos.pricePerSecond),
+            rentalExpiration: Number(rentalInfos.rentalExpiration),
+            fundingToken: rentalInfos.fundingToken,
+            owner: rentalInfos.owner,
+            renter: res.rentalInfos,
+            syntehticId: nftAddress,
+          },
+        })
+          .then(() => {
+            setSyncing(false);
+            getData();
+          })
+          .catch(err => console.log(err));
+      });
+    });
+  };
+
+  const syncNft = () => {
+    if (!nft) return;
+
+    if (nft.blockingSaleOffer) {
+      handleConfirmRefresh()
+    } else {
+      const nftChain = getChainForNFT(nft);
+      if (!nftChain) return;
+
+      setSyncing(true);
+      syncRentalInfos(nftChain);
+    }
   };
 
   const refresh = () => {
@@ -207,7 +261,7 @@ const ExploreReserveDetailPage = () => {
     setIsRefreshing(true);
     if (!checkChainID(chainId)) {
       showAlertMessage(`network error`, { variant: "error" });
-      setIsRefreshing(false);
+      setSyncing(false);
       return;
     }
     const nftRes = await getGameNFT({
@@ -224,15 +278,16 @@ const ExploreReserveDetailPage = () => {
         contract.getPastEvents(
           "PurchaseReserved",
           {
-            fromBlock: nft?.blockingSaleOffer?.blockNumber
+            fromBlock: updatedNFT?.blockingSaleOffer?.blockNumber
           },
           async (error, events) => {
+            console.log('events... ', events, updatedNFT )
             const event = (events || []).find(e => e.returnValues?.collection.toLowerCase() === nft?.Address.toLowerCase() && e.returnValues.tokenId === nft?.tokenId)
 
             if (event) {
               const offer = event.returnValues;
 
-              console.log('offer... ', offer)
+              console.log('offer... ', offer) 
               const activeReserveId = web3.utils.keccak256(
                 web3.eth.abi.encodeParameters(
                   ["address", "uint256", "address", "address"],
@@ -256,7 +311,7 @@ const ExploreReserveDetailPage = () => {
               if (response.success) {
                 const blockedInfo = response.offer;
 
-                await acceptBlockingOffer({
+                const offerRes = await acceptBlockingOffer({
                   mode: isProd ? "main" : "test",
                   CollectionId: collection_id,
                   TokenId: blockedInfo.tokenId,
@@ -265,12 +320,16 @@ const ExploreReserveDetailPage = () => {
                   Price: nft.blockingSaleOffer.Price,
                   Beneficiary: blockedInfo.buyer,
                   CollateralPercent: nft?.blockingSaleOffer?.CollateralPercent,
-                  TotalCollateralPercent: blockedInfo.collateralPercent,
+                  TotalCollateralPercent: Number(blockedInfo.collateralPercent) / 100,
                   ReservePeriod: nft.blockingSaleOffer.ReservePeriod,
                   from: blockedInfo.seller,
                   to: blockedInfo.buyer,
                   notificationMode: -1,
                 });
+
+                if (offerRes.success) {
+                  setNft(offerRes.data)
+                }
               }
             }
           }
@@ -278,7 +337,7 @@ const ExploreReserveDetailPage = () => {
       }
     }
     
-    setIsRefreshing(false);
+    setSyncing(false);
   }
 
   return (
@@ -353,17 +412,30 @@ const ExploreReserveDetailPage = () => {
                 ) : (
                   <div />
                 )}
-                <span
-                  onClick={() =>
-                    shareMedia(
-                      "gameNFTS",
-                      `gameNFTS/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`
-                    )
-                  }
-                  style={{ cursor: "pointer" }}
-                >
-                  <ShareWhiteIcon />
-                </span>
+                <Box display="flex" alignItems="center">
+                  <span
+                    onClick={() =>
+                      shareMedia(
+                        "gameNFTS",
+                        `gameNFTS/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`
+                      )
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
+                    <ShareWhiteIcon />
+                  </span>
+                  <SecondaryButton
+                    className={classes.detailsButton}
+                    size="small"
+                    onClick={() => syncNft()}
+                    ml={2}
+                  >
+                    <IconButtonWrapper style={{ marginLeft: -10 }} rotate={syncing}>
+                      <RefreshIcon />
+                    </IconButtonWrapper>
+                    Sync NFT
+                  </SecondaryButton>
+                </Box>
               </Box>
               <Box
                 display="flex"
@@ -390,13 +462,6 @@ const ExploreReserveDetailPage = () => {
                   </Text>
                 </Box>
                 <Box display="flex" flexDirection="row" alignItems="center">
-                  <SecondaryButton
-                    className={classes.detailsButton}
-                    size="small"
-                    onClick={() => handleConfirmRefresh()}
-                  >
-                    Sync NFT
-                  </SecondaryButton>
                   <SecondaryButton
                     className={classes.detailsButton}
                     size="small"
@@ -624,3 +689,44 @@ const FullViewIncon = () => (
     />
   </svg>
 );
+
+const RefreshIcon = () => {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M15 8.25051C14.8166 6.93068 14.2043 5.70776 13.2575 4.77013C12.3107 3.83251 11.0818 3.2322 9.76025 3.06168C8.43869 2.89115 7.09772 3.15987 5.9439 3.82645C4.79009 4.49302 3.88744 5.52046 3.375 6.75051M3 3.75051V6.75051H6"
+        stroke="#E9FF26"
+        stroke-width="1.125"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M3 9.75C3.18342 11.0698 3.7957 12.2928 4.74252 13.2304C5.68934 14.168 6.91818 14.7683 8.23975 14.9388C9.56131 15.1094 10.9023 14.8406 12.0561 14.1741C13.2099 13.5075 14.1126 12.48 14.625 11.25M15 14.25V11.25H12"
+        stroke="#E9FF26"
+        stroke-width="1.125"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
+const IconButtonWrapper = styled.div<{ rotate: boolean }>`
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ${props => (props.rotate ? `rotate 1.5s linear 0s infinite` : "")};
+  -webkit-animation: ${props => (props.rotate ? `rotate 1.5s linear 0s infinite` : "")};
+  -moz-animation: ${props => (props.rotate ? `rotate 1.5s linear 0s infinite` : "")};
+  @keyframes rotate {
+    0% {
+    }
+    100% {
+      -webkit-transform: rotate(-360deg);
+      -moz-transform: rotate(-360deg);
+      transform: rotate(-360deg);
+    }
+  }
+`;

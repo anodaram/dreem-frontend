@@ -36,7 +36,7 @@ export async function getPenaltyFee(): Promise<any> {
 export async function storePenaltyFee(fee): Promise<any> {
   try {
     const response = await axios.post(`${URL()}/metaverseReserve/setPenaltyFee`, {
-      fee
+      fee,
     });
     return response.data;
   } catch (e) {
@@ -326,6 +326,16 @@ export async function updateSyntheticAddress(payload: any): Promise<any> {
     const response = await axios.post(`${URL()}/metaverseReserve/updateSyntheticAddress`, {
       ...payload,
     });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
+export async function syncUpNFT(payload: any): Promise<any> {
+  try {
+    const response = await axios.post(`${URL()}/metaverseReserve/syncUpNFT`, payload);
     return response.data;
   } catch (e) {
     console.log(e);

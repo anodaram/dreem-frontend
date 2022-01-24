@@ -112,6 +112,7 @@ export interface RootState {
   };
   selectedProfilePage: {
     id: number;
+    selectedTabProfile: string;
   };
   selectedOtherProfilePage: {
     id: number;
