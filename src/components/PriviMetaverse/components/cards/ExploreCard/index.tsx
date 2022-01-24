@@ -15,17 +15,25 @@ import { NftStates } from "shared/constants/constants";
 import { visitChainLink } from "shared/helpers";
 
 import { cardStyles } from "./index.style";
+import { useLocation } from "react-router-dom";
 
 const SECONDS_PER_HOUR = 3600;
 
 const ExploreCard = ({ nft, isLoading = false }) => {
   const history = useHistory();
+  const { pathname } = useLocation();
   const classes = cardStyles();
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const user: any = useSelector((state: RootState) => state.user);
 
   const handleOpenExplore = () => {
     history.push(`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
+  };
+
+  const handleOpenExploreNewTab = () => {
+    const url = window.location.href.replace(pathname, `/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
+    window.open(url, "_blank");
+    return false;
   };
 
   const getTokenSymbol = addr => {
@@ -98,10 +106,15 @@ const ExploreCard = ({ nft, isLoading = false }) => {
     return [];
   }, [nft]);
 
-  const isBlocked = useMemo(() => nftStatus.includes("Blocked"), [nftStatus])
+  const isBlocked = useMemo(() => nftStatus.includes("Blocked"), [nftStatus]);
 
   return (
-    <div className={classes.outerCard} style={{ marginBottom: 0 }} onClick={handleOpenExplore}>
+    <div
+      className={classes.outerCard}
+      style={{ marginBottom: 0 }}
+      onClick={handleOpenExplore}
+      onContextMenu={handleOpenExploreNewTab}
+    >
       {isLoading ? (
         <Box className={classes.skeleton}>
           <Skeleton variant="rect" width="100%" height={330} />
@@ -113,11 +126,14 @@ const ExploreCard = ({ nft, isLoading = false }) => {
       ) : (
         <>
           <div className={classes.cardImg}>
-            <img src={nft.image || nft.content_url} style={{ width: "100%" }} />
+            <img src={!nft?.animation_url ? nft?.image : nft?.CardImage} style={{ width: "100%" }} />
             <Box className={classes.nftStates} display="flex" flexDirection="column">
               {nftStatus.length > 0 &&
                 nftStatus.map(status => (
-                  <span className={classes.cardOptionButton} style={{ background: NFT_STATUS_COLORS[status] }}>
+                  <span
+                    className={classes.cardOptionButton}
+                    style={{ background: NFT_STATUS_COLORS[status] }}
+                  >
                     {status}
                   </span>
                 ))}

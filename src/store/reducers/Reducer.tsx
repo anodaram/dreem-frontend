@@ -112,6 +112,7 @@ export interface RootState {
   };
   selectedProfilePage: {
     id: number;
+    selectedTabProfile: string;
   };
   selectedOtherProfilePage: {
     id: number;
@@ -231,11 +232,15 @@ export interface RootState {
     newChatInList: any;
   };
   marketPlace: {
+    collectionNFTList: any[];
+    allNFTList: any[];
     tokenList: any[];
     fee: number;
     selectedTabMarketMain: string;
     selectedTabMarketManageNFTMain: string;
     selectedTabMarketManageNFTSub: number;
+    scrollPositionInCollection: number;
+    scrollPositionInAllNFT: number;
   };
 }
 

@@ -145,7 +145,11 @@ const ExploreReserveDetailPage = () => {
   };
 
   const goBack = () => {
-    history.goBack();
+    if (history.action === "POP") {
+      history.push("/gameNFTS/");
+    } else {
+      history.goBack();
+    }
   };
 
   const handleClaimPayment = () => {
@@ -211,7 +215,7 @@ const ExploreReserveDetailPage = () => {
               borderRadius="20px"
               style={{
                 minWidth: "40%",
-                backgroundImage: `url("${nft?.image}")`,
+                backgroundImage: `url("${!nft?.animation_url ? nft?.image : nft?.CardImage}")`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "contain",
                 backgroundPosition: "center",
@@ -233,7 +237,12 @@ const ExploreReserveDetailPage = () => {
                 </Box>
               )}
             </Box>
-            <Box ml={isMobileScreen ? 0 : isTableScreen ? 2 : 5} py={2} style={{ flex: "1", overflow: "auto" }} width={1}>
+            <Box
+              ml={isMobileScreen ? 0 : isTableScreen ? 2 : 5}
+              py={2}
+              style={{ flex: "1", overflow: "auto" }}
+              width={1}
+            >
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 {isListed ? (
                   <Box className={classes.status}>
@@ -260,9 +269,21 @@ const ExploreReserveDetailPage = () => {
                 alignItems="flex-start"
                 justifyContent="space-between"
               >
-                <Box flex={1} display="flex" flexDirection={isMobileScreen ? "column" : "row"} alignItems="center" ml={0.25} mr={1.25}
-                style={{ overflow:"hidden" }}>
-                  <Text color={Color.Black} className={classes.creatorName} style={{ marginBottom: 4 }} title={nft.name}>
+                <Box
+                  flex={1}
+                  display="flex"
+                  flexDirection={isMobileScreen ? "column" : "row"}
+                  alignItems="center"
+                  ml={0.25}
+                  mr={1.25}
+                  style={{ overflow: "hidden" }}
+                >
+                  <Text
+                    color={Color.Black}
+                    className={classes.creatorName}
+                    style={{ marginBottom: 4 }}
+                    title={nft.name}
+                  >
                     {nft.name}
                   </Text>
                 </Box>

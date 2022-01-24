@@ -98,13 +98,13 @@ const Auth = () => {
     window.location.href = "/";
   };
 
-  useEffect(() => {
-    (window as any).ethereum.on("accountsChanged", accounts => {
-      if (isSignedin && !accounts.length) {
-        handleLogout();
-      }
-    });
-  });
+  // useEffect(() => {
+  //   (window as any).ethereum.on("accountsChanged", accounts => {
+  //     if (isSignedin && !accounts.length) {
+  //       handleLogout();
+  //     }
+  //   });
+  // });
 
   return (
     <Router>

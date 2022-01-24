@@ -53,10 +53,10 @@ const RealmDetailTabs: TabItem[] = [
     key: "extensions",
     title: "Extensions",
   },
-  {
-    key: "voting",
-    title: "Voting",
-  },
+  // {
+  //   key: "voting",
+  //   title: "Voting",
+  // },
 ];
 
 export default function RealmDetailPage() {

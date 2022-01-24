@@ -147,8 +147,6 @@ const GameNFTDetailModal = ({
     shareMedia("GameCharacter", `gameNFTS/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`);
   };
 
-  console.log('383838383883', nft)
-
   const avatarUrl = React.useMemo(() => {
     if (nft?.owner?.urlIpfsImage?.startsWith("/assets")) {
       const lastIndex = nft?.owner?.urlIpfsImage.lastIndexOf("/");
@@ -178,11 +176,7 @@ const GameNFTDetailModal = ({
                   )}
                   <Box ml={1}>
                     {nft?.owner?.name && <Box className={classes.typo1}>{nft?.owner?.name}</Box>}
-                    <Box
-                      className={classes.typo1}
-                      mt={nft?.owner?.name ? 1 : 0}
-                      style={{ color: "#ffffff" }}
-                    >
+                    <Box className={classes.typo1} mt={nft?.owner?.name ? 1 : 0} style={{ color: "#ffffff" }}>
                       {convertAddress(nft?.creatorAddress)}
                     </Box>
                   </Box>
