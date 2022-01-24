@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import Web3 from "web3";
+import styled from "styled-components";
 import { useParams, useHistory } from "react-router-dom";
-import { useWeb3React } from "@web3-react/core";
-import { useDispatch, useSelector } from "react-redux";
-
 import { useMediaQuery, useTheme } from "@material-ui/core";
+import { useWeb3React } from "@web3-react/core";
+import { useDispatch } from "react-redux";
 
 import { setMarketFee, setTokenList } from "store/actions/MarketPlace";
 import { BackButton } from "components/PriviMetaverse/components/BackButton";
@@ -16,7 +17,7 @@ import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import { Modal } from "shared/ui-kit";
 import { ShareWhiteIcon } from "shared/ui-kit/Icons/SvgIcons";
 import DiscordPhotoFullScreen from "shared/ui-kit/Page-components/Discord/DiscordPhotoFullScreen/DiscordPhotoFullScreen";
-import { getGameNFT, getMarketplaceFee } from "shared/services/API/ReserveAPI";
+import { getGameNFT, getMarketplaceFee, syncUpNFT } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
 import { getChainForNFT } from "shared/functions/metamask";
@@ -44,6 +45,8 @@ const ExploreReserveDetailPage = () => {
 
   const { shareMedia } = useShareMedia();
 
+  const { library } = useWeb3React();
+  const [syncing, setSyncing] = useState<boolean>(false);
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [isBuyer, setIsBuyer] = useState<boolean>(false);
   const [isRenter, setIsRenter] = useState<boolean>(false);
@@ -161,6 +164,58 @@ const ExploreReserveDetailPage = () => {
     setClaimType(type);
   };
 
+  const syncRentalInfos = async (nftChain: any) => {
+    const web3APIHandler = nftChain.apiHandler;
+    const web3 = new Web3(library.provider);
+    const payloads = {
+      collectionId: nft.Address,
+      tokenId: Number(nft.tokenId),
+    };
+
+    Promise.all([
+      web3APIHandler.RentalManager.rentedTokenData(web3, payloads),
+      web3APIHandler.RentalManager.rentedTokenSyntheticID(web3, payloads),
+      web3APIHandler.RentalManager.getSyntheticNFTAddress(web3, payloads),
+    ]).then(([{ rentalInfos }, { nftAddress }, syntheticNFTRes]) => {
+      web3APIHandler.SyntheticNFTManager.ownerOf(web3, {
+        contractAddress: syntheticNFTRes.nftAddress,
+        tokenId: Number(nftAddress),
+      }).then(res => {
+        syncUpNFT({
+          mode: isProd ? "main" : "test",
+          collectionId: nft.collectionId,
+          tokenId: nft.tokenId,
+          rentalInfos: {
+            collection: rentalInfos.collection,
+            tokenId: rentalInfos.tokenId,
+            maximumRentTime: Number(rentalInfos.maximumRentTime),
+            pricePerSecond: Number(rentalInfos.pricePerSecond),
+            rentalExpiration: Number(rentalInfos.rentalExpiration),
+            fundingToken: rentalInfos.fundingToken,
+            owner: rentalInfos.owner,
+            renter: res.rentalInfos,
+            syntehticId: nftAddress,
+          },
+        })
+          .then(() => {
+            setSyncing(false);
+            getData();
+          })
+          .catch(err => console.log(err));
+      });
+    });
+  };
+
+  const syncNft = () => {
+    if (!nft) return;
+
+    const nftChain = getChainForNFT(nft);
+    if (!nftChain) return;
+
+    setSyncing(true);
+    syncRentalInfos(nftChain);
+  };
+
   const refresh = () => {
     getData();
   };
@@ -251,17 +306,30 @@ const ExploreReserveDetailPage = () => {
                 ) : (
                   <div />
                 )}
-                <span
-                  onClick={() =>
-                    shareMedia(
-                      "gameNFTS",
-                      `gameNFTS/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`
-                    )
-                  }
-                  style={{ cursor: "pointer" }}
-                >
-                  <ShareWhiteIcon />
-                </span>
+                <Box display="flex" alignItems="center">
+                  <span
+                    onClick={() =>
+                      shareMedia(
+                        "gameNFTS",
+                        `gameNFTS/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`
+                      )
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
+                    <ShareWhiteIcon />
+                  </span>
+                  <SecondaryButton
+                    className={classes.detailsButton}
+                    size="small"
+                    onClick={() => syncNft()}
+                    ml={2}
+                  >
+                    <IconButtonWrapper style={{ marginLeft: -10 }} rotate={syncing}>
+                      <RefreshIcon />
+                    </IconButtonWrapper>
+                    Sync NFT
+                  </SecondaryButton>
+                </Box>
               </Box>
               <Box
                 display="flex"
@@ -515,3 +583,44 @@ const FullViewIncon = () => (
     />
   </svg>
 );
+
+const RefreshIcon = () => {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M15 8.25051C14.8166 6.93068 14.2043 5.70776 13.2575 4.77013C12.3107 3.83251 11.0818 3.2322 9.76025 3.06168C8.43869 2.89115 7.09772 3.15987 5.9439 3.82645C4.79009 4.49302 3.88744 5.52046 3.375 6.75051M3 3.75051V6.75051H6"
+        stroke="#E9FF26"
+        stroke-width="1.125"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M3 9.75C3.18342 11.0698 3.7957 12.2928 4.74252 13.2304C5.68934 14.168 6.91818 14.7683 8.23975 14.9388C9.56131 15.1094 10.9023 14.8406 12.0561 14.1741C13.2099 13.5075 14.1126 12.48 14.625 11.25M15 14.25V11.25H12"
+        stroke="#E9FF26"
+        stroke-width="1.125"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
+const IconButtonWrapper = styled.div<{ rotate: boolean }>`
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ${props => (props.rotate ? `rotate 1.5s linear 0s infinite` : "")};
+  -webkit-animation: ${props => (props.rotate ? `rotate 1.5s linear 0s infinite` : "")};
+  -moz-animation: ${props => (props.rotate ? `rotate 1.5s linear 0s infinite` : "")};
+  @keyframes rotate {
+    0% {
+    }
+    100% {
+      -webkit-transform: rotate(-360deg);
+      -moz-transform: rotate(-360deg);
+      transform: rotate(-360deg);
+    }
+  }
+`;

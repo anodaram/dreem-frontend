@@ -16,6 +16,7 @@ import dreemLaunchpadVesting from "./contracts/DreemLaunchpadVesting";
 import openSalesManager from "./contracts/OpenSalesManager";
 import dreem from "./contracts/Dreem";
 import rentalManager from "./contracts/rentalManager";
+import syntheticNFTManager from "./contracts/SyntheticNFT";
 import reservesManager from "./contracts/reservesManager";
 import reserveMarketplace from "./contracts/reserveMarketplace";
 
@@ -39,6 +40,7 @@ const api = network => {
     DreemLaunchpadVesting: dreemLaunchpadVesting(network),
     Dreem: dreem(network),
     RentalManager: rentalManager(network),
+    SyntheticNFTManager: syntheticNFTManager(),
     ReserveMarketplace: reserveMarketplace(network),
     ReservesManager: reservesManager(network),
   };
