@@ -24,6 +24,11 @@ export const useModalStyles = makeStyles(theme => ({
     lineHeight: "24px",
     color: "#ffffff",
   },
+  header2: {
+    fontSize: 18,
+    fontWeight: 400,
+    color: "#E9FF26",
+  },
   ethImg: {
     display: "flex",
     alignItems: "center",
