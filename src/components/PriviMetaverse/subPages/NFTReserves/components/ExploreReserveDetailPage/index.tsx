@@ -486,13 +486,17 @@ const ExploreReserveDetailPage = () => {
                     url={avatarUrl ?? (nft?.owner ? getDefaultAvatar() : getExternalAvatar())}
                     size="small"
                   />
-                  <Text style={{ margin: "0px 9px", fontFamily: "Rany", fontWeight: 400 }}>Owned by</Text>
-                  <Text className={classes.gradientText}>
-                    {nft?.owner?.name ||
-                      nft?.ownerAddress?.substr(0, 18) +
-                        "..." +
-                        nft?.ownerAddress?.substr(nft?.ownerAddress?.length - 3, 3)}
-                  </Text>
+                  {(nft?.owner?.name || nft?.ownerAddress) && (
+                    <>
+                      <Text style={{ margin: "0px 9px", fontFamily: "Rany", fontWeight: 400 }}>Owned by</Text>
+                      <Text className={classes.gradientText}>
+                          {nft?.owner?.name ||
+                          nft?.ownerAddress?.substr(0, 18) +
+                          "..." +
+                          nft?.ownerAddress?.substr(nft?.ownerAddress?.length - 3, 3)}
+                      </Text>
+                    </>
+                    )}
                 </Box>
                 <SecondaryButton size="small" onClick={handleClickLink} className={classes.checkOnBtn}>
                   Check on
