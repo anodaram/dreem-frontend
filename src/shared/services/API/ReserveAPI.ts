@@ -33,6 +33,18 @@ export async function getPenaltyFee(): Promise<any> {
   }
 }
 
+export async function getNFTOwnerAddress(payload): Promise<any> {
+  try {
+    const response = await axios.get(`${URL()}/metaverseReserve/getNFTOwnerAddress`, {
+      params: payload,
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
 export async function storePenaltyFee(fee): Promise<any> {
   try {
     const response = await axios.post(`${URL()}/metaverseReserve/setPenaltyFee`, {

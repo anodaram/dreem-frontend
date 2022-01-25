@@ -17,7 +17,7 @@ import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import { Modal } from "shared/ui-kit";
 import { ShareWhiteIcon } from "shared/ui-kit/Icons/SvgIcons";
 import DiscordPhotoFullScreen from "shared/ui-kit/Page-components/Discord/DiscordPhotoFullScreen/DiscordPhotoFullScreen";
-import { getGameNFT, getMarketplaceFee, syncUpNFT, acceptBlockingOffer } from "shared/services/API/ReserveAPI";
+import { getGameNFT, getMarketplaceFee, syncUpNFT, acceptBlockingOffer, getNFTOwnerAddress } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
 import { checkChainID, getChainForNFT } from "shared/functions/metamask";
@@ -39,7 +39,6 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { RootState } from "store/reducers/Reducer";
 import { ContractInstance } from "shared/connectors/web3/functions";
 import NFTReserveMarketplaceContract from "shared/connectors/web3/contracts/reserve/ReserveMarketplace.json";
-import { getNFTOwnerAddress } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -276,9 +275,16 @@ const ExploreReserveDetailPage = () => {
       return;
     }
 
-    const ownerAddress = await getNFTOwnerAddress(chainId, nft.Address, token_id) || nftRes.nft?.currentOwner
+    const ownerAddressRes = await getNFTOwnerAddress({
+      chainId,
+      address: nft.Address,
+      tokenId: token_id,
+      mode: isProd ? "main" : "test",
+      collectionId: collection_id
+    })
 
-    if (ownerAddress) {
+    if (ownerAddressRes.success && ownerAddressRes.data) {
+      const ownerAddress = ownerAddressRes.data;
       if (ownerAddress === web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER.toLowerCase()) {
         const contract = ContractInstance(web3, NFTReserveMarketplaceContract.abi, web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE);
 
@@ -440,7 +446,7 @@ const ExploreReserveDetailPage = () => {
                   >
                     <ShareWhiteIcon />
                   </span>
-                  {/* <SecondaryButton
+                  <SecondaryButton
                     className={classes.detailsButton}
                     size="small"
                     onClick={() => syncNft()}
@@ -450,7 +456,7 @@ const ExploreReserveDetailPage = () => {
                       <RefreshIcon />
                     </IconButtonWrapper>
                     Sync NFT
-                  </SecondaryButton> */}
+                  </SecondaryButton>
                 </Box>
               </Box>
               <Box
