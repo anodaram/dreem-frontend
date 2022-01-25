@@ -87,7 +87,11 @@ const erc721 = network => {
         const gas = await contract.methods
           .approve(payload.to, payload.tokenId)
           .estimateGas({ from: account });
-        await contract.methods.approve(payload.to, payload.tokenId).send({ from: account, gas: gas });
+        await contract.methods.approve(payload.to, payload.tokenId).send({ 
+          from: account, 
+          gas: gas,
+          maxFeePerGas: gas*1.5,
+         });
         resolve({ success: true });
       } catch (e) {
         console.log(e);
