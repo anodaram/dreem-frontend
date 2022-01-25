@@ -21,6 +21,7 @@ import { RootState } from "store/reducers/Reducer";
 import { getNextDay } from "shared/helpers/utils";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { MakeRentalOfferModalStyles } from "./index.style";
+import { getInputValue } from "shared/helpers";
 
 const SECONDS_PER_HOUR = 3600;
 const PRECISSION = 1.01;
@@ -249,7 +250,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
             <Grid item sm={7}>
               <InputWithLabelAndTooltip
                 inputValue={pricePerHour}
-                onInputValueChange={e => setPricePerHour(e.target.value)}
+                onInputValueChange={e => setPricePerHour(getInputValue(e.target.value, 0))}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"
@@ -277,7 +278,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
           <Box className={classes.nameField}>Rental Time</Box>
           <InputWithLabelAndTooltip
             inputValue={rentalTime}
-            onInputValueChange={e => setRentalTime(e.target.value)}
+            onInputValueChange={e => setRentalTime(getInputValue(e.target.value, 0))}
             overriedClasses={classes.inputJOT}
             required
             type="number"
