@@ -6,6 +6,8 @@ const rentalManager = (network: string) => {
   const metadata = require("shared/connectors/web3/contracts/reserve/RentalManager.json");
   const contractAddress = config[network].CONTRACT_ADDRESSES.RENTAL_MANAGER;
 
+  const MAX_PRIO_FEE = "32";
+
   // owner make offer
   const listOffer = async (web3: Web3, account: string, payload: any, setHash: any): Promise<any> => {
     return new Promise(async resolve => {
@@ -31,7 +33,7 @@ const rentalManager = (network: string) => {
             payload.rentalExpiration,
             payload.fundingToken
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });
@@ -74,7 +76,7 @@ const rentalManager = (network: string) => {
             payload.rentalExpiration,
             payload.fundingToken
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });
@@ -120,7 +122,7 @@ const rentalManager = (network: string) => {
             payload.fundingToken,
             payload.operator
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });
@@ -166,7 +168,7 @@ const rentalManager = (network: string) => {
             payload.fundingToken,
             payload.operator
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });
@@ -210,7 +212,7 @@ const rentalManager = (network: string) => {
             payload.fundingToken,
             payload.offerer
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });
