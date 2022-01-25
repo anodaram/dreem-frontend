@@ -97,7 +97,7 @@ const ExploreReserveDetailPage = () => {
 
   useEffect(() => {
     if (nft) {
-      setIsOwner((account || "").toLowerCase() === (nft.ownerAddress || "").toLowerCase());
+      setIsOwner(!!account && ((account || "").toLowerCase() === (nft.ownerAddress || "").toLowerCase()));
       setIsBlockedNFT(nft.status?.length ? nft.status.includes("Blocked") : false);
       setIsRentedNFT(nft.status?.length ? nft.status.includes("Rented") : false);
       setIsListed(
