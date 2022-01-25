@@ -22,15 +22,12 @@ import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
 import CreateCollection from "./components/CreateCollection";
-import CreateNFT from "./components/CreateNFT";
+import CreateNFTFlow from "./components/CreateNFTFlow";
+import CreateTextureFlow from "./components/CreateTextureFlow";
+import CreateMaterialFlow from "./components/CreateMaterialFlow";
+import Create3DAssetFlow from "./components/Create3DAssetFlow";
+import CreateCharacterFlow from "./components/CreateCharacterFlow";
 import SelectType from "./components/SelectType";
-import CreatingStep from "./components/CreatingStep";
-import NFTOption from "./components/NFTOption";
-import RoyaltyOption from "./components/RoyaltyOption";
-import CreateTexture from "./components/CreateTexture";
-import CreateCharacter from "./components/CreateCharacter";
-import Create3DAsset from "./components/Create3DAsset";
-import CreateMaterial from "./components/CreateMaterial";
 import { RootState } from "../../../../store/reducers/Reducer";
 import CreateRealmModal from "../../modals/CreateRealmModal";
 import { manageContentPageStyles } from "./index.styles";
@@ -60,6 +57,10 @@ export default function ManageContentPage() {
 
   const width = useWindowDimensions().width;
   const [step, setStep] = useState<number>(0);
+  const [worldCurStep, setWorldCurStep] = useState<number>(1);
+  const [textureCurStep, setTextureCurStep] = useState<number>(1);
+
+
   const [hasUnderMaintenanceInfo, setHasUnderMaintenanceInfo] = useState(false);
   const [openCreateCollectionModal, setOpenCreateCollectionModal] = useState<boolean>(false);
   const loadingCount = React.useMemo(() => (width > 1000 ? 6 : width > 600 ? 3 : 6), [width]);
@@ -194,8 +195,51 @@ export default function ManageContentPage() {
   };
 
   const handleNext = () => {
-    console.log('-----', currentCollection)
-    setStep(prev => prev + 1);
+    console.log('----',step)
+    if(step == 2){
+      switch (selectedAsset) {
+        case 'world':
+          if(worldCurStep<2){
+            setWorldCurStep(prev => prev + 1)
+          } else{
+            setStep(prev => prev + 1);
+          }
+          break;
+        case 'texture':
+          if(textureCurStep<3){
+            setTextureCurStep(prev => prev + 1)
+          } else{
+            setStep(prev => prev + 1);
+          }
+          break;
+        case 'material':
+          if(textureCurStep<3){
+            setTextureCurStep(prev => prev + 1)
+          } else{
+            setStep(prev => prev + 1);
+          }
+          break;
+        case '3d-asset':
+          if(textureCurStep<3){
+            setTextureCurStep(prev => prev + 1)
+          } else{
+            setStep(prev => prev + 1);
+          }
+          break;
+        case 'character':
+          if(textureCurStep<3){
+            setTextureCurStep(prev => prev + 1)
+          } else{
+            setStep(prev => prev + 1);
+          }
+          break;
+      
+        default:
+          break;
+      }
+    } else{
+      setStep(prev => prev + 1);
+    }
   };
 
   const handlePrev = () => {
@@ -205,14 +249,14 @@ export default function ManageContentPage() {
   const handleAsset = (asset) => {
     setSelectedAsset(asset);
     if(asset != 'world'){
-      // setStep(10);
+      setStep(2);
     } else{
       setStep(prev => prev + 1);
     }
   };
 
   const handleRefreshCollection = () => {
-    setStep(2)
+    setStep(3)
     setCurPage(1)
     setLoadingCollection(true);
     MetaverseAPI.getCollections(12, 1, "DESC")
@@ -320,60 +364,78 @@ export default function ManageContentPage() {
         {step === 1 && (
           <SelectType handleNext={(asset) => {handleAsset(asset)}}/>
         )}
-        {step === 10 && (
+        {(step === 2 && selectedAsset === 'world') &&  (
+          <CreateNFTFlow metaData={metaDataForModal} step={worldCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        )}
+        {(step === 2 && selectedAsset === 'texture') &&  (
+          <CreateTextureFlow metaData={metaDataForModal} step={textureCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        )}
+        {(step === 2 && selectedAsset === 'material') &&  (
+          <CreateMaterialFlow metaData={metaDataForModal} step={textureCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        )}
+        {(step === 2 && selectedAsset === '3d-asset') &&  (
+          <Create3DAssetFlow metaData={metaDataForModal} step={textureCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        )}
+        {(step === 2 && selectedAsset === 'character') &&  (
+          <CreateCharacterFlow metaData={metaDataForModal} step={textureCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        )}
+        {step === 3 && (
           <div className={classes.otherContent}>
             <div className={classes.typo1}>Creating new NFT</div>
             <Box className={classes.typo3} mb={3}>
               Select or create a collection to create NFT in
             </Box>
-            <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
-              <Box className={classes.typo4}>All of your collections</Box>
-              <div className={classes.createCollectionBtn} onClick={() => setStep(4)}>
-                <PlusIcon />
-                create new collection
-              </div>
-            </Box>
             {collections.length ? (
-              <Box width={1} pb={20}>
-                <InfiniteScroll
-                  hasChildren={collections.length > 0}
-                  dataLength={collections.length}
-                  scrollableTarget={"scrollContainer"}
-                  next={loadMore}
-                  hasMore={!!lastPage && curPage < lastPage}
-                  loader={
-                    lastPage && curPage === lastPage ? (
-                      <Box mt={2}>
-                        <MasonryGrid
-                          gutter={"16px"}
-                          data={Array(loadingCount).fill(0)}
-                          renderItem={(item, _) => <CollectionCard isLoading={true} />}
-                          columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                        />
-                      </Box>
-                    ) : (
-                      <></>
-                    )
-                  }
-                >
-                  <Box mt={4}>
-                    <MasonryGrid
-                      gutter={"16px"}
-                      data={collections}
-                      renderItem={(item, _) => (
-                        <CollectionCard
-                          item={item}
-                          isLoading={loadingCollection}
-                          onClick={() => setCurrentCollection(item)}
-                        />
-                      )}
-                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                    />
-                  </Box>
-                </InfiniteScroll>
-              </Box>
+              <>
+                <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
+                  <Box className={classes.typo4}>All of your collections</Box>
+                  <div className={classes.createCollectionBtn} onClick={() => setStep(4)}>
+                    <PlusIcon />
+                    create new collection
+                  </div>
+                </Box>
+                <Box width={1} pb={20}>
+                  <InfiniteScroll
+                    hasChildren={collections.length > 0}
+                    dataLength={collections.length}
+                    scrollableTarget={"scrollContainer"}
+                    next={loadMore}
+                    hasMore={!!lastPage && curPage < lastPage}
+                    loader={
+                      lastPage && curPage === lastPage ? (
+                        <Box mt={2}>
+                          <MasonryGrid
+                            gutter={"16px"}
+                            data={Array(loadingCount).fill(0)}
+                            renderItem={(item, _) => <CollectionCard isLoading={true} />}
+                            columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                          />
+                        </Box>
+                      ) : (
+                        <></>
+                      )
+                    }
+                  >
+                    <Box mt={4}>
+                      <MasonryGrid
+                        gutter={"16px"}
+                        data={collections}
+                        renderItem={(item, _) => (
+                          <CollectionCard
+                            item={item}
+                            isLoading={loadingCollection}
+                            onClick={() => setCurrentCollection(item)}
+                          />
+                        )}
+                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                      />
+                    </Box>
+                  </InfiniteScroll>
+                </Box>
+              </>
             ) : (
               <Box pb={20}>
+                <Box className={classes.typo4}>All of your collections</Box>
                 <Box display="flex" alignItems="center" mt={6} mb={3}>
                   <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
                   <Box
@@ -392,11 +454,17 @@ export default function ManageContentPage() {
                 <Box className={classes.typo3}>
                   No collections created yet, Create Collection with the button above.
                 </Box>
+                <Box display="flex" alignItems="center" justifyContent="center" width={1} mt="20px">
+                  <div className={classes.createCollectionBtn} onClick={() => setStep(4)}>
+                    <PlusIcon />
+                    create new collection
+                  </div>
+                </Box>
               </Box>
             )}
           </div>
         )}
-        {step === 11 && (
+        {step === 4 && (
           <div className={classes.otherContent}>
             <div className={classes.typo1}>Creating New Collection</div>
             <Box className={classes.typo3} mb={3}>
@@ -405,70 +473,35 @@ export default function ManageContentPage() {
             <CreateCollection handleNext={() => {}} handleCancel={()=>setStep(2)} handleRefresh={()=>handleRefreshCollection()} />
           </div>
         )}
-        {step === 3 && (
-          <div className={classes.otherContent}>
-            <div className={classes.typo1}>Creating New Draft</div>
-            <Box className={classes.typo3} mb={3}>
-              Fill all the details of your new nft
-            </Box>
-            <CreateNFT metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()} collection={currentCollection} isCollectionPage={false}/>
-          </div>
-        )}
-        {step === 5 && (
-          <div className={classes.otherContent}>
-            <div className={classes.typo1}><AssetIcon />Creating New Asset</div>
-            <CreatingStep curStep="2" status={[]} />
-            <NFTOption handleNext={() => {}}/>
-          </div>
-        )}
-        {step === 6 && (
-          <div className={classes.otherContent}>
-            <div className={classes.typo1}><AssetIcon />Creating New Asset</div>
-            <CreatingStep curStep="2" status={[]}/>
-            <RoyaltyOption handleNext={() => {}}/>
-          </div>
-        )}
-        {step === 7 && (
-          <div className={classes.otherContent}>
-            <div className={classes.typo1}><AssetIcon />Creating New Texture</div>
-            <CreatingStep curStep="2" status={[]}/>
-            <CreateTexture  metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev}/>
-          </div>
-        )}
-        {step === 8 && (
-          <div className={classes.otherContent}>
-            <div className={classes.typo1}><AssetIcon />Creating New Character</div>
-            <CreatingStep curStep="2" status={[]}/>
-            <CreateCharacter  metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev}/>
-          </div>
-        )}
-        {step === 9 && (
-          <div className={classes.otherContent}>
-            <div className={classes.typo1}><AssetIcon />Creating New Asset</div>
-            <CreatingStep curStep="2" status={[]}/>
-            <Create3DAsset  metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev}/>
-          </div>
-        )}
-        {step === 10 && (
-          <div className={classes.otherContent}>
-            <div className={classes.typo1}><AssetIcon />Creating New Material</div>
-            <CreatingStep curStep="2" status={[]}/>
-            <CreateMaterial  metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev}/>
-          </div>
-        )}
         {step > 2 || (step === 2 && collections.length) ? (
           <Box className={classes.footer}>
             <div className={classes.howToCreateBtn} onClick={handlePrev}>
               back
             </div>
-            <PrimaryButton
-              size="medium"
-              className={classes.nextBtn}
-              disabled={step === 1 && !currentCollection}
-              onClick={() => setStep(3)}
-            >
-              next
-            </PrimaryButton>
+            {step < 3 &&
+              <PrimaryButton
+                size="medium"
+                className={classes.nextBtn}
+                disabled={step === 1 && !currentCollection}
+                onClick={() => handleNext()}
+              >
+                next
+              </PrimaryButton>
+            }
+            {step === 3 &&
+              <Box display="flex" alignItems="center" justifyContent="center">
+                <div className={classes.howToCreateBtn} onClick={()=>{}}>
+                  create draft
+                </div>
+                <PrimaryButton
+                  size="medium"
+                  className={classes.nextBtn}
+                  onClick={() => {}}
+                  >
+                  mint nft
+                </PrimaryButton>
+              </Box>
+            }
           </Box>
         ) : null}
       </div>

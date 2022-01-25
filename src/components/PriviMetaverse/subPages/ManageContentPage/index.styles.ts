@@ -91,6 +91,7 @@ export const manageContentPageStyles = makeStyles(theme => ({
     cursor: "pointer",
     textTransform: "uppercase",
     height: "50px !important",
+    marginLeft: "10px"
   },
   howToCreateBtn: {
     background: "transparent",
