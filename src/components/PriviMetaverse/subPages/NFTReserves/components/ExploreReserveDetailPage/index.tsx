@@ -496,6 +496,7 @@ const ExploreReserveDetailPage = () => {
                 </Box>
                 <SecondaryButton size="small" onClick={handleClickLink} className={classes.checkOnBtn}>
                   Check on
+                  <img src={getChainImageUrl(nft.Chain)} alt="" />
                 </SecondaryButton>
               </Box>
               <hr className={classes.divider} />
