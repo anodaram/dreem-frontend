@@ -252,7 +252,8 @@ const EditProfileModal = (props: any) => {
             <Box className={classes.itemTitle} mb={1} mt={2.5}>
               Bio
             </Box>
-            <input
+            <textarea
+              style={{ height: "130px" }}
               className={`${classes.inputBox} ${classes.input}`}
               placeholder="Enter your Bio"
               value={user.bio}
