@@ -347,7 +347,7 @@ export async function getNFTFromMoralis(payload: any): Promise<any> {
   try {
     await axios.post(`${URL()}/metaverseReserve/getNFTFromMoralis`, payload);
     const response = await getOwnedNFTs(payload)
-    return response.data;
+    return response;
   } catch (e) {
     console.log(e);
     throw new Error(e.message);
