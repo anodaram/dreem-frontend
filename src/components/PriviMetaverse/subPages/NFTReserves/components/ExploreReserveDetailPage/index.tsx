@@ -258,80 +258,98 @@ const ExploreReserveDetailPage = () => {
     const web3APIHandler = selectedChain.apiHandler;
     const web3 = new Web3(library.provider);
 
-    setIsRefreshing(true);
+    setSyncing(true);
     if (!checkChainID(chainId)) {
       showAlertMessage(`network error`, { variant: "error" });
       setSyncing(false);
       return;
     }
     
-    const ownerAddress = await getNFTOwnerAddress(chainId, nft.Address, token_id)
-    console.log('ownerAddress... ', ownerAddress)
+    const nftRes = await getGameNFT({
+      mode: isProd ? "main" : "test",
+      collectionId: collection_id,
+      tokenId: token_id,
+    });
+
+    if ((nftRes.nft?.blockingSalesHistories || []).find(h => h.status === 'ACTIVE')) {
+      setSyncing(false);
+      return;
+    }
+
+    const ownerAddress = await getNFTOwnerAddress(chainId, nft.Address, token_id) || nftRes.nft?.currentOwner
 
     if (ownerAddress) {
       if (ownerAddress === web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER.toLowerCase()) {
         const contract = ContractInstance(web3, NFTReserveMarketplaceContract.abi, web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE);
 
-        contract.getPastEvents(
-          "PurchaseReserved",
-          {
-            fromBlock: nft?.blockingSaleOffer?.blockNumber
-          },
-          async (error, events) => {
-            console.log('events... ', events, nft )
-            const event = (events || []).find(e => e.returnValues?.collection.toLowerCase() === nft?.Address.toLowerCase() && e.returnValues.tokenId === nft?.tokenId)
-
-            if (event) {
-              const offer = event.returnValues;
-
-              console.log('offer... ', offer) 
-              const activeReserveId = web3.utils.keccak256(
-                web3.eth.abi.encodeParameters(
-                  ["address", "uint256", "address", "address"],
-                  [
-                    nft.Address,
-                    token_id,
-                    offer?.seller,
-                    offer?.buyer,
-                  ]
-                )
-              );
-              
-              console.log('activeReserveId... ', activeReserveId)
-              const response = await web3APIHandler.ReservesManager.getActiveReserves(
-                web3,
-                {
-                  activeReserveId
-                }
-              );
-
-              if (response.success) {
-                const blockedInfo = response.offer;
-
-                const offerRes = await acceptBlockingOffer({
-                  mode: isProd ? "main" : "test",
-                  CollectionId: collection_id,
-                  TokenId: blockedInfo.tokenId,
-                  AcceptDuration: nft.blockingSaleOffer.AcceptDuration,
-                  PaymentToken: nft.blockingSaleOffer.PaymentToken,
-                  Price: nft.blockingSaleOffer.Price,
-                  Beneficiary: blockedInfo.buyer,
-                  CollateralPercent: nft?.blockingSaleOffer?.CollateralPercent,
-                  TotalCollateralPercent: Number(blockedInfo.collateralPercent) / 100,
-                  ReservePeriod: nft.blockingSaleOffer.ReservePeriod,
-                  from: blockedInfo.seller,
-                  to: blockedInfo.buyer,
-                  notificationMode: -1,
-                  ownerAddress
-                });
-
-                if (offerRes.success) {
-                  setNft(offerRes.data)
+        const blockNumber = Number(nft?.blockingSaleOffer?.blockNumber);
+        const latestBlockNumber = await web3.eth.getBlockNumber();
+        let event: any = null
+        let curBlockNumber: number = blockNumber;
+        while(!(event || curBlockNumber > latestBlockNumber)) {
+          let toBlock = curBlockNumber + 999;
+          if (toBlock > latestBlockNumber) toBlock = latestBlockNumber
+          await contract.getPastEvents(
+            "PurchaseReserved",
+            {
+              filter: { collection: nft?.Address, tokenId: nft?.tokenId},
+              fromBlock: curBlockNumber,
+              toBlock 
+            },
+            async (error, events) => {
+              event = events ? events[0] : null;
+              if (event) {
+                const offer = event?.returnValues;
+  
+                console.log('offer... ', offer) 
+                const activeReserveId = web3.utils.keccak256(
+                  web3.eth.abi.encodeParameters(
+                    ["address", "uint256", "address", "address"],
+                    [
+                      nft.Address,
+                      token_id,
+                      offer?.seller,
+                      offer?.buyer,
+                    ]
+                  )
+                );
+                
+                const response = await web3APIHandler.ReservesManager.getActiveReserves(
+                  web3,
+                  {
+                    activeReserveId
+                  }
+                );
+  
+                if (response.success) {
+                  const blockedInfo = response.offer;
+  
+                  const offerRes = await acceptBlockingOffer({
+                    mode: isProd ? "main" : "test",
+                    CollectionId: collection_id,
+                    TokenId: blockedInfo.tokenId,
+                    AcceptDuration: nft.blockingSaleOffer.AcceptDuration,
+                    PaymentToken: nft.blockingSaleOffer.PaymentToken,
+                    Price: nft.blockingSaleOffer.Price,
+                    Beneficiary: blockedInfo.buyer,
+                    CollateralPercent: nft?.blockingSaleOffer?.CollateralPercent,
+                    TotalCollateralPercent: Number(blockedInfo.collateralPercent) / 100,
+                    ReservePeriod: nft.blockingSaleOffer.ReservePeriod,
+                    from: blockedInfo.seller,
+                    to: blockedInfo.buyer,
+                    notificationMode: -1,
+                    ownerAddress
+                  });
+  
+                  if (offerRes.success) {
+                    setNft(offerRes.data)
+                  }
                 }
               }
             }
-          }
-        );
+          )
+          curBlockNumber += 999;
+        }
       }
     }
     
