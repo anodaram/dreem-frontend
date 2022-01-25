@@ -342,3 +342,14 @@ export async function syncUpNFT(payload: any): Promise<any> {
     throw new Error(e.message);
   }
 }
+
+export async function getNFTFromMoralis(): Promise<any> {
+  try {
+    axios.post(`${URL()}/metaverseReserve/getNFTFromMoralis`);
+    // const response = await getOwnedNFTs(payload)
+    // return response;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}

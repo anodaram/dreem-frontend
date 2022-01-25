@@ -422,7 +422,7 @@ const ExploreReserveDetailPage = () => {
                   >
                     <ShareWhiteIcon />
                   </span>
-                  <SecondaryButton
+                  {/* <SecondaryButton
                     className={classes.detailsButton}
                     size="small"
                     onClick={() => syncNft()}
@@ -432,7 +432,7 @@ const ExploreReserveDetailPage = () => {
                       <RefreshIcon />
                     </IconButtonWrapper>
                     Sync NFT
-                  </SecondaryButton>
+                  </SecondaryButton> */}
                 </Box>
               </Box>
               <Box
