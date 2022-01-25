@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useParams, useHistory } from "react-router-dom";
 import { useMediaQuery, useTheme } from "@material-ui/core";
 import { useWeb3React } from "@web3-react/core";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { setMarketFee, setTokenList } from "store/actions/MarketPlace";
 import { BackButton } from "components/PriviMetaverse/components/BackButton";
@@ -20,7 +20,7 @@ import DiscordPhotoFullScreen from "shared/ui-kit/Page-components/Discord/Discor
 import { getGameNFT, getMarketplaceFee, syncUpNFT, acceptBlockingOffer, getNFTOwnerAddress } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
-import { checkChainID, getChainForNFT } from "shared/functions/metamask";
+import { getChainForNFT } from "shared/functions/metamask";
 import GameNFTDetailModal from "components/PriviMetaverse/modals/GameNFTDetailModal";
 import RentSuccessModal from "components/PriviMetaverse/modals/RentSuccessModal";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
@@ -35,8 +35,6 @@ import ExpiredPayDetailSection from "./components/ExpiredPayDetailSection";
 import ExpiredPayStatusSection from "./components/ExpiredPayStatusSection";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
 import { exploreOptionDetailPageStyles } from "./index.styles";
-import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import { RootState } from "store/reducers/Reducer";
 import { ContractInstance } from "shared/connectors/web3/functions";
 import NFTReserveMarketplaceContract from "shared/connectors/web3/contracts/reserve/ReserveMarketplace.json";
 
@@ -59,12 +57,9 @@ const ExploreReserveDetailPage = () => {
   const [isRentedNFT, setIsRentedNFT] = useState<boolean>(false);
   const [isExpired, setIsExpired] = useState<boolean>(false);
   const [isExpiredPaySuccess, setIsExpiredPaySuccess] = useState<boolean>(false);
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [selectedChain, setSelectedChain] = useState<any>(null);
-  const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
 
   const history = useHistory();
-  const { showAlertMessage } = useAlertMessage();
 
   const theme = useTheme();
   const isMobileScreen = useMediaQuery(theme.breakpoints.down("xs"));
@@ -217,7 +212,7 @@ const ExploreReserveDetailPage = () => {
   const syncNft = () => {
     if (!nft) return;
 
-    if (nft.blockingSaleOffer) {
+    if (nft.blockingSaleOffer && nft.blockingSaleOffer.id) {
       handleConfirmRefresh()
     } else {
       const nftChain = getChainForNFT(nft);
@@ -246,23 +241,12 @@ const ExploreReserveDetailPage = () => {
     }
   };
 
-  const getTokenDecimal = addr => {
-    if (tokens.length == 0 || !addr) return 0;
-    let token = tokens.find(token => token.Address === addr);
-    return token.Decimals;
-  };
-
   const handleConfirmRefresh = async () => {
     const web3Config = selectedChain.config;
     const web3APIHandler = selectedChain.apiHandler;
     const web3 = new Web3(library.provider);
 
     setSyncing(true);
-    if (!checkChainID(chainId)) {
-      showAlertMessage(`network error`, { variant: "error" });
-      setSyncing(false);
-      return;
-    }
     
     const nftRes = await getGameNFT({
       mode: isProd ? "main" : "test",
