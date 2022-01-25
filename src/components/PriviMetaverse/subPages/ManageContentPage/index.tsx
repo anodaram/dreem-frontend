@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import Web3 from "web3";
@@ -7,6 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
 
 import { useAuth } from "shared/contexts/AuthContext";
+import useIPFS from "shared/utils-IPFS/useIPFS";
+import { BlockchainNets } from "shared/constants/constants";
+import { switchNetwork } from "shared/functions/metamask";
 import Box from "shared/ui-kit/Box";
 import { CircularLoadingIndicator, PrimaryButton } from "shared/ui-kit";
 import MetaMaskIcon from "assets/walletImages/metamask1.svg";
@@ -31,6 +34,7 @@ import SelectType from "./components/SelectType";
 import { RootState } from "../../../../store/reducers/Reducer";
 import CreateRealmModal from "../../modals/CreateRealmModal";
 import { manageContentPageStyles } from "./index.styles";
+import { onUploadNonEncrypt } from "shared/ipfs/upload";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
@@ -45,8 +49,9 @@ export default function ManageContentPage() {
   const underMaintenanceSelector = useSelector((state: RootState) => state.underMaintenanceInfo?.info);
   const publicy = useSelector((state: RootState) => state.underMaintenanceInfo?.publicy);
 
+  const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
   const classes = manageContentPageStyles();
-  const { activate, account, library } = useWeb3React();
+  const { activate, chainId, account, library } = useWeb3React();
   const { showAlertMessage } = useAlertMessage();
 
   const [openCreateNftModal, setOpenCreateNftModal] = useState<boolean>(false);
@@ -54,12 +59,40 @@ export default function ManageContentPage() {
   const [noMetamask, setNoMetamask] = React.useState<boolean>(false);
   const [metaDataForModal, setMetaDataForModal] = useState<any>(null);
   const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
+  const [response, setResponse] = useState<any>();
+  const [chain, setChain] = useState<string>(BlockchainNets[0].value);
 
   const width = useWindowDimensions().width;
   const [step, setStep] = useState<number>(0);
   const [worldCurStep, setWorldCurStep] = useState<number>(1);
   const [textureCurStep, setTextureCurStep] = useState<number>(1);
 
+  // Transaction Modal
+  const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
+  const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
+  const [txHash, setTxHash] = useState<string>("");
+
+  // uploading modal
+  const [showUploadingModal, setShowUploadingModal] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [isUpload, setIsUpload] = useState(true);
+
+  //uploading data
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [image, setImage] = useState<any>(null);
+  const [imageFile, setImageFile] = useState<any>(null);
+  const [video, setVideo] = useState<any>(null);
+  const [videoFile, setVideoFile] = useState<any>(null);
+  const [unity, setUnity] = useState<any>(null);
+  const [unityFile, setUnityFile] = useState<any>(null);
+  const [entity, setEntity] = useState<any>(null);
+  const [entityFile, setEntityFile] = useState<any>(null);
+  const [isPublic, setIsPublic] = useState<boolean>(true);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
+  const unityInputRef = useRef<HTMLInputElement>(null);
+  const entityInputRef = useRef<HTMLInputElement>(null);
 
   const [hasUnderMaintenanceInfo, setHasUnderMaintenanceInfo] = useState(false);
   const [openCreateCollectionModal, setOpenCreateCollectionModal] = useState<boolean>(false);
@@ -292,6 +325,190 @@ export default function ManageContentPage() {
     })
     .finally(() => setLoadingCollection(false));
   };
+
+  const validate = () => {
+    let sizeSpec = metaDataForModal;
+    if (!currentCollection) {
+      showAlertMessage(`Please select collection first`, { variant: "error" });
+      return false;
+    }
+    if (!title || !description || !image || !unity) {
+      showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
+      return false;
+    }
+    if (!video) {
+      showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
+      return false;
+    }
+    if (title.length < sizeSpec?.worldTitle.limit.min || title.length > sizeSpec?.worldTitle.limit.max) {
+      showAlertMessage(
+        `Name field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldTitle.limit.min} to ${sizeSpec?.worldTitle.limit.max} characters`,
+        {
+          variant: "error",
+        }
+      );
+      return false;
+    } else if (
+      description.length < sizeSpec?.worldDescription.limit.min ||
+      description.length > sizeSpec?.worldDescription.limit.max
+    ) {
+      showAlertMessage(
+        `Description field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldDescription.limit.min} to ${sizeSpec?.worldDescription.limit.max} characters`,
+        { variant: "error" }
+      );
+      return false;
+    } else if (image.size > sizeSpec?.worldImage.limit.maxBytes) {
+      showAlertMessage(`Image field invalid. Size cannot exceed ${sizeSpec?.worldImage.limit.readable}`, {
+        variant: "error",
+      });
+      return false;
+    } else if (video && video.size > sizeSpec?.worldVideo.limit.maxBytes) {
+      showAlertMessage(`Video field invalid. Size cannot exceed ${sizeSpec?.worldVideo.limit.readable}`, {
+        variant: "error",
+      });
+      return false;
+    } else if (
+      !sizeSpec?.worldLevel.supportedFormats.toString().includes(unity.name.split(".").reverse()[0])
+    ) {
+      showAlertMessage(`World file is invalid.`, { variant: "error" });
+      return false;
+    } else if (unity.size > sizeSpec?.worldLevel.limit.maxBytes) {
+      showAlertMessage(`World file invalid. Size cannot exceed ${sizeSpec?.worldLevel.limit.readable}`, {
+        variant: "error",
+      });
+      return false;
+    } else if (!entity.name.includes(sizeSpec?.worldMeta.supportedFormats.toString())) {
+      showAlertMessage(`World data is invalid.`, { variant: "error" });
+      return false;
+    } else if (entity.size > sizeSpec?.worldMeta.limit.maxBytes) {
+      showAlertMessage(`World data invalid. Size cannot exceed ${sizeSpec?.worldMeta.limit.readable}`, {
+        variant: "error",
+      });
+      return false;
+    } else return true;
+  };
+
+  const handleSaveDraft = async () => {
+    if (validate()) {
+      let payload: any = {};
+      let collectionAddr = currentCollection.address;
+      let tokenId;
+
+      payload = {
+        collectionId: currentCollection.id,
+        worldTitle: title,
+        worldDescription: description,
+        worldImage: image,
+        worldLevel: unity,
+        worldData: entity,
+        isPublic: isPublic
+      };
+
+      if (video) payload.worldVideo = video;
+
+      setShowUploadingModal(true);
+      setProgress(0);
+      MetaverseAPI.uploadWorld(payload)
+        .then(async res => {
+          if (!res.success) {
+            showAlertMessage(`Failed to upload world`, { variant: "error" });
+            setShowUploadingModal(false);
+          } else{
+            setResponse(res.data)
+            setShowUploadingModal(false);
+            showAlertMessage(`Created draft successfully`, { variant: "success" });
+          }
+        })
+    }
+  }
+  const mintNFT = async () => {
+    let collectionData = currentCollection;
+    let metadata = response.medadata;
+    let collectionAddr = collectionData.address;
+    let tokenId;
+    let isDraft = collectionData?.kind=="DRAFT" ? true : false;
+
+    const metaData = await onUploadNonEncrypt(metadata, file =>
+      uploadWithNonEncryption(file)
+    );
+
+    const targetChain = BlockchainNets.find(net => net.value === chain);
+
+    if (chainId && chainId !== targetChain?.chainId) {
+      const isHere = await switchNetwork(targetChain?.chainId || 0);
+      if (!isHere) {
+        showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+        return;
+      }
+    }
+
+    const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
+    const web3APIHandler = targetChain.apiHandler;
+    const web3 = new Web3(library.provider);
+    console.log('----metadata:', metaData, isDraft)
+
+    if (isDraft) {
+      console.log('here-----')
+      const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
+        web3,
+        account,
+        {
+          name: collectionData.name,
+          symbol: collectionData.symbol,
+          uri,
+        },
+        setTxModalOpen,
+        setTxHash
+      );
+      if (resRoyalty.success) {
+        setTxSuccess(true);
+        showAlertMessage(`Successfully world minted`, { variant: "success" });
+
+        await MetaverseAPI.convertToNFTWorld(
+          metaData.id,
+          resRoyalty.contractAddress,
+          targetChain.name,
+          resRoyalty.tokenId,
+          metaData.newFileCID,
+          account,
+          '0x0000000000000000000000000000000000000000'
+        );
+        handleRefreshCollection()
+      } else {
+        setTxSuccess(false);
+      }
+    } else {
+      const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
+        web3,
+        account,
+        {
+          collectionAddress: collectionAddr,
+          to: account,
+          uri,
+        },
+        setTxModalOpen,
+        setTxHash
+      );
+
+      if (contractRes.success) {
+        setTxSuccess(true);
+        showAlertMessage(`Successfully world minted`, { variant: "success" });
+        console.log(contractRes)
+        await MetaverseAPI.convertToNFTWorld(
+          response.item.id,
+          contractRes.collectionAddress,
+          targetChain.name,
+          contractRes.tokenId,
+          metadata.newFileCID,
+          contractRes.owner,
+          contractRes.royaltyAddress
+        );
+        handleRefreshCollection()
+      } else {
+        setTxSuccess(false);
+      }
+    }
+  }
 
   return (
     <>
