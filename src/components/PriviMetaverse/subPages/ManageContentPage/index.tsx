@@ -24,9 +24,17 @@ import CollectionCard from "components/PriviMetaverse/components/cards/Collectio
 import CreateCollection from "./components/CreateCollection";
 import CreateNFT from "./components/CreateNFT";
 import SelectType from "./components/SelectType";
+import CreatingStep from "./components/CreatingStep";
+import NFTOption from "./components/NFTOption";
+import RoyaltyOption from "./components/RoyaltyOption";
+import CreateTexture from "./components/CreateTexture";
+import CreateCharacter from "./components/CreateCharacter";
+import Create3DAsset from "./components/Create3DAsset";
+import CreateMaterial from "./components/CreateMaterial";
 import { RootState } from "../../../../store/reducers/Reducer";
 import CreateRealmModal from "../../modals/CreateRealmModal";
 import { manageContentPageStyles } from "./index.styles";
+import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
@@ -196,7 +204,11 @@ export default function ManageContentPage() {
 
   const handleAsset = (asset) => {
     setSelectedAsset(asset);
-    setStep(prev => prev + 1);
+    if(asset != 'world'){
+      // setStep(10);
+    } else{
+      setStep(prev => prev + 1);
+    }
   };
 
   const handleRefreshCollection = () => {
@@ -239,65 +251,6 @@ export default function ManageContentPage() {
 
   return (
     <>
-      {/* <div className={classes.root}>
-        <div className={classes.mainContent}>
-          <div className={classes.typo2}>Create your own Dreem</div>
-          <Box className={classes.typo3} mt={"24px"} mb={"50px"}>
-            Be part of the Dreem, mint your realm as an NFT and monetize on it
-          </Box>
-          <Box display="flex" alignItems="center">
-            <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              border="2px dashed #FFFFFF"
-              borderRadius={12}
-              mx={"30px"}
-              className={classes.centerBox}
-            >
-              <img src={require("assets/metaverseImages/dreem_fav_icon.png")} />
-            </Box>
-            <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
-          </Box>
-          <Box mt={"45px"} mb={"28px"}></Box>
-          {isSignedin ? (
-            <Box pl={2} className={classes.buttons}>
-              {isLoadingMetaData ? (
-                <Box minWidth={250} display="flex" justifyContent="center">
-                  <CircularProgress size={24} style={{ color: "#EEFF21" }} />
-                </Box>
-              ) : (
-                <div className={classes.createBtn} onClick={handleOpenRealmModal}>
-                  Create Realm
-                </div>
-              )}
-              <Box mx={1}></Box>
-              <div className={classes.howToCreateBtn} onClick={openLearnToCreator}>
-                Learn how to create
-              </div>
-            </Box>
-          ) : (
-            <PrimaryButton
-              onClick={handleConnect}
-              size="medium"
-              className={classes.button}
-              disabled={isOnSigning || underMaintenanceSelector?.underMaintenance}
-              style={{
-                pointerEvents: isOnSigning ? "none" : undefined,
-                opacity: isOnSigning ? 0.4 : undefined,
-              }}
-            >
-              {isOnSigning && !underMaintenanceSelector?.underMaintenance ? (
-                <CircularLoadingIndicator />
-              ) : (
-                <img src={MetaMaskIcon} alt="metamask" width={25} />
-              )}
-              <div style={{ marginTop: 4 }}>Log in</div>
-            </PrimaryButton>
-          )}
-        </div>
-      </div> */}
       <div className={classes.root} id="scrollContainer">
         {step === 0 && (
           <div className={classes.mainContent}>
@@ -367,7 +320,7 @@ export default function ManageContentPage() {
         {step === 1 && (
           <SelectType handleNext={(asset) => {handleAsset(asset)}}/>
         )}
-        {step === 2 && (
+        {step === 10 && (
           <div className={classes.otherContent}>
             <div className={classes.typo1}>Creating new NFT</div>
             <Box className={classes.typo3} mb={3}>
@@ -443,7 +396,7 @@ export default function ManageContentPage() {
             )}
           </div>
         )}
-        {step === 4 && (
+        {step === 11 && (
           <div className={classes.otherContent}>
             <div className={classes.typo1}>Creating New Collection</div>
             <Box className={classes.typo3} mb={3}>
@@ -459,6 +412,48 @@ export default function ManageContentPage() {
               Fill all the details of your new nft
             </Box>
             <CreateNFT metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()} collection={currentCollection} isCollectionPage={false}/>
+          </div>
+        )}
+        {step === 5 && (
+          <div className={classes.otherContent}>
+            <div className={classes.typo1}><AssetIcon />Creating New Asset</div>
+            <CreatingStep curStep="2" status={[]} />
+            <NFTOption handleNext={() => {}}/>
+          </div>
+        )}
+        {step === 6 && (
+          <div className={classes.otherContent}>
+            <div className={classes.typo1}><AssetIcon />Creating New Asset</div>
+            <CreatingStep curStep="2" status={[]}/>
+            <RoyaltyOption handleNext={() => {}}/>
+          </div>
+        )}
+        {step === 7 && (
+          <div className={classes.otherContent}>
+            <div className={classes.typo1}><AssetIcon />Creating New Texture</div>
+            <CreatingStep curStep="2" status={[]}/>
+            <CreateTexture  metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev}/>
+          </div>
+        )}
+        {step === 8 && (
+          <div className={classes.otherContent}>
+            <div className={classes.typo1}><AssetIcon />Creating New Character</div>
+            <CreatingStep curStep="2" status={[]}/>
+            <CreateCharacter  metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev}/>
+          </div>
+        )}
+        {step === 9 && (
+          <div className={classes.otherContent}>
+            <div className={classes.typo1}><AssetIcon />Creating New Asset</div>
+            <CreatingStep curStep="2" status={[]}/>
+            <Create3DAsset  metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev}/>
+          </div>
+        )}
+        {step === 10 && (
+          <div className={classes.otherContent}>
+            <div className={classes.typo1}><AssetIcon />Creating New Material</div>
+            <CreatingStep curStep="2" status={[]}/>
+            <CreateMaterial  metaData={metaDataForModal} handleNext={() => {}} handleCancel={handlePrev}/>
           </div>
         )}
         {step > 2 || (step === 2 && collections.length) ? (

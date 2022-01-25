@@ -18,27 +18,32 @@ const ASSET_TYPE = [
   {
     key: "texture",
     isPublish: true,
-    label: "texture"
+    label: "texture",
+    img: 'texture.png'
   },
   {
     key: "material",
     isPublish: true,
-    label: "material"
+    label: "material",
+    img: 'material.png'
   },
   {
     key: "3d-asset",
     isPublish: true,
-    label: "3d asset"
+    label: "3d asset",
+    img: '3d_asset.png'
   },
   {
     key: "character",
     isPublish: false,
-    label: "character"
+    label: "character",
+    img: 'character.png'
   },
   {
     key: "world",
     isPublish: true,
-    label: "world"
+    label: "world",
+    img: 'world.png'
   },
 ];
 const SelectType = ({ handleNext }: { handleNext: (asset: string) => void }) => {
@@ -61,6 +66,9 @@ const SelectType = ({ handleNext }: { handleNext: (asset: string) => void }) => 
             <div className={classes.mask}>
               <div className={classes.cardTitle}>{item.label}</div>
               {!item.isPublish && <div className={classes.comingSoon}>coming soon</div>}
+              <div className={classes.imageBox}>
+                <img src={require(`assets/mediaIcons/${item.img}`)} alt="" />
+              </div>
             </div>
           </Box>
         ))}

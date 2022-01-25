@@ -39,7 +39,7 @@ export const manageContentPageStyles = makeStyles(theme => ({
     alignItems: "center",
   },
   otherContent: {
-    marginTop: 120,
+    marginTop: 110,
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -48,6 +48,7 @@ export const manageContentPageStyles = makeStyles(theme => ({
     marginLeft: "auto",
     marginRight: "auto",
     padding: "0 96px",
+    position: 'relative',
     [theme.breakpoints.down("sm")]: {
       padding: "0 24px",
     },
@@ -162,6 +163,10 @@ export const manageContentPageStyles = makeStyles(theme => ({
     textAlign: "center",
     fontFamily: "GRIFTER",
     textTransform: "uppercase",
+    display: 'flex',
+    "& svg": {
+      marginRight: '8px'
+    },
     [theme.breakpoints.down("sm")]: {
       fontSize: 30,
       lineHeight: "30px",
@@ -250,4 +255,9 @@ export const manageContentPageStyles = makeStyles(theme => ({
     display: "flex",
     justifyContent: "space-between",
   },
+  assetIcon: {
+    width: '38px',
+    height: '38px',
+    background: 'linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)'
+  }
 }));
