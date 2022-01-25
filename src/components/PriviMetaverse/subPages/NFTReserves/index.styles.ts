@@ -91,6 +91,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       paddingLeft: "16px",
       paddingRight: "16px",
     },
+    "& .infinite-scroll-component": {
+      overflow: "visible !important",
+    },
   },
   titleBar: {
     width: "100%",

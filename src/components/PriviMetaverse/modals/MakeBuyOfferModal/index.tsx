@@ -22,6 +22,7 @@ import { ReserveTokenSelect } from "shared/ui-kit/Select/ReserveTokenSelect";
 import { getNextDay } from "shared/helpers/utils";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { MakeBuyOfferModalStyles } from "./index.style";
+import { getInputValue } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 const filteredBlockchainNets = BlockchainNets.filter(b => b.name != "PRIVI");
@@ -249,7 +250,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
           <Grid item xs={6} sm={7}>
             <InputWithLabelAndTooltip
               inputValue={price}
-              onInputValueChange={e => setPrice(e.target.value)}
+              onInputValueChange={e => setPrice(getInputValue(e.target.value, 0))}
               overriedClasses={classes.inputJOT}
               required
               type="number"

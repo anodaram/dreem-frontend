@@ -33,6 +33,7 @@ import selectedOtherProfilePageReducer from "./reducers/SelectedOtherProfilePage
 import selectedProtectionOptionsSwapReducer from "./reducers/SelectedProtectionOptionsSwap";
 import selectedLiquidityPoolPriviSwapReducer from "./reducers/SelectedLiquidityPoolPriviSwap";
 import underMaintenanceReducer from "./reducers/UnderMaintenance";
+import worldReducer from "./reducers/World";
 import { createStore, combineReducers, compose, applyMiddleware } from "redux";
 
 // Set global state variables through Redux
@@ -80,7 +81,8 @@ const rootReducer = combineReducers({
   selectedProtectionOptionsSwap: selectedProtectionOptionsSwapReducer,
   trendingPoolsLoading: insuranceReducers.reducerTrendingPoolsLoading,
   selectedLiquidityPoolPriviSwap: selectedLiquidityPoolPriviSwapReducer,
-  underMaintenanceInfo: underMaintenanceReducer
+  underMaintenanceInfo: underMaintenanceReducer,
+  world: worldReducer,
 });
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

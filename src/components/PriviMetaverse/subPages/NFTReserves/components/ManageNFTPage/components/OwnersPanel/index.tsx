@@ -13,7 +13,7 @@ import Box from "shared/ui-kit/Box";
 import { CircularLoadingIndicator, PrimaryButton } from "shared/ui-kit";
 import { BlockchainNets } from "shared/constants/constants";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
-import { getOwnedNFTs } from "shared/services/API/ReserveAPI";
+import { getNFTFromMoralis, getOwnedNFTs } from "shared/services/API/ReserveAPI";
 import { toDecimals } from "shared/functions/web3";
 import { useAuth } from "shared/contexts/AuthContext";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
@@ -82,6 +82,14 @@ const OwnersPanel = () => {
   const refreshData = () => {
     setUserNFTs([]);
     getData();
+  };
+
+  const clickRefreshBtn = () => {
+    getRefreshedData();
+  }
+
+  const getRefreshedData = async () => {
+      getNFTFromMoralis();
   };
 
   const getData = async () => {
@@ -293,7 +301,7 @@ const OwnersPanel = () => {
         >
           <PrimaryButton
             onClick={() => {
-              refreshData();
+              clickRefreshBtn();
             }}
             size="small"
             style={{

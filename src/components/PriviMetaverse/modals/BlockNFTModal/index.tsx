@@ -20,6 +20,7 @@ import { acceptBlockingOffer } from "shared/services/API/ReserveAPI";
 import { RootState } from "store/reducers/Reducer";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { ReserveNftModalStyles } from "./index.style";
+import { getInputValue } from "shared/helpers";
 
 export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfirm }) {
   const classes = ReserveNftModalStyles();
@@ -290,7 +291,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                 <Grid item sm={7}>
                   <InputWithLabelAndTooltip
                     inputValue={collateral}
-                    onInputValueChange={e => setCollateral(e.target.value)}
+                    onInputValueChange={e => setCollateral(getInputValue(e.target.value, 0))}
                     overriedClasses={classes.inputJOT}
                     required
                     type="number"
