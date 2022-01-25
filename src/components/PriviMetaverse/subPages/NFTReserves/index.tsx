@@ -300,7 +300,7 @@ const NFTReserves = () => {
         setReservedNftList([...reservedNftList, ...newNfts]);
       }
       dispatch(setAllNFTList([...allNFTList, ...newNfts]));
-      setHasMore(newNfts.length);
+      setHasMore(newNfts.length > 0);
       if (newNfts.length) {
         lastNFTId.current = newNfts[newNfts.length - 1].RandomId;
         lastCollectionId.current = newNfts[newNfts.length - 1].collectionId;
