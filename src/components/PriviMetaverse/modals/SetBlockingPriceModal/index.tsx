@@ -149,7 +149,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
           )
         );
 
-        await setBlockingOffer({
+        const res = await setBlockingOffer({
           mode: isProd ? "main" : "test",
           offerId: offerId,
           CollectionId: collection_id,
@@ -160,22 +160,12 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
           CollateralPercent: collateralPercent,
           ReservePeriod: period,
           AcceptDuration: 1000,
-          hash,
+          hash: contractResponse.hash,
+          blockNumber: contractResponse.offer?.blockNumber
         });
-        let newNft = { ...nft };
-        newNft.blockingSaleOffer = {
-          id: offerId,
-          PaymentToken: reservePriceToken?.Address,
-          Price: price,
-          Beneficiary: account,
-          CollateralPercent: collateralPercent,
-          ReservePeriod: period,
-          hash,
-          created: new Date().getTime(),
-        };
 
         setTransactionSuccess(true);
-        setNft(newNft);
+        setNft(res.data);
         handleClose();
       } else {
         setTransactionSuccess(false);

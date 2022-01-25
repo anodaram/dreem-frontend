@@ -87,7 +87,12 @@ const erc721 = network => {
         const gas = await contract.methods
           .approve(payload.to, payload.tokenId)
           .estimateGas({ from: account });
-        await contract.methods.approve(payload.to, payload.tokenId).send({ from: account, gas: gas });
+        await contract.methods.approve(payload.to, payload.tokenId).send({ 
+          from: account, 
+          gas: gas,
+          maxPriorityFeePerGas: web3.utils.toWei('5', 'gwei'),
+          maxFeePerGas: web3.utils.toWei('5', 'gwei'),
+         });
         resolve({ success: true });
       } catch (e) {
         console.log(e);
@@ -185,7 +190,9 @@ const erc721 = network => {
         console.log("Getting gas....");
         const gas = await contract.methods.approve(payload.to, payload.tokenId).estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
-        await contract.methods.approve(payload.to, payload.tokenId).send({ from: account, gas: gas });
+        await contract.methods.approve(payload.to, payload.tokenId).send({ from: account, gas: gas,
+          maxPriorityFeePerGas: web3.utils.toWei('32', 'gwei'),
+        })
         console.log("transaction succeed");
         resolve(true);
       } catch (e) {
