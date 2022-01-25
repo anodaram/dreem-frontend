@@ -38,6 +38,7 @@ import { useFilterSelectStyles, useNFTOptionsStyles, useTabsStyles } from "./ind
 import { ReactComponent as BinanceIcon } from "assets/icons/bsc.svg";
 import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
 import { userTrackMarketPlace } from "shared/services/API";
+import Axios, { CancelTokenSource } from "axios";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -151,6 +152,8 @@ const NFTReserves = () => {
 
   const [openHowWorksModal, setOpenHowWorksModal] = useState<boolean>(false);
 
+  const getAllGameNFTsRef = useRef<CancelTokenSource | undefined>();
+
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     {
       headerName: "Name",
@@ -203,20 +206,6 @@ const NFTReserves = () => {
   }, [isSignedin]);
 
   useEffect(() => {
-    lastNFTId.current = undefined;
-    lastNFTId.current = undefined;
-    if (selectedTab === TAB_NFTS) {
-      setHasMore(true);
-      getData();
-    } else {
-      setHasMoreCollections(true);
-      setExploreMetaverses([]);
-      getCollectionData(true);
-    }
-  }, [filterChain, filterStatus, debouncedSearchValue]);
-
-  useEffect(() => {
-    lastNFTId.current = undefined;
     if (selectedTab === TAB_NFTS) {
       setHasMore(true);
       getData(true);
@@ -225,7 +214,7 @@ const NFTReserves = () => {
       setExploreMetaverses([]);
       getCollectionData(true);
     }
-  }, [selectedTab]);
+  }, [filterChain, filterStatus, debouncedSearchValue, selectedTab]);
 
   const getTokenList = async () => {
     getAllTokenInfos().then(res => {
@@ -277,24 +266,31 @@ const NFTReserves = () => {
   const getData = async (isInit = false) => {
     if (!isInit && (!hasMore || loading)) return;
 
+    if (getAllGameNFTsRef.current) {
+      getAllGameNFTsRef.current.cancel();
+    }
+
     const network = filterChain !== filterChainOptions[0] ? filterChain : undefined;
     const status = filterStatus !== filterStatusOptions[0] ? filterStatus : undefined;
     const search = debouncedSearchValue ? debouncedSearchValue : undefined;
 
     try {
       setLoading(true);
+      
+      getAllGameNFTsRef.current = Axios.CancelToken.source();
       const response = await getAllGameNFTs({
         mode: isProd ? "main" : "test",
         network,
         status,
         search,
-        lastNFTId: lastNFTId.current,
+        lastNFTId: isInit ? undefined : lastNFTId.current,
         lastCollectionId: lastCollectionId.current,
         pageSize: PAGE_SIZE,
-      });
+      }, getAllGameNFTsRef?.current?.token);
 
       const newNfts = response.nfts;
-      if (!lastNFTId.current) {
+
+      if (!lastNFTId.current || isInit) {
         setReservedNftList([...newNfts]);
       } else {
         setReservedNftList([...reservedNftList, ...newNfts]);
@@ -424,7 +420,6 @@ const NFTReserves = () => {
   };
 
   const handleFilterChain = e => {
-    lastNFTId.current = undefined;
     lastCollectionId.current = undefined;
     setIsFilterStatus(false);
     setIsFilterChain(true);
@@ -434,7 +429,6 @@ const NFTReserves = () => {
   };
 
   const handleFilterStatus = e => {
-    lastNFTId.current = undefined;
     lastCollectionId.current = undefined;
     setIsFilterStatus(true);
     setIsFilterChain(false);
@@ -654,7 +648,6 @@ const NFTReserves = () => {
                       inputValue={searchValue}
                       placeHolder="Search"
                       onInputValueChange={e => {
-                        lastNFTId.current = undefined;
                         setSearchValue(e.target.value);
                         setHasMore(true);
                         setReservedNftList([]);
