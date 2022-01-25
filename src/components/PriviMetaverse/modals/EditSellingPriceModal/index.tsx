@@ -17,6 +17,7 @@ import { RootState } from "store/reducers/Reducer";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { EditSellingPriceModalStyles } from "./index.style";
+import { getInputValue } from "shared/helpers";
 
 const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
   const classes = EditSellingPriceModalStyles();
@@ -271,7 +272,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
               <Box className={classes.nameField}>Selling Price</Box>
               <InputWithLabelAndTooltip
                 inputValue={inputBalance}
-                onInputValueChange={e => setInputBalance(e.target.value)}
+                onInputValueChange={e => setInputBalance(getInputValue(e.target.value, 0))}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"

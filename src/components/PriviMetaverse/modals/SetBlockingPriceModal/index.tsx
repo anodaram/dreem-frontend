@@ -18,6 +18,7 @@ import { setBlockingOffer } from "shared/services/API/ReserveAPI";
 import { RootState } from "store/reducers/Reducer";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { MakeSetBlockingPriceModalStyles } from "./index.style";
+import { getInputValue } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -188,7 +189,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
               <Box className={classes.nameField}>Blocking Price</Box>
               <InputWithLabelAndTooltip
                 inputValue={price}
-                onInputValueChange={e => setPrice(e.target.value)}
+                onInputValueChange={e => setPrice(getInputValue(e.target.value, 0))}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"
@@ -217,7 +218,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
           <Box className={classes.nameField}>Blocking Period</Box>
           <InputWithLabelAndTooltip
             inputValue={period}
-            onInputValueChange={e => setPeriod(e.target.value)}
+            onInputValueChange={e => setPeriod(getInputValue(e.target.value, 0))}
             overriedClasses={classes.inputJOT}
             required
             type="number"
@@ -230,7 +231,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
           <Box className={classes.nameField}>Collateral (%)</Box>
           <InputWithLabelAndTooltip
             inputValue={collateralPercent}
-            onInputValueChange={e => setCollateralPercent(e.target.value)}
+            onInputValueChange={e => setCollateralPercent(getInputValue(e.target.value, 0))}
             overriedClasses={classes.inputJOT}
             required
             type="number"

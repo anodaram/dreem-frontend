@@ -170,3 +170,13 @@ export const getNFTOwnerAddress = async (chainId, address, tokenId) => {
 
   return meta?.data.data.items[0].nft_data[0].owner_address
 }
+
+export const getInputValue = (val, min: number, max?: number) => {
+  if (min !== undefined && val < min) {
+    return min;
+  }
+  if (max !== undefined && val > max) {
+    return max;
+  }
+  return val;
+}

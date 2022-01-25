@@ -19,6 +19,7 @@ import { updateBlockingHistory } from "shared/services/API/ReserveAPI";
 import { RootState } from "store/reducers/Reducer";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { ReserveNftModalStyles } from "./index.style";
+import { getInputValue } from "shared/helpers";
 
 export default function AddCollateralModal({ open, handleClose, nft, refresh }) {
   const classes = ReserveNftModalStyles();
@@ -256,7 +257,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
                 <Grid item sm={7}>
                   <InputWithLabelAndTooltip
                     inputValue={price}
-                    onInputValueChange={e => setPrice(e.target.value)}
+                    onInputValueChange={e => setPrice(getInputValue(e.target.value, 0))}
                     overriedClasses={classes.inputJOT}
                     required
                     type="number"

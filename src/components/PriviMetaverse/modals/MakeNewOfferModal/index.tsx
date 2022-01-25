@@ -18,6 +18,7 @@ import { createBlockingOffer } from "shared/services/API/ReserveAPI";
 import { RootState } from "store/reducers/Reducer";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { MakeNewOfferModalStyles } from "./index.style";
+import { getInputValue } from "shared/helpers";
 
 export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
   const classes = MakeNewOfferModalStyles();
@@ -268,7 +269,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                 <Grid item sm={7}>
                   <InputWithLabelAndTooltip
                     inputValue={price}
-                    onInputValueChange={e => setPrice(e.target.value)}
+                    onInputValueChange={e => setPrice(getInputValue(e.target.value, 0))}
                     overriedClasses={classes.inputJOT}
                     required
                     type="number"
@@ -296,7 +297,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
               <Box className={classes.nameField}>How many days do you want to block the NFT?</Box>
               <InputWithLabelAndTooltip
                 inputValue={blockingPeriod}
-                onInputValueChange={e => setBlockingPeriod(Number(e.target.value))}
+                onInputValueChange={e => setBlockingPeriod(Number(getInputValue(e.target.value, 0)))}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"
@@ -309,7 +310,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
               <Box className={classes.nameField}>What % of your Buying Offer do you want to provide as collateral?</Box>
               <InputWithLabelAndTooltip
                 inputValue={collateralPercent}
-                onInputValueChange={e => setCollateralPercent(e.target.value)}
+                onInputValueChange={e => setCollateralPercent(getInputValue(e.target.value, 0))}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"
@@ -326,7 +327,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                   <InputWithLabelAndTooltip
                     inputValue={collateral}
                     // onInputValueChange={e => setCollateral(e.target.value)}
-                    onInputValueChange={e => setCollateral(e.target.value)}
+                    onInputValueChange={e => setCollateral(getInputValue(e.target.value, 0))}
                     overriedClasses={classes.inputJOT}
                     required
                     type="number"
@@ -374,7 +375,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
               <Box className={classes.nameField}>Offer will disappear if not accepted within</Box>
               <InputWithLabelAndTooltip
                 inputValue={disappearDays}
-                onInputValueChange={e => setDisappearDays(e.target.value)}
+                onInputValueChange={e => setDisappearDays(getInputValue(e.target.value, 0))}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"

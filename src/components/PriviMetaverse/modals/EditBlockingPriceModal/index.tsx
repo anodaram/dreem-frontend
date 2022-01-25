@@ -19,6 +19,7 @@ import { RootState } from "store/reducers/Reducer";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { MakeEditBlockingPriceModalStyles } from "./index.style";
+import { getInputValue } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -284,7 +285,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
               <Grid item sm={7}>
                 <InputWithLabelAndTooltip
                   inputValue={price}
-                  onInputValueChange={e => setPrice(e.target.value)}
+                  onInputValueChange={e => setPrice(getInputValue(e.target.value, 0))}
                   overriedClasses={classes.inputJOT}
                   required
                   type="number"
@@ -315,7 +316,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
             </Box>
             <InputWithLabelAndTooltip
               inputValue={period}
-              onInputValueChange={e => setPeriod(e.target.value)}
+              onInputValueChange={e => setPeriod(getInputValue(e.target.value, 0))}
               overriedClasses={classes.inputJOT}
               required
               type="number"
@@ -328,7 +329,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
             <Box className={classes.nameField}>Collateral % Required</Box>
             <InputWithLabelAndTooltip
               inputValue={collateralPercent}
-              onInputValueChange={e => setCollateralPercent(e.target.value)}
+              onInputValueChange={e => setCollateralPercent(getInputValue(e.target.value, 0))}
               overriedClasses={classes.inputJOT}
               required
               type="number"
