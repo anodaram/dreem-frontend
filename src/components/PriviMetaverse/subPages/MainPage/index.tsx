@@ -35,6 +35,7 @@ import roadmapImage from "assets/metaverseImages/shape_roadmap.png";
 import { homePageStyles, DotContainer, Dot } from "./index.styles";
 import { getOperatingSystem } from "shared/helpers/platform";
 import Footer from "components/PriviMetaverse/components/Footer";
+import { userTrackDownload } from "shared/services/API/UserAPI";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
@@ -220,6 +221,10 @@ export default function HomePage() {
   };
 
   const handleDownload = () => {
+    if (isSignedin) {
+      userTrackDownload();
+    }
+
     if (detectMob()) {
       setShowDownloadModal(true);
     } else {

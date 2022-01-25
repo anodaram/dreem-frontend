@@ -33,10 +33,22 @@ export async function getPenaltyFee(): Promise<any> {
   }
 }
 
+export async function getNFTOwnerAddress(payload): Promise<any> {
+  try {
+    const response = await axios.get(`${URL()}/metaverseReserve/getNFTOwnerAddress`, {
+      params: payload,
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
 export async function storePenaltyFee(fee): Promise<any> {
   try {
     const response = await axios.post(`${URL()}/metaverseReserve/setPenaltyFee`, {
-      fee
+      fee,
     });
     return response.data;
   } catch (e) {
@@ -327,6 +339,27 @@ export async function updateSyntheticAddress(payload: any): Promise<any> {
       ...payload,
     });
     return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
+export async function syncUpNFT(payload: any): Promise<any> {
+  try {
+    const response = await axios.post(`${URL()}/metaverseReserve/syncUpNFT`, payload);
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
+export async function getNFTFromMoralis(): Promise<any> {
+  try {
+    axios.post(`${URL()}/metaverseReserve/getNFTFromMoralis`);
+    // const response = await getOwnedNFTs(payload)
+    // return response;
   } catch (e) {
     console.log(e);
     throw new Error(e.message);

@@ -16,6 +16,7 @@ import { formatDuration } from "shared/helpers/utils";
 import { RootState, useTypedSelector } from "store/reducers/Reducer";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { RentNFTModalStyles } from "./index.style";
+import { getInputValue } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -371,7 +372,7 @@ export default function RentNFTModal({
             {maxDays > 0 && (
               <InputWithLabelAndTooltip
                 inputValue={limitDays}
-                onInputValueChange={e => setLimitDays(e.target.value)}
+                onInputValueChange={e => setLimitDays(getInputValue(e.target.value, 0))}
                 overriedClasses={classes.inputDays}
                 required
                 type="number"
@@ -387,12 +388,12 @@ export default function RentNFTModal({
             {(maxDays > 0 || maxHours > 0) && (
               <InputWithLabelAndTooltip
                 inputValue={limitHour}
-                onInputValueChange={e => setLimitHour(e.target.value)}
+                onInputValueChange={e => setLimitHour(getInputValue(e.target.value, 0, 23))}
                 overriedClasses={classes.inputDays}
                 required
                 type="number"
                 theme="light"
-                maxValue={24}
+                maxValue={23}
                 minValue={0}
                 endAdornment={<div className={classes.inputLabel}>h</div>}
                 disabled={isApproved}
@@ -402,12 +403,12 @@ export default function RentNFTModal({
             )}
             <InputWithLabelAndTooltip
               inputValue={limitMin}
-              onInputValueChange={e => setLimitMin(e.target.value)}
+              onInputValueChange={e => setLimitMin(getInputValue(e.target.value, 0, 59))}
               overriedClasses={classes.inputDays}
               required
               type="number"
               theme="light"
-              maxValue={60}
+              maxValue={59}
               minValue={0}
               endAdornment={<div className={classes.inputLabel}>min</div>}
               disabled={isApproved}
@@ -416,12 +417,12 @@ export default function RentNFTModal({
             />
             <InputWithLabelAndTooltip
               inputValue={limitSec}
-              onInputValueChange={e => setLimitSec(e.target.value)}
+              onInputValueChange={e => setLimitSec(getInputValue(e.target.value, 0, 59))}
               overriedClasses={classes.inputDays}
               required
               type="number"
               theme="light"
-              maxValue={60}
+              maxValue={59}
               minValue={0}
               endAdornment={<div className={classes.inputLabel}>sec</div>}
               disabled={isApproved}

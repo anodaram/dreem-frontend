@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
+import { RootState } from "store/reducers/Reducer";
+import { setSelTabWorldDetail } from "store/actions/World";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import Avatar from "shared/ui-kit/Avatar";
@@ -33,13 +36,15 @@ const Tabs: TabItem[] = [
 
 export default function WorldDetailPage() {
   const classes = worldDetailPageStyles();
+  const dispatch = useDispatch();
+  const selTab = useSelector((state: RootState) => state.world.selectedTabWorldDetail);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [fruitData, setFruitData] = useState<any>({});
-  const [selectedTab, setSelectedTab] = useState<string>("sale");
+  const [selectedTab, setSelectedTab] = useState<string>(selTab || "sale");
 
   return (
     <Box className={classes.root}>
@@ -203,7 +208,9 @@ export default function WorldDetailPage() {
                 tabs={Tabs}
                 onSelectTab={tab => {
                   setSelectedTab(tab.key);
+                  dispatch(setSelTabWorldDetail(tab.key));
                 }}
+                seletedTabIndex={Tabs.findIndex(tab => tab.key === selectedTab)}
               />
             </Box>
             {selectedTab === "sale" ? (

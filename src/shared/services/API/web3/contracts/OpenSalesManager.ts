@@ -2,6 +2,8 @@ import Web3 from "web3";
 import { ContractInstance } from "shared/connectors/web3/functions";
 import config from "shared/connectors/web3/config";
 
+const MAX_PRIO_FEE = "50";
+
 const openSalesManager = network => {
   const metadata = require("shared/connectors/web3/contracts/OpenSalesManager.json");
   const contractAddress = config[network].CONTRACT_ADDRESSES.OPEN_SALES_MANAGER;
@@ -31,7 +33,7 @@ const openSalesManager = network => {
             payload.beneficiary,
             payload.sellerToMatch
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });
@@ -78,7 +80,7 @@ const openSalesManager = network => {
             payload.beneficiary,
             payload.buyerToMatch
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });
@@ -122,7 +124,7 @@ const openSalesManager = network => {
             payload.price,
             payload.owner
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });
@@ -165,7 +167,7 @@ const openSalesManager = network => {
             payload.price,
             payload.beneficiary
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });

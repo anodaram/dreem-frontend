@@ -1,4 +1,5 @@
 import moment from "moment";
+import axios from 'axios';
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -158,4 +159,14 @@ export const visitChainLink = (chain, address, isAddress = true) => {
 
 export const getAbbrAddress = (address, start, end) => {
   return `${address?.substring(0, start)}...${address?.substring(address?.length - end, address.length)}`
+}
+
+export const getInputValue = (val, min: number, max?: number) => {
+  if (min !== undefined && val < min) {
+    return min;
+  }
+  if (max !== undefined && val > max) {
+    return max;
+  }
+  return val;
 }

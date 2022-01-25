@@ -87,7 +87,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
             </Text>
           )}
           <Box display="flex" justifyContent="flex-end" alignItems="center">
-            {isOwnership ? (
+            {isOwnership && isSignedin ? (
               nft?.sellingOffer?.Price ? (
                 <Box display="flex" alignItems="space-between" marginTop="10px">
                   <PrimaryButton
@@ -170,7 +170,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
             </Text>
           )}
           <Box display="flex" justifyContent="flex-end" alignItems="center">
-            {isOwnership ? (
+            {isOwnership && isSignedin ? (
               nft?.blockingSaleOffer?.Price ? (
                 <Box display="flex" alignItems="space-between" marginTop="10px">
                   <PrimaryButton
@@ -257,7 +257,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
             </Text>
           )}
           <Box display="flex" justifyContent="flex-end" alignItems="center">
-            {isOwnership ? (
+            {isOwnership && isSignedin ? (
               nft?.rentSaleOffer?.pricePerSecond ? (
                 <Box display="flex" alignItems="space-between" marginTop="10px">
                   <PrimaryButton
