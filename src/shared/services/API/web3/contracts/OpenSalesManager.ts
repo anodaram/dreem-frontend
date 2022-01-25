@@ -2,7 +2,7 @@ import Web3 from "web3";
 import { ContractInstance } from "shared/connectors/web3/functions";
 import config from "shared/connectors/web3/config";
 
-const MAX_PRIO_FEE = "32";
+const MAX_PRIO_FEE = "50";
 
 const openSalesManager = network => {
   const metadata = require("shared/connectors/web3/contracts/OpenSalesManager.json");

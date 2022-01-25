@@ -6,7 +6,7 @@ const rentalManager = (network: string) => {
   const metadata = require("shared/connectors/web3/contracts/reserve/RentalManager.json");
   const contractAddress = config[network].CONTRACT_ADDRESSES.RENTAL_MANAGER;
 
-  const MAX_PRIO_FEE = "32";
+  const MAX_PRIO_FEE = "50";
 
   // owner make offer
   const listOffer = async (web3: Web3, account: string, payload: any, setHash: any): Promise<any> => {

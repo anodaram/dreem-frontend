@@ -5,7 +5,7 @@ const erc721 = network => {
   const contractAddress = config[network].CONTRACT_ADDRESSES.ERC721WithRoyalty;
   const metadata = require("shared/connectors/web3/contracts/ERC721WithRoyalty.json");
 
-  const MAX_PRIO_FEE = "32";
+  const MAX_PRIO_FEE = "50";
 
   const instantiate = async (web3: Web3, account: string): Promise<any> => {
     return new Promise(async resolve => {
