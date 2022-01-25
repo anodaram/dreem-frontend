@@ -242,6 +242,9 @@ export interface RootState {
     scrollPositionInCollection: number;
     scrollPositionInAllNFT: number;
   };
+  world: {
+    selectedTabWorldDetail: string;
+  };
 }
 
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
