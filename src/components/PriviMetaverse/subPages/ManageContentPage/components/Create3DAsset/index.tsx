@@ -464,29 +464,6 @@ const Create3DAsset = ({
               <Box pt={0.5}><CharacterIcon /> Character File</Box>
             )}
           </PrimaryButton>
-          <Box className={classes.switchWrapper}>
-            <Box display="flex" alignItems="center">
-              <p style={{ marginRight: 16 }}>Make your file Public</p>
-              <InfoTooltip
-                tooltip={
-                  "This allows you to make your realm, which in this case is a work in progress/draft, available for people to test and give feedback (public). Or just internal for you (private), only to be set public later"
-                }
-              />
-            </Box>
-            <FormControlLabel
-              control={
-                <IOSSwitch
-                  defaultChecked
-                  checked={isPublic}
-                  onChange={() => {
-                    setIsPublic(prev => !prev);
-                  }}
-                />
-              }
-              label={isPublic ? "Yes" : "No"}
-              labelPlacement="start"
-            />
-          </Box>
         </div>
         <input
           ref={imageInputRef}

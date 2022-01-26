@@ -353,19 +353,13 @@ export default function ManageContentPage() {
         {step === 2 && selectedAsset === "3d-asset" && (
           <Create3DAssetFlow
             metaData={metaDataForModal}
-            step={textureCurStep}
-            handleNext={() => {}}
             handleCancel={handlePrev}
-            handleRefresh={() => {}}
           />
         )}
         {step === 2 && selectedAsset === "character" && (
           <CreateCharacterFlow
             metaData={metaDataForModal}
-            step={textureCurStep}
-            handleNext={() => {}}
             handleCancel={handlePrev}
-            handleRefresh={() => {}}
           />
         )}
       </div>

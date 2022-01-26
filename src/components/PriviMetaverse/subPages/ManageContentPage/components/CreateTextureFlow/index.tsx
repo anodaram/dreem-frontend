@@ -99,10 +99,10 @@ const CreateTextureFlow = ({
     console.log(steps[step-1])
     switch (step) {
       case 1:
-        steps[step-1].completed = nftOption ? true : false;
+        steps[step-1].completed = (nftOption === 'single') || (nftOption === 'multiple' && amount) ? true : false;
         break;
       case 2:
-        steps[step-1].completed = isRoyalty ? true : false;
+        steps[step-1].completed = (isRoyalty && royaltyPercentage && royaltyAddress) || (isRoyalty === false) ? true : false;
         break;
       case 3:
         steps[step-1].completed = validate() ? true : false;
@@ -316,7 +316,7 @@ const CreateTextureFlow = ({
                     className={classes.inputRadio}
                     id="single"
                     type="radio"
-                    // value={title}
+                    checked={nftOption === 'single' && true}
                     onChange={e => setNftOption(e.target.value == "on" ? "single" : "")}
                   />
                   <label htmlFor="single">single NFT(1/1)</label>
@@ -330,7 +330,7 @@ const CreateTextureFlow = ({
                     className={classes.inputRadio}
                     id="multi"
                     type="radio"
-                    // value={title}
+                    checked={nftOption === 'multiple' && true}
                     onChange={e => {
                       setNftOption(e.target.value == "on" ? "multiple" : "");
                     }}
@@ -385,7 +385,7 @@ const CreateTextureFlow = ({
                     className={classes.inputRadio}
                     id='single'
                     type='radio'
-                    // value={title}
+                    checked={isRoyalty && true}
                     onChange={e => setIsRoyalty(e.target.value == 'on' ? true : false)}
                   />
                   <label htmlFor="single">yes</label>
@@ -397,7 +397,7 @@ const CreateTextureFlow = ({
                     className={classes.inputRadio}
                     id='multi'
                     type='radio'
-                    // value={title}
+                    checked={!isRoyalty && true}
                     onChange={e => {setIsRoyalty(e.target.value == 'on' ? false : true)}}
                   />
                   <label htmlFor="multi">no</label>

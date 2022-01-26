@@ -79,6 +79,7 @@ export const useModalStyles = makeStyles(theme => ({
     fontWeight: 700,
     fontFamily: "Rany",
     lineHeight: "104.5%",
+    textTransform: "uppercase",
   },
   input: {
     background: "rgba(218, 230, 229, 0.06)",

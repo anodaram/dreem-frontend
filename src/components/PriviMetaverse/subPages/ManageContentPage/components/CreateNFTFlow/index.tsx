@@ -228,7 +228,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
     console.log(steps[step-1])
     switch (step) {
       case 1:
-        steps[step-1].completed = nftOption ? true : false;
+        steps[step-1].completed = (nftOption === 'single') || (nftOption === 'multiple' && amount) ? true : false;
         break;
       case 2:
         steps[step-1].completed = validate() ? true : false;
@@ -436,7 +436,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
           <div className={classes.otherContent}>
             <div className={classes.typo1}>
               <AssetIcon />
-              Creating New Asset
+              Creating New World
             </div>
             <CreatingStep curStep={step} status={steps} />
             {step == 1 && (
@@ -459,7 +459,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
                         className={classes.inputRadio}
                         id="single"
                         type="radio"
-                        // value={title}
+                        checked={nftOption === 'single' && true}
                         onChange={e => setNftOption(e.target.value == "on" ? "single" : "")}
                       />
                       <label htmlFor="single">single NFT(1/1)</label>
@@ -473,7 +473,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
                         className={classes.inputRadio}
                         id="multi"
                         type="radio"
-                        // value={title}
+                        checked={nftOption === 'multiple' && true}
                         onChange={e => {
                           setNftOption(e.target.value == "on" ? "multiple" : "");
                         }}
