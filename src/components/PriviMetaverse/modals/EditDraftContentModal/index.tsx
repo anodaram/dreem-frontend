@@ -98,6 +98,7 @@ const EditDraftContentModal = ({ open, onClose }) => {
                 fontSize: 18,
                 paddingTop: 4,
               }}
+              onClick={() => setSelectedTab(prev => (prev > 0 ? prev - 1 : prev))}
             >
               Cancel
             </SecondaryButton>
@@ -112,6 +113,7 @@ const EditDraftContentModal = ({ open, onClose }) => {
                 paddingTop: 4,
                 color: "#212121",
               }}
+              onClick={() => setSelectedTab(prev => (prev < 4 ? prev + 1 : prev))}
             >
               Save Changes
             </PrimaryButton>

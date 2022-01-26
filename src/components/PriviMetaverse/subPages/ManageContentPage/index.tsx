@@ -32,6 +32,7 @@ import { RootState } from "../../../../store/reducers/Reducer";
 import CreateRealmModal from "../../modals/CreateRealmModal";
 import { manageContentPageStyles } from "./index.styles";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
+import EditDraftContentModal from "components/PriviMetaverse/modals/EditDraftContentModal";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
@@ -59,7 +60,6 @@ export default function ManageContentPage() {
   const [step, setStep] = useState<number>(0);
   const [worldCurStep, setWorldCurStep] = useState<number>(1);
   const [textureCurStep, setTextureCurStep] = useState<number>(1);
-
 
   const [hasUnderMaintenanceInfo, setHasUnderMaintenanceInfo] = useState(false);
   const [openCreateCollectionModal, setOpenCreateCollectionModal] = useState<boolean>(false);
@@ -195,49 +195,49 @@ export default function ManageContentPage() {
   };
 
   const handleNext = () => {
-    console.log('----',step)
-    if(step == 2){
+    console.log("----", step);
+    if (step == 2) {
       switch (selectedAsset) {
-        case 'world':
-          if(worldCurStep<2){
-            setWorldCurStep(prev => prev + 1)
-          } else{
+        case "world":
+          if (worldCurStep < 2) {
+            setWorldCurStep(prev => prev + 1);
+          } else {
             setStep(prev => prev + 1);
           }
           break;
-        case 'texture':
-          if(textureCurStep<3){
-            setTextureCurStep(prev => prev + 1)
-          } else{
+        case "texture":
+          if (textureCurStep < 3) {
+            setTextureCurStep(prev => prev + 1);
+          } else {
             setStep(prev => prev + 1);
           }
           break;
-        case 'material':
-          if(textureCurStep<3){
-            setTextureCurStep(prev => prev + 1)
-          } else{
+        case "material":
+          if (textureCurStep < 3) {
+            setTextureCurStep(prev => prev + 1);
+          } else {
             setStep(prev => prev + 1);
           }
           break;
-        case '3d-asset':
-          if(textureCurStep<3){
-            setTextureCurStep(prev => prev + 1)
-          } else{
+        case "3d-asset":
+          if (textureCurStep < 3) {
+            setTextureCurStep(prev => prev + 1);
+          } else {
             setStep(prev => prev + 1);
           }
           break;
-        case 'character':
-          if(textureCurStep<3){
-            setTextureCurStep(prev => prev + 1)
-          } else{
+        case "character":
+          if (textureCurStep < 3) {
+            setTextureCurStep(prev => prev + 1);
+          } else {
             setStep(prev => prev + 1);
           }
           break;
-      
+
         default:
           break;
       }
-    } else{
+    } else {
       setStep(prev => prev + 1);
     }
   };
@@ -246,51 +246,51 @@ export default function ManageContentPage() {
     setStep(prev => prev - 1);
   };
 
-  const handleAsset = (asset) => {
+  const handleAsset = asset => {
     setSelectedAsset(asset);
-    if(asset != 'world'){
+    if (asset != "world") {
       setStep(2);
-    } else{
+    } else {
       setStep(prev => prev + 1);
     }
   };
 
   const handleRefreshCollection = () => {
-    setStep(3)
-    setCurPage(1)
+    setStep(3);
+    setCurPage(1);
     setLoadingCollection(true);
     MetaverseAPI.getCollections(12, 1, "DESC")
-    .then(res => {
-      if (res.success) {
-        const items = res.data.elements;
-        if (items && items.length > 0) {
-          setCollections(res.data.elements);
-          if (res.data.page && curPage <= res.data.page.max) {
-            setCurPage(curPage => curPage + 1);
-            setLastPage(res.data.page.max);
+      .then(res => {
+        if (res.success) {
+          const items = res.data.elements;
+          if (items && items.length > 0) {
+            setCollections(res.data.elements);
+            if (res.data.page && curPage <= res.data.page.max) {
+              setCurPage(curPage => curPage + 1);
+              setLastPage(res.data.page.max);
+            }
           }
         }
-      }
-    })
-    .finally(() => setLoadingCollection(false));
+      })
+      .finally(() => setLoadingCollection(false));
   };
 
   const loadMore = () => {
     setLoadingCollection(true);
     MetaverseAPI.getCollections(12, curPage, "DESC")
-    .then(res => {
-      if (res.success) {
-        const items = res.data.elements;
-        if (items && items.length > 0) {
-          setCollections([...collections, ...res.data.elements]);
-          if (res.data.page && curPage <= res.data.page.max) {
-            setCurPage(curPage => curPage + 1);
-            setLastPage(res.data.page.max);
+      .then(res => {
+        if (res.success) {
+          const items = res.data.elements;
+          if (items && items.length > 0) {
+            setCollections([...collections, ...res.data.elements]);
+            if (res.data.page && curPage <= res.data.page.max) {
+              setCurPage(curPage => curPage + 1);
+              setLastPage(res.data.page.max);
+            }
           }
         }
-      }
-    })
-    .finally(() => setLoadingCollection(false));
+      })
+      .finally(() => setLoadingCollection(false));
   };
 
   return (
@@ -359,25 +359,60 @@ export default function ManageContentPage() {
                 <div style={{ marginTop: 4 }}>Log in</div>
               </PrimaryButton>
             )}
+            <EditDraftContentModal open={true} onClose={() => {}} />
           </div>
         )}
         {step === 1 && (
-          <SelectType handleNext={(asset) => {handleAsset(asset)}}/>
+          <SelectType
+            handleNext={asset => {
+              handleAsset(asset);
+            }}
+          />
         )}
-        {(step === 2 && selectedAsset === 'world') &&  (
-          <CreateNFTFlow metaData={metaDataForModal} step={worldCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        {step === 2 && selectedAsset === "world" && (
+          <CreateNFTFlow
+            metaData={metaDataForModal}
+            step={worldCurStep}
+            handleNext={() => {}}
+            handleCancel={handlePrev}
+            handleRefresh={() => handleRefreshCollection()}
+          />
         )}
-        {(step === 2 && selectedAsset === 'texture') &&  (
-          <CreateTextureFlow metaData={metaDataForModal} step={textureCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        {step === 2 && selectedAsset === "texture" && (
+          <CreateTextureFlow
+            metaData={metaDataForModal}
+            step={textureCurStep}
+            handleNext={() => {}}
+            handleCancel={handlePrev}
+            handleRefresh={() => handleRefreshCollection()}
+          />
         )}
-        {(step === 2 && selectedAsset === 'material') &&  (
-          <CreateMaterialFlow metaData={metaDataForModal} step={textureCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        {step === 2 && selectedAsset === "material" && (
+          <CreateMaterialFlow
+            metaData={metaDataForModal}
+            step={textureCurStep}
+            handleNext={() => {}}
+            handleCancel={handlePrev}
+            handleRefresh={() => handleRefreshCollection()}
+          />
         )}
-        {(step === 2 && selectedAsset === '3d-asset') &&  (
-          <Create3DAssetFlow metaData={metaDataForModal} step={textureCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        {step === 2 && selectedAsset === "3d-asset" && (
+          <Create3DAssetFlow
+            metaData={metaDataForModal}
+            step={textureCurStep}
+            handleNext={() => {}}
+            handleCancel={handlePrev}
+            handleRefresh={() => handleRefreshCollection()}
+          />
         )}
-        {(step === 2 && selectedAsset === 'character') &&  (
-          <CreateCharacterFlow metaData={metaDataForModal} step={textureCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        {step === 2 && selectedAsset === "character" && (
+          <CreateCharacterFlow
+            metaData={metaDataForModal}
+            step={textureCurStep}
+            handleNext={() => {}}
+            handleCancel={handlePrev}
+            handleRefresh={() => handleRefreshCollection()}
+          />
         )}
         {step === 3 && (
           <div className={classes.otherContent}>
@@ -470,7 +505,11 @@ export default function ManageContentPage() {
             <Box className={classes.typo3} mb={3}>
               Fill all the details of your new collection
             </Box>
-            <CreateCollection handleNext={() => {}} handleCancel={()=>setStep(2)} handleRefresh={()=>handleRefreshCollection()} />
+            <CreateCollection
+              handleNext={() => {}}
+              handleCancel={() => setStep(2)}
+              handleRefresh={() => handleRefreshCollection()}
+            />
           </div>
         )}
         {step > 2 || (step === 2 && collections.length) ? (
@@ -478,7 +517,7 @@ export default function ManageContentPage() {
             <div className={classes.howToCreateBtn} onClick={handlePrev}>
               back
             </div>
-            {step < 3 &&
+            {step < 3 && (
               <PrimaryButton
                 size="medium"
                 className={classes.nextBtn}
@@ -487,21 +526,17 @@ export default function ManageContentPage() {
               >
                 next
               </PrimaryButton>
-            }
-            {step === 3 &&
+            )}
+            {step === 3 && (
               <Box display="flex" alignItems="center" justifyContent="center">
-                <div className={classes.howToCreateBtn} onClick={()=>{}}>
+                <div className={classes.howToCreateBtn} onClick={() => {}}>
                   create draft
                 </div>
-                <PrimaryButton
-                  size="medium"
-                  className={classes.nextBtn}
-                  onClick={() => {}}
-                  >
+                <PrimaryButton size="medium" className={classes.nextBtn} onClick={() => {}}>
                   mint nft
                 </PrimaryButton>
               </Box>
-            }
+            )}
           </Box>
         ) : null}
       </div>

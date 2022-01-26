@@ -94,6 +94,7 @@ export const useModalStyles = makeStyles(theme => ({
         borderRadius: "50%",
         alignItems: "center !important",
         justifyContent: "center",
+        marginBottom: 1,
       },
     },
   },
