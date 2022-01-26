@@ -67,7 +67,7 @@ export default function RentNFTModal({
   };
 
   const price = offer
-    ? (+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime).toFixed(2)
+    ? (+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime)
     : "0";
 
   useEffect(() => setSelectedChain(getChainForNFT(nft)), [nft]);
@@ -167,7 +167,7 @@ export default function RentNFTModal({
       let balance = await web3APIHandler.Erc20[rentalToken.Symbol].balanceOf(web3, { account });
       let decimals = await web3APIHandler.Erc20[rentalToken.Symbol].decimals(web3, { account });
       balance = balance / Math.pow(10, decimals);
-      const approvePrice = parseFloat(price) * (1.01 + marketFee);
+      const approvePrice = Number(price) * (1+ marketFee);
 
       if (balance < (approvePrice || 0)) {
         showAlertMessage(`Insufficient balance to approve`, { variant: "error" });
@@ -433,7 +433,7 @@ export default function RentNFTModal({
             <Box className={classes.box}>
               <Box display="flex" flexDirection="column">
                 <span className={classes.amountLabel}>Amount to pay</span>
-                <span className={classes.purpleText}>{`${(Number(price)*(1+marketFee)).toFixed(2)} ${rentalToken?.Symbol ?? "USDT"}`}</span>
+                <span className={classes.purpleText}>{`${(Number(price)*(1+marketFee)).toFixed(4)} ${rentalToken?.Symbol ?? "USDT"}`}</span>
               </Box>
               <Box display="flex" flexDirection="column" textAlign="end">
                 <span className={classes.amountLabel}>Max rental time</span>
