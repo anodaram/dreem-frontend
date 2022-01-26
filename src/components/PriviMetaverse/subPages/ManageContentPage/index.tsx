@@ -347,10 +347,7 @@ export default function ManageContentPage() {
         {step === 2 && selectedAsset === "material" && (
           <CreateMaterialFlow
             metaData={metaDataForModal}
-            step={textureCurStep}
-            handleNext={() => {}}
             handleCancel={handlePrev}
-            handleRefresh={() => {}}
           />
         )}
         {step === 2 && selectedAsset === "3d-asset" && (

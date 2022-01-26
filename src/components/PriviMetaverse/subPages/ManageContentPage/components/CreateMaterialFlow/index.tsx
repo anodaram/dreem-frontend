@@ -22,25 +22,57 @@ import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
 import { FilterWorldAssetOptions } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
+import CollectionList from "../CollectionList";
+import PublicOption from "../PublicOption";
+import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
+import { ReactComponent as UnityIcon } from "assets/icons/unity.svg";
 
-import CreateMaterial from "../CreateMaterial";
-
+const CreateSteps = [
+  {
+    step: 1,
+    label: 'NFT',
+    completed: false
+  },
+  {
+    step: 2,
+    label: 'Files',
+    completed: false
+  },
+  {
+    step: 3,
+    label: 'Royalties',
+    completed: false
+  },
+  {
+    step: 4,
+    label: 'Collection',
+    completed: false
+  },
+]
 const CreateMaterialFlow = ({
   metaData,
-  step,
-  handleNext,
   handleCancel,
-  handleRefresh,
 }: {
   metaData: any;
-  step
-  handleNext: () => void;
   handleCancel: () => void;
-  handleRefresh: () => void;
 }) => {
   const classes = useModalStyles();
   const filterClasses = useFilterSelectStyles();
   const { showAlertMessage } = useAlertMessage();
+
+  const [nftOption, setNftOption] = useState<string>("");
+  const [step, setStep] = useState<number>(1);
+  const [steps, setSteps] = useState<any>(CreateSteps);
+  const [amount, setAmount] = useState<string>("");
+  const [royaltyAddress, setRoyaltyAddress] = useState<string>("");
+  const [royaltyPercentage, setRoyaltyPercentage] = useState<string>("");
+  const [isRoyalty, setIsRoyalty] = useState<boolean>();
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [isPublic, setIsPublic] = useState<boolean>(true);
+  const [currentCollection, setCurrentCollection] = useState<any>(null);
+  const [openPublic, setOpenPublic] = useState<any>();
+  const [sizeSpec, setSizeSpec] = useState<any>(metaData);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -57,6 +89,89 @@ const CreateMaterialFlow = ({
   const videoInputRef = useRef<HTMLInputElement>(null);
   const unityInputRef = useRef<HTMLInputElement>(null);
   const entityInputRef = useRef<HTMLInputElement>(null);
+
+  const handlePrev = () => {
+    if(step == 1) handleCancel()
+    setStep(prev => prev - 1);
+  };
+  const handleNext = () => {
+    console.log(steps[step-1])
+    switch (step) {
+      case 1:
+        steps[step-1].completed = nftOption ? true : false;
+        break;
+      case 2:
+        steps[step-1].completed = isRoyalty ? true : false;
+        break;
+      case 3:
+        steps[step-1].completed = validate() ? true : false;
+        break;
+      case 4:
+        steps[step-1].completed = currentCollection ? true : false;
+        break;
+    
+      default:
+        break;
+    }
+    if(step < 4){
+      setStep(prev => prev + 1);
+    }
+  };
+
+  const validate = () => {
+    if (!title || !description || !image || !unity) {
+      showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
+      return false;
+    }
+
+    if (title.length < sizeSpec?.worldTitle.limit.min || title.length > sizeSpec?.worldTitle.limit.max) {
+      showAlertMessage(
+        `Name field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldTitle.limit.min} to ${sizeSpec?.worldTitle.limit.max} characters`,
+        {
+          variant: "error",
+        }
+      );
+      return false;
+    } else if (
+      description.length < sizeSpec?.worldDescription.limit.min ||
+      description.length > sizeSpec?.worldDescription.limit.max
+    ) {
+      showAlertMessage(
+        `Description field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldDescription.limit.min} to ${sizeSpec?.worldDescription.limit.max} characters`,
+        { variant: "error" }
+      );
+      return false;
+    } else if (image.size > sizeSpec?.worldImage.limit.maxBytes) {
+      showAlertMessage(`Image field invalid. Size cannot exceed ${sizeSpec?.worldImage.limit.readable}`, {
+        variant: "error",
+      });
+      return false;
+    } else if (video && video.size > sizeSpec?.worldVideo.limit.maxBytes) {
+      showAlertMessage(`Video field invalid. Size cannot exceed ${sizeSpec?.worldVideo.limit.readable}`, {
+        variant: "error",
+      });
+      return false;
+    } else if (
+      !sizeSpec?.worldLevel.supportedFormats.toString().includes(unity.name.split(".").reverse()[0])
+    ) {
+      console.log(sizeSpec, metaData, unity.name.split(".").reverse()[0]);
+      showAlertMessage(`World file is invalid.`, { variant: "error" });
+      return false;
+    } else if (unity.size > sizeSpec?.worldLevel.limit.maxBytes) {
+      showAlertMessage(`World file invalid. Size cannot exceed ${sizeSpec?.worldLevel.limit.readable}`, {
+        variant: "error",
+      });
+      return false;
+    } else if (!entity.name.includes(sizeSpec?.worldMeta.supportedFormats.toString())) {
+      showAlertMessage(`World data is invalid.`, { variant: "error" });
+      return false;
+    } else if (entity.size > sizeSpec?.worldMeta.limit.maxBytes) {
+      showAlertMessage(`World data invalid. Size cannot exceed ${sizeSpec?.worldMeta.limit.readable}`, {
+        variant: "error",
+      });
+      return false;
+    } else return true;
+  };
 
   const onImageInput = e => {
     const files = e.target.files;
@@ -173,32 +288,366 @@ const CreateMaterialFlow = ({
   };
 
   return (
+    
     <>
-      { step == 1 &&
-        <div className={classes.otherContent}>
-          <div className={classes.typo1}><AssetIcon />Creating New Texture</div>
-          <CreatingStep curStep="2" status={[]} />
-          <NFTOption handleNext={() => {}}/>
+      <div className={classes.otherContent}>
+        <div className={classes.typo1}>
+          <AssetIcon />
+          Creating New Texture
         </div>
-      }
-      { step == 2 &&
-        <div className={classes.otherContent}>
-          <div className={classes.typo1}><AssetIcon />Creating New Asset</div>
-          <CreatingStep curStep="2" status={[]}/>
-          <RoyaltyOption handleNext={() => {}}/>
-        </div>
-      }
-      { step == 3 &&
-      <>
-        <div className={classes.otherContent}>
-          <div className={classes.typo1}>Creating New Draft</div>
-          <Box className={classes.typo3} mb={3}>
-            Fill all the details of your new nft
+        <CreatingStep curStep={step} status={steps} />
+        { step == 1 &&
+          <Box
+            className={classes.content}
+            style={{
+              padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
+            }}
+          >
+            <div className={classes.modalContent}>
+              <Box display="flex" alignItems="center" justifyContent="center" mt={2.5}>
+                <Box className={classes.title} mb={1}>
+                  select nft option
+                </Box>
+              </Box>
+              <div className={classes.inputGroup}>
+                <div className={classes.inputBox}>
+                  <input
+                    name="radio-group"
+                    className={classes.inputRadio}
+                    id="single"
+                    type="radio"
+                    // value={title}
+                    onChange={e => setNftOption(e.target.value == "on" ? "single" : "")}
+                  />
+                  <label htmlFor="single">single NFT(1/1)</label>
+                  <div className="check">
+                    <div className="inside"></div>
+                  </div>
+                </div>
+                <div className={classes.inputBox}>
+                  <input
+                    name="radio-group"
+                    className={classes.inputRadio}
+                    id="multi"
+                    type="radio"
+                    // value={title}
+                    onChange={e => {
+                      setNftOption(e.target.value == "on" ? "multiple" : "");
+                    }}
+                  />
+                  <label htmlFor="multi">multiple edition nft</label>
+                  <div className="check">
+                    <div className="inside"></div>
+                  </div>
+                </div>
+              </div>
+              {nftOption == "multiple" && (
+                <>
+                  <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+                    <Box className={classes.itemTitle} mb={1}>
+                      How many nfts do you want minted from this asset?
+                    </Box>
+                    <InfoTooltip tooltip={"Please give the number of nfts you want to mint."} />
+                  </Box>
+                  <input
+                    type="number"
+                    className={classes.inputText}
+                    placeholder=""
+                    value={amount}
+                    onChange={e => setAmount(e.target.value)}
+                  />
+                </>
+              )}
+            </div>
           </Box>
-          <CreateMaterial metaData={metaData} handleNext={() => {}} handleCancel={()=>{}}/>
+        }
+        { step == 2 &&
+         
+          <Box
+            className={classes.content}
+            style={{
+              padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
+            }}
+          >
+            <div className={classes.modalContent}>
+              <Box display="flex" alignItems="center" justifyContent="center" mt={2.5}>
+                <Box className={classes.title} mb={1}>
+                  do you want royalties from secondary sales of the nft(s)?
+                </Box>
+              </Box>
+              <Box className={classes.typo3} mb={3}>
+              Every time the NFT is traded on OpenSea or Dreem, NFT holders can receive royalties to their wallet address. If you select “Yes”, be prepared to paste the recipient wallet address.
+              </Box>
+              <div className={classes.inputGroup}>
+                <div className={classes.inputBox}>
+                  <input
+                    name="radio-group"
+                    className={classes.inputRadio}
+                    id='single'
+                    type='radio'
+                    // value={title}
+                    onChange={e => setIsRoyalty(e.target.value == 'on' ? true : false)}
+                  />
+                  <label htmlFor="single">yes</label>
+                  <div className="check"><div className="inside"></div></div>
+                </div>
+                <div className={classes.inputBox}>
+                  <input
+                    name="radio-group"
+                    className={classes.inputRadio}
+                    id='multi'
+                    type='radio'
+                    // value={title}
+                    onChange={e => {setIsRoyalty(e.target.value == 'on' ? false : true)}}
+                  />
+                  <label htmlFor="multi">no</label>
+                  <div className="check"><div className="inside"></div></div>
+                </div>
+              </div>
+              {isRoyalty &&
+              <>
+                <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+                  <Box className={classes.itemTitle} mb={1}>
+                    royalty share amount
+                  </Box>
+                </Box>
+                <input
+                  type='number'
+                  className={classes.inputText}
+                  placeholder=""
+                  value={royaltyPercentage}
+                  onChange={e => setRoyaltyPercentage(e.target.value)}
+                />
+                <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+                  <Box className={classes.itemTitle} mb={1}>
+                    address to receive royalties
+                  </Box>
+                </Box>
+                <input
+                  className={classes.inputText}
+                  placeholder=""
+                  value={royaltyAddress}
+                  onChange={e => setRoyaltyAddress(e.target.value)}
+                />
+              </>
+              }
+            </div>
+          </Box>
+        }
+        { step == 3 &&
+        <>
+          <Box
+            className={classes.content}
+            style={{
+              padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
+            }}
+          >
+            <div className={classes.modalContent}>
+              <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+                <Box className={classes.itemTitle} mb={1}>
+                  material name
+                </Box>
+              </Box>
+              <input
+                className={classes.input}
+                placeholder="NFT Name"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+              />
+              <Box display="flex" alignItems="center" justifyContent="space-between">
+                <Box className={classes.itemTitle} mt={2.5} mb={1}>
+                  Description
+                </Box>
+              </Box>
+              <textarea
+                style={{ height: "130px" }}
+                className={classes.input}
+                placeholder="NFT description"
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+              />
+              <Box display="flex" alignItems="center" justifyContent="space-between">
+                <Box className={classes.itemTitle} mt={2.5} mb={1}>
+                  Preview Image
+                </Box>
+                <InfoTooltip tooltip={"Please add an image of your realm."} />
+              </Box>
+              <Box
+                className={classes.uploadBox}
+                onClick={() => !image && imageInputRef.current?.click()}
+                style={{
+                  cursor: image ? undefined : "pointer",
+                  height: image ? 110 : 80,
+                }}
+              >
+                {image ? (
+                  <>
+                    <Box
+                      className={classes.image}
+                      style={{
+                        backgroundImage: `url(${imageFile})`,
+                        backgroundSize: "cover",
+                      }}
+                    />
+                    <Box flex={1} display="flex" alignItems="center" marginLeft="24px" justifyContent="space-between" mr={3}>
+                      Uploaded {image.name}
+                      <SecondaryButton
+                        size="medium"
+                        onClick={e => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setImage(null);
+                          setImageFile(null);
+                          imageInputRef.current?.click();
+                        }}
+                      >
+                        <img src={require("assets/metaverseImages/refresh.png")} />
+                        <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
+                      </SecondaryButton>
+                    </Box>
+                  </>
+                ) : (
+                  <>
+                    <Box className={classes.image}>
+                      <img width={26} src={require("assets/icons/image-icon.png")} alt="image" />
+                    </Box>
+                    <Box className={classes.controlBox} ml={5}>
+                      Drag image here or <span>browse media on your device</span>
+                      <br />
+                      <span>Accepted files png, jpg, svg</span> minimum 600 x 600 px size for
+                      <br />
+                      best viewing experience
+                    </Box>
+                  </>
+                )}
+              </Box>
+              <Box display="flex" alignItems="center" justifyContent="space-between">
+                <Box className={classes.itemTitle} mt={2.5} mb={1}>
+                  Material file
+                </Box>
+                <InfoTooltip
+                  tooltip={
+                    "Please input your extension source file (.dreemworld) that was generated by the dreem creator toolkit. The maximum size allowed is 50MB - if your file exceeds this limit, try reducing the size of resources."
+                  }
+                />
+              </Box>
+              <PrimaryButton
+                size="medium"
+                className={classes.uploadBtn}
+                onClick={() => {
+                  !unity && unityInputRef.current?.click();
+                }}
+                style={unity && {background: "#E9FF26!important"}}
+              >
+                {unity ? (
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    width={1}
+                    fontSize={12}
+                  >
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      fontSize={12}
+                    >
+                      <DocumentIcon /> {unity.name}
+                    </Box>
+                    <SecondaryButton
+                      size="medium"
+                      onClick={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setUnity(null);
+                        setUnityFile(null);
+                        unityInputRef.current?.click();
+                      }}
+                    >
+                      <img src={require("assets/metaverseImages/refresh.png")} />
+                      <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
+                    </SecondaryButton>
+                  </Box>
+                ) : (
+                  <Box pt={0.5}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <UnityIcon /> <Box display="flex" alignItems="center" marginLeft="5px">Add Unity File</Box>
+                  </Box>
+                )}
+              </PrimaryButton>
+            </div>
+            <input
+              ref={imageInputRef}
+              id={`selectPhoto-create-nft`}
+              hidden
+              type="file"
+              style={{ display: "none" }}
+              accept={sizeSpec?.worldImage.mimeTypes.join(",")}
+              onChange={onImageInput}
+            />
+            <input
+              ref={unityInputRef}
+              id={`selectUnity-create-nft`}
+              hidden
+              type="file"
+              style={{ display: "none" }}
+              // accept={sizeSpec?.worldLevel.mimeTypes.join(",")}
+              onChange={onUnityInput}
+            />
+          </Box>
+        </>
+        }
+      </div>
+      {step === 4 && (
+        <CollectionList
+          handleNext={() => {}}
+          handleCancel={() => {}}
+          handleSelect={item => {
+            setCurrentCollection(item);
+            steps[step-1].completed = true
+          }}
+        />
+      )}
+
+      {openPublic && (
+        <PublicOption
+          open={openPublic}
+          onClose={() => {
+            setOpenPublic(false);
+          }}
+          handleSubmit={() => {}}
+          handleSelect={isPublic => setIsPublic(isPublic)}
+        />
+      )}
+      <Box className={classes.footer}>
+        <div className={classes.howToCreateBtn} onClick={handlePrev}>
+          back
         </div>
-      </>
-      }
+        {step < 4 && (
+          <PrimaryButton
+            size="medium"
+            className={classes.nextBtn}
+            // disabled={step === 1}
+            onClick={() => handleNext()}
+          >
+            next
+          </PrimaryButton>
+        )}
+        {step === 4 && (
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <div className={classes.howToCreateBtn} onClick={() => setOpenPublic(true)}>
+              create draft
+            </div>
+            <PrimaryButton size="medium" className={classes.nextBtn} onClick={() => {}}>
+              mint nft
+            </PrimaryButton>
+          </Box>
+        )}
+      </Box>
     </>
   );
 };
