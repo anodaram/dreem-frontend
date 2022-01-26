@@ -306,6 +306,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
   };
 
   const handleSaveDraft = async () => {
+    setOpenPublic(false)
     if (validate()) {
       let payload: any = {};
       let collectionAddr = currentCollection.address;
@@ -360,7 +361,10 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
         return;
       }
     }
-
+    if(!library) {
+      showAlertMessage("Please check your network", { variant: "error" });
+      return;
+    }
     const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
     console.log(uri);
     setNftImage(metadata.image);
