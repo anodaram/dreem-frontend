@@ -46,9 +46,11 @@ export default function CollectionCard(props) {
     setData(item);
   }, [item]);
   const onClick = () => {
-    if (props.onClick) {
+    if (props.selectable) {
       props.onClick();
       setIsSelected(isSelected => !isSelected);
+    } else{
+      history.push(`/collection/${item.id}`);
     }
   }
   const isOwner = item && item.creatorId === userSelector.id;

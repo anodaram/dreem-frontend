@@ -145,6 +145,24 @@ export const getCollection = async collectionId => {
   }
 };
 
+export const getNFTInfo = async itemId => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.get(
+      `${METAVERSE_URL()}/web/itemVersions/${itemId}/nft/`,
+      config
+    );
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const uploadWorld = async payload => {
   try {
     const formData = new FormData();

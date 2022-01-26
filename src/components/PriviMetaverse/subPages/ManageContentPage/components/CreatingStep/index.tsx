@@ -38,25 +38,16 @@ const CreatingStep = ({
     <>
       <Box mb={3}>
         <div className={classes.stepBox}>
-          <div className={classes.boxContainer}>
-            <div className={`step ${curStep == 1 && status[0] ? "active" : "inactive"}`}><div className="inside">1</div></div>
-            <div className="label">NFT</div>
-          </div>
-          <div className="line"></div>
-          <div className={classes.boxContainer}>
-            <div className={`step ${curStep == 2 && status[1] ? "active" : "inactive"}`}><div className="inside">2</div></div>
-            <div className="label">Royalties</div>
-          </div>
-          <div className="line"></div>
-          <div className={classes.boxContainer}>
-            <div className={`step ${curStep == 3 && status[2] ? "active" : "inactive"}`}><div className="inside">3</div></div>
-            <div className="label">Files</div>
-          </div>
-          <div className="line"></div>
-          <div className={classes.boxContainer}>
-            <div className={`step ${curStep == 4 && status[3] ? "active" : "inactive"}`}><div className="inside">4</div></div>
-            <div className="label">Collection</div>
-          </div>
+          {status?.map((item, index) => (
+            <>
+              <div className={classes.boxContainer}>
+                <div className="statusIcon">{curStep > item.step && (item.completed ? <CompletedIcon/> : <FailedIcon/>) || curStep == status.length && item.completed && <CompletedIcon/> }</div>
+                <div className={`step ${curStep > item.step && (item.completed ? "active" : "inactive") || curStep == status.length && item.completed && "active" }`}><div className="inside">{item.step}</div></div>
+                <div className="label">{item.label}</div>
+              </div>
+              <div className={`line ${item.step == status.length ? "hidden" : ""}`}></div>
+            </>
+          ))}
         </div>
       </Box>
     </>
@@ -105,4 +96,18 @@ const IOSSwitch = styled((props: SwitchProps) => (
     }),
   },
 }));
+
+
+const CompletedIcon = () => (
+  <svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9.14288 2L4.14288 7L2 4.85713" stroke="#E9FF26" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+  </svg>
+);
+const FailedIcon = () => (
+<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8.14293 2.00002L2 8.14291M8.14296 8.14293L2.00007 2" stroke="#FF6868" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+</svg>
+
+);
+
 export default CreatingStep;

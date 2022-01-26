@@ -35,7 +35,23 @@ import { FilterWorldAssetOptions } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 import CreateNFT from "../CreateNFT";
-
+const CreateSteps = [
+  {
+    step: 1,
+    label: 'NFT',
+    completed: false
+  },
+  {
+    step: 2,
+    label: 'Files',
+    completed: false
+  },
+  {
+    step: 3,
+    label: 'Collection',
+    completed: false
+  },
+]
 const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel: () => void }) => {
   const classes = useModalStyles();
   const filterClasses = useFilterSelectStyles();
@@ -62,6 +78,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
   const [currentCollection, setCurrentCollection] = useState<any>(null);
   const [response, setResponse] = useState<any>();
   const [openPublic, setOpenPublic] = useState<any>();
+  const [steps, setSteps] = useState<any>(CreateSteps);
 
   const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
 
@@ -204,10 +221,28 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
   };
 
   const handlePrev = () => {
+    if(step == 1) handleCancel()
     setStep(prev => prev - 1);
   };
   const handleNext = () => {
-    setStep(prev => prev + 1);
+    console.log(steps[step-1])
+    switch (step) {
+      case 1:
+        steps[step-1].completed = nftOption ? true : false;
+        break;
+      case 2:
+        steps[step-1].completed = validate() ? true : false;
+        break;
+      case 3:
+        steps[step-1].completed = currentCollection ? true : false;
+        break;
+    
+      default:
+        break;
+    }
+    if(step < 3){
+      setStep(prev => prev + 1);
+    }
   };
 
   const validate = () => {
@@ -305,6 +340,10 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
     }
   };
   const mintNFT = async () => {
+    if(!response){
+      showAlertMessage(`Save draft first`, { variant: "error" });
+      return;
+    }
     let collectionData = currentCollection;
     let metadata = response.metadata;
     let collectionAddr = collectionData.address;
@@ -380,7 +419,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
           contractRes.collectionAddress,
           targetChain.name,
           contractRes.tokenId,
-          metadata.newFileCID,
+          metaData.newFileCID,
           contractRes.owner,
           contractRes.royaltyAddress
         );
@@ -399,7 +438,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
               <AssetIcon />
               Creating New Asset
             </div>
-            <CreatingStep curStep="2" status={[]} />
+            <CreatingStep curStep={step} status={steps} />
             {step == 1 && (
               <Box
                 className={classes.content}
@@ -744,6 +783,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
               handleCancel={() => {}}
               handleSelect={item => {
                 setCurrentCollection(item);
+                steps[step-1].completed = true
               }}
             />
           )}

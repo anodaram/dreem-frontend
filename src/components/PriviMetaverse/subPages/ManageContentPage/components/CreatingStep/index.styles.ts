@@ -44,6 +44,10 @@ export const useModalStyles = makeStyles(theme => ({
         color: '#212121',
       },
     },
+    "& .statusIcon": {
+      position: 'absolute',
+      top: '-17px'
+    },
     "& .line": {
       posistion: 'static',
       top: 'calc(50% - 0px/2 - 0px)',
@@ -51,6 +55,9 @@ export const useModalStyles = makeStyles(theme => ({
       width : '81.65px',
       height: '0px',
       border: '1px solid #FFFFFF',
+      "&.hidden": {
+        display: "none"
+      }
     }
   },
   boxContainer: {

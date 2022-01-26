@@ -284,6 +284,7 @@ const CollectionList = ({
                         item={item}
                         isLoading={loadingCollection}
                         onClick={() => handleSelect(item)}
+                        selectable={true}
                       />
                     )}
                     columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
