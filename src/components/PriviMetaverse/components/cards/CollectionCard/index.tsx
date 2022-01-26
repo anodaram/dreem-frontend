@@ -41,7 +41,6 @@ export default function CollectionCard(props) {
   const [imageIPFS, setImageIPFS] = useState<any>();
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
-
   React.useEffect(() => {
     setData(item);
   }, [item]);
@@ -49,19 +48,21 @@ export default function CollectionCard(props) {
     if (props.selectable) {
       props.onClick();
       setIsSelected(isSelected => !isSelected);
-    } else{
+    } else {
       history.push(`/collection/${item.id}`);
     }
-  }
+  };
   const isOwner = item && item.creatorId === userSelector.id;
 
   return (
-    <div className={styles.cardBorderWrapper} onClick={onClick}
+    <div
+      onClick={onClick}
       style={{
-        border: isSelected ? "3px solid #E9FF26" : "unset",
+        borderRadius: 12,
+        border: isSelected ? "3px solid #E9FF26" : "1px solid #ED7B7B",
         boxShadow: isSelected ? "0px 0px 14px 1px #DCFF35" : "unset",
       }}
-      >
+    >
       {isLoading ? (
         <Box className={styles.skeleton}>
           <Skeleton variant="rect" width="100%" />
@@ -74,17 +75,14 @@ export default function CollectionCard(props) {
             <div
               className={styles.collectionImage}
               style={{
-                backgroundImage: data.image
-                  ? `url("${data.image}")`
-                  : `url(${getDefaultImageUrl()})`,
+                backgroundImage: data.image ? `url("${data.image}")` : `url(${getDefaultImageUrl()})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 overflow: "hidden",
               }}
               ref={parentNode}
-            >
-            </div>
+            ></div>
           </div>
           <div className={styles.shapeIcon}>
             <ShapeIcon

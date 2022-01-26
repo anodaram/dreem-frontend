@@ -1,10 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 export const collectionCardStyles = makeStyles(theme => ({
-  cardBorderWrapper: {
-    border: "1px solid #ED7B7B",
-    borderRadius: 12,
-  },
   card: {
     background: "#000000",
     borderRadius: 12,
@@ -12,6 +8,7 @@ export const collectionCardStyles = makeStyles(theme => ({
     flexDirection: "column",
     position: "relative",
     maxHeight: 410,
+    minWidth: 310,
   },
   shapeIcon: {
     position: "absolute",
