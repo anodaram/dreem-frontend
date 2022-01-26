@@ -228,49 +228,49 @@ export default function ManageContentPage() {
   };
 
   const handleNext = () => {
-    console.log('----',step)
-    if(step == 2){
+    console.log("----", step);
+    if (step == 2) {
       switch (selectedAsset) {
-        case 'world':
-          if(worldCurStep<2){
-            setWorldCurStep(prev => prev + 1)
-          } else{
+        case "world":
+          if (worldCurStep < 2) {
+            setWorldCurStep(prev => prev + 1);
+          } else {
             setStep(prev => prev + 1);
           }
           break;
-        case 'texture':
-          if(textureCurStep<3){
-            setTextureCurStep(prev => prev + 1)
-          } else{
+        case "texture":
+          if (textureCurStep < 3) {
+            setTextureCurStep(prev => prev + 1);
+          } else {
             setStep(prev => prev + 1);
           }
           break;
-        case 'material':
-          if(textureCurStep<3){
-            setTextureCurStep(prev => prev + 1)
-          } else{
+        case "material":
+          if (textureCurStep < 3) {
+            setTextureCurStep(prev => prev + 1);
+          } else {
             setStep(prev => prev + 1);
           }
           break;
-        case '3d-asset':
-          if(textureCurStep<3){
-            setTextureCurStep(prev => prev + 1)
-          } else{
+        case "3d-asset":
+          if (textureCurStep < 3) {
+            setTextureCurStep(prev => prev + 1);
+          } else {
             setStep(prev => prev + 1);
           }
           break;
-        case 'character':
-          if(textureCurStep<3){
-            setTextureCurStep(prev => prev + 1)
-          } else{
+        case "character":
+          if (textureCurStep < 3) {
+            setTextureCurStep(prev => prev + 1);
+          } else {
             setStep(prev => prev + 1);
           }
           break;
-      
+
         default:
           break;
       }
-    } else{
+    } else {
       setStep(prev => prev + 1);
     }
   };
@@ -279,51 +279,51 @@ export default function ManageContentPage() {
     setStep(prev => prev - 1);
   };
 
-  const handleAsset = (asset) => {
+  const handleAsset = asset => {
     setSelectedAsset(asset);
-    if(asset != 'world'){
+    if (asset != "world") {
       setStep(2);
-    } else{
+    } else {
       setStep(prev => prev + 1);
     }
   };
 
   const handleRefreshCollection = () => {
-    setStep(3)
-    setCurPage(1)
+    setStep(3);
+    setCurPage(1);
     setLoadingCollection(true);
     MetaverseAPI.getCollections(12, 1, "DESC")
-    .then(res => {
-      if (res.success) {
-        const items = res.data.elements;
-        if (items && items.length > 0) {
-          setCollections(res.data.elements);
-          if (res.data.page && curPage <= res.data.page.max) {
-            setCurPage(curPage => curPage + 1);
-            setLastPage(res.data.page.max);
+      .then(res => {
+        if (res.success) {
+          const items = res.data.elements;
+          if (items && items.length > 0) {
+            setCollections(res.data.elements);
+            if (res.data.page && curPage <= res.data.page.max) {
+              setCurPage(curPage => curPage + 1);
+              setLastPage(res.data.page.max);
+            }
           }
         }
-      }
-    })
-    .finally(() => setLoadingCollection(false));
+      })
+      .finally(() => setLoadingCollection(false));
   };
 
   const loadMore = () => {
     setLoadingCollection(true);
     MetaverseAPI.getCollections(12, curPage, "DESC")
-    .then(res => {
-      if (res.success) {
-        const items = res.data.elements;
-        if (items && items.length > 0) {
-          setCollections([...collections, ...res.data.elements]);
-          if (res.data.page && curPage <= res.data.page.max) {
-            setCurPage(curPage => curPage + 1);
-            setLastPage(res.data.page.max);
+      .then(res => {
+        if (res.success) {
+          const items = res.data.elements;
+          if (items && items.length > 0) {
+            setCollections([...collections, ...res.data.elements]);
+            if (res.data.page && curPage <= res.data.page.max) {
+              setCurPage(curPage => curPage + 1);
+              setLastPage(res.data.page.max);
+            }
           }
         }
-      }
-    })
-    .finally(() => setLoadingCollection(false));
+      })
+      .finally(() => setLoadingCollection(false));
   };
 
   const validate = () => {
@@ -401,36 +401,33 @@ export default function ManageContentPage() {
         worldImage: image,
         worldLevel: unity,
         worldData: entity,
-        isPublic: isPublic
+        isPublic: isPublic,
       };
 
       if (video) payload.worldVideo = video;
 
       setShowUploadingModal(true);
       setProgress(0);
-      MetaverseAPI.uploadWorld(payload)
-        .then(async res => {
-          if (!res.success) {
-            showAlertMessage(`Failed to upload world`, { variant: "error" });
-            setShowUploadingModal(false);
-          } else{
-            setResponse(res.data)
-            setShowUploadingModal(false);
-            showAlertMessage(`Created draft successfully`, { variant: "success" });
-          }
-        })
+      MetaverseAPI.uploadWorld(payload).then(async res => {
+        if (!res.success) {
+          showAlertMessage(`Failed to upload world`, { variant: "error" });
+          setShowUploadingModal(false);
+        } else {
+          setResponse(res.data);
+          setShowUploadingModal(false);
+          showAlertMessage(`Created draft successfully`, { variant: "success" });
+        }
+      });
     }
-  }
+  };
   const mintNFT = async () => {
     let collectionData = currentCollection;
     let metadata = response.medadata;
     let collectionAddr = collectionData.address;
     let tokenId;
-    let isDraft = collectionData?.kind=="DRAFT" ? true : false;
+    let isDraft = collectionData?.kind == "DRAFT" ? true : false;
 
-    const metaData = await onUploadNonEncrypt(metadata, file =>
-      uploadWithNonEncryption(file)
-    );
+    const metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
 
     const targetChain = BlockchainNets.find(net => net.value === chain);
 
@@ -445,10 +442,10 @@ export default function ManageContentPage() {
     const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
     const web3APIHandler = targetChain.apiHandler;
     const web3 = new Web3(library.provider);
-    console.log('----metadata:', metaData, isDraft)
+    console.log("----metadata:", metaData, isDraft);
 
     if (isDraft) {
-      console.log('here-----')
+      console.log("here-----");
       const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
         web3,
         account,
@@ -471,9 +468,9 @@ export default function ManageContentPage() {
           resRoyalty.tokenId,
           metaData.newFileCID,
           account,
-          '0x0000000000000000000000000000000000000000'
+          "0x0000000000000000000000000000000000000000"
         );
-        handleRefreshCollection()
+        handleRefreshCollection();
       } else {
         setTxSuccess(false);
       }
@@ -493,7 +490,7 @@ export default function ManageContentPage() {
       if (contractRes.success) {
         setTxSuccess(true);
         showAlertMessage(`Successfully world minted`, { variant: "success" });
-        console.log(contractRes)
+        console.log(contractRes);
         await MetaverseAPI.convertToNFTWorld(
           response.item.id,
           contractRes.collectionAddress,
@@ -503,12 +500,12 @@ export default function ManageContentPage() {
           contractRes.owner,
           contractRes.royaltyAddress
         );
-        handleRefreshCollection()
+        handleRefreshCollection();
       } else {
         setTxSuccess(false);
       }
     }
-  }
+  };
 
   return (
     <>
@@ -579,22 +576,56 @@ export default function ManageContentPage() {
           </div>
         )}
         {step === 1 && (
-          <SelectType handleNext={(asset) => {handleAsset(asset)}}/>
+          <SelectType
+            handleNext={asset => {
+              handleAsset(asset);
+            }}
+          />
         )}
-        {(step === 2 && selectedAsset === 'world') &&  (
-          <CreateNFTFlow metaData={metaDataForModal} step={worldCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        {step === 2 && selectedAsset === "world" && (
+          <CreateNFTFlow
+            metaData={metaDataForModal}
+            step={worldCurStep}
+            handleNext={() => {}}
+            handleCancel={handlePrev}
+            handleRefresh={() => handleRefreshCollection()}
+          />
         )}
-        {(step === 2 && selectedAsset === 'texture') &&  (
-          <CreateTextureFlow metaData={metaDataForModal} step={textureCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        {step === 2 && selectedAsset === "texture" && (
+          <CreateTextureFlow
+            metaData={metaDataForModal}
+            step={textureCurStep}
+            handleNext={() => {}}
+            handleCancel={handlePrev}
+            handleRefresh={() => handleRefreshCollection()}
+          />
         )}
-        {(step === 2 && selectedAsset === 'material') &&  (
-          <CreateMaterialFlow metaData={metaDataForModal} step={textureCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        {step === 2 && selectedAsset === "material" && (
+          <CreateMaterialFlow
+            metaData={metaDataForModal}
+            step={textureCurStep}
+            handleNext={() => {}}
+            handleCancel={handlePrev}
+            handleRefresh={() => handleRefreshCollection()}
+          />
         )}
-        {(step === 2 && selectedAsset === '3d-asset') &&  (
-          <Create3DAssetFlow metaData={metaDataForModal} step={textureCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        {step === 2 && selectedAsset === "3d-asset" && (
+          <Create3DAssetFlow
+            metaData={metaDataForModal}
+            step={textureCurStep}
+            handleNext={() => {}}
+            handleCancel={handlePrev}
+            handleRefresh={() => handleRefreshCollection()}
+          />
         )}
-        {(step === 2 && selectedAsset === 'character') &&  (
-          <CreateCharacterFlow metaData={metaDataForModal} step={textureCurStep} handleNext={()=>{}} handleCancel={handlePrev} handleRefresh={() => handleRefreshCollection()}/>
+        {step === 2 && selectedAsset === "character" && (
+          <CreateCharacterFlow
+            metaData={metaDataForModal}
+            step={textureCurStep}
+            handleNext={() => {}}
+            handleCancel={handlePrev}
+            handleRefresh={() => handleRefreshCollection()}
+          />
         )}
         {step === 3 && (
           <div className={classes.otherContent}>
@@ -687,7 +718,11 @@ export default function ManageContentPage() {
             <Box className={classes.typo3} mb={3}>
               Fill all the details of your new collection
             </Box>
-            <CreateCollection handleNext={() => {}} handleCancel={()=>setStep(2)} handleRefresh={()=>handleRefreshCollection()} />
+            <CreateCollection
+              handleNext={() => {}}
+              handleCancel={() => setStep(2)}
+              handleRefresh={() => handleRefreshCollection()}
+            />
           </div>
         )}
         {step > 2 || (step === 2 && collections.length) ? (
@@ -695,7 +730,7 @@ export default function ManageContentPage() {
             <div className={classes.howToCreateBtn} onClick={handlePrev}>
               back
             </div>
-            {step < 3 &&
+            {step < 3 && (
               <PrimaryButton
                 size="medium"
                 className={classes.nextBtn}
@@ -704,21 +739,17 @@ export default function ManageContentPage() {
               >
                 next
               </PrimaryButton>
-            }
-            {step === 3 &&
+            )}
+            {step === 3 && (
               <Box display="flex" alignItems="center" justifyContent="center">
-                <div className={classes.howToCreateBtn} onClick={()=>{}}>
+                <div className={classes.howToCreateBtn} onClick={() => {}}>
                   create draft
                 </div>
-                <PrimaryButton
-                  size="medium"
-                  className={classes.nextBtn}
-                  onClick={() => {}}
-                  >
+                <PrimaryButton size="medium" className={classes.nextBtn} onClick={() => {}}>
                   mint nft
                 </PrimaryButton>
               </Box>
-            }
+            )}
           </Box>
         ) : null}
       </div>

@@ -30,7 +30,6 @@ const EditNFTDraft = () => {
             className={classes.input}
             id="single"
             type="radio"
-            // value={type === "single" ? "on" : ""}
             onChange={e => setType(e.target.value === "on" ? "single" : "")}
           />
           <label htmlFor="single">single NFT (1/1)</label>
@@ -52,7 +51,6 @@ const EditNFTDraft = () => {
             className={classes.input}
             id="multi"
             type="radio"
-            // value={type === "multiple" ? "on" : ""}
             onChange={e => {
               setType(e.target.value === "on" ? "multiple" : "");
             }}
