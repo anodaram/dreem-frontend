@@ -23,20 +23,35 @@ const rentalManager = (network: string) => {
             payload.fundingToken
           )
           .estimateGas({ from: account });
-
-        const response = await contract.methods
-          .listOffer(
-            payload.collectionId,
-            payload.tokenId,
-            payload.maximumRentalTime,
-            payload.pricePerSecond,
-            payload.rentalExpiration,
-            payload.fundingToken
-          )
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-          .on("transactionHash", hash => {
-            setHash(hash);
-          });
+        
+        
+        const response = await web3.eth.getChainId()==137 
+            ? await contract.methods
+                .listOffer(
+                  payload.collectionId,
+                  payload.tokenId,
+                  payload.maximumRentalTime,
+                  payload.pricePerSecond,
+                  payload.rentalExpiration,
+                  payload.fundingToken
+                )
+                .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
+            : await contract.methods
+                .listOffer(
+                  payload.collectionId,
+                  payload.tokenId,
+                  payload.maximumRentalTime,
+                  payload.pricePerSecond,
+                  payload.rentalExpiration,
+                  payload.fundingToken
+                )
+                .send({ from: account, gas: gas })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+              })
 
         const offerListed = response.events.OfferListed?.returnValues;
         if (!offerListed) {
@@ -67,19 +82,33 @@ const rentalManager = (network: string) => {
           )
           .estimateGas({ from: account });
 
-        const response = await contract.methods
-          .cancelListOffer(
-            payload.collectionId,
-            payload.tokenId,
-            payload.maximumRentalTime,
-            payload.pricePerSecond,
-            payload.rentalExpiration,
-            payload.fundingToken
-          )
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-          .on("transactionHash", hash => {
-            setHash(hash);
-          });
+        const response = await web3.eth.getChainId()==137 
+           ? await contract.methods
+              .cancelListOffer(
+                payload.collectionId,
+                payload.tokenId,
+                payload.maximumRentalTime,
+                payload.pricePerSecond,
+                payload.rentalExpiration,
+                payload.fundingToken
+              )
+              .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+              .on("transactionHash", hash => {
+                setHash(hash);
+              })
+            : await contract.methods
+                  .cancelListOffer(
+                    payload.collectionId,
+                    payload.tokenId,
+                    payload.maximumRentalTime,
+                    payload.pricePerSecond,
+                    payload.rentalExpiration,
+                    payload.fundingToken
+                  )
+                  .send({ from: account, gas: gas })
+                  .on("transactionHash", hash => {
+                    setHash(hash);
+                  })
 
         const offerCancelled = response.events.OfferCanceled?.returnValues;
         if (!offerCancelled) {
@@ -112,20 +141,35 @@ const rentalManager = (network: string) => {
           )
           .estimateGas({ from: account });
 
-        const response = await contract.methods
-          .rentalOffer(
-            payload.collectionId,
-            payload.tokenId,
-            payload.rentalTime,
-            payload.pricePerSecond,
-            payload.rentalExpiration,
-            payload.fundingToken,
-            payload.operator
-          )
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-          .on("transactionHash", hash => {
-            setHash(hash);
-          });
+        const response = await web3.eth.getChainId()==137 
+            ? await contract.methods
+                .rentalOffer(
+                  payload.collectionId,
+                  payload.tokenId,
+                  payload.rentalTime,
+                  payload.pricePerSecond,
+                  payload.rentalExpiration,
+                  payload.fundingToken,
+                  payload.operator
+                )
+                .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
+            : await contract.methods
+                .rentalOffer(
+                  payload.collectionId,
+                  payload.tokenId,
+                  payload.rentalTime,
+                  payload.pricePerSecond,
+                  payload.rentalExpiration,
+                  payload.fundingToken,
+                  payload.operator
+                )
+                .send({ from: account, gas: gas })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
 
         const rentalOffered = response.events.RentalOffered?.returnValues;
         if (!rentalOffered) {
@@ -158,20 +202,35 @@ const rentalManager = (network: string) => {
           )
           .estimateGas({ from: account });
 
-        const response = await contract.methods
-          .cancelRentalOffer(
-            payload.collectionId,
-            payload.tokenId,
-            payload.rentalTime,
-            payload.pricePerSecond,
-            payload.rentalExpiration,
-            payload.fundingToken,
-            payload.operator
-          )
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-          .on("transactionHash", hash => {
-            setHash(hash);
-          });
+        const response = await web3.eth.getChainId()==137 
+            ? await contract.methods
+                    .cancelRentalOffer(
+                      payload.collectionId,
+                      payload.tokenId,
+                      payload.rentalTime,
+                      payload.pricePerSecond,
+                      payload.rentalExpiration,
+                      payload.fundingToken,
+                      payload.operator
+                    )
+                    .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                    .on("transactionHash", hash => {
+                      setHash(hash);
+                    })
+            : await contract.methods
+                    .cancelRentalOffer(
+                      payload.collectionId,
+                      payload.tokenId,
+                      payload.rentalTime,
+                      payload.pricePerSecond,
+                      payload.rentalExpiration,
+                      payload.fundingToken,
+                      payload.operator
+                    )
+                    .send({ from: account, gas: gas })
+                    .on("transactionHash", hash => {
+                      setHash(hash);
+                    })
         if (response) {
           resolve({ success: true });
         } else {
@@ -202,20 +261,35 @@ const rentalManager = (network: string) => {
           )
           .estimateGas({ from: account });
 
-        const response = await contract.methods
-          .acceptRentalOffer(
-            payload.collectionId,
-            payload.tokenId,
-            payload.rentalTime,
-            payload.pricePerSecond,
-            payload.rentalExpiration,
-            payload.fundingToken,
-            payload.offerer
-          )
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-          .on("transactionHash", hash => {
-            setHash(hash);
-          });
+        const response = await web3.eth.getChainId()==137 
+           ? await contract.methods
+                .acceptRentalOffer(
+                  payload.collectionId,
+                  payload.tokenId,
+                  payload.rentalTime,
+                  payload.pricePerSecond,
+                  payload.rentalExpiration,
+                  payload.fundingToken,
+                  payload.offerer
+                )
+                .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
+          : await contract.methods
+              .acceptRentalOffer(
+                payload.collectionId,
+                payload.tokenId,
+                payload.rentalTime,
+                payload.pricePerSecond,
+                payload.rentalExpiration,
+                payload.fundingToken,
+                payload.offerer
+              )
+              .send({ from: account, gas: gas })
+              .on("transactionHash", hash => {
+                setHash(hash);
+              });
         const eventNFTRented = response.events.NFTRented?.returnValues;
         if (eventNFTRented) {
           resolve({ success: true, offer: eventNFTRented });
@@ -247,21 +321,37 @@ const rentalManager = (network: string) => {
           )
           .estimateGas({ from: account });
 
-        const response = await contract.methods
-          .rentNFT(
-            payload.collectionId,
-            payload.tokenId,
-            payload.maximumRentalTime,
-            payload.pricePerSecond,
-            payload.rentalExpiration,
-            payload.fundingToken,
-            payload.operator,
-            payload.rentalTime
-          )
-          .send({ from: account, gas: gas })
-          .on("transactionHash", hash => {
-            setHash(hash);
-          });
+        const response = await web3.eth.getChainId()==137 
+            ? await contract.methods
+                .rentNFT(
+                  payload.collectionId,
+                  payload.tokenId,
+                  payload.maximumRentalTime,
+                  payload.pricePerSecond,
+                  payload.rentalExpiration,
+                  payload.fundingToken,
+                  payload.operator,
+                  payload.rentalTime
+                )
+                .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
+            : await contract.methods
+                .rentNFT(
+                  payload.collectionId,
+                  payload.tokenId,
+                  payload.maximumRentalTime,
+                  payload.pricePerSecond,
+                  payload.rentalExpiration,
+                  payload.fundingToken,
+                  payload.operator,
+                  payload.rentalTime
+                )
+                .send({ from: account, gas: gas })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
         const eventNFTRented = response.events.NFTRented?.returnValues;
         if (eventNFTRented) {
           resolve({ success: true, offer: { ...eventNFTRented, hash: response.transactionHash } });
