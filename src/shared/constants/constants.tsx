@@ -217,6 +217,10 @@ export const handleTelegramLink = () => {
   window.open("https://t.me/joinchat/eSqsr4rW4gBkZGM0", "_blank");
 };
 
+export const handleWhatsappLink = () => {
+  window.open("", "_blank");
+};
+
 export const handleYoutubeLink = () => {
   window.open("https://www.youtube.com/channel/UCXAIU_t-EeATLJyoAD7A3Zw", "_blank");
 };

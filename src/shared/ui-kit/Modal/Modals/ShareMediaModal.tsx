@@ -21,14 +21,15 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import Box from "shared/ui-kit/Box";
 
 const copyIcon = require("assets/icons/copy.png");
-import { ReactComponent as YoutubeIcon } from "assets/snsIcons/youtube.svg";
+// import { ReactComponent as YoutubeIcon } from "assets/snsIcons/youtube.svg";
 import { ReactComponent as TwitterIcon } from "assets/snsIcons/twitter.svg";
-import { ReactComponent as InstagramIcon } from "assets/snsIcons/instagram.svg";
-import { ReactComponent as LinkedInIcon } from "assets/snsIcons/linkedin.svg";
-import { ReactComponent as TiktokIcon } from "assets/snsIcons/tiktok.svg";
-import { ReactComponent as MediaIcon } from "assets/snsIcons/media.svg";
-import { ReactComponent as FacebookIcon } from "assets/snsIcons/facebook.svg";
+// import { ReactComponent as InstagramIcon } from "assets/snsIcons/instagram.svg";
+// import { ReactComponent as LinkedInIcon } from "assets/snsIcons/linkedin.svg";
+// import { ReactComponent as TiktokIcon } from "assets/snsIcons/tiktok.svg";
+// import { ReactComponent as MediaIcon } from "assets/snsIcons/media.svg";
+// import { ReactComponent as FacebookIcon } from "assets/snsIcons/facebook.svg";
 import { ReactComponent as TelegramIcon } from "assets/snsIcons/telegram.svg";
+import { ReactComponent as WhatsappIcon } from "assets/snsIcons/whatsapp.svg";
 
 type SocialMediaButtonProps = {
   color: string;
@@ -172,7 +173,7 @@ export const ShareMediaModal: React.FC<ShareMediaToSocialModalProps> = ({
         <h3 className={classes.shareSocialMedia}>Share on</h3>
         <Box className={classes.socialBox}>
           <Box>
-            <SocialMediaButton
+            {/* <SocialMediaButton
               color={"#E9FF26"}
               name={"Linkedin"}
               icon={<LinkedInIcon />}
@@ -181,8 +182,8 @@ export const ShareMediaModal: React.FC<ShareMediaToSocialModalProps> = ({
                 url: shareLink,
               }}
               shareMedia={shareMedia}
-            />
-            <SocialMediaButton
+            /> */}
+            {/* <SocialMediaButton
               color={"#E9FF26"}
               name={"Facebook"}
               icon={<FacebookIcon />}
@@ -192,7 +193,7 @@ export const ShareMediaModal: React.FC<ShareMediaToSocialModalProps> = ({
                 hashTag: "PRIVI",
               }}
               shareMedia={shareMedia}
-            />
+            /> */}
             <SocialMediaButton
               color={"#E9FF26"}
               name={"Twitter"}
@@ -215,6 +216,16 @@ export const ShareMediaModal: React.FC<ShareMediaToSocialModalProps> = ({
               shareMedia={shareMedia}
             />
           </Box>
+          <SocialMediaButton
+            color={"#E9FF26"}
+            name={"Whatsapp"}
+            icon={<WhatsappIcon />}
+            shareProps={{
+              title: `Check out this ${shareType} at`,
+              url: shareLink,
+            }}
+            shareMedia={shareMedia}
+          />
           {/* <Box>
             <SocialMediaButton
               color={"#E9FF26"}
