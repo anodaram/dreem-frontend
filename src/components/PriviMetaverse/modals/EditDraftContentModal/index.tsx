@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
@@ -10,16 +10,28 @@ import EditFilesDraftTab from "./components/EditFilesDraft";
 import EditCollectionDraftTab from "./components/EditCollectionDraft";
 import { useModalStyles } from "./index.styles";
 
-const Tabs = ["NFT", "Royalties", "Files", "Collection"];
-
 const EditDraftContentModal = ({ open, onClose, draftContent }) => {
   const classes = useModalStyles();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
+  const [tabs, setTabs] = useState<string[]>(["NFT", "Royalties", "Files", "Collection"]);
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [completed, setCompleted] = useState<boolean[]>([]);
+  const [isWorldNFT, setIsWorldNFT] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!draftContent) return;
+
+    if (draftContent.itemKind === "WORLD") {
+      setIsWorldNFT(true);
+      setTabs(["Royalties", "Files", "Collection"]);
+    } else {
+      setIsWorldNFT(false);
+      setTabs(["NFT", "Royalties", "Files", "Collection"]);
+    }
+  }, [draftContent]);
 
   const handlePage = (index: number) => {
     const newComplete = [...completed];
@@ -51,7 +63,7 @@ const EditDraftContentModal = ({ open, onClose, draftContent }) => {
         <Box className={classes.tabSection}>
           <div className={classes.stepsBorder} />
           <div className={classes.steps}>
-            {Tabs.map((tab, index) => (
+            {tabs.map((tab, index) => (
               <div
                 className={index <= selectedTab ? classes.selected : undefined}
                 key={`tab-${index}`}
@@ -82,10 +94,16 @@ const EditDraftContentModal = ({ open, onClose, draftContent }) => {
         </Box>
         <div className={classes.divider} />
         <Box className={classes.mainSection}>
-          {selectedTab === 0 && <EditNFTDraftTab />}
-          {selectedTab === 1 && <EditRoyaltiesDraftTab />}
-          {selectedTab === 2 && <EditFilesDraftTab draftContent={draftContent} />}
-          {selectedTab === 3 && <EditCollectionDraftTab />}
+          {selectedTab === 0 && !isWorldNFT && <EditNFTDraftTab />}
+          {((selectedTab === 1 && !isWorldNFT) || (selectedTab === 0 && isWorldNFT)) && (
+            <EditRoyaltiesDraftTab />
+          )}
+          {((selectedTab === 2 && !isWorldNFT) || (selectedTab === 1 && isWorldNFT)) && (
+            <EditFilesDraftTab draftContent={draftContent} />
+          )}
+          {((selectedTab === 3 && !isWorldNFT) || (selectedTab === 2 && isWorldNFT)) && (
+            <EditCollectionDraftTab />
+          )}
           <Box className={classes.footerSection}>
             <SecondaryButton
               size="medium"
