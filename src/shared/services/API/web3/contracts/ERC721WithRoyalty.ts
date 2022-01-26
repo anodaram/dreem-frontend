@@ -89,11 +89,18 @@ const erc721 = network => {
         const gas = await contract.methods
           .approve(payload.to, payload.tokenId)
           .estimateGas({ from: account });
-        await contract.methods.approve(payload.to, payload.tokenId).send({ 
+
+      await web3.eth.getChainId()==137 
+         ? await contract.methods.approve(payload.to, payload.tokenId).send({ 
           from: account, 
           gas: gas,
           maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei')
+         })
+         : await contract.methods.approve(payload.to, payload.tokenId).send({ 
+            from: account, 
+            gas: gas
          });
+
         resolve({ success: true });
       } catch (e) {
         console.log(e);
@@ -109,13 +116,18 @@ const erc721 = network => {
   ): Promise<any> => {
     return new Promise(async resolve => {
       try {
+        
         const contract = ContractInstance(web3, metadata.abi, tokenContractAddress || contractAddress);
         const gas = await contract.methods
           .setApprovalForAll(payload.operator, payload.approve)
           .estimateGas({ from: account });
-        await contract.methods
+      await web3.eth.getChainId()==137 
+         ? await contract.methods
           .setApprovalForAll(payload.operator, payload.approve)
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') });
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+        : await contract.methods
+          .setApprovalForAll(payload.operator, payload.approve)
+          .send({ from: account, gas: gas })
         resolve({ success: true });
       } catch (e) {
         console.log(e);
@@ -135,9 +147,15 @@ const erc721 = network => {
         const gas = await contract.methods
           .setApprovalForAll(config[network].CONTRACT_ADDRESSES[interactingContractAddress], true)
           .estimateGas({ from: account });
-        await contract.methods
-          .setApprovalForAll(config[network].CONTRACT_ADDRESSES[interactingContractAddress], true)
-          .send({ type: "0x2", from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') });
+
+        await web3.eth.getChainId()==137 
+          ? await contract.methods
+            .setApprovalForAll(config[network].CONTRACT_ADDRESSES[interactingContractAddress], true)
+            .send({ type: "0x2", from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+          : await contract.methods
+            .setApprovalForAll(config[network].CONTRACT_ADDRESSES[interactingContractAddress], true)
+            .send({ type: "0x2", from: account, gas: gas })
+
         resolve({ success: true });
       } catch (e) {
         console.log(e);
@@ -191,11 +209,18 @@ const erc721 = network => {
         console.log("Getting gas....");
         const gas = await contract.methods.approve(payload.to, payload.tokenId).estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
-        await contract.methods.approve(payload.to, payload.tokenId).send({ 
-          from: account, 
-          gas: gas,
-          maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei'),
-        })
+
+        await web3.eth.getChainId()==137 
+           ? await contract.methods.approve(payload.to, payload.tokenId).send({ 
+                from: account, 
+                gas: gas,
+                maxPriorityFeePerGas: await web3.eth.getChainId()==137 ? web3.utils.toWei(MAX_PRIO_FEE, 'gwei') : "",
+              })
+           : await contract.methods.approve(payload.to, payload.tokenId).send({ 
+                from: account, 
+                gas: gas
+            })
+            
         console.log("transaction succeed");
         resolve(true);
       } catch (e) {
