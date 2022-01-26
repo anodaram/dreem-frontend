@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import Box from "shared/ui-kit/Box";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
@@ -18,6 +18,8 @@ const EditFilesDraft = ({ draftContent }) => {
   const [description, setDescription] = useState<string>("");
   const [image, setImage] = useState<any>(null);
   const [imageFile, setImageFile] = useState<any>(null);
+  const [video, setVideo] = useState<any>(null);
+  const [videoFile, setVideoFile] = useState<any>(null);
   const [unity, setUnity] = useState<any>(null);
   const [unityFile, setUnityFile] = useState<any>(null);
   const [gltf, setGltf] = useState<any>(null);
@@ -28,10 +30,17 @@ const EditFilesDraft = ({ draftContent }) => {
   const [materialFile, setMaterialFile] = useState<any>(null);
 
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
   const unityInputRef = useRef<HTMLInputElement>(null);
   const gltfInputRef = useRef<HTMLInputElement>(null);
   const characterInputRef = useRef<HTMLInputElement>(null);
   const materialInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!draftContent) return;
+
+    setType(draftContent.itemKind);
+  }, [draftContent]);
 
   const onImageInput = e => {
     const files = e.target.files;
@@ -127,7 +136,6 @@ const EditFilesDraft = ({ draftContent }) => {
       characterInputRef.current.value = "";
     }
   };
-
   const handleCharacterFiles = (files: any) => {
     if (files && files[0]) {
       setCharacter(files[0]);
@@ -156,7 +164,6 @@ const EditFilesDraft = ({ draftContent }) => {
       materialInputRef.current.value = "";
     }
   };
-
   const handleMaterialFiles = (files: any) => {
     if (files && files[0]) {
       setMaterial(files[0]);
@@ -178,7 +185,7 @@ const EditFilesDraft = ({ draftContent }) => {
     <Box>
       <Box display="flex" alignItems="center" justifyContent="space-between">
         <Box className={classes.itemTitle} mb={1}>
-          texture name
+          {type === "WORLD" ? "NFT Name" : "Texture Name"}
         </Box>
       </Box>
       <input
@@ -261,7 +268,68 @@ const EditFilesDraft = ({ draftContent }) => {
           </>
         )}
       </Box>
-      {type === "CHARACTER" && (
+      {type === "WORLD" && (
+        <>
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Box className={classes.itemTitle} mt={2.5} mb={1}>
+              Add Video file
+            </Box>
+            <InfoTooltip
+              tooltip={
+                "Please give your realm a video. This video can be considered as your teaser to your realm."
+              }
+            />
+          </Box>
+          <Box
+            className={classes.uploadBox}
+            onClick={() => !video && videoInputRef.current?.click()}
+            style={{
+              cursor: video ? undefined : "pointer",
+              height: video ? 110 : 80,
+            }}
+          >
+            {video ? (
+              <>
+                <Box
+                  className={classes.image}
+                  style={{
+                    backgroundImage: `url(${videoFile})`,
+                    backgroundSize: "cover",
+                  }}
+                />
+                <Box flex={1} display="flex" justifyContent="flex-end" mr={3}>
+                  <SecondaryButton
+                    size="medium"
+                    onClick={e => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setVideo(null);
+                      setVideoFile(null);
+                      videoInputRef.current?.click();
+                    }}
+                  >
+                    <img src={require("assets/metaverseImages/refresh.png")} />
+                    <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
+                  </SecondaryButton>
+                </Box>
+              </>
+            ) : (
+              <>
+                <Box className={classes.image}>
+                  <img src={require("assets/icons/video_outline_white_icon.png")} alt="video" />
+                </Box>
+                <Box className={classes.controlBox} ml={5}>
+                  Drag video here or <span>browse media on your device</span>
+                  <br />
+                  Maximum video size is 30mb
+                </Box>
+              </>
+            )}
+          </Box>
+        </>
+      )}
+      0
+      {(type === "WORLD" || type === "CHARACTER") && (
         <>
           <Box display="flex" alignItems="center" justifyContent="space-between">
             <Box className={classes.itemTitle} mt={2.5} mb={1}>
