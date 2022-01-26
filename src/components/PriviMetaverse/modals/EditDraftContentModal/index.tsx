@@ -12,7 +12,7 @@ import { useModalStyles } from "./index.styles";
 
 const Tabs = ["NFT", "Royalties", "Files", "Collection"];
 
-const EditDraftContentModal = ({ open, onClose }) => {
+const EditDraftContentModal = ({ open, onClose, draftContent }) => {
   const classes = useModalStyles();
 
   const theme = useTheme();
@@ -84,7 +84,7 @@ const EditDraftContentModal = ({ open, onClose }) => {
         <Box className={classes.mainSection}>
           {selectedTab === 0 && <EditNFTDraftTab />}
           {selectedTab === 1 && <EditRoyaltiesDraftTab />}
-          {selectedTab === 2 && <EditFilesDraftTab />}
+          {selectedTab === 2 && <EditFilesDraftTab draftContent={draftContent} />}
           {selectedTab === 3 && <EditCollectionDraftTab />}
           <Box className={classes.footerSection}>
             <SecondaryButton
