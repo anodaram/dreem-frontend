@@ -5,6 +5,8 @@ import { erc20ToWeiUnit } from "shared/constants/constants";
 import { BigNumber } from "ethers";
 import { toNDecimals } from "shared/functions/web3";
 
+const MAX_PRIO_FEE = "50";
+
 const erc20_standard = (network, token) => {
   const contractAddress = config[network].TOKEN_ADDRESSES[token];
   const metadata = require(`shared/connectors/web3/contracts/${token}.json`);
@@ -18,7 +20,16 @@ const erc20_standard = (network, token) => {
         console.log("Getting gas....");
         const gas = await contract.methods.approve(address, approveAmount).estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
-        await contract.methods.approve(address, approveAmount).send({ from: account, gas: gas });
+        await web3.eth.getChainId()==137 
+            ? await contract.methods.approve(address, approveAmount).send({ 
+              from: account, 
+              gas: gas,
+              maxPriorityFeePerGas: await web3.eth.getChainId()==137 ? web3.utils.toWei(MAX_PRIO_FEE, 'gwei') : "",
+            })
+            : await contract.methods.approve(address, approveAmount).send({ 
+                from: account, 
+                gas: gas
+              });
         console.log("transaction succeed");
         resolve(true);
       } catch (e) {
