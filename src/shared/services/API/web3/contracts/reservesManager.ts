@@ -44,14 +44,23 @@ const reservesManager = (network: string) => {
           )
           .estimateGas({ from: account });
 
-        const response = await contract.methods
-          .cancelReserve(
-            payload.activeReserveId
-          )
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-          .on("transactionHash", hash => {
-            setHash(hash);
-          });
+        const response = await web3.eth.getChainId()==137 
+            ? await contract.methods
+                  .cancelReserve(
+                    payload.activeReserveId
+                  )
+                  .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                  .on("transactionHash", hash => {
+                    setHash(hash);
+                  })
+            : await contract.methods
+                  .cancelReserve(
+                    payload.activeReserveId
+                  )
+                  .send({ from: account, gas: gas })
+                  .on("transactionHash", hash => {
+                    setHash(hash);
+                  })
 
         console.log("transaction succeed... ", response?.events);
         if (response?.events?.ReserveCanceled) {
@@ -83,14 +92,26 @@ const reservesManager = (network: string) => {
           )
           .estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
-        const response = await contract.methods
-          .liquidateReserve(
-            payload.activeReserveId,
-          )
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-          .on("transactionHash", hash => {
-            setHash(hash);
-          });
+
+
+
+        const response = await web3.eth.getChainId()==137 
+            ? await contract.methods
+                  .liquidateReserve(
+                    payload.activeReserveId,
+                  )
+                  .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                  .on("transactionHash", hash => {
+                    setHash(hash);
+                  })
+            : await contract.methods
+                .liquidateReserve(
+                  payload.activeReserveId,
+                )
+                .send({ from: account, gas: gas })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
         console.log("transaction succeed", response?.events);
         if (
           payload.mode === 0 && response?.events?.PurchaseExecuted ||
@@ -128,14 +149,27 @@ const reservesManager = (network: string) => {
           )
           .estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
-        const response = await contract.methods
-          .liquidateUndercollateralization(
-            payload.activeReserveId,
-          )
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-          .on("transactionHash", hash => {
-            setHash(hash);
-          });
+
+
+        const response = await web3.eth.getChainId()==137 
+           ? await contract.methods
+                .liquidateUndercollateralization(
+                  payload.activeReserveId,
+                )
+                .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
+            : await contract.methods
+                .liquidateUndercollateralization(
+                  payload.activeReserveId,
+                )
+                .send({ from: account, gas: gas})
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
+
+
         console.log("transaction succeed", response?.events);
         if (response?.events?.CollateralClaimed) {
           resolve({ success: true, hash: response.transactionHash });
@@ -171,15 +205,29 @@ const reservesManager = (network: string) => {
           )
           .estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
-        const response = await contract.methods
-          .decreaseReserveCollateral(
-            payload.activeReserveId,
-            payload.amount,
-          )
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-          .on("transactionHash", hash => {
-            setHash(hash);
-          });
+
+
+        const response = await web3.eth.getChainId()==137 
+            ? await contract.methods
+                  .decreaseReserveCollateral(
+                    payload.activeReserveId,
+                    payload.amount,
+                  )
+                  .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                  .on("transactionHash", hash => {
+                    setHash(hash);
+                  })
+            : await contract.methods
+                  .decreaseReserveCollateral(
+                    payload.activeReserveId,
+                    payload.amount,
+                  )
+                  .send({ from: account, gas: gas })
+                  .on("transactionHash", hash => {
+                    setHash(hash);
+                  })
+
+
         console.log("transaction succeed", response?.events);
         if (response?.events?.CollateralDecreased) {
           resolve({ success: true, hash: response.transactionHash });
@@ -213,15 +261,27 @@ const reservesManager = (network: string) => {
           )
           .estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
-        const response = await contract.methods
-          .increaseReserveCollateral(
-            payload.activeReserveId,
-            payload.amount,
-          )
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-          .on("transactionHash", hash => {
-            setHash(hash);
-          });
+
+
+        const response = await web3.eth.getChainId()==137 
+             ? await contract.methods
+                      .increaseReserveCollateral(
+                        payload.activeReserveId,
+                        payload.amount,
+                      )
+                      .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                      .on("transactionHash", hash => {
+                        setHash(hash);
+                      })
+              : await contract.methods
+                    .increaseReserveCollateral(
+                      payload.activeReserveId,
+                      payload.amount,
+                    )
+                    .send({ from: account, gas: gas })
+                    .on("transactionHash", hash => {
+                      setHash(hash);
+                    })
         console.log("transaction succeed", response?.events);
         if (response?.events?.CollateralIncreased) {
           resolve({ success: true, hash: response.transactionHash });
@@ -254,14 +314,26 @@ const reservesManager = (network: string) => {
           )
           .estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
-        const response = await contract.methods
-          .payThePrice(
-            payload.activeReserveId,
-          )
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-          .on("transactionHash", hash => {
-            setHash(hash);
-          });
+        const response = await web3.eth.getChainId()==137 
+            ? await contract.methods
+                .payThePrice(
+                  payload.activeReserveId,
+                )
+                .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
+            : await contract.methods
+                .payThePrice(
+                  payload.activeReserveId,
+                )
+                .send({ from: account, gas: gas })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
+
+
+
         console.log("transaction succeed", response?.events);
         if (response?.events?.ReservePricePaid) {
           resolve({ success: true, hash: response.transactionHash });

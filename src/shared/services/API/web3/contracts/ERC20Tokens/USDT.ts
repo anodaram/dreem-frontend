@@ -4,6 +4,8 @@ import config from "shared/connectors/polygon/config";
 import { BigNumber } from "ethers";
 import { toNDecimals } from "shared/functions/web3";
 
+const MAX_PRIO_FEE = "50";
+
 const usdt = network => {
   const contractAddress = config[network].TOKEN_ADDRESSES.USDT;
   const metadata = require("shared/connectors/polygon/contracts/USDT.json");
@@ -12,12 +14,19 @@ const usdt = network => {
     return new Promise(async resolve => {
       try {
         const approveAmount = amount || toNDecimals(1, 30);
-
+        console.log("hereeeee")
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
         console.log("Getting gas....");
-        const gas = await contract.methods.approve(address, approveAmount).estimateGas({ from: account });
+        const gas = await contract.methods.approve(address, approveAmount).estimateGas({ 
+          from: account
+         });
         console.log("calced gas price is.... ", gas);
-        await contract.methods.approve(address, approveAmount).send({ from: account, gas: gas });
+        console.log("hereeeee")
+        await contract.methods.approve(address, approveAmount).send({ 
+          from: account, 
+          gas: gas,
+          maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei'),
+         });
         console.log("transaction succeed");
         resolve(true);
       } catch (e) {
