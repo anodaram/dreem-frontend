@@ -6,21 +6,23 @@ import { Modal, PrimaryButton } from "shared/ui-kit";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
 import {
-  handleDiscordLink,
+  // handleDiscordLink,
   handleTelegramLink,
-  handleYoutubeLink,
+  // handleYoutubeLink,
   handleTwitterLink,
-  handleInstagramLink,
-  handleGitbookLink,
+  // handleInstagramLink,
+  // handleGitbookLink,
+  handleWhatsappLink,
 } from "shared/constants/constants";
 import { useModalStyles } from "./index.styles";
 
 import { ReactComponent as TelegramIcon } from "assets/snsIcons/telegram.svg";
 import { ReactComponent as TwitterIcon } from "assets/snsIcons/twitter.svg";
-import { ReactComponent as DiscordIcon } from "assets/snsIcons/discord.svg";
-import { ReactComponent as InstagramIcon } from "assets/snsIcons/instagram.svg";
-import { ReactComponent as YoutubeIcon } from "assets/snsIcons/youtube.svg";
-import { ReactComponent as GitbookIcon } from "assets/snsIcons/gitbook.svg";
+import { ReactComponent as WhatsappIcon } from "assets/snsIcons/whatsapp.svg";
+// import { ReactComponent as DiscordIcon } from "assets/snsIcons/discord.svg";
+// import { ReactComponent as InstagramIcon } from "assets/snsIcons/instagram.svg";
+// import { ReactComponent as YoutubeIcon } from "assets/snsIcons/youtube.svg";
+// import { ReactComponent as GitbookIcon } from "assets/snsIcons/gitbook.svg";
 
 require("dotenv").config();
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -172,7 +174,10 @@ export default function MintingNFTProgressModal({
             <Box className={classes.snsBox} onClick={handleTwitterLink}>
               <TwitterIcon />
             </Box>
-            <Box className={classes.snsBox} onClick={handleYoutubeLink}>
+            <Box className={classes.snsBox} onClick={handleWhatsappLink}>
+              <WhatsappIcon />
+            </Box>
+            {/* <Box className={classes.snsBox} onClick={handleYoutubeLink}>
               <YoutubeIcon width="26px" />
             </Box>
             <Box className={classes.snsBox} onClick={handleDiscordLink}>
@@ -183,7 +188,7 @@ export default function MintingNFTProgressModal({
             </Box>
             <Box className={classes.snsBox} onClick={handleGitbookLink}>
               <GitbookIcon />
-            </Box>
+            </Box> */}
           </Box>
         </Box>
       )}
