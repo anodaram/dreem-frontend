@@ -20,6 +20,7 @@ const EditDraftContentModal = ({ open, onClose, draftContent }) => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [completed, setCompleted] = useState<boolean[]>([]);
   const [isWorldNFT, setIsWorldNFT] = useState<boolean>(false);
+  const [openSelectCollectionPage, setOpenSelectCollectionPage] = useState<boolean>(false);
 
   useEffect(() => {
     if (!draftContent) return;
@@ -54,8 +55,19 @@ const EditDraftContentModal = ({ open, onClose, draftContent }) => {
     });
   };
 
+  const handleChangeCollection = value => {
+    setOpenSelectCollectionPage(value);
+  };
+
   return (
-    <Modal size="medium" isOpen={open} onClose={onClose} showCloseIcon className={classes.root}>
+    <Modal
+      size="medium"
+      isOpen={open}
+      onClose={onClose}
+      showCloseIcon
+      className={classes.root}
+      style={{ maxWidth: openSelectCollectionPage ? "1374px" : "788px" }}
+    >
       <Box className={classes.modalContent}>
         <Box className={classes.header1} mt={3}>
           Edit NFT Draft
@@ -102,7 +114,7 @@ const EditDraftContentModal = ({ open, onClose, draftContent }) => {
             <EditFilesDraftTab draftContent={draftContent} />
           )}
           {((selectedTab === 3 && !isWorldNFT) || (selectedTab === 2 && isWorldNFT)) && (
-            <EditCollectionDraftTab />
+            <EditCollectionDraftTab onChangeCollection={handleChangeCollection} />
           )}
           <Box className={classes.footerSection}>
             <SecondaryButton
