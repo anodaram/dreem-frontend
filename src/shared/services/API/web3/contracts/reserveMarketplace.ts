@@ -2,6 +2,8 @@ import Web3 from "web3";
 import { ContractInstance } from "shared/connectors/web3/functions";
 import config from "shared/connectors/web3/config";
 
+const MAX_PRIO_FEE = "50";
+
 const reserveMarketplace = (network: string) => {
   const metadata = require("shared/connectors/web3/contracts/reserve/ReserveMarketplace.json");
   const contractAddress = config[network].CONTRACT_ADDRESSES.RESERVE_MARKETPLACE;
@@ -40,7 +42,7 @@ const reserveMarketplace = (network: string) => {
             payload.reservePeriod,
             payload.buyer,
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });
@@ -92,7 +94,7 @@ const reserveMarketplace = (network: string) => {
             payload.reservePeriod,
             payload.owner,
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });
@@ -151,7 +153,7 @@ const reserveMarketplace = (network: string) => {
             payload.validityPeriod,
             payload.sellerToMatch
           )
-          .send({ from: account, gas })
+          .send({ from: account, gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });
@@ -214,7 +216,7 @@ const reserveMarketplace = (network: string) => {
             payload.validityPeriod,
             payload.buyerToMatch
           )
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             setHash(hash);
           });

@@ -37,6 +37,7 @@ import { useFilterSelectStyles, useNFTOptionsStyles, useTabsStyles } from "./ind
 
 import { ReactComponent as BinanceIcon } from "assets/icons/bsc.svg";
 import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
+import { userTrackMarketPlace } from "shared/services/API";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -194,6 +195,12 @@ const NFTReserves = () => {
     dispatch(setScrollPositionInCollection(0));
     getTokenList();
   }, []);
+
+  useEffect(() => {
+    if (isSignedin) {
+      userTrackMarketPlace();
+    }
+  }, [isSignedin]);
 
   useEffect(() => {
     lastNFTId.current = undefined;

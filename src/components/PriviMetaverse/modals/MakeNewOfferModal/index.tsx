@@ -18,6 +18,7 @@ import { createBlockingOffer } from "shared/services/API/ReserveAPI";
 import { RootState } from "store/reducers/Reducer";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { MakeNewOfferModalStyles } from "./index.style";
+import { getInputValue } from "shared/helpers";
 
 export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
   const classes = MakeNewOfferModalStyles();
@@ -27,7 +28,6 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
   const [price, setPrice] = useState<number>();
   const [disappearDays, setDisappearDays] = useState<number>();
   const [collateral, setCollateral] = useState<number>();
-  const [selectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const fee = useSelector((state: RootState) => state.marketPlace.fee);
   const [reservePriceToken, setReservePriceToken] = useState<any>(tokenList[0]);
@@ -37,6 +37,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
   const [totalBalance, setTotalBalance] = React.useState<string>("0");
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const [confirmSuccess, setConfirmSuccess] = useState<boolean>(false);
+  const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
 
   const [hash, setHash] = useState<string>("");
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
@@ -66,10 +67,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
 
   const setBalance = async () => {
     if (reservePriceToken) {
-      if (!checkChainID(chainId)) {
-        showAlertMessage(`network error`, { variant: "error" });
-        return;
-      }
+      const targetChain = await checkNetworkFromNFT();
 
       const web3APIHandler = selectedChain.apiHandler;
       const web3 = new Web3(library.provider);
@@ -82,6 +80,27 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
       });
       setTotalBalance(toDecimals(balance, decimals));
     }
+  };
+
+  const checkNetworkFromNFT = async () => {
+    const nftChain = getChainForNFT(nft);
+    if (!nftChain) {
+      showAlertMessage(`network error`, { variant: "error" });
+      return;
+    }
+    if (chainId && chainId !== nftChain?.chainId) {
+      const isHere = await switchNetwork(nftChain?.chainId || 0);
+      if (!isHere) {
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+          variant: "error",
+        });
+        return;
+      }
+
+      setSelectedChain(nftChain);
+    }
+
+    return nftChain;
   };
 
   const handleApprove = async () => {
@@ -250,7 +269,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                 <Grid item sm={7}>
                   <InputWithLabelAndTooltip
                     inputValue={price}
-                    onInputValueChange={e => setPrice(e.target.value)}
+                    onInputValueChange={e => setPrice(getInputValue(e.target.value, 0))}
                     overriedClasses={classes.inputJOT}
                     required
                     type="number"
@@ -278,7 +297,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
               <Box className={classes.nameField}>How many days do you want to block the NFT?</Box>
               <InputWithLabelAndTooltip
                 inputValue={blockingPeriod}
-                onInputValueChange={e => setBlockingPeriod(Number(e.target.value))}
+                onInputValueChange={e => setBlockingPeriod(Number(getInputValue(e.target.value, 0)))}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"
@@ -291,7 +310,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
               <Box className={classes.nameField}>What % of your Buying Offer do you want to provide as collateral?</Box>
               <InputWithLabelAndTooltip
                 inputValue={collateralPercent}
-                onInputValueChange={e => setCollateralPercent(e.target.value)}
+                onInputValueChange={e => setCollateralPercent(getInputValue(e.target.value, 0))}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"
@@ -301,13 +320,14 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                 disabled={isApproved}
                 placeHolder={"0"}
               />
-              <Box className={classes.nameField}>Collateral Amount & Token</Box>
-              <Grid container spacing={2}>
-                <Grid item sm={7}>
+              <Box className={classes.nameField}>Collateral Amount</Box>
+              {/* <Box className={classes.nameField}>Collateral Amount & Token</Box> */}
+              {/* <Grid container spacing={2}> */}
+                {/* <Grid item sm={7}> */}
                   <InputWithLabelAndTooltip
                     inputValue={collateral}
                     // onInputValueChange={e => setCollateral(e.target.value)}
-                    onInputValueChange={e => setCollateral(e.target.value)}
+                    onInputValueChange={e => setCollateral(getInputValue(e.target.value, 0))}
                     overriedClasses={classes.inputJOT}
                     required
                     type="number"
@@ -316,8 +336,8 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                     disabled={isApproved}
                     placeHolder={"0"}
                   />
-                </Grid>
-                <Grid item sm={5}>
+                {/* </Grid> */}
+                {/* <Grid item sm={5}>
                   <ReserveTokenSelect
                     tokens={tokenList.filter(
                       token => token?.Network?.toLowerCase() === selectedChain?.name?.toLowerCase()
@@ -330,8 +350,8 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
                     style={{ flex: "1" }}
                     disabled={true}
                   />
-                </Grid>
-              </Grid>
+                </Grid> */}
+              {/* </Grid> */}
               <Box
                 display="flex"
                 alignItems="center"
@@ -355,7 +375,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
               <Box className={classes.nameField}>Offer will disappear if not accepted within</Box>
               <InputWithLabelAndTooltip
                 inputValue={disappearDays}
-                onInputValueChange={e => setDisappearDays(e.target.value)}
+                onInputValueChange={e => setDisappearDays(getInputValue(e.target.value, 0))}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"

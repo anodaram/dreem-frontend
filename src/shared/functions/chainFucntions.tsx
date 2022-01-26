@@ -11,11 +11,10 @@ export const getLoanChainImageUrl = (chain, blockchainNetwork) => {
 
 export const getChainImageUrl = blockchain => {
   if (!blockchain) {
-    return require("assets/tokenImages/PRIVI.png");
+    return;
   }
-  if (blockchain.toLowerCase().includes("privi")) {
-    return require("assets/tokenImages/PRIVI.png");
-  } else if (blockchain.toLowerCase().includes("polygon")) {
+
+  if (blockchain.toLowerCase().includes("polygon")) {
     return require("assets/tokenImages/POLYGON.png");
   } else if (blockchain.toLowerCase().includes("ethereum")) {
     return require("assets/tokenImages/ETH.png");

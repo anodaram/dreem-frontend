@@ -412,6 +412,8 @@ export const exploreOptionDetailPageStyles = makeStyles(theme => ({
     fontFamily: "GRIFTER",
     fontWeight: 700,
     fontSize: "16px",
+    display: "flex",
+    alignItems: "center",
     textTransform: "uppercase",
     border: "2px solid rgb(233, 255, 38) !important",
     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",

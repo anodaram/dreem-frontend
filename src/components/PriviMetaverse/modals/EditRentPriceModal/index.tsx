@@ -21,6 +21,7 @@ import { getNextDay } from "shared/helpers/utils";
 import { RootState } from "store/reducers/Reducer";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { EditRentPriceModalStyles } from "./index.style";
+import { getInputValue } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 const SECONDS_PER_HOUR = 3600;
@@ -308,7 +309,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
             <Grid item sm={7}>
               <InputWithLabelAndTooltip
                 inputValue={pricePerHour}
-                onInputValueChange={e => setPricePerHour(e.target.value)}
+                onInputValueChange={e => setPricePerHour(getInputValue(e.target.value, 0))}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"
@@ -358,7 +359,7 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
           <Box display="flex" alignItems="center">
             <InputWithLabelAndTooltip
               inputValue={limitDays}
-              onInputValueChange={e => setLimitDays(e.target.value)}
+              onInputValueChange={e => setLimitDays(getInputValue(e.target.value, 0))}
               overriedClasses={classes.inputJOT}
               required
               type="number"
@@ -370,12 +371,13 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
             />
             <InputWithLabelAndTooltip
               inputValue={limitHour}
-              onInputValueChange={e => setLimitHour(e.target.value)}
+              onInputValueChange={e => setLimitHour(getInputValue(e.target.value, 0, 23))}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
+              maxValue={23}
               endAdornment={<div className={classes.suffixText}>HRS</div>}
               disabled={isApproved}
               style={{ marginLeft: "8px" }}
@@ -383,12 +385,13 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
             />
             <InputWithLabelAndTooltip
               inputValue={limitMin}
-              onInputValueChange={e => setLimitMin(e.target.value)}
+              onInputValueChange={e => setLimitMin(getInputValue(e.target.value, 0, 59))}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
+              maxValue={59}
               endAdornment={<div className={classes.suffixText}>MINS</div>}
               disabled={isApproved}
               style={{ marginLeft: "8px" }}
@@ -396,12 +399,13 @@ export default function EditRentPriceModal({ open, offer, handleClose = () => {}
             />
             <InputWithLabelAndTooltip
               inputValue={limitSec}
-              onInputValueChange={e => setLimitSec(e.target.value)}
+              onInputValueChange={e => setLimitSec(getInputValue(e.target.value, 0, 59))}
               overriedClasses={classes.inputJOT}
               required
               type="number"
               theme="light"
               minValue={0}
+              maxValue={59}
               endAdornment={<div className={classes.suffixText}>SEC</div>}
               disabled={isApproved}
               style={{ marginLeft: "8px" }}

@@ -18,6 +18,7 @@ import { RootState } from "store/reducers/Reducer";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import TransactionProgressModal from "../TransactionProgressModal";
 import { SetSellingPriceModalStyles } from "./index.style";
+import { getInputValue } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -180,7 +181,7 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
               <Box className={classes.nameField}>Selling Price</Box>
               <InputWithLabelAndTooltip
                 inputValue={inputBalance}
-                onInputValueChange={e => setInputBalance(e.target.value)}
+                onInputValueChange={e => setInputBalance(getInputValue(e.target.value, 0))}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"
