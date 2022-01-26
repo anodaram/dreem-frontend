@@ -20,10 +20,7 @@ import { setLoginBool } from "store/actions/LoginBool";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import NoMetamaskModal from "components/Connect/modals/NoMetamaskModal";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
-import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
 import CreateCollection from "./components/CreateCollection";
 import CreateNFTFlow from "./components/CreateNFTFlow";
 import CreateTextureFlow from "./components/CreateTextureFlow";
@@ -36,13 +33,6 @@ import CreateRealmModal from "../../modals/CreateRealmModal";
 import { manageContentPageStyles } from "./index.styles";
 import { onUploadNonEncrypt } from "shared/ipfs/upload";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
-
-const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
-  375: 1,
-  600: 2,
-  1000: 3,
-  1440: 3,
-};
 
 export default function ManageContentPage() {
   const dispatch = useDispatch();
@@ -59,10 +49,8 @@ export default function ManageContentPage() {
   const [noMetamask, setNoMetamask] = React.useState<boolean>(false);
   const [metaDataForModal, setMetaDataForModal] = useState<any>(null);
   const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
-  const [response, setResponse] = useState<any>();
   const [chain, setChain] = useState<string>(BlockchainNets[0].value);
 
-  const width = useWindowDimensions().width;
   const [step, setStep] = useState<number>(0);
   const [worldCurStep, setWorldCurStep] = useState<number>(1);
   const [textureCurStep, setTextureCurStep] = useState<number>(1);
@@ -95,32 +83,17 @@ export default function ManageContentPage() {
   const entityInputRef = useRef<HTMLInputElement>(null);
 
   const [hasUnderMaintenanceInfo, setHasUnderMaintenanceInfo] = useState(false);
-  const [openCreateCollectionModal, setOpenCreateCollectionModal] = useState<boolean>(false);
-  const loadingCount = React.useMemo(() => (width > 1000 ? 6 : width > 600 ? 3 : 6), [width]);
-  const [currentCollection, setCurrentCollection] = useState<any>(null);
-  const [collections, setCollections] = useState<any[]>([]);
-  const [curPage, setCurPage] = React.useState(1);
-  const [lastPage, setLastPage] = React.useState(0);
-  const [loadingCollection, setLoadingCollection] = React.useState<boolean>(false);
   const [selectedAsset, setSelectedAsset] = useState<string>();
 
+  useEffect(() => {
+    handleOpenRealmModal()
+  }, []);
+  
   useEffect(() => {
     if (underMaintenanceSelector && Object.keys(underMaintenanceSelector).length > 0) {
       setHasUnderMaintenanceInfo(true);
     }
   }, [underMaintenanceSelector]);
-
-  useEffect(() => {
-    if (step === 2) {
-      handleOpenCollectionModal();
-    } else if (step === 3) {
-      handleOpenRealmModal();
-    }
-  }, [step]);
-
-  useEffect(() => {
-    loadMore();
-  }, []);
 
   const signInWithMetamask = () => {
     if (!account) return;
@@ -223,10 +196,6 @@ export default function ManageContentPage() {
     }
   };
 
-  const handleOpenCollectionModal = () => {
-    setOpenCreateCollectionModal(true);
-  };
-
   const handleNext = () => {
     console.log("----", step);
     if (step == 2) {
@@ -288,224 +257,184 @@ export default function ManageContentPage() {
     }
   };
 
-  const handleRefreshCollection = () => {
-    setStep(3);
-    setCurPage(1);
-    setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, 1, "DESC")
-      .then(res => {
-        if (res.success) {
-          const items = res.data.elements;
-          if (items && items.length > 0) {
-            setCollections(res.data.elements);
-            if (res.data.page && curPage <= res.data.page.max) {
-              setCurPage(curPage => curPage + 1);
-              setLastPage(res.data.page.max);
-            }
-          }
-        }
-      })
-      .finally(() => setLoadingCollection(false));
-  };
+  // const validate = () => {
+  //   let sizeSpec = metaDataForModal;
+  //   if (!currentCollection) {
+  //     showAlertMessage(`Please select collection first`, { variant: "error" });
+  //     return false;
+  //   }
+  //   if (!title || !description || !image || !unity) {
+  //     showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
+  //     return false;
+  //   }
+  //   if (!video) {
+  //     showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
+  //     return false;
+  //   }
+  //   if (title.length < sizeSpec?.worldTitle.limit.min || title.length > sizeSpec?.worldTitle.limit.max) {
+  //     showAlertMessage(
+  //       `Name field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldTitle.limit.min} to ${sizeSpec?.worldTitle.limit.max} characters`,
+  //       {
+  //         variant: "error",
+  //       }
+  //     );
+  //     return false;
+  //   } else if (
+  //     description.length < sizeSpec?.worldDescription.limit.min ||
+  //     description.length > sizeSpec?.worldDescription.limit.max
+  //   ) {
+  //     showAlertMessage(
+  //       `Description field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldDescription.limit.min} to ${sizeSpec?.worldDescription.limit.max} characters`,
+  //       { variant: "error" }
+  //     );
+  //     return false;
+  //   } else if (image.size > sizeSpec?.worldImage.limit.maxBytes) {
+  //     showAlertMessage(`Image field invalid. Size cannot exceed ${sizeSpec?.worldImage.limit.readable}`, {
+  //       variant: "error",
+  //     });
+  //     return false;
+  //   } else if (video && video.size > sizeSpec?.worldVideo.limit.maxBytes) {
+  //     showAlertMessage(`Video field invalid. Size cannot exceed ${sizeSpec?.worldVideo.limit.readable}`, {
+  //       variant: "error",
+  //     });
+  //     return false;
+  //   } else if (
+  //     !sizeSpec?.worldLevel.supportedFormats.toString().includes(unity.name.split(".").reverse()[0])
+  //   ) {
+  //     showAlertMessage(`World file is invalid.`, { variant: "error" });
+  //     return false;
+  //   } else if (unity.size > sizeSpec?.worldLevel.limit.maxBytes) {
+  //     showAlertMessage(`World file invalid. Size cannot exceed ${sizeSpec?.worldLevel.limit.readable}`, {
+  //       variant: "error",
+  //     });
+  //     return false;
+  //   } else if (!entity.name.includes(sizeSpec?.worldMeta.supportedFormats.toString())) {
+  //     showAlertMessage(`World data is invalid.`, { variant: "error" });
+  //     return false;
+  //   } else if (entity.size > sizeSpec?.worldMeta.limit.maxBytes) {
+  //     showAlertMessage(`World data invalid. Size cannot exceed ${sizeSpec?.worldMeta.limit.readable}`, {
+  //       variant: "error",
+  //     });
+  //     return false;
+  //   } else return true;
+  // };
 
-  const loadMore = () => {
-    setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, curPage, "DESC")
-      .then(res => {
-        if (res.success) {
-          const items = res.data.elements;
-          if (items && items.length > 0) {
-            setCollections([...collections, ...res.data.elements]);
-            if (res.data.page && curPage <= res.data.page.max) {
-              setCurPage(curPage => curPage + 1);
-              setLastPage(res.data.page.max);
-            }
-          }
-        }
-      })
-      .finally(() => setLoadingCollection(false));
-  };
+  // const handleSaveDraft = async () => {
+  //   if (validate()) {
+  //     let payload: any = {};
+  //     let collectionAddr = currentCollection.address;
+  //     let tokenId;
 
-  const validate = () => {
-    let sizeSpec = metaDataForModal;
-    if (!currentCollection) {
-      showAlertMessage(`Please select collection first`, { variant: "error" });
-      return false;
-    }
-    if (!title || !description || !image || !unity) {
-      showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
-      return false;
-    }
-    if (!video) {
-      showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
-      return false;
-    }
-    if (title.length < sizeSpec?.worldTitle.limit.min || title.length > sizeSpec?.worldTitle.limit.max) {
-      showAlertMessage(
-        `Name field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldTitle.limit.min} to ${sizeSpec?.worldTitle.limit.max} characters`,
-        {
-          variant: "error",
-        }
-      );
-      return false;
-    } else if (
-      description.length < sizeSpec?.worldDescription.limit.min ||
-      description.length > sizeSpec?.worldDescription.limit.max
-    ) {
-      showAlertMessage(
-        `Description field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldDescription.limit.min} to ${sizeSpec?.worldDescription.limit.max} characters`,
-        { variant: "error" }
-      );
-      return false;
-    } else if (image.size > sizeSpec?.worldImage.limit.maxBytes) {
-      showAlertMessage(`Image field invalid. Size cannot exceed ${sizeSpec?.worldImage.limit.readable}`, {
-        variant: "error",
-      });
-      return false;
-    } else if (video && video.size > sizeSpec?.worldVideo.limit.maxBytes) {
-      showAlertMessage(`Video field invalid. Size cannot exceed ${sizeSpec?.worldVideo.limit.readable}`, {
-        variant: "error",
-      });
-      return false;
-    } else if (
-      !sizeSpec?.worldLevel.supportedFormats.toString().includes(unity.name.split(".").reverse()[0])
-    ) {
-      showAlertMessage(`World file is invalid.`, { variant: "error" });
-      return false;
-    } else if (unity.size > sizeSpec?.worldLevel.limit.maxBytes) {
-      showAlertMessage(`World file invalid. Size cannot exceed ${sizeSpec?.worldLevel.limit.readable}`, {
-        variant: "error",
-      });
-      return false;
-    } else if (!entity.name.includes(sizeSpec?.worldMeta.supportedFormats.toString())) {
-      showAlertMessage(`World data is invalid.`, { variant: "error" });
-      return false;
-    } else if (entity.size > sizeSpec?.worldMeta.limit.maxBytes) {
-      showAlertMessage(`World data invalid. Size cannot exceed ${sizeSpec?.worldMeta.limit.readable}`, {
-        variant: "error",
-      });
-      return false;
-    } else return true;
-  };
+  //     payload = {
+  //       collectionId: currentCollection.id,
+  //       worldTitle: title,
+  //       worldDescription: description,
+  //       worldImage: image,
+  //       worldLevel: unity,
+  //       worldData: entity,
+  //       isPublic: isPublic,
+  //     };
 
-  const handleSaveDraft = async () => {
-    if (validate()) {
-      let payload: any = {};
-      let collectionAddr = currentCollection.address;
-      let tokenId;
+  //     if (video) payload.worldVideo = video;
 
-      payload = {
-        collectionId: currentCollection.id,
-        worldTitle: title,
-        worldDescription: description,
-        worldImage: image,
-        worldLevel: unity,
-        worldData: entity,
-        isPublic: isPublic,
-      };
+  //     setShowUploadingModal(true);
+  //     setProgress(0);
+  //     MetaverseAPI.uploadWorld(payload).then(async res => {
+  //       if (!res.success) {
+  //         showAlertMessage(`Failed to upload world`, { variant: "error" });
+  //         setShowUploadingModal(false);
+  //       } else {
+  //         setResponse(res.data);
+  //         setShowUploadingModal(false);
+  //         showAlertMessage(`Created draft successfully`, { variant: "success" });
+  //       }
+  //     });
+  //   }
+  // };
+  // const mintNFT = async () => {
+  //   let collectionData = currentCollection;
+  //   let metadata = response.medadata;
+  //   let collectionAddr = collectionData.address;
+  //   let tokenId;
+  //   let isDraft = collectionData?.kind == "DRAFT" ? true : false;
 
-      if (video) payload.worldVideo = video;
+  //   const metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
 
-      setShowUploadingModal(true);
-      setProgress(0);
-      MetaverseAPI.uploadWorld(payload).then(async res => {
-        if (!res.success) {
-          showAlertMessage(`Failed to upload world`, { variant: "error" });
-          setShowUploadingModal(false);
-        } else {
-          setResponse(res.data);
-          setShowUploadingModal(false);
-          showAlertMessage(`Created draft successfully`, { variant: "success" });
-        }
-      });
-    }
-  };
-  const mintNFT = async () => {
-    let collectionData = currentCollection;
-    let metadata = response.medadata;
-    let collectionAddr = collectionData.address;
-    let tokenId;
-    let isDraft = collectionData?.kind == "DRAFT" ? true : false;
+  //   const targetChain = BlockchainNets.find(net => net.value === chain);
 
-    const metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
+  //   if (chainId && chainId !== targetChain?.chainId) {
+  //     const isHere = await switchNetwork(targetChain?.chainId || 0);
+  //     if (!isHere) {
+  //       showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+  //       return;
+  //     }
+  //   }
 
-    const targetChain = BlockchainNets.find(net => net.value === chain);
+  //   const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
+  //   const web3APIHandler = targetChain.apiHandler;
+  //   const web3 = new Web3(library.provider);
+  //   console.log("----metadata:", metaData, isDraft);
 
-    if (chainId && chainId !== targetChain?.chainId) {
-      const isHere = await switchNetwork(targetChain?.chainId || 0);
-      if (!isHere) {
-        showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
-        return;
-      }
-    }
+  //   if (isDraft) {
+  //     console.log("here-----");
+  //     const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
+  //       web3,
+  //       account,
+  //       {
+  //         name: collectionData.name,
+  //         symbol: collectionData.symbol,
+  //         uri,
+  //       },
+  //       setTxModalOpen,
+  //       setTxHash
+  //     );
+  //     if (resRoyalty.success) {
+  //       setTxSuccess(true);
+  //       showAlertMessage(`Successfully world minted`, { variant: "success" });
 
-    const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
-    const web3APIHandler = targetChain.apiHandler;
-    const web3 = new Web3(library.provider);
-    console.log("----metadata:", metaData, isDraft);
+  //       await MetaverseAPI.convertToNFTWorld(
+  //         metaData.id,
+  //         resRoyalty.contractAddress,
+  //         targetChain.name,
+  //         resRoyalty.tokenId,
+  //         metaData.newFileCID,
+  //         account,
+  //         "0x0000000000000000000000000000000000000000"
+  //       );
+  //     } else {
+  //       setTxSuccess(false);
+  //     }
+  //   } else {
+  //     const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
+  //       web3,
+  //       account,
+  //       {
+  //         collectionAddress: collectionAddr,
+  //         to: account,
+  //         uri,
+  //       },
+  //       setTxModalOpen,
+  //       setTxHash
+  //     );
 
-    if (isDraft) {
-      console.log("here-----");
-      const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
-        web3,
-        account,
-        {
-          name: collectionData.name,
-          symbol: collectionData.symbol,
-          uri,
-        },
-        setTxModalOpen,
-        setTxHash
-      );
-      if (resRoyalty.success) {
-        setTxSuccess(true);
-        showAlertMessage(`Successfully world minted`, { variant: "success" });
-
-        await MetaverseAPI.convertToNFTWorld(
-          metaData.id,
-          resRoyalty.contractAddress,
-          targetChain.name,
-          resRoyalty.tokenId,
-          metaData.newFileCID,
-          account,
-          "0x0000000000000000000000000000000000000000"
-        );
-        handleRefreshCollection();
-      } else {
-        setTxSuccess(false);
-      }
-    } else {
-      const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
-        web3,
-        account,
-        {
-          collectionAddress: collectionAddr,
-          to: account,
-          uri,
-        },
-        setTxModalOpen,
-        setTxHash
-      );
-
-      if (contractRes.success) {
-        setTxSuccess(true);
-        showAlertMessage(`Successfully world minted`, { variant: "success" });
-        console.log(contractRes);
-        await MetaverseAPI.convertToNFTWorld(
-          response.item.id,
-          contractRes.collectionAddress,
-          targetChain.name,
-          contractRes.tokenId,
-          metadata.newFileCID,
-          contractRes.owner,
-          contractRes.royaltyAddress
-        );
-        handleRefreshCollection();
-      } else {
-        setTxSuccess(false);
-      }
-    }
-  };
+  //     if (contractRes.success) {
+  //       setTxSuccess(true);
+  //       showAlertMessage(`Successfully world minted`, { variant: "success" });
+  //       console.log(contractRes);
+  //       await MetaverseAPI.convertToNFTWorld(
+  //         response.item.id,
+  //         contractRes.collectionAddress,
+  //         targetChain.name,
+  //         contractRes.tokenId,
+  //         metadata.newFileCID,
+  //         contractRes.owner,
+  //         contractRes.royaltyAddress
+  //       );
+  //     } else {
+  //       setTxSuccess(false);
+  //     }
+  //   }
+  // };
 
   return (
     <>
@@ -585,10 +514,7 @@ export default function ManageContentPage() {
         {step === 2 && selectedAsset === "world" && (
           <CreateNFTFlow
             metaData={metaDataForModal}
-            step={worldCurStep}
-            handleNext={() => {}}
             handleCancel={handlePrev}
-            handleRefresh={() => handleRefreshCollection()}
           />
         )}
         {step === 2 && selectedAsset === "texture" && (
@@ -597,7 +523,7 @@ export default function ManageContentPage() {
             step={textureCurStep}
             handleNext={() => {}}
             handleCancel={handlePrev}
-            handleRefresh={() => handleRefreshCollection()}
+            handleRefresh={() => {}}
           />
         )}
         {step === 2 && selectedAsset === "material" && (
@@ -606,7 +532,7 @@ export default function ManageContentPage() {
             step={textureCurStep}
             handleNext={() => {}}
             handleCancel={handlePrev}
-            handleRefresh={() => handleRefreshCollection()}
+            handleRefresh={() => {}}
           />
         )}
         {step === 2 && selectedAsset === "3d-asset" && (
@@ -615,7 +541,7 @@ export default function ManageContentPage() {
             step={textureCurStep}
             handleNext={() => {}}
             handleCancel={handlePrev}
-            handleRefresh={() => handleRefreshCollection()}
+            handleRefresh={() => {}}
           />
         )}
         {step === 2 && selectedAsset === "character" && (
@@ -624,134 +550,9 @@ export default function ManageContentPage() {
             step={textureCurStep}
             handleNext={() => {}}
             handleCancel={handlePrev}
-            handleRefresh={() => handleRefreshCollection()}
+            handleRefresh={() => {}}
           />
         )}
-        {step === 3 && (
-          <div className={classes.otherContent}>
-            <div className={classes.typo1}>Creating new NFT</div>
-            <Box className={classes.typo3} mb={3}>
-              Select or create a collection to create NFT in
-            </Box>
-            {collections.length ? (
-              <>
-                <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
-                  <Box className={classes.typo4}>All of your collections</Box>
-                  <div className={classes.createCollectionBtn} onClick={() => setStep(4)}>
-                    <PlusIcon />
-                    create new collection
-                  </div>
-                </Box>
-                <Box width={1} pb={20}>
-                  <InfiniteScroll
-                    hasChildren={collections.length > 0}
-                    dataLength={collections.length}
-                    scrollableTarget={"scrollContainer"}
-                    next={loadMore}
-                    hasMore={!!lastPage && curPage < lastPage}
-                    loader={
-                      lastPage && curPage === lastPage ? (
-                        <Box mt={2}>
-                          <MasonryGrid
-                            gutter={"16px"}
-                            data={Array(loadingCount).fill(0)}
-                            renderItem={(item, _) => <CollectionCard isLoading={true} />}
-                            columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                          />
-                        </Box>
-                      ) : (
-                        <></>
-                      )
-                    }
-                  >
-                    <Box mt={4}>
-                      <MasonryGrid
-                        gutter={"16px"}
-                        data={collections}
-                        renderItem={(item, _) => (
-                          <CollectionCard
-                            item={item}
-                            isLoading={loadingCollection}
-                            onClick={() => setCurrentCollection(item)}
-                          />
-                        )}
-                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                      />
-                    </Box>
-                  </InfiniteScroll>
-                </Box>
-              </>
-            ) : (
-              <Box pb={20}>
-                <Box className={classes.typo4}>All of your collections</Box>
-                <Box display="flex" alignItems="center" mt={6} mb={3}>
-                  <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    border="2px dashed #FFFFFF"
-                    borderRadius={12}
-                    mx={"30px"}
-                    className={classes.centerBox}
-                  >
-                    <img src={require("assets/metaverseImages/dreem_fav_icon.png")} />
-                  </Box>
-                  <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
-                </Box>
-                <Box className={classes.typo3}>
-                  No collections created yet, Create Collection with the button above.
-                </Box>
-                <Box display="flex" alignItems="center" justifyContent="center" width={1} mt="20px">
-                  <div className={classes.createCollectionBtn} onClick={() => setStep(4)}>
-                    <PlusIcon />
-                    create new collection
-                  </div>
-                </Box>
-              </Box>
-            )}
-          </div>
-        )}
-        {step === 4 && (
-          <div className={classes.otherContent}>
-            <div className={classes.typo1}>Creating New Collection</div>
-            <Box className={classes.typo3} mb={3}>
-              Fill all the details of your new collection
-            </Box>
-            <CreateCollection
-              handleNext={() => {}}
-              handleCancel={() => setStep(2)}
-              handleRefresh={() => handleRefreshCollection()}
-            />
-          </div>
-        )}
-        {step > 2 || (step === 2 && collections.length) ? (
-          <Box className={classes.footer}>
-            <div className={classes.howToCreateBtn} onClick={handlePrev}>
-              back
-            </div>
-            {step < 3 && (
-              <PrimaryButton
-                size="medium"
-                className={classes.nextBtn}
-                disabled={step === 1 && !currentCollection}
-                onClick={() => handleNext()}
-              >
-                next
-              </PrimaryButton>
-            )}
-            {step === 3 && (
-              <Box display="flex" alignItems="center" justifyContent="center">
-                <div className={classes.howToCreateBtn} onClick={() => {}}>
-                  create draft
-                </div>
-                <PrimaryButton size="medium" className={classes.nextBtn} onClick={() => {}}>
-                  mint nft
-                </PrimaryButton>
-              </Box>
-            )}
-          </Box>
-        ) : null}
       </div>
       {/* {openCreateNftModal && (
         <CreateRealmModal
@@ -765,13 +566,3 @@ export default function ManageContentPage() {
   );
 }
 
-const PlusIcon = () => (
-  <svg width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M6.5 12.0488V2.04883M1.5 7.04883L11.5 7.04883"
-      stroke="#151515"
-      strokeWidth="2.5"
-      strokeLinecap="square"
-    />
-  </svg>
-);
