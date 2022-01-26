@@ -32,7 +32,6 @@ import { RootState } from "../../../../store/reducers/Reducer";
 import CreateRealmModal from "../../modals/CreateRealmModal";
 import { manageContentPageStyles } from "./index.styles";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
-import EditDraftContentModal from "components/PriviMetaverse/modals/EditDraftContentModal";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
@@ -359,7 +358,6 @@ export default function ManageContentPage() {
                 <div style={{ marginTop: 4 }}>Log in</div>
               </PrimaryButton>
             )}
-            <EditDraftContentModal open={true} onClose={() => {}} />
           </div>
         )}
         {step === 1 && (
