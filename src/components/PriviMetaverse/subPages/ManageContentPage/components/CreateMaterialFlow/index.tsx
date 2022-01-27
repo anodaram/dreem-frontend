@@ -450,6 +450,7 @@ const CreateMaterialFlow = ({
                 <Box className={classes.itemTitle} mb={1}>
                   material name
                 </Box>
+                <InfoTooltip tooltip={"Please give your material a name."} />
               </Box>
               <input
                 className={classes.input}

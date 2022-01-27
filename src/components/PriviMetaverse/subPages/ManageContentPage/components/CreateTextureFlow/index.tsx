@@ -450,6 +450,7 @@ const CreateTextureFlow = ({
                 <Box className={classes.itemTitle} mb={1}>
                   texture name
                 </Box>
+                <InfoTooltip tooltip={"Please give your texture a name."} />
               </Box>
               <input
                 className={classes.input}

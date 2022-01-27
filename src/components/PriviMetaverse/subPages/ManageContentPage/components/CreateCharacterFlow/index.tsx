@@ -449,6 +449,7 @@ const CreateCharacterFlow = ({
                 <Box className={classes.itemTitle} mb={1}>
                   character name
                 </Box>
+                <InfoTooltip tooltip={"Please give your character a name."} />
               </Box>
               <input
                 className={classes.input}

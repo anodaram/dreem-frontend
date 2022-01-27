@@ -230,7 +230,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
     switch (step) {
       case 1:
         console.log(isValidAddress(royaltyAddress))
-        if(!isValidAddress(royaltyAddress)){
+        if(!isValidAddress(royaltyAddress) && isRoyalty){
           showAlertMessage(`Invalid Address`, { variant: "error" });
           return;
         }
@@ -549,7 +549,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
                       <Box className={classes.itemTitle} mb={1}>
                         NFT Name
                       </Box>
-                      <InfoTooltip tooltip={"Please give your realm a name."} />
+                      <InfoTooltip tooltip={"Please give your world a name."} />
                     </Box>
                     <input
                       className={classes.input}

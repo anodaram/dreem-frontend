@@ -451,6 +451,7 @@ const Create3DAssetFlow = ({
                 <Box className={classes.itemTitle} mb={1}>
                   asset name
                 </Box>
+                <InfoTooltip tooltip={"Please give your asset a name."} />
               </Box>
               <input
                 className={classes.input}
