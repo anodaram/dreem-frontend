@@ -5,16 +5,7 @@ import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import Web3 from "web3";
 import axios from "axios";
 
-import {
-  Popper,
-  ClickAwayListener,
-  Grow,
-  Paper,
-  MenuList,
-  MenuItem,
-  Hidden,
-  Box,
-} from "@material-ui/core";
+import { Popper, ClickAwayListener, Grow, Paper, MenuList, MenuItem, Hidden, Box } from "@material-ui/core";
 
 import { socket } from "components/Login/Auth";
 import { useNotifications } from "shared/contexts/NotificationsContext";
@@ -202,11 +193,9 @@ const Header = props => {
     setOpenNotificationModal(false);
   };
 
-  const handleCloseContributionModal = () => {
-  };
+  const handleCloseContributionModal = () => {};
 
-  const handleOpenModalShareContribution = () => {
-  };
+  const handleOpenModalShareContribution = () => {};
 
   const viewMore = notification => {
     setOpenNotificationModal(false);
@@ -676,6 +665,7 @@ const Navigator: NavItem[] = [
   { name: "CREATE", value: "creations", link: "/create" },
   { name: "REALMS", value: "realms", link: "/realms" },
   { name: "AVATARS", value: "avatars", link: "/avatars" },
+  { name: "ASSETS", value: "assets", link: "/assets" },
   { name: "GAME NFTS", value: "gameNFTS", link: "/gameNFTS" },
   // { name: "METAVERSE", value: "metaverse", link: "/metaverse" },
   // { name: "Claim Dreem", value: "claim_dreem", link: "/claim_dreem", authorize: true },

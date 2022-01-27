@@ -1,5 +1,6 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
+// import { useDebounce } from "use-debounce/lib";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
@@ -9,7 +10,7 @@ import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
 
-import { exploreAvatarPage } from "./index.styles";
+import { exploreAssetsPage } from "./index.styles";
 
 import backImg1 from "assets/metaverseImages/shape_roadmap.png";
 import backImg2 from "assets/metaverseImages/shape_explorer_blue_arc.png";
@@ -22,8 +23,8 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   // 1440: 4,
 };
 
-export default function ExploreAvatarPage() {
-  const classes = exploreAvatarPage();
+export default function ExploreAssetsPage() {
+  const classes = exploreAssetsPage();
 
   const history = useHistory();
   const width = useWindowDimensions().width;

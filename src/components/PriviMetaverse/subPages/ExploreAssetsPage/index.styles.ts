@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 
-export const exploreAvatarPage = makeStyles(theme => ({
+export const exploreAssetsPage = makeStyles(theme => ({
   root: {
     width: "100%",
     height: "100%",
