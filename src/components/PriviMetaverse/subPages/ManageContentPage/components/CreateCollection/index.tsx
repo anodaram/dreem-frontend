@@ -12,7 +12,7 @@ import { BlockchainNets } from "shared/constants/constants";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
-import LoadingProgressModal from "components/PriviMetaverse/modals/LoadingProgressModal";
+import ContentProcessingOperationModal from "components/PriviMetaverse/modals/ContentProcessingOperationModal";
 
 const CreateCollection = ({
   handleNext,
@@ -35,16 +35,9 @@ const CreateCollection = ({
   const [title, setTitle] = useState<string>("");
   const [symbol, setSymbol] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const { chainId, account, library } = useWeb3React();
+  const [uploadSuccess, setUploadSuccess] = useState<any>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
-
-  const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const [chain, setChain] = useState<string>(BlockchainNets[0].value);
-
-  useEffect(() => {
-    setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");
-  }, []);
 
   const onImageInput = e => {
     const files = e.target.files;
@@ -83,7 +76,7 @@ const CreateCollection = ({
     return true;
   };
 
-  const handleWorld = async () => {
+  const handleCollection = async () => {
     if (validate()) {
       setIsUploading(true)
       let payload: any = {};
@@ -93,13 +86,14 @@ const CreateCollection = ({
         erc721CollectionDescription: description,
         erc721CollectionImage: image,
       };
-
+      console.log('upload collection')
       MetaverseAPI.uploadCollection(payload)
         .then(async res => {
-          setIsUploading(false)
           if (!res.success) {
+            setUploadSuccess(false)
             showAlertMessage(`Failed to create collection`, { variant: "error" });
           } else{
+            setUploadSuccess(true)
             showAlertMessage(`Successfully collection created`, { variant: "success" });
             handleCancel()
             handleRefresh()
@@ -113,7 +107,7 @@ const CreateCollection = ({
 
   return (
     isUploading ? (
-      <LoadingProgressModal open={isUploading} type="collection" onClose={()=>{setIsUploading(false)}}/>
+      <ContentProcessingOperationModal open={isUploading} txSuccess={uploadSuccess} onClose={()=>{setIsUploading(false)}}/>
     ) :
     <Box
       className={classes.content}
@@ -218,7 +212,7 @@ const CreateCollection = ({
           <SecondaryButton size="medium" onClick={handleCancel}>
             CANCEL
           </SecondaryButton>
-          <PrimaryButton size="medium" onClick={handleWorld}>
+          <PrimaryButton size="medium" onClick={handleCollection}>
             CREATE
           </PrimaryButton>
         </Box>

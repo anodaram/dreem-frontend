@@ -463,6 +463,7 @@ const Create3DAssetFlow = ({
                 <Box className={classes.itemTitle} mt={2.5} mb={1}>
                   Description
                 </Box>
+                <InfoTooltip tooltip={"Please give your asset a description."} />
               </Box>
               <textarea
                 style={{ height: "130px" }}
@@ -475,7 +476,7 @@ const Create3DAssetFlow = ({
                 <Box className={classes.itemTitle} mt={2.5} mb={1}>
                   Preview Image
                 </Box>
-                <InfoTooltip tooltip={"Please add an image of your realm."} />
+                <InfoTooltip tooltip={"Please add an image of your asset."} />
               </Box>
               <Box
                 className={classes.uploadBox}

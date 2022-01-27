@@ -402,6 +402,7 @@ export const useModalStyles = makeStyles(theme => ({
     textTransform: "uppercase",
     display: "flex",
     alignItems: "center",
+    marginBottom: "20px",
     "& svg": {
       marginRight: 12,
     },

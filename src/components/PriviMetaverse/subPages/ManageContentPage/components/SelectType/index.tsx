@@ -12,7 +12,6 @@ import { BlockchainNets } from "shared/constants/constants";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
-import LoadingProgressModal from "components/PriviMetaverse/modals/LoadingProgressModal";
 
 const ASSET_TYPE = [
   {

@@ -2,15 +2,17 @@ import React, { useEffect, useState, useRef } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 
-import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem } from "@material-ui/core";
+import { Grid, FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
+import { useTypedSelector } from "store/reducers/Reducer";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
+import RealmExtensionProfileCard from "components/PriviMetaverse/components/cards/RealmExtensionProfileCard";
 import Box from "shared/ui-kit/Box";
 import { switchNetwork } from "shared/functions/metamask";
 import { BlockchainNets } from "shared/constants/constants";
@@ -26,13 +28,12 @@ import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
 import { FilterWorldAssetOptions } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
-const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
+const COLUMNS_COUNT_BREAK_POINTS_THREE = {
   375: 1,
   600: 2,
   1000: 3,
   1440: 3,
 };
-
 const CollectionList = ({
   handleNext,
   handleCancel,
@@ -43,6 +44,7 @@ const CollectionList = ({
   handleSelect: (item: any) => void;
 }) => {
   const classes = useModalStyles();
+  const userSelector = useTypedSelector(state => state.user);
   const filterClasses = useFilterSelectStyles();
   const { showAlertMessage } = useAlertMessage();
   const width = useWindowDimensions().width;
@@ -82,12 +84,13 @@ const CollectionList = ({
   const [currentCollection, setCurrentCollection] = useState<any>(null);
   const [curPage, setCurPage] = React.useState(1);
   const [lastPage, setLastPage] = React.useState(0);
-  const [loadingCollection, setLoadingCollection] = React.useState<boolean>(false);
+  const [loadingCollection, setLoadingCollection] = React.useState<boolean>(true);
 
   const [collections, setCollections] = useState<any[]>([]);
+  const [hasMore, setHasMore] = useState<boolean>(true);
 
   useEffect(() => {
-    loadMore();
+    loadData();
   }, []);
 
   const onImageInput = e => {
@@ -216,6 +219,8 @@ const CollectionList = ({
             if (res.data.page && curPage <= res.data.page.max) {
               setCurPage(curPage => curPage + 1);
               setLastPage(res.data.page.max);
+            } else{
+              setHasMore(false);
             }
           }
         }
@@ -223,9 +228,28 @@ const CollectionList = ({
       .finally(() => setLoadingCollection(false));
   };
 
+  const loadData = () => {
+    setLoadingCollection(true);
+    MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.address)
+      .then(res => {
+        if (res.success) {
+          const items = res.data.elements;
+          if (items && items.length > 0) {
+            setCollections(res.data.elements);
+            if (res.data.page && curPage <= res.data.page.max) {
+              setCurPage(curPage => curPage + 1);
+              setLastPage(res.data.page.max);
+            } else{
+              setHasMore(false);
+            }
+          }
+        }
+      })
+      .finally(() => setLoadingCollection(false));
+  };
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, curPage, "DESC")
+    MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.address)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -234,6 +258,9 @@ const CollectionList = ({
             if (res.data.page && curPage <= res.data.page.max) {
               setCurPage(curPage => curPage + 1);
               setLastPage(res.data.page.max);
+              curPage >= res.data.page.max && setHasMore(false)
+            } else{
+              setHasMore(false);
             }
           }
         }
@@ -243,8 +270,9 @@ const CollectionList = ({
 
   return (
     <>
+    {!openCreateCollectionModal ?
       <div className={classes.otherContent}>
-        {collections.length ? (
+        {loadingCollection || collections.length ? (
           <>
             <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
               <Box className={classes.typo4}>Select Collection</Box>
@@ -255,41 +283,38 @@ const CollectionList = ({
             </Box>
             <Box width={1} pb={20}>
               <InfiniteScroll
-                hasChildren={collections.length > 0}
-                dataLength={collections.length}
+                hasChildren={collections?.length > 0}
+                dataLength={collections?.length}
                 scrollableTarget={"scrollContainer"}
                 next={loadMore}
-                hasMore={!!lastPage && curPage < lastPage}
+                hasMore={hasMore}
                 loader={
-                  lastPage && curPage === lastPage ? (
+                  loadingCollection && (
                     <Box mt={2}>
                       <MasonryGrid
                         gutter={"16px"}
                         data={Array(loadingCount).fill(0)}
-                        renderItem={(item, _) => <CollectionCard isLoading={true} />}
-                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                        renderItem={(item, _) => (
+                          <CollectionCard nft={{}} isLoading={true} />
+                        )}
+                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
                       />
                     </Box>
-                  ) : (
-                    <></>
                   )
                 }
               >
-                <Box mt={4}>
-                  <MasonryGrid
-                    gutter={"16px"}
-                    data={collections}
-                    renderItem={(item, _) => (
+                <Grid container spacing={3} style={{ marginBottom: 24 }}>
+                  {collections?.map((item, index) => (
+                    <Grid item key={`trending-pod-${index}`} md={4} sm={6} xs={12}>
                       <CollectionCard
                         item={item}
                         isLoading={loadingCollection}
                         onClick={() => handleSelect(item)}
                         selectable={true}
                       />
-                    )}
-                    columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                  />
-                </Box>
+                    </Grid>
+                  ))}
+                </Grid>
               </InfiniteScroll>
             </Box>
           </>
@@ -323,20 +348,19 @@ const CollectionList = ({
           </Box>
         )}
       </div>
-
-      {openCreateCollectionModal && (
-        <div className={classes.otherContent}>
-          <div className={classes.typo1}>Creating New Collection</div>
-          <Box className={classes.typo3} mb={3}>
-            Fill all the details of your new collection
-          </Box>
-          <CreateCollection
-            handleNext={() => {}}
-            handleCancel={() => setOpenCreateCollectionModal(false)}
-            handleRefresh={() => handleRefreshCollection()}
-          />
-        </div>
-      )}
+      :
+      <div className={classes.otherContent}>
+        <div className={classes.typo1}>Creating New Collection</div>
+        <Box className={classes.typo3} mb={3}>
+          Fill all the details of your new collection
+        </Box>
+        <CreateCollection
+          handleNext={() => {}}
+          handleCancel={() => setOpenCreateCollectionModal(false)}
+          handleRefresh={() => handleRefreshCollection()}
+        />
+      </div>
+      }
       {/* {step > 2 || (step === 2 && collections.length) ? (
         <Box className={classes.footer}>
           <div className={classes.howToCreateBtn} onClick={handlePrev}>

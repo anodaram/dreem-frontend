@@ -461,6 +461,7 @@ const CreateCharacterFlow = ({
                 <Box className={classes.itemTitle} mt={2.5} mb={1}>
                   Description
                 </Box>
+                <InfoTooltip tooltip={"Please give your character a description."} />
               </Box>
               <textarea
                 style={{ height: "130px" }}
@@ -473,7 +474,7 @@ const CreateCharacterFlow = ({
                 <Box className={classes.itemTitle} mt={2.5} mb={1}>
                   Preview Image
                 </Box>
-                <InfoTooltip tooltip={"Please add an image of your realm."} />
+                <InfoTooltip tooltip={"Please add an image of your character."} />
               </Box>
               <Box
                 className={classes.uploadBox}

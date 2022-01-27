@@ -256,7 +256,6 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
   };
   const validate = () => {
     if (!title || !description || !image || !unity) {
-      showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
       return false;
     }
 
@@ -561,7 +560,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
                       <Box className={classes.itemTitle} mt={2.5} mb={1}>
                         Description
                       </Box>
-                      <InfoTooltip tooltip={"Please give your realm a description."} />
+                      <InfoTooltip tooltip={"Please give your world a description."} />
                     </Box>
                     <textarea
                       style={{ height: "130px" }}
@@ -574,7 +573,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
                       <Box className={classes.itemTitle} mt={2.5} mb={1}>
                         Preview Image
                       </Box>
-                      <InfoTooltip tooltip={"Please add an image of your realm."} />
+                      <InfoTooltip tooltip={"Please add an image of your world."} />
                     </Box>
                     <Box
                       className={classes.uploadBox}
@@ -628,7 +627,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
                       </Box>
                       <InfoTooltip
                         tooltip={
-                          "Please give your realm a video. This video can be considered as your teaser to your realm."
+                          "Please give your world a video. This video can be considered as your teaser to your world."
                         }
                       />
                     </Box>
