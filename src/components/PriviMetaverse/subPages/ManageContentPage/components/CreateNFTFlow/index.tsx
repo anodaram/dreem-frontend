@@ -38,7 +38,7 @@ import CreateNFT from "../CreateNFT";
 const CreateSteps = [
   {
     step: 1,
-    label: 'NFT',
+    label: 'Royalties',
     completed: false
   },
   {
@@ -72,8 +72,9 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
   const { chainId, account, library } = useWeb3React();
   const [isPublic, setIsPublic] = useState<boolean>(true);
   const [step, setStep] = useState<number>(1);
-  const [nftOption, setNftOption] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
+  const [royaltyAddress, setRoyaltyAddress] = useState<string>("");
+  const [royaltyPercentage, setRoyaltyPercentage] = useState<string>("");
+  const [isRoyalty, setIsRoyalty] = useState<boolean>();
   const [isDraft, setIsDraft] = useState<boolean>(true);
   const [currentCollection, setCurrentCollection] = useState<any>(null);
   const [response, setResponse] = useState<any>();
@@ -228,7 +229,12 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
     console.log(steps[step-1])
     switch (step) {
       case 1:
-        steps[step-1].completed = (nftOption === 'single') || (nftOption === 'multiple' && amount) ? true : false;
+        console.log(isValidAddress(royaltyAddress))
+        if(!isValidAddress(royaltyAddress)){
+          showAlertMessage(`Invalid Address`, { variant: "error" });
+          return;
+        }
+        steps[step-1].completed = (isRoyalty && royaltyPercentage && royaltyAddress) || (isRoyalty === false) ? true : false;
         break;
       case 2:
         steps[step-1].completed = validate() ? true : false;
@@ -244,7 +250,10 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
       setStep(prev => prev + 1);
     }
   };
-
+  const isValidAddress = address => {
+    const web3 = new Web3(library.provider);
+    return web3.utils.isAddress(address);
+  };
   const validate = () => {
     if (!title || !description || !image || !unity) {
       showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
@@ -381,6 +390,9 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
           name: collectionData.name,
           symbol: collectionData.symbol,
           uri,
+          isRoyalty,
+          royaltyAddress,
+          royaltyPercentage
         },
         setTxModalOpen,
         setTxHash
@@ -396,7 +408,8 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
           resRoyalty.tokenId,
           metaData.newFileCID,
           account,
-          "0x0000000000000000000000000000000000000000"
+          royaltyAddress,
+          royaltyPercentage
         );
       } else {
         setTxSuccess(false);
@@ -409,6 +422,9 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
           collectionAddress: collectionAddr,
           to: account,
           uri,
+          isRoyalty,
+          royaltyAddress,
+          royaltyPercentage
         },
         setTxModalOpen,
         setTxHash
@@ -425,7 +441,8 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
           contractRes.tokenId,
           metaData.newFileCID,
           contractRes.owner,
-          contractRes.royaltyAddress
+          royaltyAddress,
+          royaltyPercentage
         );
       } else {
         setTxSuccess(false);
@@ -453,58 +470,69 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
                 <div className={classes.modalContent}>
                   <Box display="flex" alignItems="center" justifyContent="center" mt={2.5}>
                     <Box className={classes.title} mb={1}>
-                      select nft option
+                      do you want royalties from secondary sales of the nft(s)?
                     </Box>
+                  </Box>
+                  <Box className={classes.typo3} mb={3}>
+                  Every time the NFT is traded on OpenSea or Dreem, NFT holders can receive royalties to their wallet address. If you select “Yes”, be prepared to paste the recipient wallet address.
                   </Box>
                   <div className={classes.inputGroup}>
                     <div className={classes.inputBox}>
                       <input
                         name="radio-group"
                         className={classes.inputRadio}
-                        id="single"
-                        type="radio"
-                        checked={nftOption === 'single' && true}
-                        onChange={e => setNftOption(e.target.value == "on" ? "single" : "")}
+                        id='single'
+                        type='radio'
+                        checked={isRoyalty && true}
+                        onChange={e => setIsRoyalty(e.target.value == 'on' ? true : false)}
                       />
-                      <label htmlFor="single">single NFT(1/1)</label>
-                      <div className="check">
-                        <div className="inside"></div>
-                      </div>
+                      <label htmlFor="single">yes</label>
+                      <div className="check"><div className="inside"></div></div>
                     </div>
                     <div className={classes.inputBox}>
                       <input
                         name="radio-group"
                         className={classes.inputRadio}
-                        id="multi"
-                        type="radio"
-                        checked={nftOption === 'multiple' && true}
-                        onChange={e => {
-                          setNftOption(e.target.value == "on" ? "multiple" : "");
-                        }}
+                        id='multi'
+                        type='radio'
+                        checked={!isRoyalty && true}
+                        onChange={e => {setIsRoyalty(e.target.value == 'on' ? false : true)}}
                       />
-                      <label htmlFor="multi">multiple edition nft</label>
-                      <div className="check">
-                        <div className="inside"></div>
-                      </div>
+                      <label htmlFor="multi">no</label>
+                      <div className="check"><div className="inside"></div></div>
                     </div>
                   </div>
-                  {nftOption == "multiple" && (
-                    <>
-                      <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
-                        <Box className={classes.itemTitle} mb={1}>
-                          How many nfts do you want minted from this asset?
-                        </Box>
-                        <InfoTooltip tooltip={"Please give the number of nfts you want to mint."} />
+                  {isRoyalty &&
+                  <>
+                    <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+                      <Box className={classes.itemTitle} mb={1}>
+                        royalty share amount
                       </Box>
+                      <InfoTooltip tooltip={"royalty share amount to receive profit"} />
+                    </Box>
+                    <Box position="relative">
                       <input
-                        type="number"
+                        type='number'
                         className={classes.inputText}
-                        placeholder=""
-                        value={amount}
-                        onChange={e => setAmount(e.target.value)}
+                        placeholder="00.00"
+                        value={royaltyPercentage}
+                        onChange={e => setRoyaltyPercentage(e.target.value)}
                       />
-                    </>
-                  )}
+                      <div className={classes.percentLabel}>%</div>
+                    </Box>
+                    <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+                      <Box className={classes.itemTitle} mb={1}>
+                        address to receive royalties
+                      </Box>
+                    </Box>
+                    <input
+                      className={classes.inputText}
+                      placeholder=""
+                      value={royaltyAddress}
+                      onChange={e => setRoyaltyAddress(e.target.value)}
+                    />
+                  </>
+                  }
                 </div>
               </Box>
             )}

@@ -326,7 +326,8 @@ const CreateRealmModal = ({
                 contractRes.tokenId,
                 metadata.newFileCID,
                 contractRes.owner,
-                contractRes.royaltyAddress
+                contractRes.royaltyAddress,
+                0
               );
             } else {
               setTxSuccess(false);

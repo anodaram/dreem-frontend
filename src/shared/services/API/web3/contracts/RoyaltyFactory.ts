@@ -1,6 +1,9 @@
 import Web3 from "web3";
+import { zeroAddress } from "ethereumjs-util";
 import { ContractInstance } from "shared/connectors/web3/functions";
 import config from "shared/connectors/web3/config";
+
+const MAX_PRIO_FEE = "50";
 
 const royaltyFactory = network => {
   const contractAddress = config[network].CONTRACT_ADDRESSES.ROYALTYFACTORY;
@@ -16,16 +19,18 @@ const royaltyFactory = network => {
   ): Promise<any> => {
     return new Promise(async resolve => {
       try {
-        const { name, symbol, uri } = payload;
+        const { name, symbol, uri, isRoyalty, royaltyAddress, royaltyPercentage } = payload;
+        const rAddress = isRoyalty ? royaltyAddress : zeroAddress()
+        const bps = isRoyalty ? royaltyPercentage * 100 : 0
 
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
 
-        console.log("Getting gas....", contract, contractAddress, account);
-        const gas = await contract.methods.createRoyaltyERC721(name, symbol, uri, '0x0000000000000000000000000000000000000000', 0, '').estimateGas({ from: account });
+        console.log("Getting gas....", contract, contractAddress, account, rAddress, bps);
+        const gas = await contract.methods.createRoyaltyERC721(name, symbol, uri, rAddress, bps, '').estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
-          .createRoyaltyERC721(name, symbol, uri, '0x0000000000000000000000000000000000000000', 0, '')
-          .send({ from: account, gas: gas })
+          .createRoyaltyERC721(name, symbol, uri, rAddress, bps, '')
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", function (hash) {
             console.log("transaction hash:", hash);
             setTxModalOpen(true);

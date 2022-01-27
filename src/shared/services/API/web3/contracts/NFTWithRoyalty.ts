@@ -1,6 +1,9 @@
 import Web3 from "web3";
+import { zeroAddress } from "ethereumjs-util";
 import { ContractInstance } from "shared/connectors/web3/functions";
 import config from "shared/connectors/web3/config";
+
+const MAX_PRIO_FEE = "50";
 
 const nftWithRoyalty = network => {
   const contractAddress = config[network].CONTRACT_ADDRESSES.ERC721_WITH_ROYALTY;
@@ -16,15 +19,17 @@ const nftWithRoyalty = network => {
   ): Promise<any> => {
     return new Promise(async resolve => {
       try {
-        const { collectionAddress, to, uri } = payload;
+        const { collectionAddress, to, uri, isRoyalty, royaltyAddress, royaltyPercentage  } = payload;
+        const rAddress = isRoyalty ? royaltyAddress : zeroAddress()
+        const bps = isRoyalty ? royaltyPercentage * 100 : 0
 
         const contract = ContractInstance(web3, metadata.abi, collectionAddress);
 
-        console.log("Getting gas....", contract, collectionAddress, to, account, uri);
-        const gas = await contract.methods.mintWithRoyalty(to, uri, '0x0000000000000000000000000000000000000000', 0, '').estimateGas({ from: account });
+        console.log("Getting gas....", contract, collectionAddress, to, account, uri, rAddress, bps);
+        const gas = await contract.methods.mintWithRoyalty(to, uri, rAddress, bps, '').estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
-          .mintWithRoyalty(to, uri, '0x0000000000000000000000000000000000000000', 0, '')
+          .mintWithRoyalty(to, uri, rAddress, bps, '')
           .send({ from: account, gas: gas })
           .on("transactionHash", function (hash) {
             console.log("transaction hash:", hash);

@@ -492,6 +492,7 @@ export const useModalStyles = makeStyles(theme => ({
     },
   },
   inputText: {
+    width: "100%",
     background: "rgba(218, 230, 229, 0.06)",
     border: "1px solid rgba(218, 218, 219, 0.59)",
     fontSize: 14,
@@ -504,6 +505,11 @@ export const useModalStyles = makeStyles(theme => ({
       '-webkit-appearance': 'none',
       margin: 0
     }
+  },
+  percentLabel: {
+    position: "absolute",
+    top: "15.5px",
+    right: "14.5px"
   }
 }));
 

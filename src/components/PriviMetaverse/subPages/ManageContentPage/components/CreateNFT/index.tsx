@@ -357,7 +357,8 @@ const CreateNFT = ({
                   resRoyalty.tokenId,
                   metadata.newFileCID,
                   account,
-                  '0x0000000000000000000000000000000000000000'
+                  '0x0000000000000000000000000000000000000000',
+                  0
                 );
                 handleRefresh()
               } else {
@@ -387,7 +388,8 @@ const CreateNFT = ({
                   contractRes.tokenId,
                   metadata.newFileCID,
                   contractRes.owner,
-                  contractRes.royaltyAddress
+                  contractRes.royaltyAddress,
+                  0
                 );
                 handleRefresh()
               } else {

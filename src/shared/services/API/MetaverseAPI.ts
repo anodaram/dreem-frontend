@@ -305,7 +305,7 @@ export const getCharacterData = async characterId => {
   }
 };
 
-export const convertToNFTWorld = async (worldId, contractAddress, chain, nftId, metadataCID, owner, royaltyAddress) => {
+export const convertToNFTWorld = async (worldId, contractAddress, chain, nftId, metadataCID, owner, royaltyAddress, royaltyPercentage) => {
   try {
     const token = localStorage.getItem("token");
     const config = {
@@ -319,7 +319,7 @@ export const convertToNFTWorld = async (worldId, contractAddress, chain, nftId, 
         ownerAddress : owner,
         metadataUrl : metadataCID,
         chain : chain,
-        royaltyPercentage : 15,
+        royaltyPercentage : royaltyPercentage,
         royaltyAddress : royaltyAddress
       },
       config

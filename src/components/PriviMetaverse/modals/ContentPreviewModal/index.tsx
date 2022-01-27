@@ -14,6 +14,7 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { getDefaultAvatar, getDefaultBGImage } from "shared/services/user/getUserAvatar";
 import { CircularLoadingIndicator, Modal, PrimaryButton } from "shared/ui-kit";
 import MintingNFTProgressModal from "components/PriviMetaverse/modals/MintingNFTProgressModal";
+import EditDraftContentModal from "components/PriviMetaverse/modals/EditDraftContentModal";
 import Box from "shared/ui-kit/Box";
 import Avatar from "shared/ui-kit/Avatar";
 import AddressView from "shared/ui-kit/AddressView";
@@ -163,7 +164,8 @@ const ContentPreviewModal = ({
           resRoyalty.tokenId,
           metaData.newFileCID,
           account,
-          "0x0000000000000000000000000000000000000000"
+          "0x0000000000000000000000000000000000000000",
+          0
         );
         setTxSuccess(true);
         showAlertMessage(`Successfully world minted`, { variant: "success" });
@@ -192,7 +194,8 @@ const ContentPreviewModal = ({
           contractRes.tokenId,
           metaData.newFileCID,
           contractRes.owner,
-          contractRes.royaltyAddress
+          contractRes.royaltyAddress,
+          0
         );
         setTxSuccess(true);
         showAlertMessage(`Successfully world minted`, { variant: "success" });
@@ -405,33 +408,39 @@ const ContentPreviewModal = ({
               </div>
             )}
             {openEditRealmModal &&
-              (nft.worldIsExtension ? (
-                <EditExtensionModal
+              <EditDraftContentModal 
                   open={openEditRealmModal}
                   onClose={() => setOpenEditRealmModal(false)}
-                  metaData={metaDataForModal}
-                  realmData={nft}
-                  handleRefresh={() => {
-                    MetaverseAPI.getWorld(nftId).then(res => {
-                      setNFT(res.data);
-                    });
-                    handleRefresh && handleRefresh();
-                  }}
-                />
-              ) : (
-                <EditRealmModal
-                  open={openEditRealmModal}
-                  onClose={() => setOpenEditRealmModal(false)}
-                  metaData={metaDataForModal}
-                  realmData={nft}
-                  handleRefresh={() => {
-                    MetaverseAPI.getWorld(nftId).then(res => {
-                      setNFT(res.data);
-                    });
-                    handleRefresh && handleRefresh();
-                  }}
-                />
-              ))}
+                  draftContent={nft}
+              />
+              // (nft.worldIsExtension ? (
+              //   <EditExtensionModal
+              //     open={openEditRealmModal}
+              //     onClose={() => setOpenEditRealmModal(false)}
+              //     metaData={metaDataForModal}
+              //     realmData={nft}
+              //     handleRefresh={() => {
+              //       MetaverseAPI.getWorld(nftId).then(res => {
+              //         setNFT(res.data);
+              //       });
+              //       handleRefresh && handleRefresh();
+              //     }}
+              //   />
+              // ) : (
+              //   <EditRealmModal
+              //     open={openEditRealmModal}
+              //     onClose={() => setOpenEditRealmModal(false)}
+              //     metaData={metaDataForModal}
+              //     realmData={nft}
+              //     handleRefresh={() => {
+              //       MetaverseAPI.getWorld(nftId).then(res => {
+              //         setNFT(res.data);
+              //       });
+              //       handleRefresh && handleRefresh();
+              //     }}
+              //   />
+              // ))
+            }
             {openNotAppModal && (
               <NotAppModal
                 open={openNotAppModal}

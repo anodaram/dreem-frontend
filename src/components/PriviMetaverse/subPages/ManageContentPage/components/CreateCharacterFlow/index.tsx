@@ -35,12 +35,12 @@ const CreateSteps = [
   },
   {
     step: 2,
-    label: 'Files',
+    label: 'Royalties',
     completed: false
   },
   {
     step: 3,
-    label: 'Royalties',
+    label: 'Files',
     completed: false
   },
   {
@@ -346,7 +346,6 @@ const CreateCharacterFlow = ({
                     <Box className={classes.itemTitle} mb={1}>
                       How many nfts do you want minted from this asset?
                     </Box>
-                    <InfoTooltip tooltip={"Please give the number of nfts you want to mint."} />
                   </Box>
                   <input
                     type="number"
@@ -409,14 +408,18 @@ const CreateCharacterFlow = ({
                   <Box className={classes.itemTitle} mb={1}>
                     royalty share amount
                   </Box>
+                  <InfoTooltip tooltip={"royalty share amount to receive profit"} />
                 </Box>
-                <input
-                  type='number'
-                  className={classes.inputText}
-                  placeholder=""
-                  value={royaltyPercentage}
-                  onChange={e => setRoyaltyPercentage(e.target.value)}
-                />
+                <Box position="relative">
+                  <input
+                    type='number'
+                    className={classes.inputText}
+                    placeholder="00.00"
+                    value={royaltyPercentage}
+                    onChange={e => setRoyaltyPercentage(e.target.value)}
+                  />
+                  <div className={classes.percentLabel}>%</div>
+                </Box>
                 <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
                   <Box className={classes.itemTitle} mb={1}>
                     address to receive royalties
