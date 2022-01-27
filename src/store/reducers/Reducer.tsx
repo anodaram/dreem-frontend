@@ -245,6 +245,10 @@ export interface RootState {
   world: {
     selectedTabWorldDetail: string;
   };
+  realms: {
+    realmsList: any[];
+    scrollPositionInRealms: number;
+  };
 }
 
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
