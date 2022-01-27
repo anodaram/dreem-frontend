@@ -13,11 +13,11 @@ export default function AssetsCard(props) {
   const classes = avatarCardStyles();
   const { character_id: characterId } = useParams<{ character_id: string }>();
 
-  const [media, setMedia] = useState<any>(props.item ?? {});
+  const [asset, setAsset] = useState<any>(props.item ?? {});
 
   useEffect(() => {
     if (item?.id) {
-      setMedia(item);
+      setAsset(item);
     }
   }, [item?.id, characterId]);
 
@@ -39,9 +39,9 @@ export default function AssetsCard(props) {
             justifyContent="space-between"
             className={classes.container}
           >
-            <img className={classes.image} src={media?.ipfsImage || getDefaultBGImage()} alt="robot" />
+            <img className={classes.image} src={asset?.ipfsImage || getDefaultBGImage()} alt="robot" />
             <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Box className={classes.name}>{media?.name}</Box>
+              <Box className={classes.name}>{asset?.name || ""}</Box>
               <PolygonIcon />
             </Box>
           </Box>

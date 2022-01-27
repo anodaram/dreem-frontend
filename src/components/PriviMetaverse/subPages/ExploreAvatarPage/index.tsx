@@ -107,8 +107,8 @@ export default function ExploreAvatarPage() {
                 </Box>
               </InfiniteScroll>
               {!loading && avatars?.length < 1 && (
-                <Box textAlign="center" width="100%" mb={10} mt={2}>
-                  No NFTs
+                <Box textAlign="center" width="100%" mb={10} mt={2} fontSize={22}>
+                  No Data
                 </Box>
               )}
             </Box>
