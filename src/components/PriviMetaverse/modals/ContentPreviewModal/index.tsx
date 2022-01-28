@@ -161,7 +161,7 @@ const ContentPreviewModal = ({
           nft.id,
           resRoyalty.contractAddress,
           targetChain.name,
-          resRoyalty.tokenId,
+          [resRoyalty.tokenId],
           metaData.newFileCID,
           account,
           "0x0000000000000000000000000000000000000000",
@@ -191,7 +191,7 @@ const ContentPreviewModal = ({
           nft.id,
           contractRes.collectionAddress,
           targetChain.name,
-          contractRes.tokenId,
+          [contractRes.tokenId],
           metaData.newFileCID,
           contractRes.owner,
           contractRes.royaltyAddress,
@@ -412,6 +412,7 @@ const ContentPreviewModal = ({
                   open={openEditRealmModal}
                   onClose={() => setOpenEditRealmModal(false)}
                   draftContent={nft}
+                  metaData = {metaDataForModal}
               />
               // (nft.worldIsExtension ? (
               //   <EditExtensionModal

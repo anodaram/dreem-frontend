@@ -1,14 +1,42 @@
 import React, { useState } from "react";
-
+import { useWeb3React } from "@web3-react/core";
+import Web3 from "web3";
+import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import Box from "shared/ui-kit/Box";
 import { useModalStyles } from "./index.styles";
 
-const EditRoyaltiesDraft = () => {
+const EditRoyaltiesDraft = (
+  draftContent,
+  handleIsRoyalty,
+  handleRoyaltyPercentage,
+  handleRoyaltyAddress
+  ) => {
   const classes = useModalStyles();
+  const { chainId, account, library } = useWeb3React();
+  const { showAlertMessage } = useAlertMessage();
 
   const [isSelected, setIsSelected] = useState<boolean>();
-  const [amount, setAmount] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
+  const [amount, setAmount] = useState<string>(draftContent.royaltyPercentage ? draftContent.royaltyPercentage : "");
+  const [address, setAddress] = useState<string>(draftContent.royaltyAddress ? draftContent.royaltyAddress : "");
+
+  const isValidAddress = address => {
+    const web3 = new Web3(library.provider);
+    return web3.utils.isAddress(address);
+  };
+
+  const handleAddress = address => {
+    if(isValidAddress(address)){
+      setAddress(address)
+      handleRoyaltyAddress(address)
+    } else{
+      showAlertMessage(`Invalid Address`, { variant: "error" });
+    }
+  }
+
+  const handleIsSelected = status => {
+    setIsSelected(status);
+    handleIsRoyalty(status)
+  }
 
   return (
     <Box>
@@ -34,7 +62,10 @@ const EditRoyaltiesDraft = () => {
             className={classes.input}
             id="single"
             type="radio"
-            onChange={e => setIsSelected(e.target.value == "on" ? true : false)}
+            onChange={e => {
+              handleIsSelected(e.target.value == "on" ? true : false);
+              }
+            }
           />
           <label htmlFor="single">yes</label>
           <div className="check">
@@ -62,7 +93,7 @@ const EditRoyaltiesDraft = () => {
                   : "linear-gradient(0deg, rgba(218, 230, 229, 0.06), rgba(218, 230, 229, 0.06))",
             }}
             onChange={e => {
-              setIsSelected(e.target.value == "on" ? false : true);
+              handleIsSelected(e.target.value == "on" ? false : true);
             }}
           />
           <label htmlFor="multi">no</label>
@@ -83,7 +114,11 @@ const EditRoyaltiesDraft = () => {
             className={classes.inputText}
             placeholder="00.00"
             value={amount}
-            onChange={e => setAmount(e.target.value)}
+            onChange={e => {
+                setAmount(e.target.value);
+                handleRoyaltyPercentage(e.target.value);
+              }
+            }
           />
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
             <Box className={classes.itemTitle} mb={1}>
@@ -94,7 +129,7 @@ const EditRoyaltiesDraft = () => {
             className={classes.inputText}
             placeholder="00.00"
             value={address}
-            onChange={e => setAddress(e.target.value)}
+            onChange={e => handleAddress(e.target.value)}
           />
         </>
       )}

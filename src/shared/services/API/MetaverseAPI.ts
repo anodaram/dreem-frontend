@@ -315,7 +315,7 @@ export const convertToNFTWorld = async (worldId, contractAddress, chain, nftId, 
       `${METAVERSE_URL()}/web/itemVersions/${worldId}/mint/`,
       {
         collectionAddress : contractAddress,
-        tokenId : nftId,
+        tokenIds : nftId,
         ownerAddress : owner,
         metadataUrl : metadataCID,
         chain : chain,

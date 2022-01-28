@@ -16,12 +16,16 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   1440: 3,
 };
 
-const EditCollectionDraft = ({ onChangeCollection }) => {
+const EditCollectionDraft = ({
+   onChangeCollection,
+   currentCollection,
+   handleCollection
+  }) => {
   const classes = useModalStyles();
   const width = useWindowDimensions().width;
 
   const [loadingCollection, setLoadingCollection] = useState<boolean>(false);
-  const [selectedCollection, setSelectedCollection] = useState<any>(null);
+  const [selectedCollection, setSelectedCollection] = useState<any>(currentCollection);
   const [collections, setCollections] = useState<any[]>([]);
   const [curPage, setCurPage] = React.useState(1);
   const [lastPage, setLastPage] = React.useState(0);
@@ -30,9 +34,20 @@ const EditCollectionDraft = ({ onChangeCollection }) => {
 
   useEffect(() => {
     onChangeCollection(true);
+    getCollection();
     loadCollectionMore();
   }, []);
 
+  const getCollection = () => {
+    MetaverseAPI.getCollection(currentCollection)
+      .then(res => {
+        if (res.success) {
+          const items = res.data;
+            setSelectedCollection(res.data)     
+        }
+      })
+      .finally(() => setLoadingCollection(false));
+  }
   const loadCollectionMore = () => {
     setLoadingCollection(true);
     MetaverseAPI.getCollections(12, curPage, "DESC")
@@ -130,6 +145,7 @@ const EditCollectionDraft = ({ onChangeCollection }) => {
                           onClick={() => {
                             onChangeCollection(false);
                             setSelectedCollection(item);
+                            handleCollection(item)
                           }}
                           selectable={true}
                         />

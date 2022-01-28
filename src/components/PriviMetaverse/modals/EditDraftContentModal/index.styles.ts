@@ -7,6 +7,8 @@ export const useModalStyles = makeStyles(theme => ({
     borderRadius: "0px !important",
     boxShadow: "0px 38px 96px 17px rgba(1, 1, 13, 0.25)",
     padding: "0px !important",
+    width: "778px!important",
+    zIndex: 1400
   },
   modalContent: {
     display: "flex",

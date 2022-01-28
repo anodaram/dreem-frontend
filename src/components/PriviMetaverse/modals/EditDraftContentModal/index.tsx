@@ -3,24 +3,47 @@ import React, { useState, useEffect } from "react";
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
 import { Modal, PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { useAlertMessage } from "shared/hooks/useAlertMessage";
+import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import Box from "shared/ui-kit/Box";
 import EditNFTDraftTab from "./components/EditNFTDraft";
 import EditRoyaltiesDraftTab from "./components/EditRoyaltiesDraft";
-import EditFilesDraftTab from "./components/EditFilesDraft";
+import EditFilesNFTTab from "./components/EditFilesNFT";
 import EditCollectionDraftTab from "./components/EditCollectionDraft";
+import PublicOption from "./components/PublicOption";
 import { useModalStyles } from "./index.styles";
 
-const EditDraftContentModal = ({ open, onClose, draftContent }) => {
+const EditDraftContentModal = ({ open, onClose, draftContent, metaData }) => {
   const classes = useModalStyles();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const { showAlertMessage } = useAlertMessage();
 
   const [tabs, setTabs] = useState<string[]>(["NFT", "Royalties", "Files", "Collection"]);
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [completed, setCompleted] = useState<boolean[]>([]);
   const [isWorldNFT, setIsWorldNFT] = useState<boolean>(false);
   const [openSelectCollectionPage, setOpenSelectCollectionPage] = useState<boolean>(false);
+  const [showUploadingModal, setShowUploadingModal] = useState<boolean>(false);
+  const [openPublic, setOpenPublic] = useState<boolean>(false);
+  const [progress, setProgress] = useState(0);
+
+  const [image, setImage] = useState<any>(null);
+  const [imageFile, setImageFile] = useState<any>(null);
+  const [video, setVideo] = useState<any>(null);
+  const [videoFile, setVideoFile] = useState<any>(null);
+  const [unity, setUnity] = useState<any>(null);
+  const [unityFile, setUnityFile] = useState<any>(null);
+  const [entity, setEntity] = useState<any>(null);
+  const [entityFile, setEntityFile] = useState<any>(null);
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [isPublic, setIsPublic] = useState<boolean>(true);
+  const [isRoyalty, setIsRoyalty] = useState<boolean>();
+  const [royaltyAddress, setRoyaltyAddress] = useState<string>("");
+  const [royaltyPercentage, setRoyaltyPercentage] = useState<string>("");
+  const [currentCollection, setCurrentCollection] = useState<any>(draftContent.collectionId);
 
   useEffect(() => {
     if (!draftContent) return;
@@ -57,6 +80,37 @@ const EditDraftContentModal = ({ open, onClose, draftContent }) => {
 
   const handleChangeCollection = value => {
     setOpenSelectCollectionPage(value);
+  };
+
+
+  const handleSaveDraft = async () => {
+    // if (validate()) {
+      let payload: any = {};
+      try {
+        if(currentCollection) payload.collectionId = currentCollection;
+        payload.worldTitle = title;
+        payload.worldDescription = description;
+        if(image) payload.worldImage = image;
+        if(unity) payload.worldLevel = unity;
+        if(video) payload.worldVideo = video;
+        if(entity) payload.worldData = entity;
+        if (isPublic !== draftContent.isPublic) payload.isPublic = isPublic;
+        if(isRoyalty){
+          payload.royaltyPercentage = royaltyPercentage
+          payload.royaltyAddress = royaltyAddress
+        }
+
+        setShowUploadingModal(true);
+        setProgress(0);
+        await MetaverseAPI.editWorld(draftContent.id, payload);
+        setProgress(100);
+        setShowUploadingModal(false);
+        showAlertMessage(`Updated draft successfully`, { variant: "success" });
+        onClose();
+      } catch (error) {
+        showAlertMessage("Failed to update draft", { variant: "error" });
+      }
+    // }
   };
 
   return (
@@ -108,13 +162,32 @@ const EditDraftContentModal = ({ open, onClose, draftContent }) => {
         <Box className={classes.mainSection}>
           {selectedTab === 0 && !isWorldNFT && <EditNFTDraftTab />}
           {((selectedTab === 1 && !isWorldNFT) || (selectedTab === 0 && isWorldNFT)) && (
-            <EditRoyaltiesDraftTab />
+            <EditRoyaltiesDraftTab 
+              draftContent={draftContent}
+              handleIsRoyalty={(value)=>setIsRoyalty(value)}
+              handleRoyaltyPercentage={(value)=>setRoyaltyPercentage(value)}
+              handleRoyaltyAddress={(value)=>setRoyaltyAddress(value)}
+            />
           )}
           {((selectedTab === 2 && !isWorldNFT) || (selectedTab === 1 && isWorldNFT)) && (
-            <EditFilesDraftTab draftContent={draftContent} />
+            draftContent.itemKind === "WORLD" &&
+            <EditFilesNFTTab
+              draftContent={draftContent}
+              metaData={metaData}
+              handleTitle={(value)=>setTitle(value)}
+              handleDescription={(value)=>setDescription(value)}
+              handleImage={(value)=>setImage(value)}
+              handleVideo={(value)=>setVideo(value)}
+              handleUnity={(value)=>setUnity(value)}
+              handleEntity={(value)=>setEntity(value)}
+            />
           )}
           {((selectedTab === 3 && !isWorldNFT) || (selectedTab === 2 && isWorldNFT)) && (
-            <EditCollectionDraftTab onChangeCollection={handleChangeCollection} />
+            <EditCollectionDraftTab 
+              currentCollection={currentCollection} 
+              onChangeCollection={handleChangeCollection} 
+              handleCollection={(value)=>setCurrentCollection(value)}
+            />
           )}
           <Box className={classes.footerSection}>
             <SecondaryButton
@@ -143,13 +216,28 @@ const EditDraftContentModal = ({ open, onClose, draftContent }) => {
                 paddingTop: 4,
                 color: "#212121",
               }}
-              onClick={() => setSelectedTab(prev => (prev < 4 ? prev + 1 : prev))}
+              onClick={() => {
+                  setSelectedTab(prev => (prev < 4 ? prev + 1 : prev))
+                  selectedTab == 3 && setOpenPublic(true);
+                }
+              }
             >
               Save Changes
             </PrimaryButton>
           </Box>
         </Box>
       </Box>
+
+      {openPublic && (
+        <PublicOption
+          open={openPublic}
+          onClose={() => {
+            setOpenPublic(false);
+          }}
+          handleSubmit={() => handleSaveDraft()}
+          handleSelect={isPublic => setIsPublic(isPublic)}
+        />
+      )}
     </Modal>
   );
 };
