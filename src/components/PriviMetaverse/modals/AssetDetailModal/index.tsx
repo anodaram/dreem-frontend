@@ -11,13 +11,13 @@ import Box from "shared/ui-kit/Box";
 import Avatar from "shared/ui-kit/Avatar";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 // import { getChainImageUrl } from "shared/functions/chainFucntions";
-import { characterDetailModalStyles } from "./index.styles";
 import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
 import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAuth } from "shared/contexts/AuthContext";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
+import { assetDetailModalStyles } from "./index.styles";
 
 declare global {
   namespace JSX {
@@ -28,16 +28,16 @@ declare global {
 }
 
 const isProd = process.env.REACT_APP_ENV === "prod";
-const CharacterDetailModal = ({
+const AssetDetailModal = ({
   id,
-  realmData,
+  assetData,
   open,
   isLoading,
   onClose,
   onFruit,
 }: {
   id: string;
-  realmData: any;
+  assetData: any;
   open: boolean;
   isLoading?: boolean;
   onClose: () => void;
@@ -47,7 +47,7 @@ const CharacterDetailModal = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const { isSignedin } = useAuth();
 
-  const classes = characterDetailModalStyles();
+  const classes = assetDetailModalStyles();
   const history = useHistory();
 
   const user = useTypedSelector(state => state.user);
@@ -55,23 +55,23 @@ const CharacterDetailModal = ({
   const { showAlertMessage } = useAlertMessage();
   const { shareMedia } = useShareMedia();
 
-  const chainName = chain => {
-    if (!chain) return "";
-    const ch = chain.toLowerCase();
-    if (ch === "polygon" || ch === "mumbai") {
-      return "Polygon";
-    } else if (ch === "ethereum" || ch === "eth") {
-      return "Ethereum";
-    } else if (ch === "wax") {
-      return "Wax";
-    } else if (ch === "klaytn") {
-      return "Klaytn";
-    } else {
-      return chain;
-    }
+  // const chainName = chain => {
+  //   if (!chain) return "";
+  //   const ch = chain.toLowerCase();
+  //   if (ch === "polygon" || ch === "mumbai") {
+  //     return "Polygon";
+  //   } else if (ch === "ethereum" || ch === "eth") {
+  //     return "Ethereum";
+  //   } else if (ch === "wax") {
+  //     return "Wax";
+  //   } else if (ch === "klaytn") {
+  //     return "Klaytn";
+  //   } else {
+  //     return chain;
+  //   }
 
-    return "";
-  };
+  //   return "";
+  // };
 
   const [media, setMedia] = React.useState<any>(null);
   const [nft, setNFT] = React.useState<any>(null);
@@ -112,11 +112,6 @@ const CharacterDetailModal = ({
   //     : address;
   // }, [nft?.nftCollection, nft?.token_address, nft?.collection_address]);
 
-  // const isVideo = React.useMemo(() => {
-  //   if (!nft) return;
-  //   return !nft?.UrlMainPhoto && !nft?.Url && nft?.url?.endsWith("mp4");
-  // }, [nft]);
-
   // const handleClickAddress = () => {
   //   const address = nft?.nftCollection || nft?.token_address || nft?.collection_address || "";
   //   if (
@@ -135,12 +130,6 @@ const CharacterDetailModal = ({
   //     window.open(`https://polygonscan.com/token/${nft?.collectionAddress}`, "_blank");
   //   } else if (nft?.blockchain.toLowerCase() === "klaytn") {
   //     window.open(`https://scope.klaytn.com/nft/${nft?.collectionAddress}`, "_blank");
-  //   }
-  // };
-
-  // const handleOpenlink = () => {
-  //   if (nft?.openseaUrl || nft?.link || nft?.metadata?.external_url) {
-  //     window.open(nft?.openseaUrl || nft?.link || nft?.metadata?.external_url, "_blank");
   //   }
   // };
 
@@ -188,10 +177,10 @@ const CharacterDetailModal = ({
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     onClose();
-                    history.push(`/realms/${realmData.id}`);
+                    history.push(`/realms/${assetData.id}`);
                   }}
                 >
-                  {realmData?.worldTitle}
+                  {assetData?.worldTitle}
                 </Box>
                 <Box className={classes.optSection}>
                   {isSignedin && (
@@ -260,13 +249,7 @@ const CharacterDetailModal = ({
                 Defined by community
               </Box>
             </Box>
-            {/* <Box display="flex" flexDirection="column">
-              {nft?.blockchain === PlatformType.Privi && (
-                <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-                  <Box className={classes.typo4}>Proof of Authenthcity</Box>
-                  <Box className={classes.typo4}>_</Box>
-                </Box>
-              )}
+            {/* 
               {(nft?.token_url || nft?.metadataUri || nft?.token_uri) && (
                 <Box
                   display="flex"
@@ -279,20 +262,6 @@ const CharacterDetailModal = ({
                   style={{ cursor: "pointer" }}
                 >
                   <Box className={classes.typo4}>IPFS</Box>
-                  <ExpandIcon />
-                </Box>
-              )}
-              {!nft?.nftCollection && !nft?.token_address && nft?.blockchain !== PlatformType.Privi && (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  pt={2}
-                  mb={2}
-                  onClick={handleOpenlink}
-                  style={{ cursor: "pointer" }}
-                >
-                  <Box className={classes.typo4}>See on Opensea</Box>
                   <ExpandIcon />
                 </Box>
               )}
@@ -392,7 +361,7 @@ const CharacterDetailModal = ({
   );
 };
 
-export default CharacterDetailModal;
+export default AssetDetailModal;
 
 // const ExpandIcon = () => (
 //   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
