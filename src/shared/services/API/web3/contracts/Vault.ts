@@ -43,14 +43,15 @@ const vault = (network: string) => {
     });
   };
 
-  const withdraw = async (web3: Web3, contractAddress, payloads: any): Promise<any> => {
+  const withdraw = async (web3: Web3, contractAddress, account: string, payloads: any): Promise<any> => {
     return new Promise(async resolve => {
       try {
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
 
-        console.log(payloads)
-        const response = await contract.methods.withdraw(payloads.collectionId, payloads.tokenId).call();
-        console.log(response);
+        const response = await contract.methods
+          .withdraw(payloads.collectionId, payloads.tokenId)
+          .send({ from: account });
+
         if (response) {
           resolve({ success: true, withdrawn: response });
         } else {
