@@ -6,20 +6,28 @@ import { Skeleton } from "@material-ui/lab";
 import { PrimaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
+import AssetDetailModal from "components/PriviMetaverse/modals/AssetDetailModal";
 import { avatarCardStyles } from "./index.styles";
 
 export default function AssetsCard(props) {
   const { isLoading, item } = props;
   const classes = avatarCardStyles();
-  const { character_id: characterId } = useParams<{ character_id: string }>();
 
   const [asset, setAsset] = useState<any>(props.item ?? {});
+  const [openCharacterDetailModal, setOpenAssetDetailModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (item?.id) {
       setAsset(item);
     }
-  }, [item?.id, characterId]);
+  }, [item?.id]);
+
+  const updateFruit = fruitArray => {
+    const itemCopy = { ...asset };
+    itemCopy.fruits = fruitArray;
+
+    setAsset(itemCopy);
+  };
 
   return (
     <Box className={classes.card}>
@@ -47,11 +55,24 @@ export default function AssetsCard(props) {
           </Box>
           <Box className={classes.divider} />
           <Box p={1.5}>
-            <PrimaryButton size="medium" className={classes.button} onClick={() => {}}>
+            <PrimaryButton
+              size="medium"
+              className={classes.button}
+              onClick={() => setOpenAssetDetailModal(true)}
+            >
               see more
             </PrimaryButton>
           </Box>
         </>
+      )}
+      {openCharacterDetailModal && (
+        <AssetDetailModal
+          open={openCharacterDetailModal}
+          id={asset.id}
+          assetData={item.realm}
+          onClose={() => setOpenAssetDetailModal(false)}
+          onFruit={updateFruit}
+        />
       )}
     </Box>
   );
