@@ -390,7 +390,7 @@ const ExploreReserveDetailPage = () => {
 
     web3APIHandler.RentalManager.vaultAddress(web3, account).then(({ vaultAddress }) => {
       if (vaultAddress) {
-        web3APIHandler.Vault.withdraw(web3, vaultAddress, {
+        web3APIHandler.Vault.withdraw(web3, vaultAddress, account, {
           collectionId: nft.Address,
           tokenId: Number(nft.tokenId),
         }).then(res => {
