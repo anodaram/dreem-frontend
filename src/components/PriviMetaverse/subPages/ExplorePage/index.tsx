@@ -8,6 +8,7 @@ import { useMediaQuery, useTheme } from "@material-ui/core";
 
 import { RootState } from "store/reducers/Reducer";
 import { setRealmsList, setScrollPositionInRealms } from "store/actions/Realms";
+import { setAllNFTList, setCollectionNFTList } from "store/actions/MarketPlace";
 import Box from "shared/ui-kit/Box";
 // import { PrimaryButton } from "shared/ui-kit";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
@@ -67,6 +68,10 @@ export default function ExplorePage() {
   React.useEffect(() => {
     loadFeatured();
     loadMore(true);
+
+    // initialize store
+    dispatch(setCollectionNFTList([]));
+    dispatch(setAllNFTList([]));
   }, []);
 
   const loadMore = (isInit = false) => {

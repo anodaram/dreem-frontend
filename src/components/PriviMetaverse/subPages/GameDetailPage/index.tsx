@@ -23,7 +23,13 @@ import { RootState } from "store/reducers/Reducer";
 import { toDecimals } from "shared/functions/web3";
 import MarketplaceFeed from "./components/MarketplaceFeed";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
-import { setTokenList, setCollectionNFTList, setScrollPositionInCollection } from "store/actions/MarketPlace";
+import {
+  setTokenList,
+  setCollectionNFTList,
+  setScrollPositionInCollection,
+  setAllNFTList,
+} from "store/actions/MarketPlace";
+import { setRealmsList } from "store/actions/Realms";
 import { NftStates } from "shared/constants/constants";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 
@@ -88,6 +94,7 @@ export default function GameDetailPage() {
   const classes = gameDetailPageStyles();
   const tabsClasses = gameDetailTabsStyles();
   const filterClasses = useFilterSelectStyles();
+  const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.user);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
@@ -122,7 +129,6 @@ export default function GameDetailPage() {
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
-  const dispatch = useDispatch();
 
   const getTokenList = async () => {
     getAllTokenInfos().then(res => {
@@ -133,10 +139,10 @@ export default function GameDetailPage() {
   };
 
   React.useEffect(() => {
-    if (collectionNFTList && collectionNFTList.length > 0) {
-      setNfts([...collectionNFTList]);
-    }
-  }, [collectionNFTList]);
+    //initialize store
+    dispatch(setAllNFTList([]));
+    dispatch(setRealmsList([]));
+  }, []);
 
   React.useEffect(() => {
     loadGameInfo();
