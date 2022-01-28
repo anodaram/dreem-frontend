@@ -192,6 +192,7 @@ const NFTReserves = () => {
   };
 
   useEffect(() => {
+    // initialize store
     dispatch(setCollectionNFTList([]));
     dispatch(setRealmsList([]));
     dispatch(setScrollPositionInCollection(0));
