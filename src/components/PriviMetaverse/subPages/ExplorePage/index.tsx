@@ -1,13 +1,15 @@
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Carousel from "react-elastic-carousel";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
-// import { useTheme } from "@material-ui/core";
 
+import { RootState } from "store/reducers/Reducer";
+import { setRealmsList, setScrollPositionInRealms } from "store/actions/Realms";
 import Box from "shared/ui-kit/Box";
-import { PrimaryButton } from "shared/ui-kit";
+// import { PrimaryButton } from "shared/ui-kit";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import RealmCard from "components/PriviMetaverse/components/cards/RealmCard";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
@@ -21,7 +23,7 @@ import shapeImgBlueArc from "assets/metaverseImages/shape_explorer_blue_arc.png"
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
   600: 2,
-  1000: 3,
+  1200: 3,
   1440: 3,
 };
 
@@ -29,9 +31,12 @@ const filters = ["WORLD"];
 
 export default function ExplorePage() {
   const classes = explorePageStyles();
-  const history = useHistory();
+  // const history = useHistory();
+  const dispatch = useDispatch();
 
-  // const theme = useTheme();
+  const scrollPosition = useSelector((state: RootState) => state.realms.scrollPositionInRealms);
+  const realmsList = useSelector((state: RootState) => state.realms.realmsList);
+
   const width = useWindowDimensions().width;
   const theme = useTheme();
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
@@ -43,7 +48,7 @@ export default function ExplorePage() {
   const [curPage, setCurPage] = React.useState(1);
   const [lastPage, setLastPage] = React.useState(1);
   const [loadingExplore, setLoadingExplore] = React.useState<boolean>(false);
-  const [exploreRealms, setExploreReamls] = React.useState<any[]>([]);
+  const [exploreRealms, setExploreReamls] = React.useState<any[]>(realmsList || []);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
 
   const carouselRef = React.useRef<any>();
@@ -57,18 +62,23 @@ export default function ExplorePage() {
     // { width: theme.breakpoints.values.lg, itemsToShow: 3 },
   ]);
 
+  const loadingCount = React.useMemo(() => (width > 1200 ? 6 : width > 600 ? 3 : 6), [width]);
+
   React.useEffect(() => {
     loadFeatured();
-    loadMore();
+    loadMore(true);
   }, []);
 
-  const loadMore = () => {
+  const loadMore = (isInit = false) => {
+    if (!isInit && (!hasMore || loadingExplore)) return;
+
     MetaverseAPI.getWorlds(12, curPage, "timestamp", filters, true, undefined, undefined, false)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
           if (items && items.length > 0) {
-            setExploreReamls([...exploreRealms, ...res.data.elements]);
+            setExploreReamls(prev => (isInit ? res.data.items : [...prev, ...res.data.items]));
+            dispatch(setRealmsList([...realmsList, ...res.data.items]));
             if (res.data.page && curPage <= res.data.page.max) {
               setCurPage(curPage => curPage + 1);
               setLastPage(res.data.page.max);
@@ -122,10 +132,12 @@ export default function ExplorePage() {
     setCurPageIndex(curPage);
   };
 
-  const loadingCount = React.useMemo(() => (width > 1000 ? 6 : width > 600 ? 3 : 6), [width]);
+  const handleScroll = e => {
+    dispatch(setScrollPositionInRealms(e.target.scrollTop));
+  };
 
   return (
-    <Box className={classes.root} id="scrollContainer">
+    <Box className={classes.root} id="scrollContainer" onScroll={handleScroll}>
       <Box className={classes.realmContainer}>
         <img className={classes.bgImgTriangle} src={shapeImgTriangle} alt="seedImg" />
         <img className={classes.bgImgGreenCircle} src={shapeImgBlueArc} alt="seedImg" />
@@ -260,6 +272,7 @@ export default function ExplorePage() {
               scrollableTarget={"scrollContainer"}
               next={loadMore}
               hasMore={hasMore}
+              initialScrollY={scrollPosition - 350}
               loader={
                 lastPage && curPage === lastPage ? (
                   <Box mt={2}>

@@ -16,6 +16,7 @@ import royaltyFactory from "./contracts/RoyaltyFactory";
 import dreemLaunchpadVesting from "./contracts/DreemLaunchpadVesting";
 import openSalesManager from "./contracts/OpenSalesManager";
 import dreem from "./contracts/Dreem";
+import vault from "./contracts/Vault";
 import rentalManager from "./contracts/rentalManager";
 import syntheticNFTManager from "./contracts/SyntheticNFT";
 import reservesManager from "./contracts/reservesManager";
@@ -28,6 +29,7 @@ const api = network => {
     Loan: loan(network),
     Erc721: erc721(network),
     Erc20: erc20(network),
+    Vault: vault(network),
     VaultFactory: vaultFactory(network),
     TokenVault: tokenVault(network),
     erc20Exchange: erc20Exchange(network),
