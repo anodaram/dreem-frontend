@@ -16,7 +16,7 @@ import {
   setScrollPositionInCollection,
   setScrollPositionInAllNFT,
 } from "store/actions/MarketPlace";
-import { setRealmsList } from "store/actions/Realms";
+import { setRealmsList, setScrollPositionInRealms } from "store/actions/Realms";
 import MetaverseCard from "components/PriviMetaverse/components/cards/MetaverseCard";
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
@@ -196,6 +196,7 @@ const NFTReserves = () => {
     dispatch(setCollectionNFTList([]));
     dispatch(setRealmsList([]));
     dispatch(setScrollPositionInCollection(0));
+    dispatch(setScrollPositionInRealms(0));
     getTokenList();
   }, []);
 

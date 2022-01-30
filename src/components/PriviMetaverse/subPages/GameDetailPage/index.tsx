@@ -28,8 +28,9 @@ import {
   setCollectionNFTList,
   setScrollPositionInCollection,
   setAllNFTList,
+  setScrollPositionInAllNFT,
 } from "store/actions/MarketPlace";
-import { setRealmsList } from "store/actions/Realms";
+import { setRealmsList, setScrollPositionInRealms } from "store/actions/Realms";
 import { NftStates } from "shared/constants/constants";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 
@@ -142,6 +143,8 @@ export default function GameDetailPage() {
     //initialize store
     dispatch(setAllNFTList([]));
     dispatch(setRealmsList([]));
+    dispatch(setScrollPositionInAllNFT(0));
+    dispatch(setScrollPositionInRealms(0));
   }, []);
 
   React.useEffect(() => {
