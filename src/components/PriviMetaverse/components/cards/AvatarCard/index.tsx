@@ -54,9 +54,9 @@ export default function AvatarCard(props) {
             justifyContent="space-between"
             className={classes.container}
           >
-            <img className={classes.image} src={media?.ipfsImage} alt="robot" />
+            <img className={classes.image} src={media?.characterImage} alt="robot" />
             <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Box className={classes.name}>{media?.name}</Box>
+              <Box className={classes.name}>{media?.characterName}</Box>
               {/* <PolygonIcon /> */}
             </Box>
           </Box>

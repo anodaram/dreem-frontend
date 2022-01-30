@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
-import clsx from "clsx";
 
-import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled } from "@material-ui/core";
+import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import { Modal, PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import { switchNetwork } from "shared/functions/metamask";
 import { BlockchainNets } from "shared/constants/constants";
@@ -15,19 +14,27 @@ import { onUploadNonEncrypt } from "shared/ipfs/upload";
 import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProgressModal";
 import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingModal";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
-import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
+import { FilterWorldAssetOptions } from "shared/constants/constants";
+import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 const CreateNFT = ({
   metaData,
   handleNext,
   handleCancel,
+  handleRefresh,
+  collection,
+  isCollectionPage
 }: {
   metaData: any;
   handleNext: () => void;
   handleCancel: () => void;
+  handleRefresh: () => void;
+  collection: any,
+  isCollectionPage: boolean
 }) => {
   const classes = useModalStyles();
+  const filterClasses = useFilterSelectStyles();
   const { showAlertMessage } = useAlertMessage();
 
   const theme = useTheme();
@@ -48,7 +55,9 @@ const CreateNFT = ({
   const [isPublic, setIsPublic] = useState<boolean>(true);
 
   const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
-  const [isDraft, setIsDraft] = useState<boolean>(true);
+  const [isDraft, setIsDraft] = useState<boolean>(collection?.kind=="DRAFT" ? true : false);
+  console.log(isDraft, collection?.kind)
+  console.log(collection)
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -66,7 +75,12 @@ const CreateNFT = ({
   const [progress, setProgress] = useState(0);
   const [isUpload, setIsUpload] = useState(true);
   const [sizeSpec, setSizeSpec] = useState<any>(metaData);
+  const [collectionData, setCollectionData] = useState<any>(collection);
 
+  const [openAssetSelect, setOpenAssetSelect] = useState<boolean>(false);
+  const [openCollectionSelect, setOpenCollectionSelect] = useState<boolean>(false);
+  const [filterAsset, setFilterAsset] = useState<string>(FilterWorldAssetOptions[0]);
+  const [filterCollection, setFilterCollection] = useState<string>("");
   useEffect(() => {
     setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");
   }, []);
@@ -186,7 +200,13 @@ const CreateNFT = ({
   };
 
   const validate = () => {
-    if (!title || !description || !image || !unity || !symbol || !entity) {
+    let sizeSpec = metaData;
+    // if (!title || !description || !image || !unity || !symbol || !entity) {
+    if (!collectionData) {
+      showAlertMessage(`Please select collection first`, { variant: "error" });
+      return false;
+    }
+    if (!title || !description || !image || !unity) {
       showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
       return false;
     }
@@ -204,15 +224,15 @@ const CreateNFT = ({
         }
       );
       return false;
-    } else if (
-      symbol.length < sizeSpec?.worldSymbol.limit.min ||
-      symbol.length > sizeSpec?.worldSymbol.limit.max
-    ) {
-      showAlertMessage(
-        `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldSymbol.limit.min} to ${sizeSpec?.worldSymbol.limit.max} characters`,
-        { variant: "error" }
-      );
-      return false;
+    // } else if (
+    //   symbol.length < sizeSpec?.worldSymbol.limit.min ||
+    //   symbol.length > sizeSpec?.worldSymbol.limit.max
+    // ) {
+    //   showAlertMessage(
+    //     `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldSymbol.limit.min} to ${sizeSpec?.worldSymbol.limit.max} characters`,
+    //     { variant: "error" }
+    //   );
+    //   return false;
     } else if (
       description.length < sizeSpec?.worldDescription.limit.min ||
       description.length > sizeSpec?.worldDescription.limit.max
@@ -235,6 +255,7 @@ const CreateNFT = ({
     } else if (
       !sizeSpec?.worldLevel.supportedFormats.toString().includes(unity.name.split(".").reverse()[0])
     ) {
+      console.log(sizeSpec, metaData, unity.name.split(".").reverse()[0])
       showAlertMessage(`World file is invalid.`, { variant: "error" });
       return false;
     } else if (unity.size > sizeSpec?.worldLevel.limit.maxBytes) {
@@ -256,14 +277,16 @@ const CreateNFT = ({
   const handleWorld = async () => {
     if (validate()) {
       let payload: any = {};
+      let collectionAddr = collectionData.address;
+      let tokenId;
 
       payload = {
+        collectionId: collectionData.id,
         worldTitle: title,
-        worldSymbol: symbol,
         worldDescription: description,
         worldImage: image,
         worldLevel: unity,
-        worldMeta: entity,
+        worldData: entity,
       };
 
       if (video) payload.worldVideo = video;
@@ -273,63 +296,112 @@ const CreateNFT = ({
       setProgress(0);
       MetaverseAPI.uploadWorld(payload)
         .then(async res => {
-          if (!res.success) return;
-
-          if (isDraft) {
-            setProgress(100);
+          if (!res.success) {
+            showAlertMessage(`Failed to upload world`, { variant: "error" });
             setShowUploadingModal(false);
-            showAlertMessage(`Created draft successfully`, { variant: "success" });
-            handleNext();
-          } else {
-            const metadata = await onUploadNonEncrypt(res.data.metadata, file =>
-              uploadWithNonEncryption(file)
-            );
-            setProgress(100);
-            setShowUploadingModal(false);
+          } else{
 
-            const targetChain = BlockchainNets.find(net => net.value === chain);
+            // if (isDraft) {
+            //   setProgress(100);
+            //   setShowUploadingModal(false);
+            //   showAlertMessage(`Created draft successfully`, { variant: "success" });
+            //   handleCancel();
+            //   handleRefresh()
+            // } else {
 
-            if (chainId && chainId !== targetChain?.chainId) {
-              const isHere = await switchNetwork(targetChain?.chainId || 0);
-              if (!isHere) {
-                showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
-                return;
-              }
-            }
-
-            const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metadata.newFileCID}`;
-            const web3APIHandler = targetChain.apiHandler;
-            const web3 = new Web3(library.provider);
-            const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
-              web3,
-              account,
-              {
-                to: account,
-                uri,
-              },
-              setTxModalOpen,
-              setTxHash
-            );
-
-            if (contractRes.success) {
-              setTxSuccess(true);
-              showAlertMessage(`Successfully world minted`, { variant: "success" });
-
-              await MetaverseAPI.convertToNFTWorld(
-                res.data.worldData.id,
-                contractRes.contractAddress,
-                targetChain.name,
-                contractRes.tokenId,
-                metadata.newFileCID
+              setShowUploadingModal(false);
+              showAlertMessage(`Created draft successfully`, { variant: "success" });
+              console.log('----metadata', res.data.metadata, chainId, BlockchainNets.find(net => net.value === chain))
+              const metadata = await onUploadNonEncrypt(res.data.metadata, file =>
+                uploadWithNonEncryption(file)
               );
+              setProgress(100);
+              setShowUploadingModal(false);
+
+              const targetChain = BlockchainNets.find(net => net.value === chain);
+
+              if (chainId && chainId !== targetChain?.chainId) {
+                const isHere = await switchNetwork(targetChain?.chainId || 0);
+                if (!isHere) {
+                  showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+                  return;
+                }
+              }
+
+              const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metadata.newFileCID}`;
+              const web3APIHandler = targetChain.apiHandler;
+              const web3 = new Web3(library.provider);
+              console.log('----metadata:', metadata, isDraft)
+
+            if (isDraft) {
+              console.log('here-----')
+              const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
+                web3,
+                account,
+                {
+                  name: collectionData.name,
+                  symbol: collectionData.symbol,
+                  uri,
+                },
+                setTxModalOpen,
+                setTxHash
+              );
+              if (resRoyalty.success) {
+                setTxSuccess(true);
+                showAlertMessage(`Successfully world minted`, { variant: "success" });
+
+                await MetaverseAPI.convertToNFTWorld(
+                  res.data.item.id,
+                  resRoyalty.contractAddress,
+                  targetChain.name,
+                  resRoyalty.tokenId,
+                  metadata.newFileCID,
+                  account,
+                  '0x0000000000000000000000000000000000000000',
+                  0
+                );
+                handleRefresh()
+              } else {
+                setTxSuccess(false);
+              }
             } else {
-              setTxSuccess(false);
+              const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
+                web3,
+                account,
+                {
+                  collectionAddress: collectionAddr,
+                  to: account,
+                  uri,
+                },
+                setTxModalOpen,
+                setTxHash
+              );
+
+              if (contractRes.success) {
+                setTxSuccess(true);
+                showAlertMessage(`Successfully world minted`, { variant: "success" });
+                console.log(contractRes)
+                await MetaverseAPI.convertToNFTWorld(
+                  res.data.item.id,
+                  contractRes.collectionAddress,
+                  targetChain.name,
+                  contractRes.tokenId,
+                  metadata.newFileCID,
+                  contractRes.owner,
+                  contractRes.royaltyAddress,
+                  0
+                );
+                handleRefresh()
+              } else {
+                setTxSuccess(false);
+              }
             }
           }
         })
         .catch(err => {
           setShowUploadingModal(false);
           showAlertMessage(`Failed to upload world`, { variant: "error" });
+          console.log(err)
         });
     }
   };
@@ -343,7 +415,7 @@ const CreateNFT = ({
         }}
       >
         <div className={classes.modalContent}>
-          <Box display="flex" alignItems="center" justifyContent="space-between">
+          <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
             <Box className={classes.itemTitle} mb={1}>
               NFT Name
             </Box>
@@ -521,6 +593,74 @@ const CreateNFT = ({
               <Box pt={0.5}>Add Unity File</Box>
             )}
           </PrimaryButton>
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Box className={classes.itemTitle} mt={2.5} mb={1}>
+              World Data file
+            </Box>
+            <InfoTooltip
+              tooltip={
+                "Please input your extension source file (.dreemworld.data) that was generated by the dreem creator toolkit. The maximum size allowed is 50MB - if your file exceeds this limit, try reducing the size of resources."
+              }
+            />
+          </Box>
+          <PrimaryButton
+            size="medium"
+            className={classes.uploadBtn}
+            onClick={() => {
+              !entity && entityInputRef.current?.click();
+            }}
+          >
+            {entity ? (
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                width={1}
+                fontSize={12}
+                style={{ background: "#E9FF26 !important", borderRadius: "8px !important" }}
+              >
+                {entity.name}
+                <SecondaryButton
+                  size="medium"
+                  onClick={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setEntity(null);
+                    setEntityFile(null);
+                    entityInputRef.current?.click();
+                  }}
+                >
+                  <img src={require("assets/metaverseImages/refresh.png")} />
+                  <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
+                </SecondaryButton>
+              </Box>
+            ) : (
+              <Box pt={0.5}>Add Data File</Box>
+            )}
+          </PrimaryButton>
+          <Box className={classes.switchWrapper}>
+            <Box display="flex" alignItems="center">
+              <p style={{ marginRight: 16 }}>Make your file Public</p>
+              <InfoTooltip
+                tooltip={
+                  "This allows you to make your realm, which in this case is a work in progress/draft, available for people to test and give feedback (public). Or just internal for you (private), only to be set public later"
+                }
+              />
+            </Box>
+            <FormControlLabel
+              control={
+                <IOSSwitch
+                  defaultChecked
+                  checked={isPublic}
+                  onChange={() => {
+                    setIsPublic(prev => !prev);
+                  }}
+                />
+              }
+              label={isPublic ? "Yes" : "No"}
+              labelPlacement="start"
+            />
+          </Box>
 
           <Box className={classes.buttons} mt={7}>
             <SecondaryButton size="medium" onClick={handleCancel}>

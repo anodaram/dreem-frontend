@@ -12,6 +12,7 @@ import distributionManager from "./contracts/DistributionManager";
 import socialErc20 from "./contracts/SocialERC20";
 import socialTokenDeployer from "./contracts/SocialTokenDeployer";
 import nftWithRoyalty from "./contracts/NFTWithRoyalty";
+import royaltyFactory from "./contracts/RoyaltyFactory";
 import dreemLaunchpadVesting from "./contracts/DreemLaunchpadVesting";
 import openSalesManager from "./contracts/OpenSalesManager";
 import dreem from "./contracts/Dreem";
@@ -38,6 +39,7 @@ const api = network => {
     SocialERC20: socialErc20(network),
     SocialTokenDeployer: socialTokenDeployer(network),
     NFTWithRoyalty: nftWithRoyalty(network),
+    RoyaltyFactory: royaltyFactory(network),
     openSalesManager: openSalesManager(network),
     DreemLaunchpadVesting: dreemLaunchpadVesting(network),
     Dreem: dreem(network),

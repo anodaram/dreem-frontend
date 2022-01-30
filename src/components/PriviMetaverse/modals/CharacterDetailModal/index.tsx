@@ -55,17 +55,6 @@ const CharacterDetailModal = ({
   const { showAlertMessage } = useAlertMessage();
   const { shareMedia } = useShareMedia();
 
-  const [isPlaying, setIsPlaying] = React.useState<boolean>(true);
-  const [onProgressVideoItem, setOnProgressVideoItem] = React.useState<any>({
-    played: 0,
-    playedSeconds: 0,
-    loaded: 0,
-    loadedSeconds: 0,
-  });
-  const [onDurationVideoItem, setOnDurationVideoItem] = React.useState<number>(1);
-
-  const playerVideoItem: any = React.useRef();
-
   const chainName = chain => {
     if (!chain) return "";
     const ch = chain.toLowerCase();
@@ -115,60 +104,51 @@ const CharacterDetailModal = ({
       })();
     }
   }, [id]);
-  const getPrefixURL = () => {
-    return window.location.origin + "/#/";
-  };
 
-  const contractAddress = React.useMemo(() => {
-    const address = nft?.nftCollection || nft?.token_address || nft?.collection_address || "";
-    return address.length > 17
-      ? address.substr(0, 13) + "..." + address.substr(address.length - 3, 3)
-      : address;
-  }, [nft?.nftCollection, nft?.token_address, nft?.collection_address]);
+  // const contractAddress = React.useMemo(() => {
+  //   const address = nft?.nftCollection || nft?.token_address || nft?.collection_address || "";
+  //   return address.length > 17
+  //     ? address.substr(0, 13) + "..." + address.substr(address.length - 3, 3)
+  //     : address;
+  // }, [nft?.nftCollection, nft?.token_address, nft?.collection_address]);
 
-  const isVideo = React.useMemo(() => {
-    if (!nft) return;
-    return !nft?.UrlMainPhoto && !nft?.Url && nft?.url?.endsWith("mp4");
-  }, [nft]);
+  // const isVideo = React.useMemo(() => {
+  //   if (!nft) return;
+  //   return !nft?.UrlMainPhoto && !nft?.Url && nft?.url?.endsWith("mp4");
+  // }, [nft]);
 
-  const handleClickAddress = () => {
-    const address = nft?.nftCollection || nft?.token_address || nft?.collection_address || "";
-    if (
-      chainName(nft?.chainsFullName || nft?.BlockchainNetwork || nft?.blockchain || nft?.chain) === "Polygon"
-    ) {
-      window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/address/${address}`, "_blank");
-    } else {
-      window.open(`https://${!isProd ? "rinkeby." : ""}etherscan.io/address/${address}`, "_blank");
-    }
-  };
+  // const handleClickAddress = () => {
+  //   const address = nft?.nftCollection || nft?.token_address || nft?.collection_address || "";
+  //   if (
+  //     chainName(nft?.chainsFullName || nft?.BlockchainNetwork || nft?.blockchain || nft?.chain) === "Polygon"
+  //   ) {
+  //     window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/address/${address}`, "_blank");
+  //   } else {
+  //     window.open(`https://${!isProd ? "rinkeby." : ""}etherscan.io/address/${address}`, "_blank");
+  //   }
+  // };
 
-  const handleSeeOnPixMarketplace = () => {
-    const address = nft?.nftCollection || nft?.token_address;
-    const id = nft?.nftId || nft?.token_id;
-    return window.open(`${getPrefixURL()}reserve/explore/${address}/${id}`, "_blank");
-  };
+  // const handleClickAddressFor = () => {
+  //   if (nft?.blockchain.toLowerCase() === "eth") {
+  //     window.open(`https://etherscan.io/token/${nft?.collectionAddress}`, "_blank");
+  //   } else if (nft?.blockchain.toLowerCase() === "polygon") {
+  //     window.open(`https://polygonscan.com/token/${nft?.collectionAddress}`, "_blank");
+  //   } else if (nft?.blockchain.toLowerCase() === "klaytn") {
+  //     window.open(`https://scope.klaytn.com/nft/${nft?.collectionAddress}`, "_blank");
+  //   }
+  // };
 
-  const handleClickAddressFor = () => {
-    if (nft?.blockchain.toLowerCase() === "eth") {
-      window.open(`https://etherscan.io/token/${nft?.collectionAddress}`, "_blank");
-    } else if (nft?.blockchain.toLowerCase() === "polygon") {
-      window.open(`https://polygonscan.com/token/${nft?.collectionAddress}`, "_blank");
-    } else if (nft?.blockchain.toLowerCase() === "klaytn") {
-      window.open(`https://scope.klaytn.com/nft/${nft?.collectionAddress}`, "_blank");
-    }
-  };
+  // const handleOpenlink = () => {
+  //   if (nft?.openseaUrl || nft?.link || nft?.metadata?.external_url) {
+  //     window.open(nft?.openseaUrl || nft?.link || nft?.metadata?.external_url, "_blank");
+  //   }
+  // };
 
-  const handleOpenlink = () => {
-    if (nft?.openseaUrl || nft?.link || nft?.metadata?.external_url) {
-      window.open(nft?.openseaUrl || nft?.link || nft?.metadata?.external_url, "_blank");
-    }
-  };
-
-  const handleOpenIPFSlink = () => {
-    if (nft?.token_url || nft?.metadataUri || nft?.token_uri) {
-      window.open(nft?.token_url || nft?.metadataUri || nft?.token_uri, "_blank");
-    }
-  };
+  // const handleOpenIPFSlink = () => {
+  //   if (nft?.token_url || nft?.metadataUri || nft?.token_uri) {
+  //     window.open(nft?.token_url || nft?.metadataUri || nft?.token_uri, "_blank");
+  //   }
+  // };
 
   const handleFruit = type => {
     if (media.fruits?.filter(f => f.fruitId === type)?.find(f => f.userId === user.id)) {
@@ -243,7 +223,7 @@ const CharacterDetailModal = ({
                 <Box className={classes.nftPreviewSection}>
                   <Fragment>
                     <model-viewer
-                      src={nft?.ipfsModel}
+                      src={nft?.characterModel}
                       ar
                       ar-modes="webxr scene-viewer quick-look"
                       seamless-poster
@@ -259,19 +239,19 @@ const CharacterDetailModal = ({
                 </Box>
               )}
               <Box className={classes.typo2} mt={isMobile ? 4 : 6} color="#fff">
-                {nft?.name}
+                {nft?.characterName}
               </Box>
               <Box display="flex" alignItems="center" mt={1} color="#fff">
-                <Avatar size={32} rounded image={nft?.owner.user.avatarUrl || getDefaultAvatar()} />
+                <Avatar size={32} rounded image={nft?.submitter.user.avatarUrl || getDefaultAvatar()} />
                 <Box className={classes.typo5} ml={1}>
-                  {nft?.owner.character.name}
+                  {nft?.submitter.user.name}
                 </Box>
               </Box>
               <Box className={classes.typo3} fontWeight={800} mt={6}>
                 Description
               </Box>
               <Box className={classes.typo5} mt={1.5} color="#fff" mb={4}>
-                {nft?.description}
+                {nft?.characterDescription}
               </Box>
               <Box className={classes.typo3} fontWeight={800} mt={6}>
                 TRAITS
@@ -391,7 +371,7 @@ const CharacterDetailModal = ({
             <Box className={classes.nftPreviewSection}>
               <Fragment>
                 <model-viewer
-                  src={nft?.ipfsModel}
+                  src={nft?.characterModel}
                   ar
                   ar-modes="webxr scene-viewer quick-look"
                   seamless-poster
@@ -414,31 +394,31 @@ const CharacterDetailModal = ({
 
 export default CharacterDetailModal;
 
-const ExpandIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M8.24988 5.25H4.49988C4.10205 5.25 3.72052 5.40804 3.43922 5.68934C3.15791 5.97064 2.99988 6.35218 2.99988 6.75V13.5C2.99988 13.8978 3.15791 14.2794 3.43922 14.5607C3.72052 14.842 4.10205 15 4.49988 15H11.2499C11.6477 15 12.0292 14.842 12.3105 14.5607C12.5918 14.2794 12.7499 13.8978 12.7499 13.5V9.75"
-      stroke="#EA7097"
-      strokeWidth="1.125"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M7.49988 10.5L14.9999 3"
-      stroke="#EA7097"
-      strokeWidth="1.125"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M11.25 3H15V6.75"
-      stroke="#EA7097"
-      strokeWidth="1.125"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
+// const ExpandIcon = () => (
+//   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+//     <path
+//       d="M8.24988 5.25H4.49988C4.10205 5.25 3.72052 5.40804 3.43922 5.68934C3.15791 5.97064 2.99988 6.35218 2.99988 6.75V13.5C2.99988 13.8978 3.15791 14.2794 3.43922 14.5607C3.72052 14.842 4.10205 15 4.49988 15H11.2499C11.6477 15 12.0292 14.842 12.3105 14.5607C12.5918 14.2794 12.7499 13.8978 12.7499 13.5V9.75"
+//       stroke="#EA7097"
+//       strokeWidth="1.125"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     />
+//     <path
+//       d="M7.49988 10.5L14.9999 3"
+//       stroke="#EA7097"
+//       strokeWidth="1.125"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     />
+//     <path
+//       d="M11.25 3H15V6.75"
+//       stroke="#EA7097"
+//       strokeWidth="1.125"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     />
+//   </svg>
+// );
 
 const ShareIcon = () => (
   <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -53,7 +53,7 @@ export default function RealmExtensionProfileCard({
 
   React.useEffect(() => {
     setData(nft);
-    setIsPublic(nft.worldIsPublic);
+    setIsPublic(nft.isPublic);
   }, [nft]);
 
   const handleRemove = async () => {
@@ -118,7 +118,7 @@ export default function RealmExtensionProfileCard({
       });
   };
 
-  const isOwner = nft && nft.creatorId === userSelector.id;
+  const isOwner = nft && nft.submitter?.user?.priviId === userSelector.id;
 
   return (
     <div className={styles.cardBorderWrapper}>
@@ -134,8 +134,8 @@ export default function RealmExtensionProfileCard({
             <div
               className={styles.nftImage}
               style={{
-                backgroundImage: data.worldImages
-                  ? `url("${data.worldImages}")`
+                backgroundImage: data.worldImage
+                  ? `url("${data.worldImage}")`
                   : `url(${getDefaultImageUrl()})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
@@ -198,7 +198,7 @@ export default function RealmExtensionProfileCard({
                 ) : null}
               </>
             )}
-            {nft.itemKind === "DRAFT_WORLD" && isOwner && !isHomePage && (
+            {nft.itemKind === "WORLD" && isOwner && !isHomePage && (
               <>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                   <Box display="flex" alignItems="center">

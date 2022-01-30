@@ -3,7 +3,7 @@ import axios from "axios";
 import { METAVERSE_URL } from "shared/functions/getURL";
 
 export async function signWithMetamask(address: string, web3: Web3, domain: string): Promise<any> {
-  const res = await axios.post(`${METAVERSE_URL()}/requestSignInUsingRandomNonce/`, {
+  const res = await axios.post(`${METAVERSE_URL()}/auth/requestSignInUsingRandomNonce/`, {
     address,
   });
   const nonce = res.data.nonce;

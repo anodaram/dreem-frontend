@@ -1,6 +1,5 @@
 import React from "react";
-import { useHistory, useParams } from "react-router-dom";
-// import { useDebounce } from "use-debounce/lib";
+import { useHistory } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
@@ -53,7 +52,7 @@ export default function ExploreAvatarPage() {
       setLoading(true);
       const response = await MetaverseAPI.getWorlds(12, page, "timestamp", ["CHARACTER"]);
       if (response.success) {
-        const newAvatars = response.data.items;
+        const newAvatars = response.data.elements;
         setAvatars(prev => (init ? newAvatars : [...prev, ...newAvatars]));
         setPage(prev => prev + 1);
         setHasMore(response.data.page.cur < response.data.page.max);
@@ -108,8 +107,8 @@ export default function ExploreAvatarPage() {
                 </Box>
               </InfiniteScroll>
               {!loading && avatars?.length < 1 && (
-                <Box textAlign="center" width="100%" mb={10} mt={2}>
-                  No NFTs
+                <Box textAlign="center" width="100%" mb={10} mt={2} fontSize={22}>
+                  No Data
                 </Box>
               )}
             </Box>

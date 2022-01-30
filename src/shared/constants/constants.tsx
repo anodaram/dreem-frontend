@@ -30,6 +30,8 @@ export const walletConnect = {
 
 export const NftStates = ["For Sale", "For Blocking", "For Rental", "Blocked", "Rented"];
 
+export const UnitEdition = 20;
+
 export const priviTokenList = [
   "BAL",
   "BAT",
@@ -215,6 +217,10 @@ export const handleDiscordLink = () => {
 
 export const handleTelegramLink = () => {
   window.open("https://t.me/joinchat/eSqsr4rW4gBkZGM0", "_blank");
+};
+
+export const handleWhatsappLink = () => {
+  window.open("", "_blank");
 };
 
 export const handleYoutubeLink = () => {
@@ -471,3 +477,5 @@ export const EUROPEAN_COUNTRIES = [
     id: "VA",
   },
 ];
+
+export const FilterWorldAssetOptions = ["WORLD", "CHARACTER", "TEXTURE", "MATERIAL"];

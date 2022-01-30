@@ -5,16 +5,7 @@ import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import Web3 from "web3";
 import axios from "axios";
 
-import {
-  Popper,
-  ClickAwayListener,
-  Grow,
-  Paper,
-  MenuList,
-  MenuItem,
-  Hidden,
-  Box,
-} from "@material-ui/core";
+import { Popper, ClickAwayListener, Grow, Paper, MenuList, MenuItem, Hidden, Box } from "@material-ui/core";
 
 import { socket } from "components/Login/Auth";
 import { useNotifications } from "shared/contexts/NotificationsContext";
@@ -202,11 +193,9 @@ const Header = props => {
     setOpenNotificationModal(false);
   };
 
-  const handleCloseContributionModal = () => {
-  };
+  const handleCloseContributionModal = () => {};
 
-  const handleOpenModalShareContribution = () => {
-  };
+  const handleOpenModalShareContribution = () => {};
 
   const viewMore = notification => {
     setOpenNotificationModal(false);
@@ -281,15 +270,15 @@ const Header = props => {
       .then(res => {
         if (res.isSignedIn) {
           setSignedin(true);
-          let data = res.privian.user;
+          let data = res.data.user;
           data.infoImage = {
-            avatarUrl: res.privian.user.avatarUrl,
+            avatarUrl: res.data.user.avatarUrl,
           };
           dispatch(setUser(data));
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
-          localStorage.setItem("userId", data.id);
-          localStorage.setItem("userSlug", data.urlSlug ?? data.id);
+          localStorage.setItem("userId", data.priviId);
+          localStorage.setItem("userSlug", data.urlSlug ?? data.priviId);
 
           axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
           dispatch(setLoginBool(true));
@@ -318,11 +307,11 @@ const Header = props => {
       const res = await API.signUpWithAddressAndName(account, account, signature, "Dreem");
       if (res.isSignedIn) {
         setSignedin(true);
-        dispatch(setUser(res.userData));
+        dispatch(setUser(res.data.user));
         localStorage.setItem("token", res.accessToken);
         localStorage.setItem("address", account);
-        localStorage.setItem("userId", res.userData.id);
-        localStorage.setItem("userSlug", res.userData.urlSlug ?? res.userData.id);
+        localStorage.setItem("userId", res.data.user.priviId);
+        localStorage.setItem("userSlug", res.userData.urlSlug ?? res.data.user.priviId);
 
         axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
         dispatch(setLoginBool(true));
@@ -676,6 +665,7 @@ const Navigator: NavItem[] = [
   { name: "CREATE", value: "creations", link: "/create" },
   { name: "REALMS", value: "realms", link: "/realms" },
   { name: "AVATARS", value: "avatars", link: "/avatars" },
+  { name: "ASSETS", value: "assets", link: "/assets" },
   { name: "GAME NFTS", value: "gameNFTS", link: "/gameNFTS" },
   // { name: "METAVERSE", value: "metaverse", link: "/metaverse" },
   // { name: "Claim Dreem", value: "claim_dreem", link: "/claim_dreem", authorize: true },

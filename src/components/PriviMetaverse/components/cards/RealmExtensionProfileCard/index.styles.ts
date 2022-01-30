@@ -6,7 +6,7 @@ export const nftCardStyles = makeStyles(theme => ({
     borderRadius: 12,
   },
   card: {
-    background: "#212121",
+    background: "#000000",
     borderRadius: 12,
     display: "flex",
     flexDirection: "column",

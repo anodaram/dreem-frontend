@@ -10,10 +10,8 @@ export const exploreAvatarPage = makeStyles(theme => ({
   },
   container: {
     position: "absolute",
-    top: 200,
+    top: 150,
     width: "100%",
-    // marginTop: 400,
-    // paddingTop: 80,
     overflowY: "auto",
     overflowX: "hidden",
     color: "#ffffff",
@@ -47,6 +45,7 @@ export const exploreAvatarPage = makeStyles(theme => ({
     alignItems: "center",
     letterSpacing: "0.02em",
     textTransform: "uppercase",
+    width: "fit-content",
     [theme.breakpoints.down("sm")]: {
       fontSize: "40px",
       lineHeight: "48px",
@@ -75,5 +74,5 @@ export const exploreAvatarPage = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       width: 300,
     },
-  }
+  },
 }));

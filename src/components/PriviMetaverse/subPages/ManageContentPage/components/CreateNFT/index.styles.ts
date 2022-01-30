@@ -271,6 +271,155 @@ export const useModalStyles = makeStyles(theme => ({
     padding: "3px 4px 0px",
     position: "absolute",
     bottom: "-10px",
-    left: "calc(50% - 46px)"
-  }
+    left: "calc(50% - 46px)",
+  },
+  select: {
+    background: "rgba(218, 230, 229, 0.06)",
+    border: "1px solid rgba(218, 218, 219, 0.59)",
+    padding: "14px 18px",
+    color: "#fff",
+    "& *": {
+      color: "#fff !important",
+    },
+    "& + &": {
+      marginLeft: 10,
+    },
+    "& .MuiSelect-root": {
+      padding: "0px 4px",
+      fontFamily: "Rany",
+      fontWeight: 700,
+      fontSize: 14,
+      color: "rgba(255, 255, 255, 0.5)",
+      marginRight: 8,
+      "&:focus": {
+        backgroundColor: "unset",
+      },
+      "& svg": {
+        width: 18,
+        height: 18,
+      },
+      "& span": {
+        fontSize: 14,
+        fontWeight: 700,
+        color: "#E9FF26",
+      },
+    },
+  },
+  otherContent: {
+    marginTop: 110,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    maxWidth: 1600,
+    marginLeft: "auto",
+    marginRight: "auto",
+    padding: "0 96px",
+    position: 'relative',
+    [theme.breakpoints.down("sm")]: {
+      padding: "0 24px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: "0 16px",
+    },
+  },
+  typo1: {
+    fontSize: 40,
+    fontWeight: "bold",
+    lineHeight: "120%",
+    textAlign: "center",
+    fontFamily: "GRIFTER",
+    textTransform: "uppercase",
+    display: 'flex',
+    "& svg": {
+      marginRight: '8px'
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 30,
+      lineHeight: "30px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 22,
+      lineHeight: "22px",
+      width: 280,
+    },
+  },
+  typo2: {
+    fontSize: 62,
+    fontWeight: 700,
+    lineHeight: "62px",
+    textAlign: "center",
+    fontFamily: "GRIFTER",
+    textTransform: "uppercase",
+    marginBottom: 8,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "48px",
+      lineHeight: "48px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "34px",
+      lineHeight: "34px",
+      width: 280,
+    },
+  },
+  typo3: {
+    fontSize: 16,
+    fontWeight: 400,
+    lineHeight: "175%",
+    fontFamily: "Rany",
+    textAlign: "center",
+    [theme.breakpoints.down("xs")]: {
+      textAlign: "center",
+      width: 280,
+    },
+  },
+  typo4: {
+    fontSize: 24,
+    fontWeight: "bold",
+    lineHeight: "120%",
+    textAlign: "center",
+    fontFamily: "GRIFTER",
+    textTransform: "uppercase",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 20,
+      lineHeight: "30px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 18,
+      lineHeight: "22px",
+      width: 280,
+    },
+  },
 }));
+
+export const useFilterSelectStyles = makeStyles({
+  paper: {
+    marginTop: "10px",
+    marginLeft: "-13px",
+    background: "#212121",
+    boxShadow: "0px 15px 35px -31px rgba(13, 12, 62, 0.19)",
+    color: "rgba(255, 255, 255, 0.5)",
+    "& svg": {
+      width: 18,
+      height: 18,
+      marginRight: 8,
+    },
+  },
+  list: {
+    padding: "20px 8px!important",
+    paddingRight: 8,
+    "& .MuiListItem-root": {
+      marginBottom: 10,
+      padding: "2px 8px",
+      minWidth: "200px",
+      Height: "36px",
+      "&:last-child": {
+        marginBottom: 0,
+      },
+      "&:hover": {
+        color: "white",
+        border: "solid 1px #E9FF26",
+      },
+    },
+  },
+});

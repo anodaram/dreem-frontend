@@ -38,7 +38,7 @@ const VerifyProfileModal = ({ open, onClose }) => {
       return;
     }
     (async () => {
-      const res = await axios.post(`${METAVERSE_URL()}/requestSignInUsingRandomNonce/`, {
+      const res = await axios.post(`${METAVERSE_URL()}/auth/requestSignInUsingRandomNonce/`, {
         address: account,
       });
       const nonce = res.data.nonce;

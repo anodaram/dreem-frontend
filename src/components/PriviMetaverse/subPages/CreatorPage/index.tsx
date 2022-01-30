@@ -32,6 +32,7 @@ import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import ImageCropModal from "components/PriviMetaverse/modals/ImageCropModal";
 import EditProfileModal from "../../modals/EditProfileModal";
 import VerifyProfileModal from "../../modals/VerifyProfileModal";
+import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
 import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProfileCard";
 import FollowProfileModal from "../../modals/FollowProfileModal";
 import { creatorPageStyles } from "./index.styles";
@@ -71,9 +72,11 @@ export default function CreatorPage() {
 
   const { creatorAddress } = useParams<{ creatorAddress: string }>();
   const userSelector = useTypedSelector(state => state.user);
+  const [userInfo, setUserInfo] = useState<any>({});
   const [creator, setCreator] = useState<any>({});
   const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [collections, setCollections] = useState<any[]>([]);
   const [nftContents, setNftContents] = useState<any[]>([]);
   const [likedRealms, setLikedRealms] = useState<any[]>([]);
   const [likedAvatars, setLikedAvatars] = useState<any[]>([]);
@@ -106,17 +109,28 @@ export default function CreatorPage() {
 
   useEffect(() => {
     // check owner
-    if (userSelector && userSelector.urlSlug) {
-      setIsOwner(userSelector.urlSlug === creator?.userInfo?.urlSlug);
+    if (userSelector && userSelector.address) {
+      setIsOwner(userSelector.address === userInfo?.user?.address);
     }
-  }, [creator?.userInfo?.urlSlug, userSelector.urlSlug]);
+  }, [userInfo?.user?.address, userSelector.address]);
 
   useEffect(() => {
     setSelectedTab("");
 
     (async () => {
       try {
-        const userResp = await axios.get(`${URL()}/user/getBasicInfo/${creatorAddress}`);
+        MetaverseAPI.getUserInfo(creatorAddress)
+          .then(res => {
+            if (res.success) {
+              setUserInfo(res.data);
+            } else {
+              throw new Error("Can't find user from privi database");
+            }
+          })
+          .catch(err => {
+            console.error(err);
+          });
+        const userResp = await axios.get(`${URL()}/user/getBasicInfo/${creatorAddress}/`);
         const userData = userResp.data.data;
 
         if (userResp.data.success) {
@@ -165,12 +179,12 @@ export default function CreatorPage() {
 
   const loadData = async () => {
     try {
-      let filters: string[] = [];
+      let filters: string[] = ["WORLD"];
       let itemIds: Number[] = [];
       if (selectedTab === "drafts") {
-        filters = ["DRAFT_WORLD"];
+        filters = ["WORLD"];
       } else if (selectedTab === "realms") {
-        filters = ["NFT_WORLD"];
+        filters = ["WORLD"];
       } else if (selectedTab === "liked") {
         // get liked realms
         const respRealmIds = await axios.get(`${URL()}/dreemRealm/getLikedRealms`, {
@@ -189,9 +203,11 @@ export default function CreatorPage() {
             undefined,
             undefined,
             undefined,
-            itemIds
+            itemIds,
+            undefined,
+            false
           );
-          setLikedRealms(realmsResp.data.items);
+          setLikedRealms(realmsResp.data.elements);
         } else {
           setLikedRealms([]);
         }
@@ -208,7 +224,7 @@ export default function CreatorPage() {
             itemIds.push(parseInt(id));
           }
           const avatarResp = await MetaverseAPI.getCharacters(undefined, undefined, itemIds);
-          setLikedAvatars(avatarResp.data);
+          setLikedAvatars(avatarResp.data.elements);
         } else {
           setLikedAvatars([]);
         }
@@ -218,6 +234,16 @@ export default function CreatorPage() {
       }
 
       if (filters.length) {
+
+        MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.address)
+        .then(res => {
+          if (res.success) {
+            const items = res.data.elements;
+            if (items && items.length > 0) {
+              setCollections([...collections, ...res.data.elements]);
+            }
+          }
+        })
         const inventoryResp = await MetaverseAPI.getWorlds(
           12,
           curPage,
@@ -228,7 +254,7 @@ export default function CreatorPage() {
         );
 
         if (inventoryResp.success) {
-          setNftContents([...nftContents, ...inventoryResp.data.items]);
+          setNftContents([...nftContents, ...inventoryResp.data.elements]);
           if (inventoryResp.data.page && curPage < inventoryResp.data.page.max) {
             setCurPage(curPage => curPage + 1);
           } else {
@@ -249,12 +275,12 @@ export default function CreatorPage() {
     setHasMore(true);
     setNftContents([]);
 
-    let filters = ["NFT_WORLD", "DRAFT_WORLD", "NFT_MEDIA"];
-    if (selectedTab === "drafts") {
-      filters = ["DRAFT_WORLD"];
-    } else if (selectedTab === "realms") {
-      filters = ["NFT_WORLD"];
-    }
+    let filters = ["WORLD"];
+    // if (selectedTab === "drafts") {
+    //   filters = ["DRAFT_WORLD"];
+    // } else if (selectedTab === "realms") {
+    //   filters = ["NFT_WORLD"];
+    // }
     const inventoryResp = await MetaverseAPI.getWorlds(
       12,
       1,
@@ -264,7 +290,7 @@ export default function CreatorPage() {
       creator.userInfo.id
     );
     if (inventoryResp.success && creator && creator.userInfo) {
-      setNftContents([...inventoryResp.data.items]);
+      setNftContents([...inventoryResp.data.elements]);
       if (inventoryResp.data.page && curPage <= inventoryResp.data.page.max) {
         if (inventoryResp.data.page && inventoryResp.data.page.max > curPage) {
           setCurPage(curPage => curPage + 1);
@@ -337,7 +363,7 @@ export default function CreatorPage() {
   };
 
   const getCreatorName = () => {
-    const creatorName = creator?.userInfo?.name;
+    const creatorName = userInfo?.user?.firstName + userInfo?.user?.lastName;
     if (!creatorName) {
       return "";
     } else if (creatorName > MAX_NAME_LENGTH) {
@@ -446,7 +472,7 @@ export default function CreatorPage() {
                     <Box className={classes.avatarBox}>
                       <Avatar
                         size={isMobile ? 83 : 126}
-                        image={creator?.userInfo?.urlIpfsImage || getDefaultAvatar()}
+                        image={userInfo?.user?.avatarUrl || getDefaultAvatar()}
                         onClick={() => {
                           if (isOwner) {
                             if (inputRef && inputRef.current) {
@@ -517,7 +543,7 @@ export default function CreatorPage() {
                               padding: "7px 10px",
                               minWidth: 43,
                             }}
-                            onClick={() => shareMedia("Creator", `profile/${creator?.userInfo?.urlSlug}`)}
+                            onClick={() => shareMedia("Creator", `profile/${userInfo?.user?.address}`)}
                           >
                             <ShapeIcon />
                           </PrimaryButton>
@@ -598,18 +624,18 @@ export default function CreatorPage() {
                       </Box>
                     </Box>
                     <Box className={classes.profileMetaBox} mt={2}>
-                      <Box className={classes.typo3}>{`@${getCreatorSlug()}`}</Box>
+                      <Box className={classes.typo3}>{`@${userInfo?.user?.priviId}`}</Box>
                       <Box className={classes.metaBoxDivider} />
-                      {creator?.userInfo?.address && (
+                      {userInfo?.user?.address && (
                         <Box display="flex" alignItems="center">
                           <img src={require("assets/walletImages/metamask.svg")} width={25} />
                           <Box ml={1} className={classes.typo4}>
-                            {`${creator?.userInfo?.address?.substring(
+                            {`${userInfo?.user?.address?.substring(
                               0,
                               6
-                            )}...${creator?.userInfo?.address?.substring(
-                              creator?.userInfo?.address?.length - 11,
-                              creator?.userInfo?.address.length
+                            )}...${userInfo?.user?.address?.substring(
+                              userInfo?.user?.address?.length - 11,
+                              userInfo?.user?.address.length
                             )} `}
                           </Box>
                         </Box>
@@ -710,6 +736,48 @@ export default function CreatorPage() {
                   <Box display="flex" flexDirection="column">
                     {selectedTab === "drafts" && (
                       <>
+                        <Box mt={3} mb={2} className={classes.typo7}>
+                          Collections
+                        </Box>
+                        <InfiniteScroll
+                          hasChildren={collections?.length > 0}
+                          dataLength={collections?.length}
+                          scrollableTarget={"scrollContainer"}
+                          next={loadData}
+                          hasMore={hasMore}
+                          loader={
+                            loading && (
+                              <Box mt={2}>
+                                <MasonryGrid
+                                  gutter={"16px"}
+                                  data={Array(loadingCount).fill(0)}
+                                  renderItem={(item, _) => (
+                                    <RealmExtensionProfileCard nft={{}} isLoading={true} />
+                                  )}
+                                  columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
+                                />
+                              </Box>
+                            )
+                          }
+                        >
+                          <Grid container spacing={3} style={{ marginBottom: 24 }}>
+                            {collections?.map((item, index) => (
+                              <Grid item key={`trending-pod-${index}`} md={4} sm={6} xs={12}>
+                                <CollectionCard
+                                  item={{ ...item }}
+                                  hideInfo
+                                  handleRefresh={handleRefresh}
+                                />
+                              </Grid>
+                            ))}
+                          </Grid>
+                        </InfiniteScroll>
+                        {!loading && collections?.length < 1 && (
+                          <Box textAlign="center" width="100%" mb={10} mt={2}>
+                            No Collections
+                          </Box>
+                        )}
+
                         <Box mt={3} mb={2} className={classes.typo7}>
                           Created Drafts And Extensions
                         </Box>

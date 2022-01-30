@@ -8,9 +8,12 @@ import {
   SwitchProps,
   styled,
   CircularProgress,
+  Select,
+  MenuItem
 } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
+import { useTypedSelector } from "store/reducers/Reducer";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { Modal, PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
@@ -18,7 +21,7 @@ import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProg
 import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingModal";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "../../../../shared/utils-IPFS/useIPFS";
-import { useModalStyles } from "./index.styles";
+import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 const initialFileChangedState = {
   image: false,
@@ -40,12 +43,15 @@ const EditRealmModal = ({
   realmData: any;
   handleRefresh?: () => void;
 }) => {
+  const userSelector = useTypedSelector(state => state.user);
   const classes = useModalStyles();
+  const filterClasses = useFilterSelectStyles();
   const { showAlertMessage } = useAlertMessage();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
+  const [owner, setOwner] = useState<any>(userSelector? userSelector.id : null);
   const [image, setImage] = useState<any>(null);
   const [imageFile, setImageFile] = useState<any>(null);
   const [video, setVideo] = useState<any>(null);
@@ -54,6 +60,7 @@ const EditRealmModal = ({
   const [unityFile, setUnityFile] = useState<any>(null);
   const [entity, setEntity] = useState<any>(null);
   const [entityFile, setEntityFile] = useState<any>(null);
+  const [collectionId, setCollectionId] = useState<string>(realmData && realmData.collectionId ? realmData.collectionId : "");
   const [title, setTitle] = useState<string>(realmData && realmData.worldTitle ? realmData.worldTitle : "");
   const [symbol, setSymbol] = useState<string>(
     realmData && realmData.worldSymbol ? realmData.worldSymbol : ""
@@ -84,6 +91,9 @@ const EditRealmModal = ({
   const [sizeSpec, setSizeSpec] = useState<any>(metaData);
   const [fileChanged, setFileChanged] = useState<any>(initialFileChangedState);
   const [isLoadingFiles, setLoadingFiles] = useState(false);
+  const [openCollectionSelect, setOpenCollectionSelect] = useState<boolean>(false);
+  const [filterCollection, setFilterCollection] = useState<string>("");
+  const [collections, setCollections] = useState<any[]>([]);
 
   useEffect(() => {
     setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");
@@ -95,16 +105,31 @@ const EditRealmModal = ({
 
   useEffect(() => {
     if (!realmData) return;
+    setOwner(userSelector?.id)
+    loadCollection()
     loadFiles();
   }, [realmData]);
 
+  const loadCollection = async () => {
+    MetaverseAPI.getCollections(100, 1, "DESC", owner)
+    .then(res => {
+      if (res.success) {
+        const items = res.data.elements;
+        if (items && items.length > 0) {
+          setCollections([...collections, ...items]);
+        }
+      } else{
+        console.log('empty collection')
+      }
+    })
+  }
   const loadFiles = async () => {
     try {
       const allTasks: any[] = [];
       setLoadingFiles(true);
       const task1 = new Promise<void>(async (resolve, reject) => {
-        setImageFile(realmData.worldImages[0]);
-        const image = await fetch(realmData.worldImages[0])
+        setImageFile(realmData.worldImage);
+        const image = await fetch(realmData.worldImage)
           .then(r => r.blob())
           .then(blobFile => new File([blobFile], "source.png"));
         setImage(image);
@@ -268,7 +293,7 @@ const EditRealmModal = ({
   };
 
   const validate = () => {
-    if (!title || !description || !image || !unity || !symbol || !entity) {
+    if (!title || !description || !image || !unity || !entity) {
       showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
       return false;
     }
@@ -286,15 +311,15 @@ const EditRealmModal = ({
         }
       );
       return false;
-    } else if (
-      symbol.length < sizeSpec.worldSymbol.limit.min ||
-      symbol.length > sizeSpec.worldSymbol.limit.max
-    ) {
-      showAlertMessage(
-        `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec.worldSymbol.limit.min} to ${sizeSpec.worldSymbol.limit.max} characters`,
-        { variant: "error" }
-      );
-      return false;
+    // } else if (
+    //   symbol.length < sizeSpec.worldSymbol.limit.min ||
+    //   symbol.length > sizeSpec.worldSymbol.limit.max
+    // ) {
+    //   showAlertMessage(
+    //     `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec.worldSymbol.limit.min} to ${sizeSpec.worldSymbol.limit.max} characters`,
+    //     { variant: "error" }
+    //   );
+    //   return false;
     } else if (
       description.length < sizeSpec.worldDescription.limit.min ||
       description.length > sizeSpec.worldDescription.limit.max
@@ -339,13 +364,14 @@ const EditRealmModal = ({
     if (validate()) {
       let payload: any = {};
       try {
+        payload.collectionId = collectionId;
         payload.worldTitle = title;
-        payload.worldSymbol = symbol;
+        // payload.worldSymbol = symbol;
         payload.worldDescription = description;
         if (fileChanged.image) payload.worldImage = image;
         if (fileChanged.unity) payload.worldLevel = unity;
         if (fileChanged.video) payload.worldVideo = video;
-        if (fileChanged.entity) payload.worldMeta = entity;
+        if (fileChanged.entity) payload.worldData = entity;
         if (isPublic !== realmData.worldIsPublic) payload.isPublic = isPublic;
 
         setShowUploadingModal(true);
@@ -379,6 +405,44 @@ const EditRealmModal = ({
           <Box className={classes.title} mb={1.5} display="flex" justifyContent="center" width={1}>
             Edit Draft
           </Box>
+          <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+            <Box className={classes.itemTitle} mb={1}>
+              Collection
+            </Box>
+            <InfoTooltip tooltip={""} />
+          </Box>
+          <Select
+            open={openCollectionSelect}
+            onClose={() => setOpenCollectionSelect(false)}
+            value={collections?.map((item, index) => (
+              collectionId == item.id ? item.name : ''
+            ))}
+            onChange={e => setCollectionId(String(e.target.value))}
+            className={classes.select}
+            renderValue={(value: any) => (
+              <Box display="flex" alignItems="center" onClick={() => setOpenCollectionSelect(true)}>
+                <span>{value}</span>
+              </Box>
+            )}
+            MenuProps={{
+              classes: filterClasses,
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "left",
+              },
+              transformOrigin: {
+                vertical: "top",
+                horizontal: "left",
+              },
+              getContentAnchorEl: null,
+            }}
+          >
+            {collections?.map((item, index) => (
+              <MenuItem key={`filter-chain-${index}`} value={item.id}>
+                {item.name}
+              </MenuItem>
+            ))}
+          </Select>
           <Box display="flex" alignItems="center" justifyContent="space-between">
             <Box className={classes.itemTitle} mb={1}>
               {sizeSpec.worldTitle.header}
@@ -391,7 +455,7 @@ const EditRealmModal = ({
             value={title}
             onChange={e => setTitle(e.target.value)}
           />
-          <Box display="flex" alignItems="center" justifyContent="space-between">
+          {/* <Box display="flex" alignItems="center" justifyContent="space-between">
             <Box className={classes.itemTitle} mt={2.5} mb={1}>
               {sizeSpec.worldSymbol.header}
             </Box>
@@ -405,7 +469,7 @@ const EditRealmModal = ({
             value={symbol}
             onChange={e => setSymbol(e.target.value.trim().toUpperCase())}
             maxLength={5}
-          />
+          /> */}
           <Box display="flex" alignItems="center" justifyContent="space-between">
             <Box className={classes.itemTitle} mt={2.5} mb={1}>
               {sizeSpec.worldDescription.header}

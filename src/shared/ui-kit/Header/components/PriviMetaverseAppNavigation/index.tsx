@@ -18,6 +18,7 @@ const LeftNavigations: NavItemProps[] = [
   { name: "CREATE", value: "creations", link: "/create" },
   { name: "REALMS", value: "realms", link: "/realms" },
   { name: "AVATARS", value: "avatars", link: "/avatars" },
+  { name: "ASSETS", value: "assets", link: "/assets" },
   { name: "GAME NFTS", value: "gameNFTS", link: "/gameNFTS" },
   // { name: "METAVERSE", value: "metaverse", link: "/metaverse" },
 ];

@@ -163,6 +163,11 @@ export const contentPreviewModalStyles = makeStyles(theme => ({
     color: "white !important",
     border: "2px solid rgba(255, 255, 255, 0.5) !important",
   },
+  mintButton: {
+    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%) !important",
+    border: "2px solid #212121 !important",
+    marginTop: "10px"
+  },
   close: {
     background: "rgba(255, 255, 255, 0.1)",
     border: "0.726449px solid rgba(255, 255, 255, 0.2)",

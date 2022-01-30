@@ -67,12 +67,12 @@ const LandingPage = () => {
         if (res.isSignedIn) {
           setSignedin(true);
           // setIsAuthorized(true);
-          const data = res.privian.user;
+          const data = res.data.user;
           dispatch(setUser(data));
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
-          localStorage.setItem("userId", data.id);
-          localStorage.setItem("userSlug", data.urlSlug ?? data.id);
+          localStorage.setItem("userId", data.priviId);
+          localStorage.setItem("userSlug", data.urlSlug ?? data.priviId);
 
           axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
           dispatch(setLoginBool(true));
@@ -102,12 +102,12 @@ const LandingPage = () => {
       if (res.isSignedIn) {
         setSignedin(true);
         // setIsAuthorized(true);
-        const data = res.userData;
+        const data = res.data.user;
         dispatch(setUser(data));
         localStorage.setItem("token", res.accessToken);
         localStorage.setItem("address", account);
-        localStorage.setItem("userId", data.id);
-        localStorage.setItem("userSlug", data.urlSlug ?? data.id);
+        localStorage.setItem("userId", data.priviId);
+        localStorage.setItem("userSlug", data.urlSlug ?? data.priviId);
 
         axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
         dispatch(setLoginBool(true));
