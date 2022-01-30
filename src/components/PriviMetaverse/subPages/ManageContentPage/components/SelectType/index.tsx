@@ -13,38 +13,6 @@ import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 
-const ASSET_TYPE = [
-  {
-    key: "texture",
-    isPublish: true,
-    label: "texture",
-    img: 'texture.png'
-  },
-  {
-    key: "material",
-    isPublish: true,
-    label: "material",
-    img: 'material.png'
-  },
-  {
-    key: "3d-asset",
-    isPublish: true,
-    label: "3d asset",
-    img: '3d_asset.png'
-  },
-  {
-    key: "character",
-    isPublish: false,
-    label: "character",
-    img: 'character.png'
-  },
-  {
-    key: "world",
-    isPublish: true,
-    label: "world",
-    img: 'world.png'
-  },
-];
 const SelectType = ({ handleNext }: { handleNext: (asset: string) => void }) => {
   const history = useHistory();
   const classes = useModalStyles();
@@ -52,21 +20,32 @@ const SelectType = ({ handleNext }: { handleNext: (asset: string) => void }) => 
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const [assetTypes, setAssetTypes] = useState<any>(null);
 
-  const [image, setImage] = useState<any>(null);
+  useEffect(() => {
+    getAssetTypes()
+  }, []);
+
+  const getAssetTypes = async () => {
+    const res = await MetaverseAPI.getAssetTypes();
+    if (res && res.success) {
+      setAssetTypes(res.data);
+    } else {
+      showAlertMessage(`Server is down. Please wait...`, { variant: "error" });
+    }
+  }
 
   return (
     <Box className={classes.container}>
       <h3 className={classes.title}>What do you want to create?</h3>
       <div className={classes.content}>
         
-        {ASSET_TYPE?.map((item, index) => (
-          <Box className={classes.maskWrapper} key={`trending-pod-${index}`} onClick={()=>handleNext(item.key)}>
+        {assetTypes?.map((item, index) => (
+          <Box className={`maskWrapper ${item.interactable === true ? "" : "disabled"}`} key={`trending-pod-${index}`} onClick={()=>{}}>
             <div className={classes.mask}>
-              <div className={classes.cardTitle}>{item.label}</div>
-              {!item.isPublish && <div className={classes.comingSoon}>coming soon</div>}
+              <div className={classes.cardTitle}>{item.name.value}</div>
               <div className={classes.imageBox}>
-                <img src={require(`assets/mediaIcons/${item.img}`)} alt="" />
+                <img src={item.icon} alt="" />
               </div>
             </div>
           </Box>

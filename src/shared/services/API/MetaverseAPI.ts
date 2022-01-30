@@ -407,3 +407,21 @@ export const getNftGames = async (lastId: string, search: string, chain: string)
     console.log(error);
   }
 };
+
+export const getAssetTypes = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.get(
+      `${METAVERSE_URL()}/web/create/assets/`,
+      config
+    );
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};

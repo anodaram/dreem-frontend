@@ -30,14 +30,17 @@ export const useModalStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       gridTemplateColumns: "1fr",
     },
-  },
-  maskWrapper: {
-    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
-    margin: "0 31px 31px 31px",
-    width: "300px",
-    height: "400px",
-    borderRadius: "16px",
-    padding: "4px"
+    "& .maskWrapper": {
+      background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
+      margin: "0 31px 31px 31px",
+      width: "300px",
+      height: "400px",
+      borderRadius: "16px",
+      padding: "4px"
+    },
+    "& .maskWrapper.disabled": {
+      opacity: 0.5
+    },
   },
   mask: {
     background: "#212121",
