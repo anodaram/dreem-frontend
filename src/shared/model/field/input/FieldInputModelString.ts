@@ -1,7 +1,7 @@
 import FieldInputModel from "./FieldInputModel";
 import RangeModelInt from "../../range/RangeModelInt";
 
-export default interface FieldInputModelString extends FieldInputModel
+export default class FieldInputModelString extends FieldInputModel
 {
-    range?: RangeModelInt;
+  public range?: RangeModelInt;
 }

@@ -1,7 +1,7 @@
 import FieldModel from "./field/FieldModel";
 
-export default interface ItemModel
+export default class ItemModel
 {
-    itemKind?: string;
-    fields?: FieldModel[];
+  public itemKind?: string;
+  public fields?: FieldModel[];
 }

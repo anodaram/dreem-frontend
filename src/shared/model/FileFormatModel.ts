@@ -1,6 +1,6 @@
 
-export default interface FileFormatModel
+export default class FileFormatModel
 {
-    name?: string;
-    mimeType?: string;
+  public name?: string;
+  public mimeType?: string;
 }

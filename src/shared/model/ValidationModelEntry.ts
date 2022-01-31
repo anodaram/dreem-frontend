@@ -1,8 +1,8 @@
 import TextModel from "./TextModel";
 
-export default interface ValidationModelEntry
+export default class ValidationModelEntry
 {
-    result?: boolean;
-    text?: TextModel;
-    message?: string;
+  public result?: boolean;
+  public text?: TextModel;
+  public message?: string;
 }
