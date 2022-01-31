@@ -33,6 +33,7 @@ import CreateRealmModal from "../../modals/CreateRealmModal";
 import { manageContentPageStyles } from "./index.styles";
 import { onUploadNonEncrypt } from "shared/ipfs/upload";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
+import CreateAssetModel from "shared/model/CreateAssetModel";
 
 export default function ManageContentPage() {
   const dispatch = useDispatch();
@@ -83,10 +84,10 @@ export default function ManageContentPage() {
   const entityInputRef = useRef<HTMLInputElement>(null);
 
   const [hasUnderMaintenanceInfo, setHasUnderMaintenanceInfo] = useState(false);
-  const [selectedAsset, setSelectedAsset] = useState<string>();
+  const [selectedAsset, setSelectedAsset] = useState<CreateAssetModel>();
 
   useEffect(() => {
-    handleOpenRealmModal()
+    // handleOpenRealmModal()
   }, []);
 
   useEffect(() => {
@@ -197,51 +198,50 @@ export default function ManageContentPage() {
   };
 
   const handleNext = () => {
-    console.log("----", step);
-    if (step == 2) {
-      switch (selectedAsset) {
-        case "world":
-          if (worldCurStep < 2) {
-            setWorldCurStep(prev => prev + 1);
-          } else {
-            setStep(prev => prev + 1);
-          }
-          break;
-        case "texture":
-          if (textureCurStep < 3) {
-            setTextureCurStep(prev => prev + 1);
-          } else {
-            setStep(prev => prev + 1);
-          }
-          break;
-        case "material":
-          if (textureCurStep < 3) {
-            setTextureCurStep(prev => prev + 1);
-          } else {
-            setStep(prev => prev + 1);
-          }
-          break;
-        case "3d-asset":
-          if (textureCurStep < 3) {
-            setTextureCurStep(prev => prev + 1);
-          } else {
-            setStep(prev => prev + 1);
-          }
-          break;
-        case "character":
-          if (textureCurStep < 3) {
-            setTextureCurStep(prev => prev + 1);
-          } else {
-            setStep(prev => prev + 1);
-          }
-          break;
+    // if (step == 2) {
+    //   switch (selectedAsset) {
+    //     case "WORLD":
+    //       if (worldCurStep < 2) {
+    //         setWorldCurStep(prev => prev + 1);
+    //       } else {
+    //         setStep(prev => prev + 1);
+    //       }
+    //       break;
+    //     case "TEXTURE":
+    //       if (textureCurStep < 3) {
+    //         setTextureCurStep(prev => prev + 1);
+    //       } else {
+    //         setStep(prev => prev + 1);
+    //       }
+    //       break;
+    //     case "MATERIAL":
+    //       if (textureCurStep < 3) {
+    //         setTextureCurStep(prev => prev + 1);
+    //       } else {
+    //         setStep(prev => prev + 1);
+    //       }
+    //       break;
+    //     case "3d-asset":
+    //       if (textureCurStep < 3) {
+    //         setTextureCurStep(prev => prev + 1);
+    //       } else {
+    //         setStep(prev => prev + 1);
+    //       }
+    //       break;
+    //     case "CHARACTER":
+    //       if (textureCurStep < 3) {
+    //         setTextureCurStep(prev => prev + 1);
+    //       } else {
+    //         setStep(prev => prev + 1);
+    //       }
+    //       break;
 
-        default:
-          break;
-      }
-    } else {
-      setStep(prev => prev + 1);
-    }
+    //     default:
+    //       break;
+    //   }
+    // } else {
+    //   setStep(prev => prev + 1);
+    // }
   };
 
   const handlePrev = () => {
@@ -250,7 +250,7 @@ export default function ManageContentPage() {
 
   const handleAsset = asset => {
     setSelectedAsset(asset);
-    if (asset != "world") {
+    if (asset != "WORLD") {
       setStep(2);
     } else {
       setStep(prev => prev + 1);
@@ -331,32 +331,32 @@ export default function ManageContentPage() {
               handleAsset(asset);
             }}
           />
-        )}
-        {step === 2 && selectedAsset === "world" && (
+        )}{console.log("===========", selectedAsset)}
+        {step === 2 && selectedAsset?.key === "WORLD" && (
           <CreateNFTFlow
             metaData={metaDataForModal}
             handleCancel={handlePrev}
           />
         )}
-        {step === 2 && selectedAsset === "texture" && (
+        {step === 2 && selectedAsset?.key === "TEXTURE" && (
           <CreateTextureFlow
             metaData={metaDataForModal}
             handleCancel={handlePrev}
           />
         )}
-        {step === 2 && selectedAsset === "material" && (
+        {step === 2 && selectedAsset?.key === "MATERIAL" && (
           <CreateMaterialFlow
             metaData={metaDataForModal}
             handleCancel={handlePrev}
           />
         )}
-        {step === 2 && selectedAsset === "3d-asset" && (
+        {step === 2 && selectedAsset?.key === "3d-asset" && (
           <Create3DAssetFlow
             metaData={metaDataForModal}
             handleCancel={handlePrev}
           />
         )}
-        {step === 2 && selectedAsset === "character" && (
+        {step === 2 && selectedAsset?.key === "CHARACTER" && (
           <CreateCharacterFlow
             metaData={metaDataForModal}
             handleCancel={handlePrev}

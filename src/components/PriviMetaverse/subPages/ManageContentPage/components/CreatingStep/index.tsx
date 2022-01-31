@@ -41,8 +41,8 @@ const CreatingStep = ({
           {status?.map((item, index) => (
             <>
               <div className={classes.boxContainer}>
-                <div className="statusIcon">{curStep > item.step && (item.completed ? <CompletedIcon/> : <FailedIcon/>) || curStep == status.length && item.completed && <CompletedIcon/> }</div>
-                <div className={`step ${curStep > item.step && (item.completed ? "active" : "inactive") || curStep == status.length && item.completed && "active" }`}><div className="inside">{item.step}</div></div>
+                <div className="statusIcon">{curStep > item.step && (item.completed ? <CompletedIcon/> : <FailedIcon/>) || curStep === status.length && item.completed && <CompletedIcon/> }</div>
+                <div className={`step ${curStep > item.step ? (item.completed ? "active finished" : "inactive finished") : curStep === item.step ? "active" : '' }`}><div className="inside">{item.step}</div></div>
                 <div className="label">{item.label}</div>
               </div>
               <div className={`line ${item.step == status.length ? "hidden" : ""}`}></div>

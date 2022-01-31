@@ -14,7 +14,7 @@ import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 import CreateAssetModel from "shared/model/CreateAssetModel";
 
-const SelectType = ({ handleNext }: { handleNext: (asset: string) => void }) => {
+const SelectType = ({ handleNext }: { handleNext: (asset: CreateAssetModel) => void }) => {
   const history = useHistory();
   const classes = useModalStyles();
   const { showAlertMessage } = useAlertMessage();
@@ -24,29 +24,33 @@ const SelectType = ({ handleNext }: { handleNext: (asset: string) => void }) => 
   const [assetTypes, setAssetTypes] = useState<CreateAssetModel[]>([]);
 
   useEffect(() => {
-    getAssetTypes()
+    getAssetTypes();
   }, []);
 
   const getAssetTypes = async () => {
     const res = await MetaverseAPI.getAssetTypes();
     if (res && res.success) {
-
       // TODO - iterate over this
       let assets: CreateAssetModel[] = CreateAssetModel.constructArray(res.data);
 
-      setAssetTypes(res.data);
+      setAssetTypes(assets);
     } else {
       showAlertMessage(`Server is down. Please wait...`, { variant: "error" });
     }
-  }
+  };
 
   return (
     <Box className={classes.container}>
       <h3 className={classes.title}>What do you want to create?</h3>
       <div className={classes.content}>
-
         {assetTypes?.map((item, index) => (
-          <Box className={`maskWrapper ${item.interactable === true ? "" : "disabled"}`} key={`trending-pod-${index}`} onClick={()=>{}}>
+          <Box
+            className={`maskWrapper ${item.interactable === true ? "" : "disabled"}`}
+            key={`trending-pod-${index}`}
+            onClick={() => {
+              handleNext(item);
+            }}
+          >
             <div className={classes.mask}>
               <div className={classes.cardTitle}>{item.name?.value}</div>
               <div className={classes.imageBox}>

@@ -43,6 +43,9 @@ export const useModalStyles = makeStyles(theme => ({
         background: '#FF6868',
         color: '#212121',
       },
+      "&.finished .inside": {
+        opacity: 0.8,
+      }
     },
     "& .statusIcon": {
       position: 'absolute',
