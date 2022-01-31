@@ -1,10 +1,11 @@
-import axios from "axios";
+import axios, { CancelToken } from "axios";
 import URL from "shared/functions/getURL";
 
-export async function getAllGameNFTs(payload: any): Promise<any> {
+export async function getAllGameNFTs(payload: any,  cancelToken?: CancelToken): Promise<any> {
   try {
     const response = await axios.get(`${URL()}/metaverseReserve/getAllGameNFTs`, {
       params: payload,
+      cancelToken: cancelToken
     });
     return response.data;
   } catch (e) {
