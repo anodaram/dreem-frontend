@@ -12,6 +12,7 @@ import { BlockchainNets } from "shared/constants/constants";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
+import CreateAssetModel from "shared/model/CreateAssetModel";
 
 const SelectType = ({ handleNext }: { handleNext: (asset: string) => void }) => {
   const history = useHistory();
@@ -20,7 +21,7 @@ const SelectType = ({ handleNext }: { handleNext: (asset: string) => void }) => 
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
-  const [assetTypes, setAssetTypes] = useState<any>(null);
+  const [assetTypes, setAssetTypes] = useState<CreateAssetModel[]>([]);
 
   useEffect(() => {
     getAssetTypes()
@@ -43,7 +44,7 @@ const SelectType = ({ handleNext }: { handleNext: (asset: string) => void }) => 
         {assetTypes?.map((item, index) => (
           <Box className={`maskWrapper ${item.interactable === true ? "" : "disabled"}`} key={`trending-pod-${index}`} onClick={()=>{}}>
             <div className={classes.mask}>
-              <div className={classes.cardTitle}>{item.name.value}</div>
+              <div className={classes.cardTitle}>{item.name?.value}</div>
               <div className={classes.imageBox}>
                 <img src={item.icon} alt="" />
               </div>
