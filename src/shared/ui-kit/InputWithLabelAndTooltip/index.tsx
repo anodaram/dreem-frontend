@@ -27,6 +27,8 @@ type TooltipWithInputProps = {
   endAdornment?: any;
   transparent?: boolean;
   minDate?: number;
+  startAdornment?: any;
+  multiline?: boolean;
 };
 
 const useStyles = makeStyles(theme => ({
@@ -99,7 +101,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: "14px",
     background: "#F7F9FE",
     boxSizing: "border-box",
-    fontFamily: "Rany",
+    fontFamily: "Agrandir",
     marginTop: theme.spacing(1),
     borderRadius: "6px",
     outline: "none",
@@ -112,7 +114,7 @@ const useStyles = makeStyles(theme => ({
     },
     "& *": {
       color: "#181818",
-      fontFamily: "Rany",
+      fontFamily: "Agrandir",
     },
     [theme.breakpoints.down("xs")]: {
       padding: "11.5px 8px",
@@ -124,7 +126,7 @@ const useStyles = makeStyles(theme => ({
     padding: "19px 16px",
     fontSize: "14px",
     color: "white",
-    fontFamily: "Rany",
+    fontFamily: "Agrandir",
     marginTop: theme.spacing(1),
     outline: "none",
     borderRadius: 0,
@@ -139,7 +141,7 @@ const useStyles = makeStyles(theme => ({
     },
     "& *": {
       color: "white",
-      fontFamily: "Rany",
+      fontFamily: "Agrandir",
     },
   },
   inputBoxMusicDao: {
@@ -171,7 +173,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   inputBoxPriviPix: {
-    color: "#A4A4A4",
+    color: "#1A1B1C",
     width: "100%",
     border: "1px solid #181818",
     height: "37px",
@@ -185,12 +187,10 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 400,
     "& input": {
       border: "none",
-      background: "#F7F9FE",
       margin: 0,
       padding: 0,
     },
     "& *": {
-      color: "rgba(45, 48, 71, 0.7)",
       fontWeight: 400,
     },
   },
@@ -221,8 +221,10 @@ export default function InputWithLabelAndTooltip({
   accept,
   theme = "light",
   endAdornment,
+  startAdornment,
   transparent,
   minDate = 0,
+  multiline = false,
 }: TooltipWithInputProps) {
   const classes = useStyles();
   return (
@@ -255,6 +257,7 @@ export default function InputWithLabelAndTooltip({
         <Input
           disableUnderline
           endAdornment={endAdornment}
+          startAdornment={startAdornment}
           className={`${
             overriedClasses
               ? overriedClasses
@@ -274,9 +277,10 @@ export default function InputWithLabelAndTooltip({
           disabled={disabled}
           hidden={hidden}
           style={style ?? {}}
-          ref={reference}
+          inputRef={reference}
           onKeyDown={e => (onKeyDown ? onKeyDown(e) : null)}
           autoComplete={autoComplete}
+          multiline={multiline}
         />
       ) : type === "number" ? (
         <Input
@@ -305,7 +309,7 @@ export default function InputWithLabelAndTooltip({
           disabled={disabled}
           hidden={hidden}
           style={style ?? {}}
-          ref={reference}
+          inputRef={reference}
           onKeyDown={e => (onKeyDown ? onKeyDown(e) : null)}
         />
       ) : type === "file" ? (
@@ -334,7 +338,7 @@ export default function InputWithLabelAndTooltip({
         <DateInput
           theme={theme}
           minDate={minDate || new Date().setDate(new Date().getDate() + 1)}
-          format="dd/MMM/yyyy"
+          format="dd MMM yyyy"
           placeholder="Select date..."
           value={inputValue}
           onChange={onInputValueChange}

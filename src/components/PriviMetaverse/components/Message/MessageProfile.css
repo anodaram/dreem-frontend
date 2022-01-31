@@ -1,0 +1,120 @@
+.message-profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  object-fit: cover;
+  filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.2));
+}
+.name {
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 104.5%;
+  color: #1A1B1C;
+  margin-bottom: 10px;
+}
+.slug-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.slug-container .slug-name {
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 104.5%;
+  color: #431AB7;
+  margin-right: 10px;
+}
+.slug-container .verified-label {
+}
+.slug-container .profile-level {
+  width: 75px;
+  height: 19px;
+  margin-left: 10px;
+  /* Text */
+
+  border: 1px solid #1A1B1C;
+  box-sizing: border-box;
+  border-radius: 38.6667px;
+  color: #1A1B1C;
+  font-size: 11px;
+  line-height: 16px;
+  padding: 3px 9px 3px 9px;
+}
+.top-stats {
+  margin-bottom: 30px;
+  background: #F6F8FF;
+  box-shadow: 0px 3px 7px rgb(0 0 0 / 12%);
+  border-radius: 26px;
+  padding: 16px 30px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-container button {
+  width: 100%;
+  color: #431AB7;
+  border: none;
+  background: #DDFF57;
+  white-space: nowrap;
+}
+
+.badges {
+  border-bottom: 1px solid #707582;
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+}
+.badges .title {
+  font-size: 14px;
+  line-height: 104.5%;
+  /* identical to box height, or 15px */
+  padding: 0px;
+
+  /* Text */
+
+  color: #707582;
+}
+.top-stats .title {
+  padding: 0px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #0000001a;
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 104.5%;
+  color: #707582;
+}
+
+.top-stats .stats {
+  display: flex;
+  border-bottom: 1px solid #0000001a;
+  padding-bottom: 15px;
+}
+
+.top-stats .stats:last-child {
+  border-bottom: none;
+}
+
+.top-stats .stats .state {
+  margin-right: 40px;
+}
+.top-stats .stats .state .state-title {
+  margin-bottom: 10px;
+}
+.top-stats .stats .state .state-title div {
+  font-size: 14px;
+  line-height: 104.5%;
+  /* identical to box height, or 15px */
+
+  /* Text */
+
+  color: #707582;
+}
+.top-stats .stats .state .state-value {
+  color: #707582;
+  font-size: 22px;
+  line-height: 104.5%;
+}
