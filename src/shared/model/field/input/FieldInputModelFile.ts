@@ -1,7 +1,7 @@
 import FileFormatModel from "../../FileFormatModel";
 import FieldInputModel from "./FieldInputModel";
 
-export default interface FieldInputModelFile extends FieldInputModel
+export default class FieldInputModelFile extends FieldInputModel
 {
-    formats?: FileFormatModel[];
+  public formats?: FileFormatModel[];
 }

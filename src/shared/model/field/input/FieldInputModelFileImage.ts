@@ -1,8 +1,8 @@
 import FieldInputModelFile from "./FieldInputModelFile";
 import DimensionModel from "../../DimensionModel";
 
-export default interface FieldInputModelFileImage extends FieldInputModelFile
+export default class FieldInputModelFileImage extends FieldInputModelFile
 {
-    min?: DimensionModel;
-    max?: DimensionModel;
+  public min?: DimensionModel;
+  public max?: DimensionModel;
 }

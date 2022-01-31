@@ -2,12 +2,12 @@ import TextModel from "../TextModel";
 import FieldInputModel from "./input/FieldInputModel";
 import LayoutElementModel from "../LayoutElementModel";
 
-export default interface FieldModel
+export default class FieldModel
 {
-    key?: string;
-    kind?: string;
-    name?: TextModel;
-    input?: FieldInputModel;
-    layoutElement?: LayoutElementModel;
-    fields?: FieldModel[];
+  public key?: string;
+  public kind?: string;
+  public name?: TextModel;
+  public input?: FieldInputModel;
+  public layoutElement?: LayoutElementModel;
+  public fields?: FieldModel[];
 }

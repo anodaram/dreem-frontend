@@ -1,6 +1,6 @@
 import FieldModel from "./FieldModel";
 
-export default interface FieldModelString extends FieldModel
+export default class FieldModelString extends FieldModel
 {
-    value?: string;
+  public value?: string;
 }

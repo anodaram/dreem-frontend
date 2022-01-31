@@ -1,7 +1,7 @@
 import ValidationModelEntry from "./ValidationModelEntry";
 
-export default interface ValidationModel
+export default class ValidationModel
 {
-    result?: boolean;
-    validations?: ValidationModelEntry[];
+  public result?: boolean;
+  public validations?: ValidationModelEntry[];
 }

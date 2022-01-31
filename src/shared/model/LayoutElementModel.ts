@@ -1,12 +1,12 @@
 
-export default interface LayoutElementModel
+export default class LayoutElementModel
 {
-  ignoreLayout?: boolean;
-  minWidth?: number;
-  minHeight?: number;
-  preferredWidth?: number;
-  preferredHeight?: number;
-  flexibleWidth?: number;
-  flexibleHeight?: number;
-  layoutPriority?: number;
+  public ignoreLayout?: boolean;
+  public minWidth?: number;
+  public minHeight?: number;
+  public preferredWidth?: number;
+  public preferredHeight?: number;
+  public flexibleWidth?: number;
+  public flexibleHeight?: number;
+  public layoutPriority?: number;
 }

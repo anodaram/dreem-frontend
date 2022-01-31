@@ -1,9 +1,9 @@
 import TextModel from "../../TextModel";
 
-export default interface FieldInputModel
+export default class FieldInputModel
 {
-    required?: boolean;
-    requirements?: TextModel[];
-    placeholder?: TextModel;
-    description?: TextModel;
+  public required?: boolean;
+  public requirements?: TextModel[];
+  public placeholder?: TextModel;
+  public description?: TextModel;
 }

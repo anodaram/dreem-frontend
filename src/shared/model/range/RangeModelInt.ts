@@ -1,6 +1,6 @@
 
-export default interface RangeModelInt
+export default class RangeModelInt
 {
-    min?: number;
-    max?: number;
+  public min?: number;
+  public max?: number;
 }

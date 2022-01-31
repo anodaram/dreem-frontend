@@ -1,7 +1,7 @@
 
-export default interface DimensionModel
+export default class DimensionModel
 {
-    width?: number;
-    height?: number;
-    length?: number;
+  public width?: number;
+  public height?: number;
+  public length?: number;
 }
