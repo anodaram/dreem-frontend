@@ -4,5 +4,6 @@ export default interface FieldInputModel
 {
     required?: boolean;
     requirements?: TextModel[];
+    placeholder?: TextModel;
     description?: TextModel;
 }

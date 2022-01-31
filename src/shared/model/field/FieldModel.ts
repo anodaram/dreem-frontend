@@ -1,5 +1,6 @@
 import TextModel from "../TextModel";
 import FieldInputModel from "./input/FieldInputModel";
+import LayoutElementModel from "../LayoutElementModel";
 
 export default interface FieldModel
 {
@@ -7,5 +8,6 @@ export default interface FieldModel
     kind?: string;
     name?: TextModel;
     input?: FieldInputModel;
+    layoutElement?: LayoutElementModel;
     fields?: FieldModel[];
 }
