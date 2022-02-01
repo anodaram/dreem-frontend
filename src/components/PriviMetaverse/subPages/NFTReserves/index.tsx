@@ -39,6 +39,7 @@ import { useFilterSelectStyles, useNFTOptionsStyles, useTabsStyles } from "./ind
 import { ReactComponent as BinanceIcon } from "assets/icons/bsc.svg";
 import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
 import { userTrackMarketPlace } from "shared/services/API";
+import { GameSlider } from "components/PriviMetaverse/components/GameSlider";
 import Axios, { CancelTokenSource } from "axios";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -75,6 +76,24 @@ const FilterOptionsTabs: TabItem[] = [
 
 const filterChainOptions = ["All", "BSC", "Polygon"];
 const filterStatusOptions = ["All", ...NftStates];
+
+const gameList = [
+  {
+    title: 'Game Name 1',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.',
+    image: require("assets/backgrounds/community.jpeg")
+  },
+  {
+    title: 'Game Name 2',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.',
+    image: require("assets/backgrounds/social.jpeg")
+  },
+  {
+    title: 'Game Name 3',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.',
+    image: require("assets/backgrounds/workInProgress.jpeg")
+  }
+]
 
 const getChainImage = chain => {
   if (chain === filterChainOptions[1]) {
@@ -505,43 +524,81 @@ const NFTReserves = () => {
         <Box className={classes.limitedContent}>
           <div className={classes.content} id={"scrollContainer"} onScroll={handleScroll}>
             <div className={classes.titleBar}>
-              <Box display="flex" flexDirection="column" alignItems="center">
+              <Box display="flex" alignItems="center" width="100%" justifyContent="space-between">
                 <div className={classes.title}>Not your average NFT marketplace</div>
-                <div className={classes.subTitle}>
-                  Explore Gaming NFTs across Polygon, BSC (and soon Solana). Buy, Rent or Block and Reserve to
-                  Buy at a Later Date
-                </div>
-              </Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                mt={"36px"}
-                flexDirection={isMobile ? "column" : "row"}
-                style={isMobile ? { width: "100%" } : {}}
-              >
-                <SecondaryButton
-                  size="medium"
-                  className={classes.primaryButton}
-                  onClick={() => setOpenHowWorksModal(true)}
-                >
-                  HOW IT WORKS
-                </SecondaryButton>
-                {isSignedin && (
+                <Box display="flex" alignItems="center">
                   <SecondaryButton
                     size="medium"
                     className={classes.primaryButton}
-                    onClick={() => {
-                      history.push("/gameNFTS/manage_nft");
-                    }}
-                    style={{
-                      width: isMobile ? "100%" : "auto",
-                      marginTop: isMobile ? 10 : 0,
-                      marginLeft: isMobile ? 0 : 32,
-                    }}
+                    onClick={() => setOpenHowWorksModal(true)}
+                    style={{ background: "#fff" }}
                   >
-                    MANAGE YOUR NFTS
+                    HOW IT WORKS
                   </SecondaryButton>
-                )}
+                  {isSignedin && (
+                    <SecondaryButton
+                      size="medium"
+                      className={classes.primaryButton}
+                      onClick={() => {
+                        history.push("/gameNFTS/manage_nft");
+                      }}
+                      style={{
+                        width: isMobile ? "100%" : "auto",
+                        marginTop: isMobile ? 10 : 0,
+                        marginLeft: isMobile ? 0 : 32,
+                      }}
+                    >
+                      MANAGE YOUR NFTS
+                    </SecondaryButton>
+                  )}
+                </Box>
+              </Box>
+              <Box
+                height={720}
+                width={1280}
+                position="relative"
+                className={classes.gameslider}
+                mt="38px"
+                mb="56px"
+              >
+                <img src={require("assets/icons/slider_footer.svg")} className={classes.sliderFooter} />
+                <img src={require("assets/icons/slider_left.svg")} className={classes.sliderLeft} />
+                <img src={require("assets/icons/slider_right.svg")} className={classes.sliderRight} />
+                {/* <img src={require("assets/icons/slider_rect.svg")} className={classes.sliderRect} /> */}
+                <GameSlider
+                  games={
+                    gameList.map(game => {
+                      return () => (
+                        <Box position="relative" width="100%" height="100%">
+                          <img src={game.image} width="100%" height="100%" className={classes.gameBgImage}/>
+                          <Box
+                            padding="100px 105px"
+                            width="100%"
+                            height="100%"
+                            display="flex"
+                            flexDirection="column"
+                            alignItems="flex-start"
+                            justifyContent="flex-end"
+                            className={classes.gameContent}
+                          >
+                            <Box fontFamily="Rany" fontWeight={700} fontSize="18px" color="#E9FF26">COMING SOON</Box>
+                            <Box fontFamily="GRIFTER" fontWeight={700} fontSize="72px" color="#fff" mt="11px">{game.title}</Box>
+                            <Box fontFamily="Rany" fontWeight={500} textAlign="left" fontSize="20px" color="#fff" lineHeight="31px" mt="20px">{game.description}</Box>
+                            <SecondaryButton
+                              size="medium"
+                              className={classes.gamePlayButton}
+                              onClick={() => {}}
+                            >
+                              <GameIcon />
+                              OPEN THE GAME
+                            </SecondaryButton>
+                          </Box>
+                        </Box>
+                      )
+                    })
+                  }
+                  paginationColor="#E9FF26"
+                />
               </Box>
             </div>
 
@@ -851,3 +908,9 @@ export const DetailIcon = () => (
     <rect x="13.5" y="7.625" width="6" height="6" rx="1" transform="rotate(90 13.5 7.625)" />
   </svg>
 );
+
+export const GameIcon = () => (
+  <svg width="26" height="20" viewBox="0 0 26 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10.8333 1.70412C9.27875 0.182038 5.655 -0.430045 3.61292 1.75829C1.61417 3.89245 0 9.03775 0 13.8916C0 19.7476 4.9075 20.5601 7.58333 17.6833C9.1325 16.015 9.27875 15.7544 10.2917 14.4333H15.7083C16.7267 15.7544 16.8675 16.015 18.4167 17.6833C21.092 20.5601 26 19.7476 26 13.8916C26 9.03775 24.3858 3.89245 22.3871 1.75829C20.345 -0.430045 16.7267 0.182038 15.1667 1.70412C14.5654 2.28912 13 2.51662 13 2.51662C13 2.51662 11.4346 2.28912 10.8333 1.70412ZM8.66667 5.27912V6.84941H10.2375C10.8658 6.84941 11.375 7.33691 11.375 7.93329C11.375 8.52912 10.8658 9.01662 10.2375 9.01662H8.66667V10.5869C8.66667 11.2158 8.17917 11.725 7.58333 11.725C6.9875 11.725 6.5 11.2163 6.5 10.5869V9.01662H4.92917C4.30083 9.01662 3.79167 8.52912 3.79167 7.93329C3.79167 7.33691 4.30083 6.84941 4.92917 6.84941H6.5V5.27912C6.5 4.65079 6.9875 4.14162 7.58333 4.14162C8.17917 4.14162 8.66667 4.65079 8.66667 5.27912ZM18.4167 6.03745C18.4167 5.28995 19.0233 4.68329 19.7708 4.68329C20.5183 4.68329 21.125 5.28995 21.125 6.03745C21.125 6.78495 20.5183 7.39162 19.7708 7.39162C19.0233 7.39162 18.4167 6.78495 18.4167 6.03745ZM15.7083 9.28745C15.7083 8.53941 16.315 7.93329 17.0625 7.93329C17.81 7.93329 18.4167 8.53941 18.4167 9.28745C18.4167 10.0344 17.81 10.6416 17.0625 10.6416C16.315 10.6416 15.7083 10.0344 15.7083 9.28745Z" fill="black"/>
+  </svg>
+)
