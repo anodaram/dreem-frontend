@@ -1,27 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useHistory } from "react-router";
 import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
 import { Box } from "@material-ui/core";
+import { useSelector, useDispatch } from "react-redux";
 
 import { socket } from "components/Login/Auth";
-import { MessageList } from "./MessageList";
 import { MessageContent } from "./MessageContent";
-import { MessageProfile } from "./MessageProfile";
 
 import { RootState } from "store/reducers/Reducer";
 import { openMessageBox, sentMessage } from "store/actions/MessageActions";
 import { getMessageBox } from "store/selectors/user";
-
 import URL from "shared/functions/getURL";
-import useWindowDimensions from "shared/hooks/useWindowDimensions";
-import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 
 import "./MessageBox.css";
 
-export const MessageBox = ({ type = "social" }) => {
+export const MessageBox = ({ type = "live" }) => {
   const dispatch = useDispatch();
-  const history = useHistory();
+
   const sourceRef = useRef<any>();
   const userSelector = useSelector((state: RootState) => state.user);
   const messageBoxInfo = useSelector(getMessageBox);
@@ -34,20 +28,6 @@ export const MessageBox = ({ type = "social" }) => {
   const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const width = useWindowDimensions().width;
-  const [mobileShowRoom, setMobileShowRoom] = useState<boolean>(false);
-  const [mediaUpdate, setMediaUpdate] = useState<any>();
-
-  const userInfo = React.useMemo(() => {
-    if (chat && userSelector) {
-      if (chat.users?.userFrom?.userId === userSelector.id) {
-        return chat.users?.userTo;
-      }
-      return chat.users?.userFrom;
-    }
-
-    return null;
-  }, [chat, useSelector]);
 
   useEffect(() => {
     if (chat && chat.room && socket) {
@@ -61,10 +41,6 @@ export const MessageBox = ({ type = "social" }) => {
           msgsArray.push(message);
           return msgsArray;
         });
-
-        /*if (endMessage && endMessage.current) {
-          endMessage.current.scrollIntoView();
-        }*/
 
         let chatObj = {
           room: chat.room,
@@ -250,19 +226,14 @@ export const MessageBox = ({ type = "social" }) => {
   };
 
   return (
-    <Box>
-      <Box display="flex">
-        
-      </Box>
-      <MessageContent
-        chat={chat}
-        setChat={handleSetChat}
-        specialWidthInput={true}
-        messages={messages}
-        setMessages={msgs => setMessages(msgs)}
-        getMessages={getMessages}
-        loadingMessages={loadingMessages}
-      />
-    </Box>
+    <MessageContent
+      chat={chat}
+      setChat={handleSetChat}
+      specialWidthInput={true}
+      messages={messages}
+      setMessages={msgs => setMessages(msgs)}
+      getMessages={getMessages}
+      loadingMessages={loadingMessages}
+    />
   );
 };

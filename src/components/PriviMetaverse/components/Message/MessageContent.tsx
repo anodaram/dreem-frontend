@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 
+import Box from "shared/ui-kit/Box";
 import { MessageItem } from "./MessageItem";
 import { socket } from "components/Login/Auth";
 import { RootState } from "store/reducers/Reducer";
@@ -15,13 +16,13 @@ import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import FileAttachment, { FileType } from "shared/ui-kit/FileAttachment";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 import { onUploadNonEncrypt } from "shared/ipfs/upload";
-import { Box } from "@material-ui/core";
 
 import "./MessageBox.css";
 import Moment from "react-moment";
 
 export const MessageFooter = props => {
-  const { chat, messages, setMessages, specialWidthInput, type = "social", setMediaUpdate } = props;
+  const { chat, messages, setMessages, specialWidthInput, type = "live", setMediaUpdate } = props;
+
   const dispatch = useDispatch();
   const userSelector = useSelector((state: RootState) => state.user);
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
@@ -438,10 +439,6 @@ export const MessageFooter = props => {
     setMsg("");
   };
 
-  const toggleEmojiPicker = () => {
-    setShowEmoji(!showEmoji);
-  };
-
   const addEmoji = (e, emojiObject) => {
     let emoji = emojiObject.emoji;
     setMsg(msg + emoji);
@@ -457,47 +454,57 @@ export const MessageFooter = props => {
   return (
     <div className="message-footer1">
       {!audioMessage && (
-        <>
-          <FileAttachment setStatus={setStatus} onFileChange={onFileChange} />
-          <img
-            src={require("assets/icons/emoji_icon.svg")}
-            className="emoji-icon"
-            onClick={toggleEmojiPicker}
-            ref={emojiRef}
-          />
-          {showEmoji && (
-            <EmojiPane
-              open={showEmoji}
-              anchorEl={emojiRef.current}
-              handleClose={() => setShowEmoji(false)}
-              addEmoji={addEmoji}
+        <Box display="flex" alignItems="top">
+          <Box
+            display="flex"
+            alignItems="top"
+            bgcolor="rgba(21, 21, 21, 0.3)"
+            style={{
+              border: "2px solid rgba(255, 255, 255, 0.5)",
+            }}
+          >
+            <InputWithLabelAndTooltip
+              overriedClasses="input"
+              inputValue={msg}
+              placeHolder="Message"
+              type="text"
+              onInputValueChange={e => setMsg(e.target.value)}
+              onKeyDown={e => {
+                if (!e.shiftKey && e.key === "Enter") {
+                  sendMessage();
+                  e.preventDefault();
+                }
+              }}
+              style={{
+                background: "transparent",
+                borderRadius: 0,
+                border: "none",
+                color: "white",
+                fontFamily: "Rany",
+                fontWeight: 500,
+              }}
+              reference={inputRef}
+              multiline
             />
-          )}
-        </>
-      )}
-      {!audioMessage && (
-        <InputWithLabelAndTooltip
-          overriedClasses="input"
-          inputValue={msg}
-          placeHolder="Message"
-          type="text"
-          onInputValueChange={e => setMsg(e.target.value)}
-          onKeyDown={e => {
-            if (!e.shiftKey && e.key === "Enter") {
-              sendMessage();
-              e.preventDefault();
-            }
-          }}
-          style={{ background: "#F7F9FE" }}
-          reference={inputRef}
-          multiline
-        />
-      )}
-
-      {!audioMessage && (
-        <div className="send-icon" onClick={() => sendMessage()}>
-          <img src={require("assets/icons/send_icon.svg")} />
-        </div>
+            <Box component="span" onClick={() => sendMessage()} mx="8px" mt="8px">
+              <img src={require("assets/icons/send_icon.svg")} alt="" />
+            </Box>
+          </Box>
+          <Box display="flex" alignItems="center" marginTop="10px" height="fit-content">
+            <Box className="emoji-icon" onClick={() => setShowEmoji(!showEmoji)} component="span">
+              <img src={require("assets/icons/emoji_icon.png")} ref={emojiRef} />
+            </Box>
+            {showEmoji && (
+              <EmojiPane
+                open={showEmoji}
+                anchorEl={emojiRef.current}
+                handleClose={() => setShowEmoji(false)}
+                addEmoji={addEmoji}
+              />
+            )}
+            <FileAttachment setStatus={setStatus} onFileChange={onFileChange} />
+          </Box>
+        </Box>
       )}
       {audioMessage && (
         <RecordingBox
@@ -648,7 +655,6 @@ export const MessageContent = ({
           </div>
         ) : (
           <div className="no-items-label">
-            <img src={require("assets/icons/messages.png")} alt="messages" style={{ width: "100px" }} />
             <div style={{ fontSize: 14 }}>No messages in the chat yet.</div>
           </div>
         )}
