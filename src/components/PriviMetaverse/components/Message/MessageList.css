@@ -1,0 +1,88 @@
+.message-list-items .message-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.message-list-items .message-list-header h4 {
+  margin: 0;
+}
+
+.message-list-items .message-list-header img {
+  cursor: pointer;
+}
+
+.message-list-items .message-list-header img:first-child {
+  transform: rotate(180deg);
+  width: 8px;
+}
+
+.message-list-items .item-list {
+  margin-top: 30px;
+  cursor: pointer;
+  height: calc(100% - 170px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding-bottom: 50px;
+}
+
+.message-list-items .item-list .item {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  padding: 8px;
+}
+
+.message-list-items .item-list .item.selected {
+  background: #DBDDE2;
+}
+
+.message-list-items .item-list .avatar-container {
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.2));
+  width: 54px;
+  height: 52px;
+  padding: 2px;
+  margin-right: 20px;
+}
+.message-list-items .item-list .avatar-container .message-list-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+.message-list-items .item-list .item-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex: 1;
+  overflow: hidden;
+}
+.message-list-items .item-list .item-content .name {
+  margin-bottom: 3px;
+  color: #2D3047;
+  font-size: 14px;
+  line-height: 120%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.message-list-items .item-list .item-content .message {
+  margin-bottom: 3px;
+  color: #949bab;
+  font-size: 14px;
+}
+.message-list-items .item-list .item-content .date {
+  margin-bottom: 3px;
+  color: #949bab;
+  font-size: 11px;
+}
+
+.message-list-items .search-inputbox .input {
+  font-size: 14px;
+  background: #f7f9fe;
+}

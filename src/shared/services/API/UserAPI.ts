@@ -32,3 +32,13 @@ export async function userTrackMarketPlace(): Promise<any> {
     console.log(e);
   }
 }
+
+export async function checkUserConnected(userId: string): Promise<any> {
+  try {
+    const response = await axios.get(`${URL()}/user/checkUserConnected/${userId}`);
+    return response?.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
