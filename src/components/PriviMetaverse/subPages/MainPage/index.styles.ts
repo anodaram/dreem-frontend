@@ -58,6 +58,34 @@ export const homePageStyles = makeStyles(theme => ({
       paddingRight: 26,
     },
   },
+
+  tab: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    background: "transparent",
+    borderRadius: "2px",
+    color: "white",
+    cursor: "pointer",
+    padding: "10px 96px 6px",
+    fontFamily: "GRIFTER",
+    fontSize: "16px",
+    lineHeight: "120%",
+    textTransform: "uppercase",
+    [theme.breakpoints.down("md")]: {
+      fontSize: "12px",
+      padding: "10px 33px 6px",
+    },
+    [theme.breakpoints.down("sm")]: {
+      marginRight: "0px",
+      padding: "8px 16px 4px",
+    },
+  },
+  selected: {
+    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+    color: "#212121",
+  },
   fitContent: {
     position: "relative",
     maxWidth: 1280,
