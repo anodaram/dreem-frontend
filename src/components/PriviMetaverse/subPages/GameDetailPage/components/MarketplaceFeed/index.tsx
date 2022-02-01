@@ -122,9 +122,16 @@ export default function MarketplaceFeed({Chain}: {Chain: any}) {
     }
   };
 
-  const handleFilterStatus = e => {
+  // const handleFilterStatus = e => {
+  //   setLastId(undefined);
+  //   setFilterStatus(e.target.value);
+  //   setHasMore(true);
+  //   setNfts([]);
+  // };
+
+  const handleFilterStatus = (status) => {
     setLastId(undefined);
-    setFilterStatus(e.target.value);
+    setFilterStatus(status);
     setHasMore(true);
     setNfts([]);
   };
@@ -206,85 +213,25 @@ export default function MarketplaceFeed({Chain}: {Chain: any}) {
           width={isMobile ? 1 : "auto"}
           justifyContent={isMobile ? "flex-end" : "flex-start"}
         >
-          <Select
-            open={openStatusSelect}
-            onClose={() => setOpenStatusSelect(false)}
-            value={filterStatus}
-            onChange={handleFilterStatus}
-            className={classes.select}
-            renderValue={(value: any) => (
-              <Box display="flex" alignItems="center" onClick={() => setOpenStatusSelect(true)}>
-                <label>STATUS&nbsp;&nbsp;</label>
-                <span>{value}</span>
-              </Box>
-            )}
-            MenuProps={{
-              classes: filterClasses,
-              anchorOrigin: {
-                vertical: "bottom",
-                horizontal: "left",
-              },
-              transformOrigin: {
-                vertical: "top",
-                horizontal: "left",
-              },
-              getContentAnchorEl: null,
-            }}
-            IconComponent={ArrowIconComponent(setOpenStatusSelect)}
-          >
-            {filterStatusOptions.map((status, index) => (
-              <MenuItem key={`filter-status-${index}`} value={status}>
-                {status}
-              </MenuItem>
-            ))}
-          </Select>
+          <Box className={classes.tabTitle} mb={2}>
+            marketplace feed 
+          </Box>
         </Box>
         <Box className={classes.optionSection} mt={isMobile ? 1 : 0}>
-          <div className={classes.filterButtonBox}>
-            {showSearchBox && (
-              <InputWithLabelAndTooltip
-                type="text"
-                inputValue={searchValue}
-                placeHolder="Search"
-                onInputValueChange={e => {
-                  setLastId(undefined);
-                  setSearchValue(e.target.value);
-                  setHasMore(true);
-                  setNfts([]);
-                }}
-                style={{
-                  background: "transparent",
-                  margin: 0,
-                  marginRight: 8,
-                  marginLeft: 8,
-                  padding: 0,
-                  border: "none",
-                  height: "auto",
-                }}
-                theme="dark"
-              />
-            )}
-            <Box
-              onClick={() => setShowSearchBox(prev => !prev)}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              style={{ cursor: "pointer" }}
-            >
-              <SearchIcon />
-            </Box>
-          </div>
+          <Box className={classes.statusButtonBox} mt={1} mb={1}>
+          {filterStatusOptions.map((status, index) => (
+              <PrimaryButton onClick={()=>{handleFilterStatus(status)}} size="medium" className={filterStatus===status?classes.statusSelectedButton:classes.statusButton}>
+              {status}
+            </PrimaryButton>
+            ))}
+          </Box>
         </Box>
       </Box>
-      <Box className={classes.root} width={1}>
+      {/* <Box className={classes.root} width={1}>
         <Stats title="Total Stats" items={totalStatsItems} />
         <Stats title="Weekly Stats" items={weeklyStatsItems} />
-      </Box>
-
-      <Box
-        className={classes.fitContent}
-        style={{ paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}
-      >
+      </Box> */}
+      <Box>
         <InfiniteScroll
           hasChildren={nfts?.length > 0}
           dataLength={nfts?.length}

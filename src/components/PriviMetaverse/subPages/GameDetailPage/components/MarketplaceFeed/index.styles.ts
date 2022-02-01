@@ -10,7 +10,18 @@ export const marketplaceFeedStyles = makeStyles(theme => ({
       flexDirection: "column",
     },
   },
-
+  tabTitle: {
+    fontFamily: "GRIFTER", 
+    fontStyle: "normal", 
+    fontWeight: "bold", 
+    fontSize: "34px", 
+    lineHeight: "120%", 
+    letterSpacing: "0.02em", 
+    textTransform: "uppercase",
+    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
+    "-webkit-text-fill-color": "transparent",
+    "-webkit-background-clip": "text",
+  },
   optionSection: {
     display: "flex",
     alignItems: "center",
@@ -31,6 +42,27 @@ export const marketplaceFeedStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       padding: "8px",
     },
+  },
+  statusButtonBox: {
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
+    borderRadius: "100vh",
+    color: "white",
+  },
+  statusButton: {
+    backgroundColor: "transparent !important",
+    border: "2px solid rgba(255,255,255,0.5) !important",
+    borderRadius: "0px !important",
+    minWidth: "auto !important",
+    [theme.breakpoints.down("xs")]: {
+      padding: "0 12px",
+    }
+  },
+  statusSelectedButton: {
+    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+    color: "#212121 !important",
+    borderRadius: "0px !important",
   },
   controlBox: {
     display: "flex",
