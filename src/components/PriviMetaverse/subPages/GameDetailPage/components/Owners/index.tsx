@@ -82,11 +82,28 @@ export default function Owners() {
 
 
   return (
-    <Box width={1}>
-      <Box
-        className={classes.fitContent}
-        style={{ paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}
+    <>
+    <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        width={1}
+        mt={4}
+        flexDirection={isMobile ? "column" : "row"}
       >
+        <Box
+          display="flex"
+          alignItems="flex-end"
+          flexWrap="wrap"
+          width={isMobile ? 1 : "auto"}
+          justifyContent={isMobile ? "flex-end" : "flex-start"}
+        >
+          <Box className={classes.tabTitle} mb={2}>
+            collection owners
+          </Box>
+        </Box>
+      </Box>
+      <Box>
         <InfiniteScroll
           hasChildren={owners?.length > 0}
           dataLength={owners?.length}
@@ -118,7 +135,7 @@ export default function Owners() {
         >
         {
           tableData.length > 0 && (
-            <Box className={classes.root}>
+            <Box className={classes.table}>
               <CustomTable
                 variant={Variant.Transparent}
                 headers={TABLEHEADER}
@@ -136,6 +153,7 @@ export default function Owners() {
           </Box>
         )}
       </Box>
-    </Box>
+    </>
+
   );
 }
