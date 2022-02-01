@@ -63,6 +63,10 @@ export const marketplaceFeedStyles = makeStyles(theme => ({
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
     color: "#212121 !important",
     borderRadius: "0px !important",
+    minWidth: "auto !important",
+    [theme.breakpoints.down("xs")]: {
+      padding: "0 12px",
+    }
   },
   controlBox: {
     display: "flex",
