@@ -51,6 +51,15 @@ export const useStyles = makeStyles(theme => ({
     fontWeight: 700,
     color: "#212121",
   },
+  orderTag: {
+    fontSize: 12,
+    fontWeight: 500,
+    fontFamily: "Rany",
+    color: "#E9FF26",
+    background: "#313321",
+    borderRadius: 4,
+    padding: "11px 7px",
+  },
   typo1: {
     fontSize: 16,
     fontFamily: "Grifter",
