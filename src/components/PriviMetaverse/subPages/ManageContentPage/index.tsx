@@ -331,7 +331,7 @@ export default function ManageContentPage() {
               handleAsset(asset);
             }}
           />
-        )}{console.log("===========", selectedAsset)}
+        )}
         {step === 2 && selectedAsset?.key === "WORLD" && (
           <CreateNFTFlow
             metaData={metaDataForModal}
@@ -340,7 +340,6 @@ export default function ManageContentPage() {
         )}
         {step === 2 && selectedAsset?.key === "TEXTURE" && (
           <CreateTextureFlow
-            metaData={metaDataForModal}
             handleCancel={handlePrev}
           />
         )}
