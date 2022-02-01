@@ -30,7 +30,7 @@ const nftWithRoyalty = network => {
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
           .mintWithRoyalty(to, uri, rAddress, bps, '')
-          .send({ from: account, gas: gas })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei')})
           .on("transactionHash", function (hash) {
             console.log("transaction hash:", hash);
             setTxModalOpen(true);
