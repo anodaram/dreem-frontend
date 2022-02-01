@@ -31,10 +31,10 @@ export const getFeaturedWorlds = async filters => {
         filters,
         isPublic: true,
         page: {
-          page : 1,
-          size : 10000,
-          sort : "DESC"
-        }
+          page: 1,
+          size: 10000,
+          sort: "DESC",
+        },
       },
       config
     );
@@ -61,9 +61,9 @@ export const getWorlds = async (
   try {
     let params: any = {};
     let page = {
-      page : pageNum,
-      size : portion,
-      sort : "DESC"
+      page: pageNum,
+      size: portion,
+      sort: "DESC",
     };
     params = { ...params, page };
     params = filters ? { ...params, filters } : params;
@@ -92,18 +92,13 @@ export const getWorlds = async (
   }
 };
 
-export const getCollections = async (
-  portion = 10,
-  pageNum = 1,
-  sorting = "DESC",
-  ownerId?: string,
-) => {
+export const getCollections = async (portion = 10, pageNum = 1, sorting = "DESC", ownerId?: string) => {
   try {
     let params: any = {};
     let page = {
-      page : pageNum,
-      size : portion,
-      sort : sorting
+      page: pageNum,
+      size: portion,
+      sort: sorting,
     };
     params = { ...params, page };
     params = ownerId ? { ...params, ownerId } : params;
@@ -133,10 +128,7 @@ export const getCollection = async collectionId => {
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(
-      `${METAVERSE_URL()}/web/public/collections/${collectionId}/`,
-      config
-    );
+    const resp = await axios.get(`${METAVERSE_URL()}/web/public/collections/${collectionId}/`, config);
     if (resp.data) {
       return resp.data;
     }
@@ -151,10 +143,7 @@ export const getNFTInfo = async itemId => {
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(
-      `${METAVERSE_URL()}/web/itemVersions/${itemId}/nft/`,
-      config
-    );
+    const resp = await axios.get(`${METAVERSE_URL()}/web/itemVersions/${itemId}/nft/`, config);
     if (resp.data) {
       return resp.data;
     }
@@ -191,13 +180,12 @@ export const uploadCollection = async payload => {
     const formData = new FormData();
 
     Object.keys(payload).forEach(key => {
-      if (key === "erc721CollectionImage")
-        formData.append(key, payload[key], payload[key].name);
+      if (key === "erc721CollectionImage") formData.append(key, payload[key], payload[key].name);
       else formData.append(key, payload[key]);
     });
 
     const token = localStorage.getItem("token");
-    console.log('----- token is : ', token)
+    console.log("----- token is : ", token);
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
@@ -255,7 +243,12 @@ export const getWorld = async worldId => {
   }
 };
 
-export const getCharacters = async (worldId?: any, featured: undefined | boolean = undefined, ids?: any, isPublic: undefined | boolean = true) => {
+export const getCharacters = async (
+  worldId?: any,
+  featured: undefined | boolean = undefined,
+  ids?: any,
+  isPublic: undefined | boolean = true
+) => {
   const body: any = {};
   // if (worldId) {
   //   body.worldIds = [Number(worldId)];
@@ -270,9 +263,9 @@ export const getCharacters = async (worldId?: any, featured: undefined | boolean
     body.isPublic = isPublic;
   }
   let pageData = {
-    page : 1,
-    size : 10000,
-    sort : "DESC"
+    page: 1,
+    size: 10000,
+    sort: "DESC",
   };
   body.page = pageData;
   body.filters = ["CHARACTER"];
@@ -305,7 +298,16 @@ export const getCharacterData = async characterId => {
   }
 };
 
-export const convertToNFTWorld = async (worldId, contractAddress, chain, nftId, metadataCID, owner, royaltyAddress, royaltyPercentage) => {
+export const convertToNFTWorld = async (
+  worldId,
+  contractAddress,
+  chain,
+  nftId,
+  metadataCID,
+  owner,
+  royaltyAddress,
+  royaltyPercentage
+) => {
   try {
     const token = localStorage.getItem("token");
     const config = {
@@ -314,13 +316,13 @@ export const convertToNFTWorld = async (worldId, contractAddress, chain, nftId, 
     const resp = await axios.post(
       `${METAVERSE_URL()}/web/itemVersions/${worldId}/mint/`,
       {
-        collectionAddress : contractAddress,
-        tokenIds : nftId,
-        ownerAddress : owner,
-        metadataUrl : metadataCID,
-        chain : chain,
-        royaltyPercentage : royaltyPercentage,
-        royaltyAddress : royaltyAddress
+        collectionAddress: contractAddress,
+        tokenIds: nftId,
+        ownerAddress: owner,
+        metadataUrl: metadataCID,
+        chain: chain,
+        royaltyPercentage: royaltyPercentage,
+        royaltyAddress: royaltyAddress,
       },
       config
     );
@@ -376,11 +378,14 @@ export const getUploadMetadata = async () => {
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.post(`${METAVERSE_URL()}/public/getCoreText/`, {
-      "key" : "upload_metadata"
-    },
-    config);
-    console.log('----resp', resp)
+    const resp = await axios.post(
+      `${METAVERSE_URL()}/public/getCoreText/`,
+      {
+        key: "upload_metadata",
+      },
+      config
+    );
+    console.log("----resp", resp);
     if (resp.data) {
       return resp.data;
     }
@@ -414,10 +419,22 @@ export const getAssetTypes = async () => {
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(
-      `${METAVERSE_URL()}/web/create/assets/`,
-      config
-    );
+    const resp = await axios.get(`${METAVERSE_URL()}/web/create/assets/`, config);
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAssetMetadata = async (item: string) => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.post(`${METAVERSE_URL()}/web/create/assets/`, { item }, config);
     if (resp.data) {
       return resp.data;
     }
