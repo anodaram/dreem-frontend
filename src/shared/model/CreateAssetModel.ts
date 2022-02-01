@@ -12,7 +12,7 @@ export default class CreateAssetModel
 
   constructor(data: any)
   {
-    this.key = data.key;
+    this.key = data.item;
     this.interactable = data.interactable;
     this.name = TextModel.construct(data.name);
     this.icon = data.icon;
