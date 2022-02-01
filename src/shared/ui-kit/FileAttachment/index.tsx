@@ -154,7 +154,7 @@ const FileAttachment = ({ setStatus, onFileChange }: FileAttachmentProps) => {
     <div className="file-attachment">
       <img
         className={classes.attachment}
-        src={require("assets/icons/pix_attachment_icon.svg")}
+        src={require("assets/icons/file_attachment.svg")}
         alt="Attachment"
         onClick={uploadAttachment}
       />

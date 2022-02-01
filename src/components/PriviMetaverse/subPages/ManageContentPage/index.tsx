@@ -51,6 +51,7 @@ export default function ManageContentPage() {
   const [metaDataForModal, setMetaDataForModal] = useState<any>(null);
   const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
   const [chain, setChain] = useState<string>(BlockchainNets[0].value);
+  const [networkName, setNetworkName] = useState<string>("");
 
   const [step, setStep] = useState<number>(0);
   const [worldCurStep, setWorldCurStep] = useState<number>(1);
@@ -82,6 +83,13 @@ export default function ManageContentPage() {
   const videoInputRef = useRef<HTMLInputElement>(null);
   const unityInputRef = useRef<HTMLInputElement>(null);
   const entityInputRef = useRef<HTMLInputElement>(null);
+  const [isRoyalty, setIsRoyalty] = useState<boolean>();
+  const [royaltyAddress, setRoyaltyAddress] = useState<string>("");
+  const [royaltyPercentage, setRoyaltyPercentage] = useState<string>("");
+  const [currentCollection, setCurrentCollection] = useState<any>(null);
+  const [uploadSuccess, setUploadSuccess] = useState<any>(null);
+  const [savingDraft, setSavingDraft] = useState<any>();
+  const [metadataImage, setMetadataImage] = useState<string>("");
 
   const [hasUnderMaintenanceInfo, setHasUnderMaintenanceInfo] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState<CreateAssetModel>();
@@ -257,6 +265,198 @@ export default function ManageContentPage() {
     }
   };
 
+  const validate = () => {
+    if (!title || !description || !image || !unity) {
+      return false;
+    }
+
+    // if (!video) {
+    //   showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
+    //   return false;
+    // }
+
+    // if (title.length < metaDataForModal?.worldTitle.limit.min || title.length > metaDataForModal?.worldTitle.limit.max) {
+    //   showAlertMessage(
+    //     `Name field invalid. Must be alphanumeric and contain from ${metaDataForModal?.worldTitle.limit.min} to ${metaDataForModal?.worldTitle.limit.max} characters`,
+    //     {
+    //       variant: "error",
+    //     }
+    //   );
+    //   return false;
+    // } else if (
+    //   description.length < metaDataForModal?.worldDescription.limit.min ||
+    //   description.length > metaDataForModal?.worldDescription.limit.max
+    // ) {
+    //   showAlertMessage(
+    //     `Description field invalid. Must be alphanumeric and contain from ${metaDataForModal?.worldDescription.limit.min} to ${metaDataForModal?.worldDescription.limit.max} characters`,
+    //     { variant: "error" }
+    //   );
+    //   return false;
+    // } else if (image.size > metaDataForModal?.worldImage.limit.maxBytes) {
+    //   showAlertMessage(`Image field invalid. Size cannot exceed ${metaDataForModal?.worldImage.limit.readable}`, {
+    //     variant: "error",
+    //   });
+    //   return false;
+    // } else if (video && video.size > metaDataForModal?.worldVideo.limit.maxBytes) {
+    //   showAlertMessage(`Video field invalid. Size cannot exceed ${metaDataForModal?.worldVideo.limit.readable}`, {
+    //     variant: "error",
+    //   });
+    //   return false;
+    // } else if (
+    //   !metaDataForModal?.worldLevel.supportedFormats.toString().includes(unity.name.split(".").reverse()[0])
+    // ) {
+    //   showAlertMessage(`World file is invalid.`, { variant: "error" });
+    //   return false;
+    // } else if (unity.size > metaDataForModal?.worldLevel.limit.maxBytes) {
+    //   showAlertMessage(`World file invalid. Size cannot exceed ${metaDataForModal?.worldLevel.limit.readable}`, {
+    //     variant: "error",
+    //   });
+    //   return false;
+    // } else if (!entity.name.includes(metaDataForModal?.worldMeta.supportedFormats.toString())) {
+    //   showAlertMessage(`World data is invalid.`, { variant: "error" });
+    //   return false;
+    // } else if (entity.size > metaDataForModal?.worldMeta.limit.maxBytes) {
+    //   showAlertMessage(`World data invalid. Size cannot exceed ${metaDataForModal?.worldMeta.limit.readable}`, {
+    //     variant: "error",
+    //   });
+    //   return false;
+    // } else return true;
+  };
+
+  const handleSaveDraft = async () => {
+    if (validate()) {
+      let payload: any = {};
+      let collectionAddr = currentCollection.address;
+      let tokenId;
+
+      payload = {
+        collectionId: currentCollection.id,
+        worldTitle: title,
+        worldDescription: description,
+        worldImage: image,
+        worldLevel: unity,
+        worldData: entity,
+        isPublic: isPublic,
+      };
+
+      if (video) payload.worldVideo = video;
+
+      setShowUploadingModal(true);
+      setProgress(0);
+      MetaverseAPI.uploadWorld(payload).then(async res => {
+        if (!res.success) {
+          showAlertMessage(`Failed to upload world`, { variant: "error" });
+          // setShowUploadingModal(false);
+          setUploadSuccess(false);
+        } else {
+          setSavingDraft(res.data);
+          // setShowUploadingModal(false);
+          setUploadSuccess(true);
+          showAlertMessage(`Created draft successfully`, { variant: "success" });
+        }
+      });
+    }
+  };
+  const mintNFT = async () => {
+    if(!savingDraft){
+      showAlertMessage(`Save draft first`, { variant: "error" });
+      return;
+    }
+    let collectionData = currentCollection;
+    let metadata = savingDraft.metadata;
+    let collectionAddr = collectionData.address;
+    let isDraft = collectionData?.kind == "DRAFT" ? true : false;
+
+    const metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
+
+    const targetChain = BlockchainNets.find(net => net.value === chain);
+    setNetworkName(targetChain.name);
+    if (chainId && chainId !== targetChain?.chainId) {
+      const isHere = await switchNetwork(targetChain?.chainId || 0);
+      if (!isHere) {
+        showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+        return;
+      }
+    }
+    if(!library) {
+      showAlertMessage("Please check your network", { variant: "error" });
+      return;
+    }
+    const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
+    console.log(uri);
+    setMetadataImage(metadata.image);
+    const web3APIHandler = targetChain.apiHandler;
+    const web3 = new Web3(library.provider);
+    console.log("----metadata:", metaData, isDraft);
+
+    if (isDraft) {
+      console.log("here-----");
+      const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
+        web3,
+        account,
+        {
+          name: collectionData.name,
+          symbol: collectionData.symbol,
+          uri,
+          isRoyalty,
+          royaltyAddress,
+          royaltyPercentage
+        },
+        setTxModalOpen,
+        setTxHash
+      );
+      if (resRoyalty.success) {
+        setTxSuccess(true);
+        showAlertMessage(`Successfully world minted`, { variant: "success" });
+
+        await MetaverseAPI.convertToNFTWorld(
+          savingDraft.item.id,
+          resRoyalty.contractAddress,
+          targetChain.name,
+          [resRoyalty.tokenId],
+          metaData.newFileCID,
+          account,
+          royaltyAddress,
+          royaltyPercentage
+        );
+      } else {
+        setTxSuccess(false);
+      }
+    } else {
+      const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
+        web3,
+        account,
+        {
+          collectionAddress: collectionAddr,
+          to: account,
+          uri,
+          isRoyalty,
+          royaltyAddress,
+          royaltyPercentage
+        },
+        setTxModalOpen,
+        setTxHash
+      );
+
+      if (contractRes.success) {
+        setTxSuccess(true);
+        showAlertMessage(`Successfully world minted`, { variant: "success" });
+        console.log(contractRes);
+        await MetaverseAPI.convertToNFTWorld(
+          savingDraft.item.id,
+          contractRes.collectionAddress,
+          targetChain.name,
+          [contractRes.tokenId],
+          metaData.newFileCID,
+          contractRes.owner,
+          royaltyAddress,
+          royaltyPercentage
+        );
+      } else {
+        setTxSuccess(false);
+      }
+    }
+  };
   return (
     <>
       <div className={classes.root} id="scrollContainer">
