@@ -109,13 +109,11 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   },
   title: {
     fontFamily: "GRIFTER",
-    fontSize: 40,
+    fontSize: 32,
     fontWeight: 700,
-    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
-    "-webkit-text-fill-color": "transparent",
-    "-webkit-background-clip": "text",
+    color: "#fff",
     textTransform: "uppercase",
-    textAlign: "center",
+    textAlign: "left",
     [theme.breakpoints.down(950)]: {
       fontSize: 28,
     },
@@ -144,7 +142,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   },
   primaryButton: {
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
-    borderRadius: "10px !important",
+    borderRadius: "5px !important",
     fontFamily: "GRIFTER",
     fontWeight: "bold",
     fontSize: "16px important",
@@ -154,7 +152,25 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       fontSize: "12px !important",
       width: "193px !important",
-    },
+    }
+  },
+  gamePlayButton: {
+    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+    borderRadius: "100px !important",
+    fontFamily: "GRIFTER",
+    fontWeight: "bold",
+    fontSize: "16px important",
+    color: "#212121 !important",
+    border: "none !important",
+    padding: "2px 24px !important",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "35px",
+
+    '& svg': {
+      marginRight: '13px'
+    }
   },
   subTitleSection: {
     display: "flex",
@@ -408,6 +424,39 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       borderRadius: 6,
     },
   },
+  gameslider: {
+    border: "2px solid transparent",
+    borderImageSource: "linear-gradient(180deg, rgba(255, 255, 255, 0) 42%, #E9FF26 100%)",
+    borderImageSlice: "30%",
+  },
+  gameContent: {
+    backgroundImage: 'linear-gradient(to top, rgba(0,0,0,1), rgba(255,0,0,0))'
+  },
+  gameBgImage: {
+    position: 'absolute',
+    width: '100% !important',
+    height: '100% !important',
+    zIndex: -1
+  },
+  sliderFooter: {
+    position: 'absolute',
+    bottom: '-38px'
+  },
+  sliderLeft: {
+    position: 'absolute',
+    bottom: '100px',
+    left: '-56px'
+  },
+  sliderRight: {
+    position: 'absolute',
+    top: '90px',
+    right: '-65px'
+  },
+  sliderRect: {
+    position: 'absolute',
+    bottom: 0,
+    right: '-59px'
+  }
 }));
 
 export const useFilterSelectStyles = makeStyles({
@@ -439,7 +488,7 @@ export const useFilterSelectStyles = makeStyles({
         border: "solid 1px #E9FF26",
       },
     },
-  },
+  }
 });
 
 export const useTabsStyles = makeStyles(theme => ({
