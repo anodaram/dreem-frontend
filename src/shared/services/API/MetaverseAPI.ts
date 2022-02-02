@@ -280,6 +280,7 @@ export const getCharacters = async (
     }
   } catch (error) {
     console.log("error in getCharacters:", error);
+    throw error
   }
 };
 
