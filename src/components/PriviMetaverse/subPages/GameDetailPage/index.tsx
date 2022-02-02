@@ -32,8 +32,9 @@ import {
 } from "store/actions/MarketPlace";
 import { setRealmsList, setScrollPositionInRealms } from "store/actions/Realms";
 import { NftStates } from "shared/constants/constants";
-import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
+import TotalStats from "./components/TotalStats";
+import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 
 const SECONDS_PER_HOUR = 3600;
 
@@ -469,6 +470,14 @@ export default function GameDetailPage() {
                 </>
               )}
               <Box className={classes.description}>{gameInfo?.Description}</Box>
+            </Box>
+          </Box>
+          <Box display={"flex"} alignItems={"center"} my={3.5}>
+            <Box width={"55%"} mr={1.5}>
+              <TotalStats />
+            </Box>
+            <Box width={"calc(45% - 12px)"}>
+              <TotalStats />
             </Box>
           </Box>
           <TabsView
