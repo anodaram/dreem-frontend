@@ -307,13 +307,17 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   allNFTTitle: {
     display: "flex",
     alignItems: "center",
-    fontSize: 24,
-    fontWeight: 800,
-    color: "#431AB7",
-    fontFamily: "Agrandir GrandHeavy",
-    lineHeight: "130%",
+    justifyContent: "space-between",
+    fontSize: 34,
+    fontWeight: 700,
+    fontFamily: "GRIFTER",
+    lineHeight: "40.8px",
+    textTransform: "uppercase",
+    paddingBottom: 25,
     "& span": {
-      paddingBottom: 25,
+      background: "linear-gradient(90deg, #EDFF1C, #ED7B7B)",
+      "-webkit-text-fill-color": "transparent",
+      "-webkit-background-clip": "text",
     },
     "& img": {
       width: 80,
@@ -323,4 +327,11 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       fontSize: 25,
     },
   },
+  showAll: {
+    border: "2px solid rgba(255, 255, 255, 0.5) !important",
+    borderRadius: "12px !important",
+    textTransform: "uppercase",
+    background: "transparent !important",
+    color: "#FFFFFF !important",
+  }
 }));

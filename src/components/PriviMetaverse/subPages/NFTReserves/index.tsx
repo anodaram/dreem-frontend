@@ -3,7 +3,7 @@ import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import Carousel from "react-elastic-carousel";
 
-import { useTheme, useMediaQuery} from "@material-ui/core";
+import { useTheme, useMediaQuery, Hidden} from "@material-ui/core";
 
 import { RootState } from "store/reducers/Reducer";
 import {
@@ -31,6 +31,7 @@ import { GameSlider } from "components/PriviMetaverse/components/GameSlider";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
 import { Skeleton } from "@material-ui/lab";
 import FeaturedGameCard from "components/PriviMetaverse/components/cards/FeatureGameCard";
+import { getAllGameNFTs } from "shared/services/API/ReserveAPI";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -103,7 +104,9 @@ const NFTReserves = () => {
   const [pagination, setPagination] = useState<number>(0);
   const [loadingCollections, setLoadingCollections] = useState<boolean>(false);
   const [loadingFeaturedGames, setLoadingFeaturedGames] = useState<boolean>(false);
+  const [loadingNewListings, setLoadingNewListings] = useState<boolean>(false);
   const [openHowWorksModal, setOpenHowWorksModal] = useState<boolean>(false);
+  const [newListings, setNewListings] = useState<any[]>([]);
 
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const allNFTList = useSelector((state: RootState) => state.marketPlace.allNFTList);
@@ -144,7 +147,8 @@ const NFTReserves = () => {
   }, []);
 
   useEffect(() => {
-    getCollectionData()
+    getFeaturedGameData()
+    getNewListings()
   }, [])
 
   useEffect(() => {
@@ -152,8 +156,31 @@ const NFTReserves = () => {
       userTrackMarketPlace();
     }
   }, [isSignedin]);
+
+  const getNewListings = async () => {
+    if (loadingNewListings) return;
+
+    try {
+      setLoadingNewListings(true);
+
+      const response = await getAllGameNFTs({
+        mode: isProd ? "main" : "test",
+        network: null,
+        status: null,
+        search: null,
+        lastNFTId: null,
+        lastCollectionId: null,
+        pageSize: 8,
+      });
+
+      const nfts = response.nfts;
+
+      setNewListings(nfts)
+    } catch (err) {}
+    setLoadingNewListings(false);
+  }
   
-  const getCollectionData = () => {
+  const getFeaturedGameData = () => {
     if (loadingFeaturedGames) return;
 
     setLoadingFeaturedGames(true);
@@ -396,16 +423,25 @@ const NFTReserves = () => {
 
                 </div>
               ) : null}
-              {/* <div className={`${classes.allNFTWrapper} ${classes.fitContent}`}>
+              <div className={`${classes.allNFTWrapper} ${classes.fitContent}`}>
                 <div className={classes.allNFTTitle}>
                   <span>New Listings</span>
+                  <Hidden xsDown>
+                    <SecondaryButton
+                      size="medium"
+                      className={classes.showAll}
+                      onClick={() => {}}
+                    >
+                      Show All
+                    </SecondaryButton>
+                  </Hidden>
                 </div>
                 <div className={classes.allNFTSection}>
-                {loading || hasMoreCollections || () ? (
+                {!loadingNewListings || (newListings.length > 0) ? (
                     <>
                       <MasonryGrid
                         gutter={"24px"}
-                        data={collectionsWithSkeleton}
+                        data={newListings}
                         renderItem={(item, index) => <ExploreCard nft={item}  key={`item-${index}`} />}
                           columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS}
                       />
@@ -414,7 +450,7 @@ const NFTReserves = () => {
                     <div></div>
                   )}
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
         </Box>
