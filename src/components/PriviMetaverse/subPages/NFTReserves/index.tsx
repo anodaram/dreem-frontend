@@ -1,78 +1,48 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { useDebounce } from "use-debounce/lib";
-import InfiniteScroll from "react-infinite-scroll-component";
+import Carousel from "react-elastic-carousel";
 
-import { useTheme, useMediaQuery, Select, MenuItem } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
+import { useTheme, useMediaQuery} from "@material-ui/core";
 
 import { RootState } from "store/reducers/Reducer";
 import {
   setTokenList,
-  setSelTabMarketMain,
   setCollectionNFTList,
-  setAllNFTList,
   setScrollPositionInCollection,
   setScrollPositionInAllNFT,
 } from "store/actions/MarketPlace";
 import { setRealmsList, setScrollPositionInRealms } from "store/actions/Realms";
-import MetaverseCard from "components/PriviMetaverse/components/cards/MetaverseCard";
 import Box from "shared/ui-kit/Box";
-import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
-import { NFT_STATUS_COLORS, PrimaryButton, SecondaryButton } from "shared/ui-kit";
-import { getAllGameNFTs } from "shared/services/API/ReserveAPI";
+import { SecondaryButton } from "shared/ui-kit";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
-import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
-import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
-import { toDecimals } from "shared/functions/web3";
-import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
-import SkeletonBox from "shared/ui-kit/SkeletonBox";
 import { useAuth } from "shared/contexts/AuthContext";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
-import TabsView, { TabItem } from "shared/ui-kit/TabsView";
 import { NftStates } from "shared/constants/constants";
-import ExploreCard from "../../components/cards/ExploreCard";
 import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
-import { useFilterSelectStyles, useNFTOptionsStyles, useTabsStyles } from "./index.styles";
+import { useNFTOptionsStyles } from "./index.styles";
+import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
+import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 
 import { ReactComponent as BinanceIcon } from "assets/icons/bsc.svg";
 import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
 import { userTrackMarketPlace } from "shared/services/API";
 import { GameSlider } from "components/PriviMetaverse/components/GameSlider";
-import Axios, { CancelTokenSource } from "axios";
+import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
+import { Skeleton } from "@material-ui/lab";
+import FeaturedGameCard from "components/PriviMetaverse/components/cards/FeatureGameCard";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-const COLUMNS_COUNT_BREAK_POINTS_THREE = {
+const COLUMNS_COUNT_BREAK_POINTS = {
   400: 1,
-  700: 2,
-  1200: 3,
-};
-
-const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
-  400: 1,
-  700: 2,
+  650: 2,
   1200: 3,
   1440: 4,
 };
 
 const SECONDS_PER_HOUR = 3600;
-const PAGE_SIZE = 8;
 
-const TAB_NFTS = "nfts";
-const TAB_EXPLORE_COLLECTIONS = "explore_collections";
-
-const FilterOptionsTabs: TabItem[] = [
-  {
-    key: TAB_NFTS,
-    title: "All NFTs",
-  },
-  {
-    key: TAB_EXPLORE_COLLECTIONS,
-    title: "explore by collections",
-  },
-];
 
 const filterChainOptions = ["All", "BSC", "Polygon"];
 const filterStatusOptions = ["All", ...NftStates];
@@ -125,81 +95,32 @@ const NFTReserves = () => {
   const dispatch = useDispatch();
   const { isSignedin } = useAuth();
   const classes = useNFTOptionsStyles();
-  const filterClasses = useFilterSelectStyles();
-  const tabsClasses = useTabsStyles();
+  const carouselRef = useRef<any>();
 
-  const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const selTab = useSelector((state: RootState) => state.marketPlace.selectedTabMarketMain);
-  const user = useSelector((state: RootState) => state.user);
-  const allNFTList = useSelector((state: RootState) => state.marketPlace.allNFTList);
-  const scrollPosition = useSelector((state: RootState) => state.marketPlace.scrollPositionInAllNFT);
-
-  const width = useWindowDimensions().width;
-  const loadingCount = useMemo(() => (width > 1440 ? 4 : width > 700 ? 3 : width > 400 ? 2 : 1), [width]);
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
-  const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const breakTwo = useMediaQuery(theme.breakpoints.up(700));
-  const breakThree = useMediaQuery(theme.breakpoints.up(1200));
-  const breakFour = useMediaQuery(theme.breakpoints.up(1440));
-
-  const [exploreMetaverses, setExploreMetaverses] = useState<any[]>([]);
-  const [reservedNftList, setReservedNftList] = useState<any[]>(allNFTList || []);
-
-  const lastNFTId = useRef();
-  const lastCollectionId = useRef();
-  const [hasMore, setHasMore] = useState(true);
-  const [hasMoreCollections, setHasMoreCollections] = useState(true);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [featuredGames, setFeaturedGames] = useState<any[]>([]);
+  const [collections, setCollections] = useState<any[]>([]);
+  const [hasMoreCollections, setHasMoreCollections] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<number>(0);
   const [loadingCollections, setLoadingCollections] = useState<boolean>(false);
-  const [isListView, setIsListView] = useState<boolean>(false);
-
-  const [selectedTab, setSelectedTab] = useState<string>(selTab || TAB_NFTS);
-
-  const [showSearchBox, setShowSearchBox] = useState<boolean>(false);
-  const [searchValue, setSearchValue] = useState<string>("");
-  const [debouncedSearchValue] = useDebounce(searchValue, 500);
-
-  const [filterChain, setFilterChain] = useState<string>(filterChainOptions[0]);
-  const [filterStatus, setFilterStatus] = useState<string>(filterStatusOptions[0]);
-
-  const [isFilterChain, setIsFilterChain] = useState<boolean>(false);
-  const [isFilterStatus, setIsFilterStatus] = useState<boolean>(false);
-  const [openChainSelect, setOpenChainSelect] = useState<boolean>(false);
-  const [openStatusSelect, setOpenStatusSelect] = useState<boolean>(false);
-
+  const [loadingFeaturedGames, setLoadingFeaturedGames] = useState<boolean>(false);
   const [openHowWorksModal, setOpenHowWorksModal] = useState<boolean>(false);
 
-  const getAllGameNFTsRef = useRef<CancelTokenSource | undefined>();
+  const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+  const allNFTList = useSelector((state: RootState) => state.marketPlace.allNFTList);
 
-  const tableHeaders: Array<CustomTableHeaderInfo> = [
-    {
-      headerName: "Name",
-      headerAlign: "left",
-    },
-    {
-      headerName: "Owner",
-      headerAlign: "center",
-    },
-    {
-      headerName: "Status",
-      headerAlign: "center",
-    },
-    {
-      headerName: "Direct Purchase",
-      headerAlign: "center",
-    },
-    {
-      headerName: "Block to Buy Later",
-      headerAlign: "center",
-    },
-    {
-      headerName: "Rental Fee (per hour)",
-      headerAlign: "center",
-    },
-  ];
+  const width = useWindowDimensions().width;
+
+  const theme = useTheme();
+  const isNormalScreen = useMediaQuery(theme.breakpoints.down(1800));
+  const isTablet = useMediaQuery(theme.breakpoints.down(1420));
+  const isNarrow = useMediaQuery(theme.breakpoints.down(860));
+  const isMobile = useMediaQuery(theme.breakpoints.down(650));
+
+  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? 4 : 5;
+  const loadingCount = React.useMemo(() => (width > 1700 ? 5
+    : width > 1420 ? 4
+      : width > 1200 ? 3
+        : width > 650 ? 2 : 1), [width]);
 
   const getTokenSymbol = addr => {
     if (tokenList.length == 0 || !addr) return 0;
@@ -223,22 +144,33 @@ const NFTReserves = () => {
   }, []);
 
   useEffect(() => {
+    getCollectionData()
+  }, [])
+
+  useEffect(() => {
     if (isSignedin) {
       userTrackMarketPlace();
     }
   }, [isSignedin]);
+  
+  const getCollectionData = () => {
+    if (loadingFeaturedGames) return;
 
-  useEffect(() => {
-    if (selectedTab === TAB_NFTS) {
-      setHasMore(true);
-      getData(true);
-    } else {
-      setHasMoreCollections(true);
-      setExploreMetaverses([]);
-      getCollectionData(true);
-    }
-  }, [filterChain, filterStatus, debouncedSearchValue, selectedTab]);
-
+    setLoadingFeaturedGames(true);
+    MetaverseAPI.getNftGames(
+      "",
+      "",
+      "ALL"
+    )
+      .then(res => {
+        if (res && res.success) {
+          const items = res.data.items;
+          setFeaturedGames(items)
+        }
+      })
+      .finally(() => setLoadingFeaturedGames(false));
+  };
+  
   const getTokenList = async () => {
     getAllTokenInfos().then(res => {
       if (res.success) {
@@ -247,284 +179,17 @@ const NFTReserves = () => {
     });
   };
 
-  const nftStatus = nft => {
-    if (!nft) {
-      return [];
-    }
-    if (nft.status) {
-      return (Array.isArray(nft.status) ? nft.status : [nft.status]).filter(s => NftStates.includes(s));
-    }
-
-    return [];
-  };
-
-  const userName = nft => {
-    if (!nft.owner) {
-      if (nft.ownerAddress?.toLowerCase() === user.address.toLowerCase()) {
-        return user.firstName || user.lastName
-          ? `${user.firstName} ${user.lastName}`
-          : width > 700
-          ? nft.ownerAddress
-          : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
-            "";
-      }
-      return width > 700
-        ? nft.ownerAddress
-        : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
-            "";
-    } else {
-      let name: string = "";
-      name =
-        nft.owner.firstName || nft.owner.lastName
-          ? `${nft.owner.firstName} ${nft.owner.lastName}`
-          : width > 700
-          ? nft.ownerAddress
-          : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
-            "";
-
-      return name;
-    }
-  };
-
-  const getData = async (isInit = false) => {
-    if (!isInit && (!hasMore || loading)) return;
-
-    if (getAllGameNFTsRef.current) {
-      getAllGameNFTsRef.current.cancel();
-    }
-
-    const network = filterChain !== filterChainOptions[0] ? filterChain : undefined;
-    const status = filterStatus !== filterStatusOptions[0] ? filterStatus : undefined;
-    const search = debouncedSearchValue ? debouncedSearchValue : undefined;
-
-    try {
-      setLoading(true);
-      
-      getAllGameNFTsRef.current = Axios.CancelToken.source();
-      const response = await getAllGameNFTs({
-        mode: isProd ? "main" : "test",
-        network,
-        status,
-        search,
-        lastNFTId: isInit ? undefined : lastNFTId.current,
-        lastCollectionId: lastCollectionId.current,
-        pageSize: PAGE_SIZE,
-      }, getAllGameNFTsRef?.current?.token);
-
-      const newNfts = response.nfts;
-
-      if (!lastNFTId.current || isInit) {
-        setReservedNftList([...newNfts]);
-      } else {
-        setReservedNftList([...reservedNftList, ...newNfts]);
-      }
-      dispatch(setAllNFTList([...allNFTList, ...newNfts]));
-      setHasMore(newNfts.length > 0);
-      if (newNfts.length) {
-        lastNFTId.current = newNfts[newNfts.length - 1].RandomId;
-        lastCollectionId.current = newNfts[newNfts.length - 1].collectionId;
-      }
-    } catch (err) {}
-    setLoading(false);
-  };
-
-  const getCollectionData = (isInit = false) => {
-    if (!isInit && (!hasMoreCollections || loadingCollections)) return;
-
-    setLoadingCollections(true);
-    MetaverseAPI.getNftGames(
-      isInit ? "" : lastNFTId.current ?? "",
-      debouncedSearchValue,
-      filterChain === "All" ? "ALL" : filterChain
-    )
-      .then(res => {
-        if (res && res.success) {
-          const items = res.data.items;
-          setExploreMetaverses(prev => (isInit ? items : [...prev, ...items]));
-          setHasMoreCollections(res.data.hasMore);
-          lastNFTId.current = res.data.lastId;
-        }
-      })
-      .finally(() => setLoadingCollections(false));
-  };
-
-  const tableData = useMemo(() => {
-    let data: Array<Array<CustomTableCellInfo>> = [];
-    if (reservedNftList && reservedNftList.length) {
-      data = reservedNftList.map(row => {
-        return [
-          {
-            rawData: row,
-            cell: (
-              <Box display="flex" flexDirection="row" alignItems="center">
-                <Box className={classes.listNFTImage}>
-                  <SkeletonBox
-                    width="100%"
-                    height="100%"
-                    image={row.image}
-                    style={{
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      borderRadius: isMobile ? "6px" : "8px",
-                    }}
-                  />
-                </Box>
-                <Box mx={isMobile ? 1 : 2} width={isMobile ? 120 : 245} fontSize={16} fontWeight={800}>
-                  {row.name}
-                </Box>
-              </Box>
-            ),
-          },
-          {
-            cell: (
-              <Box color="#ffffff70" textAlign="center">
-                {userName(row)}
-              </Box>
-            ),
-          },
-          {
-            cell: (
-              <Box display="flex">
-                {nftStatus(row).length > 0 &&
-                  nftStatus(row).map(status => (
-                    <span
-                      className={classes.cardOptionButton}
-                      style={{ background: NFT_STATUS_COLORS[status] }}
-                    >
-                      {status}
-                    </span>
-                  ))}
-              </Box>
-            ),
-          },
-          {
-            cell: (
-              <Box textAlign="center">
-                {!nftStatus(row).includes("Blocked") && row?.sellingOffer?.Price
-                  ? `${row.sellingOffer.Price} ${getTokenSymbol(row.sellingOffer.PaymentToken)}`
-                  : "_"}
-              </Box>
-            ),
-          },
-          {
-            cell: (
-              <Box textAlign="center">
-                {!nftStatus(row).includes("Blocked") && row?.blockingSaleOffer?.Price
-                  ? `${row.blockingSaleOffer.Price} ${getTokenSymbol(
-                      row.blockingSaleOffer.PaymentToken
-                    )} for ${row.blockingSaleOffer.ReservePeriod} Hour(s)`
-                  : "_"}
-              </Box>
-            ),
-          },
-          {
-            cell: (
-              <Box textAlign="center">
-                {!nftStatus(row).includes("Blocked") && row?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
-                  ? `${(
-                      +toDecimals(
-                        row.rentSaleOffer.pricePerSecond,
-                        getTokenDecimal(row.rentSaleOffer.fundingToken)
-                      ) * SECONDS_PER_HOUR
-                    ).toFixed(2)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
-                  : "_"}
-              </Box>
-            ),
-          },
-        ];
-      });
-    }
-
-    return data;
-  }, [reservedNftList]);
-
   const handleScroll = e => {
     dispatch(setScrollPositionInAllNFT(e.target.scrollTop));
   };
 
-  const handleFilterChain = e => {
-    lastCollectionId.current = undefined;
-    setIsFilterStatus(false);
-    setIsFilterChain(true);
-    setFilterChain(e.target.value);
-    setHasMore(true);
-    setReservedNftList([]);
-  };
-
-  const handleFilterStatus = e => {
-    lastCollectionId.current = undefined;
-    setIsFilterStatus(true);
-    setIsFilterChain(false);
-    setFilterStatus(e.target.value);
-    setHasMore(true);
-    setReservedNftList([]);
-  };
-
-  const handleOpenExplore = row => {
-    if (!row || !row[0].rawData) return;
-
-    const nft = row[0].rawData;
-    history.push(`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
-  };
-
-  const nftListWithSkeleton = useMemo(() => {
-    if (hasMore) {
-      let addedCount = 1;
-      if (breakFour) {
-        addedCount = 4 - (reservedNftList.length % 4);
-      } else if (breakThree) {
-        addedCount = 3 - (reservedNftList.length % 3);
-      } else if (breakTwo) {
-        addedCount = 2 - (reservedNftList.length % 2);
-      }
-
-      const result = [...reservedNftList];
-      for (let index = 0; index < addedCount; index++) {
-        result.push({});
-      }
-
-      return result;
-    } else {
-      return reservedNftList;
-    }
-  }, [reservedNftList, hasMore, breakTwo, breakThree, breakFour]);
-
-  const collectionListWithSkeleton = useMemo(() => {
-    if (hasMoreCollections) {
-      let addedCount = 1;
-      if (breakThree) {
-        addedCount = 3 - (exploreMetaverses.length % 3);
-      } else if (breakTwo) {
-        addedCount = 2 - (exploreMetaverses.length % 2);
-      }
-
-      const result = [...exploreMetaverses];
-      for (let index = 0; index < addedCount; index++) {
-        result.push({});
-      }
-
-      return result;
-    } else {
-      return exploreMetaverses;
-    }
-  }, [exploreMetaverses, hasMoreCollections, breakTwo, breakThree]);
-
   return (
     <>
       <Box className={classes.main}>
-        {!isMobile && !isTablet && (
-          <>
-            <img
-              src={require("assets/metaverseImages/shape_home_green_circle.png")}
-              className={classes.image1}
-            />
-            <img src={require("assets/metaverseImages/shape_home_2.png")} className={classes.image2} />
-          </>
-        )}
         <Box className={classes.limitedContent}>
           <div className={classes.content} id={"scrollContainer"} onScroll={handleScroll}>
             <div className={classes.titleBar}>
-              <Box display="flex" alignItems="center" width="100%" justifyContent="space-between">
+              <Box display="flex" alignItems="center" width="100%" justifyContent="space-between" maxWidth={1280}>
                 <div className={classes.title}>Not your average NFT marketplace</div>
                 <Box display="flex" alignItems="center">
                   <SecondaryButton
@@ -559,7 +224,6 @@ const NFTReserves = () => {
                 position="relative"
                 className={classes.gameslider}
                 mt="38px"
-                mb="56px"
               >
                 <img src={require("assets/icons/slider_footer.svg")} className={classes.sliderFooter} />
                 <img src={require("assets/icons/slider_left.svg")} className={classes.sliderLeft} />
@@ -601,267 +265,156 @@ const NFTReserves = () => {
                 />
               </Box>
             </div>
-
-            <Box width={1} mt={4}>
-              <TabsView
-                tabs={FilterOptionsTabs}
-                onSelectTab={tab => {
-                  setSelectedTab(tab.key);
-                  dispatch(setSelTabMarketMain(tab.key));
-                }}
-                extendedClasses={tabsClasses}
-                seletedTabIndex={FilterOptionsTabs.findIndex(tab => tab.key === selectedTab)}
-              />
-            </Box>
-
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              width={1}
-              mt={4}
-              flexDirection={isMobile ? "column" : "row"}
-            >
-              <Box
-                display="flex"
-                alignItems="flex-end"
-                flexWrap="wrap"
-                width={isMobile ? 1 : "auto"}
-                justifyContent={isMobile ? "flex-end" : "flex-start"}
-              >
-                <Select
-                  open={openChainSelect}
-                  onClose={() => setOpenChainSelect(false)}
-                  value={filterChain}
-                  onChange={handleFilterChain}
-                  className={`${classes.select} ${isFilterChain ? classes.filterActive : ""}`}
-                  renderValue={(value: any) => (
-                    <Box display="flex" alignItems="center" onClick={() => setOpenChainSelect(true)}>
-                      <Box component="label" display="flex" alignItems="center">
-                        CHAIN:&nbsp;
-                        {getChainImage(value)}
-                        &nbsp;&nbsp;
+            <div className={classes.NFTSection}>
+              {featuredGames && featuredGames.length ? (
+                <div className={classes.topGamesWrapper}>
+                  <Box className={`${classes.topGamesTitle} ${classes.fitContent}`} justifyContent="space-between">
+                    <span>Featured Games</span>
+                    {featuredGames &&
+                      featuredGames.length && !isMobile &&
+                      ((isTablet && featuredGames.length > 2) ||
+                        (isNormalScreen && featuredGames.length > 3) ||
+                        featuredGames.length > 4) ? (
+                      <Box display="flex" alignItems="center">
+                        <Box
+                          className={classes.carouselNav}
+                          onClick={() => {
+                            carouselRef.current.slidePrev();
+                          }}
+                        >
+                          <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.6" d="M7.61309 2L1.92187 7.69055L7.92187 13.6906" stroke="white" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="round"/>
+                          </svg>
+                        </Box>
+                        <Box
+                          ml={3}
+                          className={classes.carouselNav}
+                          onClick={() => {
+                            carouselRef.current.slideNext();
+                          }}
+                        >
+                          <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.6" d="M2.38691 14L8.07813 8.30945L2.07813 2.30945" stroke="white" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="round"/>
+                          </svg>
+                        </Box>
                       </Box>
-                      <span>{value}</span>
-                    </Box>
-                  )}
-                  MenuProps={{
-                    classes: filterClasses,
-                    anchorOrigin: {
-                      vertical: "bottom",
-                      horizontal: "left",
-                    },
-                    transformOrigin: {
-                      vertical: "top",
-                      horizontal: "left",
-                    },
-                    getContentAnchorEl: null,
-                  }}
-                  IconComponent={ArrowIcon(setOpenChainSelect)}
-                >
-                  {filterChainOptions.map((chain, index) => (
-                    <MenuItem key={`filter-chain-${index}`} value={chain}>
-                      <div className={classes.chainImage}>{getChainImage(chain)}</div>
-                      {chain}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {selectedTab === TAB_NFTS && (
-                  <Select
-                    open={openStatusSelect}
-                    onClose={() => setOpenStatusSelect(false)}
-                    value={filterStatus}
-                    onChange={handleFilterStatus}
-                    className={classes.select}
-                    renderValue={(value: any) => (
-                      <Box display="flex" alignItems="center" onClick={() => setOpenStatusSelect(true)}>
-                        <label>STATUS&nbsp;&nbsp;</label>
-                        <span>{value}</span>
-                      </Box>
+                    ) : (
+                      <></>
                     )}
-                    MenuProps={{
-                      classes: filterClasses,
-                      anchorOrigin: {
-                        vertical: "bottom",
-                        horizontal: "left",
-                      },
-                      transformOrigin: {
-                        vertical: "top",
-                        horizontal: "left",
-                      },
-                      getContentAnchorEl: null,
-                    }}
-                    IconComponent={ArrowIcon(setOpenStatusSelect)}
-                  >
-                    {filterStatusOptions.map((status, index) => (
-                      <MenuItem key={`filter-status-${index}`} value={status}>
-                        {status}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )}
-              </Box>
-              <Box className={classes.optionSection} mt={isMobile ? 1 : 0}>
-                <div className={classes.filterButtonBox}>
-                  {showSearchBox && (
-                    <InputWithLabelAndTooltip
-                      type="text"
-                      inputValue={searchValue}
-                      placeHolder="Search"
-                      onInputValueChange={e => {
-                        setSearchValue(e.target.value);
-                        setHasMore(true);
-                        setReservedNftList([]);
-                      }}
-                      style={{
-                        background: "transparent",
-                        margin: 0,
-                        marginRight: 8,
-                        marginLeft: 8,
-                        padding: 0,
-                        border: "none",
-                        height: "auto",
-                      }}
-                      theme="dark"
-                    />
-                  )}
-                  <Box
-                    onClick={() => setShowSearchBox(prev => !prev)}
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    style={{ cursor: "pointer" }}
-                  >
-                    <SearchIcon />
                   </Box>
-                </div>
-                {!isMobile && selectedTab === TAB_NFTS && (
-                  <Box
-                    className={classes.controlBox}
-                    ml={2}
-                    display="flex"
-                    flexDirection="row"
-                    alignItems="center"
-                  >
-                    <SecondaryButton
-                      className={`${classes.showButton} ${isListView ? classes.showButtonSelected : ""}`}
-                      size="small"
-                      onClick={() => setIsListView(true)}
-                      isRounded
-                    >
-                      <UnionIcon />
-                    </SecondaryButton>
-                    <PrimaryButton
-                      className={`${classes.showButton} ${!isListView ? classes.showButtonSelected : ""}`}
-                      size="small"
-                      onClick={() => setIsListView(false)}
-                      isRounded
-                      style={{ marginLeft: 0 }}
-                    >
-                      <DetailIcon />
-                    </PrimaryButton>
-                  </Box>
-                )}
-              </Box>
-            </Box>
-            <div className={classes.explorerContent}>
-              {selectedTab === TAB_NFTS ? (
-                <InfiniteScroll
-                  hasChildren={reservedNftList?.length > 0}
-                  dataLength={reservedNftList?.length}
-                  scrollableTarget={"scrollContainer"}
-                  next={getData}
-                  hasMore={hasMore}
-                  initialScrollY={scrollPosition - 100}
-                  loader={
-                    loading &&
-                    isListView && (
-                      <div
-                        style={{
-                          paddingTop: 8,
-                          paddingBottom: 8,
-                        }}
-                      >
-                        {Array(loadingCount)
-                          .fill(0)
-                          .map((_, index) => (
-                            <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
-                              <Skeleton variant="rect" width={60} height={60} />
-                              <Skeleton
-                                variant="rect"
-                                width="40%"
-                                height={24}
-                                style={{ marginLeft: "8px" }}
-                              />
-                              <Skeleton
-                                variant="rect"
-                                width="20%"
-                                height={24}
-                                style={{ marginLeft: "8px" }}
-                              />
-                              <Skeleton
-                                variant="rect"
-                                width="20%"
-                                height={24}
-                                style={{ marginLeft: "8px" }}
-                              />
-                            </Box>
+                  <div className={`${classes.topNFTContent} ${classes.fitContent}`}>
+                    {featuredGames && featuredGames.length ? (
+                      !isMobile && (featuredGames.length === 2 || featuredGames.length === 3) ? (
+                        <div className={classes.allNFTSection}>
+                          <Box style={{ marginBottom: '24px' }}>
+                            <MasonryGrid
+                              gutter={"24px"}
+                              data={featuredGames}
+                              renderItem={item => (
+                                <FeaturedGameCard game={item} isLoading={Object.entries(item).length === 0} />
+                              )}
+                              columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS}
+                            />
+                          </Box>
+                        </div>
+                      ) : (
+                        <Carousel
+                          isRTL={false}
+                          itemsToShow={itemsToShow}
+                          pagination={false}
+                          showArrows={false}
+                          ref={carouselRef}
+                          itemPadding={[0, 12]}
+                        >
+                          {featuredGames.map((item: any, i: Number) => (
+                            <div
+                              key={item.id}
+                              style={{
+                                width: "100%",
+                                paddingBottom: "15px",
+                                display: "flex",
+                                justifyContent: isMobile
+                                  ? "center"
+                                  : featuredGames.length === 2 && i === 1
+                                    ? "flex-end"
+                                    : featuredGames.length === 3 && i === 1
+                                      ? "center"
+                                      : featuredGames.length === 3 && i === 2
+                                        ? "flex-end"
+                                        : "flex-start",
+                              }}
+                            >
+                              <FeaturedGameCard game={item} />
+                            </div>
                           ))}
-                      </div>
-                    )
-                  }
-                >
-                  {isListView ? (
-                    tableData.length > 0 && (
-                      <div className={classes.table}>
-                        <CustomTable
-                          headers={tableHeaders}
-                          rows={tableData}
-                          placeholderText=""
-                          theme="dreem"
-                          onClickRow={handleOpenExplore}
-                        />
-                      </div>
-                    )
-                  ) : (
-                    <Box sx={{ flexGrow: 1, width: "100%" }}>
+                        </Carousel>
+                      )
+                    ) : loadingFeaturedGames ? (
                       <MasonryGrid
                         gutter={"24px"}
-                        data={nftListWithSkeleton}
-                        renderItem={item => (
-                          <ExploreCard nft={item} isLoading={Object.entries(item).length === 0} />
+                        data={Array(loadingCount).fill(0)}
+                        renderItem={(_) => (
+                          <Skeleton variant="rect" width={60} height={60} />
                         )}
-                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS}
                       />
+                    ) : (
+                      <div></div>
+                    )}
+                  </div>
+                  {(featuredGames &&
+                    featuredGames.length &&
+                    (isMobile && featuredGames.length > 1)) ? (
+                    <Box display="flex" justifyContent="flex-end" pr={3} pb={3}>
+                      <Box display="flex" alignItems="center">
+                        <Box
+                          className={classes.carouselNav}
+                          onClick={() => {
+                            carouselRef.current.slidePrev();
+                          }}
+                        >
+                          <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.6" d="M7.61309 2L1.92187 7.69055L7.92187 13.6906" stroke="white" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="round"/>
+                          </svg>
+                        </Box>
+                        <Box
+                          ml={3}
+                          className={classes.carouselNav}
+                          onClick={() => {
+                            carouselRef.current.slideNext();
+                          }}
+                        >
+                          <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.6" d="M2.38691 14L8.07813 8.30945L2.07813 2.30945" stroke="white" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="round"/>
+                          </svg>
+                        </Box>
+                      </Box>
                     </Box>
+                  ) : (
+                    <></>
                   )}
-                </InfiniteScroll>
-              ) : (
-                <InfiniteScroll
-                  hasChildren={exploreMetaverses?.length > 0}
-                  dataLength={exploreMetaverses?.length}
-                  scrollableTarget={"scrollContainer"}
-                  next={getCollectionData}
-                  hasMore={hasMoreCollections}
-                  // initialScrollY={scrollPosition - 100}
-                  loader={<></>}
-                >
-                  <Box sx={{ flexGrow: 1, width: "100%" }}>
-                    <MasonryGrid
-                      gutter={"40px"}
-                      data={collectionListWithSkeleton}
-                      renderItem={(item, index) => (
-                        <MetaverseCard
-                          item={item}
-                          key={`game_${index}`}
-                          isLoading={Object.entries(item).length === 0}
-                        />
-                      )}
-                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
-                    />
-                  </Box>
-                </InfiniteScroll>
-              )}
+
+                </div>
+              ) : null}
+              {/* <div className={`${classes.allNFTWrapper} ${classes.fitContent}`}>
+                <div className={classes.allNFTTitle}>
+                  <span>New Listings</span>
+                </div>
+                <div className={classes.allNFTSection}>
+                {loading || hasMoreCollections || () ? (
+                    <>
+                      <MasonryGrid
+                        gutter={"24px"}
+                        data={collectionsWithSkeleton}
+                        renderItem={(item, index) => <ExploreCard nft={item}  key={`item-${index}`} />}
+                          columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS}
+                      />
+                    </>
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+              </div> */}
             </div>
           </div>
         </Box>
