@@ -34,6 +34,7 @@ import { setRealmsList, setScrollPositionInRealms } from "store/actions/Realms";
 import { NftStates } from "shared/constants/constants";
 import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
 import TotalStats from "./components/TotalStats";
+import RecentTransactions from "./components/RecentTransactions";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 
 const SECONDS_PER_HOUR = 3600;
@@ -477,7 +478,7 @@ export default function GameDetailPage() {
               <TotalStats />
             </Box>
             <Box width={"calc(45% - 12px)"}>
-              <TotalStats />
+              <RecentTransactions />
             </Box>
           </Box>
           <TabsView

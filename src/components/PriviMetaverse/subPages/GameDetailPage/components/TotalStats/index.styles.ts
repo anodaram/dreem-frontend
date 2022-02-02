@@ -7,6 +7,7 @@ export const useStyles = makeStyles(theme => ({
     borderRadius: 4,
     padding: "29px 31px 56px",
     width: "100%",
+    maxHeight: 319,
   },
   title: {
     fontSize: 24,
