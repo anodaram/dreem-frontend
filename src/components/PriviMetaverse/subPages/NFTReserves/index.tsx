@@ -307,26 +307,28 @@ const NFTReserves = () => {
                         <Box position="relative" width="100%" height="100%">
                           <img src={game.image} width="100%" height="100%" className={classes.gameBgImage}/>
                           <Box
-                            padding="100px 105px"
+                            padding="30px 105px 100px 105px"
                             width="100%"
                             height="100%"
                             display="flex"
                             flexDirection="column"
                             alignItems="flex-start"
-                            justifyContent="flex-end"
+                            justifyContent="space-between"
                             className={classes.gameContent}
                           >
-                            <Box fontFamily="Rany" fontWeight={700} fontSize="18px" color="#E9FF26">COMING SOON</Box>
-                            <Box fontFamily="GRIFTER" fontWeight={700} fontSize="72px" color="#fff" mt="11px">{game.title}</Box>
-                            <Box fontFamily="Rany" fontWeight={500} textAlign="left" fontSize="20px" color="#fff" lineHeight="31px" mt="20px">{game.description}</Box>
-                            <SecondaryButton
-                              size="medium"
-                              className={classes.gamePlayButton}
-                              onClick={() => {}}
-                            >
-                              <GameIcon />
-                              OPEN THE GAME
-                            </SecondaryButton>
+                            <Box className={classes.featuredGames}><GameIcon />Featured Games</Box>
+                            <Box display="flex" flexDirection="column" alignItems="flex-start">
+                              <Box fontFamily="Rany" fontWeight={700} fontSize="18px" color="#E9FF26">COMING SOON</Box>
+                              <Box fontFamily="GRIFTER" fontWeight={700} fontSize="72px" color="#fff" mt="11px">{game.title}</Box>
+                              <Box fontFamily="Rany" fontWeight={500} textAlign="left" fontSize="20px" color="#fff" lineHeight="31px" mt="20px">{game.description}</Box>
+                              <SecondaryButton
+                                size="medium"
+                                className={classes.gamePlayButton}
+                                onClick={() => {}}
+                              >
+                                OPEN THE GAME
+                              </SecondaryButton>
+                            </Box>
                           </Box>
                         </Box>
                       )
@@ -340,7 +342,7 @@ const NFTReserves = () => {
               {featuredGames && featuredGames.length ? (
                 <div className={classes.topGamesWrapper}>
                   <Box className={`${classes.topGamesTitle} ${classes.fitContent}`} justifyContent="space-between">
-                    <span>Featured Games</span>
+                    <span>Popular Games</span>
                     {featuredGames &&
                       featuredGames.length && !isMobile &&
                       ((isTablet && featuredGames.length > 2) ||
