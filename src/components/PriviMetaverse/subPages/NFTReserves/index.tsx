@@ -38,8 +38,7 @@ const COLUMNS_COUNT_BREAK_POINTS = {
   400: 1,
   650: 2,
   1200: 3,
-  1420: 4,
-  1700: 5,
+  1440: 4,
 };
 
 const SECONDS_PER_HOUR = 3600;
@@ -374,20 +373,8 @@ const NFTReserves = () => {
                             carouselRef.current.slidePrev();
                           }}
                         >
-                          <svg
-                            width="20"
-                            height="16"
-                            viewBox="0 0 20 16"
-                            fill="none"
-                            stroke="#431AB7"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M8.14546 14.6185L1.29284 7.98003M1.29284 7.98003L8.14546 1.34155M1.29284 7.98003H18.707"
-                              strokeWidth="1.5122"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
+                          <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.6" d="M7.61309 2L1.92187 7.69055L7.92187 13.6906" stroke="white" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="round"/>
                           </svg>
                         </Box>
                         <Box
@@ -397,20 +384,8 @@ const NFTReserves = () => {
                             carouselRef.current.slideNext();
                           }}
                         >
-                          <svg
-                            width="20"
-                            height="16"
-                            viewBox="0 0 20 16"
-                            fill="none"
-                            stroke="#431AB7"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M11.8545 14.6185L18.7072 7.98003M18.7072 7.98003L11.8545 1.34155M18.7072 7.98003H1.29297"
-                              strokeWidth="1.5122"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
+                          <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.6" d="M2.38691 14L8.07813 8.30945L2.07813 2.30945" stroke="white" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="round"/>
                           </svg>
                         </Box>
                       </Box>

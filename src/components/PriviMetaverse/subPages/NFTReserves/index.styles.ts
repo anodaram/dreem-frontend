@@ -30,7 +30,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     overflowY: "auto",
     display: "flex",
     flexDirection: "column",
-    alignItems: "flex-start",
+    alignItems: "center",
     minHeight: "100%",
     maxHeight: "100%",
     overflowX: "hidden",
@@ -189,6 +189,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   NFTSection: {
     width: "100%",
     marginTop: 46,
+    maxWidth: 1400
   },
   topGamesWrapper: {
     paddingTop: "50px",
