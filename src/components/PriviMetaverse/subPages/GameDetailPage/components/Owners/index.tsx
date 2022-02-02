@@ -12,6 +12,7 @@ import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import { Skeleton } from "@material-ui/lab";
 import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
 import { Variant } from "shared/ui-kit";
+import { socket } from "components/Login/Auth";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 export default function Owners() {
@@ -33,12 +34,48 @@ export default function Owners() {
     { headerName: "PERCENTAGE", headerAlign: "center", headerWidth: 200 },
   ];
 
-  
+
   React.useEffect(() => {
     setOwners([]);
     setHasMore(true);
     loadNfts(true);
   }, []);
+
+  React.useEffect(() => {
+    if (socket) {
+      const addOwnerHandler = (data) => {
+        if (owners && owners.length) {
+          const _owner = {
+            address: data.address,
+            count: data.count,
+          }
+          const _owners = [_owner].concat(owners);
+          setOwners(_owners);
+          setTotalGameCount(data.total_game_count);
+        }
+      };
+
+      const updateOwnerHandler = (data) => {
+        const _owner = {
+          address: data.address,
+          count: data.count,
+        }
+        if (owners && owners.length) {
+          const _owners = owners.map((owner) => _owner.address === owner.address ? _owner : owner);
+          setOwners(_owners);
+          setTotalGameCount(data.total_game_count);
+        }
+      };
+
+      socket.on("addOwner", addOwnerHandler);
+      socket.on("updateOwner", updateOwnerHandler);
+
+      return () => {
+        socket.removeListener("addOwner", addOwnerHandler);
+        socket.removeListener("updateOwner", updateOwnerHandler);
+      };
+    }
+  }, [socket]);
 
   const loadNfts = async (init = false) => {
     if (loading) return;
@@ -51,7 +88,7 @@ export default function Owners() {
       });
       if (response.success) {
         let newOwners = response.data.list;
-        newOwners = newOwners.sort((a, b) => {return b.count - a.count})
+        newOwners = newOwners.sort((a, b) => { return b.count - a.count })
         setOwners(prev => (init ? newOwners : [...prev, ...newOwners]));
       } else {
         setOwners([]);
@@ -83,7 +120,7 @@ export default function Owners() {
 
   return (
     <>
-    <Box
+      <Box
         display="flex"
         alignItems="center"
         justifyContent="space-between"
@@ -133,19 +170,19 @@ export default function Owners() {
             )
           }
         >
-        {
-          tableData.length > 0 && (
-            <Box className={classes.table}>
-              <CustomTable
-                variant={Variant.Transparent}
-                headers={TABLEHEADER}
-                rows={tableData}
-                placeholderText="No data"
-                sorted={{}}
-              />
-            </Box>
-          )
-        }
+          {
+            tableData.length > 0 && (
+              <Box className={classes.table}>
+                <CustomTable
+                  variant={Variant.Transparent}
+                  headers={TABLEHEADER}
+                  rows={tableData}
+                  placeholderText="No data"
+                  sorted={{}}
+                />
+              </Box>
+            )
+          }
         </InfiniteScroll>
         {!loading && owners?.length < 1 && (
           <Box textAlign="center" width="100%" mb={10} mt={2}>
