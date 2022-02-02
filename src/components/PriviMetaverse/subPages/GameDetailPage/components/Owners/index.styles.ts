@@ -2,6 +2,18 @@ import { makeStyles } from "@material-ui/core";
 
 export const ownersStyles = makeStyles(theme => ({
   root: {},
+  tabTitle: {
+    fontFamily: "GRIFTER", 
+    fontStyle: "normal", 
+    fontWeight: "bold", 
+    fontSize: "34px", 
+    lineHeight: "120%", 
+    letterSpacing: "0.02em", 
+    textTransform: "uppercase",
+    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
+    "-webkit-text-fill-color": "transparent",
+    "-webkit-background-clip": "text",
+  },
   fitContent: {
     maxWidth: 1280,
     marginLeft: "auto",
@@ -48,5 +60,11 @@ export const ownersStyles = makeStyles(theme => ({
     fontWeight: 700,
     lineHeight: "22px",
     margin: 0,
+  },
+  table: {
+    border: "2px solid",
+    borderImageSource: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
+    borderImageSlice: 1,
+    width: "100%",
   },
 }));

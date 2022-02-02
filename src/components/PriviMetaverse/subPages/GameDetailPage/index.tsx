@@ -51,14 +51,14 @@ const GameDetailTabs: TabItem[] = [
     key: TAB_NFTS,
     title: "NFTs",
   },
-  // {
-  //   key: TAB_MARKETPLACE_FEED,
-  //   title: "MARKETPLACE FEED",
-  // },
-  // {
-  //   key: TAB_OWNERS,
-  //   title: "owners",
-  // },
+  {
+    key: TAB_MARKETPLACE_FEED,
+    title: "MARKETPLACE FEED",
+  },
+  {
+    key: TAB_OWNERS,
+    title: "owners",
+  },
 ];
 const filterStatusOptions = ["All", ...NftStates];
 
