@@ -1,24 +1,21 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import Carousel from "react-elastic-carousel";
+import Moment from "react-moment";
 
 import { useTheme, useMediaQuery, Hidden} from "@material-ui/core";
 
 import { RootState } from "store/reducers/Reducer";
 import {
   setTokenList,
-  setCollectionNFTList,
-  setScrollPositionInCollection,
   setScrollPositionInAllNFT,
 } from "store/actions/MarketPlace";
-import { setRealmsList, setScrollPositionInRealms } from "store/actions/Realms";
 import Box from "shared/ui-kit/Box";
-import { SecondaryButton } from "shared/ui-kit";
+import { PrimaryButton, SecondaryButton, Variant } from "shared/ui-kit";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { useAuth } from "shared/contexts/AuthContext";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
-import { NftStates } from "shared/constants/constants";
 import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
 import { useNFTOptionsStyles } from "./index.styles";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
@@ -32,6 +29,8 @@ import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard"
 import { Skeleton } from "@material-ui/lab";
 import FeaturedGameCard from "components/PriviMetaverse/components/cards/FeatureGameCard";
 import { getAllGameNFTs } from "shared/services/API/ReserveAPI";
+import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
+import Tag from "../GameDetailPage/components/Tag";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -41,12 +40,6 @@ const COLUMNS_COUNT_BREAK_POINTS = {
   1200: 3,
   1440: 4,
 };
-
-const SECONDS_PER_HOUR = 3600;
-
-
-const filterChainOptions = ["All", "BSC", "Polygon"];
-const filterStatusOptions = ["All", ...NftStates];
 
 const gameList = [
   {
@@ -66,30 +59,50 @@ const gameList = [
   }
 ]
 
+const dummyRecentTransactions = [
+  {
+    image: '',
+    name: 'Game Name',
+    type: 'Rented',
+    Chain: 'Polygon',
+    Price: '0.0834',
+    Time: new Date().getTime() - 1200000
+  },
+  {
+    image: '',
+    name: 'Game Name 2',
+    type: 'Rented',
+    Chain: 'Polygon',
+    Price: '0.0834',
+    Time: new Date().getTime() - 1200000
+  },
+  {
+    image: '',
+    name: 'Game Name 5',
+    type: 'Rented',
+    Chain: 'BSC',
+    Price: '0.834',
+    Time: new Date().getTime() - 420000
+  },
+  {
+    image: '',
+    name: 'Game Name',
+    type: 'Rented',
+    Chain: 'Polygon',
+    Price: '0.123',
+    Time: new Date().getTime() - 120000
+  }
+]
+
 const getChainImage = chain => {
-  if (chain === filterChainOptions[1]) {
+  if (chain === 'BSC') {
     return <BinanceIcon />;
-  } else if (chain === filterChainOptions[2]) {
+  } else if (chain === 'Polygon') {
     return <PolygonIcon />;
   } else {
     return null;
   }
 };
-
-export const ArrowIcon = func => () =>
-  (
-    <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
-      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
-          stroke="#2D3047"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </Box>
-  );
 
 const NFTReserves = () => {
   const history = useHistory();
@@ -99,17 +112,12 @@ const NFTReserves = () => {
   const carouselRef = useRef<any>();
 
   const [featuredGames, setFeaturedGames] = useState<any[]>([]);
-  const [collections, setCollections] = useState<any[]>([]);
-  const [hasMoreCollections, setHasMoreCollections] = useState<boolean>(false);
-  const [pagination, setPagination] = useState<number>(0);
-  const [loadingCollections, setLoadingCollections] = useState<boolean>(false);
   const [loadingFeaturedGames, setLoadingFeaturedGames] = useState<boolean>(false);
   const [loadingNewListings, setLoadingNewListings] = useState<boolean>(false);
   const [openHowWorksModal, setOpenHowWorksModal] = useState<boolean>(false);
   const [newListings, setNewListings] = useState<any[]>([]);
-
-  const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const allNFTList = useSelector((state: RootState) => state.marketPlace.allNFTList);
+  const [recentTransactions, setRecentTransactions] = useState<any[]>(dummyRecentTransactions);
+  const [loadingTransactions, setLoadingTransctions] = useState<boolean>(false);
 
   const width = useWindowDimensions().width;
 
@@ -124,25 +132,18 @@ const NFTReserves = () => {
     : width > 1420 ? 4
       : width > 1200 ? 3
         : width > 650 ? 2 : 1), [width]);
-
-  const getTokenSymbol = addr => {
-    if (tokenList.length == 0 || !addr) return 0;
-    let token = tokenList.find(token => token.Address === addr);
-    return token?.Symbol || "";
-  };
-
-  const getTokenDecimal = addr => {
-    if (tokenList.length == 0) return 0;
-    let token = tokenList.find(token => token.Address === addr);
-    return token?.Decimals;
-  };
+  
+  const tableHeaders: Array<CustomTableHeaderInfo> = [
+    { headerName: "NFT" },
+    { headerName: "Type", headerAlign: "center" },
+    { headerName: "Chain", headerAlign: "center" },
+    { headerName: "Price", headerAlign: "center" },
+    { headerName: "Time", headerAlign: "center" },
+    { headerName: "", headerAlign: "center" },
+  ];
 
   useEffect(() => {
     // initialize store
-    dispatch(setCollectionNFTList([]));
-    dispatch(setRealmsList([]));
-    dispatch(setScrollPositionInCollection(0));
-    dispatch(setScrollPositionInRealms(0));
     getTokenList();
   }, []);
 
@@ -209,6 +210,49 @@ const NFTReserves = () => {
   const handleScroll = e => {
     dispatch(setScrollPositionInAllNFT(e.target.scrollTop));
   };
+
+  
+  const tableData = React.useMemo(() => {
+    let data: Array<Array<CustomTableCellInfo>> = [];
+    if (recentTransactions && recentTransactions.length) {
+      data = recentTransactions.map(row => [
+        {
+          cell: (
+            <div className={classes.titleWrapper}>
+              <img
+                className={classes.titleImg}
+                src={row.image}
+              />
+              <p className={classes.textTitle}>{row.name}</p>
+            </div>
+          ),
+        },
+        {
+          cell: <Tag state={row.type.toLowerCase()} text={row.type} />
+        },
+        {
+          cell: <div >
+            {getChainImage(row.Chain)}
+          </div>
+        },
+        {
+          cell: <p className={classes.whiteText}>{row.Price}</p>
+        },
+        {
+          cell: <p className={classes.whiteText}><Moment fromNow>{row.Time}</Moment></p>
+        },
+        {
+          cell: (
+            <PrimaryButton onClick={() => {}} size="medium" className={classes.viewButton} isRounded>
+              View
+            </PrimaryButton>
+          ),
+        },
+      ]);
+    }
+
+    return data;
+  }, [recentTransactions]);
 
   return (
     <>
@@ -451,6 +495,28 @@ const NFTReserves = () => {
                   )}
                 </div>
               </div>
+              <Box>
+                <div className={classes.allNFTTitle}>
+                  <span>Recent Transactions</span>
+                </div>
+                {recentTransactions.length > 0 && (
+                  <div className={classes.table}>
+                    <CustomTable
+                      variant={Variant.Transparent}
+                      headers={tableHeaders}
+                      rows={tableData}
+                      placeholderText="No data"
+                      sorted={{}}
+                      theme="game transaction"
+                    />
+                  </div>
+                )}
+                {!loadingTransactions && recentTransactions?.length < 1 && (
+                  <Box textAlign="center" width="100%" mb={10} mt={2}>
+                    No NFTs
+                  </Box>
+                )}
+              </Box>
             </div>
           </div>
         </Box>
@@ -466,37 +532,6 @@ const NFTReserves = () => {
 };
 
 export default NFTReserves;
-
-export const SearchIcon = ({ color = "white" }) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M12.9056 14.3199C11.551 15.3729 9.84871 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8C16 9.84871 15.3729 11.551 14.3199 12.9056L19.7071 18.2929C20.0976 18.6834 20.0976 19.3166 19.7071 19.7071C19.3166 20.0976 18.6834 20.0976 18.2929 19.7071L12.9056 14.3199ZM14 8C14 11.3137 11.3137 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C11.3137 2 14 4.68629 14 8Z"
-      fill={color}
-    />
-  </svg>
-);
-
-export const UnionIcon = () => (
-  <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      opacity="0.8"
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M0.5 1.75C0.5 1.19772 0.947715 0.75 1.5 0.75H11.5C12.0523 0.75 12.5 1.19772 12.5 1.75C12.5 2.30228 12.0523 2.75 11.5 2.75H1.5C0.947715 2.75 0.5 2.30228 0.5 1.75ZM0.5 5.75C0.5 5.19772 0.947715 4.75 1.5 4.75H11.5C12.0523 4.75 12.5 5.19772 12.5 5.75C12.5 6.30228 12.0523 6.75 11.5 6.75H1.5C0.947715 6.75 0.5 6.30228 0.5 5.75ZM1.5 8.75C0.947715 8.75 0.5 9.19771 0.5 9.75C0.5 10.3023 0.947715 10.75 1.5 10.75H11.5C12.0523 10.75 12.5 10.3023 12.5 9.75C12.5 9.19771 12.0523 8.75 11.5 8.75H1.5Z"
-    />
-  </svg>
-);
-
-export const DetailIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="6.5" y="0.625" width="6" height="6" rx="1" transform="rotate(90 6.5 0.625)" />
-    <rect x="6.5" y="7.625" width="6" height="6" rx="1" transform="rotate(90 6.5 7.625)" />
-    <rect x="13.5" y="0.625" width="6" height="6" rx="1" transform="rotate(90 13.5 0.625)" />
-    <rect x="13.5" y="7.625" width="6" height="6" rx="1" transform="rotate(90 13.5 7.625)" />
-  </svg>
-);
 
 export const GameIcon = () => (
   <svg width="26" height="20" viewBox="0 0 26 20" fill="none" xmlns="http://www.w3.org/2000/svg">
