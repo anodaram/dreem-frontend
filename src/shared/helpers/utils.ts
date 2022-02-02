@@ -1,5 +1,5 @@
 import moment from "moment";
-import axios from 'axios';
+import axios from "axios";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -145,21 +145,21 @@ export const visitChainLink = (chain, address, isAddress = true) => {
   if (isAddress) {
     if (chain.toLowerCase() === "bsc") {
       window.open(`https://${!isProd ? "testnet." : ""}bscscan.com/address/${address}`, "_blank");
-    } else if (chain.toLowerCase() === "polygon"){
+    } else if (chain.toLowerCase() === "polygon") {
       window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/address/${address}`, "_blank");
     }
   } else {
     if (chain.toLowerCase() === "bsc") {
       window.open(`https://${!isProd ? "testnet." : ""}bscscan.com/tx/${address}`, "_blank");
-    } else if (chain.toLowerCase() === "polygon"){
+    } else if (chain.toLowerCase() === "polygon") {
       window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/tx/${address}`, "_blank");
     }
   }
-}
+};
 
 export const getAbbrAddress = (address, start, end) => {
-  return `${address?.substring(0, start)}...${address?.substring(address?.length - end, address.length)}`
-}
+  return `${address?.substring(0, start)}...${address?.substring(address?.length - end, address.length)}`;
+};
 
 export const getInputValue = (val, min: number, max?: number) => {
   if (min !== undefined && val < min) {
@@ -169,4 +169,23 @@ export const getInputValue = (val, min: number, max?: number) => {
     return max;
   }
   return val;
-}
+};
+
+export const color2obj = color => {
+  if (color) {
+    const colors = color.replace(/[^\d,]/g, "").split(",");
+    console.log("========22222", color)
+    return {
+      r: colors[0],
+      g: colors[1],
+      b: colors[2],
+      a: colors[3],
+    };
+  } else {
+    return null;
+  }
+};
+export const obj2color = obj => {
+  console.log("========11111", obj)
+  return `rgba(${obj.r}, ${obj.g}, ${obj.b}, ${obj.a})`;
+};
