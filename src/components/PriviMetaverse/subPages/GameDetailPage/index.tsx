@@ -130,6 +130,7 @@ export default function GameDetailPage() {
   const [showSearchBox, setShowSearchBox] = React.useState<boolean>(false);
   const [searchValue, setSearchValue] = React.useState<string>("");
   const [isListView, setIsListView] = React.useState<boolean>(false);
+  const [openDescription, setOpenDescription] = React.useState<boolean>(false);
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
@@ -470,7 +471,24 @@ export default function GameDetailPage() {
                   <Box width={"738px"} height={"2px"} bgcolor="#FFFFFF10" />
                 </>
               )}
-              <Box className={classes.description}>{gameInfo?.Description}</Box>
+              <Box className={classes.description}>
+                {gameInfo?.Description && gameInfo?.Description.length > 140
+                  ? gameInfo?.Description.substr(0, 140) + " ..."
+                  : gameInfo?.Description}
+              </Box>
+              <Box className={classes.fullDescItem} onClick={() => setOpenDescription(true)}>
+                <Box mr={"10px"}>Full Description</Box>
+                <DownArrowIcon />
+              </Box>
+              {openDescription && (
+                <Box className={classes.fullDescPanel}>
+                  <Box>{gameInfo?.Description}</Box>
+                  <Box className={classes.fullDescItem} onClick={() => setOpenDescription(false)} mt={3}>
+                    <Box mr={"10px"}>Hide Description</Box>
+                    <UpArrowIcon />
+                  </Box>
+                </Box>
+              )}
             </Box>
           </Box>
           <Box display={"flex"} alignItems={"center"} my={3.5}>
@@ -795,6 +813,30 @@ export const ProfileUserIcon = () => (
     <path
       d="M18.3249 13.8266C18.2582 14.635 17.7415 15.335 16.8749 15.81C16.0415 16.2683 14.9915 16.485 13.9499 16.46C14.5499 15.9183 14.8999 15.2433 14.9665 14.5266C15.0499 13.4933 14.5582 12.5016 13.5749 11.71C13.0165 11.2683 12.3665 10.9183 11.6582 10.66C13.4999 10.1266 15.8165 10.485 17.2415 11.635C18.0082 12.2516 18.3999 13.0266 18.3249 13.8266Z"
       fill="white"
+    />
+  </svg>
+);
+
+export const DownArrowIcon = () => (
+  <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M1 1.01663L5.19385 5.21097L9.61575 0.789062"
+      stroke="#E9FF26"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+);
+
+export const UpArrowIcon = () => (
+  <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M1 4.98337L5.19385 0.789032L9.61575 5.21094"
+      stroke="#E9FF26"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
     />
   </svg>
 );
