@@ -148,10 +148,6 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     justifyContent: "center",
     alignItems: "center",
     marginTop: "35px",
-
-    '& svg': {
-      marginRight: '13px'
-    }
   },
   gameslider: {
     border: "2px solid transparent",
@@ -333,5 +329,56 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     textTransform: "uppercase",
     background: "transparent !important",
     color: "#FFFFFF !important",
+  },
+  table: {
+    width: "100%",
+  },
+  titleWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  textTitle: {
+    color: "#FFFFFF",
+    fontFamily: "Rany",
+    fontSize: 14,
+    fontWeight: 500,
+    lineHeight: "18px",
+    margin: 0,
+  },
+  titleImg: {
+    width: 45,
+    height: 45,
+    borderRadius: 6,
+    objectFit: "cover",
+    margin: "0 20px",
+  },
+  whiteText: {
+    color: "#FFFFFF",
+    fontFamily: "Rany",
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: "22px",
+    margin: 0,
+  },
+  viewButton: {
+    backgroundColor: "transparent !important",
+    border: "2px solid rgba(255,255,255,0.5) !important",
+  },
+  featuredGames: {
+    display: 'flex',
+    alignItems: 'center',
+    background: 'linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)',
+    fontFamily: 'Rany',
+    fontWeight: 700,
+    fontSize: 20,
+    color: "#151515",
+    textTransform: "uppercase",
+    border: '2px solid rgba(21, 21, 21, 0.2)',
+    padding: "8px 16px",
+
+    '& svg': {
+      marginRight: '13px'
+    }
   }
 }));
