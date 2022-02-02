@@ -33,6 +33,7 @@ import {
 import { setRealmsList, setScrollPositionInRealms } from "store/actions/Realms";
 import { NftStates } from "shared/constants/constants";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
+import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
 
 const SECONDS_PER_HOUR = 3600;
 
@@ -354,10 +355,6 @@ export default function GameDetailPage() {
     return data;
   }, [nfts]);
 
-  const handleClickProject = () => {
-    window.open(gameInfo?.Project, "_blank");
-  };
-
   const handleFilterStatus = e => {
     setLastId(undefined);
     setFilterStatus(e.target.value);
@@ -427,53 +424,53 @@ export default function GameDetailPage() {
             <ArrowIcon />
             <Box ml={1}>Back</Box>
           </Box>
-          <Box className={classes.title} mb={2}>
-            {gameInfo?.CollectionName}
-          </Box>
-          {gameInfo?.Chain && (
-            <Box display="flex" flexDirection={"row"} alignItems={"center"} fontSize={isMobile ? 14 : 20}>
+          <Box display={"flex"} alignItems={"center"} mb={4}>
+            <img
+              src={gameInfo?.Image || getDefaultBGImage()}
+              className={classes.gameInfoImg}
+              alt="game info image"
+            />
+            <Box display={"flex"} flexDirection={"column"} ml={7}>
+              <Box className={classes.title} mb={3}>
+                {gameInfo?.CollectionName}
+              </Box>
               <Box
-                display="flex"
-                alignItems="center"
-                style={{ cursor: "pointer" }}
-                onClick={handleClickProject}
+                display={"flex"}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+                maxWidth={580}
+                mb={3}
               >
-                <IconButton aria-label="">
-                  <img src={require("assets/icons/net_world.png")} />
-                </IconButton>
-                <span>{gameInfo?.Project}</span>
+                <Box display={"flex"} alignItems={"center"}>
+                  <Box mr={0.5}>{`Collection ID: ${gameInfo?.AddressShort || "xxx"}`}</Box>
+                  <LinkIcon />
+                </Box>
+                <Box width={"1px"} height={"8px"} bgcolor={"rgba(255, 255, 255, 0.15)"} />
+                <Box display={"flex"} alignItems={"center"}>
+                  <CopyIcon />
+                  <Box ml={0.5}>{`${gameInfo?.Count || 0} minted`}</Box>
+                </Box>
+                <Box width={"1px"} height={"8px"} bgcolor={"rgba(255, 255, 255, 0.15)"} />
+                <Box display={"flex"} alignItems={"center"}>
+                  <ProfileUserIcon />
+                  <Box ml={0.5}>30 owners</Box>
+                </Box>
               </Box>
-              <div
-                style={{
-                  width: 3,
-                  height: 24,
-                  background: "rgba(255, 255, 255, 0.5)",
-                  marginLeft: 20,
-                  marginRight: 10,
-                }}
-              />
-              <Box display="flex" alignItems="center">
-                <IconButton aria-label="" style={{ cursor: "unset" }}>
-                  <img src={getChainImageUrl(gameInfo?.Chain)} width={"22px"} />
-                </IconButton>
-                <span>{gameInfo?.Chain}</span>
-              </Box>
+              <Box width={"738px"} height={"2px"} bgcolor="#FFFFFF10" />
+              {gameInfo?.Chain && (
+                <>
+                  <Box display="flex" alignItems="center" my={2}>
+                    <IconButton aria-label="" style={{ cursor: "unset" }}>
+                      <img src={getChainImageUrl(gameInfo?.Chain)} width={"22px"} />
+                    </IconButton>
+                    <span>{gameInfo?.Chain}</span>
+                  </Box>
+                  <Box width={"738px"} height={"2px"} bgcolor="#FFFFFF10" />
+                </>
+              )}
+              <Box className={classes.description}>{gameInfo?.Description}</Box>
             </Box>
-          )}
-          {isMobile ? (
-            <Box>
-              <Box className={classes.description} style={{ flex: isTablet ? 3 : 2.5 }}>
-                <p>{gameInfo?.Description}</p>
-              </Box>
-            </Box>
-          ) : (
-            <Box display="flex" justifyContent="space-between">
-              <Box className={classes.description} style={{ flex: isTablet ? 3 : 2.5 }}>
-                <p>{gameInfo?.Description}</p>
-              </Box>
-            </Box>
-          )}
-
+          </Box>
           <TabsView
             tabs={GameDetailTabs}
             onSelectTab={tab => {
@@ -738,5 +735,56 @@ export const DetailIcon = () => (
     <rect x="6.5" y="7.625" width="6" height="6" rx="1" transform="rotate(90 6.5 7.625)" />
     <rect x="13.5" y="0.625" width="6" height="6" rx="1" transform="rotate(90 13.5 0.625)" />
     <rect x="13.5" y="7.625" width="6" height="6" rx="1" transform="rotate(90 13.5 7.625)" />
+  </svg>
+);
+
+export const LinkIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M12.5 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H12.5C15.12 13.25 17.25 11.12 17.25 8.5C17.25 5.88 15.12 3.75 12.5 3.75H7.5C4.88 3.75 2.75 5.88 2.75 8.5C2.75 9.6 3.14 10.67 3.84 11.52C4.1 11.84 4.06 12.31 3.74 12.58C3.42 12.84 2.95 12.8 2.68 12.48C1.76 11.36 1.25 9.95 1.25 8.5C1.25 5.05 4.05 2.25 7.5 2.25H12.5C15.95 2.25 18.75 5.05 18.75 8.5C18.75 11.95 15.95 14.75 12.5 14.75Z"
+      fill="white"
+      stroke="white"
+      stroke-width="0.5"
+    />
+    <path
+      d="M16.5 21.75H11.5C8.05 21.75 5.25 18.95 5.25 15.5C5.25 12.05 8.05 9.25 11.5 9.25H14C14.41 9.25 14.75 9.59 14.75 10C14.75 10.41 14.41 10.75 14 10.75H11.5C8.88 10.75 6.75 12.88 6.75 15.5C6.75 18.12 8.88 20.25 11.5 20.25H16.5C19.12 20.25 21.25 18.12 21.25 15.5C21.25 14.4 20.86 13.33 20.16 12.48C19.9 12.16 19.94 11.69 20.26 11.42C20.58 11.15 21.05 11.2 21.32 11.52C22.25 12.64 22.76 14.05 22.76 15.5C22.75 18.95 19.95 21.75 16.5 21.75Z"
+      fill="white"
+      stroke="white"
+      stroke-width="0.5"
+    />
+  </svg>
+);
+
+export const CopyIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M13.3337 10.7513V14.2513C13.3337 17.168 12.167 18.3346 9.25033 18.3346H5.75033C2.83366 18.3346 1.66699 17.168 1.66699 14.2513V10.7513C1.66699 7.83464 2.83366 6.66797 5.75033 6.66797H9.25033C12.167 6.66797 13.3337 7.83464 13.3337 10.7513Z"
+      fill="white"
+    />
+    <path
+      d="M14.2498 1.66797H10.7498C8.24635 1.66797 7.03822 2.53362 6.74575 4.61705C6.66834 5.16855 7.1298 5.6263 7.68671 5.6263H9.2498C12.7498 5.6263 14.3748 7.2513 14.3748 10.7513V12.3144C14.3748 12.8713 14.8326 13.3328 15.3841 13.2554C17.4675 12.9629 18.3331 11.7548 18.3331 9.2513V5.7513C18.3331 2.83464 17.1665 1.66797 14.2498 1.66797Z"
+      fill="white"
+    />
+  </svg>
+);
+
+export const ProfileUserIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M7.50033 1.66797C5.31699 1.66797 3.54199 3.44297 3.54199 5.6263C3.54199 7.76797 5.21699 9.5013 7.40033 9.5763C7.46699 9.56797 7.53366 9.56797 7.58366 9.5763C7.60033 9.5763 7.60866 9.5763 7.62533 9.5763C7.63366 9.5763 7.63366 9.5763 7.64199 9.5763C9.77533 9.5013 11.4503 7.76797 11.4587 5.6263C11.4587 3.44297 9.68366 1.66797 7.50033 1.66797Z"
+      fill="white"
+    />
+    <path
+      d="M11.7338 11.7914C9.40879 10.2414 5.61712 10.2414 3.27546 11.7914C2.21712 12.4997 1.63379 13.4581 1.63379 14.4831C1.63379 15.5081 2.21712 16.4581 3.26712 17.1581C4.43379 17.9414 5.96712 18.3331 7.50046 18.3331C9.03379 18.3331 10.5671 17.9414 11.7338 17.1581C12.7838 16.4497 13.3671 15.4997 13.3671 14.4664C13.3588 13.4414 12.7838 12.4914 11.7338 11.7914Z"
+      fill="white"
+    />
+    <path
+      d="M16.6588 6.11512C16.7921 7.73179 15.6421 9.14846 14.0505 9.34012C14.0421 9.34012 14.0421 9.34012 14.0338 9.34012H14.0088C13.9588 9.34012 13.9088 9.34012 13.8671 9.35679C13.0588 9.39845 12.3171 9.14012 11.7588 8.66512C12.6171 7.89845 13.1088 6.74846 13.0088 5.49846C12.9505 4.82346 12.7171 4.20679 12.3671 3.68179C12.6838 3.52346 13.0505 3.42346 13.4255 3.39012C15.0588 3.24846 16.5171 4.46512 16.6588 6.11512Z"
+      fill="white"
+    />
+    <path
+      d="M18.3249 13.8266C18.2582 14.635 17.7415 15.335 16.8749 15.81C16.0415 16.2683 14.9915 16.485 13.9499 16.46C14.5499 15.9183 14.8999 15.2433 14.9665 14.5266C15.0499 13.4933 14.5582 12.5016 13.5749 11.71C13.0165 11.2683 12.3665 10.9183 11.6582 10.66C13.4999 10.1266 15.8165 10.485 17.2415 11.635C18.0082 12.2516 18.3999 13.0266 18.3249 13.8266Z"
+      fill="white"
+    />
   </svg>
 );

@@ -10,7 +10,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
   headerBG: {},
   container: {
     position: "absolute",
-    top: 200,
+    top: 150,
     width: "100%",
     overflowY: "auto",
     overflowX: "hidden",
@@ -50,12 +50,18 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     fontSize: 20,
     lineHeight: "155%",
     color: "#FFFFFF",
-    maxWidth: 900,
+    maxWidth: 738,
+    marginTop: 24,
     [theme.breakpoints.down("sm")]: {},
     [theme.breakpoints.down("xs")]: {
       fontSize: "14px",
       lineHeight: "21.7px",
     },
+  },
+  gameInfoImg: {
+    width: 398,
+    height: 398,
+    borderRadius: 9,
   },
   content: {
     paddingBottom: 180,
