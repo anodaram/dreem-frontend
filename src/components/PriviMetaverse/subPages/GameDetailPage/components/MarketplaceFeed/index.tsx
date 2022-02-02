@@ -82,8 +82,8 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
     if (socket) {
       const addMarketPlaceFeedHandler = (_nft) => {
         if (nfts && nfts.length) {
-          const _nfts = [_nft].concat(nfts);
-          setNfts(_nfts);
+          const _nfts = nfts.filter((nft) => _nft.id !== nft.id);
+          setNfts([_nft].concat(_nfts));
         }
       };
 

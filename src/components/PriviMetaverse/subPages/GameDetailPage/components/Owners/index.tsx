@@ -49,8 +49,9 @@ export default function Owners() {
             address: data.address,
             count: data.count,
           }
-          const _owners = [_owner].concat(owners);
-          setOwners(_owners);
+
+          const _owners = owners.filter((owner) => _owner.address !== owner.address);
+          setOwners( [_owner].concat(_owners));
           setTotalGameCount(data.total_game_count);
         }
       };
