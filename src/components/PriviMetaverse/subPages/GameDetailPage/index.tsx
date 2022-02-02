@@ -355,10 +355,6 @@ export default function GameDetailPage() {
     return data;
   }, [nfts]);
 
-  const handleClickProject = () => {
-    window.open(gameInfo?.Project, "_blank");
-  };
-
   const handleFilterStatus = e => {
     setLastId(undefined);
     setFilterStatus(e.target.value);
@@ -398,8 +394,6 @@ export default function GameDetailPage() {
     const nft = row[0].rawData;
     history.push(`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
   };
-
-  console.log("gameInfo================", gameInfo);
 
   return (
     <Box className={classes.root} id="scrollContainer" onScroll={handleScroll}>
