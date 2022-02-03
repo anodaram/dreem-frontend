@@ -87,7 +87,7 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
 
   useEffect(() => {
     MetaverseAPI.getAssetMetadata("TEXTURE").then(res => {
-      setMetadata(res.data)
+      setMetadata(res.data);
     });
   }, []);
 
@@ -352,26 +352,24 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
               </Box>
             )}
             {step == 3 && (
-              <>
-                <Box
-                  className={classes.content}
-                  style={{
-                    padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
-                  }}
-                >
-                  <div className={classes.modalContent}>
-                    <CreateAssetForm
-                      metadata={metadata}
-                      formData={formData}
-                      setFormData={setFormData}
-                      fileInputs={fileInputs}
-                      setFileInputs={setFileInputs}
-                      fileContents={fileContents}
-                      setFileContents={setFileContents}
-                    />
-                  </div>
-                </Box>
-              </>
+              <Box
+                className={classes.content}
+                style={{
+                  padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
+                }}
+              >
+                <div className={classes.modalContent}>
+                  <CreateAssetForm
+                    metadata={metadata}
+                    formData={formData}
+                    setFormData={setFormData}
+                    fileInputs={fileInputs}
+                    setFileInputs={setFileInputs}
+                    fileContents={fileContents}
+                    setFileContents={setFileContents}
+                  />
+                </div>
+              </Box>
             )}
           </div>
           {step === 4 && (

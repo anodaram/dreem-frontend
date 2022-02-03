@@ -107,7 +107,7 @@ const Fake_Trending_Data = [
   },
 ];
 
-export default function ActivityFeeds() {
+export default function ActivityFeeds({ onClose }) {
   const classes = useStyles();
 
   const [selectedTab, setSelectedTab] = React.useState<"feed" | "trending">("feed");
@@ -123,7 +123,7 @@ export default function ActivityFeeds() {
 
   return (
     <Box className={classes.root}>
-      <div className={classes.collapseIcon}>
+      <div className={classes.collapseIcon} onClick={onClose}>
         <CollapseIcon />
       </div>
       <div className={classes.switch}>
