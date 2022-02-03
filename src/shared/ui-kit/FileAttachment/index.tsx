@@ -139,8 +139,7 @@ const FileAttachment = ({ setStatus, onFileChange }: FileAttachmentProps) => {
   const uploadAttachment = () => {
     const inputElement = document.createElement("input");
     inputElement.type = "file";
-    // inputElement.accept = "audio/*,video/*,image/*";
-    inputElement.accept = "*";
+    inputElement.accept = "video/*,image/*";
     inputElement.multiple = true;
 
     // set onchange event to call callback when user has selected file
