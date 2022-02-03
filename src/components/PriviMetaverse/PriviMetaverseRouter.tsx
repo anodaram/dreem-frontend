@@ -15,6 +15,7 @@ import ExplorePage from "./subPages/ExplorePage";
 import UseScrollTop from "shared/hooks/useScrollTop";
 import Error404Page from "./subPages/Error404Page";
 import GameDetailPage from "./subPages/GameDetailPage";
+import GameNFTExplorerPage from "./subPages/GameNFTExplorerPage";
 import NotificationPage from "./subPages/NotificationPage";
 import NFTReserves from "./subPages/NFTReserves";
 import ManageNFTPage from "./subPages/NFTReserves/components/ManageNFTPage";
@@ -50,6 +51,7 @@ export default function PriviMetaverseRouter(props) {
         <Route exact path="/creating_extension" component={CreatingExtensionPage} />
         <Route exact path="/gameNFTS" component={NFTReserves} />
         <Route exact path="/gameNFTS/manage_nft/:tab?" component={ManageNFTPage} />
+        <Route exact path="/gameNFTS/explorer" component={GameNFTExplorerPage} />
         <Route exact path="/gameNFTS/:collection_id" component={GameDetailPage} />
         <Route exact path="/gameNFTS/:collection_id/:token_id" component={ExploreReserveDetailPage} />
         <Route exact path="/notifications" component={NotificationPage} />

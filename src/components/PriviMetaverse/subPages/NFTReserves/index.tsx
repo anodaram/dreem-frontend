@@ -546,7 +546,11 @@ const NFTReserves = () => {
                 <div className={classes.allNFTTitle}>
                   <span>New Listings</span>
                   <Hidden xsDown>
-                    <SecondaryButton size="medium" className={classes.showAll} onClick={() => {}}>
+                    <SecondaryButton
+                      size="medium"
+                      className={classes.showAll}
+                      onClick={() => history.push('/gameNFTS/explorer')}
+                    >
                       Show All
                     </SecondaryButton>
                   </Hidden>
