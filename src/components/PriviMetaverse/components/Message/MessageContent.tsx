@@ -21,7 +21,7 @@ import "./MessageBox.css";
 import Moment from "react-moment";
 
 export const MessageFooter = props => {
-  const { chat, messages, setMessages, specialWidthInput, type = "live", setMediaUpdate } = props;
+  const { chat, messages, setMessages, specialWidthInput, setMediaUpdate } = props;
 
   const dispatch = useDispatch();
   const userSelector = useSelector((state: RootState) => state.user);
@@ -395,28 +395,16 @@ export const MessageFooter = props => {
 
   const sendMessage = (audioMsg?: string) => {
     const trimMsg = msg.replace(/^\s+|\s+$/g, "");
-    if (trimMsg || audioMsg) {
+    let userId: any = localStorage.getItem("userId");
+    if (socket && userId && (trimMsg || audioMsg)) {
       setAudioMessage(false);
-      let messageObj: any = {};
-      if (userSelector.id === chat.users.userFrom.userId) {
-        messageObj = {
-          room: chat.room,
-          message: trimMsg || audioMsg,
-          from: chat.users.userFrom.userId,
-          to: chat.users.userTo.userId,
-          created: Date.now(),
-          seen: false,
-        };
-      } else {
-        messageObj = {
-          room: chat.room,
-          message: trimMsg || audioMsg,
-          from: chat.users.userTo.userId,
-          to: chat.users.userFrom.userId,
-          created: Date.now(),
-          seen: false,
-        };
-      }
+      let messageObj: any = {
+        message: trimMsg || audioMsg,
+        from: {
+          id: userId
+        },
+        created: Date.now(),
+      };
 
       socket.emit("add-message", messageObj);
       let messagesCopy = [...messages];
@@ -519,23 +507,15 @@ export const MessageFooter = props => {
 };
 
 export const MessageContent = ({
-  chat,
   messages,
   setMessages,
   specialWidthInput,
   getMessages,
   loadingMessages,
-  setChat,
 }) => {
-  const userSelector = useSelector((state: RootState) => state.user);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [firstLoading, setFirstLoading] = useState<boolean>(true);
   const itemListRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setHasMore(true);
-    setFirstLoading(true);
-  }, [chat]);
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -545,6 +525,8 @@ export const MessageContent = ({
         }
         setFirstLoading(false);
       }, 100);
+    } else {
+      getMessages();
     }
   }, [messages.length]);
 
@@ -641,11 +623,6 @@ export const MessageContent = ({
                     )}
                     <MessageItem
                       key={item.id ?? `message-${index}`}
-                      user={
-                        chat.users.userFrom.userId === userSelector.id
-                          ? chat.users.userTo
-                          : chat.users.userFrom
-                      }
                       message={item}
                       messageContentRef={itemListRef}
                     />
@@ -660,7 +637,6 @@ export const MessageContent = ({
         )}
       </div>
       <MessageFooter
-        chat={chat}
         setChat={setChat}
         messages={messages}
         specialWidthInput={specialWidthInput}
