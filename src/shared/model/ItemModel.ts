@@ -7,7 +7,7 @@ export default class ItemModel
 
   constructor(data: any)
   {
-    this.itemKind = data.item;
+    this.itemKind = data.itemKind;
     this.fields = FieldModel.constructArray(data.fields);
   }
 

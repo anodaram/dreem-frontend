@@ -37,6 +37,7 @@ import PublicOption from "../PublicOption";
 
 import CreateAssetForm from "../CreateAssetForm";
 import { FormData, InputFileContents, InputFiles } from "../CreateAssetForm/interface";
+import ItemModel from "shared/model/ItemModel";
 
 const CreateSteps = [
   {
@@ -76,8 +77,11 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
   const [currentCollection, setCurrentCollection] = useState<any>(null);
   const [openPublic, setOpenPublic] = useState<any>();
   const [openMintEditions, setOpenMintEditions] = useState<any>();
+  const [showUploadingModal, setShowUploadingModal] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>();
 
-  const [metadata, setMetadata] = useState<any>({});
+  const [metadata, setMetadata] = useState<ItemModel>({});
   const [formData, setFormData] = useState<FormData>({});
   const [fileInputs, setFileInputs] = useState<InputFiles>({});
   const [fileContents, setFileContents] = useState<InputFileContents>({});
@@ -87,6 +91,7 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
 
   useEffect(() => {
     MetaverseAPI.getAssetMetadata("TEXTURE").then(res => {
+      console.log(res.data)
       setMetadata(res.data)
     });
   }, []);
@@ -121,61 +126,95 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
     }
   };
 
+  const handleSaveDraft = async () => {
+    if (validate()) {
+      let payload: any = {};
+      let collectionAddr = currentCollection.address;
+      let tokenId;
+      console.log(formData)
+      console.log(fileInputs)
+      console.log(fileContents)
+
+      payload = {
+        collectionId: currentCollection.id,
+        item: "TEXTURE",
+        name: formData.ITEM_NAME,
+        description: formData.ITEM_DESCRIPTION,
+        texture: fileInputs.ITEM_IMAGE_TEXTURE,
+        isPublic: isPublic,
+      };
+
+      setShowUploadingModal(true);
+      setProgress(0);
+      MetaverseAPI.uploadAsset(payload).then(async res => {
+        if (!res.success) {
+          showAlertMessage(`Failed to upload world`, { variant: "error" });
+          // setShowUploadingModal(false);
+          setUploadSuccess(false);
+        } else {
+          // setSavingDraft(res.data);
+          // setShowUploadingModal(false);
+          setUploadSuccess(true);
+          showAlertMessage(`Created draft successfully`, { variant: "success" });
+        }
+      });
+    }
+  };
   const handleMint = () => {
     nftOption == "single" ? mintSingleNFT() : setOpenMintEditions(true);
   };
 
   const validate = () => {
-    for (let i = 0; i < metadata.fields.length; i++) {
-      const field = metadata.fields[i];
-      if (field.kind === "STRING") {
-        if (field.input.required && !formData[field.key]) {
-          showAlertMessage(`${field.name.value} is required`, { variant: "error" });
-          return false;
-        }
-        if (formData[field.key] && field.input.range) {
-          if (field.input.range.min && field.input.range.min > formData[field.key].length) {
-            showAlertMessage(
-              `${field.name.value} is invalid. Must be more than ${field.input.range.min} characters`,
-              { variant: "error" }
-            );
+    if(metadata && metadata?.fields){
+      for (let i = 0; i < metadata?.fields?.length; i++) {
+        const field = metadata.fields[i];
+        if (field.kind === "STRING") {
+          if (field?.key && field?.input?.required && !formData[field?.key]) {
+            showAlertMessage(`${field?.name?.value} is required`, { variant: "error" });
             return false;
           }
-          if (field.input.range.max && field.input.range.max < formData[field.key].length) {
-            showAlertMessage(
-              `${field.name.value} is invalid. Must be less than ${field.input.range.max} characters`,
-              { variant: "error" }
-            );
+          if (field?.key && formData[field.key] && field?.input?.range) {
+            if (field?.input?.range.min && field?.input?.range.min > formData[field.key].length) {
+              showAlertMessage(
+                `${field?.name?.value} is invalid. Must be more than ${field.input.range.min} characters`,
+                { variant: "error" }
+              );
+              return false;
+            }
+            if (field.input.range.max && field.input.range.max < formData[field.key].length) {
+              showAlertMessage(
+                `${field?.name?.value} is invalid. Must be less than ${field.input.range.max} characters`,
+                { variant: "error" }
+              );
+              return false;
+            }
+          }
+        } else if (field.kind === "FILE_TYPE_IMAGE") {
+          if (field?.key && field?.input?.required && !fileInputs[field.key]) {
+            showAlertMessage(`${field?.name?.value} is required`, { variant: "error" });
             return false;
           }
-        }
-      } else if (field.kind === "FILE_TYPE_IMAGE") {
-        if (field.input.required && !fileInputs[field.key]) {
-          showAlertMessage(`${field.name.value} is required`, { variant: "error" });
-          return false;
-        }
-        if (fileContents[field.key] && fileContents[field.key].dimension && field.input.min) {
-          if (
-            field.input.min.width > (fileContents[field.key].dimension?.width || 0) ||
-            field.input.min.height > (fileContents[field.key].dimension?.height || 0)
-          ) {
-            showAlertMessage(
-              `${field.name.value} is invalid. Minium image size is ${field.input.min.width} x ${field.input.min.height}`,
-              { variant: "error" }
-            );
-            return false;
+          if (field.key && fileContents[field.key] && fileContents[field.key].dimension && field?.input?.min) {
+            //@ts-ignore
+            if ( field?.input?.min.width > (fileContents[field.key].dimension?.width || 0) || field?.input?.min?.height > (fileContents[field.key].dimension?.height || 0)
+            ) {
+              showAlertMessage(
+                `${field?.name?.value} is invalid. Minium image size is ${field?.input?.min?.width} x ${field?.input?.min?.height}`,
+                { variant: "error" }
+              );
+              return false;
+            }
           }
-        }
-        if (fileContents[field.key] && fileContents[field.key].dimension && field.input.max) {
-          if (
-            field.input.max.width < (fileContents[field.key].dimension?.width || 0) ||
-            field.input.max.height < (fileContents[field.key].dimension?.height || 0)
-          ) {
-            showAlertMessage(
-              `${field.name.value} is invalid. Maximum image size is ${field.input.max.width} x ${field.input.max.height}`,
-              { variant: "error" }
-            );
-            return false;
+          if (field.key && fileContents[field.key] && fileContents[field.key].dimension && field?.input?.max) {
+            //@ts-ignore
+            if ( field?.input?.max?.width < (fileContents[field.key].dimension?.width || 0) || field?.input?.max?.height < (fileContents[field.key].dimension?.height || 0)
+            ) {
+              showAlertMessage(
+                `${field?.name?.value} is invalid. Maximum image size is ${field?.input?.max?.width} x ${field?.input?.max?.height}`,
+                { variant: "error" }
+              );
+              return false;
+            }
           }
         }
       }
@@ -391,7 +430,7 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
               onClose={() => {
                 setOpenPublic(false);
               }}
-              handleSubmit={() => {}}
+              handleSubmit={() => handleSaveDraft()}
               handleSelect={isPublic => setIsPublic(isPublic)}
             />
           )}
@@ -427,6 +466,9 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
             )}
           </Box>
         </>
+      )}
+      {showUploadingModal && (
+        <FileUploadingModal open={showUploadingModal} progress={progress} isUpload={true} />
       )}
     </>
   );

@@ -115,7 +115,7 @@ const CreateAssetForm = ({
                   <Box
                     className={classes.image}
                     style={{
-                      backgroundImage: `url(${fileContents[asset.key]})`,
+                      backgroundImage: `url(${fileContents[asset.key]?.src})`,
                       backgroundSize: "cover",
                     }}
                   />

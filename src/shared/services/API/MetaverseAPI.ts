@@ -175,6 +175,29 @@ export const uploadWorld = async payload => {
   }
 };
 
+export const uploadAsset = async payload => {
+  try {
+    const formData = new FormData();
+
+    Object.keys(payload).forEach(key => {
+      if (key === "texture")
+        formData.append(key, payload[key], payload[key].name);
+      else formData.append(key, payload[key]);
+    });
+
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.post(`${METAVERSE_URL()}/web/create/asset/upload/`, formData, config);
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    console.log("error in uploading asset:", error);
+  }
+};
+
 export const uploadCollection = async payload => {
   try {
     const formData = new FormData();
