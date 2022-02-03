@@ -31,7 +31,7 @@ export const MessageBox = () => {
       const userId = localStorage.getItem("userId") || userSelector.id;
       socket.off("message");
       socket.on("message", message => {
-        console.log('message', message);
+        console.log("message", message);
         setMessages(msgs => {
           let msgsArray = [...msgs];
           msgsArray.push(message);
@@ -119,12 +119,17 @@ export const MessageBox = () => {
   };
 
   return (
-    <MessageContent
-      specialWidthInput={true}
-      messages={messages}
-      setMessages={msgs => setMessages(msgs)}
-      getMessages={getMessages}
-      loadingMessages={loadingMessages}
-    />
+    <>
+      <Box display="flex" bgcolor="#151515" p="8px" width="fit-content" mx="19px" mt="29px">
+        <Box className={"tab selected"}>Live Chat</Box>
+      </Box>
+      <MessageContent
+        specialWidthInput={true}
+        messages={messages}
+        setMessages={msgs => setMessages(msgs)}
+        getMessages={getMessages}
+        loadingMessages={loadingMessages}
+      />
+    </>
   );
 };
