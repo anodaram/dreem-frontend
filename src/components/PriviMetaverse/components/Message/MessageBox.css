@@ -16,7 +16,7 @@
   cursor: pointer;
   padding: 10px 24px 6px;
   font-weight: 700;
-  font-family: 'GRIFTER';
+  font-family: "GRIFTER";
   font-size: 14px;
   line-height: 120%;
   text-transform: uppercase;
@@ -24,7 +24,7 @@
 }
 
 .tab.selected {
-  background: linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%);
+  background: linear-gradient(92.31deg, #eeff21 -2.9%, #b7ff5c 113.47%);
   color: #212121;
 }
 
@@ -320,7 +320,7 @@
   margin-top: 2px;
   white-space: pre-wrap;
   color: #151515;
-  font-family: "Montserrat";
+  font-family: "Rany";
   font-weight: 500;
   font-size: 14px;
   background: #e9ff26;
@@ -336,7 +336,7 @@
   margin-bottom: 2px;
   margin-top: 2px;
   white-space: pre-wrap;
-  font-family: "Montserrat";
+  font-family: "Rany";
   font-weight: 500;
   font-size: 14px;
   color: #ffffff;

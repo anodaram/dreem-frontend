@@ -5,12 +5,12 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     position: "relative",
     width: "100%",
     height: "100%",
-    backgroundColor: '#151515'
+    backgroundColor: "#151515",
   },
   imageBg: {
-    position: 'fixed',
+    position: "fixed",
     top: 0,
-    width: '100%'
+    width: "100%",
   },
   image1: {
     position: "absolute",
@@ -61,7 +61,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     marginLeft: "auto",
     marginRight: "auto",
     "& > div > h2": {
-      fontFamily: "Agrandir GrandHeavy",
+      fontFamily: "Grifter",
       fontWeight: "800",
       fontSize: "40px",
       lineHeight: "104.5%",
@@ -107,7 +107,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     "-webkit-background-clip": "text",
     textTransform: "uppercase",
     textAlign: "center",
-    width: '100%',
+    width: "100%",
     [theme.breakpoints.down(950)]: {
       fontSize: 28,
     },
@@ -128,7 +128,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       fontSize: "12px !important",
       width: "193px !important",
-    }
+    },
   },
   gamePlayButton: {
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
@@ -144,9 +144,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     alignItems: "center",
     marginTop: "35px",
 
-    '& svg': {
-      marginRight: '13px'
-    }
+    "& svg": {
+      marginRight: "13px",
+    },
   },
   optionSection: {
     display: "flex",
@@ -190,7 +190,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     textAlign: "center",
     margin: "0 40px",
     fontSize: 18,
-    fontFamily: "Agrandir GrandHeavy",
+    fontFamily: "Grifter",
     [theme.breakpoints.down(1250)]: {
       minWidth: 420,
     },
@@ -237,8 +237,8 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       fill: "#fff !important",
     },
     "& span": {
-      color: "#EDFF1C !important"
-    }
+      color: "#EDFF1C !important",
+    },
   },
   filterButtonBox: {
     background: "#FFFFFF1A",
@@ -298,7 +298,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     "& .MuiTableCell-root": {
       border: "none",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
     },
     "& .MuiTableRow-head": {
       background: "transparent",
@@ -306,7 +306,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
         border: "none",
         color: "#4218B5",
         fontSize: "14px",
-        fontFamily: "Montserrat",
+        fontFamily: "Rany",
         fontWeight: 600,
         [theme.breakpoints.down("sm")]: {
           fontSize: "12px",
@@ -317,7 +317,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       "& .MuiTableCell-body": {
         fontSize: 14,
         fontWeight: 600,
-        fontFamily: "Montserrat",
+        fontFamily: "Rany",
         color: "white",
         [theme.breakpoints.down("sm")]: {
           fontSize: 12,
@@ -371,33 +371,33 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     borderImageSlice: "30%",
   },
   gameContent: {
-    backgroundImage: 'linear-gradient(to top, rgba(0,0,0,1), rgba(255,0,0,0))'
+    backgroundImage: "linear-gradient(to top, rgba(0,0,0,1), rgba(255,0,0,0))",
   },
   gameBgImage: {
-    position: 'absolute',
-    width: '100% !important',
-    height: '100% !important',
-    zIndex: -1
+    position: "absolute",
+    width: "100% !important",
+    height: "100% !important",
+    zIndex: -1,
   },
   sliderFooter: {
-    position: 'absolute',
-    bottom: '-38px'
+    position: "absolute",
+    bottom: "-38px",
   },
   sliderLeft: {
-    position: 'absolute',
-    bottom: '100px',
-    left: '-56px'
+    position: "absolute",
+    bottom: "100px",
+    left: "-56px",
   },
   sliderRight: {
-    position: 'absolute',
-    top: '90px',
-    right: '-65px'
+    position: "absolute",
+    top: "90px",
+    right: "-65px",
   },
   sliderRect: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    right: '-59px'
-  }
+    right: "-59px",
+  },
 }));
 
 export const useFilterSelectStyles = makeStyles({
@@ -429,7 +429,7 @@ export const useFilterSelectStyles = makeStyles({
         border: "solid 1px #E9FF26",
       },
     },
-  }
+  },
 });
 
 export const useTabsStyles = makeStyles(theme => ({

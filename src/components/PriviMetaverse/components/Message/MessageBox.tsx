@@ -119,8 +119,15 @@ export const MessageBox = () => {
   };
 
   return (
-    <>
-      <Box display="flex" bgcolor="#151515" p="8px" width="fit-content" mx="19px" mt="29px">
+    <Box
+      style={{
+        background: "#212121",
+        border: "2px solid #151515",
+        boxShadow: "0px 38px 96px 17px rgba(1, 1, 13, 0.5), 0px 16px 1px -488px rgba(0, 0, 0, 0.18)",
+        height: "42%",
+      }}
+    >
+      <Box display="flex" bgcolor="#151515" p="8px" width="fit-content" mx="19px" mt="22px">
         <Box className={"tab selected"}>Live Chat</Box>
       </Box>
       <MessageContent
@@ -130,6 +137,6 @@ export const MessageBox = () => {
         getMessages={getMessages}
         loadingMessages={loadingMessages}
       />
-    </>
+    </Box>
   );
 };
