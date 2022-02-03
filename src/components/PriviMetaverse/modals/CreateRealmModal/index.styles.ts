@@ -24,7 +24,7 @@ export const useModalStyles = makeStyles(theme => ({
     },
     "& p": {
       fontStyle: "normal",
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       fontSize: 18,
       fontWeight: 500,
       lineHeight: "160%",

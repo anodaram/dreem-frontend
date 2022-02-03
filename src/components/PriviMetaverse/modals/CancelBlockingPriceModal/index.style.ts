@@ -7,7 +7,7 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
   },
   nameField: {
     margin: "27px 0px 7px 0px",
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     fontStyle: "normal",
     fontWeight: 500,
     fontSize: "14px",
@@ -110,24 +110,24 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
   cancelDesc: {
     color: "#ffffff",
     marginBottom: 64,
-    textAlign: 'center',
-    padding: '16px 50px',
-    fontSize: '16px',
-    lineHeight: '24px'
+    textAlign: "center",
+    padding: "16px 50px",
+    fontSize: "16px",
+    lineHeight: "24px",
   },
   cancelButton: {
     backgroundColor: "transparent !important",
     color: "#DDFF57 !important",
     border: "1px solid #E9FF26 !important",
     borderRadius: "40px !important",
-    width: '165px !important',
-    textTransform: "uppercase"
+    width: "165px !important",
+    textTransform: "uppercase",
   },
   editPriceButton: {
     backgroundColor: "#DDFF57 !important",
     color: "#0B151C !important",
-    width: '165px !important',
+    width: "165px !important",
     borderRadius: "40px !important",
-    textTransform: "uppercase"
-  }
+    textTransform: "uppercase",
+  },
 }));

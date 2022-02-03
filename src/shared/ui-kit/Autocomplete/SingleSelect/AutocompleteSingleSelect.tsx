@@ -79,7 +79,7 @@ const Option = styled.div`
   color: white;
   font-size: 14,
   font-weight: 500,
-  font-family: Montserrat;
+  font-family: Rany;
 `;
 
 const OptionContent = styled.div`
@@ -87,7 +87,7 @@ const OptionContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: left;
-  font-family: Montserrat;
+  font-family: Rany;
   font-size: 14px;
   font-weight: 500;
 `;

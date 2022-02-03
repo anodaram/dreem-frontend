@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   datePickerInputMusicDao: {
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     padding: "11px 19px",
     borderRadius: "8px",
     border: "1px solid #DADADB",

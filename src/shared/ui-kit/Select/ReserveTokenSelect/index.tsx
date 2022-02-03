@@ -108,7 +108,7 @@ const useStyles = makeStyles(theme => ({
       border: "none",
       backgroundColor: "#F0F5F5",
       color: "#181818",
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       fontSize: "14px",
       paddingLeft: "10px",
       borderRadius: "8px",

@@ -44,7 +44,7 @@ export const RentNFTModalStyles = makeStyles(theme => ({
     },
   },
   maxTime: {
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     fontStyle: "normal",
     fontWeight: 500,
     fontSize: "14px",

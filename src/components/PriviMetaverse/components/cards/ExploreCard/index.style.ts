@@ -137,7 +137,7 @@ export const cardStyles = makeStyles(theme => ({
       marginLeft: 10,
       color: "#FFFFFF",
       opacity: 0.7,
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       fontWeight: 600,
       fontSize: 12,
       overflow: "hidden",

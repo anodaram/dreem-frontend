@@ -11,7 +11,7 @@ export const useModalStyles = makeStyles(theme => ({
     marginLeft: "auto",
     marginRight: "auto",
     padding: "0 96px",
-    position: 'relative',
+    position: "relative",
     [theme.breakpoints.down("sm")]: {
       padding: "0 24px",
     },
@@ -44,7 +44,7 @@ export const useModalStyles = makeStyles(theme => ({
     },
     "& p": {
       fontStyle: "normal",
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       fontSize: 18,
       fontWeight: 500,
       lineHeight: "160%",
@@ -92,7 +92,7 @@ export const useModalStyles = makeStyles(theme => ({
     lineHeight: "120%",
     textTransform: "uppercase",
     textAlign: "center",
-    marginBottom: "30px"
+    marginBottom: "30px",
   },
   description: {
     fontSize: 14,
@@ -109,7 +109,7 @@ export const useModalStyles = makeStyles(theme => ({
     fontFamily: "GRIFTER",
     lineHeight: "17px",
     textTransform: "uppercase",
-    marginBottom: "22px"
+    marginBottom: "22px",
   },
   itemTitle: {
     fontSize: 16,
@@ -125,7 +125,7 @@ export const useModalStyles = makeStyles(theme => ({
     height: "60px",
     background: "rgba(218, 230, 229, 0.06)",
     border: "1px solid #DAE6E5",
-    boxSizing: "border-box"
+    boxSizing: "border-box",
   },
   mintBtn: {
     display: "flex",
@@ -135,7 +135,7 @@ export const useModalStyles = makeStyles(theme => ({
     fontSize: "14px !important",
     backgroundColor: "#E9FF26 !important",
     borderRadius: "27.661px !important",
-    color: "#212121 !important"
+    color: "#212121 !important",
   },
   finishBtn: {
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%) !important",
@@ -149,6 +149,6 @@ export const useModalStyles = makeStyles(theme => ({
     textTransform: "uppercase",
     textAlign: "center",
     height: "auto !important",
-    color: "#212121 !important"
+    color: "#212121 !important",
   },
 }));

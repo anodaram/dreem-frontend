@@ -23,7 +23,7 @@ export const transHistoryStyles = makeStyles(theme => ({
     borderRadius: "30px",
     color: Color.MusicDAODark,
     fontSize: "14px",
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     fontWeight: 600,
     lineHeight: "18px",
     "& svg": {
@@ -69,7 +69,7 @@ export const transHistoryStyles = makeStyles(theme => ({
     },
   },
   inputs: {
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     color: Color.Black,
     fontSize: "14px",
     lineHeight: "120%",
@@ -118,7 +118,7 @@ export const transHistoryStyles = makeStyles(theme => ({
       paddingRight: "8px",
       width: "fit-content",
       "& *": {
-        fontFamily: "Montserrat",
+        fontFamily: "Rany",
         color: Color.MusicDAODark,
         fontSize: "14px",
       },
@@ -130,7 +130,7 @@ export const transHistoryStyles = makeStyles(theme => ({
       },
     },
     "& *": {
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       color: Color.MusicDAODark,
       fontSize: "14px",
     },
@@ -163,7 +163,7 @@ export const transHistoryStyles = makeStyles(theme => ({
 export const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     head: {
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       fontSize: "14px",
       border: "none",
       fontWeight: 800,
@@ -174,7 +174,7 @@ export const StyledTableCell = withStyles((theme: Theme) =>
     },
     body: {
       fontSize: "13px",
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       borderBottom: "1px solid #0000001a",
       background: "white",
       color: "#54658F",
@@ -187,7 +187,7 @@ export const StyledTableCellColor = withStyles((theme: Theme) =>
   createStyles({
     body: {
       fontSize: "13px",
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       borderBottom: "1px solid #0000001a",
       background: "white",
       color: "#54658F",

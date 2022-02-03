@@ -26,7 +26,7 @@ export const useModalStyles = makeStyles(theme => ({
     },
     "& p": {
       fontStyle: "normal",
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       fontSize: 18,
       fontWeight: 500,
       lineHeight: "160%",
@@ -316,7 +316,7 @@ export const useModalStyles = makeStyles(theme => ({
     marginLeft: "auto",
     marginRight: "auto",
     padding: "0 96px",
-    position: 'relative',
+    position: "relative",
     [theme.breakpoints.down("sm")]: {
       padding: "0 24px",
     },
@@ -331,9 +331,9 @@ export const useModalStyles = makeStyles(theme => ({
     textAlign: "center",
     fontFamily: "GRIFTER",
     textTransform: "uppercase",
-    display: 'flex',
+    display: "flex",
     "& svg": {
-      marginRight: '8px'
+      marginRight: "8px",
     },
     [theme.breakpoints.down("sm")]: {
       fontSize: 30,
@@ -415,7 +415,7 @@ export const useModalStyles = makeStyles(theme => ({
     cursor: "pointer",
     textTransform: "uppercase",
     height: "50px !important",
-    marginLeft: "10px"
+    marginLeft: "10px",
   },
   footer: {
     position: "fixed",
@@ -432,63 +432,63 @@ export const useModalStyles = makeStyles(theme => ({
     display: "flex",
   },
   inputBox: {
-    width: '50%',
-    background: 'linear-gradient(0deg, rgba(218, 230, 229, 0.06), rgba(218, 230, 229, 0.06))',
-    display: 'flex',
-    alignItems: 'center',
-    position: 'relative',
-    float: 'left',
+    width: "50%",
+    background: "linear-gradient(0deg, rgba(218, 230, 229, 0.06), rgba(218, 230, 229, 0.06))",
+    display: "flex",
+    alignItems: "center",
+    position: "relative",
+    float: "left",
     "& label": {
-      display: 'block',
-      position: 'relative',
-      cursor: 'pointer',
+      display: "block",
+      position: "relative",
+      cursor: "pointer",
       fontSize: 16,
       fontWeight: 500,
       fontFamily: "Rany",
       lineHeight: "104.5%",
       textTransform: "uppercase",
-      padding: '25px 25px 25px 90px',
-      zIndex: 9
+      padding: "25px 25px 25px 90px",
+      zIndex: 9,
     },
     "& .check": {
-      display: 'block',
-      position: 'absolute',
-      border: '2px solid #E9FF26',
-      borderRadius: '100%',
-      height: '28px',
-      width: '28px',
-      left: '20px',
-      marginLeft: '20px',
+      display: "block",
+      position: "absolute",
+      border: "2px solid #E9FF26",
+      borderRadius: "100%",
+      height: "28px",
+      width: "28px",
+      left: "20px",
+      marginLeft: "20px",
       zIndex: 5,
-      transition: 'border .25s linear',
+      transition: "border .25s linear",
       "& .inside": {
-        display: 'block',
-        position: 'absolute',
-        borderRadius: '100%',
-        height: '12px',
-        width: '12px',
-        top: '6px',
-        left: '6px',
-        margin: 'auto',
-        transition: 'background 0.25s linear'
+        display: "block",
+        position: "absolute",
+        borderRadius: "100%",
+        height: "12px",
+        width: "12px",
+        top: "6px",
+        left: "6px",
+        margin: "auto",
+        transition: "background 0.25s linear",
       },
       "&:hover": {
-        border: '2px solid #FFFFFF'
+        border: "2px solid #FFFFFF",
       },
     },
     "&:hover": {
-      background: '#3c2a5a',
-    }
+      background: "#3c2a5a",
+    },
   },
   inputRadio: {
-    position: 'absolute',
-    visibility: 'hidden',
+    position: "absolute",
+    visibility: "hidden",
     zIndex: 4,
     "&:checked ~ .check": {
-      border: '2px solid #E9FF26',
+      border: "2px solid #E9FF26",
     },
     "&:checked ~ .check>.inside": {
-      background: '#E9FF26',
+      background: "#E9FF26",
     },
   },
   inputText: {
@@ -502,15 +502,15 @@ export const useModalStyles = makeStyles(theme => ({
     color: "white",
     padding: "12px 20px",
     "&::-webkit-inner-spin-button": {
-      '-webkit-appearance': 'none',
-      margin: 0
-    }
+      "-webkit-appearance": "none",
+      margin: 0,
+    },
   },
   percentLabel: {
     position: "absolute",
     top: "15.5px",
-    right: "14.5px"
-  }
+    right: "14.5px",
+  },
 }));
 
 export const useFilterSelectStyles = makeStyles({
