@@ -69,13 +69,13 @@ export const MakeEditBlockingPriceModalStyles = makeStyles(theme => ({
     },
   },
   usdt: {
-    fontFamily: "Agrandir GrandHeavy !important",
+    fontFamily: "Grifter !important",
     color: "#ffffff",
     fontWeight: 800,
     fontSize: "16px",
   },
   totalText: {
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontStyle: "normal",
     fontWeight: 800,
     fontSize: "14px",

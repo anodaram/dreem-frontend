@@ -75,11 +75,11 @@ const Option = styled.div`
   height: ${OPTION_HEIGHT};
   display: flex;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-family: Agrandir;
+  font-family: Grifter;
   color: white;
   font-size: 14,
   font-weight: 500,
-  font-family: Montserrat;
+  font-family: Rany;
 `;
 
 const OptionContent = styled.div`
@@ -87,7 +87,7 @@ const OptionContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: left;
-  font-family: Montserrat;
+  font-family: Rany;
   font-size: 14px;
   font-weight: 500;
 `;

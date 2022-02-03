@@ -10,6 +10,7 @@ import DiscordVideoFullScreen from "shared/ui-kit/Page-components/Discord/Discor
 
 import { saveAs } from "file-saver";
 
+import Box from "shared/ui-kit/Box";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import { ReactComponent as PlaySolid } from "assets/icons/play-solid.svg";
 import { ReactComponent as DownloadSolid } from "assets/icons/download-solid.svg";
@@ -109,20 +110,25 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const MessageItemFC = ({ user, message, messageContentRef }) => {
+const MessageItemFC = ({ message, messageContentRef }) => {
   const playerVideo = React.useRef(null);
   const classes = useStyles();
   const [selectedPhoto, setSelectedPhoto] = React.useState<string>("");
   const [selectedVideo, setSelectedVideo] = React.useState<string>("");
   const [openModalPhotoFullScreen, setOpenModalPhotoFullScreen] = React.useState<boolean>(false);
   const [openModalVideoFullScreen, setOpenModalVideoFullScreen] = React.useState<boolean>(false);
-  const isLeftItem = user?.userId === message.from;
-  const isRightItem = user?.userd !== message.from;
+  const [isOwnMessage, setIsOwnMessage] = React.useState(false);
 
   const { downloadWithNonDecryption } = useIPFS();
 
   const [fileIPFS, setFileIPFS] = useState<any>(null);
   const [fileBlobIPFS, setFileBlobIPFS] = useState<any>(null);
+
+  useEffect(() => {
+    const user = message.from;
+    const selfId = localStorage.getItem("userId");
+    setIsOwnMessage(user.id === selfId);
+  }, [message]);
 
   useEffect(() => {
     if (
@@ -192,14 +198,19 @@ const MessageItemFC = ({ user, message, messageContentRef }) => {
     saveAs(`${message.url}`, message.message);
   };
 
-  if (!isLeftItem && !isRightItem) return null;
   return (
     <>
-      <div className={isLeftItem ? "left-item" : "right-item"} id={message.id}>
-        {isLeftItem && (
+      <Box
+        display="flex"
+        width="100%"
+        my="4px"
+        className={!isOwnMessage ? "left-item" : "right-item"}
+        id={message.id}
+      >
+        {!isOwnMessage && (
           <div className="avatar-container" style={{ background: "transparent" }}>
             <img
-              src={user?.userFoto ?? getDefaultAvatar()}
+              src={message.from?.url || getDefaultAvatar()}
               alt="Avatar"
               className="message-item-avatar"
               style={{
@@ -207,7 +218,6 @@ const MessageItemFC = ({ user, message, messageContentRef }) => {
                 height: "32px",
                 borderRadius: "50%",
                 objectFit: "cover",
-                marginTop: "8px",
               }}
             />
           </div>
@@ -229,7 +239,7 @@ const MessageItemFC = ({ user, message, messageContentRef }) => {
                 backgroundSize: "cover",
               }}
             ></div>
-            <div className="item-subtitle grey" style={{ marginLeft: isLeftItem ? 16 : 0 }}>
+            <div className="item-subtitle grey" style={{ marginLeft: !isOwnMessage ? 16 : 0 }}>
               <Moment fromNow className={classes.itemMeta}>
                 {message.created}
               </Moment>
@@ -257,7 +267,7 @@ const MessageItemFC = ({ user, message, messageContentRef }) => {
                 progressInterval={200}
               />
             </div>
-            <div className="item-subtitle grey" style={{ marginLeft: isLeftItem ? 16 : 0 }}>
+            <div className="item-subtitle grey" style={{ marginLeft: !isOwnMessage ? 16 : 0 }}>
               <Moment fromNow className={classes.itemMeta}>
                 {message.created}
               </Moment>
@@ -280,7 +290,7 @@ const MessageItemFC = ({ user, message, messageContentRef }) => {
                 <p className={classes.noMessagesLabelChat}>Loading audio...</p>
               )}
             </div>
-            <div className="item-subtitle grey" style={{ marginLeft: isLeftItem ? 16 : 0 }}>
+            <div className="item-subtitle grey" style={{ marginLeft: !isOwnMessage ? 16 : 0 }}>
               <Moment fromNow className={classes.itemMeta}>
                 {message.created}
               </Moment>
@@ -309,7 +319,7 @@ const MessageItemFC = ({ user, message, messageContentRef }) => {
                 </SvgIcon>
               </div>
             </div>
-            <div className="item-subtitle grey" style={{ marginLeft: isLeftItem ? 16 : 0 }}>
+            <div className="item-subtitle grey" style={{ marginLeft: !isOwnMessage ? 16 : 0 }}>
               <Moment fromNow className={classes.itemMeta}>
                 {message.created}
               </Moment>
@@ -319,17 +329,7 @@ const MessageItemFC = ({ user, message, messageContentRef }) => {
           <>
             {typeof message.message === "string" && (
               <div className="item-content">
-                <div className="item-subtitle">{message?.fromType?.toUpperCase()}</div>
-                <div className="item-message">
-                  {message.message.includes("data:audio/wav;") ? (
-                    <audio style={{ width: "200px" }} controls src={JSON.parse(message.message)}>
-                      The “audio” tag is not supported by your browser. Click [here] to download the sound
-                      file.
-                    </audio>
-                  ) : (
-                    message.message
-                  )}
-                </div>
+                <div className="item-message">{message.message}</div>
                 <Moment fromNow className="item-subtitle">
                   {message.created}
                 </Moment>
@@ -337,7 +337,7 @@ const MessageItemFC = ({ user, message, messageContentRef }) => {
             )}
           </>
         )}
-      </div>
+      </Box>
 
       {selectedPhoto && openModalPhotoFullScreen && (
         <Modal

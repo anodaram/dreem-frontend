@@ -54,7 +54,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     marginLeft: "auto",
     marginRight: "auto",
     "& > div > h2": {
-      fontFamily: "Agrandir GrandHeavy",
+      fontFamily: "Grifter",
       fontWeight: "800",
       fontSize: "40px",
       lineHeight: "104.5%",

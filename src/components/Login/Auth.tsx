@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { HashRouter as Router } from "react-router-dom";
 import axios from "axios";
 import io from "socket.io-client";
+import { useWeb3React } from "@web3-react/core";
 
 import { setUser, signOut } from "store/actions/User";
 import { useTypedSelector } from "store/reducers/Reducer";
@@ -15,15 +15,20 @@ import { UserConnectionsContextProvider } from "shared/contexts/UserConnectionsC
 import { TokenConversionContextProvider } from "shared/contexts/TokenConversionContext";
 import { PageRefreshContextProvider } from "shared/contexts/PageRefreshContext";
 import { MessagesContextProvider } from "shared/contexts/MessagesContext";
-import { AuthContextProvider, useAuth } from "shared/contexts/AuthContext";
-import NavBar from "shared/ui-kit/Navigation/NavBar";
-import URL from "shared/functions/getURL";
 import { IPFSContextProvider } from "shared/contexts/IPFSContext";
-import { useWeb3React } from "@web3-react/core";
+import { useAuth } from "shared/contexts/AuthContext";
+import NavBar from "shared/ui-kit/Navigation/NavBar";
+import URL, { LISTENER_URL } from "shared/functions/getURL";
 
 export let socket: SocketIOClient.Socket;
+export let listenerSocket : SocketIOClient.Socket;
+
 export const setSocket = (sock: SocketIOClient.Socket) => {
   socket = sock;
+};
+
+export const setListenerSocket = (sock: SocketIOClient.Socket) => {
+  listenerSocket = sock;
 };
 
 const Auth = () => {
@@ -38,8 +43,8 @@ const Auth = () => {
   const [internalSocket] = useState<SocketIOClient.Socket | null>(null);
 
   useEffect(() => {
-    if (user.id) {
-      const userId = user.id;
+    const userId = localStorage.getItem("userId") || user.id;
+    if (userId) {
       axios
         .get(`${URL()}/user/getUserCounters/${userId}`)
         .then(res => {
@@ -50,6 +55,8 @@ const Auth = () => {
           }
         })
         .catch(err => console.log("numberMessages error: ", err));
+
+      // set socket with BE
       if (!socket) {
         const sock = io(URL(), { query: { token: localStorage.getItem("token")?.toString() || "" } });
         sock.connect();
@@ -57,6 +64,13 @@ const Auth = () => {
         sock.emit("add user", localStorage.getItem("userId")?.toString() || "");
       }
       socket && socket.emit("subscribeToYou", { _id: userId });
+
+      // set socket with Listener
+      if (!listenerSocket) {
+        const listenerSock = io(URL(), { query: { token: localStorage.getItem("token")?.toString() || "" } });
+        listenerSock.connect();
+        setListenerSocket(listenerSock);
+      }
 
       if (!user.email) {
         const token: string = localStorage.getItem("token") || "";

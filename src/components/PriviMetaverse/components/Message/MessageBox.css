@@ -4,6 +4,30 @@
   width: 100%;
   position: relative;
 }
+
+.tab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: transparent;
+  border-radius: 2px;
+  color: white;
+  cursor: pointer;
+  padding: 10px 24px 6px;
+  font-weight: 700;
+  font-family: 'GRIFTER';
+  font-size: 14px;
+  line-height: 120%;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.tab.selected {
+  background: linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%);
+  color: #212121;
+}
+
 .message-box.pix {
   height: calc(100vh - 72px);
 }
@@ -215,18 +239,34 @@
   cursor: pointer;
 }
 
-.message-content .item-list .left-item .item-content {
-  background: #eff2f8;
-  border-radius: 10px;
-  color: #2d3047;
-  padding: 15px;
+.item-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-width: 80%;
+}
+
+.left-item .item-content {
+  align-items: flex-start;
 }
 
 .item-list-container {
   overflow-y: auto;
-  scrollbar-width: none;
-  margin: 27px 25px;
+  margin: 27px 13px 27px 25px;
+  padding-right: 12px;
   flex: 1;
+  max-height: 30vh;
+  max-width: 404px;
+}
+.item-list-container::-webkit-scrollbar {
+  width: 7px;
+}
+.item-list-container::-webkit-scrollbar-track {
+  background: rgba(21, 21, 21, 0.2);
+}
+.item-list-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 30px;
 }
 .message-content .no-items-label {
   width: 100%;
@@ -243,13 +283,16 @@
   flex: 1;
 }
 
-.message-content .item-list .right-item .item-content {
-  border: none;
-  background: #4218b5;
-  border-radius: 10px;
-  color: #fff;
-  padding: 13px;
-  max-width: 80%;
+.right-item {
+  justify-content: flex-end;
+}
+
+.left-item {
+  justify-content: flex-start;
+}
+
+.right-item .item-content {
+  align-items: flex-end;
 }
 
 .left-item .item-subtitle {
@@ -276,6 +319,15 @@
   margin-bottom: 2px;
   margin-top: 2px;
   white-space: pre-wrap;
+  color: #151515;
+  font-family: "Montserrat";
+  font-weight: 500;
+  font-size: 14px;
+  background: #e9ff26;
+  border-radius: 4px;
+  padding: 6px 12px;
+  width: fit-content;
+  float: right;
 }
 
 .left-item .item-content .item-message {
@@ -284,6 +336,11 @@
   margin-bottom: 2px;
   margin-top: 2px;
   white-space: pre-wrap;
+  font-family: "Montserrat";
+  font-weight: 500;
+  font-size: 14px;
+  color: #ffffff;
+  background: transparent;
 }
 
 .right-item .item-content .item-file {
@@ -321,26 +378,23 @@
   cursor: pointer;
 }
 
-.message-content .item-list .avatar-container {
+.avatar-container {
   border-radius: 50%;
   background-color: white;
   display: flex;
   justify-content: center;
-  align-items: center;
-  /* filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.2)); */
-  width: 40px;
-  height: 40px;
-  margin-right: 20px;
+  align-items: top;
+  margin-right: 15px;
 }
+
+.avatar-container > img {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
 .message-content .item-list .avatar-container .message-item-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-}
-.message-content .item-list .item-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
 }
 .message-list .item-list .item-content .message img {
   width: 30px;

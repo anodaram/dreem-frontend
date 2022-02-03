@@ -22,7 +22,7 @@ export const useStyles = makeStyles(theme => ({
     },
     "& > svg path": {
       stroke: "white",
-    }
+    },
   },
   title: {
     fontFamily: "GRIFTER",
@@ -37,7 +37,7 @@ export const useStyles = makeStyles(theme => ({
     },
   },
   description: {
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     fontStyle: "normal",
     fontWeight: 500,
     fontSize: "16px",
@@ -48,7 +48,7 @@ export const useStyles = makeStyles(theme => ({
     },
   },
   alert: {
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     fontStyle: "normal",
     fontWeight: 500,
     fontSize: "16px",
@@ -80,7 +80,7 @@ export const useStyles = makeStyles(theme => ({
     border: "1px solid rgba(84, 101, 143, 0.3)",
     borderRadius: 28,
     width: 452,
-    height: 452
+    height: 452,
   },
   button: {
     position: "relative",
@@ -90,7 +90,7 @@ export const useStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "center",
     padding: "38px 40px",
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     fontStyle: "normal",
     fontWeight: 600,
     fontSize: "22px",
@@ -101,7 +101,7 @@ export const useStyles = makeStyles(theme => ({
       border: "1px solid #2D3047",
     },
     "&:active": {
-      opacity: 0.5
+      opacity: 0.5,
     },
     "& > .icon": {
       position: "absolute",
@@ -115,7 +115,7 @@ export const useStyles = makeStyles(theme => ({
       [theme.breakpoints.down("xs")]: {
         fontSize: "16px",
         padding: "24px 12px",
-      }
+      },
     },
     [theme.breakpoints.down("sm")]: {
       justifyContent: "flex-end",

@@ -19,6 +19,10 @@ const URL = (): string => {
   return process.env.REACT_APP_PRIVI_BACKEND_URL ?? "http://localhost:3000";
 };
 
+export const LISTENER_URL = (): string => {
+  return process.env.REACT_APP_PRIVI_LISTENER_URL ?? "http://localhost:3006";
+};
+
 export const METAVERSE_URL = (): string => {
   return process.env.REACT_APP_PRIVI_METAVERSE_URL ?? "http://localhost:3000";
 };

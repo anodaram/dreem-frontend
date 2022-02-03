@@ -14,7 +14,7 @@ const Button = styled.div<ButtonProps>`
   margin-top: ${p => (p.dark || p.light ? 0 : "50px")};
   margin-bottom: ${p => (p.dark || p.light ? 0 : "30px")};
   cursor: pointer;
-  font-family: ${p => (p.light ? "Agrandir" : "sans-serif")};
+  font-family: ${p => (p.light ? "Grifter" : "sans-serif")};
   font-size: 18px;
   font-weight: 400;
   display: flex;
@@ -42,7 +42,7 @@ export const BackButton = ({
   };
 
   return (
-    <Button onClick={overrideFunction ?? onClick} dark={dark} light={light} style={{width:"fit-content"}}>
+    <Button onClick={overrideFunction ?? onClick} dark={dark} light={light} style={{ width: "fit-content" }}>
       {dark ? (
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">
           <path

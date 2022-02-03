@@ -59,13 +59,13 @@ export const SetSellingPriceModalStyles = makeStyles(theme => ({
     },
   },
   usdt: {
-    fontFamily: "Agrandir GrandHeavy !important",
+    fontFamily: "Grifter !important",
     color: "#431AB7",
     fontWeight: 800,
     fontSize: "16px",
   },
   totalText: {
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontStyle: "normal",
     fontWeight: 800,
     fontSize: "14px",
@@ -87,7 +87,7 @@ export const SetSellingPriceModalStyles = makeStyles(theme => ({
     "&:disabled": {
       background: "linear-gradient(#B7FF5C, #EEFF21) !important",
       color: "#212121 !important",
-    }
+    },
   },
   cancelModal: {
     maxWidth: "521px !important",
@@ -98,7 +98,7 @@ export const SetSellingPriceModalStyles = makeStyles(theme => ({
     justifyContent: "center",
   },
   cancelTitle: {
-    fontFamily: "Agrandir GrandHeavy",
+    fontFamily: "Grifter",
     fontSize: "18px",
     color: "#2D3047",
   },

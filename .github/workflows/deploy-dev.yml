@@ -40,8 +40,8 @@ jobs:
     - run: yarn build
       env:
         NODE_OPTIONS: '--max_old_space_size=8192'
-        REACT_APP_PRIVI_BACKEND_URL: 'https://priv-iweb-backend-x68uu.ondigitalocean.app/backend'
-        REACT_APP_PRIVI_METAVERSE_URL: 'https://dev.privi-metaverse.com'
+        REACT_APP_PRIVI_BACKEND_URL: 'https://dev-be.dreem.xyz'
+        REACT_APP_PRIVI_METAVERSE_URL: 'https://dream-app-backend-4nedb.ondigitalocean.app'
         CI: false
     - run: ls -a
     - run: rm -fr .git/

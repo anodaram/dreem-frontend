@@ -68,7 +68,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     fontWeight: 600,
     color: Color.MusicDAODark,
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
 
     "& svg": {
       height: "14px",
@@ -101,7 +101,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: "14px",
     background: "#F7F9FE",
     boxSizing: "border-box",
-    fontFamily: "Agrandir",
+    fontFamily: "Rany",
     marginTop: theme.spacing(1),
     borderRadius: "6px",
     outline: "none",
@@ -114,7 +114,7 @@ const useStyles = makeStyles(theme => ({
     },
     "& *": {
       color: "#181818",
-      fontFamily: "Agrandir",
+      fontFamily: "Rany",
     },
     [theme.breakpoints.down("xs")]: {
       padding: "11.5px 8px",
@@ -126,7 +126,7 @@ const useStyles = makeStyles(theme => ({
     padding: "19px 16px",
     fontSize: "14px",
     color: "white",
-    fontFamily: "Agrandir",
+    fontFamily: "Rany",
     marginTop: theme.spacing(1),
     outline: "none",
     borderRadius: 0,
@@ -141,7 +141,7 @@ const useStyles = makeStyles(theme => ({
     },
     "& *": {
       color: "white",
-      fontFamily: "Agrandir",
+      fontFamily: "Rany",
     },
   },
   inputBoxMusicDao: {
@@ -153,7 +153,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: "14px",
     background: "rgba(218, 230, 229, 0.4)",
     boxSizing: "border-box",
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     marginTop: theme.spacing(1),
     borderRadius: "8px",
     outline: "none",
@@ -168,7 +168,7 @@ const useStyles = makeStyles(theme => ({
     },
     "& *": {
       color: "rgba(45, 48, 71, 0.7)",
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       fontWeight: 500,
     },
   },
