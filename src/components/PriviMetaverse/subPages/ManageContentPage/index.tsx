@@ -25,6 +25,7 @@ import CreateCollection from "./components/CreateCollection";
 import CreateNFTFlow from "./components/CreateNFTFlow";
 import CreateTextureFlow from "./components/CreateTextureFlow";
 import CreateMaterialFlow from "./components/CreateMaterialFlow";
+import CreateAssetFlow from "./components/CreateAssetFlow";
 import Create3DAssetFlow from "./components/Create3DAssetFlow";
 import CreateCharacterFlow from "./components/CreateCharacterFlow";
 import SelectType from "./components/SelectType";
@@ -532,32 +533,9 @@ export default function ManageContentPage() {
             }}
           />
         )}
-        {step === 2 && selectedAsset?.key === "WORLD" && (
-          <CreateNFTFlow
-            metaData={metaDataForModal}
-            handleCancel={handlePrev}
-          />
-        )}
-        {step === 2 && selectedAsset?.key === "TEXTURE" && (
-          <CreateTextureFlow
-            handleCancel={handlePrev}
-          />
-        )}
-        {step === 2 && selectedAsset?.key === "MATERIAL" && (
-          <CreateMaterialFlow
-            metaData={metaDataForModal}
-            handleCancel={handlePrev}
-          />
-        )}
-        {step === 2 && selectedAsset?.key === "3d-asset" && (
-          <Create3DAssetFlow
-            metaData={metaDataForModal}
-            handleCancel={handlePrev}
-          />
-        )}
-        {step === 2 && selectedAsset?.key === "CHARACTER" && (
-          <CreateCharacterFlow
-            metaData={metaDataForModal}
+        {step == 2 && selectedAsset?.key && (
+          <CreateAssetFlow 
+            assetItem={selectedAsset.key}
             handleCancel={handlePrev}
           />
         )}
