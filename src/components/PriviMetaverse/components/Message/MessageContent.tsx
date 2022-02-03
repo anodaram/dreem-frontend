@@ -21,15 +21,13 @@ import "./MessageBox.css";
 import Moment from "react-moment";
 
 export const MessageFooter = props => {
-  const { chat, messages, setMessages, specialWidthInput, setMediaUpdate } = props;
+  const { messages, setMessages, setMediaUpdate } = props;
 
   const dispatch = useDispatch();
-  const userSelector = useSelector((state: RootState) => state.user);
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
 
   const [audioMessage, setAudioMessage] = useState<boolean>(false);
   const [msg, setMsg] = useState<string>("");
-  const [mediaBlobUrl, setMediaBlobUrl] = React.useState<any>();
   const [status, setStatus] = useState<any>("");
   const emojiRef = useRef<any>();
   const inputRef = useRef<any>();
@@ -42,20 +40,13 @@ export const MessageFooter = props => {
 
   const onChangeMessagePhoto = async (file: any) => {
     try {
-      let from: string = "";
-      let to: string = "";
-      if (userSelector.id === chat.users.userFrom.userId) {
-        from = chat.users.userFrom.userId;
-        to = chat.users.userTo.userId;
-      } else {
-        from = chat.users.userTo.userId;
-        to = chat.users.userFrom.userId;
-      }
+      let from: string = localStorage.getItem("userId") || "";
+      if (!from) return;
 
       let infoImage = await onUploadNonEncrypt(file, file => uploadWithNonEncryption(file, false));
 
       axios
-        .post(`${ServerURL()}/chat/addMessagePhoto/${chat.room}/${from}/${to}`, infoImage)
+        .post(`${ServerURL()}/chat/addMessagePhoto/${from}`, infoImage)
         .then(response => {
           if (response.data && response.data.success) {
             let msg: any = response.data.data;
@@ -68,7 +59,6 @@ export const MessageFooter = props => {
             setMessages(messagesCopy);
 
             const chatObj = {
-              ...chat,
               lastMessage: msg.type,
               lastMessageDate: msg.created,
               messages: messagesCopy,
@@ -114,94 +104,15 @@ export const MessageFooter = props => {
     }
   };
 
-  const onChangeMessageAudio = async (file: any) => {
-    try {
-      let from: string = "";
-      let to: string = "";
-      if (userSelector.id === chat.users.userFrom.userId) {
-        from = chat.users.userFrom.userId;
-        to = chat.users.userTo.userId;
-      } else {
-        from = chat.users.userTo.userId;
-        to = chat.users.userFrom.userId;
-      }
-
-      let infoImage = await onUploadNonEncrypt(file, file => uploadWithNonEncryption(file, false));
-
-      axios
-        .post(`${ServerURL()}/chat/addMessageAudio/${chat.room}/${from}/${to}`, infoImage)
-        .then(response => {
-          if (response.data && response.data.success) {
-            let msg: any = response.data.data;
-
-            msg.noAddMessage = true;
-            socket.emit("add-message", msg);
-
-            let messagesCopy = [...messages];
-            messagesCopy.push(msg);
-            setMessages(messagesCopy);
-
-            const chatObj = {
-              ...chat,
-              lastMessage: msg.type,
-              lastMessageDate: msg.created,
-              messages: messagesCopy,
-            };
-            if (props.setChat) {
-              props.setChat(chatObj);
-            }
-
-            dispatch(setChat(chatObj));
-            dispatch(setMessage(msg));
-
-            setStatus({
-              msg: "Audio uploaded successfully",
-              key: Math.random(),
-              variant: "success",
-            });
-          } else {
-            console.log(response.data);
-            setStatus({
-              msg: response.data.error,
-              key: Math.random(),
-              variant: "error",
-            });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-          setStatus({
-            msg: "Error uploading audio",
-            key: Math.random(),
-            variant: "error",
-          });
-        });
-    } catch (error) {
-      console.log(error);
-      setStatus({
-        msg: "Error uploading audio",
-        key: Math.random(),
-        variant: "error",
-      });
-    }
-  };
-
   const onChangeMessageOther = async (file: any) => {
     try {
-      let from: string = "";
-      let to: string = "";
-      if (userSelector.id === chat.users.userFrom.userId) {
-        from = chat.users.userFrom.userId;
-        to = chat.users.userTo.userId;
-      } else {
-        from = chat.users.userTo.userId;
-        to = chat.users.userFrom.userId;
-      }
+      let from: string = localStorage.getItem("userId") || "";
+      if (!from) return;
 
       let infoImage = await onUploadNonEncrypt(file, file => uploadWithNonEncryption(file, false));
 
       axios
-        .post(`${ServerURL()}/chat/addMessageFile/${chat.room}/${from}/${to}`, infoImage)
+        .post(`${ServerURL()}/chat/addMessageFile/${from}`, infoImage)
         .then(response => {
           if (response.data && response.data.success) {
             let msg: any = response.data.data;
@@ -214,7 +125,6 @@ export const MessageFooter = props => {
             setMessages(messagesCopy);
 
             const chatObj = {
-              ...chat,
               lastMessage: msg.type,
               lastMessageDate: msg.created,
               messages: messagesCopy,
@@ -260,20 +170,13 @@ export const MessageFooter = props => {
 
   const onChangeMessageVideo = async (file: any) => {
     try {
-      let from: string = "";
-      let to: string = "";
-      if (userSelector.id === chat.users.userFrom.userId) {
-        from = chat.users.userFrom.userId;
-        to = chat.users.userTo.userId;
-      } else {
-        from = chat.users.userTo.userId;
-        to = chat.users.userFrom.userId;
-      }
+      let from: string = localStorage.getItem("userId") || "";
+      if (!from) return;
 
       let infoImage = await onUploadNonEncrypt(file, file => uploadWithNonEncryption(file, false));
 
       axios
-        .post(`${ServerURL()}/chat/addMessageVideo/${chat.room}/${from}/${to}`, infoImage)
+        .post(`${ServerURL()}/chat/addMessageVideo/${from}`, infoImage)
         .then(response => {
           if (response.data && response.data.success) {
             let msg: any = response.data.data;
@@ -286,7 +189,6 @@ export const MessageFooter = props => {
             setMessages(messagesCopy);
 
             const chatObj = {
-              ...chat,
               lastMessage: msg.type,
               lastMessageDate: msg.created,
               messages: messagesCopy,
@@ -332,9 +234,6 @@ export const MessageFooter = props => {
 
   const onFileChange = (file: any, type: FileType) => {
     switch (type) {
-      case FileType.AUDIO:
-        onChangeMessageAudio(file);
-        break;
       case FileType.IMAGE:
         onChangeMessagePhoto(file);
         break;
@@ -346,10 +245,6 @@ export const MessageFooter = props => {
         onChangeMessageOther(file);
         break;
     }
-  };
-
-  const startAudioRecording = () => {
-    setAudioMessage(true);
   };
 
   const deleteVoiceMessage = () => {
@@ -366,32 +261,6 @@ export const MessageFooter = props => {
     }
     return new Blob([ab], { type: "image/jpeg" });
   }
-
-  const sendVoiceMessage = async () => {
-    if (mediaBlobUrl) {
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = "blob";
-
-      xhr.onload = function () {
-        var recoveredBlob = xhr.response;
-
-        var reader = new FileReader();
-
-        reader.onload = async function () {
-          const blobAsDefaultURL = reader.result;
-          if (blobAsDefaultURL) {
-            onChangeMessageAudio(b64toBlob(blobAsDefaultURL));
-            setAudioMessage(false);
-          }
-        };
-
-        reader.readAsDataURL(recoveredBlob);
-      };
-
-      xhr.open("GET", mediaBlobUrl);
-      xhr.send();
-    }
-  };
 
   const sendMessage = (audioMsg?: string) => {
     const trimMsg = msg.replace(/^\s+|\s+$/g, "");
@@ -412,7 +281,6 @@ export const MessageFooter = props => {
       setMessages(messagesCopy);
 
       const chatObj = {
-        ...chat,
         lastMessage: messageObj.message,
         lastMessageDate: messageObj.created,
         messages: messagesCopy,
@@ -493,14 +361,6 @@ export const MessageFooter = props => {
             <FileAttachment setStatus={setStatus} onFileChange={onFileChange} />
           </Box>
         </Box>
-      )}
-      {audioMessage && (
-        <RecordingBox
-          specialWidthInput={specialWidthInput}
-          deleteVoiceMessage={deleteVoiceMessage}
-          sendVoiceMessage={sendVoiceMessage}
-          setMediaBlobUrl={setMediaBlobUrl}
-        />
       )}
     </div>
   );
