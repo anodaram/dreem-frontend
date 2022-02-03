@@ -259,10 +259,8 @@ const NFTReserves = () => {
               <MessageBox />
             </Box>
           ) : (
-            <Box className={classes.sideBar}>
-              <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
-                <ExpandIcon />
-              </Box>
+            <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
+              <ExpandIcon />
             </Box>
           )}
         </Box>
@@ -551,7 +549,7 @@ const NFTReserves = () => {
                     <SecondaryButton
                       size="medium"
                       className={classes.showAll}
-                      onClick={() => history.push('/gameNFTS/explorer')}
+                      onClick={() => history.push("/gameNFTS/explorer")}
                     >
                       Show All
                     </SecondaryButton>
