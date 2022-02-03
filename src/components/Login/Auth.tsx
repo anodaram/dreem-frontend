@@ -71,9 +71,7 @@ const Auth = () => {
         const listenerSock = io(LISTENER_URL(), { query: { token: localStorage.getItem("token")?.toString() || "" } });
         listenerSock.connect();
         setListenerSocket(listenerSock);
-        listenerSock.emit("add user", localStorage.getItem("userId")?.toString() || "");
       }
-      listenerSocket && listenerSocket.emit("subscribeToYou", { _id: userId });
 
       if (!user.email) {
         const token: string = localStorage.getItem("token") || "";
