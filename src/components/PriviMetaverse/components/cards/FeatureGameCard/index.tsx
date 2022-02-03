@@ -16,11 +16,11 @@ const FeaturedGameCard = ({ game, isLoading = false }) => {
   const classes = cardStyles();
 
   const handleOpenExplore = () => {
-    history.push(`/gameNFTS/${game.Slug}`);
+    history.push(`/P2E/${game.Slug}`);
   };
 
   const handleOpenExploreNewTab = () => {
-    const url = window.location.href.replace(pathname, `/gameNFTS/${game.Slug}`);
+    const url = window.location.href.replace(pathname, `/P2E/${game.Slug}`);
     window.open(url, "_blank");
     return false;
   };
@@ -43,7 +43,10 @@ const FeaturedGameCard = ({ game, isLoading = false }) => {
       ) : (
         <>
           <div className={classes.cardImg}>
-            <img src={!game?.animation_url ? game?.Image : game?.CardImage} style={{ width: "100%", objectFit: "cover" }} />
+            <img
+              src={!game?.animation_url ? game?.Image : game?.CardImage}
+              style={{ width: "100%", objectFit: "cover" }}
+            />
             <Box className={classes.chainImage}>
               <img src={getChainImageUrl(game?.Chain)} />
             </Box>
@@ -53,22 +56,14 @@ const FeaturedGameCard = ({ game, isLoading = false }) => {
           <div>
             <div className={classes.cardContentDiv}>
               <span className={classes.cardContentText}>Owners</span>
-              <span className={classes.cardContentAmount}>
-                {game.Owners || 0}
-              </span>
+              <span className={classes.cardContentAmount}>{game.Owners || 0}</span>
             </div>
             <div className={classes.cardContentDiv}>
               <span className={classes.cardContentText}>Items</span>
-              <span className={classes.cardContentAmount}>
-                {game.Count || 0}
-              </span>
+              <span className={classes.cardContentAmount}>{game.Count || 0}</span>
             </div>
           </div>
-          <SecondaryButton
-            size="medium"
-            className={classes.primaryButton}
-            onClick={handleOpenExplore}
-          >
+          <SecondaryButton size="medium" className={classes.primaryButton} onClick={handleOpenExplore}>
             SEE MORE
           </SecondaryButton>
         </>

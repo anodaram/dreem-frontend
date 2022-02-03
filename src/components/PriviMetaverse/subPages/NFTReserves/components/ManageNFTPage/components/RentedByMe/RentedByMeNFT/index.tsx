@@ -147,7 +147,7 @@ export default ({
                       borderRadius: "40px",
                     }}
                     onClick={() => {
-                      history.push(`/gameNFTS/${item.Slug}/${item.id}`);
+                      history.push(`/P2E/${item.Slug}/${item.id}`);
                     }}
                   >
                     Rent again
