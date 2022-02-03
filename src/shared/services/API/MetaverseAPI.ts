@@ -137,13 +137,13 @@ export const getCollection = async collectionId => {
   }
 };
 
-export const getNFTInfo = async itemId => {
+export const getNFTInfo = async hashId => {
   try {
     const token = localStorage.getItem("token");
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(`${METAVERSE_URL()}/web/itemVersions/${itemId}/nft/`, config);
+    const resp = await axios.get(`${METAVERSE_URL()}/web/asset/${hashId}/mint/metadata/`, config);
     if (resp.data) {
       return resp.data;
     }
@@ -323,7 +323,7 @@ export const getCharacterData = async characterId => {
 };
 
 export const convertToNFTWorld = async (
-  worldId,
+  hashId,
   contractAddress,
   chain,
   nftId,
@@ -338,7 +338,7 @@ export const convertToNFTWorld = async (
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
     const resp = await axios.post(
-      `${METAVERSE_URL()}/web/itemVersions/${worldId}/mint/`,
+      `${METAVERSE_URL()}/web/itemVersions/${hashId}/mint/`,
       {
         collectionAddress: contractAddress,
         tokenIds: nftId,

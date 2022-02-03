@@ -21,6 +21,7 @@ import { switchNetwork } from "shared/functions/metamask";
 import { BlockchainNets } from "shared/constants/constants";
 import { onUploadNonEncrypt } from "shared/ipfs/upload";
 import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProgressModal";
+import ContentProcessingOperationModal from "components/PriviMetaverse/modals/ContentProcessingOperationModal";
 import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingModal";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "shared/utils-IPFS/useIPFS";
@@ -65,7 +66,9 @@ const CreateSteps = [
 const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
   const classes = useModalStyles();
   const { showAlertMessage } = useAlertMessage();
-
+  const { activate, chainId, account, library } = useWeb3React();
+  const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
+  const [chain, setChain] = useState<string>(BlockchainNets[0].value);
   const [nftOption, setNftOption] = useState<string>("");
   const [step, setStep] = useState<number>(1);
   const [steps, setSteps] = useState<any>(CreateSteps);
@@ -77,14 +80,20 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
   const [currentCollection, setCurrentCollection] = useState<any>(null);
   const [openPublic, setOpenPublic] = useState<any>();
   const [openMintEditions, setOpenMintEditions] = useState<any>();
-  const [showUploadingModal, setShowUploadingModal] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [uploadSuccess, setUploadSuccess] = useState<boolean>();
-
+  const [uploadSuccess, setUploadSuccess] = useState<any>(null);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [savingDraft, setSavingDraft] = useState<any>();
+  const [networkName, setNetworkName] = useState<string>("");
   const [metadata, setMetadata] = useState<ItemModel>({});
   const [formData, setFormData] = useState<FormData>({});
   const [fileInputs, setFileInputs] = useState<InputFiles>({});
   const [fileContents, setFileContents] = useState<InputFileContents>({});
+  // Transaction Modal
+  const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
+  const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
+  const [txHash, setTxHash] = useState<string>("");
+
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -126,6 +135,7 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
   };
 
   const handleSaveDraft = async () => {
+    setOpenPublic(false)
     if (validate()) {
       let payload: any = {};
       let collectionAddr = currentCollection.address;
@@ -143,22 +153,128 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
         isPublic: isPublic,
       };
 
-      setShowUploadingModal(true);
+      setIsUploading(true);
       setProgress(0);
       MetaverseAPI.uploadAsset(payload).then(async res => {
         if (!res.success) {
           showAlertMessage(`Failed to upload world`, { variant: "error" });
-          // setShowUploadingModal(false);
           setUploadSuccess(false);
         } else {
-          // setSavingDraft(res.data);
-          // setShowUploadingModal(false);
+          setSavingDraft(res.data);
           setUploadSuccess(true);
           showAlertMessage(`Created draft successfully`, { variant: "success" });
         }
       });
     }
   };
+  const getMetadata = async (hashId) => {
+    try {
+      const res = await MetaverseAPI.getNFTInfo(hashId)
+      return res.data
+    } catch (error) {
+      console.log('error in getting metadata',error)
+    }
+  }
+  const mintSingleNFT = async () => {
+    if(!savingDraft){
+      showAlertMessage(`Save draft first`, { variant: "error" });
+      return;
+    }
+    let collectionData = currentCollection;
+    let metadata = await getMetadata(savingDraft.instance.hashId);
+    let collectionAddr = collectionData.address;
+    let isDraft = collectionData?.kind == "DRAFT" ? true : false;
+
+    const metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
+    console.log(metaData, collectionData);
+    const targetChain = BlockchainNets.find(net => net.value === chain);
+    setNetworkName(targetChain.name);
+    if (chainId && chainId !== targetChain?.chainId) {
+      const isHere = await switchNetwork(targetChain?.chainId || 0);
+      if (!isHere) {
+        showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+        return;
+      }
+    }
+    if(!library) {
+      showAlertMessage("Please check your network", { variant: "error" });
+      return;
+    }
+    const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
+    console.log(uri);
+    const web3APIHandler = targetChain.apiHandler;
+    const web3 = new Web3(library.provider);
+    console.log("----metadata:", metaData, isDraft);
+
+    if (isDraft) {
+      console.log("here-----");
+      const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
+        web3,
+        account,
+        {
+          name: collectionData.name,
+          symbol: collectionData.symbol,
+          uri,
+          isRoyalty,
+          royaltyAddress,
+          royaltyPercentage
+        },
+        setTxModalOpen,
+        setTxHash
+      );
+      if (resRoyalty.success) {
+        setTxSuccess(true);
+        showAlertMessage(`Successfully world minted`, { variant: "success" });
+
+        await MetaverseAPI.convertToNFTWorld(
+          savingDraft.instance.hashId,
+          resRoyalty.contractAddress,
+          targetChain.name,
+          [resRoyalty.tokenId],
+          metaData.newFileCID,
+          account,
+          royaltyAddress,
+          royaltyPercentage
+        );
+      } else {
+        setTxSuccess(false);
+      }
+    } else {
+      const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
+        web3,
+        account,
+        {
+          collectionAddress: collectionAddr,
+          to: account,
+          uri,
+          isRoyalty,
+          royaltyAddress,
+          royaltyPercentage
+        },
+        setTxModalOpen,
+        setTxHash
+      );
+
+      if (contractRes.success) {
+        setTxSuccess(true);
+        showAlertMessage(`Successfully world minted`, { variant: "success" });
+        console.log(contractRes);
+        await MetaverseAPI.convertToNFTWorld(
+          savingDraft.instance.hashId,
+          contractRes.collectionAddress,
+          targetChain.name,
+          [contractRes.tokenId],
+          metaData.newFileCID,
+          contractRes.owner,
+          royaltyAddress,
+          royaltyPercentage
+        );
+      } else {
+        setTxSuccess(false);
+      }
+    }
+  };
+
   const handleMint = () => {
     nftOption == "single" ? mintSingleNFT() : setOpenMintEditions(true);
   };
@@ -221,8 +337,6 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
 
     return true;
   };
-
-  const mintSingleNFT = () => {};
 
   return (
     <>
@@ -464,8 +578,21 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
           </Box>
         </>
       )}
-      {showUploadingModal && (
-        <FileUploadingModal open={showUploadingModal} progress={progress} isUpload={true} />
+      {isUploading && (
+        <ContentProcessingOperationModal open={isUploading} txSuccess={uploadSuccess} onClose={()=>{setIsUploading(false)}}/>
+      )}
+      {txModalOpen && (
+        <TransactionProgressModal
+          open={txModalOpen}
+          title="Minting your NFT"
+          transactionSuccess={txSuccess}
+          hash={txHash}
+          onClose={() => {
+            setTxSuccess(null);
+            setTxModalOpen(false);
+            handleNext();
+          }}
+        />
       )}
     </>
   );
