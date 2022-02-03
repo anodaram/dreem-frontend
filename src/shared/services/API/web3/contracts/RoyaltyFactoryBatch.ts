@@ -25,7 +25,7 @@ const royaltyFactoryBatch = network => {
 
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
 
-        console.log("Getting gas....", contract, contractAddress, account, rAddress, bps);
+        console.log("Getting gas....", contract, contractAddress, account, [name, symbol], amount, uri, rAddress, bps);
         const gas = await contract.methods.mintMasterBatch([name, symbol], amount, uri, rAddress, bps).estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
@@ -38,7 +38,7 @@ const royaltyFactoryBatch = network => {
           });
         console.log("transaction succeed", response);
 
-        resolve({ success: true, contractAddress: response.events.LoyaltyERC721Created.returnValues.nft, tokenId: response.events.LoyaltyERC721Created.returnValues.initialId });
+        resolve({ success: true, contractAddress: response.events.LoyaltyERC721Created.returnValues.nft, initialId: response.events.LoyaltyERC721Created.returnValues.initialId, amount: response.events.LoyaltyERC721Created.returnValues.amount });
       } catch (e) {
         console.log(e);
         resolve({ success: false });

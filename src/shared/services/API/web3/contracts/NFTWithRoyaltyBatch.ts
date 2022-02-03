@@ -37,8 +37,8 @@ const nftWithRoyalty = network => {
             setTxHash(hash);
           });
         console.log("transaction succeed", response);
-        const returnValues = response.events.RoyaltyNFT.returnValues;
-        resolve({ success: true, collectionAddress, tokenId: returnValues.initialId, owner: returnValues.owner, royaltyAddress: returnValues.royaltyAddress });
+        const returnValues = response.events.BatchMinting.returnValues;
+        resolve({ success: true, collectionAddress, batchId: returnValues.batchId, startTokenId: returnValues.startingId, endTokenId: returnValues.endingId });
       } catch (e) {
         console.log(e);
         resolve({ success: false });

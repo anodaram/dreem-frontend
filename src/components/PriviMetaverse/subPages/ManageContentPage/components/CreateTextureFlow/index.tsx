@@ -274,6 +274,105 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
       }
     }
   };
+  const mintMultipleEdition = async () => {
+    if(!savingDraft){
+      showAlertMessage(`Save draft first`, { variant: "error" });
+      return;
+    }
+    let collectionData = currentCollection;
+    let metadata = await getMetadata(savingDraft.instance.hashId);
+    let collectionAddr = collectionData.address;
+    let isDraft = collectionData?.kind == "DRAFT" ? true : false;
+
+    const metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
+    console.log(metaData, collectionData);
+    const targetChain = BlockchainNets.find(net => net.value === chain);
+    setNetworkName(targetChain.name);
+    if (chainId && chainId !== targetChain?.chainId) {
+      const isHere = await switchNetwork(targetChain?.chainId || 0);
+      if (!isHere) {
+        showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+        return;
+      }
+    }
+    if(!library) {
+      showAlertMessage("Please check your network", { variant: "error" });
+      return;
+    }
+    const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
+    console.log(uri);
+    const web3APIHandler = targetChain.apiHandler;
+    const web3 = new Web3(library.provider);
+    console.log("----metadata:", metaData, isDraft);
+
+    if (isDraft) {
+      console.log("here-----");
+      const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
+        web3,
+        account,
+        {
+          name: collectionData.name,
+          symbol: collectionData.symbol,
+          uri,
+          isRoyalty,
+          royaltyAddress,
+          royaltyPercentage
+        },
+        setTxModalOpen,
+        setTxHash
+      );
+      if (resRoyalty.success) {
+        setTxSuccess(true);
+        showAlertMessage(`Successfully world minted`, { variant: "success" });
+
+        await MetaverseAPI.convertToNFTWorld(
+          savingDraft.instance.hashId,
+          resRoyalty.contractAddress,
+          targetChain.name,
+          [resRoyalty.tokenId],
+          metaData.newFileCID,
+          account,
+          royaltyAddress,
+          royaltyPercentage
+        );
+      } else {
+        setTxSuccess(false);
+      }
+    } else {
+      const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
+        web3,
+        account,
+        {
+          collectionAddress: collectionAddr,
+          to: account,
+          uri,
+          isRoyalty,
+          royaltyAddress,
+          royaltyPercentage
+        },
+        setTxModalOpen,
+        setTxHash
+      );
+
+      if (contractRes.success) {
+        setTxSuccess(true);
+        showAlertMessage(`Successfully world minted`, { variant: "success" });
+        console.log(contractRes);
+        await MetaverseAPI.convertToNFTWorld(
+          savingDraft.instance.hashId,
+          contractRes.collectionAddress,
+          targetChain.name,
+          [contractRes.tokenId],
+          metaData.newFileCID,
+          contractRes.owner,
+          royaltyAddress,
+          royaltyPercentage
+        );
+      } else {
+        setTxSuccess(false);
+      }
+    }
+  };
 
   const handleMint = () => {
     nftOption == "single" ? mintSingleNFT() : setOpenMintEditions(true);
@@ -343,9 +442,11 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
       {openMintEditions ? (
         <MintEditions
           amount={amount}
+          hashId = {savingDraft.instance.hashId}
           handleCancel={() => {
             setOpenMintEditions(false);
           }}
+          handleMint = {() => {}}
         />
       ) : (
         <>

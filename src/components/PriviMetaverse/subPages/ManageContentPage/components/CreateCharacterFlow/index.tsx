@@ -302,7 +302,9 @@ const CreateCharacterFlow = ({
       {openMintEditions ?
         <MintEditions
           amount={amount}
+          hashId = ''
           handleCancel={() => {setOpenMintEditions(false)}}
+          handleMint = {() => {}}
         /> 
       :
       <>

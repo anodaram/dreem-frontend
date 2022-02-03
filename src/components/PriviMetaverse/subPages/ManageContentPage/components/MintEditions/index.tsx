@@ -17,10 +17,14 @@ import ContentProcessingOperationModal from "components/PriviMetaverse/modals/Co
 
 const MintEditions = ({
   amount,
+  hashId,
   handleCancel,
+  handleMint
 }: {
   amount: string,
+  hashId: string,
   handleCancel: () => void;
+  handleMint: (amount: any) => void;
 }) => {
   const history = useHistory();
   const classes = useModalStyles();
@@ -73,7 +77,7 @@ const MintEditions = ({
               <Box className={classes.itemTitle}>
                 Batch {bunches[index - 1] + 1}-{item}
               </Box>
-              <PrimaryButton className={classes.mintBtn} size="medium" onClick={()=>{}}>
+              <PrimaryButton className={classes.mintBtn} size="medium" onClick={()=>handleMint(item)}>
                 Mint
               </PrimaryButton>
             </Box>
