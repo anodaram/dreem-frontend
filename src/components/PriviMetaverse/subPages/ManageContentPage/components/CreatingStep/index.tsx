@@ -20,14 +20,16 @@ import { useModalStyles } from "./index.styles";
 
 const CreatingStep = ({
   curStep,
-  status
+  status,
   // handleNext,
   // handleCancel,
+  handleGoStep,
 }: {
   curStep: any;
   status: any;
   // handleNext: () => void;
   // handleCancel: () => void;
+  handleGoStep: (step: number) => void;
 }) => {
   const classes = useModalStyles();
   const theme = useTheme();
@@ -42,7 +44,12 @@ const CreatingStep = ({
             <>
               <div className={classes.boxContainer}>
                 <div className="statusIcon">{curStep > item.step && (item.completed ? <CompletedIcon/> : <FailedIcon/>) || curStep === status.length && item.completed && <CompletedIcon/> }</div>
-                <div className={`step ${curStep > item.step ? (item.completed ? "active finished" : "inactive finished") : curStep === item.step ? "active" : '' }`}><div className="inside">{item.step}</div></div>
+                <div 
+                  className={`step ${curStep > item.step ? (item.completed ? "active finished" : "inactive finished") : curStep === item.step ? "active" : '' }`} 
+                  onClick={() => handleGoStep(item.step)}
+                >
+                  <div className="inside">{item.step}</div>
+                </div>
                 <div className="label">{item.label}</div>
               </div>
               <div className={`line ${item.step == status.length ? "hidden" : ""}`}></div>

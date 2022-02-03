@@ -121,6 +121,9 @@ const Create3DAssetFlow = ({
       setStep(prev => prev + 1);
     }
   };
+  const handleGoStep = step => {
+    setStep(step);
+  }
 
   const validate = () => {
     if (!title || !description || !image || !unity) {
@@ -315,7 +318,7 @@ const Create3DAssetFlow = ({
             <AssetIcon />
             Creating New 3D Asset
           </div>
-          <CreatingStep curStep={step} status={steps} />
+          <CreatingStep curStep={step} status={steps} handleGoStep={handleGoStep} />
           { step == 1 &&
             <Box
               className={classes.content}

@@ -74,7 +74,7 @@ const CreateAssetFlow = ({
   const [amount, setAmount] = useState<string>("");
   const [royaltyAddress, setRoyaltyAddress] = useState<string>("");
   const [royaltyPercentage, setRoyaltyPercentage] = useState<string>("");
-  const [isRoyalty, setIsRoyalty] = useState<boolean>();
+  const [isRoyalty, setIsRoyalty] = useState<boolean>(false);
   const [isPublic, setIsPublic] = useState<boolean>(true);
   const [currentCollection, setCurrentCollection] = useState<any>(null);
   const [openPublic, setOpenPublic] = useState<any>();
@@ -127,6 +127,9 @@ const CreateAssetFlow = ({
       setStep(prev => prev + 1);
     }
   };
+  const handleGoStep = step => {
+    setStep(step);
+  }
 
   const handleSaveDraft = async () => {
     setOpenPublic(false)
@@ -461,7 +464,7 @@ const CreateAssetFlow = ({
             <AssetIcon />
             Creating New {capitalize(assetItem)}
           </div>
-          <CreatingStep curStep={step} status={steps} />
+          <CreatingStep curStep={step} status={steps} handleGoStep={handleGoStep} />
           { step == 1 &&
             <Box
               className={classes.content}

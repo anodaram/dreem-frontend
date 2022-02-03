@@ -115,6 +115,9 @@ const CreateMaterialFlow = ({
       setStep(prev => prev + 1);
     }
   };
+  const handleGoStep = step => {
+    setStep(step);
+  }
 
   const validate = () => {
     for (let i = 0; i < metadata.fields.length; i++) {
@@ -200,7 +203,7 @@ const CreateMaterialFlow = ({
             <AssetIcon />
             Creating New Material
           </div>
-          <CreatingStep curStep={step} status={steps} />
+          <CreatingStep curStep={step} status={steps} handleGoStep={handleGoStep} />
           { step == 1 &&
             <Box
               className={classes.content}

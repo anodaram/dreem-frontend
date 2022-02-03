@@ -119,6 +119,9 @@ const CreateCharacterFlow = ({
       setStep(prev => prev + 1);
     }
   };
+  const handleGoStep = step => {
+    setStep(step);
+  }
 
   const validate = () => {
     if (!title || !description || !image || !unity) {
@@ -313,7 +316,7 @@ const CreateCharacterFlow = ({
             <AssetIcon />
             Creating New Character
           </div>
-          <CreatingStep curStep={step} status={steps} />
+          <CreatingStep curStep={step} status={steps} handleGoStep={handleGoStep} />
           { step == 1 &&
             <Box
               className={classes.content}
