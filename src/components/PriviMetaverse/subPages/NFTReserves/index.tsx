@@ -476,7 +476,7 @@ const NFTReserves = () => {
                     <SecondaryButton
                       size="medium"
                       className={classes.showAll}
-                      onClick={() => {}}
+                      onClick={() => history.push('/gameNFTS/explorer')}
                     >
                       Show All
                     </SecondaryButton>
