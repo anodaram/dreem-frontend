@@ -55,7 +55,7 @@ export const useStyles = makeStyles(theme => ({
     },
     "& .MuiTableCell-root": {
       border: "none",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
     },
     "& .MuiTableRow-head": {
       background: "transparent",
@@ -63,7 +63,7 @@ export const useStyles = makeStyles(theme => ({
         border: "none",
         color: "#4218B5",
         fontSize: "14px",
-        fontFamily: "Montserrat",
+        fontFamily: "Rany",
         fontWeight: 600,
         [theme.breakpoints.down("sm")]: {
           fontSize: "12px",
@@ -74,7 +74,7 @@ export const useStyles = makeStyles(theme => ({
       "& .MuiTableCell-body": {
         fontSize: 14,
         fontWeight: 600,
-        fontFamily: "Montserrat",
+        fontFamily: "Rany",
         color: "white",
         [theme.breakpoints.down("sm")]: {
           fontSize: 12,

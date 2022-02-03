@@ -14,7 +14,7 @@ import "./Sidebar.css";
 const HtmlTooltip = withStyles(theme => ({
   tooltip: {
     backgroundColor: "#99a2b3",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontSize: "10px",
   },
   arrow: {

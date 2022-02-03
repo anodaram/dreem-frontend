@@ -79,7 +79,7 @@ export const useTransactionProgressModalStyles = makeStyles(theme => ({
     background: "#4218B5",
     borderRadius: "10px",
     color: "white",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontWeight: "bold",
     fontSize: "16px",
     lineHeight: "21px",
