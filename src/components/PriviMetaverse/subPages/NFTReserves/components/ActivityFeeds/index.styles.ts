@@ -4,7 +4,7 @@ export const useStyles = makeStyles(theme => ({
   root: {
     background: "#212121",
     border: "2px solid #151515",
-    minWidth: 398,
+    minWidth: 404,
     height: "45%",
     position: "relative",
     padding: "22px 32px 8px 19px",
