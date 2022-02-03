@@ -120,6 +120,9 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
       setStep(prev => prev + 1);
     }
   };
+  const handleGoStep = step => {
+    setStep(step);
+  }
 
   const handleMint = () => {
     nftOption == "single" ? mintSingleNFT() : setOpenMintEditions(true);
@@ -202,7 +205,7 @@ const CreateTextureFlow = ({ handleCancel }: { handleCancel: () => void }) => {
               <AssetIcon />
               Creating New Texture
             </div>
-            <CreatingStep curStep={step} status={steps} />
+            <CreatingStep curStep={step} status={steps} handleGoStep={handleGoStep} />
             {step == 1 && (
               <Box
                 className={classes.content}

@@ -250,6 +250,9 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
       setStep(prev => prev + 1);
     }
   };
+  const handleGoStep = step => {
+    setStep(step);
+  }
   const isValidAddress = address => {
     const web3 = new Web3(library.provider);
     return web3.utils.isAddress(address);
@@ -458,7 +461,7 @@ const CreateNFTFlow = ({ metaData, handleCancel }: { metaData: any; handleCancel
               <AssetIcon />
               Creating New World
             </div>
-            <CreatingStep curStep={step} status={steps} />
+            <CreatingStep curStep={step} status={steps} handleGoStep={handleGoStep} />
             {step == 1 && (
               <Box
                 className={classes.content}
