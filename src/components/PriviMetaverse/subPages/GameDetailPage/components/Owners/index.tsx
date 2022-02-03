@@ -12,7 +12,7 @@ import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import { Skeleton } from "@material-ui/lab";
 import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
 import { Variant } from "shared/ui-kit";
-import { socket } from "components/Login/Auth";
+import { listenerSocket } from "components/Login/Auth";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 export default function Owners() {
@@ -42,7 +42,7 @@ export default function Owners() {
   }, []);
 
   React.useEffect(() => {
-    if (socket) {
+    if (listenerSocket) {
       const addOwnerHandler = (data) => {
         if (owners && owners.length) {
           const _owner = {
@@ -68,15 +68,15 @@ export default function Owners() {
         }
       };
 
-      socket.on("addOwner", addOwnerHandler);
-      socket.on("updateOwner", updateOwnerHandler);
+      listenerSocket.on("addOwner", addOwnerHandler);
+      listenerSocket.on("updateOwner", updateOwnerHandler);
 
       return () => {
-        socket.removeListener("addOwner", addOwnerHandler);
-        socket.removeListener("updateOwner", updateOwnerHandler);
+        listenerSocket.removeListener("addOwner", addOwnerHandler);
+        listenerSocket.removeListener("updateOwner", updateOwnerHandler);
       };
     }
-  }, [socket]);
+  }, [listenerSocket]);
 
   const loadNfts = async (init = false) => {
     if (loading) return;

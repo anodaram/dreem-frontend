@@ -17,13 +17,19 @@ import { PageRefreshContextProvider } from "shared/contexts/PageRefreshContext";
 import { MessagesContextProvider } from "shared/contexts/MessagesContext";
 import { AuthContextProvider, useAuth } from "shared/contexts/AuthContext";
 import NavBar from "shared/ui-kit/Navigation/NavBar";
-import URL from "shared/functions/getURL";
+import URL, { LISTENER_URL } from "shared/functions/getURL";
 import { IPFSContextProvider } from "shared/contexts/IPFSContext";
 import { useWeb3React } from "@web3-react/core";
 
 export let socket: SocketIOClient.Socket;
+export let listenerSocket : SocketIOClient.Socket;
+
 export const setSocket = (sock: SocketIOClient.Socket) => {
   socket = sock;
+};
+
+export const setListenerSocket = (sock: SocketIOClient.Socket) => {
+  listenerSocket = sock;
 };
 
 const Auth = () => {
@@ -50,6 +56,8 @@ const Auth = () => {
           }
         })
         .catch(err => console.log("numberMessages error: ", err));
+
+      // set socket with BE
       if (!socket) {
         const sock = io(URL(), { query: { token: localStorage.getItem("token")?.toString() || "" } });
         sock.connect();
@@ -57,6 +65,15 @@ const Auth = () => {
         sock.emit("add user", localStorage.getItem("userId")?.toString() || "");
       }
       socket && socket.emit("subscribeToYou", { _id: userId });
+
+      // set socket with Listener
+      if (!listenerSocket) {
+        const listenerSock = io(LISTENER_URL(), { query: { token: localStorage.getItem("token")?.toString() || "" } });
+        listenerSock.connect();
+        setListenerSocket(listenerSock);
+        listenerSock.emit("add user", localStorage.getItem("userId")?.toString() || "");
+      }
+      listenerSocket && listenerSocket.emit("subscribeToYou", { _id: userId });
 
       if (!user.email) {
         const token: string = localStorage.getItem("token") || "";

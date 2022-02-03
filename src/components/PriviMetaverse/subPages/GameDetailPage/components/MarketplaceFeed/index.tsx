@@ -22,7 +22,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
 import { useHistory } from "react-router-dom";
-import { socket } from "components/Login/Auth";
+import { listenerSocket } from "components/Login/Auth";
 // TODO: mock data delete and change for real data
 
 const filterStatusOptions = ["All", "RENTED", "SOLD", "BLOCKED"];
@@ -79,7 +79,7 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
   }, [filterStatus, debouncedSearchValue]);
 
   React.useEffect(() => {
-    if (socket) {
+    if (listenerSocket) {
       const addMarketPlaceFeedHandler = (_nft) => {
         if (nfts && nfts.length) {
           const _nfts = nfts.filter((nft) => _nft.id !== nft.id);
@@ -94,15 +94,15 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
         }
       };
 
-      socket.on("addMarketPlaceFeed", addMarketPlaceFeedHandler);
-      socket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+      listenerSocket.on("addMarketPlaceFeed", addMarketPlaceFeedHandler);
+      listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
 
       return () => {
-        socket.removeListener("addMarketPlaceFeed", addMarketPlaceFeedHandler);
-        socket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+        listenerSocket.removeListener("addMarketPlaceFeed", addMarketPlaceFeedHandler);
+        listenerSocket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
       };
     }
-  }, [socket]);
+  }, [listenerSocket]);
 
   const getTokenSymbol = addr => {
     if (tokenList.length == 0 || !addr) return 0;
