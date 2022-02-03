@@ -4,6 +4,30 @@
   width: 100%;
   position: relative;
 }
+
+.tab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: transparent;
+  border-radius: 2px;
+  color: white;
+  cursor: pointer;
+  padding: 10px 24px 6px;
+  font-weight: 700;
+  font-family: 'GRIFTER';
+  font-size: 14px;
+  line-height: 120%;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.tab.selected {
+  background: linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%);
+  color: #212121;
+}
+
 .message-box.pix {
   height: calc(100vh - 72px);
 }

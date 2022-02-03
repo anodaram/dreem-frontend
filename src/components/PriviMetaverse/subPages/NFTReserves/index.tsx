@@ -26,6 +26,7 @@ import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/
 import Tag from "../GameDetailPage/components/Tag";
 import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
 import ActivityFeeds from "./components/ActivityFeeds";
+import { MessageBox } from "components/PriviMetaverse/components/Message/MessageBox";
 import { useNFTOptionsStyles } from "./index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -253,8 +254,9 @@ const NFTReserves = () => {
       <Box className={classes.main}>
         <Box className={classes.sideBar}>
           {openSideBar ? (
-            <Box>
+            <Box display="flex" flexDirection="column">
               <ActivityFeeds onClose={() => setOpenSideBar(false)} />
+              <MessageBox />
             </Box>
           ) : (
             <Box className={classes.sideBar}>
