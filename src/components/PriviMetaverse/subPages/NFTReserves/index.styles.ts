@@ -9,6 +9,21 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     backgroundRepeat: "round",
     overflow: "hidden",
   },
+  sideBar: {
+    display: "flex",
+    justifyContent: "center",
+    position: "fixed",
+    top: 72,
+    minWidth: 59,
+    height: "100%",
+    background: "#212121",
+    border: "2px solid #151515",
+    zIndex: 2,
+  },
+  expandIcon: {
+    marginTop: 16,
+    cursor: "pointer",
+  },
   image1: {
     position: "absolute",
     left: -210,
@@ -133,7 +148,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       fontSize: "12px !important",
       width: "193px !important",
-    }
+    },
   },
   gamePlayButton: {
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
@@ -148,10 +163,6 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     justifyContent: "center",
     alignItems: "center",
     marginTop: "35px",
-
-    '& svg': {
-      marginRight: '13px'
-    }
   },
   gameslider: {
     border: "2px solid transparent",
@@ -159,37 +170,37 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     borderImageSlice: "30%",
   },
   gameContent: {
-    backgroundImage: 'linear-gradient(to top, rgba(0,0,0,1), rgba(255,0,0,0))'
+    backgroundImage: "linear-gradient(to top, rgba(0,0,0,1), rgba(255,0,0,0))",
   },
   gameBgImage: {
-    position: 'absolute',
-    width: '100% !important',
-    height: '100% !important',
-    zIndex: -1
+    position: "absolute",
+    width: "100% !important",
+    height: "100% !important",
+    zIndex: -1,
   },
   sliderFooter: {
-    position: 'absolute',
-    bottom: '-38px'
+    position: "absolute",
+    bottom: "-38px",
   },
   sliderLeft: {
-    position: 'absolute',
-    bottom: '100px',
-    left: '-110px'
+    position: "absolute",
+    bottom: "100px",
+    left: "-110px",
   },
   sliderRight: {
-    position: 'absolute',
-    top: '90px',
-    right: '-110px'
+    position: "absolute",
+    top: "90px",
+    right: "-110px",
   },
   sliderRect: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    right: '-59px'
+    right: "-59px",
   },
   NFTSection: {
     width: "100%",
     marginTop: 46,
-    maxWidth: 1400
+    maxWidth: 1400,
   },
   topGamesWrapper: {
     paddingTop: "50px",
@@ -231,7 +242,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       border: "2px solid #E9FF26",
       "& path": {
         stroke: "#E9FF26",
-        opacity: 1
+        opacity: 1,
       },
     },
   },
@@ -307,13 +318,17 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   allNFTTitle: {
     display: "flex",
     alignItems: "center",
-    fontSize: 24,
-    fontWeight: 800,
-    color: "#431AB7",
-    fontFamily: "Agrandir GrandHeavy",
-    lineHeight: "130%",
+    justifyContent: "space-between",
+    fontSize: 34,
+    fontWeight: 700,
+    fontFamily: "GRIFTER",
+    lineHeight: "40.8px",
+    textTransform: "uppercase",
+    paddingBottom: 25,
     "& span": {
-      paddingBottom: 25,
+      background: "linear-gradient(90deg, #EDFF1C, #ED7B7B)",
+      "-webkit-text-fill-color": "transparent",
+      "-webkit-background-clip": "text",
     },
     "& img": {
       width: 80,
@@ -321,6 +336,64 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("xs")]: {
       fontSize: 25,
+    },
+  },
+  showAll: {
+    border: "2px solid rgba(255, 255, 255, 0.5) !important",
+    borderRadius: "12px !important",
+    textTransform: "uppercase",
+    background: "transparent !important",
+    color: "#FFFFFF !important",
+  },
+  table: {
+    width: "100%",
+  },
+  titleWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  textTitle: {
+    color: "#FFFFFF",
+    fontFamily: "Rany",
+    fontSize: 14,
+    fontWeight: 500,
+    lineHeight: "18px",
+    margin: 0,
+  },
+  titleImg: {
+    width: 45,
+    height: 45,
+    borderRadius: 6,
+    objectFit: "cover",
+    margin: "0 20px",
+  },
+  whiteText: {
+    color: "#FFFFFF",
+    fontFamily: "Rany",
+    fontSize: 16,
+    fontWeight: 700,
+    lineHeight: "22px",
+    margin: 0,
+  },
+  viewButton: {
+    backgroundColor: "transparent !important",
+    border: "2px solid rgba(255,255,255,0.5) !important",
+  },
+  featuredGames: {
+    display: "flex",
+    alignItems: "center",
+    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+    fontFamily: "Rany",
+    fontWeight: 700,
+    fontSize: 20,
+    color: "#151515",
+    textTransform: "uppercase",
+    border: "2px solid rgba(21, 21, 21, 0.2)",
+    padding: "8px 16px",
+
+    "& svg": {
+      marginRight: "13px",
     },
   },
 }));

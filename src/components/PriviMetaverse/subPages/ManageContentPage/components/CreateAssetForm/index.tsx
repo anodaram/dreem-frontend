@@ -1,12 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
+import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, Slider } from "@material-ui/core";
+import React, { useRef } from "react";
+import { ChromePicker } from "react-color";
 
-import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import { SecondaryButton } from "shared/ui-kit";
+import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
-import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
-import { useModalStyles } from "./index.styles";
 
 import { FormData, InputFileContents, InputFiles, InputRefs } from "./interface";
+import { color2obj, obj2color } from "shared/helpers";
+
+import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
+import { ReactComponent as GLTFIcon } from "assets/icons/gltf.svg";
+
+import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 const CreateAssetForm = ({
   metadata,
@@ -19,17 +24,16 @@ const CreateAssetForm = ({
 }: {
   metadata: any;
   formData: FormData;
-  setFormData: (data: FormData) => void;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   fileInputs: InputFiles;
-  setFileInputs: (data: InputFiles) => void;
+  setFileInputs: React.Dispatch<React.SetStateAction<InputFiles>>;
   fileContents: InputFileContents;
-  setFileContents: (data: InputFileContents) => void;
+  setFileContents: React.Dispatch<React.SetStateAction<InputFileContents>>;
 }) => {
   const classes = useModalStyles();
-  const { showAlertMessage } = useAlertMessage();
+  const filterClasses = useFilterSelectStyles();
 
   const inputRef = useRef<InputRefs>({});
-  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const onFileInput = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -41,7 +45,7 @@ const CreateAssetForm = ({
 
         const reader = new FileReader();
         reader.addEventListener("load", () => {
-          setFileContents({ ...fileContents, [key]: { ...fileContents[key], src: reader.result } });
+          setFileContents(prev => ({ ...prev, [key]: { ...prev[key], src: reader.result } }));
           let image = new Image();
           if (
             reader.result !== null &&
@@ -51,16 +55,26 @@ const CreateAssetForm = ({
             image.onload = function () {
               let width = image.width;
               let height = image.height;
-              setFileContents({
-                ...fileContents,
+              setFileContents(prev => ({
+                ...prev,
                 [key]: {
-                  ...fileContents[key],
+                  ...prev[key],
                   dimension: {
                     width,
                     height,
                   },
                 },
-              });
+              }));
+              // setFileContents({
+              //   ...fileContents,
+              //   [key]: {
+              //     ...fileContents[key],
+              //     dimension: {
+              //       width,
+              //       height,
+              //     },
+              //   },
+              // });
             };
           }
         });
@@ -68,12 +82,9 @@ const CreateAssetForm = ({
         reader.readAsDataURL(files[0]);
       }
     }
-
-    if (imageInputRef !== null && imageInputRef.current) {
-      imageInputRef.current.value = "";
-    }
   };
 
+  console.log("=============", fileContents);
   const renderAsset = (asset: any, index: number) => {
     return (
       <Box className={classes.itemContainer} key={`asset-field-${index}`}>
@@ -83,23 +94,28 @@ const CreateAssetForm = ({
           </Box>
           {/* <InfoTooltip tooltip={"Please give your texture a name."} /> */}
         </Box>
-        {asset.kind === "STRING" && (
-          <input
-            className={classes.input}
-            placeholder={asset.input.placeholder.value}
-            value={formData[asset.key]}
-            onChange={e => setFormData({ ...formData, [asset.key]: e.target.value })}
-          />
-        )}
-        {asset.kind === "TEXT" && (
-          <textarea
-            style={{ height: "130px" }}
-            className={classes.input}
-            placeholder={asset.input.placeholder.value}
-            value={formData[asset.key]}
-            onChange={e => setFormData({ ...formData, [asset.key]: e.target.value })}
-          />
-        )}
+        {asset.kind === "STRING" ? (
+          asset.key === "ITEM_DESCRIPTION" ? (
+            <textarea
+              style={{ height: "130px" }}
+              className={classes.input}
+              placeholder={asset.input.placeholder.value}
+              value={formData[asset.key]}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                setFormData({ ...formData, [asset.key]: e.target.value })
+              }
+            />
+          ) : (
+            <input
+              className={classes.input}
+              placeholder={asset.input.placeholder.value}
+              value={formData[asset.key]}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData({ ...formData, [asset.key]: e.target.value })
+              }
+            />
+          )
+        ) : null}
         {asset.kind === "FILE_TYPE_IMAGE" && (
           <>
             <Box
@@ -135,7 +151,6 @@ const CreateAssetForm = ({
                         e.stopPropagation();
                         setFileInputs({ ...fileInputs, [asset.key]: null });
                         setFileContents({ ...fileContents, [asset.key]: null });
-                        imageInputRef.current?.click();
                       }}
                     >
                       <img src={require("assets/metaverseImages/refresh.png")} />
@@ -164,6 +179,135 @@ const CreateAssetForm = ({
               type="file"
               style={{ display: "none" }}
               accept={asset.input.formats?.mimeType}
+              onChange={onFileInput(asset.key)}
+            />
+          </>
+        )}
+        {asset.kind === "DROPDOWN" && (
+          <Select
+            defaultValue={asset.value}
+            value={formData[asset.key]}
+            onChange={(e: React.ChangeEvent<{ value: unknown }>) => {
+              setFormData({ ...formData, [asset.key]: e.target.value });
+            }}
+            disableUnderline
+            className={classes.select}
+            MenuProps={{
+              classes: filterClasses,
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "left",
+              },
+              transformOrigin: {
+                vertical: "top",
+                horizontal: "left",
+              },
+              getContentAnchorEl: null,
+            }}
+          >
+            {asset.options.map((option, index) => (
+              <MenuItem key={`${asset.key}-OPTION-${index}`} value={option.value}>
+                {option.name.value}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+        {asset.kind === "BOOL" && (
+          <RadioGroup
+            row
+            value={formData[asset.key] || asset.value ? "yes" : "no"}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setFormData({ ...formData, [asset.key]: e.target.value === "yes" });
+            }}
+            className={classes.radio}
+          >
+            <FormControlLabel value={"yes"} control={<Radio />} label="Yes" />
+            <FormControlLabel value={"no"} control={<Radio />} label="No" />
+          </RadioGroup>
+        )}
+        {asset.kind === "FLOAT" && (
+          <Box className={classes.slider}>
+            <Slider
+              value={formData[asset.key] || asset.value || 0}
+              onChange={(event: any, newValue: number | number[]) => {
+                setFormData({ ...formData, [asset.key]: newValue });
+              }}
+              min={asset.range.min}
+              max={asset.range.max}
+              step={0.01}
+            />
+            <input
+              type="number"
+              className={classes.input}
+              value={formData[asset.key] || asset.value || 0}
+              min={asset.range.min}
+              max={asset.range.max}
+              step={0.01}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData({ ...formData, [asset.key]: e.target.value })
+              }
+            />
+          </Box>
+        )}
+        {asset.kind === "COLOR32" && (
+          <ChromePicker
+            color={
+              color2obj(formData[asset.key]) || {
+                ...asset.value,
+                a: Number((asset.value.a / 255).toFixed(2)),
+              }
+            }
+            onChangeComplete={color => setFormData({ ...formData, [asset.key]: obj2color(color.rgb) })}
+          />
+        )}
+        {asset.kind === "ITEM" && (
+          <>
+            <PrimaryButton
+              size="medium"
+              className={classes.uploadBtn}
+              onClick={() => {
+                !fileInputs[asset.key] && inputRef.current[asset.key]?.click();
+              }}
+              style={fileInputs[asset.key] && { background: "#E9FF26!important" }}
+            >
+              {fileInputs[asset.key] ? (
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  width={1}
+                  fontSize={12}
+                >
+                  <Box display="flex" alignItems="center" justifyContent="space-between" fontSize={12}>
+                    <DocumentIcon /> {fileInputs[asset.key].name}
+                  </Box>
+                  <SecondaryButton
+                    size="medium"
+                    onClick={e => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setFileInputs({ ...fileInputs, [asset.key]: null });
+                      setFileContents({ ...fileContents, [asset.key]: null });
+                    }}
+                  >
+                    <img src={require("assets/metaverseImages/refresh.png")} />
+                    <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
+                  </SecondaryButton>
+                </Box>
+              ) : (
+                <Box pt={0.5} display="flex" alignItems="center" justifyContent="space-between">
+                  <GLTFIcon />{" "}
+                  <Box display="flex" alignItems="center" marginLeft="5px">
+                    Add {asset.name.value}
+                  </Box>
+                </Box>
+              )}
+            </PrimaryButton>
+            <input
+              ref={ref => (inputRef.current[asset.key] = ref)}
+              hidden
+              type="file"
+              style={{ display: "none" }}
               onChange={onFileInput(asset.key)}
             />
           </>

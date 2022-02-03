@@ -182,34 +182,38 @@ export default function HomePage() {
   }, [underMaintenanceSelector]);
 
   React.useEffect(() => {
-    if (!underMaintenanceSelector.underMaintenance) {
-      setLoadingFeatured(true);
-      MetaverseAPI.getFeaturedWorlds(filters)
-        .then(res => {
-          if (res.success) {
-            setFeaturedRealms(res.data.elements);
-          }
-        })
-        .finally(() => setLoadingFeatured(false));
-
-      setLoadingExplore(true);
-      MetaverseAPI.getWorlds(9, 1, "timestamp", filters, true, undefined, undefined, false)
-        .then(res => {
-          if (res.success) {
-            const items = res.data.elements;
-            if (items && items.length > 0) {
-              setExploreReamls(res.data.elements);
+    try {
+      if (!underMaintenanceSelector.underMaintenance) {
+        setLoadingFeatured(true);
+        MetaverseAPI.getFeaturedWorlds(filters)
+          .then(res => {
+            if (res.success) {
+              setFeaturedRealms(res.data.elements);
             }
-          }
-        })
-        .finally(() => setLoadingExplore(false));
+          })
+          .finally(() => setLoadingFeatured(false));
 
-      setLoadingExploreCharacters(true);
-      MetaverseAPI.getCharacters(null, true, null, true)
-        .then(res => {
-          setExploreCharacters(res.data.elements);
-        })
-        .finally(() => setLoadingExploreCharacters(false));
+        setLoadingExplore(true);
+        MetaverseAPI.getWorlds(9, 1, "timestamp", filters, true, undefined, undefined, false)
+          .then(res => {
+            if (res.success) {
+              const items = res.data.elements;
+              if (items && items.length > 0) {
+                setExploreReamls(res.data.elements);
+              }
+            }
+          })
+          .finally(() => setLoadingExplore(false));
+
+        setLoadingExploreCharacters(true);
+        MetaverseAPI.getCharacters(null, true, null, true)
+          .then(res => {
+            setExploreCharacters(res.data.elements);
+          })
+          .finally(() => setLoadingExploreCharacters(false));
+      }
+    } catch (err) {
+      console.log(err);
     }
   }, []);
 

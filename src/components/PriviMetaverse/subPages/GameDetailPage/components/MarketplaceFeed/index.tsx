@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
 import { useHistory } from "react-router-dom";
+import { socket } from "components/Login/Auth";
 // TODO: mock data delete and change for real data
 
 const filterStatusOptions = ["All", "RENTED", "SOLD", "BLOCKED"];
@@ -39,7 +40,7 @@ const weeklyStatsItems = [
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-export default function MarketplaceFeed({Chain}: {Chain: any}) {
+export default function MarketplaceFeed({ Chain }: { Chain: any }) {
   const classes = marketplaceFeedStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -76,6 +77,32 @@ export default function MarketplaceFeed({Chain}: {Chain: any}) {
     setHasMore(true);
     loadNfts(true);
   }, [filterStatus, debouncedSearchValue]);
+
+  React.useEffect(() => {
+    if (socket) {
+      const addMarketPlaceFeedHandler = (_nft) => {
+        if (nfts && nfts.length) {
+          const _nfts = [_nft].concat(nfts);
+          setNfts(_nfts);
+        }
+      };
+
+      const updateMarketPlaceFeedHandler = (_nft) => {
+        if (nfts && nfts.length) {
+          const _nfts = nfts.map((nft) => _nft.id === nft.id ? _nft : nft);
+          setNfts(_nfts);
+        }
+      };
+
+      socket.on("addMarketPlaceFeed", addMarketPlaceFeedHandler);
+      socket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+
+      return () => {
+        socket.removeListener("addMarketPlaceFeed", addMarketPlaceFeedHandler);
+        socket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+      };
+    }
+  }, [socket]);
 
   const getTokenSymbol = addr => {
     if (tokenList.length == 0 || !addr) return 0;
@@ -147,7 +174,7 @@ export default function MarketplaceFeed({Chain}: {Chain: any}) {
   const goToNft = (row) => {
     history.push(`/gameNFTS/${row.collectionId}/${row.tokenId}`)
   }
-  
+
   const tableData = React.useMemo(() => {
     let data: Array<Array<CustomTableCellInfo>> = [];
     if (nfts && nfts.length) {
@@ -166,25 +193,33 @@ export default function MarketplaceFeed({Chain}: {Chain: any}) {
             </div>
           ),
         },
-        { cell: <p className={classes.accTitle}>{
-          `${(row.operator || row.seller || row.fromSeller || row.toSeller).substring(0, 6)}...${(row.operator || row.seller || row.fromSeller || row.toSeller).substring((row.operator || row.seller || row.fromSeller || row.toSeller).length - 4, (row.operator || row.seller || row.fromSeller || row.toSeller).length)}`}</p> },
-        { cell: <p className={classes.whiteText}>{
+        {
+          cell: <p className={classes.accTitle}>{
+            `${(row.operator || row.seller || row.fromSeller || row.toSeller).substring(0, 6)}...${(row.operator || row.seller || row.fromSeller || row.toSeller).substring((row.operator || row.seller || row.fromSeller || row.toSeller).length - 4, (row.operator || row.seller || row.fromSeller || row.toSeller).length)}`}</p>
+        },
+        {
+          cell: <p className={classes.whiteText}>{
             `${+toDecimals(row.price || (row.pricePerSecond * row.rentalTime), getTokenDecimal(row.paymentToken || row.fundingToken))} ${getTokenSymbol(row.paymentToken || row.fundingToken)}`
-        }</p> },
-        { cell: <p className={classes.whiteText}>{
-          (new Date(row.updated).getMonth()+1) +
-          "-"+(new Date(row.updated).getDate())+
-          "-"+new Date(row.updated).getFullYear()}</p> },
+          }</p>
+        },
+        {
+          cell: <p className={classes.whiteText}>{
+            (new Date(row.updated).getMonth() + 1) +
+            "-" + (new Date(row.updated).getDate()) +
+            "-" + new Date(row.updated).getFullYear()}</p>
+        },
         {
           cell: <Tag state={row.type.toLowerCase()} text={row.type} />
         },
-        { cell: <div onClick={() => {goToScan(row.transactionHash)}}>{
+        {
+          cell: <div onClick={() => { goToScan(row.transactionHash) }}>{
             <img src={getChainImageUrl(Chain)} width={"22px"} />
           }
-          </div> },
+          </div>
+        },
         {
           cell: (
-            <PrimaryButton onClick={() => {goToNft(row)}} size="medium" className={classes.button} isRounded>
+            <PrimaryButton onClick={() => { goToNft(row) }} size="medium" className={classes.button} isRounded>
               View
             </PrimaryButton>
           ),
@@ -214,15 +249,15 @@ export default function MarketplaceFeed({Chain}: {Chain: any}) {
           justifyContent={isMobile ? "flex-end" : "flex-start"}
         >
           <Box className={classes.tabTitle} mb={2}>
-            marketplace feed 
+            marketplace feed
           </Box>
         </Box>
         <Box className={classes.optionSection} mt={isMobile ? 1 : 0}>
           <Box className={classes.statusButtonBox} mt={1} mb={1}>
-          {filterStatusOptions.map((status, index) => (
-              <PrimaryButton onClick={()=>{handleFilterStatus(status)}} size="medium" className={filterStatus===status?classes.statusSelectedButton:classes.statusButton}>
-              {status}
-            </PrimaryButton>
+            {filterStatusOptions.map((status, index) => (
+              <PrimaryButton onClick={() => { handleFilterStatus(status) }} size="medium" className={filterStatus === status ? classes.statusSelectedButton : classes.statusButton}>
+                {status}
+              </PrimaryButton>
             ))}
           </Box>
         </Box>
@@ -261,19 +296,19 @@ export default function MarketplaceFeed({Chain}: {Chain: any}) {
             )
           }
         >
-        {
-          tableData.length > 0 && (
-            <div className={classes.table}>
-              <CustomTable
-                variant={Variant.Transparent}
-                headers={tableHeaders}
-                rows={tableData}
-                placeholderText="No data"
-                sorted={{}}
-              />
-            </div>
-          )
-        }
+          {
+            tableData.length > 0 && (
+              <div className={classes.table}>
+                <CustomTable
+                  variant={Variant.Transparent}
+                  headers={tableHeaders}
+                  rows={tableData}
+                  placeholderText="No data"
+                  sorted={{}}
+                />
+              </div>
+            )
+          }
         </InfiniteScroll>
         {!loading && nfts?.length < 1 && (
           <Box textAlign="center" width="100%" mb={10} mt={2}>
@@ -287,19 +322,19 @@ export default function MarketplaceFeed({Chain}: {Chain: any}) {
 
 
 export const ArrowIconComponent = func => () =>
-  (
-    <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
-      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
-          stroke="#2D3047"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </Box>
-  );
+(
+  <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
+    <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
+        stroke="#2D3047"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </Box>
+);
 
 export const SearchIcon = ({ color = "white" }) => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -27,6 +27,8 @@ import CollectionList from "../CollectionList";
 import PublicOption from "../PublicOption";
 import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
 import { ReactComponent as UnityIcon } from "assets/icons/unity.svg";
+import CreateAssetForm from "../CreateAssetForm";
+import { FormData, InputFileContents, InputFiles } from "../CreateAssetForm/interface";
 
 const CreateSteps = [
   {
@@ -58,7 +60,6 @@ const CreateMaterialFlow = ({
   handleCancel: () => void;
 }) => {
   const classes = useModalStyles();
-  const filterClasses = useFilterSelectStyles();
   const { showAlertMessage } = useAlertMessage();
 
   const [nftOption, setNftOption] = useState<string>("");
@@ -68,29 +69,24 @@ const CreateMaterialFlow = ({
   const [royaltyAddress, setRoyaltyAddress] = useState<string>("");
   const [royaltyPercentage, setRoyaltyPercentage] = useState<string>("");
   const [isRoyalty, setIsRoyalty] = useState<boolean>();
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
   const [isPublic, setIsPublic] = useState<boolean>(true);
   const [currentCollection, setCurrentCollection] = useState<any>(null);
   const [openPublic, setOpenPublic] = useState<any>();
   const [openMintEditions, setOpenMintEditions] = useState<any>();
-  const [sizeSpec, setSizeSpec] = useState<any>(metaData);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
-  const [image, setImage] = useState<any>(null);
-  const [imageFile, setImageFile] = useState<any>(null);
-  const [video, setVideo] = useState<any>(null);
-  const [videoFile, setVideoFile] = useState<any>(null);
-  const [unity, setUnity] = useState<any>(null);
-  const [unityFile, setUnityFile] = useState<any>(null);
-  const [entity, setEntity] = useState<any>(null);
-  const [entityFile, setEntityFile] = useState<any>(null);
 
-  const imageInputRef = useRef<HTMLInputElement>(null);
-  const videoInputRef = useRef<HTMLInputElement>(null);
-  const unityInputRef = useRef<HTMLInputElement>(null);
-  const entityInputRef = useRef<HTMLInputElement>(null);
+  const [metadata, setMetadata] = useState<any>({});
+  const [formData, setFormData] = useState<FormData>({});
+  const [fileInputs, setFileInputs] = useState<InputFiles>({});
+  const [fileContents, setFileContents] = useState<InputFileContents>({});
+
+  useEffect(() => {
+    MetaverseAPI.getAssetMetadata("MATERIAL").then(res => {
+      setMetadata(res.data);
+    });
+  }, []);
 
   const handlePrev = () => {
     if(step == 1) handleCancel()
@@ -121,58 +117,62 @@ const CreateMaterialFlow = ({
   };
 
   const validate = () => {
-    if (!title || !description || !image || !unity) {
-      // showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
-      return false;
+    for (let i = 0; i < metadata.fields.length; i++) {
+      const field = metadata.fields[i];
+      if (field.kind === "STRING") {
+        if (field.input.required && !formData[field.key]) {
+          showAlertMessage(`${field.name.value} is required`, { variant: "error" });
+          return false;
+        }
+        if (formData[field.key] && field.input.range) {
+          if (field.input.range.min && field.input.range.min > formData[field.key].length) {
+            showAlertMessage(
+              `${field.name.value} is invalid. Must be more than ${field.input.range.min} characters`,
+              { variant: "error" }
+            );
+            return false;
+          }
+          if (field.input.range.max && field.input.range.max < formData[field.key].length) {
+            showAlertMessage(
+              `${field.name.value} is invalid. Must be less than ${field.input.range.max} characters`,
+              { variant: "error" }
+            );
+            return false;
+          }
+        }
+      } else if (field.kind === "FILE_TYPE_IMAGE") {
+        if (field.input.required && !fileInputs[field.key]) {
+          showAlertMessage(`${field.name.value} is required`, { variant: "error" });
+          return false;
+        }
+        if (fileContents[field.key] && fileContents[field.key].dimension && field.input.min) {
+          if (
+            field.input.min.width > (fileContents[field.key].dimension?.width || 0) ||
+            field.input.min.height > (fileContents[field.key].dimension?.height || 0)
+          ) {
+            showAlertMessage(
+              `${field.name.value} is invalid. Minium image size is ${field.input.min.width} x ${field.input.min.height}`,
+              { variant: "error" }
+            );
+            return false;
+          }
+        }
+        if (fileContents[field.key] && fileContents[field.key].dimension && field.input.max) {
+          if (
+            field.input.max.width < (fileContents[field.key].dimension?.width || 0) ||
+            field.input.max.height < (fileContents[field.key].dimension?.height || 0)
+          ) {
+            showAlertMessage(
+              `${field.name.value} is invalid. Maximum image size is ${field.input.max.width} x ${field.input.max.height}`,
+              { variant: "error" }
+            );
+            return false;
+          }
+        }
+      }
     }
 
-    if (title.length < sizeSpec?.worldTitle.limit.min || title.length > sizeSpec?.worldTitle.limit.max) {
-      showAlertMessage(
-        `Name field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldTitle.limit.min} to ${sizeSpec?.worldTitle.limit.max} characters`,
-        {
-          variant: "error",
-        }
-      );
-      return false;
-    } else if (
-      description.length < sizeSpec?.worldDescription.limit.min ||
-      description.length > sizeSpec?.worldDescription.limit.max
-    ) {
-      showAlertMessage(
-        `Description field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldDescription.limit.min} to ${sizeSpec?.worldDescription.limit.max} characters`,
-        { variant: "error" }
-      );
-      return false;
-    } else if (image.size > sizeSpec?.worldImage.limit.maxBytes) {
-      showAlertMessage(`Image field invalid. Size cannot exceed ${sizeSpec?.worldImage.limit.readable}`, {
-        variant: "error",
-      });
-      return false;
-    } else if (video && video.size > sizeSpec?.worldVideo.limit.maxBytes) {
-      showAlertMessage(`Video field invalid. Size cannot exceed ${sizeSpec?.worldVideo.limit.readable}`, {
-        variant: "error",
-      });
-      return false;
-    } else if (
-      !sizeSpec?.worldLevel.supportedFormats.toString().includes(unity.name.split(".").reverse()[0])
-    ) {
-      console.log(sizeSpec, metaData, unity.name.split(".").reverse()[0]);
-      showAlertMessage(`World file is invalid.`, { variant: "error" });
-      return false;
-    } else if (unity.size > sizeSpec?.worldLevel.limit.maxBytes) {
-      showAlertMessage(`World file invalid. Size cannot exceed ${sizeSpec?.worldLevel.limit.readable}`, {
-        variant: "error",
-      });
-      return false;
-    } else if (!entity.name.includes(sizeSpec?.worldMeta.supportedFormats.toString())) {
-      showAlertMessage(`World data is invalid.`, { variant: "error" });
-      return false;
-    } else if (entity.size > sizeSpec?.worldMeta.limit.maxBytes) {
-      showAlertMessage(`World data invalid. Size cannot exceed ${sizeSpec?.worldMeta.limit.readable}`, {
-        variant: "error",
-      });
-      return false;
-    } else return true;
+    return true;
   };
 
   const handleMint = () => {
@@ -182,120 +182,6 @@ const CreateMaterialFlow = ({
   const mintSingleNFT = () => {
 
   }
-
-  const onImageInput = e => {
-    const files = e.target.files;
-    if (files.length) {
-      handleImageFiles(files);
-    }
-    e.preventDefault();
-
-    if (imageInputRef !== null && imageInputRef.current) {
-      imageInputRef.current.value = "";
-    }
-  };
-
-  const handleImageFiles = (files: any) => {
-    if (files && files[0] && files[0].type) {
-      setImage(files[0]);
-
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setImageFile(reader.result);
-        let image = new Image();
-        if (reader.result !== null && (typeof reader.result === "string" || reader.result instanceof String))
-          image.src = reader.result.toString();
-      });
-
-      reader.readAsDataURL(files[0]);
-    }
-  };
-
-  const onVideoInput = e => {
-    const files = e.target.files;
-    if (files.length) {
-      handleVideoFiles(files);
-    }
-    e.preventDefault();
-
-    if (videoInputRef !== null && videoInputRef.current) {
-      videoInputRef.current.value = "";
-    }
-  };
-
-  const handleVideoFiles = (files: any) => {
-    if (files && files[0]) {
-      setVideo(files[0]);
-
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setVideoFile(reader.result);
-
-        let image = new Image();
-        if (reader.result !== null && (typeof reader.result === "string" || reader.result instanceof String))
-          image.src = reader.result.toString();
-      });
-
-      reader.readAsDataURL(files[0]);
-    }
-  };
-
-  const onUnityInput = e => {
-    const files = e.target.files;
-    if (files.length) {
-      handleUnityFiles(files);
-    }
-    e.preventDefault();
-
-    if (unityInputRef !== null && unityInputRef.current) {
-      unityInputRef.current.value = "";
-    }
-  };
-
-  const handleUnityFiles = (files: any) => {
-    if (files && files[0]) {
-      setUnity(files[0]);
-
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setUnityFile(reader.result);
-
-        let image = new Image();
-        if (reader.result !== null && (typeof reader.result === "string" || reader.result instanceof String))
-          image.src = reader.result.toString();
-      });
-
-      reader.readAsDataURL(files[0]);
-    }
-  };
-
-  const onEntityInput = e => {
-    const files = e.target.files;
-    if (files.length) {
-      handleEntityFiles(files);
-    }
-    e.preventDefault();
-
-    if (entityInputRef !== null && entityInputRef.current) {
-      entityInputRef.current.value = "";
-    }
-  };
-  const handleEntityFiles = (files: any) => {
-    if (files && files[0]) {
-      setEntity(files[0]);
-
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setEntityFile(reader.result);
-
-        let image = new Image();
-        if (reader.result !== null && (typeof reader.result === "string" || reader.result instanceof String))
-          image.src = reader.result.toString();
-      });
-
-      reader.readAsDataURL(files[0]);
-    }
-  };
 
   return (
     
@@ -457,170 +343,23 @@ const CreateMaterialFlow = ({
           { step == 3 &&
           <>
             <Box
-              className={classes.content}
-              style={{
-                padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
-              }}
-            >
-              <div className={classes.modalContent}>
-                <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
-                  <Box className={classes.itemTitle} mb={1}>
-                    material name
-                  </Box>
-                  <InfoTooltip tooltip={"Please give your material a name."} />
-                </Box>
-                <input
-                  className={classes.input}
-                  placeholder="NFT Name"
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                />
-                <Box display="flex" alignItems="center" justifyContent="space-between">
-                  <Box className={classes.itemTitle} mt={2.5} mb={1}>
-                    Description
-                  </Box>
-                  <InfoTooltip tooltip={"Please give your material a description."} />
-                </Box>
-                <textarea
-                  style={{ height: "130px" }}
-                  className={classes.input}
-                  placeholder="NFT description"
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
-                />
-                <Box display="flex" alignItems="center" justifyContent="space-between">
-                  <Box className={classes.itemTitle} mt={2.5} mb={1}>
-                    Preview Image
-                  </Box>
-                  <InfoTooltip tooltip={"Please add an image of your material."} />
-                </Box>
-                <Box
-                  className={classes.uploadBox}
-                  onClick={() => !image && imageInputRef.current?.click()}
-                  style={{
-                    cursor: image ? undefined : "pointer",
-                    height: image ? 110 : 80,
-                  }}
-                >
-                  {image ? (
-                    <>
-                      <Box
-                        className={classes.image}
-                        style={{
-                          backgroundImage: `url(${imageFile})`,
-                          backgroundSize: "cover",
-                        }}
-                      />
-                      <Box flex={1} display="flex" alignItems="center" marginLeft="24px" justifyContent="space-between" mr={3}>
-                        Uploaded {image.name}
-                        <SecondaryButton
-                          size="medium"
-                          onClick={e => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setImage(null);
-                            setImageFile(null);
-                            imageInputRef.current?.click();
-                          }}
-                        >
-                          <img src={require("assets/metaverseImages/refresh.png")} />
-                          <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                        </SecondaryButton>
-                      </Box>
-                    </>
-                  ) : (
-                    <>
-                      <Box className={classes.image}>
-                        <img width={26} src={require("assets/icons/image-icon.png")} alt="image" />
-                      </Box>
-                      <Box className={classes.controlBox} ml={5}>
-                        Drag image here or <span>browse media on your device</span>
-                        <br />
-                        <span>Accepted files png, jpg, svg</span> minimum 600 x 600 px size for
-                        <br />
-                        best viewing experience
-                      </Box>
-                    </>
-                  )}
-                </Box>
-                <Box display="flex" alignItems="center" justifyContent="space-between">
-                  <Box className={classes.itemTitle} mt={2.5} mb={1}>
-                    Material file
-                  </Box>
-                  <InfoTooltip
-                    tooltip={
-                      "Please input your extension source file (.dreemworld) that was generated by the dreem creator toolkit. The maximum size allowed is 50MB - if your file exceeds this limit, try reducing the size of resources."
-                    }
+                className={classes.content}
+                style={{
+                  padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
+                }}
+              >
+                <div className={classes.modalContent}>
+                  <CreateAssetForm
+                    metadata={metadata}
+                    formData={formData}
+                    setFormData={setFormData}
+                    fileInputs={fileInputs}
+                    setFileInputs={setFileInputs}
+                    fileContents={fileContents}
+                    setFileContents={setFileContents}
                   />
-                </Box>
-                <PrimaryButton
-                  size="medium"
-                  className={classes.uploadBtn}
-                  onClick={() => {
-                    !unity && unityInputRef.current?.click();
-                  }}
-                  style={unity && {background: "#E9FF26!important"}}
-                >
-                  {unity ? (
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="space-between"
-                      width={1}
-                      fontSize={12}
-                    >
-                      <Box
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                        fontSize={12}
-                      >
-                        <DocumentIcon /> {unity.name}
-                      </Box>
-                      <SecondaryButton
-                        size="medium"
-                        onClick={e => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setUnity(null);
-                          setUnityFile(null);
-                          unityInputRef.current?.click();
-                        }}
-                      >
-                        <img src={require("assets/metaverseImages/refresh.png")} />
-                        <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                      </SecondaryButton>
-                    </Box>
-                  ) : (
-                    <Box pt={0.5}
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <UnityIcon /> <Box display="flex" alignItems="center" marginLeft="5px">Add Unity File</Box>
-                    </Box>
-                  )}
-                </PrimaryButton>
-              </div>
-              <input
-                ref={imageInputRef}
-                id={`selectPhoto-create-nft`}
-                hidden
-                type="file"
-                style={{ display: "none" }}
-                accept={sizeSpec?.worldImage.mimeTypes.join(",")}
-                onChange={onImageInput}
-              />
-              <input
-                ref={unityInputRef}
-                id={`selectUnity-create-nft`}
-                hidden
-                type="file"
-                style={{ display: "none" }}
-                // accept={sizeSpec?.worldLevel.mimeTypes.join(",")}
-                onChange={onUnityInput}
-              />
-            </Box>
+                </div>
+              </Box>
           </>
           }
         </div>

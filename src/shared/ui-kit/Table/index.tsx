@@ -30,7 +30,8 @@ export type CustomTableProps = {
   | "offers blue"
   | "bid"
   | "normal"
-  | "dreem";
+  | "dreem"
+  | "game transaction";
   onSort?: any;
   sorted?: any;
   radius?: number;
@@ -185,6 +186,55 @@ const useStyles = makeStyles(() =>
           },
           "&:last-child": {
             borderRight: "2px solid #F2C525",
+            borderRightStyle: "solid",
+            borderBottomRightRadius: "12px",
+            borderTopRightRadius: "12px",
+          },
+        },
+      },
+    },
+    tableGameTransaction: {
+      "& .MuiTable-root": {
+        borderCollapse: "separate !important",
+        borderSpacing: "0 6px",
+        marginTop: "-6px",
+      },
+      "& .MuiTableHead-root": {
+        backgroundColor: "transparent",
+      },
+      "& .MuiTableCell-root": {
+        fontFamily: "Rany",
+        border: 0,
+        fontWeight: 400,
+        color: "white",
+      },
+      "& .MuiTableCell-head": {
+        textTransform: "uppercase",
+        fontSize: 18,
+        fontFamily: "Rany",
+        fontWeight: 700,
+        paddingBottom: 0,
+        color: "#ffffff50 !important",
+      },
+      "& .MuiTableCell-body": {
+        fontSize: 18,
+        color: "white"
+      },
+      "& .MuiTableBody-root": {
+        "& .MuiTableRow-root": {
+          backgroundColor: "transparent !important",
+        },
+        "& .MuiTableCell-root": {
+          borderTop: "2px solid #ffffff50",
+          borderBottom: "2px solid #ffffff50",
+          "&:first-child": {
+            borderLeft: "2px solid #ffffff50",
+            borderLeftStyle: "solid",
+            borderTopLeftRadius: "10px",
+            borderBottomLeftRadius: "12px",
+          },
+          "&:last-child": {
+            borderRight: "2px solid #ffffff50",
             borderRightStyle: "solid",
             borderBottomRightRadius: "12px",
             borderTopRightRadius: "12px",
@@ -492,9 +542,11 @@ export const CustomTable = ({
                             ? classes.bid
                             : theme === "dreem"
                               ? classes.dreem
-                              : theme === "normal"
-                                ? classes.normal
-                                : classes.table
+                              : theme === "game transaction"
+                                ? classes.tableGameTransaction
+                                : theme === "normal"
+                                  ? classes.normal
+                                  : classes.table
       }
     >
       <Table>
