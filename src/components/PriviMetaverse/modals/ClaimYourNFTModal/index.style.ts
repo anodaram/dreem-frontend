@@ -20,7 +20,7 @@ export const ClaimYourNFTModalStyles = makeStyles(theme => ({
   },
   infoValue: {
     fontSize: 16,
-    fontFamily: "Agrandir GrandHeavy",
+    fontFamily: "Grifter",
   },
   confirmButton: {
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%) !important",
@@ -29,7 +29,7 @@ export const ClaimYourNFTModalStyles = makeStyles(theme => ({
     borderRadius: "40px !important",
     textTransform: "uppercase",
     marginTop: "27px",
-    padding: "0 44px !important"
+    padding: "0 44px !important",
   },
   title: {
     fontFamily: "GRIFTER",
@@ -38,7 +38,7 @@ export const ClaimYourNFTModalStyles = makeStyles(theme => ({
     fontWeight: 800,
     width: "70%",
     textAlign: "center",
-    textTransform: "uppercase"
+    textTransform: "uppercase",
   },
   description: {
     fontFamily: "Rany",
@@ -68,6 +68,6 @@ export const ClaimYourNFTModalStyles = makeStyles(theme => ({
   },
   cardImg: {
     height: "316px",
-    objectFit: "cover"
-  }
+    objectFit: "cover",
+  },
 }));

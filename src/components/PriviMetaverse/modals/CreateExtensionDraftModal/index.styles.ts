@@ -19,7 +19,7 @@ export const useModalStyles = makeStyles(theme => ({
       fontWeight: 800,
       fontSize: 20,
       textAlign: "center",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
       lineHeight: "130%",
     },
     "& p": {

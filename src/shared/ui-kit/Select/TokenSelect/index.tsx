@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: "#f7f9fe",
       color: "rgb(101, 110, 126)",
       padding: "11.5px 18px",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
       paddingLeft: "16px",
       height: "100%",
       "& .MuiSelect-select:focus": {
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: "#f7f9fe",
       color: "rgb(101, 110, 126)",
       padding: "16px",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
       height: "100%",
       paddingLeft: "16px",
       minHeight: "45px",
@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme => ({
       border: "1px solid #FFFFFF",
       backgroundColor: "rgba(255, 255, 255, 0.16)",
       color: "white",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
       fontSize: "14px",
       paddingLeft: "10px",
       height: "100%",
@@ -138,7 +138,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "#1A1B1C",
     borderRadius: 0,
     "& *": {
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
       fontSize: "14px",
       color: "white",
     },
@@ -147,7 +147,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "white",
   },
   "& *": {
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
   },
 }));
 
@@ -254,7 +254,7 @@ export const TokenSelect = ({
         ? tokens && tokens[0] && tokens[0].token
           ? tokens.map(({ token, name, Type }, index) => (
               <StyledMenuItem value={token} key={token + "-" + index}>
-                <Box display="flex" alignItems="center" fontFamily="Agrandir">
+                <Box display="flex" alignItems="center" fontFamily="Grifter">
                   {Type === "NFTMEDIA" && (
                     <img
                       className={classes.tokenImage}
@@ -277,7 +277,7 @@ export const TokenSelect = ({
             ))
           : tokens.map((token, index) => (
               <StyledMenuItem value={token} key={token + "-" + index}>
-                <Box display="flex" alignItems="center" fontFamily="Agrandir">
+                <Box display="flex" alignItems="center" fontFamily="Grifter">
                   <img
                     className={classes.tokenImage}
                     src={require(`assets/tokenImages/${
@@ -292,7 +292,7 @@ export const TokenSelect = ({
         : tokens[0] && tokens[0].name
         ? tokens.map(({ name, value }, index) => (
             <StyledMenuItem value={name} key={name + "-" + index}>
-              <Box display="flex" alignItems="center" fontFamily="Agrandir">
+              <Box display="flex" alignItems="center" fontFamily="Grifter">
                 <img
                   className={classes.tokenImage}
                   src={require(`assets/tokenImages/${

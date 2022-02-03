@@ -21,7 +21,7 @@ export const GradientSlider = withStyles({
     fontSize: 16,
     fontWeight: 400,
     lineHeight: "104.5%",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     color: "#A3A5BF",
   },
   track: {
@@ -43,7 +43,7 @@ export const GradientSlider = withStyles({
     "& span": {
       background: "transparent",
       color: "#431AB7",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
       fontSize: "10px",
       fontWeight: 600,
       lineHeight: "120%",
@@ -90,9 +90,8 @@ export const SecondaryGradientSlider = withStyles({
     "& span": {
       background: "#EFF2F8",
       color: "#707582",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
       fontSize: "14px",
     },
   },
 })(Slider);
-

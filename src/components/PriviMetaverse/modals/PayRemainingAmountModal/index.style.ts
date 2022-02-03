@@ -50,7 +50,7 @@ export const PayRemainingAmountModalStyles = makeStyles(theme => ({
     width: "100%",
     borderRadius: theme.spacing(1),
     padding: "16px",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontStyle: "normal",
     fontWeight: "bold",
     fontSize: "14px",
@@ -60,7 +60,7 @@ export const PayRemainingAmountModalStyles = makeStyles(theme => ({
     border: "none",
   },
   purpleText: {
-    fontFamily: "Agrandir Variable !important",
+    fontFamily: "Grifter !important",
     cursor: "pointer",
     color: "#431AB7",
     fontSize: "16px",
@@ -84,6 +84,6 @@ export const PayRemainingAmountModalStyles = makeStyles(theme => ({
     "&:disabled": {
       background: "linear-gradient(#B7FF5C, #EEFF21) !important",
       color: "#212121 !important",
-    }
+    },
   },
 }));

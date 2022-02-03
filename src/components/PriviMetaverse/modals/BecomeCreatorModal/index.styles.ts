@@ -12,7 +12,7 @@ export const becomeCreatorModalStyles = makeStyles(theme => ({
     fontSize: 20,
     fontWeight: 800,
     lineHeight: "26px",
-    fontFamily: "Agrandir GrandHeavy",
+    fontFamily: "Grifter",
     marginTop: 24,
   },
   typo2: {

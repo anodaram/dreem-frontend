@@ -22,7 +22,7 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
     margin: "0 2px",
   },
   purpleText: {
-    fontFamily: "Agrandir Variable !important",
+    fontFamily: "Grifter !important",
     cursor: "pointer",
     color: "#431AB7",
     fontSize: "16px",
@@ -55,13 +55,13 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
     },
   },
   usdt: {
-    fontFamily: "Agrandir GrandHeavy !important",
+    fontFamily: "Grifter !important",
     color: "#431AB7",
     fontWeight: 800,
     fontSize: "16px",
   },
   totalText: {
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontStyle: "normal",
     fontWeight: 800,
     fontSize: "14px",

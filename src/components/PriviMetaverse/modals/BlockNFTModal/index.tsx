@@ -407,7 +407,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
             </Grid>
             <div
               style={{
-                fontFamily: "Agrandir GrandHeavy",
+                fontFamily: "Grifter",
                 color: "#2D3047",
                 fontSize: "22px",
                 fontWeight: 800,

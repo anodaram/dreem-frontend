@@ -55,7 +55,7 @@ export const useStyles = makeStyles(theme => ({
     },
     "& .MuiTableCell-root": {
       border: "none",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
     },
     "& .MuiTableRow-head": {
       background: "transparent",

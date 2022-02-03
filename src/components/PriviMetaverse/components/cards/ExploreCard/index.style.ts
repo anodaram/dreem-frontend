@@ -72,7 +72,7 @@ export const cardStyles = makeStyles(theme => ({
     order: 1,
     flexGrow: 0,
     margin: "0px 0px",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontStyle: "normal",
     fontWeight: "bold",
     fontSize: "8.26741px",

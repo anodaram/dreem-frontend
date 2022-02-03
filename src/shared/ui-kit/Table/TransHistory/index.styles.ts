@@ -9,7 +9,7 @@ export const transHistoryStyles = makeStyles(theme => ({
     fontSize: "22px",
     fontWeight: 800,
     lineHeight: "130%",
-    fontFamily: "Agrandir Grandlight",
+    fontFamily: "Grifter",
   },
   seeAll: {
     paddingLeft: "48px",

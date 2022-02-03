@@ -75,7 +75,7 @@ const Option = styled.div`
   height: ${OPTION_HEIGHT};
   display: flex;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-family: Agrandir;
+  font-family: Grifter;
   color: white;
   font-size: 14,
   font-weight: 500,

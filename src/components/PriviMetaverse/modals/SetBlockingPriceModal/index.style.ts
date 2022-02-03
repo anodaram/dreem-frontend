@@ -19,7 +19,7 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
     width: "100%",
     padding: theme.spacing(1),
     color: "#ffffff60 !important",
-    borderRadius: "unset !important"
+    borderRadius: "unset !important",
   },
   tokenSelect: {
     backgroundColor: "#172227 !important",
@@ -28,7 +28,7 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
     color: "#ffffff !important",
     borderRadius: "unset !important",
-    flex: "1"
+    flex: "1",
   },
   purpleText: {
     fontFamily: "Rany",
@@ -64,13 +64,13 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
     },
   },
   usdt: {
-    fontFamily: "Agrandir GrandHeavy !important",
+    fontFamily: "Grifter !important",
     color: "#ffffff",
     fontWeight: 800,
     fontSize: "16px",
   },
   totalText: {
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontStyle: "normal",
     fontWeight: 800,
     fontSize: "14px",
@@ -100,7 +100,7 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
     justifyContent: "center",
   },
   cancelTitle: {
-    fontFamily: "Agrandir GrandHeavy",
+    fontFamily: "Grifter",
     fontSize: "18px",
     color: "#2D3047",
   },
@@ -116,15 +116,15 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
     color: "#DDFF57 !important",
     border: "1px solid #E9FF26 !important",
     borderRadius: "40px !important",
-    width: '165px !important',
-    textTransform: "uppercase"
+    width: "165px !important",
+    textTransform: "uppercase",
   },
   editPriceButton: {
     backgroundColor: "#DDFF57 !important",
     color: "#0B151C !important",
-    width: '165px !important',
+    width: "165px !important",
     borderRadius: "40px !important",
-    textTransform: "uppercase"
+    textTransform: "uppercase",
   },
   primaryButton: {
     color: "#212121 !important",
@@ -136,6 +136,6 @@ export const MakeSetBlockingPriceModalStyles = makeStyles(theme => ({
     "&:disabled": {
       background: "linear-gradient(#B7FF5C, #EEFF21) !important",
       color: "#212121 !important",
-    }
+    },
   },
 }));
