@@ -280,6 +280,7 @@ export const getCharacters = async (
     }
   } catch (error) {
     console.log("error in getCharacters:", error);
+    throw error
   }
 };
 
@@ -434,7 +435,7 @@ export const getAssetMetadata = async (item: string) => {
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.post(`${METAVERSE_URL()}/web/create/assets/`, { item }, config);
+    const resp = await axios.post(`${METAVERSE_URL()}/web/create/asset/`, { item }, config);
     if (resp.data) {
       return resp.data;
     }
