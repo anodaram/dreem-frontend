@@ -127,7 +127,6 @@ export default function GameDetailPage() {
   const [selectedTab, setSelectedTab] = React.useState<string>(TAB_NFTS);
   const [filterStatus, setFilterStatus] = React.useState<string>(filterStatusOptions[0]);
   const [openStatusSelect, setOpenStatusSelect] = React.useState<boolean>(false);
-  const [showSearchBox, setShowSearchBox] = React.useState<boolean>(false);
   const [searchValue, setSearchValue] = React.useState<string>("");
   const [isListView, setIsListView] = React.useState<boolean>(false);
   const [openDescription, setOpenDescription] = React.useState<boolean>(false);
@@ -508,12 +507,15 @@ export default function GameDetailPage() {
           />
           {selectedTab === TAB_NFTS && (
             <>
+              <Box className={classes.tabTitle} mt={4}>
+                Explore NFTs
+              </Box>
               <Box
                 display="flex"
                 alignItems="center"
                 justifyContent="space-between"
                 width={1}
-                mt={4}
+                mt={2}
                 flexDirection={isMobile ? "column" : "row"}
               >
                 <Box
@@ -558,31 +560,28 @@ export default function GameDetailPage() {
                 </Box>
                 <Box className={classes.optionSection} mt={isMobile ? 1 : 0}>
                   <div className={classes.filterButtonBox}>
-                    {showSearchBox && (
-                      <InputWithLabelAndTooltip
-                        type="text"
-                        inputValue={searchValue}
-                        placeHolder="Search"
-                        onInputValueChange={e => {
-                          setLastId(undefined);
-                          setSearchValue(e.target.value);
-                          setHasMore(true);
-                          setNfts([]);
-                        }}
-                        style={{
-                          background: "transparent",
-                          margin: 0,
-                          marginRight: 8,
-                          marginLeft: 8,
-                          padding: 0,
-                          border: "none",
-                          height: "auto",
-                        }}
-                        theme="dark"
-                      />
-                    )}
+                    <InputWithLabelAndTooltip
+                      type="text"
+                      inputValue={searchValue}
+                      placeHolder="Search games"
+                      onInputValueChange={e => {
+                        setLastId(undefined);
+                        setSearchValue(e.target.value);
+                        setHasMore(true);
+                        setNfts([]);
+                      }}
+                      style={{
+                        background: "transparent",
+                        margin: 0,
+                        marginRight: 8,
+                        marginLeft: 8,
+                        padding: 0,
+                        border: "none",
+                        height: "auto",
+                      }}
+                      theme="dark"
+                    />
                     <Box
-                      onClick={() => setShowSearchBox(prev => !prev)}
                       display="flex"
                       alignItems="center"
                       justifyContent="center"
@@ -593,7 +592,7 @@ export default function GameDetailPage() {
                   </div>
                   <Box
                     className={classes.controlBox}
-                    ml={2}
+                    ml={4.5}
                     display="flex"
                     flexDirection="row"
                     alignItems="center"
@@ -602,7 +601,6 @@ export default function GameDetailPage() {
                       className={`${classes.showButton} ${isListView ? classes.showButtonSelected : ""}`}
                       size="small"
                       onClick={() => setIsListView(true)}
-                      isRounded
                     >
                       <UnionIcon />
                     </SecondaryButton>
@@ -610,7 +608,6 @@ export default function GameDetailPage() {
                       className={`${classes.showButton} ${!isListView ? classes.showButtonSelected : ""}`}
                       size="small"
                       onClick={() => setIsListView(false)}
-                      isRounded
                       style={{ marginLeft: 0 }}
                     >
                       <DetailIcon />

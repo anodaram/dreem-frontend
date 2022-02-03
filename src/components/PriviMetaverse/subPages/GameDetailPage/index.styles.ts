@@ -45,6 +45,19 @@ export const gameDetailPageStyles = makeStyles(theme => ({
       fontSize: 34,
     },
   },
+  tabTitle: {
+    fontFamily: "GRIFTER",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: "34px",
+    lineHeight: "120%",
+    letterSpacing: "0.02em",
+    textTransform: "uppercase",
+    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
+    "-webkit-text-fill-color": "transparent",
+    "-webkit-background-clip": "text",
+    width: "fit-content",
+  },
   description: {
     fontStyle: "normal",
     fontWeight: 500,
@@ -150,13 +163,15 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     },
   },
   filterButtonBox: {
-    background: "#FFFFFF1A",
+    background: "rgba(21, 21, 21, 0.3)",
+    border: "2px solid rgba(255, 255, 255, 0.5)",
     display: "flex",
     alignItems: "center",
     padding: `${theme.spacing(1)}px`,
     cursor: "pointer",
-    borderRadius: "100vh",
-    color: "white",
+    color: "#ffffff80",
+    minWidth: 274,
+    height: 38,
     [theme.breakpoints.down("xs")]: {
       padding: "8px",
     },
@@ -164,8 +179,8 @@ export const gameDetailPageStyles = makeStyles(theme => ({
   controlBox: {
     display: "flex",
     alignItems: "center",
-    background: "#FFFFFF1A",
-    borderRadius: 69,
+    background: "#FFFFFF10",
+    borderRadius: 6,
   },
   showButton: {
     display: "flex",
@@ -180,9 +195,9 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     },
   },
   showButtonSelected: {
-    background: "#ffffff !important",
+    background: "#E9FF26 !important",
     boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.08), 0px -1px 20px rgba(0, 0, 0, 0.05)",
-    borderRadius: 34,
+    borderRadius: 6,
     "& svg": {
       fill: "#212121",
     },
