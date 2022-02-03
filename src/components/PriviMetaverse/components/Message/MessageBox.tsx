@@ -120,7 +120,7 @@ export const MessageBox = () => {
 
   return (
     <>
-      <Box display="flex" bgcolor="#151515" p="8px" width="fit-content" mx="19px" mt="29px">
+      <Box display="flex" bgcolor="#151515" p="8px" width="fit-content" mx="19px" mt="22px">
         <Box className={"tab selected"}>Live Chat</Box>
       </Box>
       <MessageContent

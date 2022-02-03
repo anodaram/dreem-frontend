@@ -24,6 +24,12 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     marginTop: 16,
     cursor: "pointer",
   },
+  collapseIcon: {
+    position: "absolute",
+    top: "16px",
+    right: "18px",
+    cursor: "pointer",
+  },
   image1: {
     position: "absolute",
     left: -210,
