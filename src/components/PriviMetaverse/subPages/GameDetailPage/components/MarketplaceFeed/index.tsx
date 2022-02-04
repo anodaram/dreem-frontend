@@ -200,10 +200,10 @@ export default function MarketplaceFeed() {
               row.operator ||
               row.seller ||
               row.fromSeller ||
-              row.toSeller
-            ).substring(0, 6)}...${(row.operator || row.seller || row.fromSeller || row.toSeller).substring(
-              (row.operator || row.seller || row.fromSeller || row.toSeller).length - 4,
-              (row.operator || row.seller || row.fromSeller || row.toSeller).length
+              row.toSeller || ""
+            ).substring(0, 6)}...${(row.operator || row.seller || row.fromSeller || row.toSeller || "").substring(
+              (row.operator || row.seller || row.fromSeller || row.toSeller || "").length - 4,
+              (row.operator || row.seller || row.fromSeller || row.toSeller || "").length
             )}`}</p>
           ),
         },
