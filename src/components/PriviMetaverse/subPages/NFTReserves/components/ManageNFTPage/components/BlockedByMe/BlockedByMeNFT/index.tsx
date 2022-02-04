@@ -210,7 +210,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                             size="medium"
                             className={classes.primaryButton}
                             onClick={() => {
-                              history.push(`/gameNFTS/${item.Slug}/${item.id}`);
+                              history.push(`/P2E/${item.Slug}/${item.id}`);
                             }}
                           >
                             CLAIM YOUR NFT
@@ -223,7 +223,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                           size="medium"
                           className={classes.primaryButton}
                           onClick={() => {
-                            history.push(`/gameNFTS/${item.Slug}/${item.id}`);
+                            history.push(`/P2E/${item.Slug}/${item.id}`);
                           }}
                         >
                           CLAIM OUTSTANDING COLLATERAL
@@ -267,7 +267,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
               src={require(`assets/icons/arrow_white_right.png`)}
               style={{ cursor: "pointer" }}
               onClick={() => {
-                history.push(`/gameNFTS/${item.Slug}/${item.id}`);
+                history.push(`/P2E/${item.Slug}/${item.id}`);
               }}
             />
           </Box>
@@ -345,7 +345,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                         size="medium"
                         className={classes.primaryButton}
                         onClick={() => {
-                          history.push(`/gameNFTS/${item.Slug}/${item.id}`);
+                          history.push(`/P2E/${item.Slug}/${item.id}`);
                         }}
                       >
                         CLAIM YOUR NFT
@@ -358,7 +358,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
                       size="medium"
                       className={classes.primaryButton}
                       onClick={() => {
-                        history.push(`/gameNFTS/${item.Slug}/${item.id}`);
+                        history.push(`/P2E/${item.Slug}/${item.id}`);
                       }}
                     >
                       CLAIM OUTSTANDING COLLATERAL

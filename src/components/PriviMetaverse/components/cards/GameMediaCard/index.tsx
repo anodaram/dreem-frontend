@@ -41,7 +41,7 @@ export default function GameMediaCard(props) {
             justifyContent="space-between"
             className={classes.container}
             onClick={() => {
-              history.push(`/gameNFTS/${gameInfo.Slug}/${item.id}`);
+              history.push(`/P2E/${gameInfo.Slug}/${item.id}`);
             }}
           >
             <img className={classes.image} src={media?.image} alt="robot" />
