@@ -189,7 +189,7 @@ const ExploreReserveDetailPage = () => {
 
   const goBack = () => {
     if (history.action === "POP") {
-      history.push("/gameNFTS/");
+      history.push("/P2E/");
     } else {
       history.goBack();
     }
@@ -488,10 +488,7 @@ const ExploreReserveDetailPage = () => {
                 <Box display="flex" alignItems="center">
                   <span
                     onClick={() =>
-                      shareMedia(
-                        "gameNFTS",
-                        `gameNFTS/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`
-                      )
+                      shareMedia("P2E", `P2E/${encodeURIComponent(nft?.Slug)}/${encodeURIComponent(nft?.id)}`)
                     }
                     style={{ cursor: "pointer" }}
                   >
@@ -506,7 +503,7 @@ const ExploreReserveDetailPage = () => {
                     <IconButtonWrapper style={{ marginLeft: -10 }} rotate={syncing}>
                       <RefreshIcon />
                     </IconButtonWrapper>
-                    Sync NFT
+                    <Box paddingTop={"4px"}>Sync NFT</Box>
                   </SecondaryButton>
                 </Box>
               </Box>

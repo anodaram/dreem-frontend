@@ -305,7 +305,7 @@ const NFTReserves = () => {
                       size="medium"
                       className={classes.primaryButton}
                       onClick={() => {
-                        history.push("/gameNFTS/manage_nft");
+                        history.push("/P2E/manage_nft");
                       }}
                       style={{
                         width: isMobile ? "100%" : "auto",
@@ -565,7 +565,7 @@ const NFTReserves = () => {
                     <SecondaryButton
                       size="medium"
                       className={classes.showAll}
-                      onClick={() => history.push("/gameNFTS/explorer")}
+                      onClick={() => history.push("/P2E/explorer")}
                     >
                       Show All
                     </SecondaryButton>

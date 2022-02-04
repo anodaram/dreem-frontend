@@ -419,6 +419,7 @@ export const exploreOptionDetailPageStyles = makeStyles(theme => ({
     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
     "-webkit-text-fill-color": "transparent",
     "-webkit-background-clip": "text",
+    paddingTop: "4px !important",
   },
   pricingButton: {
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",

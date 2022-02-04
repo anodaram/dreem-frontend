@@ -79,21 +79,24 @@ const filterStatusOptions = ["All", ...NftStates];
 
 const gameList = [
   {
-    title: 'Game Name 1',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.',
-    image: require("assets/backgrounds/community.jpeg")
+    title: "Game Name 1",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.",
+    image: require("assets/backgrounds/community.jpeg"),
   },
   {
-    title: 'Game Name 2',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.',
-    image: require("assets/backgrounds/social.jpeg")
+    title: "Game Name 2",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.",
+    image: require("assets/backgrounds/social.jpeg"),
   },
   {
-    title: 'Game Name 3',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.',
-    image: require("assets/backgrounds/workInProgress.jpeg")
-  }
-]
+    title: "Game Name 3",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.",
+    image: require("assets/backgrounds/workInProgress.jpeg"),
+  },
+];
 
 const getChainImage = chain => {
   if (chain === filterChainOptions[1]) {
@@ -299,17 +302,20 @@ const GameNFTExplorerPage = () => {
 
     try {
       setLoading(true);
-      
+
       getAllGameNFTsRef.current = Axios.CancelToken.source();
-      const response = await getAllGameNFTs({
-        mode: isProd ? "main" : "test",
-        network,
-        status,
-        search,
-        lastNFTId: isInit ? undefined : lastNFTId.current,
-        lastCollectionId: lastCollectionId.current,
-        pageSize: PAGE_SIZE,
-      }, getAllGameNFTsRef?.current?.token);
+      const response = await getAllGameNFTs(
+        {
+          mode: isProd ? "main" : "test",
+          network,
+          status,
+          search,
+          lastNFTId: isInit ? undefined : lastNFTId.current,
+          lastCollectionId: lastCollectionId.current,
+          pageSize: PAGE_SIZE,
+        },
+        getAllGameNFTsRef?.current?.token
+      );
 
       const newNfts = response.nfts;
 
@@ -464,7 +470,7 @@ const GameNFTExplorerPage = () => {
     if (!row || !row[0].rawData) return;
 
     const nft = row[0].rawData;
-    history.push(`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
+    history.push(`/P2E/${nft.collectionId}/${nft.tokenId}`);
   };
 
   const nftListWithSkeleton = useMemo(() => {
@@ -512,17 +518,17 @@ const GameNFTExplorerPage = () => {
   return (
     <>
       <Box className={classes.main}>
-        <img
-          src={require("assets/metaverseImages/gamenft_explorer_bg.png")}
-          className={classes.imageBg}
-        />
+        <img src={require("assets/metaverseImages/gamenft_explorer_bg.png")} className={classes.imageBg} />
         {!isMobile && !isTablet && (
           <>
             <img
               src={require("assets/metaverseImages/rectangle_yellow_left.png")}
               className={classes.image1}
             />
-            <img src={require("assets/metaverseImages/rectangle_yellow_top.png")} className={classes.image2} />
+            <img
+              src={require("assets/metaverseImages/rectangle_yellow_top.png")}
+              className={classes.image2}
+            />
           </>
         )}
         <Box className={classes.limitedContent}>
@@ -825,6 +831,9 @@ export const DetailIcon = () => (
 
 export const GameIcon = () => (
   <svg width="26" height="20" viewBox="0 0 26 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M10.8333 1.70412C9.27875 0.182038 5.655 -0.430045 3.61292 1.75829C1.61417 3.89245 0 9.03775 0 13.8916C0 19.7476 4.9075 20.5601 7.58333 17.6833C9.1325 16.015 9.27875 15.7544 10.2917 14.4333H15.7083C16.7267 15.7544 16.8675 16.015 18.4167 17.6833C21.092 20.5601 26 19.7476 26 13.8916C26 9.03775 24.3858 3.89245 22.3871 1.75829C20.345 -0.430045 16.7267 0.182038 15.1667 1.70412C14.5654 2.28912 13 2.51662 13 2.51662C13 2.51662 11.4346 2.28912 10.8333 1.70412ZM8.66667 5.27912V6.84941H10.2375C10.8658 6.84941 11.375 7.33691 11.375 7.93329C11.375 8.52912 10.8658 9.01662 10.2375 9.01662H8.66667V10.5869C8.66667 11.2158 8.17917 11.725 7.58333 11.725C6.9875 11.725 6.5 11.2163 6.5 10.5869V9.01662H4.92917C4.30083 9.01662 3.79167 8.52912 3.79167 7.93329C3.79167 7.33691 4.30083 6.84941 4.92917 6.84941H6.5V5.27912C6.5 4.65079 6.9875 4.14162 7.58333 4.14162C8.17917 4.14162 8.66667 4.65079 8.66667 5.27912ZM18.4167 6.03745C18.4167 5.28995 19.0233 4.68329 19.7708 4.68329C20.5183 4.68329 21.125 5.28995 21.125 6.03745C21.125 6.78495 20.5183 7.39162 19.7708 7.39162C19.0233 7.39162 18.4167 6.78495 18.4167 6.03745ZM15.7083 9.28745C15.7083 8.53941 16.315 7.93329 17.0625 7.93329C17.81 7.93329 18.4167 8.53941 18.4167 9.28745C18.4167 10.0344 17.81 10.6416 17.0625 10.6416C16.315 10.6416 15.7083 10.0344 15.7083 9.28745Z" fill="black"/>
+    <path
+      d="M10.8333 1.70412C9.27875 0.182038 5.655 -0.430045 3.61292 1.75829C1.61417 3.89245 0 9.03775 0 13.8916C0 19.7476 4.9075 20.5601 7.58333 17.6833C9.1325 16.015 9.27875 15.7544 10.2917 14.4333H15.7083C16.7267 15.7544 16.8675 16.015 18.4167 17.6833C21.092 20.5601 26 19.7476 26 13.8916C26 9.03775 24.3858 3.89245 22.3871 1.75829C20.345 -0.430045 16.7267 0.182038 15.1667 1.70412C14.5654 2.28912 13 2.51662 13 2.51662C13 2.51662 11.4346 2.28912 10.8333 1.70412ZM8.66667 5.27912V6.84941H10.2375C10.8658 6.84941 11.375 7.33691 11.375 7.93329C11.375 8.52912 10.8658 9.01662 10.2375 9.01662H8.66667V10.5869C8.66667 11.2158 8.17917 11.725 7.58333 11.725C6.9875 11.725 6.5 11.2163 6.5 10.5869V9.01662H4.92917C4.30083 9.01662 3.79167 8.52912 3.79167 7.93329C3.79167 7.33691 4.30083 6.84941 4.92917 6.84941H6.5V5.27912C6.5 4.65079 6.9875 4.14162 7.58333 4.14162C8.17917 4.14162 8.66667 4.65079 8.66667 5.27912ZM18.4167 6.03745C18.4167 5.28995 19.0233 4.68329 19.7708 4.68329C20.5183 4.68329 21.125 5.28995 21.125 6.03745C21.125 6.78495 20.5183 7.39162 19.7708 7.39162C19.0233 7.39162 18.4167 6.78495 18.4167 6.03745ZM15.7083 9.28745C15.7083 8.53941 16.315 7.93329 17.0625 7.93329C17.81 7.93329 18.4167 8.53941 18.4167 9.28745C18.4167 10.0344 17.81 10.6416 17.0625 10.6416C16.315 10.6416 15.7083 10.0344 15.7083 9.28745Z"
+      fill="black"
+    />
   </svg>
-)
+);
