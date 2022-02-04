@@ -256,7 +256,7 @@
   padding-right: 12px;
   flex: 1;
   max-height: 30vh;
-  max-width: 404px;
+  max-width: 398px;
 }
 .item-list-container::-webkit-scrollbar {
   width: 7px;
@@ -427,4 +427,14 @@
   display: "-webkit-box";
   -webkit-line-clamp: 1;
   -webkit-box-orient: "vertical";
+}
+
+@media (max-width: 768px) {
+  .item-list-container {
+    margin: 12px 8px;
+    max-width: 235px;
+  }
+  .message-footer1 {
+    padding: 16px 8px 35px 8px;
+  }
 }

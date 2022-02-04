@@ -49,7 +49,7 @@ const gameList = [
     image: require("assets/backgrounds/community.jpeg"),
     transfers: 5,
     owners: 3,
-    transactions: 12
+    transactions: 12,
   },
   {
     title: "Game Name 2",
@@ -58,7 +58,7 @@ const gameList = [
     image: require("assets/backgrounds/social.jpeg"),
     transfers: 25,
     owners: 5,
-    transactions: 2
+    transactions: 2,
   },
   {
     title: "Game Name 3",
@@ -67,8 +67,8 @@ const gameList = [
     image: require("assets/backgrounds/workInProgress.jpeg"),
     transfers: 7,
     owners: 23,
-    transactions: 19
-  }
+    transactions: 19,
+  },
 ];
 
 const getChainImage = chain => {
@@ -252,7 +252,17 @@ const NFTReserves = () => {
           cell: <div>{getChainImage(row.chain)}</div>,
         },
         {
-          cell: <p className={classes.whiteText}>{+toDecimals(row.price || (row.pricePerSecond * row.rentalTime), getTokenDecimal(row.paymentToken || row.fundingToken))} {getTokenSymbol(row.paymentToken || row.fundingToken)}</p>,
+          cell: (
+            <p className={classes.whiteText}>
+              {
+                +toDecimals(
+                  row.price || row.pricePerSecond * row.rentalTime,
+                  getTokenDecimal(row.paymentToken || row.fundingToken)
+                )
+              }{" "}
+              {getTokenSymbol(row.paymentToken || row.fundingToken)}
+            </p>
+          ),
         },
         {
           cell: (
@@ -277,31 +287,37 @@ const NFTReserves = () => {
   return (
     <>
       <Box className={classes.main}>
-        <img src={require("assets/metaverseImages/nft_reserve_bg.png")} className={classes.imageBg} />
-        <Box className={classes.sideBar}>
-          {openSideBar ? (
+        {isTablet && !isMobile && (
+          <Box className={classes.sideBar}>
             <Box display="flex" flexDirection="column">
               <ActivityFeeds onClose={() => setOpenSideBar(false)} />
               <MessageBox />
             </Box>
-          ) : (
-            <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
-              <ExpandIcon />
+          </Box>
+        )}
+        {!isTablet && !isMobile && (
+          <>
+            <Box className={classes.sideBar}>
+              {openSideBar ? (
+                <Box display="flex" flexDirection="column">
+                  <ActivityFeeds onClose={() => setOpenSideBar(false)} />
+                  <MessageBox />
+                </Box>
+              ) : (
+                <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
+                  <ExpandIcon />
+                </Box>
+              )}
             </Box>
-          )}
-        </Box>
+          </>
+        )}
+        <img src={require("assets/metaverseImages/nft_reserve_bg.png")} className={classes.imageBg} />
         <Box className={classes.limitedContent}>
           <div className={classes.content} id={"scrollContainer"} onScroll={handleScroll}>
             <div className={classes.titleBar}>
-              <Box
-                display="flex"
-                alignItems="center"
-                width="100%"
-                justifyContent="space-between"
-                maxWidth={1280}
-              >
+              <Box className={classes.titleSection}>
                 <div className={classes.title}>Not your average NFT marketplace</div>
-                <Box display="flex" alignItems="center">
+                <Box display="flex" alignItems="center" mt={isTablet ? 2 : 0}>
                   <SecondaryButton
                     size="medium"
                     className={classes.primaryButton}
@@ -328,7 +344,7 @@ const NFTReserves = () => {
                   )}
                 </Box>
               </Box>
-              <Box height={720} width={1280} position="relative" className={classes.gameslider} mt="38px">
+              <Box className={classes.gameslider}>
                 <img src={require("assets/icons/slider_footer.svg")} className={classes.sliderFooter} />
                 <img src={require("assets/icons/slider_left.svg")} className={classes.sliderLeft} />
                 <img src={require("assets/icons/slider_right.svg")} className={classes.sliderRight} />
@@ -338,42 +354,46 @@ const NFTReserves = () => {
                     return () => (
                       <Box position="relative" width="100%" height="100%">
                         <img src={game.image} width="100%" height="100%" className={classes.gameBgImage} />
-                        <Box
-                          padding="30px 105px 100px 105px"
-                          width="100%"
-                          height="100%"
-                          display="flex"
-                          flexDirection="column"
-                          alignItems="flex-start"
-                          justifyContent="space-between"
-                          className={classes.gameContent}
-                        >
+                        <Box className={classes.gameContent}>
                           <Box className={classes.popularGames}>
                             <GameIcon />
                             Featured Games
                           </Box>
-                          <Box display="flex" flexDirection="column" alignItems="flex-start">
-                            <Box fontFamily="Rany" fontWeight={700} fontSize="18px" color="#E9FF26">
+                          <Box
+                            display="flex"
+                            flexDirection="column"
+                            alignItems="flex-start"
+                            mt={isTablet ? 2 : 0}
+                          >
+                            <Box
+                              fontFamily="Rany"
+                              fontWeight={700}
+                              fontSize={isTablet ? 12 : 18}
+                              color="#E9FF26"
+                            >
                               COMING SOON
                             </Box>
-                            <Box fontFamily="GRIFTER" fontWeight={700} fontSize="72px" color="#fff" mt="11px">
+                            <Box
+                              fontFamily="GRIFTER"
+                              fontWeight={700}
+                              fontSize={isTablet ? 26 : 72}
+                              color="#fff"
+                              mt="11px"
+                            >
                               {game.title}
                             </Box>
                             <Box
                               fontFamily="Rany"
                               fontWeight={500}
                               textAlign="left"
-                              fontSize="20px"
+                              fontSize={isTablet ? 12 : 20}
                               color="#fff"
                               lineHeight="31px"
                               mt="20px"
                             >
                               {game.description}
                             </Box>
-                            <Box
-                              display="flex"
-                              mt={3}
-                            >
+                            <Box display="flex" mt={3}>
                               <Box
                                 display="flex"
                                 flexDirection="column"
@@ -607,7 +627,7 @@ const NFTReserves = () => {
                     <SecondaryButton
                       size="medium"
                       className={classes.showAll}
-                      onClick={() => history.push('/P2E/explorer')}
+                      onClick={() => history.push("/P2E/explorer")}
                     >
                       Show All
                     </SecondaryButton>
@@ -645,9 +665,7 @@ const NFTReserves = () => {
                   </div>
                 )}
                 {!transactionloading && transactions?.length < 1 && (
-                  <Box textAlign="center" width="100%" mb={10} mt={2}>
-                    
-                  </Box>
+                  <Box textAlign="center" width="100%" mb={10} mt={2}></Box>
                 )}
               </Box>
             </div>

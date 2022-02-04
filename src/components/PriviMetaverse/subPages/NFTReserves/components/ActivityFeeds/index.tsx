@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useTheme, useMediaQuery } from "@material-ui/core";
+
 import Box from "shared/ui-kit/Box";
 import Avatar from "shared/ui-kit/Avatar";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
@@ -110,6 +112,10 @@ const Fake_Trending_Data = [
 export default function ActivityFeeds({ onClose }) {
   const classes = useStyles();
 
+  const theme = useTheme();
+  const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+
   const [selectedTab, setSelectedTab] = React.useState<"feed" | "trending">("feed");
   const [nftList, setNftList] = React.useState<any[]>(Fake_Feeds_Data);
 
@@ -123,9 +129,11 @@ export default function ActivityFeeds({ onClose }) {
 
   return (
     <Box className={classes.root}>
-      <div className={classes.collapseIcon} onClick={onClose}>
-        <CollapseIcon />
-      </div>
+      {!isTablet && (
+        <div className={classes.collapseIcon} onClick={onClose}>
+          <CollapseIcon />
+        </div>
+      )}
       <div className={classes.switch}>
         <div
           className={classes.switchButton}
@@ -149,6 +157,7 @@ export default function ActivityFeeds({ onClose }) {
                 ? "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)"
                 : "transparent",
             color: selectedTab === "trending" ? "#212121" : "#fff",
+            marginTop: isTablet ? 8 : 0,
           }}
           onClick={() => setSelectedTab("trending")}
         >

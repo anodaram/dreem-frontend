@@ -8,6 +8,26 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     overflow: "auto",
   },
   headerBG: {},
+  sideBar: {
+    display: "flex",
+    position: "fixed",
+    justifyContent: "center",
+    top: 72,
+    height: "100%",
+    background: "#212121",
+    border: "2px solid #151515",
+    zIndex: 2,
+  },
+  expandIcon: {
+    padding: 16,
+    cursor: "pointer",
+  },
+  collapseIcon: {
+    position: "absolute",
+    top: "16px",
+    right: "18px",
+    cursor: "pointer",
+  },
   container: {
     position: "absolute",
     top: 150,
