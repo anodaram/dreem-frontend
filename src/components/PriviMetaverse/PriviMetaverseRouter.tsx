@@ -24,6 +24,7 @@ import ExploreAvatarPage from "./subPages/ExploreAvatarPage";
 import ExploreAssetsPage from "./subPages/ExploreAssetsPage";
 import RealmMapPage from "./subPages/RealmMapPage";
 import WorldDetailPage from "./subPages/WorldDetailPage";
+import CreateRealmPage from "./subPages/CreateRealmPage";
 
 // import ClaimDreemPage from "./subPages/ClaimDreemPage";
 // import MetaversePage from "./subPages/MetaversePage";
@@ -36,6 +37,7 @@ export default function PriviMetaverseRouter(props) {
         <Route exact path="/play" component={LandingPage} />
         <Route exact path="/create" component={ManageContentPage} />
         <Route exact path="/collection/:id" component={CollectionDetailPage} />
+        <Route exact path="/create_realm" component={CreateRealmPage} />
         <Route exact path="/realms/map/:id" component={RealmMapPage} />
         <Route exact path="/realms/:id" component={RealmDetailPage} />
         <Route exact path="/realms/:id/:character_id" component={RealmDetailPage} />
@@ -49,11 +51,11 @@ export default function PriviMetaverseRouter(props) {
         <Route exact path="/become_creator" component={GettingStartedPage} />
         <Route exact path="/creating_realm" component={CreatingRealmPage} />
         <Route exact path="/creating_extension" component={CreatingExtensionPage} />
-        <Route exact path="/gameNFTS" component={NFTReserves} />
-        <Route exact path="/gameNFTS/manage_nft/:tab?" component={ManageNFTPage} />
-        <Route exact path="/gameNFTS/explorer" component={GameNFTExplorerPage} />
-        <Route exact path="/gameNFTS/:collection_id" component={GameDetailPage} />
-        <Route exact path="/gameNFTS/:collection_id/:token_id" component={ExploreReserveDetailPage} />
+        <Route exact path="/P2E" component={NFTReserves} />
+        <Route exact path="/P2E/manage_nft/:tab?" component={ManageNFTPage} />
+        <Route exact path="/P2E/explorer" component={GameNFTExplorerPage} />
+        <Route exact path="/P2E/:collection_id" component={GameDetailPage} />
+        <Route exact path="/P2E/:collection_id/:token_id" component={ExploreReserveDetailPage} />
         <Route exact path="/notifications" component={NotificationPage} />
         {/* <Route exact path="/metaverse" component={MetaversePage} />
         <Route exact path="/claim_dreem" component={ClaimDreemPage} /> */}

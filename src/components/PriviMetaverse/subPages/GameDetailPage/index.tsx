@@ -394,7 +394,7 @@ export default function GameDetailPage() {
     if (!row || !row[0].rawData) return;
 
     const nft = row[0].rawData;
-    history.push(`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
+    history.push(`/P2E/${nft.collectionId}/${nft.tokenId}`);
   };
 
   return (

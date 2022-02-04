@@ -80,16 +80,16 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
 
   React.useEffect(() => {
     if (listenerSocket) {
-      const addMarketPlaceFeedHandler = (_nft) => {
+      const addMarketPlaceFeedHandler = _nft => {
         if (nfts && nfts.length) {
-          const _nfts = nfts.filter((nft) => _nft.id !== nft.id);
+          const _nfts = nfts.filter(nft => _nft.id !== nft.id);
           setNfts([_nft].concat(_nfts));
         }
       };
 
-      const updateMarketPlaceFeedHandler = (_nft) => {
+      const updateMarketPlaceFeedHandler = _nft => {
         if (nfts && nfts.length) {
-          const _nfts = nfts.map((nft) => _nft.id === nft.id ? _nft : nft);
+          const _nfts = nfts.map(nft => (_nft.id === nft.id ? _nft : nft));
           setNfts(_nfts);
         }
       };
@@ -156,14 +156,14 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
   //   setNfts([]);
   // };
 
-  const handleFilterStatus = (status) => {
+  const handleFilterStatus = status => {
     setLastId(undefined);
     setFilterStatus(status);
     setHasMore(true);
     setNfts([]);
   };
 
-  const goToScan = (hash) => {
+  const goToScan = hash => {
     if (Chain.toLowerCase() === "polygon") {
       window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/tx/${hash}`, "_blank");
     } else if (Chain.toLowerCase() === "bsc") {
@@ -171,9 +171,9 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
     }
   };
 
-  const goToNft = (row) => {
-    history.push(`/gameNFTS/${row.collectionId}/${row.tokenId}`)
-  }
+  const goToNft = row => {
+    history.push(`/P2E/${row.collectionId}/${row.tokenId}`);
+  };
 
   const tableData = React.useMemo(() => {
     let data: Array<Array<CustomTableCellInfo>> = [];
@@ -182,44 +182,74 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
         {
           cell: (
             <div className={classes.titleWrapper}>
-              <img
-                className={classes.titleImg}
-                src={row.image}
-              />
+              <img className={classes.titleImg} src={row.image} />
               <div className={classes.textBox}>
                 <p className={classes.textTitle}>{row.name}</p>
-                <p className={classes.description}>{`${row.collection.substring(0, 6)}...${row.collection.substring(row.collection.length - 4, row.collection.length)}`}</p>
+                <p className={classes.description}>{`${row.collection.substring(
+                  0,
+                  6
+                )}...${row.collection.substring(row.collection.length - 4, row.collection.length)}`}</p>
               </div>
             </div>
           ),
         },
         {
-          cell: <p className={classes.accTitle}>{
-            `${(row.operator || row.seller || row.fromSeller || row.toSeller).substring(0, 6)}...${(row.operator || row.seller || row.fromSeller || row.toSeller).substring((row.operator || row.seller || row.fromSeller || row.toSeller).length - 4, (row.operator || row.seller || row.fromSeller || row.toSeller).length)}`}</p>
-        },
-        {
-          cell: <p className={classes.whiteText}>{
-            `${+toDecimals(row.price || (row.pricePerSecond * row.rentalTime), getTokenDecimal(row.paymentToken || row.fundingToken))} ${getTokenSymbol(row.paymentToken || row.fundingToken)}`
-          }</p>
-        },
-        {
-          cell: <p className={classes.whiteText}>{
-            (new Date(row.updated).getMonth() + 1) +
-            "-" + (new Date(row.updated).getDate()) +
-            "-" + new Date(row.updated).getFullYear()}</p>
-        },
-        {
-          cell: <Tag state={row.type.toLowerCase()} text={row.type} />
-        },
-        {
-          cell: <div onClick={() => { goToScan(row.transactionHash) }}>{
-            <img src={getChainImageUrl(Chain)} width={"22px"} />
-          }
-          </div>
+          cell: (
+            <p className={classes.accTitle}>{`${(
+              row.operator ||
+              row.seller ||
+              row.fromSeller ||
+              row.toSeller
+            ).substring(0, 6)}...${(row.operator || row.seller || row.fromSeller || row.toSeller).substring(
+              (row.operator || row.seller || row.fromSeller || row.toSeller).length - 4,
+              (row.operator || row.seller || row.fromSeller || row.toSeller).length
+            )}`}</p>
+          ),
         },
         {
           cell: (
-            <PrimaryButton onClick={() => { goToNft(row) }} size="medium" className={classes.button} isRounded>
+            <p className={classes.whiteText}>{`${+toDecimals(
+              row.price || row.pricePerSecond * row.rentalTime,
+              getTokenDecimal(row.paymentToken || row.fundingToken)
+            )} ${getTokenSymbol(row.paymentToken || row.fundingToken)}`}</p>
+          ),
+        },
+        {
+          cell: (
+            <p className={classes.whiteText}>
+              {new Date(row.updated).getMonth() +
+                1 +
+                "-" +
+                new Date(row.updated).getDate() +
+                "-" +
+                new Date(row.updated).getFullYear()}
+            </p>
+          ),
+        },
+        {
+          cell: <Tag state={row.type.toLowerCase()} text={row.type} />,
+        },
+        {
+          cell: (
+            <div
+              onClick={() => {
+                goToScan(row.transactionHash);
+              }}
+            >
+              {<img src={getChainImageUrl(Chain)} width={"22px"} />}
+            </div>
+          ),
+        },
+        {
+          cell: (
+            <PrimaryButton
+              onClick={() => {
+                goToNft(row);
+              }}
+              size="medium"
+              className={classes.button}
+              isRounded
+            >
               View
             </PrimaryButton>
           ),
@@ -229,7 +259,6 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
 
     return data;
   }, [nfts]);
-
 
   return (
     <>
@@ -255,7 +284,13 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
         <Box className={classes.optionSection} mt={isMobile ? 1 : 0}>
           <Box className={classes.statusButtonBox} mt={1} mb={1}>
             {filterStatusOptions.map((status, index) => (
-              <PrimaryButton onClick={() => { handleFilterStatus(status) }} size="medium" className={filterStatus === status ? classes.statusSelectedButton : classes.statusButton}>
+              <PrimaryButton
+                onClick={() => {
+                  handleFilterStatus(status);
+                }}
+                size="medium"
+                className={filterStatus === status ? classes.statusSelectedButton : classes.statusButton}
+              >
                 {status}
               </PrimaryButton>
             ))}
@@ -274,8 +309,7 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
           next={loadNfts}
           hasMore={hasMore}
           loader={
-            loading &&
-            (
+            loading && (
               <div
                 style={{
                   paddingTop: 8,
@@ -296,19 +330,17 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
             )
           }
         >
-          {
-            tableData.length > 0 && (
-              <div className={classes.table}>
-                <CustomTable
-                  variant={Variant.Transparent}
-                  headers={tableHeaders}
-                  rows={tableData}
-                  placeholderText="No data"
-                  sorted={{}}
-                />
-              </div>
-            )
-          }
+          {tableData.length > 0 && (
+            <div className={classes.table}>
+              <CustomTable
+                variant={Variant.Transparent}
+                headers={tableHeaders}
+                rows={tableData}
+                placeholderText="No data"
+                sorted={{}}
+              />
+            </div>
+          )}
         </InfiniteScroll>
         {!loading && nfts?.length < 1 && (
           <Box textAlign="center" width="100%" mb={10} mt={2}>
@@ -320,21 +352,20 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
   );
 }
 
-
 export const ArrowIconComponent = func => () =>
-(
-  <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
-    <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
-        stroke="#2D3047"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  </Box>
-);
+  (
+    <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
+      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
+          stroke="#2D3047"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </Box>
+  );
 
 export const SearchIcon = ({ color = "white" }) => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

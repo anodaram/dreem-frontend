@@ -1,7 +1,7 @@
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Carousel from "react-elastic-carousel";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
@@ -25,6 +25,7 @@ import { explorePageStyles } from "./index.styles";
 
 import shapeImgTriangle from "assets/metaverseImages/shape_home_2.png";
 import shapeImgBlueArc from "assets/metaverseImages/shape_explorer_blue_arc.png";
+import { PrimaryButton } from "shared/ui-kit";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
@@ -37,7 +38,7 @@ const filters = ["WORLD"];
 
 export default function ExplorePage() {
   const classes = explorePageStyles();
-  // const history = useHistory();
+  const history = useHistory();
   const dispatch = useDispatch();
 
   const scrollPosition = useSelector((state: RootState) => state.realms.scrollPositionInRealms);
@@ -261,7 +262,7 @@ export default function ExplorePage() {
           <Box>
             <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
               <Box className={classes.gradientText}>Explore realms</Box>
-              {/* <PrimaryButton
+              <PrimaryButton
                 size="medium"
                 style={{
                   background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
@@ -272,10 +273,10 @@ export default function ExplorePage() {
                   color: "#121212",
                   paddingTop: 4,
                 }}
-                onClick={() => history.push("/creating_realm")}
+                onClick={() => history.push("/create_realm")}
               >
                 Create Realm
-              </PrimaryButton> */}
+              </PrimaryButton>
             </Box>
 
             <InfiniteScroll
