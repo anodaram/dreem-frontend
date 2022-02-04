@@ -24,6 +24,7 @@ import ExploreAvatarPage from "./subPages/ExploreAvatarPage";
 import ExploreAssetsPage from "./subPages/ExploreAssetsPage";
 import RealmMapPage from "./subPages/RealmMapPage";
 import WorldDetailPage from "./subPages/WorldDetailPage";
+import CreateRealmPage from "./subPages/CreateRealmPage";
 
 // import ClaimDreemPage from "./subPages/ClaimDreemPage";
 // import MetaversePage from "./subPages/MetaversePage";
@@ -36,6 +37,7 @@ export default function PriviMetaverseRouter(props) {
         <Route exact path="/play" component={LandingPage} />
         <Route exact path="/create" component={ManageContentPage} />
         <Route exact path="/collection/:id" component={CollectionDetailPage} />
+        <Route exact path="/create_realm" component={CreateRealmPage} />
         <Route exact path="/realms/map/:id" component={RealmMapPage} />
         <Route exact path="/realms/:id" component={RealmDetailPage} />
         <Route exact path="/realms/:id/:character_id" component={RealmDetailPage} />
