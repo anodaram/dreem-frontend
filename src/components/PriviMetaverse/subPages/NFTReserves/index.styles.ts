@@ -222,13 +222,12 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   },
   gameBgImage: {
     position: "absolute",
-    width: "100% !important",
-    height: "100% !important",
     zIndex: -1,
   },
   sliderFooter: {
     position: "absolute",
     bottom: "-38px",
+    width: '100%'
   },
   sliderLeft: {
     position: "absolute",

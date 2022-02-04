@@ -306,7 +306,12 @@ const NFTReserves = () => {
                   )}
                 </Box>
               </Box>
-              <Box className={classes.gameslider}>
+              <Box
+                className={classes.gameslider}
+                style={{
+                  width: openSideBar ? 'auto' : '1280px'
+                }}
+              >
                 <img src={require("assets/icons/slider_footer.svg")} className={classes.sliderFooter} />
                 <img src={require("assets/icons/slider_left.svg")} className={classes.sliderLeft} />
                 <img src={require("assets/icons/slider_right.svg")} className={classes.sliderRight} />
@@ -315,8 +320,12 @@ const NFTReserves = () => {
                   games={featuredGames.map((game: any) => {
                     return () => (
                       <Box position="relative" width="100%" height="100%">
-                        <img src={game.image} width="100%" height="100%" className={classes.gameBgImage} />
-                        <Box className={classes.gameContent}>
+                        <img
+                          src={game?.Image}
+                          className={classes.gameBgImage}
+                          style={{ width: openSideBar ? 'auto' : '1280px !important', objectFit: "cover" }}
+                        />
+                        <Box className={classes.gameContent} style={{ width: openSideBar ? 'auto' : '1280px' }}>
                           <Box className={classes.popularGames}>
                             <GameIcon />
                             Featured Games
