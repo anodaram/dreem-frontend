@@ -11,6 +11,7 @@ import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
 import FeaturedGameCard from "components/PriviMetaverse/components/cards/FeatureGameCard";
 import { GameSlider } from "components/PriviMetaverse/components/GameSlider";
+import { MessageBox } from "components/PriviMetaverse/components/Message/MessageBox";
 import { useAuth } from "shared/contexts/AuthContext";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import { userTrackMarketPlace } from "shared/services/API";
@@ -22,7 +23,7 @@ import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
 import { setScrollPositionInAllNFT, setTokenList } from "store/actions/MarketPlace";
-import { MessageBox } from "components/PriviMetaverse/components/Message/MessageBox";
+
 import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
 import Tag from "../GameDetailPage/components/Tag";
 import ActivityFeeds from "./components/ActivityFeeds";
