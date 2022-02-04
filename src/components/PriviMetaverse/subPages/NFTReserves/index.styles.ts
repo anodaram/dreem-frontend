@@ -85,9 +85,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       maxWidth: 1280,
     },
     [theme.breakpoints.down("sm")]: {
-      paddingLeft: "20px",
-      paddingRight: "20px",
-      maxWidth: 670,
+      paddingLeft: "0px",
+      paddingRight: "0px",
+      maxWidth: 480,
     },
     "& .infinite-scroll-component": {
       overflow: "visible !important",
@@ -101,7 +101,8 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     flexDirection: "column",
     padding: "0 35px",
     [theme.breakpoints.down("sm")]: {
-      maxWidth: 670,
+      maxWidth: 480,
+      padding: 0,
     },
     [theme.breakpoints.down("xs")]: {
       flexDirection: "column",
@@ -115,7 +116,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     justifyContent: "space-between",
     maxWidth: 1280,
     [theme.breakpoints.down("sm")]: {
-      maxWidth: 670,
+      maxWidth: 480,
+      flexDirection: "column",
+      alignItems: "flex-start",
     },
   },
   title: {
@@ -160,6 +163,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     color: "#212121 !important",
     border: "none !important",
     padding: "2px 24px !important",
+    [theme.breakpoints.down("sm")]: {
+      height: "39px !important",
+    },
     [theme.breakpoints.down("xs")]: {
       fontSize: "12px !important",
       width: "193px !important",
@@ -178,6 +184,11 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     justifyContent: "center",
     alignItems: "center",
     marginTop: "35px",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "12px !important",
+      height: "33px !important",
+      marginTop: "20px",
+    },
   },
   gameslider: {
     height: 720,
@@ -188,11 +199,23 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     borderImageSource: "linear-gradient(180deg, rgba(255, 255, 255, 0) 42%, #E9FF26 100%)",
     borderImageSlice: "30%",
     [theme.breakpoints.down("sm")]: {
-      maxWidth: 670,
+      maxWidth: 480,
+      height: 330,
     },
   },
   gameContent: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    padding: "30px 105px 100px 105px",
     backgroundImage: "linear-gradient(to top, rgba(0,0,0,1), rgba(255,0,0,0))",
+    [theme.breakpoints.down("sm")]: {
+      padding: "18px",
+      justifyContent: "flex-start",
+    },
   },
   gameBgImage: {
     position: "absolute",
@@ -235,6 +258,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     alignItems: "center",
     paddingBottom: "25px",
     "& span": {
+      textTransform: "uppercase",
       fontFamily: "GRIFTER",
       fontSize: 34,
       fontWeight: 700,
@@ -242,13 +266,19 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       "-webkit-text-fill-color": "transparent",
       "-webkit-background-clip": "text",
       lineHeight: "40.8px",
+      [theme.breakpoints.down("sm")]: {
+        fontSize: 20,
+      },
       [theme.breakpoints.down("xs")]: {
-        fontSize: 25,
+        fontSize: 18,
       },
     },
     "& img": {
       width: 80,
       height: 80,
+    },
+    [theme.breakpoints.down("sm")]: {
+      paddingBottom: "12px",
     },
   },
   carouselNav: {
@@ -266,6 +296,10 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
         stroke: "#E9FF26",
         opacity: 1,
       },
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: 55,
+      height: 32,
     },
   },
   topNFTContent: {
@@ -322,8 +356,8 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   },
   allNFTWrapper: {
     padding: "50px 40px",
-    [theme.breakpoints.down(860)]: {
-      padding: "50px 25px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "24px 25px",
     },
   },
   fitContent: {
@@ -333,8 +367,8 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     paddingLeft: "32px !important",
     paddingRight: "32px !important",
     [theme.breakpoints.down("sm")]: {
-      paddingLeft: "16px !important",
-      paddingRight: "16px !important",
+      paddingLeft: "0px !important",
+      paddingRight: "0px !important",
     },
   },
   allNFTTitle: {
@@ -356,8 +390,12 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       width: 80,
       height: 80,
     },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 20,
+      paddingBottom: 16,
+    },
     [theme.breakpoints.down("xs")]: {
-      fontSize: 25,
+      fontSize: 18,
     },
   },
   showAll: {
@@ -416,6 +454,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
 
     "& svg": {
       marginRight: "13px",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
     },
   },
 }));

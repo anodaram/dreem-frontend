@@ -35,7 +35,6 @@ export const useStyles = makeStyles(theme => ({
       flexDirection: "column",
       width: 235,
       height: 88,
-      marginTop: 20,
     },
   },
   switchButton: {
@@ -55,7 +54,7 @@ export const useStyles = makeStyles(theme => ({
     overflowY: "scroll",
     height: 310,
     [theme.breakpoints.down("sm")]: {
-      height: 245,
+      height: 263,
       marginTop: 12,
     },
   },

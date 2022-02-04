@@ -252,24 +252,35 @@ const NFTReserves = () => {
   return (
     <>
       <Box className={classes.main}>
-        <Box className={classes.sideBar}>
-          {openSideBar ? (
+        {isTablet && !isMobile && (
+          <Box className={classes.sideBar}>
             <Box display="flex" flexDirection="column">
               <ActivityFeeds onClose={() => setOpenSideBar(false)} />
               <MessageBox />
             </Box>
-          ) : (
-            <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
-              <ExpandIcon />
-            </Box>
-          )}
-        </Box>
+          </Box>
+        )}
+        {!isTablet && !isMobile && (
+          <Box className={classes.sideBar}>
+            {openSideBar ? (
+              <Box display="flex" flexDirection="column">
+                <ActivityFeeds onClose={() => setOpenSideBar(false)} />
+                <MessageBox />
+              </Box>
+            ) : (
+              <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
+                <ExpandIcon />
+              </Box>
+            )}
+          </Box>
+        )}
+
         <Box className={classes.limitedContent}>
           <div className={classes.content} id={"scrollContainer"} onScroll={handleScroll}>
             <div className={classes.titleBar}>
               <Box className={classes.titleSection}>
                 <div className={classes.title}>Not your average NFT marketplace</div>
-                <Box display="flex" alignItems="center">
+                <Box display="flex" alignItems="center" mt={isTablet ? 2 : 0}>
                   <SecondaryButton
                     size="medium"
                     className={classes.primaryButton}
@@ -306,32 +317,39 @@ const NFTReserves = () => {
                     return () => (
                       <Box position="relative" width="100%" height="100%">
                         <img src={game.image} width="100%" height="100%" className={classes.gameBgImage} />
-                        <Box
-                          padding="30px 105px 100px 105px"
-                          width="100%"
-                          height="100%"
-                          display="flex"
-                          flexDirection="column"
-                          alignItems="flex-start"
-                          justifyContent="space-between"
-                          className={classes.gameContent}
-                        >
+                        <Box className={classes.gameContent}>
                           <Box className={classes.featuredGames}>
                             <GameIcon />
                             Featured Games
                           </Box>
-                          <Box display="flex" flexDirection="column" alignItems="flex-start">
-                            <Box fontFamily="Rany" fontWeight={700} fontSize="18px" color="#E9FF26">
+                          <Box
+                            display="flex"
+                            flexDirection="column"
+                            alignItems="flex-start"
+                            mt={isTablet ? 2 : 0}
+                          >
+                            <Box
+                              fontFamily="Rany"
+                              fontWeight={700}
+                              fontSize={isTablet ? 12 : 18}
+                              color="#E9FF26"
+                            >
                               COMING SOON
                             </Box>
-                            <Box fontFamily="GRIFTER" fontWeight={700} fontSize="72px" color="#fff" mt="11px">
+                            <Box
+                              fontFamily="GRIFTER"
+                              fontWeight={700}
+                              fontSize={isTablet ? 26 : 72}
+                              color="#fff"
+                              mt="11px"
+                            >
                               {game.title}
                             </Box>
                             <Box
                               fontFamily="Rany"
                               fontWeight={500}
                               textAlign="left"
-                              fontSize="20px"
+                              fontSize={isTablet ? 12 : 20}
                               color="#fff"
                               lineHeight="31px"
                               mt="20px"

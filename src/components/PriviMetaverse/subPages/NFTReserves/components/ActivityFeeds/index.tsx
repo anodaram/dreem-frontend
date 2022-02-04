@@ -129,9 +129,11 @@ export default function ActivityFeeds({ onClose }) {
 
   return (
     <Box className={classes.root}>
-      <div className={classes.collapseIcon} onClick={onClose}>
-        <CollapseIcon />
-      </div>
+      {!isTablet && (
+        <div className={classes.collapseIcon} onClick={onClose}>
+          <CollapseIcon />
+        </div>
+      )}
       <div className={classes.switch}>
         <div
           className={classes.switchButton}
