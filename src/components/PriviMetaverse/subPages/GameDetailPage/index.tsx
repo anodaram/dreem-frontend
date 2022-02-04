@@ -123,7 +123,7 @@ export default function GameDetailPage() {
   const [gameInfo, setGameInfo] = React.useState<any>(undefined);
 
   const [nfts, setNfts] = React.useState<any[]>(collectionNFTList || []);
-  const [openSideBar, setOpenSideBar] = React.useState<boolean>(false);
+  const [openSideBar, setOpenSideBar] = React.useState<boolean>(true);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [lastId, setLastId] = React.useState<any>(undefined);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
@@ -403,7 +403,7 @@ export default function GameDetailPage() {
   };
 
   return (
-    <>
+    <Box display="flex" height="100%">
       <Box className={classes.sideBar}>
         {openSideBar ? (
           <Box display="flex" flexDirection="column">
@@ -721,7 +721,7 @@ export default function GameDetailPage() {
           </Box>
         </Box>
       </Box>
-    </>
+    </Box>
   );
 }
 
