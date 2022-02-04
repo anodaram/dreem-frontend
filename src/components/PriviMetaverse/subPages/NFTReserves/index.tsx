@@ -1,32 +1,32 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useHistory } from "react-router";
-import { useDispatch } from "react-redux";
+import { Hidden, useMediaQuery, useTheme } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
+import React, { useEffect, useRef, useState } from "react";
 import Carousel from "react-elastic-carousel";
 import Moment from "react-moment";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 
-import { useTheme, useMediaQuery, Hidden } from "@material-ui/core";
-
-import { setTokenList, setScrollPositionInAllNFT } from "store/actions/MarketPlace";
-import Box from "shared/ui-kit/Box";
-import { PrimaryButton, SecondaryButton, Variant } from "shared/ui-kit";
-import { getAllTokenInfos } from "shared/services/API/TokenAPI";
-import { useAuth } from "shared/contexts/AuthContext";
-import useWindowDimensions from "shared/hooks/useWindowDimensions";
-import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
-import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { ReactComponent as BinanceIcon } from "assets/icons/bsc.svg";
 import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
-import { userTrackMarketPlace } from "shared/services/API";
-import { GameSlider } from "components/PriviMetaverse/components/GameSlider";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
-import { Skeleton } from "@material-ui/lab";
 import FeaturedGameCard from "components/PriviMetaverse/components/cards/FeatureGameCard";
-import { getAllGameNFTs } from "shared/services/API/ReserveAPI";
-import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
-import Tag from "../GameDetailPage/components/Tag";
-import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
-import ActivityFeeds from "./components/ActivityFeeds";
+import { GameSlider } from "components/PriviMetaverse/components/GameSlider";
 import { MessageBox } from "components/PriviMetaverse/components/Message/MessageBox";
+import { useAuth } from "shared/contexts/AuthContext";
+import useWindowDimensions from "shared/hooks/useWindowDimensions";
+import { userTrackMarketPlace } from "shared/services/API";
+import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
+import { getAllGameNFTs } from "shared/services/API/ReserveAPI";
+import { getAllTokenInfos } from "shared/services/API/TokenAPI";
+import { PrimaryButton, SecondaryButton, Variant } from "shared/ui-kit";
+import Box from "shared/ui-kit/Box";
+import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
+import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
+import { setScrollPositionInAllNFT, setTokenList } from "store/actions/MarketPlace";
+
+import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
+import Tag from "../GameDetailPage/components/Tag";
+import ActivityFeeds from "./components/ActivityFeeds";
 import { useNFTOptionsStyles } from "./index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -44,19 +44,28 @@ const gameList = [
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.",
     image: require("assets/backgrounds/community.jpeg"),
+    transfers: 5,
+    owners: 3,
+    transactions: 12
   },
   {
     title: "Game Name 2",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.",
     image: require("assets/backgrounds/social.jpeg"),
+    transfers: 25,
+    owners: 5,
+    transactions: 2
   },
   {
     title: "Game Name 3",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.",
     image: require("assets/backgrounds/workInProgress.jpeg"),
-  },
+    transfers: 7,
+    owners: 23,
+    transactions: 19
+  }
 ];
 
 const dummyRecentTransactions = [
@@ -111,8 +120,8 @@ const NFTReserves = () => {
   const classes = useNFTOptionsStyles();
   const carouselRef = useRef<any>();
 
-  const [featuredGames, setFeaturedGames] = useState<any[]>([]);
-  const [loadingFeaturedGames, setLoadingFeaturedGames] = useState<boolean>(false);
+  const [popularGames, setPopularGames] = useState<any[]>([]);
+  const [loadingPopularGames, setLoadingPopularGames] = useState<boolean>(false);
   const [loadingNewListings, setLoadingNewListings] = useState<boolean>(false);
   const [openHowWorksModal, setOpenHowWorksModal] = useState<boolean>(false);
   const [newListings, setNewListings] = useState<any[]>([]);
@@ -128,7 +137,7 @@ const NFTReserves = () => {
   const isNarrow = useMediaQuery(theme.breakpoints.down(860));
   const isMobile = useMediaQuery(theme.breakpoints.down(650));
 
-  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? 4 : 5;
+  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : 4;
   const loadingCount = React.useMemo(
     () => (width > 1700 ? 5 : width > 1420 ? 4 : width > 1200 ? 3 : width > 650 ? 2 : 1),
     [width]
@@ -183,17 +192,17 @@ const NFTReserves = () => {
   };
 
   const getFeaturedGameData = () => {
-    if (loadingFeaturedGames) return;
+    if (loadingPopularGames) return;
 
-    setLoadingFeaturedGames(true);
+    setLoadingPopularGames(true);
     MetaverseAPI.getNftGames("", "", "ALL")
       .then(res => {
         if (res && res.success) {
           const items = res.data.items;
-          setFeaturedGames(items);
+          setPopularGames(items);
         }
       })
-      .finally(() => setLoadingFeaturedGames(false));
+      .finally(() => setLoadingPopularGames(false));
   };
 
   const getTokenList = async () => {
@@ -252,6 +261,7 @@ const NFTReserves = () => {
   return (
     <>
       <Box className={classes.main}>
+        <img src={require("assets/metaverseImages/nft_reserve_bg.png")} className={classes.imageBg} />
         <Box className={classes.sideBar}>
           {openSideBar ? (
             <Box display="flex" flexDirection="column">
@@ -322,7 +332,7 @@ const NFTReserves = () => {
                           justifyContent="space-between"
                           className={classes.gameContent}
                         >
-                          <Box className={classes.featuredGames}>
+                          <Box className={classes.popularGames}>
                             <GameIcon />
                             Featured Games
                           </Box>
@@ -344,6 +354,38 @@ const NFTReserves = () => {
                             >
                               {game.description}
                             </Box>
+                            <Box
+                              display="flex"
+                              mt={3}
+                            >
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="flex-start"
+                                className={classes.gameInfoSection}
+                              >
+                                <span>{game.transfers}</span>
+                                <span>Transfers</span>
+                              </Box>
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="flex-start"
+                                className={classes.gameInfoSection}
+                              >
+                                <span>{game.owners}</span>
+                                <span>New Owners</span>
+                              </Box>
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="flex-start"
+                                className={classes.gameInfoSection}
+                              >
+                                <span>{game.transactions}</span>
+                                <span>marketplace transactions</span>
+                              </Box>
+                            </Box>
                             <SecondaryButton
                               size="medium"
                               className={classes.gamePlayButton}
@@ -361,19 +403,19 @@ const NFTReserves = () => {
               </Box>
             </div>
             <div className={classes.NFTSection}>
-              {featuredGames && featuredGames.length ? (
+              {popularGames && popularGames.length ? (
                 <div className={classes.topGamesWrapper}>
                   <Box
                     className={`${classes.topGamesTitle} ${classes.fitContent}`}
                     justifyContent="space-between"
                   >
                     <span>Popular Games</span>
-                    {featuredGames &&
-                    featuredGames.length &&
+                    {popularGames &&
+                    popularGames.length &&
                     !isMobile &&
-                    ((isTablet && featuredGames.length > 2) ||
-                      (isNormalScreen && featuredGames.length > 3) ||
-                      featuredGames.length > 4) ? (
+                    ((isTablet && popularGames.length > 2) ||
+                      (isNormalScreen && popularGames.length > 3) ||
+                      popularGames.length > 4) ? (
                       <Box display="flex" alignItems="center">
                         <Box
                           className={classes.carouselNav}
@@ -428,13 +470,13 @@ const NFTReserves = () => {
                     )}
                   </Box>
                   <div className={`${classes.topNFTContent} ${classes.fitContent}`}>
-                    {featuredGames && featuredGames.length ? (
-                      !isMobile && (featuredGames.length === 2 || featuredGames.length === 3) ? (
+                    {popularGames && popularGames.length ? (
+                      !isMobile && (popularGames.length === 2 || popularGames.length === 3) ? (
                         <div className={classes.allNFTSection}>
                           <Box style={{ marginBottom: "24px" }}>
                             <MasonryGrid
                               gutter={"24px"}
-                              data={featuredGames}
+                              data={popularGames}
                               renderItem={item => (
                                 <FeaturedGameCard game={item} isLoading={Object.entries(item).length === 0} />
                               )}
@@ -451,7 +493,7 @@ const NFTReserves = () => {
                           ref={carouselRef}
                           itemPadding={[0, 12]}
                         >
-                          {featuredGames.map((item: any, i: Number) => (
+                          {popularGames.map((item: any, i: Number) => (
                             <div
                               key={item.id}
                               style={{
@@ -460,11 +502,11 @@ const NFTReserves = () => {
                                 display: "flex",
                                 justifyContent: isMobile
                                   ? "center"
-                                  : featuredGames.length === 2 && i === 1
+                                  : popularGames.length === 2 && i === 1
                                   ? "flex-end"
-                                  : featuredGames.length === 3 && i === 1
+                                  : popularGames.length === 3 && i === 1
                                   ? "center"
-                                  : featuredGames.length === 3 && i === 2
+                                  : popularGames.length === 3 && i === 2
                                   ? "flex-end"
                                   : "flex-start",
                               }}
@@ -474,7 +516,7 @@ const NFTReserves = () => {
                           ))}
                         </Carousel>
                       )
-                    ) : loadingFeaturedGames ? (
+                    ) : loadingPopularGames ? (
                       <MasonryGrid
                         gutter={"24px"}
                         data={Array(loadingCount).fill(0)}
@@ -485,7 +527,7 @@ const NFTReserves = () => {
                       <div></div>
                     )}
                   </div>
-                  {featuredGames && featuredGames.length && isMobile && featuredGames.length > 1 ? (
+                  {popularGames && popularGames.length && isMobile && popularGames.length > 1 ? (
                     <Box display="flex" justifyContent="flex-end" pr={3} pb={3}>
                       <Box display="flex" alignItems="center">
                         <Box
@@ -549,7 +591,7 @@ const NFTReserves = () => {
                     <SecondaryButton
                       size="medium"
                       className={classes.showAll}
-                      onClick={() => history.push("/P2E/explorer")}
+                      onClick={() => history.push('/P2E/explorer')}
                     >
                       Show All
                     </SecondaryButton>
@@ -570,7 +612,7 @@ const NFTReserves = () => {
                   )}
                 </div>
               </div>
-              <Box>
+              <Box padding="0 32px">
                 <div className={classes.allNFTTitle}>
                   <span>Recent Transactions</span>
                 </div>
