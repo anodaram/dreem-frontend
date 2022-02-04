@@ -10,7 +10,6 @@ import { Skeleton } from "@material-ui/lab";
 import { RootState } from "store/reducers/Reducer";
 import {
   setTokenList,
-  setSelTabMarketMain,
   setCollectionNFTList,
   setAllNFTList,
   setScrollPositionInCollection,
@@ -161,7 +160,7 @@ const GameNFTExplorerPage = () => {
 
   const [selectedTab, setSelectedTab] = useState<string>(selTab || TAB_NFTS);
 
-  const [showSearchBox, setShowSearchBox] = useState<boolean>(false);
+  const [showSearchBox, setShowSearchBox] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>("");
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
@@ -519,18 +518,8 @@ const GameNFTExplorerPage = () => {
     <>
       <Box className={classes.main}>
         <img src={require("assets/metaverseImages/gamenft_explorer_bg.png")} className={classes.imageBg} />
-        {!isMobile && !isTablet && (
-          <>
-            <img
-              src={require("assets/metaverseImages/rectangle_yellow_left.png")}
-              className={classes.image1}
-            />
-            <img
-              src={require("assets/metaverseImages/rectangle_yellow_top.png")}
-              className={classes.image2}
-            />
-          </>
-        )}
+        <img src={require("assets/metaverseImages/rectangle_yellow_left.png")} className={classes.image1} />
+        <img src={require("assets/metaverseImages/rectangle_yellow_top.png")} className={classes.image2} />
         <Box className={classes.limitedContent}>
           <div className={classes.content} id={"scrollContainer"} onScroll={handleScroll}>
             <Box className={classes.title}>Explore all NFTS</Box>
@@ -539,7 +528,7 @@ const GameNFTExplorerPage = () => {
               alignItems="center"
               justifyContent="space-between"
               width={1}
-              mt={6}
+              mt={isMobile ? 3 : 6}
               flexDirection={isMobile ? "column" : "row"}
             >
               <Box
@@ -547,7 +536,7 @@ const GameNFTExplorerPage = () => {
                 alignItems="flex-end"
                 flexWrap="wrap"
                 width={isMobile ? 1 : "auto"}
-                justifyContent={isMobile ? "flex-end" : "flex-start"}
+                justifyContent={isMobile ? "space-between" : "flex-start"}
               >
                 <Select
                   open={openChainSelect}
@@ -595,7 +584,7 @@ const GameNFTExplorerPage = () => {
                     className={classes.select}
                     renderValue={(value: any) => (
                       <Box display="flex" alignItems="center" onClick={() => setOpenStatusSelect(true)}>
-                        <label>STATUS&nbsp;&nbsp;</label>
+                        <label>TYPE&nbsp;&nbsp;</label>
                         <span>{value}</span>
                       </Box>
                     )}
@@ -655,7 +644,7 @@ const GameNFTExplorerPage = () => {
                     <SearchIcon />
                   </Box>
                 </div>
-                {!isMobile && selectedTab === TAB_NFTS && (
+                {selectedTab === TAB_NFTS && (
                   <Box
                     className={classes.controlBox}
                     ml={2}

@@ -5,10 +5,31 @@ export const useModalStyles = makeStyles(theme => ({
     background: "rgba(11, 21, 28, 0.6)",
     boxShadow: "0px 38px 96px 17px rgba(1, 1, 13, 0.25)",
     color: "white",
-    width: "755px",
+    maxWidth: "755px",
     borderRadius: "0px",
-    maxHeight: "670px",
+    maxHeight: "576px",
     overflow: "auto",
+  },
+  headTitle: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    position: "relative",
+  },
+  backArrow: {
+    display: "flex",
+    justifyContent: "center",
+    color: "white",
+    width: "fit-content",
+    cursor: "pointer",
+    position: "absolute",
+    left: 0,
+    [theme.breakpoints.down("xs")]: {
+      position: "relative",
+      alignSelf: "flex-start",
+      marginBottom: 24,
+    }
   },
   warningScreen: {
     display: "flex",
@@ -342,7 +363,6 @@ export const useModalStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       fontSize: 22,
       lineHeight: "22px",
-      width: 280,
     },
   },
   typo2: {
@@ -463,6 +483,12 @@ export const useModalStyles = makeStyles(theme => ({
     padding: "14px 212px",
     display: "flex",
     justifyContent: "space-between",
+    [theme.breakpoints.down("sm")]: {
+      padding: "14px 80px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: "14px 10px",
+    },
   },
   inputGroup: {
     display: "flex",
@@ -484,7 +510,10 @@ export const useModalStyles = makeStyles(theme => ({
       lineHeight: "104.5%",
       textTransform: "uppercase",
       padding: '25px 25px 25px 90px',
-      zIndex: 9
+      zIndex: 9,
+      [theme.breakpoints.down("xs")]: {
+        padding: '25px 25px 25px 50px',
+      }
     },
     "& .check": {
       display: 'block',
@@ -497,6 +526,9 @@ export const useModalStyles = makeStyles(theme => ({
       marginLeft: '20px',
       zIndex: 5,
       transition: 'border .25s linear',
+      [theme.breakpoints.down("xs")]: {
+        marginLeft: 0,
+      },
       "& .inside": {
         display: 'block',
         position: 'absolute',
