@@ -37,7 +37,7 @@ const a11yProps = (index: number) => {
   };
 };
 
-const AppBar = styled(MuiAppBar) <AppBarProps>`
+const AppBar = styled(MuiAppBar)<AppBarProps>`
   && {
     margin-left: 0;
     background-color: ${props => (props.type === "primary" ? "white" : "transparent")};
@@ -54,7 +54,7 @@ const AppBar = styled(MuiAppBar) <AppBarProps>`
     .MuiTab-root {
       min-width: auto;
       color: ${props =>
-    props.theme === "dark" ? Color.White : props.theme === "green" ? Color.GrayDark : Color.GrayTab};
+        props.theme === "dark" ? Color.White : props.theme === "green" ? Color.GrayDark : Color.GrayTab};
       font-weight: ${props => (props.theme === "green" ? 800 : "inherit")};
       opacity: ${props => (props.theme === "green" ? 1 : "inherit")};
       text-transform: ${props => (props.theme === "green" ? "uppercase" : "none")};
@@ -63,8 +63,8 @@ const AppBar = styled(MuiAppBar) <AppBarProps>`
       margin-right: ${props => (props.$ismobile ? "0px" : "10px")};
       margin-left: ${props => (props.$ismobile ? "0px" : "10px")};
       font-size: ${props =>
-    props.size === "large" ? FontSize.L : props.size === "extralarge" ? "25px" : FontSize.M};
-      font-family: Agrandir;
+        props.size === "large" ? FontSize.L : props.size === "extralarge" ? "25px" : FontSize.M};
+      font-family: Grifter;
     }
 
     .MuiTab-root:first-child {
@@ -172,12 +172,12 @@ export const TabNavigation = ({
               theme === "dark"
                 ? Gradient.BlueMagenta
                 : theme === "light"
-                  ? Gradient.Mint
-                  : theme === "green"
-                    ? Gradient.Green
-                    : theme === "cyan"
-                      ? "#431AB7"
-                      : "black",
+                ? Gradient.Mint
+                : theme === "green"
+                ? Gradient.Green
+                : theme === "cyan"
+                ? "#431AB7"
+                : "black",
             height: showBorder ? "3px" : "0",
           },
         }}
@@ -195,12 +195,12 @@ export const TabNavigation = ({
               theme === "dark"
                 ? classes.tabItemDark
                 : theme === "light"
-                  ? classes.tabItem
-                  : theme === "green"
-                    ? classes.tabItemGreen
-                    : theme === "cyan"
-                      ? classes.tabItemCyan
-                      : classes.tabItemBlack
+                ? classes.tabItem
+                : theme === "green"
+                ? classes.tabItemGreen
+                : theme === "cyan"
+                ? classes.tabItemCyan
+                : classes.tabItemBlack
             }
           />
         ))}

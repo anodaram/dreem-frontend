@@ -8,7 +8,7 @@ const calendarIconWhite = require("assets/icons/calendar_icon_white.png");
 
 const useStyles = makeStyles(theme => ({
   datePickerInput: {
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     height: "100%",
     padding: "10px 16px",
     borderRadius: 8,
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   datePickerInputDark: {
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     padding: "19px 16px",
     borderRadius: 0,
     border: "1px solid #FFFFFF",
@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   datePickerInputMusicDao: {
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     padding: "11px 19px",
     borderRadius: "8px",
     border: "1px solid #DADADB",

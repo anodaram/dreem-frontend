@@ -274,7 +274,7 @@ export const creatorPageStyles = makeStyles(theme => ({
   typo4: {
     fontSize: 16,
     fontWeight: 600,
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     color: "#ffffff80",
     "& span": {
       fontSize: 16,

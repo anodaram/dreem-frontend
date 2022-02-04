@@ -120,7 +120,7 @@ export const collectionCardStyles = makeStyles(theme => ({
   creatorName: {
     fontWeight: 800,
     fontSize: 13,
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     lineHeight: "17px",
     color: "#A4A1B3",
     marginLeft: 8,
@@ -132,7 +132,7 @@ export const collectionCardStyles = makeStyles(theme => ({
   viewsCount: {
     fontWeight: 600,
     fontSize: 12,
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     lineHeight: "17px",
     color: "#A4A1B3",
     marginLeft: 5,
@@ -190,7 +190,7 @@ export const collectionCardStyles = makeStyles(theme => ({
     marginLeft: 10,
     fontSize: 16,
     fontWeight: 600,
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     width: "fit-content",
     position: "absolute",
     bottom: 0,

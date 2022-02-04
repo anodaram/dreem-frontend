@@ -20,7 +20,7 @@ const Title = styled.div<TitleDivProps>`
     position: relative;
     display: inline-block;
     font-size: 56px;
-    font-family: "Agrandir GrandLight";
+    font-family: "Grifter";
     margin: 0;
     font-weight: 300;
   }

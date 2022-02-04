@@ -21,12 +21,12 @@ export const useModalStyles = makeStyles(theme => ({
       fontWeight: 800,
       fontSize: 20,
       textAlign: "center",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
       lineHeight: "130%",
     },
     "& p": {
       fontStyle: "normal",
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       fontSize: 18,
       fontWeight: 500,
       lineHeight: "160%",
@@ -79,7 +79,7 @@ export const useModalStyles = makeStyles(theme => ({
     fontWeight: 700,
     fontFamily: "Rany",
     lineHeight: "104.5%",
-    textTransform: 'uppercase'
+    textTransform: "uppercase",
   },
   input: {
     background: "rgba(218, 230, 229, 0.06)",

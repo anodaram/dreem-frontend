@@ -141,7 +141,7 @@ export const claimPageStyles = makeStyles(theme => ({
         },
         "& td": {
           color: "#fff",
-          fontFamily: "Montserrat",
+          fontFamily: "Rany",
           fontStyle: "normal",
           fontWeight: 600,
           fontSize: "12px",

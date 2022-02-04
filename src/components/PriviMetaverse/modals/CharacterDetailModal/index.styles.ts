@@ -30,7 +30,7 @@ export const characterDetailModalStyles = makeStyles(theme => ({
     fontSize: 12,
     fontWeight: 800,
     lineHeight: "104.5%",
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     textTransform: "uppercase",
     width: 265,
   },

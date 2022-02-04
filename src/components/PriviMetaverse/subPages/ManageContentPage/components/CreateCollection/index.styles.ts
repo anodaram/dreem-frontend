@@ -21,12 +21,12 @@ export const useModalStyles = makeStyles(theme => ({
       fontWeight: 800,
       fontSize: 20,
       textAlign: "center",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
       lineHeight: "130%",
     },
     "& p": {
       fontStyle: "normal",
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       fontSize: 18,
       fontWeight: 500,
       lineHeight: "160%",
@@ -271,6 +271,6 @@ export const useModalStyles = makeStyles(theme => ({
     padding: "3px 4px 0px",
     position: "absolute",
     bottom: "-10px",
-    left: "calc(50% - 46px)"
-  }
+    left: "calc(50% - 46px)",
+  },
 }));

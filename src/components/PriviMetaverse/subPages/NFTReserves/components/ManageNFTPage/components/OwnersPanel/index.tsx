@@ -86,10 +86,10 @@ const OwnersPanel = () => {
 
   const clickRefreshBtn = () => {
     getRefreshedData();
-  }
+  };
 
   const getRefreshedData = async () => {
-      getNFTFromMoralis();
+    getNFTFromMoralis();
   };
 
   const getData = async () => {
@@ -306,7 +306,7 @@ const OwnersPanel = () => {
             size="small"
             style={{
               background: "#3b4834",
-              fontFamily: "Montserrat",
+              fontFamily: "Rany",
               fontStyle: "normal",
               fontWeight: 600,
               fontSize: "12px",

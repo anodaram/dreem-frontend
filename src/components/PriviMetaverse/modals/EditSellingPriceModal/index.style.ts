@@ -19,7 +19,7 @@ export const EditSellingPriceModalStyles = makeStyles(theme => ({
     width: "100%",
     padding: theme.spacing(1),
     color: "#ffffff60 !important",
-    borderRadius: "unset !important"
+    borderRadius: "unset !important",
   },
   tokenSelect: {
     backgroundColor: "#172227 !important",
@@ -28,7 +28,7 @@ export const EditSellingPriceModalStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
     color: "#ffffff !important",
     borderRadius: "unset !important",
-    flex: "1"
+    flex: "1",
   },
   purpleText: {
     cursor: "pointer",
@@ -36,7 +36,7 @@ export const EditSellingPriceModalStyles = makeStyles(theme => ({
     fontSize: "18px",
     fontWeight: 700,
     fontFamily: "Rany",
-    lineHeight: "150%"
+    lineHeight: "150%",
   },
   usdWrap: {
     display: "flex",
@@ -65,13 +65,13 @@ export const EditSellingPriceModalStyles = makeStyles(theme => ({
     },
   },
   usdt: {
-    fontFamily: "Agrandir GrandHeavy !important",
+    fontFamily: "Grifter !important",
     color: "#ffffff",
     fontWeight: 800,
     fontSize: "16px",
   },
   totalText: {
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontStyle: "normal",
     fontWeight: 800,
     fontSize: "14px",
@@ -93,7 +93,7 @@ export const EditSellingPriceModalStyles = makeStyles(theme => ({
     "&:disabled": {
       background: "linear-gradient(#B7FF5C, #EEFF21) !important",
       color: "#212121 !important",
-    }
+    },
   },
   secondaryButton: {
     padding: "0 37px !important",
@@ -116,36 +116,36 @@ export const EditSellingPriceModalStyles = makeStyles(theme => ({
   cancelDesc: {
     color: "#ffffff",
     marginBottom: 64,
-    textAlign: 'center',
-    padding: '16px 50px',
-    fontSize: '16px',
-    lineHeight: '24px'
+    textAlign: "center",
+    padding: "16px 50px",
+    fontSize: "16px",
+    lineHeight: "24px",
   },
   cancelButton: {
     backgroundColor: "transparent !important",
     color: "#DDFF57 !important",
     border: "1px solid #E9FF26 !important",
     borderRadius: "40px !important",
-    width: '165px !important',
-    textTransform: "uppercase"
+    width: "165px !important",
+    textTransform: "uppercase",
   },
   editPriceButton: {
     backgroundColor: "#DDFF57 !important",
     color: "#0B151C !important",
-    width: '165px !important',
+    width: "165px !important",
     borderRadius: "40px !important",
-    textTransform: "uppercase"
+    textTransform: "uppercase",
   },
   borderBox: {
     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
     padding: 2,
-    marginTop: 32
+    marginTop: 32,
   },
   box: {
     padding: "23px 18px",
     background: "rgb(11, 21, 28)",
     display: "flex",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   currentPrice: {
     background: "linear-gradient(#EDFF1C, #ED7B7B)",
@@ -153,6 +153,6 @@ export const EditSellingPriceModalStyles = makeStyles(theme => ({
     "-webkit-background-clip": "text",
     fontSize: "16px",
     fontFamily: "Rany",
-    lineHeight: "150%"
-  }
+    lineHeight: "150%",
+  },
 }));

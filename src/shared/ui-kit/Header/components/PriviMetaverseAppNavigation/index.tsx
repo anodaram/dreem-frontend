@@ -19,8 +19,7 @@ const LeftNavigations: NavItemProps[] = [
   { name: "REALMS", value: "realms", link: "/realms" },
   { name: "AVATARS", value: "avatars", link: "/avatars" },
   { name: "ASSETS", value: "assets", link: "/assets" },
-  { name: "GAME NFTS", value: "gameNFTS", link: "/gameNFTS" },
-  // { name: "METAVERSE", value: "metaverse", link: "/metaverse" },
+  { name: "GAME NFTS", value: "P2E", link: "/P2E" },
 ];
 
 const RightNavigations: NavItemProps[] = [

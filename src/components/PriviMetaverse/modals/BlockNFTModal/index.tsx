@@ -140,7 +140,9 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
       }
       setIsApproved(true);
       showAlertMessage(
-        `Successfully approved ${(Number(collateral) * (1 + fee)* PRECISSION).toFixed(2)} ${reservePriceToken.Symbol}!`,
+        `Successfully approved ${(Number(collateral) * (1 + fee) * PRECISSION).toFixed(2)} ${
+          reservePriceToken.Symbol
+        }!`,
         {
           variant: "success",
         }
@@ -336,9 +338,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
             <Box className={classes.footer}>
               <Box className={classes.totalText}>Total</Box>
               <Box display="flex" alignItems="center" justifyContent="space-between" mt={1}>
-                <Box
-                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
-                >
+                <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
                   Collateral at{" "}
                   {((Number(collateral) / Number(nft?.blockingSaleOffer?.Price)) * 100).toFixed(2)}% /{" "}
                   <b>{nft?.blockingSaleOffer?.CollateralPercent}</b>%
@@ -347,34 +347,24 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
                     <Box style={{ color: "red" }}>You need to add more collateral</Box>
                   )}
                 </Box>
-                <Box
-                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
-                >
+                <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
                   {collateral || 0} {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
-                <Box
-                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
-                >
+                <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
                   Marketplace fee ({fee * 100}%)
                 </Box>
-                <Box
-                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
-                >
+                <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
                   {(Number(collateral || 0) * fee).toFixed(2)}{" "}
                   {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
               </Box>
               <Box display="flex" alignItems="center" justifyContent="space-between" mt={0.5}>
-                <Box
-                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
-                >
+                <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
                   TOTAL
                 </Box>
-                <Box
-                  style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}
-                >
+                <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
                   {((collateral || 0) * (1 + fee)).toFixed(2)}{" "}
                   {getTokenSymbol(nft?.blockingSaleOffer?.PaymentToken)}
                 </Box>
@@ -417,7 +407,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
             </Grid>
             <div
               style={{
-                fontFamily: "Agrandir GrandHeavy",
+                fontFamily: "Grifter",
                 color: "#2D3047",
                 fontSize: "22px",
                 fontWeight: 800,

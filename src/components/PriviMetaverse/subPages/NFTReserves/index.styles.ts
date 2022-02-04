@@ -14,16 +14,19 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   sideBar: {
     display: "flex",
     justifyContent: "center",
-    position: "fixed",
-    top: 72,
-    minWidth: 59,
+    marginTop: 144,
     height: "100%",
     background: "#212121",
     border: "2px solid #151515",
-    zIndex: 2,
   },
   expandIcon: {
-    marginTop: 16,
+    padding: 16,
+    cursor: "pointer",
+  },
+  collapseIcon: {
+    position: "absolute",
+    top: "16px",
+    right: "18px",
     cursor: "pointer",
   },
   image1: {
@@ -56,7 +59,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     marginLeft: "auto",
     marginRight: "auto",
     "& > div > h2": {
-      fontFamily: "Agrandir GrandHeavy",
+      fontFamily: "Grifter",
       fontWeight: "800",
       fontSize: "40px",
       lineHeight: "104.5%",

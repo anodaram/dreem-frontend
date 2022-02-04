@@ -27,11 +27,11 @@ const ExploreCard = ({ nft, isLoading = false }) => {
   const user: any = useSelector((state: RootState) => state.user);
 
   const handleOpenExplore = () => {
-    history.push(`/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
+    history.push(`/P2E/${nft.collectionId}/${nft.tokenId}`);
   };
 
   const handleOpenExploreNewTab = () => {
-    const url = window.location.href.replace(pathname, `/gameNFTS/${nft.collectionId}/${nft.tokenId}`);
+    const url = window.location.href.replace(pathname, `/P2E/${nft.collectionId}/${nft.tokenId}`);
     window.open(url, "_blank");
     return false;
   };

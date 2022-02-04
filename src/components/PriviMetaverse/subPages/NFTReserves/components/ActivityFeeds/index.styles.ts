@@ -4,11 +4,10 @@ export const useStyles = makeStyles(theme => ({
   root: {
     background: "#212121",
     border: "2px solid #151515",
-    minWidth: 398,
-    height: 640,
+    minWidth: 404,
+    height: "45%",
     position: "relative",
     padding: "22px 32px 8px 19px",
-    overflowY: "scroll",
   },
   collapseIcon: {
     position: "absolute",
@@ -40,6 +39,8 @@ export const useStyles = makeStyles(theme => ({
   },
   content: {
     marginTop: 21,
+    overflowY: "scroll",
+    height: 310,
   },
   typeTag: {
     borderRadius: 4,

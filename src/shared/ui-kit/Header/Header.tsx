@@ -600,7 +600,7 @@ const Header = props => {
               <div
                 className={classes.header_popup_back_item}
                 onClick={() => {
-                  history.push("/gameNFTS/manage_nft");
+                  history.push("/P2E/manage_nft");
                   setAnchorEl(null);
                 }}
               >
@@ -666,7 +666,7 @@ const Navigator: NavItem[] = [
   { name: "REALMS", value: "realms", link: "/realms" },
   { name: "AVATARS", value: "avatars", link: "/avatars" },
   { name: "ASSETS", value: "assets", link: "/assets" },
-  { name: "GAME NFTS", value: "gameNFTS", link: "/gameNFTS" },
+  { name: "GAME NFTS", value: "P2E", link: "/P2E" },
   // { name: "METAVERSE", value: "metaverse", link: "/metaverse" },
   // { name: "Claim Dreem", value: "claim_dreem", link: "/claim_dreem", authorize: true },
 ];

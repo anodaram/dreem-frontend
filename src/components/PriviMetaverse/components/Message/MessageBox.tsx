@@ -13,7 +13,7 @@ import URL from "shared/functions/getURL";
 
 import "./MessageBox.css";
 
-export const MessageBox = ({ type = "live" }) => {
+export const MessageBox = () => {
   const dispatch = useDispatch();
 
   const sourceRef = useRef<any>();
@@ -21,21 +21,17 @@ export const MessageBox = ({ type = "live" }) => {
   const messageBoxInfo = useSelector(getMessageBox);
   const { isOpenMessageBox, isSendMessage, message, chat: messageBoxChat } = messageBoxInfo;
 
-  const [chats, setChats] = useState<any[]>([]);
-  const [chatsUsers, setChatsUsers] = useState<any>({});
-  const [chat, setChat] = useState<any>({});
   const [messages, setMessages] = useState<any[]>([]);
   const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
 
   useEffect(() => {
-    if (chat && chat.room && socket) {
+    if (socket) {
+      const userId = localStorage.getItem("userId") || userSelector.id;
       socket.off("message");
       socket.on("message", message => {
-        if (message.room !== chat.room) {
-          return;
-        }
+        console.log("message", message);
         setMessages(msgs => {
           let msgsArray = [...msgs];
           msgsArray.push(message);
@@ -43,8 +39,7 @@ export const MessageBox = ({ type = "live" }) => {
         });
 
         let chatObj = {
-          room: chat.room,
-          userId: userSelector.id,
+          userId: userId,
           lastView: Date.now(),
         };
 
@@ -52,14 +47,7 @@ export const MessageBox = ({ type = "live" }) => {
           .post(`${URL()}/chat/lastView`, chatObj)
           .then(response => {
             if (response.data.success) {
-              let id;
-              if (chatsUsers["userTo"].userId === userSelector.id) {
-                id = chatsUsers["userTo"].userId;
-              } else if (chatsUsers["userFrom"].userId === userSelector.id) {
-                id = chatsUsers["userFrom"].userId;
-              }
-
-              socket.emit("numberMessages", id);
+              socket.emit("numberMessages", userId);
             }
           })
           .catch(error => {
@@ -67,10 +55,9 @@ export const MessageBox = ({ type = "live" }) => {
           });
       });
     }
-  }, [chat, socket]);
+  }, [socket]);
 
   useEffect(() => {
-    //this opens message box when navigating to /social/:id/messages
     if (!isOpenMessageBox) {
       if (!message) {
         dispatch(openMessageBox(true));
@@ -84,89 +71,12 @@ export const MessageBox = ({ type = "live" }) => {
 
   useEffect(() => {
     if (isSendMessage === true) {
-      const newChats = chats.map(item => {
-        if (
-          item.room === messageBoxChat.room ||
-          (item.users?.userFrom?.userId === messageBoxChat.users?.userFrom?.userId &&
-            item.users?.userTo?.userId === messageBoxChat.users?.userTo?.userId)
-        ) {
-          return messageBoxChat;
-        }
-        return item;
-      });
-      setChats(newChats);
-
-      // If currently selected chat in the profile message is same as the chatmodal
-      if (
-        chat.room === messageBoxChat.room ||
-        (chat.users?.userFrom?.userId === messageBoxChat.users?.userFrom?.userId &&
-          chat.users?.userTo?.userId === messageBoxChat.users?.userTo?.userId)
-      ) {
-        setChat(messageBoxChat);
-        setMessages(messageBoxChat.messages);
-      }
+      setMessages(messageBoxChat.messages);
       dispatch(sentMessage());
     }
   }, [isSendMessage]);
 
-  const beforeCreateChat = (chat: any) => {
-    let differentUser;
-    if (
-      chat &&
-      chat.users &&
-      chat.users.userFrom &&
-      chat.users.userFrom.userId &&
-      chat.users.userFrom.userId !== userSelector.id
-    ) {
-      differentUser = chat.users.userFrom;
-    } else if (
-      chat &&
-      chat.users &&
-      chat.users.userTo &&
-      chat.users.userTo.userId &&
-      chat.users.userTo.userId !== userSelector.id
-    ) {
-      differentUser = chat.users.userTo;
-    }
-
-    if (differentUser) {
-      createChat(differentUser);
-    }
-  };
-
-  const createChat = (user: any) => {
-    let users: any = {
-      userFrom: {
-        userId: userSelector.id,
-        userName: userSelector.firstName,
-        userConnected: true,
-        lastView: new Date(),
-      },
-      userTo: {
-        userId: user.userId,
-        userName: user.userName,
-        userConnected: false,
-        lastView: null,
-      },
-    };
-
-    setChatsUsers(users);
-    axios
-      .post(`${URL()}/chat/newChat`, { users: users })
-      .then(async response => {
-        if (response.data.success) {
-          setChat(response.data.data);
-          setMessages([]);
-          await getMessages(response.data.data, true);
-          socket.emit("subscribe", users);
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  const getMessages = (chatInfo?: any, isNew?: boolean): Promise<boolean> => {
+  const getMessages = (isNew?: boolean): Promise<boolean> => {
     return new Promise((resolve, reject) => {
       if (!isNew && (loadingMessages || !hasMore)) {
         resolve(true);
@@ -182,7 +92,6 @@ export const MessageBox = ({ type = "live" }) => {
         .post(
           `${URL()}/chat/getMessages`,
           {
-            room: chatInfo ? chatInfo.room : chat.room,
             pageIndex: isNew ? 0 : pageIndex,
           },
           {
@@ -209,31 +118,25 @@ export const MessageBox = ({ type = "live" }) => {
     });
   };
 
-  const handleSetChat = newChat => {
-    setChat(newChat);
-    setMessages(newChat.messages);
-    const newChats = chats.map(item => {
-      if (
-        item.room === newChat.room ||
-        (item.users?.userFrom?.userId === newChat.users?.userFrom?.userId &&
-          item.users?.userTo?.userId === newChat.users?.userTo?.userId)
-      ) {
-        return newChat;
-      }
-      return item;
-    });
-    setChats(newChats);
-  };
-
   return (
-    <MessageContent
-      chat={chat}
-      setChat={handleSetChat}
-      specialWidthInput={true}
-      messages={messages}
-      setMessages={msgs => setMessages(msgs)}
-      getMessages={getMessages}
-      loadingMessages={loadingMessages}
-    />
+    <Box
+      style={{
+        background: "#212121",
+        border: "2px solid #151515",
+        boxShadow: "0px 38px 96px 17px rgba(1, 1, 13, 0.5), 0px 16px 1px -488px rgba(0, 0, 0, 0.18)",
+        height: "42%",
+      }}
+    >
+      <Box display="flex" bgcolor="#151515" p="8px" width="fit-content" mx="19px" mt="22px">
+        <Box className={"tab selected"}>Live Chat</Box>
+      </Box>
+      <MessageContent
+        specialWidthInput={true}
+        messages={messages}
+        setMessages={msgs => setMessages(msgs)}
+        getMessages={getMessages}
+        loadingMessages={loadingMessages}
+      />
+    </Box>
   );
 };

@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
       color: "white",
       fontSize: "14px",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
       fontWeight: "bold",
       borderRadius: theme.spacing(0.5),
     },
@@ -85,14 +85,14 @@ export const StyledSlider = withStyles({
   },
   valueLabel: {
     color: "#45CFEA",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
   },
 })(Slider);
 
 export const StyledBlueSelect = withStyles({
   select: {
     fontSize: "14px",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
   },
   icon: {
     fill: "#000",
@@ -102,7 +102,7 @@ export const StyledBlueSelect = withStyles({
 export const StyledModalSelect = withStyles({
   select: {
     fontSize: "16px",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     background: "white",
     boxShadow: "0px 2px 14px rgba(0, 0, 0, 0.08)",
     borderRadius: "10px",
@@ -116,7 +116,7 @@ export const StyledModalSelect = withStyles({
 export const StyledTextField = withStyles({
   root: {
     fontSize: "14px",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     borderRadius: "10px",
     padding: "12px 12px",
   },
@@ -125,7 +125,7 @@ export const StyledTextField = withStyles({
 export const StyledTextField2 = withStyles({
   root: {
     fontSize: "16px",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     background: "white",
     boxShadow: "0px 2px 14px rgba(0, 0, 0, 0.08)",
     borderRadius: "10px",
@@ -140,7 +140,7 @@ export const StyledSelect = withStyles({
   select: {
     paddingTop: "11px",
     fontSize: "14px",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontWeight: "bold",
   },
 })(Select);
@@ -148,7 +148,7 @@ export const StyledSelect = withStyles({
 export const StyledSelectDao = withStyles({
   select: {
     fontSize: "14px",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontWeight: "bold",
     "&:focus": {
       backgroundColor: "transparent",
@@ -160,7 +160,7 @@ export const StyledSelectDao = withStyles({
 export const StyledWhiteSelect = withStyles({
   select: {
     fontSize: "14px",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
   },
   icon: {
     fill: "white",
@@ -170,7 +170,7 @@ export const StyledWhiteSelect = withStyles({
 export const StyledMenuItem = withStyles({
   root: {
     fontSize: "14px",
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
   },
 })(MenuItem);
 

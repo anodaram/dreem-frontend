@@ -21,12 +21,12 @@ export const useModalStyles = makeStyles(theme => ({
       fontWeight: 800,
       fontSize: 20,
       textAlign: "center",
-      fontFamily: "Agrandir",
+      fontFamily: "Grifter",
       lineHeight: "130%",
     },
     "& p": {
       fontStyle: "normal",
-      fontFamily: "Montserrat",
+      fontFamily: "Rany",
       fontSize: 18,
       fontWeight: 500,
       lineHeight: "160%",
@@ -314,7 +314,7 @@ export const useModalStyles = makeStyles(theme => ({
     marginLeft: "auto",
     marginRight: "auto",
     padding: "0 96px",
-    position: 'relative',
+    position: "relative",
     [theme.breakpoints.down("sm")]: {
       padding: "0 24px",
     },
@@ -329,9 +329,9 @@ export const useModalStyles = makeStyles(theme => ({
     textAlign: "center",
     fontFamily: "GRIFTER",
     textTransform: "uppercase",
-    display: 'flex',
+    display: "flex",
     "& svg": {
-      marginRight: '8px'
+      marginRight: "8px",
     },
     [theme.breakpoints.down("sm")]: {
       fontSize: 30,
