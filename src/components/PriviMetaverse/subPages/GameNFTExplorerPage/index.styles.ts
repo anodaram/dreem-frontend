@@ -16,11 +16,24 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     position: "absolute",
     top: 247,
     left: 0,
+    [theme.breakpoints.down("sm")]: {
+      top: 190,
+    },
+    [theme.breakpoints.down("xs")]: {
+      left: -125,
+    },
   },
   image2: {
     position: "absolute",
     top: 0,
     right: 0,
+    [theme.breakpoints.down("sm")]: {
+      right: -90,
+    },
+    [theme.breakpoints.down("xs")]: {
+      top: -66,
+      right: -120,
+    },
   },
   limitedContent: {
     background: "linear-gradient(180deg, rgba(0, 0, 0, 0) 9.5%, #17151A 69.7%)",
@@ -69,6 +82,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       color: "#431AB7",
       [theme.breakpoints.down("xs")]: {
         fontSize: "28px",
+        padding: "120px 32px 45px",
       },
       "& span": {
         fontSize: "18px",
@@ -108,8 +122,8 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     textTransform: "uppercase",
     textAlign: "center",
     width: "100%",
-    [theme.breakpoints.down(950)]: {
-      fontSize: 28,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 30,
     },
     [theme.breakpoints.down("xs")]: {
       paddingBottom: 8,
@@ -153,7 +167,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     alignItems: "center",
     [theme.breakpoints.down("xs")]: {
       width: "100%",
-      justifyContent: "flex-end",
+      justifyContent: "space-between",
     },
   },
   controlBox: {
