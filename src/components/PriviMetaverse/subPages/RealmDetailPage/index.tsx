@@ -356,20 +356,52 @@ export default function RealmDetailPage() {
             )}
             {realmData.id ? (
               realmData.worldVideo ? (
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  style={{
-                    // backgroundImage: `url("${realmData.worldImages[0]}")`,
-                    backgroundImage: `url("${realmData.worldVideo}")`,
-                    backgroundSize: "cover",
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "center",
-                  }}
-                >
-                  <source src={realmData.worldVideo} type="video/mp4" />
-                </video>
+                <div className={classes.videoCtn}>
+                  <Box className={classes.public}>
+                    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12.875 15.625C14.3247 15.625 15.5 14.4497 15.5 13C15.5 11.5503 14.3247 10.375 12.875 10.375C11.4253 10.375 10.25 11.5503 10.25 13C10.25 14.4497 11.4253 15.625 12.875 15.625Z" fill="#E9FF26"/>
+                      <path d="M20.9162 9.30751C18.7824 7.17706 15.8903 5.98047 12.875 5.98047C9.85966 5.98047 6.96758 7.17706 4.83373 9.30751L1.75373 12.3788C1.58979 12.544 1.4978 12.7673 1.4978 13C1.4978 13.2327 1.58979 13.4561 1.75373 13.6213L4.83373 16.6925C6.96826 18.8217 9.86008 20.0174 12.875 20.0174C15.8899 20.0174 18.7817 18.8217 20.9162 16.6925L23.9962 13.6213C24.1602 13.4561 24.2521 13.2327 24.2521 13C24.2521 12.7673 24.1602 12.544 23.9962 12.3788L20.9162 9.30751ZM12.875 17.375C12.0097 17.375 11.1638 17.1184 10.4444 16.6377C9.72489 16.157 9.16414 15.4737 8.833 14.6742C8.50187 13.8748 8.41523 12.9952 8.58404 12.1465C8.75285 11.2978 9.16953 10.5183 9.78138 9.90642C10.3932 9.29456 11.1728 8.87788 12.0215 8.70907C12.8701 8.54026 13.7498 8.6269 14.5492 8.95803C15.3486 9.28917 16.0319 9.84992 16.5127 10.5694C16.9934 11.2889 17.25 12.1347 17.25 13C17.25 14.1603 16.789 15.2731 15.9686 16.0936C15.1481 16.9141 14.0353 17.375 12.875 17.375Z" fill="#E9FF26"/>
+                    </svg>
+
+                    <Box ml={1}>PUBLIC REALM</Box>
+                  </Box>
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    style={{
+                      // backgroundImage: `url("${realmData.worldImages[0]}")`,
+                      backgroundImage: `url("${realmData.worldVideo}")`,
+                      backgroundSize: "cover",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",
+                    }}
+                  >
+                    <source src={realmData.worldVideo} type="video/mp4" />
+                  </video>
+                  <Box className={classes.stat}>
+                    <Box className={classes.statItem}>
+                      <Box className={classes.val}>5</Box>
+                      <Box className={classes.desc}>visitors online</Box>
+                    </Box>
+                    <Box className={classes.statItem}>
+                      <Box className={classes.val}>5%</Box>
+                      <Box className={classes.desc}>taxation</Box>
+                    </Box>
+                    <Box className={classes.statItem}>
+                      <Box className={classes.val}>5</Box>
+                      <Box className={classes.desc}>worlds</Box>
+                    </Box>
+                    <Box className={classes.statItem}>
+                      <Box className={classes.val}>12</Box>
+                      <Box className={classes.desc}>creators</Box>
+                    </Box>
+                    <Box className={classes.statItem}>
+                      <Box className={classes.val}>60%</Box>
+                      <Box className={classes.desc}>governance consensus</Box>
+                    </Box>
+                  </Box>
+                </div>
               ) : (
                 <img src={realmData.worldImages[0]} alt="realm" />
               )
