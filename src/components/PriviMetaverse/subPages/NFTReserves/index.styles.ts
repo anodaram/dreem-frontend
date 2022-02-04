@@ -9,18 +9,19 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     alignItems: "center",
   },
   imageBg: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
-    width: '100%'
+    width: "100%",
   },
   sideBar: {
     display: "flex",
     justifyContent: "center",
-    marginTop: 144,
     height: "100%",
     background: "#212121",
     border: "2px solid #151515",
-    zIndex: 1
+    zIndex: 2,
+    top: 72,
+    position: "fixed",
   },
   expandIcon: {
     padding: 16,
@@ -353,7 +354,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     textTransform: "uppercase",
     background: "transparent !important",
     color: "#FFFFFF !important",
-    padding: "0 30px !important"
+    padding: "0 30px !important",
   },
   table: {
     width: "100%",
@@ -413,25 +414,25 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     textTransform: "uppercase",
 
     "&:first-child": {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
 
     "&:last-child": {
-      borderRight: "none"
+      borderRight: "none",
     },
 
     "& span:first-child": {
       fontWeight: 700,
       fontSize: 34,
       lineHeight: "35.53px",
-      fontFamily: "GRIFTER"
+      fontFamily: "GRIFTER",
     },
     "& span:last-child": {
       fontWeight: 700,
       fontSize: 14,
       lineHeight: "21px",
       fontFamily: "Rany",
-      opacity: 0.6
-    }
-  }
+      opacity: 0.6,
+    },
+  },
 }));
