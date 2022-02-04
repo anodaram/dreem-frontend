@@ -9,7 +9,7 @@ const nftWithRoyalty = network => {
   const contractAddress = config[network].CONTRACT_ADDRESSES.ERC721_WITH_ROYALTY;
 
   const metadata = require("shared/connectors/web3/contracts/ERC721WithRoyalty.json");
-
+  let txHash;
   const mint = async (
     web3: Web3,
     account: string,
@@ -35,10 +35,11 @@ const nftWithRoyalty = network => {
             console.log("transaction hash:", hash);
             setTxModalOpen(true);
             setTxHash(hash);
+            txHash = hash;
           });
         console.log("transaction succeed", response);
         const returnValues = response.events.BatchMinting.returnValues;
-        resolve({ success: true, collectionAddress, batchId: returnValues.batchId, startTokenId: returnValues.startingId, endTokenId: returnValues.endingId });
+        resolve({ success: true, txHash: txHash, collectionAddress, batchId: returnValues.batchId, startTokenId: returnValues.startingId, endTokenId: returnValues.endingId });
       } catch (e) {
         console.log(e);
         resolve({ success: false });

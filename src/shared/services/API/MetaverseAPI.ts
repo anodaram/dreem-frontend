@@ -381,7 +381,9 @@ export const convertToNFTAsset = async (
   metadataCID,
   owner,
   royaltyAddress,
-  royaltyPercentage
+  royaltyPercentage,
+  txHash,
+  totalSupply
 ) => {
   try {
     const token = localStorage.getItem("token");
@@ -398,6 +400,48 @@ export const convertToNFTAsset = async (
         chain: chain,
         royaltyPercentage: royaltyPercentage,
         royaltyAddress: royaltyAddress,
+        tx: txHash,
+        totalSupply: totalSupply
+      },
+      config
+    );
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const convertToNFTAssetBatch = async (
+  hashId,
+  contractAddress,
+  chain,
+  nftId,
+  metadataCID,
+  owner,
+  royaltyAddress,
+  royaltyPercentage,
+  txHash,
+  totalSupply
+) => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.post(
+      `${METAVERSE_URL()}/web/asset/${hashId}/mint/batch/`,
+      {
+        collectionAddress: contractAddress,
+        tokenIds: nftId,
+        ownerAddress: owner,
+        metadataUrl: metadataCID,
+        chain: chain,
+        royaltyPercentage: royaltyPercentage,
+        royaltyAddress: royaltyAddress,
+        tx: txHash,
+        totalSupply: totalSupply
       },
       config
     );

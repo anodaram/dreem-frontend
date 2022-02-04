@@ -7,7 +7,7 @@ const MAX_PRIO_FEE = "50";
 
 const royaltyFactory = network => {
   const contractAddress = config[network].CONTRACT_ADDRESSES.ROYALTYFACTORY;
-
+  let txHash;
   const metadata = require("shared/connectors/web3/contracts/RoyaltyFactory.json");
 
   const mint = async (
@@ -35,10 +35,11 @@ const royaltyFactory = network => {
             console.log("transaction hash:", hash);
             setTxModalOpen(true);
             setTxHash(hash);
+            txHash = hash;
           });
         console.log("transaction succeed", response);
 
-        resolve({ success: true, contractAddress: response.events.LoyaltyERC721Created.returnValues.nft, tokenId: response.events.LoyaltyERC721Created.returnValues.initialId });
+        resolve({ success: true, txHash: txHash, contractAddress: response.events.LoyaltyERC721Created.returnValues.nft, tokenId: response.events.LoyaltyERC721Created.returnValues.initialId });
       } catch (e) {
         console.log(e);
         resolve({ success: false });
