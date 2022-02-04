@@ -63,70 +63,70 @@ export const useStyles = makeStyles(() => ({
 
 export const subDAOPageStyles = makeStyles(() => ({
   daoPage: {
-    position: 'relative',
-    width: 'calc(100vw)',
-    height: 'calc(100vh - 104px)',
-    minHeight: 'calc(100vh - 104px)',
-    backgroundColor: 'black'
+    position: "relative",
+    width: "calc(100vw)",
+    height: "calc(100vh - 104px)",
+    minHeight: "calc(100vh - 104px)",
+    backgroundColor: "black",
   },
   contentWrapper: {
-    width: '100%',
-    height: '100%',
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-    '& > nav': {
+    width: "100%",
+    height: "100%",
+    overflowY: "auto",
+    overflowX: "hidden",
+    display: "flex",
+    flexDirection: "column",
+    "& > nav": {
       paddingLeft: 80,
-      display: 'flex',
-      alignItems: 'center',
-      fontStyle: 'normal',
-      fontWeight: 'normal',
+      display: "flex",
+      alignItems: "center",
+      fontStyle: "normal",
+      fontWeight: "normal",
       fontSize: 16,
-      lineHeight: '21px',
-      letterSpacing: '0.04em',
-      color: '#ffffff',
+      lineHeight: "21px",
+      letterSpacing: "0.04em",
+      color: "#ffffff",
       marginBottom: 38,
       marginTop: 16.5,
-      cursor: 'pointer'
+      cursor: "pointer",
     },
-    '& > nav img': {
+    "& > nav img": {
       marginRight: 16,
       height: 16,
-      width: 8
-    }
+      width: 8,
+    },
   },
   headerWrapper: {
-    width: '100%',
-    height: 'auto'
+    width: "100%",
+    height: "auto",
   },
   mobileHeaderWrapper: {
-    display: 'none',
-    flexDirection: 'column'
+    display: "none",
+    flexDirection: "column",
   },
-  '@media screen and (max-width: 375px)': {
+  "@media screen and (max-width: 375px)": {
     mobileHeaderWrapper: {
-      display: 'flex'
-    }
+      display: "flex",
+    },
   },
   content: {
-    padding: '0px 80px 100px',
-    position: 'relative'
+    padding: "0px 80px 100px",
+    position: "relative",
   },
   appbarContainer: {
-    overflowX: 'auto',
-    scrollbarWidth: 'none',
+    overflowX: "auto",
+    scrollbarWidth: "none",
     marginBottom: 40,
     top: 0,
-    width: '100%',
-    '& header': {
-      background: 'transparent !important',
+    width: "100%",
+    "& header": {
+      background: "transparent !important",
     },
-    '@media screen and (max-width: 768px)': {
-      '& header': {
-        padding: 0
-      }
-    }
+    "@media screen and (max-width: 768px)": {
+      "& header": {
+        padding: 0,
+      },
+    },
   },
 }));
 
@@ -153,7 +153,7 @@ export type TitleGrandLightProps = React.PropsWithChildren<{
 }>;
 
 export const TitleGrandLight = styled.div<TitleGrandLightProps>`
-  font-family: Agrandir GrandLight;
+  font-family: Grifter;
   color: ${p => (p.color ? p.color : Color.White)};
   margin-bottom: ${p =>
     p.mb ? (typeof p.mb === "string" ? `${p.mb}${p.mb.includes("px") ? "" : "px"}` : `${8 * p.mb}px`) : 0};

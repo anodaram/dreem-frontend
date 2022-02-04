@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-export const MakeBuyOfferModalStyles = makeStyles((theme) => ({
+export const MakeBuyOfferModalStyles = makeStyles(theme => ({
   container: {
     maxWidth: "508px !important",
     padding: "0px !important",
@@ -25,7 +25,7 @@ export const MakeBuyOfferModalStyles = makeStyles((theme) => ({
     width: "100%",
     padding: theme.spacing(1),
     color: "#ffffff60 !important",
-    borderRadius: "unset !important"
+    borderRadius: "unset !important",
   },
   tokenSelect: {
     backgroundColor: "#172227 !important",
@@ -34,7 +34,7 @@ export const MakeBuyOfferModalStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     color: "#ffffff !important",
     borderRadius: "unset !important",
-    flex: "1"
+    flex: "1",
   },
   purpleText: {
     cursor: "pointer",
@@ -42,7 +42,7 @@ export const MakeBuyOfferModalStyles = makeStyles((theme) => ({
     fontSize: "18px",
     fontWeight: 700,
     fontFamily: "Rany",
-    lineHeight: "150%"
+    lineHeight: "150%",
   },
   usdWrap: {
     display: "flex",
@@ -71,13 +71,13 @@ export const MakeBuyOfferModalStyles = makeStyles((theme) => ({
     },
   },
   usdt: {
-    fontFamily: "Agrandir GrandHeavy !important",
+    fontFamily: "Grifter !important",
     color: "#ffffff",
     fontWeight: 800,
     fontSize: "16px",
   },
   totalText: {
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontStyle: "normal",
     fontWeight: 800,
     fontSize: "14px",
@@ -99,7 +99,7 @@ export const MakeBuyOfferModalStyles = makeStyles((theme) => ({
     "&:disabled": {
       background: "linear-gradient(#B7FF5C, #EEFF21) !important",
       color: "#212121 !important",
-    }
+    },
   },
   secondaryButton: {
     padding: "0 37px !important",
@@ -114,7 +114,7 @@ export const MakeBuyOfferModalStyles = makeStyles((theme) => ({
       color: "#ffffff60 !important",
     },
     "& svg": {
-      color: "#ffffff"
-    }
+      color: "#ffffff",
+    },
   },
 }));

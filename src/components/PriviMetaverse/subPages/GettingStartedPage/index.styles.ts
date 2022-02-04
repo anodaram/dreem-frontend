@@ -25,7 +25,7 @@ export const gettingStartedPageStyles = makeStyles(theme => ({
     alignItems: "center",
     fontSize: 14,
     fontWeight: 700,
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     textTransform: "uppercase",
     cursor: "pointer",
     marginLeft: 39,
@@ -46,7 +46,7 @@ export const gettingStartedPageStyles = makeStyles(theme => ({
     top: -25,
   },
   header: {
-    position: 'relative',
+    position: "relative",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
@@ -81,18 +81,18 @@ export const gettingStartedPageStyles = makeStyles(theme => ({
     textTransform: "uppercase",
   },
   content: {
-    position: 'relative',
+    position: "relative",
     display: "flex",
     flexDirection: "column",
     color: "#ffffff",
     padding: "0px 60px",
     paddingBottom: 150,
     [theme.breakpoints.down("sm")]: {
-      padding: "0px 46px"
+      padding: "0px 46px",
     },
     [theme.breakpoints.down("xs")]: {
-      padding: "0px 26px"
-    }
+      padding: "0px 26px",
+    },
   },
   description: {
     marginTop: 32,
@@ -125,7 +125,7 @@ export const gettingStartedPageStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "center",
     fontSize: 16,
-    fontFamily: "Agrandir GrandHeavy",
+    fontFamily: "Grifter",
     color: "#212121",
     paddingTop: 5,
   },

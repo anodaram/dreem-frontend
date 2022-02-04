@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-export const useVerifyProfileModalStyles = makeStyles((theme) => ({
+export const useVerifyProfileModalStyles = makeStyles(theme => ({
   content: {
     backgroundColor: "#0B151C !important",
     boxShadow: "0px 38px 96px 17px rgba(1, 1, 13, 0.25)",
@@ -10,7 +10,7 @@ export const useVerifyProfileModalStyles = makeStyles((theme) => ({
     borderRadius: "0 !important",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   modalContent: {
     display: "flex",
@@ -40,7 +40,7 @@ export const useVerifyProfileModalStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down("xs")]: {
       fontSize: 14,
-    }
+    },
   },
   saluteIcon: {
     width: "90px",
@@ -54,18 +54,18 @@ export const useVerifyProfileModalStyles = makeStyles((theme) => ({
     background: "#1DA1F2 !important",
     borderRadius: "4px !important",
     color: "white",
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     fontSize: "16px",
     lineHeight: "20px",
     marginTop: "38px",
     [theme.breakpoints.down("xs")]: {
       width: "256px !important",
-    }
+    },
   },
   twitterIcon: {
     position: "absolute",
     left: "16px",
-    top: "17px"
+    top: "17px",
   },
   progressBar: {
     display: "flex",
@@ -74,7 +74,7 @@ export const useVerifyProfileModalStyles = makeStyles((theme) => ({
     marginBottom: "94px",
     [theme.breakpoints.down("xs")]: {
       width: 260,
-    }
+    },
   },
   line: {
     height: "1px",
@@ -96,13 +96,13 @@ export const useVerifyProfileModalStyles = makeStyles((theme) => ({
       fontFamily: "GRIFTER",
       fontWeight: "bold",
       fontSize: "16px",
-      lineHeight: "120%"
+      lineHeight: "120%",
     },
     "& label": {
       position: "absolute",
       top: "50px",
-      whiteSpace: "nowrap"
-    }
+      whiteSpace: "nowrap",
+    },
   },
   stepCircleInner: {
     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
@@ -112,7 +112,7 @@ export const useVerifyProfileModalStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    color: "#212121 !important"
+    color: "#212121 !important",
   },
   urlInputBox: {
     display: "flex",
@@ -135,11 +135,11 @@ export const useVerifyProfileModalStyles = makeStyles((theme) => ({
     paddingLeft: "19px",
     color: "rgba(255, 255, 255, 0.5)",
     "&:focus": {
-      outline: "none"
+      outline: "none",
     },
     [theme.breakpoints.down("xs")]: {
       width: 340,
-    }
+    },
   },
   confirmButton: {
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%) !important",
@@ -147,6 +147,6 @@ export const useVerifyProfileModalStyles = makeStyles((theme) => ({
     height: "48px !important",
     color: "#212121 !important",
     marginTop: "43px",
-    textTransform: "uppercase"
-  }
-}))
+    textTransform: "uppercase",
+  },
+}));

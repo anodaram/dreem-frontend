@@ -313,7 +313,7 @@ export default function MakeRentalOfferModal({ open, handleClose = () => {}, nft
         <Box className={classes.footer}>
           <Box display="flex" justifyContent="space-between">
             <Box className={classes.totalText}>Total</Box>
-            <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Montserrat", fontWeight: 500 }}>
+            <Box style={{ color: "#ffffff", fontSize: "14px", fontFamily: "Rany", fontWeight: 500 }}>
               {`${offerPrice} ${rentalToken?.Symbol}`}
             </Box>
           </Box>

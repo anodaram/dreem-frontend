@@ -7,7 +7,7 @@ export const CancelRentPriceModalStyles = makeStyles(theme => ({
   },
   nameField: {
     margin: "27px 0px 7px 0px",
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     fontStyle: "normal",
     fontWeight: 500,
     fontSize: "14px",
@@ -22,7 +22,7 @@ export const CancelRentPriceModalStyles = makeStyles(theme => ({
     margin: "0 2px",
   },
   purpleText: {
-    fontFamily: "Agrandir Variable !important",
+    fontFamily: "Grifter !important",
     cursor: "pointer",
     color: "#431AB7",
     fontSize: "16px",
@@ -55,13 +55,13 @@ export const CancelRentPriceModalStyles = makeStyles(theme => ({
     },
   },
   usdt: {
-    fontFamily: "Agrandir GrandHeavy !important",
+    fontFamily: "Grifter !important",
     color: "#431AB7",
     fontWeight: 800,
     fontSize: "16px",
   },
   totalText: {
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     fontStyle: "normal",
     fontWeight: 800,
     fontSize: "14px",
@@ -83,7 +83,7 @@ export const CancelRentPriceModalStyles = makeStyles(theme => ({
     "&:disabled": {
       background: "linear-gradient(#B7FF5C, #EEFF21) !important",
       color: "#212121 !important",
-    }
+    },
   },
   secondaryButton: {
     padding: "0 37px !important",
@@ -116,24 +116,24 @@ export const CancelRentPriceModalStyles = makeStyles(theme => ({
   cancelDesc: {
     color: "#ffffff",
     marginBottom: 64,
-    textAlign: 'center',
-    padding: '16px 50px',
-    fontSize: '16px',
-    lineHeight: '24px'
+    textAlign: "center",
+    padding: "16px 50px",
+    fontSize: "16px",
+    lineHeight: "24px",
   },
   cancelButton: {
     backgroundColor: "transparent !important",
     color: "#DDFF57 !important",
     border: "1px solid #E9FF26 !important",
     borderRadius: "40px !important",
-    width: '165px !important',
-    textTransform: "uppercase"
+    width: "165px !important",
+    textTransform: "uppercase",
   },
   editPriceButton: {
     backgroundColor: "#DDFF57 !important",
     color: "#0B151C !important",
-    width: '165px !important',
+    width: "165px !important",
     borderRadius: "40px !important",
-    textTransform: "uppercase"
-  }
+    textTransform: "uppercase",
+  },
 }));

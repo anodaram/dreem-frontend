@@ -26,6 +26,7 @@ import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/
 import Tag from "../GameDetailPage/components/Tag";
 import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
 import ActivityFeeds from "./components/ActivityFeeds";
+import { MessageBox } from "components/PriviMetaverse/components/Message/MessageBox";
 import { useNFTOptionsStyles } from "./index.styles";
 import { getNftGameFeed } from "shared/services/API/DreemAPI";
 import { toDecimals } from "shared/functions/web3";
@@ -269,14 +270,13 @@ const NFTReserves = () => {
       <Box className={classes.main}>
         <Box className={classes.sideBar}>
           {openSideBar ? (
-            <Box>
+            <Box display="flex" flexDirection="column">
               <ActivityFeeds onClose={() => setOpenSideBar(false)} />
+              <MessageBox />
             </Box>
           ) : (
-            <Box className={classes.sideBar}>
-              <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
-                <ExpandIcon />
-              </Box>
+            <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
+              <ExpandIcon />
             </Box>
           )}
         </Box>
@@ -565,7 +565,7 @@ const NFTReserves = () => {
                     <SecondaryButton
                       size="medium"
                       className={classes.showAll}
-                      onClick={() => history.push('/gameNFTS/explorer')}
+                      onClick={() => history.push("/gameNFTS/explorer")}
                     >
                       Show All
                     </SecondaryButton>

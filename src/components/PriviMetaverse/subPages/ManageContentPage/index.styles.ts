@@ -18,7 +18,7 @@ export const manageContentPageStyles = makeStyles(theme => ({
     alignItems: "center",
     fontSize: 14,
     fontWeight: 700,
-    fontFamily: "Agrandir",
+    fontFamily: "Grifter",
     textTransform: "uppercase",
     cursor: "pointer",
     marginLeft: 39,
@@ -48,7 +48,7 @@ export const manageContentPageStyles = makeStyles(theme => ({
     marginLeft: "auto",
     marginRight: "auto",
     padding: "0 96px",
-    position: 'relative',
+    position: "relative",
     [theme.breakpoints.down("sm")]: {
       padding: "0 24px",
     },
@@ -91,7 +91,7 @@ export const manageContentPageStyles = makeStyles(theme => ({
     cursor: "pointer",
     textTransform: "uppercase",
     height: "50px !important",
-    marginLeft: "10px"
+    marginLeft: "10px",
   },
   howToCreateBtn: {
     background: "transparent",
@@ -164,9 +164,9 @@ export const manageContentPageStyles = makeStyles(theme => ({
     textAlign: "center",
     fontFamily: "GRIFTER",
     textTransform: "uppercase",
-    display: 'flex',
+    display: "flex",
     "& svg": {
-      marginRight: '8px'
+      marginRight: "8px",
     },
     [theme.breakpoints.down("sm")]: {
       fontSize: 30,
@@ -257,8 +257,8 @@ export const manageContentPageStyles = makeStyles(theme => ({
     justifyContent: "space-between",
   },
   assetIcon: {
-    width: '38px',
-    height: '38px',
-    background: 'linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)'
-  }
+    width: "38px",
+    height: "38px",
+    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+  },
 }));

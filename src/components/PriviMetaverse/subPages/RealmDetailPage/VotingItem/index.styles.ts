@@ -118,7 +118,7 @@ export const votingItemStyles = makeStyles(theme => ({
     position: "absolute",
     top: 2,
     left: 12,
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     fontStyle: "normal",
     fontWeight: 600,
     fontSize: 12,
@@ -126,7 +126,7 @@ export const votingItemStyles = makeStyles(theme => ({
     color: "#151515",
   },
   barValue: {
-    fontFamily: "Montserrat",
+    fontFamily: "Rany",
     fontStyle: "normal",
     fontWeight: 600,
     fontSize: 16,

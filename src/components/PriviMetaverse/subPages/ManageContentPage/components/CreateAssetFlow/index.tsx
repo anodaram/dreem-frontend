@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 
-import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem } from "@material-ui/core";
+import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem, capitalize } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -52,23 +52,23 @@ const CreateSteps = [
     completed: false
   },
 ]
-const CreateMaterialFlow = ({
-  metaData,
+const CreateAssetFlow = ({
+  assetItem,
   handleCancel,
 }: {
-  metaData: any;
+  assetItem: string;
   handleCancel: () => void;
 }) => {
   const classes = useModalStyles();
   const { showAlertMessage } = useAlertMessage();
 
-  const [nftOption, setNftOption] = useState<string>("");
+  const [nftOption, setNftOption] = useState<string>("single");
   const [step, setStep] = useState<number>(1);
   const [steps, setSteps] = useState<any>(CreateSteps);
   const [amount, setAmount] = useState<string>("");
   const [royaltyAddress, setRoyaltyAddress] = useState<string>("");
   const [royaltyPercentage, setRoyaltyPercentage] = useState<string>("");
-  const [isRoyalty, setIsRoyalty] = useState<boolean>();
+  const [isRoyalty, setIsRoyalty] = useState<boolean>(false);
   const [isPublic, setIsPublic] = useState<boolean>(true);
   const [currentCollection, setCurrentCollection] = useState<any>(null);
   const [openPublic, setOpenPublic] = useState<any>();
@@ -83,10 +83,10 @@ const CreateMaterialFlow = ({
   const [fileContents, setFileContents] = useState<InputFileContents>({});
 
   useEffect(() => {
-    MetaverseAPI.getAssetMetadata("MATERIAL").then(res => {
+    MetaverseAPI.getAssetMetadata(assetItem).then(res => {
       setMetadata(res.data);
     });
-  }, []);
+  }, [assetItem]);
 
   const handlePrev = () => {
     if(step == 1) handleCancel()
@@ -199,7 +199,7 @@ const CreateMaterialFlow = ({
         <div className={classes.otherContent}>
           <div className={classes.typo1}>
             <AssetIcon />
-            Creating New Material
+            Creating New {capitalize(assetItem)}
           </div>
           <CreatingStep curStep={step} status={steps} handleGoStep={handleGoStep} />
           { step == 1 &&
@@ -461,4 +461,4 @@ const IOSSwitch = styled((props: SwitchProps) => (
   },
 }));
 
-export default CreateMaterialFlow;
+export default CreateAssetFlow;

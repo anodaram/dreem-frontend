@@ -1,13 +1,14 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core";
 
 export const homePageStyles = makeStyles(theme => ({
   root: {
     width: "100%",
     display: "flex",
     flexDirection: "column",
-    color: '#ffffff',
-    background: 'linear-gradient(180deg, rgba(243, 254, 247, 0) 37.95%, #B6B5E0 81.78%), linear-gradient(97.63deg, #381498 26.36%, #4636FF 91.1%)',
-    position: 'relative',
+    color: "#ffffff",
+    background:
+      "linear-gradient(180deg, rgba(243, 254, 247, 0) 37.95%, #B6B5E0 81.78%), linear-gradient(97.63deg, #381498 26.36%, #4636FF 91.1%)",
+    position: "relative",
     overflowY: "auto",
     overflowX: "hidden",
   },
@@ -16,92 +17,92 @@ export const homePageStyles = makeStyles(theme => ({
     padding: "90px 56px 150px 56px",
   },
   smallPlanetImg: {
-    position: 'absolute',
+    position: "absolute",
   },
   largePlanetImg: {
-    position: 'absolute',
+    position: "absolute",
     right: 0,
-    top: -25
+    top: -25,
   },
   title: {
     fontSize: 58,
     fontWeight: 400,
-    fontFamily: 'Agrandir Grand',
-    lineHeight: '75px',
-    textAlign: 'center',
-    '& span': {
-      fontFamily: 'Agrandir GrandHeavy',
-      fontWeight: 800
+    fontFamily: "Grifter",
+    lineHeight: "75px",
+    textAlign: "center",
+    "& span": {
+      fontFamily: "Grifter",
+      fontWeight: 800,
     },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 36
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 36,
     },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 24
-    }
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 24,
+    },
   },
   subTitle: {
     fontSize: 26,
     fontWeight: 400,
-    lineHeight: '150%',
-    fontFamily: 'Agrandir',
-    letterSpacing: '0.02em',
-    textAlign: 'center',
+    lineHeight: "150%",
+    fontFamily: "Grifter",
+    letterSpacing: "0.02em",
+    textAlign: "center",
     marginTop: 8,
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 18
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 18,
     },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 16
-    }
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 16,
+    },
   },
   subTitle1: {
     fontSize: 22,
     fontWeight: 800,
-    lineHeight: '130%',
-    fontFamily: 'Agrandir GrandHeavy',
-    textAlign: 'center',
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 18
+    lineHeight: "130%",
+    fontFamily: "Grifter",
+    textAlign: "center",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 18,
     },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 16
-    }
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 16,
+    },
   },
   becomeCreatorBtn: {
     width: 243,
     borderRadius: 48,
-    background: '#FFFFFF',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '15px 0px',
+    background: "#FFFFFF",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "15px 0px",
     fontSize: 18,
     fontWeight: 600,
-    color: '#4218B5',
-    lineHeight: '22px',
+    color: "#4218B5",
+    lineHeight: "22px",
     marginTop: 30,
-    cursor: 'pointer',
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 16
+    cursor: "pointer",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 16,
     },
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 14
-    }
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 14,
+    },
   },
   trendingContentsSection: {
     marginTop: 57,
   },
   headerSection: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 40
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 40,
   },
   carouselContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     width: "100vw",
     maxWidth: "100vw",
     overflow: "hidden",
@@ -237,19 +238,19 @@ export const homePageStyles = makeStyles(theme => ({
     },
   },
   arrowBoxContent: {
-    margin: '0 90px',
-    display: 'flex',
-    justifyContent: 'space-between',
+    margin: "0 90px",
+    display: "flex",
+    justifyContent: "space-between",
     marginTop: 0,
-    [theme.breakpoints.down('sm')]: {
-      margin: 0
-    }
+    [theme.breakpoints.down("sm")]: {
+      margin: 0,
+    },
   },
   arrowBox: {
     display: "flex",
     alignItems: "center",
     background: "#ffffff",
-    padding: '12px 27px 5px',
+    padding: "12px 27px 5px",
     marginTop: 24,
     borderRadius: 37,
     boxShadow: "0px 10px 21px -9px rgba(105, 105, 105, 0.15)",
@@ -258,7 +259,7 @@ export const homePageStyles = makeStyles(theme => ({
     marginTop: 46,
   },
   footer: {
-    width: '100%',
-    marginBottom: 24
-  }
+    width: "100%",
+    marginBottom: 24,
+  },
 }));

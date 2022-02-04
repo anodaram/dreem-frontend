@@ -15,7 +15,7 @@ export const Input = styled(InputBase).attrs<InputProps, { size: InputSize; ador
   })
 )`
   && {
-    font-family: Agrandir;
+    font-family: Grifter;
     background-color: ${Color.GrayInputBackground};
     border-radius: ${p => BORDER_RADIUS[p.size]};
     height: ${p => HEIGHT[p.size]};
