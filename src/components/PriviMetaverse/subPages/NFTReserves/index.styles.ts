@@ -9,19 +9,18 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     alignItems: "center",
   },
   imageBg: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
-    width: "100%",
+    width: '100%'
   },
   sideBar: {
     display: "flex",
     justifyContent: "center",
+    marginTop: 144,
     height: "100%",
     background: "#212121",
     border: "2px solid #151515",
-    zIndex: 2,
-    top: 72,
-    position: "fixed",
+    zIndex: 1
   },
   expandIcon: {
     padding: 16,

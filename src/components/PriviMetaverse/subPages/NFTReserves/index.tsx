@@ -93,7 +93,7 @@ const NFTReserves = () => {
   const [loadingNewListings, setLoadingNewListings] = useState<boolean>(false);
   const [openHowWorksModal, setOpenHowWorksModal] = useState<boolean>(false);
   const [newListings, setNewListings] = useState<any[]>([]);
-  const [openSideBar, setOpenSideBar] = useState<boolean>(false);
+  const [openSideBar, setOpenSideBar] = useState<boolean>(true);
 
   const [transactions, setTransactions] = useState<any[]>([]);
   const [transactionloading, setTransactionLoading] = useState<boolean>(false);

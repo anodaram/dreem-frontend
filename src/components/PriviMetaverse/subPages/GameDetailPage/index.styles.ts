@@ -10,13 +10,12 @@ export const gameDetailPageStyles = makeStyles(theme => ({
   headerBG: {},
   sideBar: {
     display: "flex",
-    position: "fixed",
     justifyContent: "center",
-    top: 72,
+    marginTop: 72,
     height: "100%",
     background: "#212121",
     border: "2px solid #151515",
-    zIndex: 2,
+    zIndex: 1,
   },
   expandIcon: {
     padding: 16,
