@@ -137,7 +137,7 @@ const NFTReserves = () => {
   const isNarrow = useMediaQuery(theme.breakpoints.down(860));
   const isMobile = useMediaQuery(theme.breakpoints.down(650));
 
-  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? 4 : 4;
+  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : 4;
   const loadingCount = React.useMemo(
     () => (width > 1700 ? 5 : width > 1420 ? 4 : width > 1200 ? 3 : width > 650 ? 2 : 1),
     [width]
@@ -264,7 +264,7 @@ const NFTReserves = () => {
         <img src={require("assets/metaverseImages/nft_reserve_bg.png")} className={classes.imageBg} />
         <Box className={classes.sideBar}>
           {openSideBar ? (
-            <Box>
+            <Box display="flex" flexDirection="column">
               <ActivityFeeds onClose={() => setOpenSideBar(false)} />
               <MessageBox />
             </Box>
