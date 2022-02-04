@@ -31,6 +31,7 @@ import { useNFTOptionsStyles } from "./index.styles";
 import { getNftGameFeed } from "shared/services/API/DreemAPI";
 import { toDecimals } from "shared/functions/web3";
 import { RootState } from "store/reducers/Reducer";
+import { listenerSocket } from "components/Login/Auth";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -141,6 +142,32 @@ const NFTReserves = () => {
       userTrackMarketPlace();
     }
   }, [isSignedin]);
+
+  useEffect(() => {
+    if (listenerSocket) {
+      const addMarketPlaceFeedHandler = _transaction => {
+        if (transactions && transactions.length) {
+          const _transactions = transactions.filter(transaction => _transaction.id !== transaction.id);
+          setTransactions([_transaction].concat(_transactions));
+        }
+      };
+
+      const updateMarketPlaceFeedHandler = _transaction => {
+        if (transactions && transactions.length) {
+          const _transactions = transactions.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
+          setTransactions(_transactions);
+        }
+      };
+
+      listenerSocket.on("addMarketPlaceFeed", addMarketPlaceFeedHandler);
+      listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+
+      return () => {
+        listenerSocket.removeListener("addMarketPlaceFeed", addMarketPlaceFeedHandler);
+        listenerSocket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+      };
+    }
+  }, [listenerSocket]);
 
   const loadTransactions = async (init = false) => {
     if (transactionloading) return;

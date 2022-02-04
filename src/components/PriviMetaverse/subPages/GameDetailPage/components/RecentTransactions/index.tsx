@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toDecimals } from "shared/functions/web3";
 import { RootState } from "store/reducers/Reducer";
+import { listenerSocket } from "components/Login/Auth";
 
 export default function RecentTransactions() {
   const classes = useStyles();
@@ -25,6 +26,32 @@ export default function RecentTransactions() {
   useEffect(() => {
     loadTransactions(true);
   }, []);
+
+  useEffect(() => {
+    if (listenerSocket) {
+      const addMarketPlaceFeedHandler = _transaction => {
+        if (transactions && transactions.length) {
+          const _transactions = transactions.filter(transaction => _transaction.id !== transaction.id);
+          setTransactions([_transaction].concat(_transactions));
+        }
+      };
+
+      const updateMarketPlaceFeedHandler = _transaction => {
+        if (transactions && transactions.length) {
+          const _transactions = transactions.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
+          setTransactions(_transactions);
+        }
+      };
+
+      listenerSocket.on("addMarketPlaceFeed", addMarketPlaceFeedHandler);
+      listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+
+      return () => {
+        listenerSocket.removeListener("addMarketPlaceFeed", addMarketPlaceFeedHandler);
+        listenerSocket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+      };
+    }
+  }, [listenerSocket]);
 
   const getTokenSymbol = addr => {
     if (tokenList.length == 0 || !addr) return 0;
