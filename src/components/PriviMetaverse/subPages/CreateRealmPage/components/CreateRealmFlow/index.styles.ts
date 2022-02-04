@@ -527,7 +527,7 @@ export const useModalStyles = makeStyles(theme => ({
       zIndex: 5,
       transition: 'border .25s linear',
       [theme.breakpoints.down("xs")]: {
-        marginLeft: 8,
+        marginLeft: 0,
       },
       "& .inside": {
         display: 'block',
