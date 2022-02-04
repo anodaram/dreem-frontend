@@ -8,7 +8,7 @@ const MAX_PRIO_FEE = "50";
 const nftWithRoyalty = network => {
   const contractAddress = config[network].CONTRACT_ADDRESSES.ERC721_WITH_ROYALTY;
 
-  const metadata = require("shared/connectors/web3/contracts/ERC721WithRoyalty.json");
+  const metadata = require("shared/connectors/web3/contracts/ERC721WithRoyaltyBatch.json");
   let txHash;
   const mint = async (
     web3: Web3,
@@ -29,7 +29,7 @@ const nftWithRoyalty = network => {
         const gas = await contract.methods.mintBatchWithRoyalty(to, amount, uri, rAddress, bps, '').estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
-          .mintBatchWithRoyalty(to, uri, rAddress, bps, '')
+          .mintBatchWithRoyalty(to, amount, uri, rAddress, bps, '')
           .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", function (hash) {
             console.log("transaction hash:", hash);
@@ -38,8 +38,9 @@ const nftWithRoyalty = network => {
             txHash = hash;
           });
         console.log("transaction succeed", response);
-        const returnValues = response.events.BatchMinting.returnValues;
-        resolve({ success: true, txHash: txHash, collectionAddress, batchId: returnValues.batchId, startTokenId: returnValues.startingId, endTokenId: returnValues.endingId });
+        console.log(response.events)
+        const returnValues = response.events.RoyaltyNFT.returnValues;
+        resolve({ success: true, txHash: txHash, owner: returnValues.owner, collectionAddress, startTokenId: returnValues.initialId, endTokenId: returnValues.initialId*1 + amount - 1 });
       } catch (e) {
         console.log(e);
         resolve({ success: false });

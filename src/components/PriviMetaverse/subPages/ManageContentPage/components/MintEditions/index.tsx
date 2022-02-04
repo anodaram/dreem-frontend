@@ -56,11 +56,12 @@ const MintEditions = ({
     console.log(res)
     bunches.map((item, index)=>{
       if(item.key == i) {
-        // if(res){
+        //@ts-ignore
+        if(res){
           item.status = true;
-        // } else {
-        //   item.status = false;
-        // }
+        } else {
+          item.status = false;
+        }
       }
     });
 

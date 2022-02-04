@@ -177,7 +177,8 @@ const CreateAssetFlow = ({
       showAlertMessage(`Save draft first`, { variant: "error" });
       return;
     }
-    let collectionData = currentCollection;
+    let collectionData = await MetaverseAPI.getCollection(currentCollection.id);
+    collectionData = collectionData.data
     let metadata = await getMetadata(savingDraft.instance.hashId);
     let collectionAddr = collectionData.address;
     let isDraft = collectionData?.kind == "DRAFT" ? true : false;
@@ -275,12 +276,13 @@ const CreateAssetFlow = ({
       }
     }
   };
-  const mintMultipleEdition = async (amount: number) => {
+  const mintMultipleEdition = async (mintAmount: number) => {
     if(!savingDraft){
       showAlertMessage(`Save draft first`, { variant: "error" });
       return;
     }
-    let collectionData = currentCollection;
+    let collectionData = await MetaverseAPI.getCollection(currentCollection.id);
+    collectionData = collectionData.data
     let metaData;
     if(!uri){
       let metadata = await getMetadata(savingDraft.instance.hashId);
@@ -290,8 +292,10 @@ const CreateAssetFlow = ({
       console.log(metadatauri);
     }
     let isDraft = collectionData?.kind == "DRAFT" ? true : false;
+    console.log(collectionData)
     let collectionAddr = collectionData.address;
     let URI = uri ? uri : metaData.newFileCID
+    console.log(uri, URI)
     const targetChain = BlockchainNets.find(net => net.value === chain);
     setNetworkName(targetChain.name);
     if (chainId && chainId !== targetChain?.chainId) {
@@ -317,7 +321,7 @@ const CreateAssetFlow = ({
         {
           name: collectionData.name,
           symbol: collectionData.symbol,
-          amount: amount,
+          amount: mintAmount,
           uri : URI,
           isRoyalty,
           royaltyAddress,
@@ -328,8 +332,8 @@ const CreateAssetFlow = ({
       );
       if (resRoyalty.success) {
         let tokenIds: any = [];
-        for(let i = 0; i < resRoyalty.amount; i++){
-          tokenIds[i] = Number(resRoyalty.initialId) + i
+        for(let i = 0; i < resRoyalty.mintAmount; i++){
+          tokenIds.push(Number(resRoyalty.initialId) + i)
         }
 
         await MetaverseAPI.convertToNFTAssetBatch(
@@ -352,13 +356,14 @@ const CreateAssetFlow = ({
         return false;
       }
     } else {
+      console.log(URI)
       const contractRes = await web3APIHandler.NFTWithRoyaltyBatch.mint(
         web3,
         account,
         {
           collectionAddress: collectionAddr,
           to: account,
-          amount: amount,
+          amount: mintAmount,
           uri : URI,
           isRoyalty,
           royaltyAddress,
@@ -371,8 +376,9 @@ const CreateAssetFlow = ({
       if (contractRes.success) {
         console.log(contractRes);
         let tokenIds: any = [];
+        console.log('contractRes---', contractRes)
         for(let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++){
-          tokenIds[i] = i
+          tokenIds.push(Number(i))
         }
         await MetaverseAPI.convertToNFTAssetBatch(
           savingDraft.instance.hashId,
