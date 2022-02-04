@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Carousel from "react-elastic-carousel";
 import Moment from "react-moment";
 
@@ -27,6 +27,9 @@ import Tag from "../GameDetailPage/components/Tag";
 import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
 import ActivityFeeds from "./components/ActivityFeeds";
 import { useNFTOptionsStyles } from "./index.styles";
+import { getNftGameFeed } from "shared/services/API/DreemAPI";
+import { toDecimals } from "shared/functions/web3";
+import { RootState } from "store/reducers/Reducer";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -58,41 +61,6 @@ const gameList = [
   },
 ];
 
-const dummyRecentTransactions = [
-  {
-    image: "",
-    name: "Game Name",
-    type: "Rented",
-    Chain: "Polygon",
-    Price: "0.0834",
-    Time: new Date().getTime() - 1200000,
-  },
-  {
-    image: "",
-    name: "Game Name 2",
-    type: "Rented",
-    Chain: "Polygon",
-    Price: "0.0834",
-    Time: new Date().getTime() - 1200000,
-  },
-  {
-    image: "",
-    name: "Game Name 5",
-    type: "Rented",
-    Chain: "BSC",
-    Price: "0.834",
-    Time: new Date().getTime() - 420000,
-  },
-  {
-    image: "",
-    name: "Game Name",
-    type: "Rented",
-    Chain: "Polygon",
-    Price: "0.123",
-    Time: new Date().getTime() - 120000,
-  },
-];
-
 const getChainImage = chain => {
   if (chain === "BSC") {
     return <BinanceIcon />;
@@ -115,9 +83,12 @@ const NFTReserves = () => {
   const [loadingNewListings, setLoadingNewListings] = useState<boolean>(false);
   const [openHowWorksModal, setOpenHowWorksModal] = useState<boolean>(false);
   const [newListings, setNewListings] = useState<any[]>([]);
-  const [recentTransactions, setRecentTransactions] = useState<any[]>(dummyRecentTransactions);
-  const [loadingTransactions, setLoadingTransctions] = useState<boolean>(false);
   const [openSideBar, setOpenSideBar] = useState<boolean>(false);
+
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactionloading, setTransactionLoading] = useState<boolean>(false);
+  const [transactionHasMore, setTransactionHasMore] = useState<boolean>(false);
+  const [lastTransactionId, setLastTransactionId] = useState<any>();
 
   const width = useWindowDimensions().width;
 
@@ -142,6 +113,8 @@ const NFTReserves = () => {
     { headerName: "", headerAlign: "center" },
   ];
 
+  const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+
   useEffect(() => {
     // initialize store
     getTokenList();
@@ -150,6 +123,7 @@ const NFTReserves = () => {
   useEffect(() => {
     getFeaturedGameData();
     getNewListings();
+    loadTransactions(true);
   }, []);
 
   useEffect(() => {
@@ -157,6 +131,36 @@ const NFTReserves = () => {
       userTrackMarketPlace();
     }
   }, [isSignedin]);
+
+  const loadTransactions = async (init = false) => {
+    if (transactionloading) return;
+    try {
+      setTransactionLoading(true);
+
+      const response = await getNftGameFeed({
+        gameId: undefined,
+        lastId: init ? undefined : lastTransactionId,
+        searchValue: undefined,
+        mode: isProd ? "main" : "test",
+        status: undefined,
+      });
+      if (response.success) {
+        const newCharacters = response.data.list;
+        const newLastId = response.data.lastId;
+        const newhasMore = response.data.hasMore;
+
+        setTransactions(prev => (init ? newCharacters : [...prev, ...newCharacters]));
+        setLastTransactionId(newLastId);
+        setTransactionHasMore(newhasMore);
+      } else {
+        setTransactions([]);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setTransactionLoading(false);
+    }
+  };
 
   const getNewListings = async () => {
     if (loadingNewListings) return;
@@ -207,10 +211,22 @@ const NFTReserves = () => {
     dispatch(setScrollPositionInAllNFT(e.target.scrollTop));
   };
 
+  const getTokenSymbol = addr => {
+    if (tokenList.length == 0 || !addr) return 0;
+    let token = tokenList.find(token => token.Address === addr);
+    return token?.Symbol || "";
+  };
+
+  const getTokenDecimal = addr => {
+    if (tokenList.length == 0) return 0;
+    let token = tokenList.find(token => token.Address === addr);
+    return token?.Decimals;
+  };
+
   const tableData = React.useMemo(() => {
     let data: Array<Array<CustomTableCellInfo>> = [];
-    if (recentTransactions && recentTransactions.length) {
-      data = recentTransactions.map(row => [
+    if (transactions && transactions.length) {
+      data = transactions.map(row => [
         {
           cell: (
             <div className={classes.titleWrapper}>
@@ -223,15 +239,15 @@ const NFTReserves = () => {
           cell: <Tag state={row.type.toLowerCase()} text={row.type} />,
         },
         {
-          cell: <div>{getChainImage(row.Chain)}</div>,
+          cell: <div>{getChainImage(row.chain)}</div>,
         },
         {
-          cell: <p className={classes.whiteText}>{row.Price}</p>,
+          cell: <p className={classes.whiteText}>{+toDecimals(row.price || (row.pricePerSecond * row.rentalTime), getTokenDecimal(row.paymentToken || row.fundingToken))} {getTokenSymbol(row.paymentToken || row.fundingToken)}</p>,
         },
         {
           cell: (
             <p className={classes.whiteText}>
-              <Moment fromNow>{row.Time}</Moment>
+              <Moment fromNow>{+row.id}</Moment>
             </p>
           ),
         },
@@ -246,7 +262,7 @@ const NFTReserves = () => {
     }
 
     return data;
-  }, [recentTransactions]);
+  }, [transactions]);
 
   return (
     <>
@@ -574,21 +590,21 @@ const NFTReserves = () => {
                 <div className={classes.allNFTTitle}>
                   <span>Recent Transactions</span>
                 </div>
-                {recentTransactions.length > 0 && (
+                {transactions.length > 0 && (
                   <div className={classes.table}>
                     <CustomTable
                       variant={Variant.Transparent}
                       headers={tableHeaders}
                       rows={tableData}
-                      placeholderText="No data"
+                      placeholderText=""
                       sorted={{}}
                       theme="game transaction"
                     />
                   </div>
                 )}
-                {!loadingTransactions && recentTransactions?.length < 1 && (
+                {!transactionloading && transactions?.length < 1 && (
                   <Box textAlign="center" width="100%" mb={10} mt={2}>
-                    No NFTs
+                    
                   </Box>
                 )}
               </Box>

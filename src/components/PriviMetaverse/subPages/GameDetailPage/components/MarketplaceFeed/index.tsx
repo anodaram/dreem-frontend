@@ -23,6 +23,7 @@ import { RootState } from "store/reducers/Reducer";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
 import { useHistory } from "react-router-dom";
 import { listenerSocket } from "components/Login/Auth";
+import Moment from "react-moment";
 // TODO: mock data delete and change for real data
 
 const filterStatusOptions = ["All", "RENTED", "SOLD", "BLOCKED"];
@@ -40,7 +41,7 @@ const weeklyStatsItems = [
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
-export default function MarketplaceFeed({ Chain }: { Chain: any }) {
+export default function MarketplaceFeed() {
   const classes = marketplaceFeedStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -163,10 +164,10 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
     setNfts([]);
   };
 
-  const goToScan = (hash) => {
-    if (Chain.toLowerCase() === "polygon") {
+  const goToScan = (hash, chain) => {
+    if (chain.toLowerCase() === "polygon") {
       window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/tx/${hash}`, "_blank");
-    } else if (Chain.toLowerCase() === "bsc") {
+    } else if (chain.toLowerCase() === "bsc") {
       window.open(`https://${!isProd ? "testnet." : ""}bscscan.com/tx/${hash}`, "_blank");
     }
   };
@@ -203,17 +204,29 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
           }</p>
         },
         {
-          cell: <p className={classes.whiteText}>{
-            (new Date(row.updated).getMonth() + 1) +
-            "-" + (new Date(row.updated).getDate()) +
-            "-" + new Date(row.updated).getFullYear()}</p>
+          cell: <p className={classes.whiteText}><Moment fromNow format="DD/MMM/YYYY">{+row.id}</Moment></p>
         },
         {
-          cell: <Tag state={row.type.toLowerCase()} text={row.type} />
+          cell: <Box className={classes.typeTag}
+          style={{
+            background:
+              row.type && row.type.toLowerCase() === "rented"
+                ? "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)"
+                : row.type && row.type.toLowerCase() === "sold"
+                ? "conic-gradient(from 31.61deg at 50% 50%, #91D502 -25.18deg, #E5FF46 15deg, rgba(186, 252, 0, 0.76) 103.13deg, #A3CC00 210deg, #91D502 334.82deg, #E5FF46 375deg)"
+                : row.type && row.type.toLowerCase() === "blocked"
+                ? "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)"
+                : row.type && row.type.toLowerCase() === "transfer"
+                ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
+                : "",
+          }}
+        >
+          {row.type}
+        </Box>
         },
         {
-          cell: <div onClick={() => { goToScan(row.transactionHash) }}>{
-            <img src={getChainImageUrl(Chain)} width={"22px"} />
+          cell: <div onClick={() => { goToScan(row.transactionHash, row.chain) }}>{
+            <img src={getChainImageUrl(row.chain)} width={"22px"} />
           }
           </div>
         },
@@ -312,7 +325,6 @@ export default function MarketplaceFeed({ Chain }: { Chain: any }) {
         </InfiniteScroll>
         {!loading && nfts?.length < 1 && (
           <Box textAlign="center" width="100%" mb={10} mt={2}>
-            No NFTs
           </Box>
         )}
       </Box>
