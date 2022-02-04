@@ -260,6 +260,10 @@ const NFTReserves = () => {
     return token?.Decimals;
   };
 
+  const goToNft = row => {
+    history.push(`/P2E/${row.collectionId}/${row.tokenId}`);
+  };
+
   const tableData = React.useMemo(() => {
     let data: Array<Array<CustomTableCellInfo>> = [];
     if (transactions && transactions.length) {
@@ -300,7 +304,7 @@ const NFTReserves = () => {
         },
         {
           cell: (
-            <PrimaryButton onClick={() => {}} size="medium" className={classes.viewButton} isRounded>
+            <PrimaryButton onClick={() => { goToNft(row); }} size="medium" className={classes.viewButton} isRounded>
               View
             </PrimaryButton>
           ),
