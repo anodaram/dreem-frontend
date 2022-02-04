@@ -1,109 +1,119 @@
 import React from "react";
 
-import Box from "shared/ui-kit/Box";
-import Avatar from "shared/ui-kit/Avatar";
+import { getTrendingGameNfts } from "shared/services/API/ReserveAPI";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
+import Avatar from "shared/ui-kit/Avatar";
+import Box from "shared/ui-kit/Box";
+import { LoadingWrapper } from "shared/ui-kit/Hocs";
+
 import { useStyles } from "./index.styles";
+
+const isProd = process.env.REACT_APP_ENV === "prod";
 
 const Fake_Feeds_Data = [
   {
     image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
+    name: "cyberwave",
+    owner: {
+      name: "Creator name"
+    },
     type: "rented",
   },
   {
     image: "",
-    nft_name: "catchking",
-    creator_name: "Creator name",
+    name: "catchking",
+    owner: {
+      name: "Creator name"
+    },
     type: "Sold",
   },
   {
     image: "",
-    nft_name: "botborgs",
-    creator_name: "Creator name",
+    name: "botborgs",
+    owner: {
+      name: "Creator name"
+    },
     type: "blocked",
   },
   {
     image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
+    name: "cyberwave",
+    owner: {
+      name: "Creator name"
+    },
     type: "transfer",
   },
   {
     image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
+    name: "cyberwave",
+    owner: {
+      name: "Creator name"
+    },
     type: "sold",
   },
   {
     image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
+    name: "cyberwave",
+    owner: {
+      name: "Creator name"
+    },
     type: "sold",
   },
   {
     image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
-    type: "sold",
+    name: "cyberwave",
+    owner: {
+      name: "Creator name"
+    },
+    type: "transfer",
   },
   {
     image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
-    type: "sold",
+    name: "cyberwave",
+    owner: {
+      name: "Creator name"
+    },
+    type: "transfer",
   },
   {
     image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
-    type: "sold",
+    name: "cyberwave",
+    owner: {
+      name: "Creator name"
+    },
+    type: "transfer",
   },
   {
     image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
-    type: "sold",
+    name: "cyberwave",
+    owner: {
+      name: "Creator name"
+    },
+    type: "transfer",
   },
   {
     image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
-    type: "sold",
+    name: "cyberwave",
+    owner: {
+      name: "Creator name"
+    },
+    type: "transfer",
   },
   {
     image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
-    type: "sold",
+    name: "cyberwave",
+    owner: {
+      name: "Creator name"
+    },
+    type: "transfer",
   },
   {
     image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
-    type: "sold",
-  },
-];
-
-const Fake_Trending_Data = [
-  {
-    image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
-    order: "10",
-  },
-  {
-    image: "",
-    nft_name: "catchking",
-    creator_name: "Creator name",
-    order: "2",
-  },
-  {
-    image: "",
-    nft_name: "botborgs",
-    creator_name: "Creator name",
-    order: "3",
+    name: "cyberwave",
+    owner: {
+      name: "Creator name"
+    },
+    type: "transfer",
   },
 ];
 
@@ -112,12 +122,19 @@ export default function ActivityFeeds({ onClose }) {
 
   const [selectedTab, setSelectedTab] = React.useState<"feed" | "trending">("feed");
   const [nftList, setNftList] = React.useState<any[]>(Fake_Feeds_Data);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (selectedTab === "feed") {
       setNftList(Fake_Feeds_Data);
     } else {
-      setNftList(Fake_Trending_Data);
+      setLoading(true)
+      getTrendingGameNfts({
+        mode: isProd ? "main" : "test"
+      }).then((res) => {
+        setNftList(res.data);
+      }).catch(() => {})
+      .finally(() => setLoading(false))
     }
   }, [selectedTab]);
 
@@ -156,49 +173,55 @@ export default function ActivityFeeds({ onClose }) {
         </div>
       </div>
       <Box className={classes.content}>
-        {nftList && nftList.length > 0 ? (
-          nftList.map((item, index) => (
-            <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5}>
-              <Box display={"flex"} alignItems={"center"}>
-                <Avatar
-                  size={selectedTab === "feed" ? 32 : 49}
-                  rounded={selectedTab === "feed" ? true : false}
-                  radius={selectedTab === "feed" ? 0 : 5}
-                  image={item?.image || getDefaultAvatar()}
-                />
-                <Box display={"flex"} flexDirection={"column"} ml={1.5}>
-                  <Box className={classes.typo1}>{item.nft_name}</Box>
-                  <Box className={classes.typo2} mt={0.25}>
-                    {item.creator_name}
+        {
+          loading ? (
+            <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
+              <LoadingWrapper loading={loading} />
+            </Box>
+          ) : nftList && nftList.length > 0 ? (
+            nftList.map((item, index) => (
+              <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5}>
+                <Box display={"flex"} alignItems={"center"}>
+                  <Avatar
+                    size={selectedTab === "feed" ? 32 : 49}
+                    rounded={selectedTab === "feed" ? true : false}
+                    radius={selectedTab === "feed" ? 0 : 5}
+                    image={item?.image || getDefaultAvatar()}
+                  />
+                  <Box display={"flex"} flexDirection={"column"} ml={1.5}>
+                    <Box className={classes.typo1}>{item.name}</Box>
+                    <Box className={classes.typo2} mt={0.25}>
+                      {item.owner?.name}
+                    </Box>
                   </Box>
                 </Box>
+                {selectedTab === "feed" ? (
+                  <Box
+                    className={classes.typeTag}
+                    style={{
+                      background:
+                        item.type && item.type.toLowerCase() === "rented"
+                          ? "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)"
+                          : item.type && item.type.toLowerCase() === "sold"
+                          ? "conic-gradient(from 31.61deg at 50% 50%, #91D502 -25.18deg, #E5FF46 15deg, rgba(186, 252, 0, 0.76) 103.13deg, #A3CC00 210deg, #91D502 334.82deg, #E5FF46 375deg)"
+                          : item.type && item.type.toLowerCase() === "blocked"
+                          ? "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)"
+                          : item.type && item.type.toLowerCase() === "transfer"
+                          ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
+                          : "",
+                    }}
+                  >
+                    {item.type}
+                  </Box>
+                ) : (
+                  <Box className={classes.orderTag}>{`# ${item.tokenId}`}</Box>
+                )}
               </Box>
-              {selectedTab === "feed" ? (
-                <Box
-                  className={classes.typeTag}
-                  style={{
-                    background:
-                      item.type && item.type.toLowerCase() === "rented"
-                        ? "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)"
-                        : item.type && item.type.toLowerCase() === "sold"
-                        ? "conic-gradient(from 31.61deg at 50% 50%, #91D502 -25.18deg, #E5FF46 15deg, rgba(186, 252, 0, 0.76) 103.13deg, #A3CC00 210deg, #91D502 334.82deg, #E5FF46 375deg)"
-                        : item.type && item.type.toLowerCase() === "blocked"
-                        ? "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)"
-                        : item.type && item.type.toLowerCase() === "transfer"
-                        ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
-                        : "",
-                  }}
-                >
-                  {item.type}
-                </Box>
-              ) : (
-                <Box className={classes.orderTag}>{`# ${item.order}`}</Box>
-              )}
-            </Box>
-          ))
-        ) : (
-          <Box>NO DATA</Box>
-        )}
+            ))
+          ) : (
+            <Box>NO DATA</Box>
+          )
+        }
       </Box>
     </Box>
   );

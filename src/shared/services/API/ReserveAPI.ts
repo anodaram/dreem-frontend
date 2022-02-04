@@ -1,4 +1,5 @@
 import axios, { CancelToken } from "axios";
+
 import URL from "shared/functions/getURL";
 
 export async function getAllGameNFTs(payload: any,  cancelToken?: CancelToken): Promise<any> {
@@ -6,6 +7,30 @@ export async function getAllGameNFTs(payload: any,  cancelToken?: CancelToken): 
     const response = await axios.get(`${URL()}/metaverseReserve/getAllGameNFTs`, {
       params: payload,
       cancelToken: cancelToken
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
+export async function getPopularGames(payload: any): Promise<any> {
+  try {
+    const response = await axios.get(`${URL()}/metaverseReserve/getPopularGames`, {
+      params: payload
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
+export async function getTrendingGameNfts(payload: any): Promise<any> {
+  try {
+    const response = await axios.get(`${URL()}/metaverseReserve/getTrendingGameNfts`, {
+      params: payload
     });
     return response.data;
   } catch (e) {
