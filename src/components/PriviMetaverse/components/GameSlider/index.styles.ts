@@ -6,13 +6,6 @@ export const GameSliderStyles = makeStyles(theme => ({
     height: "100%",
     position: "relative",
 
-    "& .react-stacked-center-carousel-slide-1": {
-      left: "0px !important",
-    },
-    "& .react-stacked-center-carousel-slide--1": {
-      right: "0px !important",
-      left: "auto !important",
-    },
     "& .swiper-container": {
       width: "100%",
       height: "100%",
@@ -37,7 +30,8 @@ export const GameSliderStyles = makeStyles(theme => ({
     },
 
     "& .swiper-pagination-bullet": {
-      width: "150px",
+      width: (props: any) => (props.gameCount ? `${600 / props.gameCount}px` : "0px"),
+      maxWidth: 150,
       height: "3px",
       opacity: 1,
       borderRadius: 0,

@@ -9,11 +9,12 @@ import { MessageContent } from "./MessageContent";
 import { RootState } from "store/reducers/Reducer";
 import { openMessageBox, sentMessage } from "store/actions/MessageActions";
 import { getMessageBox } from "store/selectors/user";
+import { GLOBAL_CHAT_ROOM } from "shared/constants/constants";
 import URL from "shared/functions/getURL";
 
 import "./MessageBox.css";
 
-export const MessageBox = () => {
+export const MessageBox = ({ roomId = GLOBAL_CHAT_ROOM }: { roomId?: string }) => {
   const dispatch = useDispatch();
 
   const sourceRef = useRef<any>();
@@ -29,9 +30,14 @@ export const MessageBox = () => {
   useEffect(() => {
     if (socket) {
       const userId = localStorage.getItem("userId") || userSelector.id;
+
+      socket.emit("subscribe", roomId);
       socket.off("message");
       socket.on("message", message => {
-        console.log("message", message);
+        if (message.room !== roomId) {
+          return;
+        }
+
         setMessages(msgs => {
           let msgsArray = [...msgs];
           msgsArray.push(message);
@@ -39,6 +45,7 @@ export const MessageBox = () => {
         });
 
         let chatObj = {
+          room: roomId,
           userId: userId,
           lastView: Date.now(),
         };
@@ -92,6 +99,7 @@ export const MessageBox = () => {
         .post(
           `${URL()}/chat/getMessages`,
           {
+            room: roomId,
             pageIndex: isNew ? 0 : pageIndex,
           },
           {
@@ -136,6 +144,7 @@ export const MessageBox = () => {
         setMessages={msgs => setMessages(msgs)}
         getMessages={getMessages}
         loadingMessages={loadingMessages}
+        room={roomId}
       />
     </Box>
   );

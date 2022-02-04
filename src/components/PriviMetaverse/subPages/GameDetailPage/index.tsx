@@ -35,6 +35,9 @@ import { NftStates } from "shared/constants/constants";
 import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
 import TotalStats from "./components/TotalStats";
 import RecentTransactions from "./components/RecentTransactions";
+import { MessageBox } from "components/PriviMetaverse/components/Message/MessageBox";
+import { ExpandIcon } from "../NFTReserves";
+import ActivityFeeds from "../NFTReserves/components/ActivityFeeds";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
 
 const SECONDS_PER_HOUR = 3600;
@@ -120,6 +123,7 @@ export default function GameDetailPage() {
   const [gameInfo, setGameInfo] = React.useState<any>(undefined);
 
   const [nfts, setNfts] = React.useState<any[]>(collectionNFTList || []);
+  const [openSideBar, setOpenSideBar] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [lastId, setLastId] = React.useState<any>(undefined);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
@@ -133,6 +137,7 @@ export default function GameDetailPage() {
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
+  const roomId = React.useMemo(() => gameInfo && `${gameInfo.Slug}-${gameInfo.Address}`, [gameInfo]);
 
   const getTokenList = async () => {
     getAllTokenInfos().then(res => {
@@ -398,311 +403,325 @@ export default function GameDetailPage() {
   };
 
   return (
-    <Box className={classes.root} id="scrollContainer" onScroll={handleScroll}>
-      <Box
-        className={classes.headerBG}
-        style={{
-          width: "100%",
-          height: "100%",
-          backgroundImage: gameInfo?.Image
-            ? `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%), url(${gameInfo.Image})`
-            : `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%)`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundColor: "#151515",
-        }}
-      />
-      <Box className={classes.container}>
-        <Box className={classes.fitContent} mb={isTablet ? 6 : 12}>
-          <Box
-            color="#FFFFFF"
-            mb={4}
-            style={{ width: "fit-content", cursor: "pointer" }}
-            onClick={() => history.goBack()}
-            display="flex"
-            alignItems="center"
-          >
-            <ArrowIcon />
-            <Box ml={1}>Back</Box>
+    <>
+      <Box className={classes.sideBar}>
+        {openSideBar ? (
+          <Box display="flex" flexDirection="column">
+            <ActivityFeeds onClose={() => setOpenSideBar(false)} />
+            <MessageBox roomId={roomId} />
           </Box>
-          <Box display={"flex"} alignItems={"center"} mb={4}>
-            <img
-              src={gameInfo?.Image || getDefaultBGImage()}
-              className={classes.gameInfoImg}
-              alt="game info image"
-            />
-            <Box display={"flex"} flexDirection={"column"} ml={7}>
-              <Box className={classes.title} mb={3}>
-                {gameInfo?.CollectionName}
-              </Box>
-              <Box
-                display={"flex"}
-                alignItems={"center"}
-                justifyContent={"space-between"}
-                maxWidth={580}
-                mb={3}
-              >
-                <Box display={"flex"} alignItems={"center"}>
-                  <Box mr={0.5}>{`Collection ID: ${gameInfo?.AddressShort || "xxx"}`}</Box>
-                  <LinkIcon />
-                </Box>
-                <Box width={"1px"} height={"8px"} bgcolor={"rgba(255, 255, 255, 0.15)"} />
-                <Box display={"flex"} alignItems={"center"}>
-                  <CopyIcon />
-                  <Box ml={0.5}>{`${gameInfo?.Count || 0} minted`}</Box>
-                </Box>
-                <Box width={"1px"} height={"8px"} bgcolor={"rgba(255, 255, 255, 0.15)"} />
-                <Box display={"flex"} alignItems={"center"}>
-                  <ProfileUserIcon />
-                  <Box ml={0.5}>30 owners</Box>
-                </Box>
-              </Box>
-              <Box width={"738px"} height={"2px"} bgcolor="#FFFFFF10" />
-              {gameInfo?.Chain && (
-                <>
-                  <Box display="flex" alignItems="center" my={2}>
-                    <IconButton aria-label="" style={{ cursor: "unset" }}>
-                      <img src={getChainImageUrl(gameInfo?.Chain)} width={"22px"} />
-                    </IconButton>
-                    <span>{gameInfo?.Chain}</span>
-                  </Box>
-                  <Box width={"738px"} height={"2px"} bgcolor="#FFFFFF10" />
-                </>
-              )}
-              <Box className={classes.description}>
-                {gameInfo?.Description && gameInfo?.Description.length > 140
-                  ? gameInfo?.Description.substr(0, 140) + " ..."
-                  : gameInfo?.Description}
-              </Box>
-              <Box className={classes.fullDescItem} onClick={() => setOpenDescription(true)}>
-                <Box mr={"10px"}>Full Description</Box>
-                <DownArrowIcon />
-              </Box>
-              {openDescription && (
-                <Box className={classes.fullDescPanel}>
-                  <Box>{gameInfo?.Description}</Box>
-                  <Box className={classes.fullDescItem} onClick={() => setOpenDescription(false)} mt={3}>
-                    <Box mr={"10px"}>Hide Description</Box>
-                    <UpArrowIcon />
-                  </Box>
-                </Box>
-              )}
-            </Box>
+        ) : (
+          <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
+            <ExpandIcon />
           </Box>
-          <Box display={"flex"} alignItems={"center"} my={3.5}>
-            <Box width={"55%"} mr={1.5}>
-              <TotalStats />
+        )}
+      </Box>
+      <Box className={classes.root} id="scrollContainer" onScroll={handleScroll}>
+        <Box
+          className={classes.headerBG}
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundImage: gameInfo?.Image
+              ? `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%), url(${gameInfo.Image})`
+              : `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%)`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundColor: "#151515",
+          }}
+        />
+        <Box className={classes.container}>
+          <Box className={classes.fitContent} mb={isTablet ? 6 : 12}>
+            <Box
+              color="#FFFFFF"
+              mb={4}
+              style={{ width: "fit-content", cursor: "pointer" }}
+              onClick={() => history.goBack()}
+              display="flex"
+              alignItems="center"
+            >
+              <ArrowIcon />
+              <Box ml={1}>Back</Box>
             </Box>
-            <Box width={"calc(45% - 12px)"}>
-              <RecentTransactions />
-            </Box>
-          </Box>
-          <TabsView
-            tabs={GameDetailTabs}
-            onSelectTab={tab => {
-              setSelectedTab(tab.key);
-            }}
-            extendedClasses={tabsClasses}
-          />
-          {selectedTab === TAB_NFTS && (
-            <>
-              <Box className={classes.tabTitle} mt={4}>
-                Explore NFTs
-              </Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-                width={1}
-                mt={2}
-                flexDirection={isMobile ? "column" : "row"}
-              >
+            <Box display={"flex"} alignItems={"center"} mb={4}>
+              <img
+                src={gameInfo?.Image || getDefaultBGImage()}
+                className={classes.gameInfoImg}
+                alt="game info image"
+              />
+              <Box display={"flex"} flexDirection={"column"} ml={7}>
+                <Box className={classes.title} mb={3}>
+                  {gameInfo?.CollectionName}
+                </Box>
                 <Box
-                  display="flex"
-                  alignItems="flex-end"
-                  flexWrap="wrap"
-                  width={isMobile ? 1 : "auto"}
-                  justifyContent={isMobile ? "flex-end" : "flex-start"}
+                  display={"flex"}
+                  alignItems={"center"}
+                  justifyContent={"space-between"}
+                  maxWidth={580}
+                  mb={3}
                 >
-                  <Select
-                    open={openStatusSelect}
-                    onClose={() => setOpenStatusSelect(false)}
-                    value={filterStatus}
-                    onChange={handleFilterStatus}
-                    className={classes.select}
-                    renderValue={(value: any) => (
-                      <Box display="flex" alignItems="center" onClick={() => setOpenStatusSelect(true)}>
-                        <label>STATUS&nbsp;&nbsp;</label>
-                        <span>{value}</span>
-                      </Box>
-                    )}
-                    MenuProps={{
-                      classes: filterClasses,
-                      anchorOrigin: {
-                        vertical: "bottom",
-                        horizontal: "left",
-                      },
-                      transformOrigin: {
-                        vertical: "top",
-                        horizontal: "left",
-                      },
-                      getContentAnchorEl: null,
-                    }}
-                    IconComponent={ArrowIconComponent(setOpenStatusSelect)}
-                  >
-                    {filterStatusOptions.map((status, index) => (
-                      <MenuItem key={`filter-status-${index}`} value={status}>
-                        {status}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Box>
-                <Box className={classes.optionSection} mt={isMobile ? 1 : 0}>
-                  <div className={classes.filterButtonBox}>
-                    <InputWithLabelAndTooltip
-                      type="text"
-                      inputValue={searchValue}
-                      placeHolder="Search games"
-                      onInputValueChange={e => {
-                        setLastId(undefined);
-                        setSearchValue(e.target.value);
-                        setHasMore(true);
-                        setNfts([]);
-                      }}
-                      style={{
-                        background: "transparent",
-                        margin: 0,
-                        marginRight: 8,
-                        marginLeft: 8,
-                        padding: 0,
-                        border: "none",
-                        height: "auto",
-                      }}
-                      theme="dark"
-                    />
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      style={{ cursor: "pointer" }}
-                    >
-                      <SearchIcon />
-                    </Box>
-                  </div>
-                  <Box
-                    className={classes.controlBox}
-                    ml={4.5}
-                    display="flex"
-                    flexDirection="row"
-                    alignItems="center"
-                  >
-                    <SecondaryButton
-                      className={`${classes.showButton} ${isListView ? classes.showButtonSelected : ""}`}
-                      size="small"
-                      onClick={() => setIsListView(true)}
-                    >
-                      <UnionIcon />
-                    </SecondaryButton>
-                    <PrimaryButton
-                      className={`${classes.showButton} ${!isListView ? classes.showButtonSelected : ""}`}
-                      size="small"
-                      onClick={() => setIsListView(false)}
-                      style={{ marginLeft: 0 }}
-                    >
-                      <DetailIcon />
-                    </PrimaryButton>
+                  <Box display={"flex"} alignItems={"center"}>
+                    <Box mr={0.5}>{`Collection ID: ${gameInfo?.AddressShort || "xxx"}`}</Box>
+                    <LinkIcon />
+                  </Box>
+                  <Box width={"1px"} height={"8px"} bgcolor={"rgba(255, 255, 255, 0.15)"} />
+                  <Box display={"flex"} alignItems={"center"}>
+                    <CopyIcon />
+                    <Box ml={0.5}>{`${gameInfo?.Count || 0} minted`}</Box>
+                  </Box>
+                  <Box width={"1px"} height={"8px"} bgcolor={"rgba(255, 255, 255, 0.15)"} />
+                  <Box display={"flex"} alignItems={"center"}>
+                    <ProfileUserIcon />
+                    <Box ml={0.5}>30 owners</Box>
                   </Box>
                 </Box>
-              </Box>
-
-              <Box
-                className={classes.fitContent}
-                style={{ paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}
-              >
-                <InfiniteScroll
-                  hasChildren={nfts?.length > 0}
-                  dataLength={nfts?.length}
-                  scrollableTarget={"scrollContainer"}
-                  next={loadNfts}
-                  hasMore={hasMore}
-                  initialScrollY={scrollPosition - 100}
-                  loader={
-                    loading &&
-                    isListView && (
-                      <div
-                        style={{
-                          paddingTop: 8,
-                          paddingBottom: 8,
-                        }}
-                      >
-                        {Array(loadingCount)
-                          .fill(0)
-                          .map((_, index) => (
-                            <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
-                              <Skeleton variant="rect" width={60} height={60} />
-                              <Skeleton
-                                variant="rect"
-                                width="40%"
-                                height={24}
-                                style={{ marginLeft: "8px" }}
-                              />
-                              <Skeleton
-                                variant="rect"
-                                width="20%"
-                                height={24}
-                                style={{ marginLeft: "8px" }}
-                              />
-                              <Skeleton
-                                variant="rect"
-                                width="20%"
-                                height={24}
-                                style={{ marginLeft: "8px" }}
-                              />
-                            </Box>
-                          ))}
-                      </div>
-                    )
-                  }
-                >
-                  {isListView ? (
-                    tableData.length > 0 && (
-                      <div className={classes.table}>
-                        <CustomTable
-                          headers={tableHeaders}
-                          rows={tableData}
-                          placeholderText=""
-                          theme="dreem"
-                          onClickRow={handleOpenExplore}
-                        />
-                      </div>
-                    )
-                  ) : (
-                    <Box mt={4} px={1}>
-                      <MasonryGrid
-                        gutter={"40px"}
-                        data={nftListWithSkeleton}
-                        renderItem={item => (
-                          <ExploreCard nft={item} isLoading={Object.entries(item).length === 0} />
-                        )}
-                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                      />
+                <Box width={"738px"} height={"2px"} bgcolor="#FFFFFF10" />
+                {gameInfo?.Chain && (
+                  <>
+                    <Box display="flex" alignItems="center" my={2}>
+                      <IconButton aria-label="" style={{ cursor: "unset" }}>
+                        <img src={getChainImageUrl(gameInfo?.Chain)} width={"22px"} />
+                      </IconButton>
+                      <span>{gameInfo?.Chain}</span>
                     </Box>
-                  )}
-                </InfiniteScroll>
-                {!loading && nfts?.length < 1 && (
-                  <Box textAlign="center" width="100%" mb={10} mt={2}>
-                    No NFTs
+                    <Box width={"738px"} height={"2px"} bgcolor="#FFFFFF10" />
+                  </>
+                )}
+                <Box className={classes.description}>
+                  {gameInfo?.Description && gameInfo?.Description.length > 140
+                    ? gameInfo?.Description.substr(0, 140) + " ..."
+                    : gameInfo?.Description}
+                </Box>
+                <Box className={classes.fullDescItem} onClick={() => setOpenDescription(true)}>
+                  <Box mr={"10px"}>Full Description</Box>
+                  <DownArrowIcon />
+                </Box>
+                {openDescription && (
+                  <Box className={classes.fullDescPanel}>
+                    <Box>{gameInfo?.Description}</Box>
+                    <Box className={classes.fullDescItem} onClick={() => setOpenDescription(false)} mt={3}>
+                      <Box mr={"10px"}>Hide Description</Box>
+                      <UpArrowIcon />
+                    </Box>
                   </Box>
                 )}
               </Box>
-            </>
-          )}
-          {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed Chain={gameInfo.Chain} />}
-          {selectedTab === TAB_OWNERS && <Owners />}
+            </Box>
+            <Box display={"flex"} alignItems={"stretch"} my={3.5}>
+              <Box width={"55%"} mr={1.5}>
+                <TotalStats />
+              </Box>
+              <Box width={"calc(45% - 12px)"}>
+                <RecentTransactions />
+              </Box>
+            </Box>
+            <TabsView
+              tabs={GameDetailTabs}
+              onSelectTab={tab => {
+                setSelectedTab(tab.key);
+              }}
+              extendedClasses={tabsClasses}
+            />
+            {selectedTab === TAB_NFTS && (
+              <>
+                <Box className={classes.tabTitle} mt={4}>
+                  Explore NFTs
+                </Box>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  width={1}
+                  mt={2}
+                  flexDirection={isMobile ? "column" : "row"}
+                >
+                  <Box
+                    display="flex"
+                    alignItems="flex-end"
+                    flexWrap="wrap"
+                    width={isMobile ? 1 : "auto"}
+                    justifyContent={isMobile ? "flex-end" : "flex-start"}
+                  >
+                    <Select
+                      open={openStatusSelect}
+                      onClose={() => setOpenStatusSelect(false)}
+                      value={filterStatus}
+                      onChange={handleFilterStatus}
+                      className={classes.select}
+                      renderValue={(value: any) => (
+                        <Box display="flex" alignItems="center" onClick={() => setOpenStatusSelect(true)}>
+                          <label>STATUS&nbsp;&nbsp;</label>
+                          <span>{value}</span>
+                        </Box>
+                      )}
+                      MenuProps={{
+                        classes: filterClasses,
+                        anchorOrigin: {
+                          vertical: "bottom",
+                          horizontal: "left",
+                        },
+                        transformOrigin: {
+                          vertical: "top",
+                          horizontal: "left",
+                        },
+                        getContentAnchorEl: null,
+                      }}
+                      IconComponent={ArrowIconComponent(setOpenStatusSelect)}
+                    >
+                      {filterStatusOptions.map((status, index) => (
+                        <MenuItem key={`filter-status-${index}`} value={status}>
+                          {status}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Box>
+                  <Box className={classes.optionSection} mt={isMobile ? 1 : 0}>
+                    <div className={classes.filterButtonBox}>
+                      <InputWithLabelAndTooltip
+                        type="text"
+                        inputValue={searchValue}
+                        placeHolder="Search games"
+                        onInputValueChange={e => {
+                          setLastId(undefined);
+                          setSearchValue(e.target.value);
+                          setHasMore(true);
+                          setNfts([]);
+                        }}
+                        style={{
+                          background: "transparent",
+                          margin: 0,
+                          marginRight: 8,
+                          marginLeft: 8,
+                          padding: 0,
+                          border: "none",
+                          height: "auto",
+                        }}
+                        theme="dark"
+                      />
+                      <Box
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        style={{ cursor: "pointer" }}
+                      >
+                        <SearchIcon />
+                      </Box>
+                    </div>
+                    <Box
+                      className={classes.controlBox}
+                      ml={4.5}
+                      display="flex"
+                      flexDirection="row"
+                      alignItems="center"
+                    >
+                      <SecondaryButton
+                        className={`${classes.showButton} ${isListView ? classes.showButtonSelected : ""}`}
+                        size="small"
+                        onClick={() => setIsListView(true)}
+                      >
+                        <UnionIcon />
+                      </SecondaryButton>
+                      <PrimaryButton
+                        className={`${classes.showButton} ${!isListView ? classes.showButtonSelected : ""}`}
+                        size="small"
+                        onClick={() => setIsListView(false)}
+                        style={{ marginLeft: 0 }}
+                      >
+                        <DetailIcon />
+                      </PrimaryButton>
+                    </Box>
+                  </Box>
+                </Box>
+
+                <Box
+                  className={classes.fitContent}
+                  style={{ paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}
+                >
+                  <InfiniteScroll
+                    hasChildren={nfts?.length > 0}
+                    dataLength={nfts?.length}
+                    scrollableTarget={"scrollContainer"}
+                    next={loadNfts}
+                    hasMore={hasMore}
+                    initialScrollY={scrollPosition - 100}
+                    loader={
+                      loading &&
+                      isListView && (
+                        <div
+                          style={{
+                            paddingTop: 8,
+                            paddingBottom: 8,
+                          }}
+                        >
+                          {Array(loadingCount)
+                            .fill(0)
+                            .map((_, index) => (
+                              <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
+                                <Skeleton variant="rect" width={60} height={60} />
+                                <Skeleton
+                                  variant="rect"
+                                  width="40%"
+                                  height={24}
+                                  style={{ marginLeft: "8px" }}
+                                />
+                                <Skeleton
+                                  variant="rect"
+                                  width="20%"
+                                  height={24}
+                                  style={{ marginLeft: "8px" }}
+                                />
+                                <Skeleton
+                                  variant="rect"
+                                  width="20%"
+                                  height={24}
+                                  style={{ marginLeft: "8px" }}
+                                />
+                              </Box>
+                            ))}
+                        </div>
+                      )
+                    }
+                  >
+                    {isListView ? (
+                      tableData.length > 0 && (
+                        <div className={classes.table}>
+                          <CustomTable
+                            headers={tableHeaders}
+                            rows={tableData}
+                            placeholderText=""
+                            theme="dreem"
+                            onClickRow={handleOpenExplore}
+                          />
+                        </div>
+                      )
+                    ) : (
+                      <Box mt={4} px={1}>
+                        <MasonryGrid
+                          gutter={"40px"}
+                          data={nftListWithSkeleton}
+                          renderItem={item => (
+                            <ExploreCard nft={item} isLoading={Object.entries(item).length === 0} />
+                          )}
+                          columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                        />
+                      </Box>
+                    )}
+                  </InfiniteScroll>
+                  {!loading && nfts?.length < 1 && (
+                    <Box textAlign="center" width="100%" mb={10} mt={2}>
+                      No NFTs
+                    </Box>
+                  )}
+                </Box>
+              </>
+            )}
+            {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed />}
+            {selectedTab === TAB_OWNERS && <Owners />}
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }
 

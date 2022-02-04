@@ -5,19 +5,23 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     position: "relative",
     width: "100%",
     height: "100%",
-    backgroundImage: `url(${require("assets/metaverseImages/metaverse_bg.png")})`,
-    backgroundRepeat: "round",
-    overflow: "hidden",
     display: "flex",
     alignItems: "center",
+  },
+  imageBg: {
+    position: "absolute",
+    top: 0,
+    width: "100%",
   },
   sideBar: {
     display: "flex",
     justifyContent: "center",
-    marginTop: 144,
     height: "100%",
     background: "#212121",
     border: "2px solid #151515",
+    zIndex: 2,
+    top: 72,
+    position: "fixed",
   },
   expandIcon: {
     padding: 16,
@@ -404,6 +408,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     textTransform: "uppercase",
     background: "transparent !important",
     color: "#FFFFFF !important",
+    padding: "0 30px !important",
   },
   table: {
     width: "100%",
@@ -440,7 +445,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     backgroundColor: "transparent !important",
     border: "2px solid rgba(255,255,255,0.5) !important",
   },
-  featuredGames: {
+  popularGames: {
     display: "flex",
     alignItems: "center",
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
@@ -457,6 +462,34 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("sm")]: {
       fontSize: 12,
+    },
+  },
+  gameInfoSection: {
+    color: "#E9FF26",
+    padding: "0 90px",
+    borderRight: "2px solid #E9FF2620",
+    textTransform: "uppercase",
+
+    "&:first-child": {
+      paddingLeft: 0,
+    },
+
+    "&:last-child": {
+      borderRight: "none",
+    },
+
+    "& span:first-child": {
+      fontWeight: 700,
+      fontSize: 34,
+      lineHeight: "35.53px",
+      fontFamily: "GRIFTER",
+    },
+    "& span:last-child": {
+      fontWeight: 700,
+      fontSize: 14,
+      lineHeight: "21px",
+      fontFamily: "Rany",
+      opacity: 0.6,
     },
   },
 }));

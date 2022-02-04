@@ -5,11 +5,13 @@ import axios from "axios";
 import { useTheme, useMediaQuery } from "@material-ui/core";
 
 import Box from "shared/ui-kit/Box";
-import { MessageItem } from "./MessageItem";
+import Moment from "react-moment";
 import { socket } from "components/Login/Auth";
+import { MessageItem } from "./MessageItem";
 import { setChat, setMessage } from "store/actions/MessageActions";
 
 import { default as ServerURL } from "shared/functions/getURL";
+import { GLOBAL_CHAT_ROOM } from "shared/constants/constants";
 import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import EmojiPane from "shared/ui-kit/EmojiPane";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
@@ -18,10 +20,9 @@ import useIPFS from "shared/utils-IPFS/useIPFS";
 import { onUploadNonEncrypt } from "shared/ipfs/upload";
 
 import "./MessageBox.css";
-import Moment from "react-moment";
 
 export const MessageFooter = props => {
-  const { messages, setMessages, setMediaUpdate } = props;
+  const { messages, setMessages, setMediaUpdate, room = GLOBAL_CHAT_ROOM } = props;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -56,7 +57,7 @@ export const MessageFooter = props => {
       let infoImage = await onUploadNonEncrypt(file, file => uploadWithNonEncryption(file, false));
 
       axios
-        .post(`${ServerURL()}/chat/addMessagePhoto/${from}`, infoImage)
+        .post(`${ServerURL()}/chat/addMessagePhoto/${room}/${from}`, infoImage)
         .then(response => {
           if (response.data && response.data.success) {
             let msg: any = response.data.data;
@@ -122,7 +123,7 @@ export const MessageFooter = props => {
       let infoImage = await onUploadNonEncrypt(file, file => uploadWithNonEncryption(file, false));
 
       axios
-        .post(`${ServerURL()}/chat/addMessageFile/${from}`, infoImage)
+        .post(`${ServerURL()}/chat/addMessageFile/${room}/${from}`, infoImage)
         .then(response => {
           if (response.data && response.data.success) {
             let msg: any = response.data.data;
@@ -186,7 +187,7 @@ export const MessageFooter = props => {
       let infoImage = await onUploadNonEncrypt(file, file => uploadWithNonEncryption(file, false));
 
       axios
-        .post(`${ServerURL()}/chat/addMessageVideo/${from}`, infoImage)
+        .post(`${ServerURL()}/chat/addMessageVideo/${room}/${from}`, infoImage)
         .then(response => {
           if (response.data && response.data.success) {
             let msg: any = response.data.data;
@@ -263,6 +264,7 @@ export const MessageFooter = props => {
     if (socket && userId && (trimMsg || audioMsg)) {
       setAudioMessage(false);
       let messageObj: any = {
+        room,
         message: trimMsg || audioMsg,
         from: {
           id: userId,
@@ -363,6 +365,7 @@ export const MessageContent = ({
   specialWidthInput,
   getMessages,
   loadingMessages,
+  room,
 }) => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [firstLoading, setFirstLoading] = useState<boolean>(true);
@@ -492,6 +495,7 @@ export const MessageContent = ({
         messages={messages}
         specialWidthInput={specialWidthInput}
         setMessages={msgs => setMessages(msgs)}
+        room={room}
       />
     </div>
   );
