@@ -13,6 +13,32 @@ export const createRealmPageStyles = makeStyles(theme => ({
     backgroundSize: "100% 100%",
     position: "relative",
   },
+  container: {
+    position: "absolute",
+    top: 150,
+    width: "100%",
+    overflowY: "auto",
+    overflowX: "hidden",
+    color: "#ffffff",
+  },
+  fitContent: {
+    maxWidth: 1440,
+    marginLeft: "auto",
+    marginRight: "auto",
+    [theme.breakpoints.down("md")]: {
+      maxWidth: 1280,
+      paddingLeft: 60,
+      paddingRight: 60,
+    },
+    [theme.breakpoints.down("sm")]: {
+      paddingLeft: 32,
+      paddingRight: 32,
+    },
+    [theme.breakpoints.down("xs")]: {
+      paddingLeft: 24,
+      paddingRight: 24,
+    },
+  },
   backBtn: {
     display: "flex",
     alignItems: "center",

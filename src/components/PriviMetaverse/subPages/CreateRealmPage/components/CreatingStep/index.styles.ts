@@ -19,6 +19,10 @@ export const useModalStyles = makeStyles(theme => ({
       border: '1px solid #FFFFFF',
       borderRadius: '100%',
       position: 'relative',
+      [theme.breakpoints.down("xs")]: {
+        width: 24,
+        height: 24,
+      },
       "& .inside": {
         width: '30.83px',
         height: '30.83px',
@@ -33,7 +37,11 @@ export const useModalStyles = makeStyles(theme => ({
         fontFamily: "GRIFTER",
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        [theme.breakpoints.down("xs")]: {
+          width: 20,
+          height: 20,
+        },
       },
       "&.active .inside": {
         background: '#E9FF26',
@@ -60,7 +68,10 @@ export const useModalStyles = makeStyles(theme => ({
       border: '1px solid #FFFFFF',
       "&.hidden": {
         display: "none"
-      }
+      },
+      [theme.breakpoints.down("xs")]: {
+        width : 60,
+      },
     }
   },
   boxContainer: {
@@ -68,9 +79,15 @@ export const useModalStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    cursor: "pointer",
     "& .label": {
       position: 'absolute',
-      top: '50px'
+      top: '50px',
+      textAlign: 'center',
+      width: 110,
+      [theme.breakpoints.down("xs")]: {
+        fontSize: 14,
+      }
     }
   }
 }));
