@@ -22,7 +22,7 @@ import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
 import { setScrollPositionInAllNFT, setTokenList } from "store/actions/MarketPlace";
-
+import { MessageBox } from "components/PriviMetaverse/components/Message/MessageBox";
 import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
 import Tag from "../GameDetailPage/components/Tag";
 import ActivityFeeds from "./components/ActivityFeeds";
@@ -265,12 +265,11 @@ const NFTReserves = () => {
           {openSideBar ? (
             <Box>
               <ActivityFeeds onClose={() => setOpenSideBar(false)} />
+              <MessageBox />
             </Box>
           ) : (
-            <Box className={classes.sideBar}>
-              <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
-                <ExpandIcon />
-              </Box>
+            <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
+              <ExpandIcon />
             </Box>
           )}
         </Box>

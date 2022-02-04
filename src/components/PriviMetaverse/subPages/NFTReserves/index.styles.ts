@@ -4,7 +4,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   main: {
     position: "relative",
     width: "100%",
-    height: "100%"
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
   },
   imageBg: {
     position: 'absolute',
@@ -18,6 +20,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     height: "100%",
     background: "#212121",
     border: "2px solid #151515",
+    zIndex: 1
   },
   expandIcon: {
     padding: 16,
