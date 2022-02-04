@@ -267,13 +267,7 @@ const NFTReserves = () => {
         <Box className={classes.limitedContent}>
           <div className={classes.content} id={"scrollContainer"} onScroll={handleScroll}>
             <div className={classes.titleBar}>
-              <Box
-                display="flex"
-                alignItems="center"
-                width="100%"
-                justifyContent="space-between"
-                maxWidth={1280}
-              >
+              <Box className={classes.titleSection}>
                 <div className={classes.title}>Not your average NFT marketplace</div>
                 <Box display="flex" alignItems="center">
                   <SecondaryButton
@@ -302,7 +296,7 @@ const NFTReserves = () => {
                   )}
                 </Box>
               </Box>
-              <Box height={720} width={1280} position="relative" className={classes.gameslider} mt="38px">
+              <Box className={classes.gameslider}>
                 <img src={require("assets/icons/slider_footer.svg")} className={classes.sliderFooter} />
                 <img src={require("assets/icons/slider_left.svg")} className={classes.sliderLeft} />
                 <img src={require("assets/icons/slider_right.svg")} className={classes.sliderRight} />

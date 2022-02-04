@@ -4,10 +4,14 @@ export const useStyles = makeStyles(theme => ({
   root: {
     background: "#212121",
     border: "2px solid #151515",
-    minWidth: 404,
+    width: 398,
     height: "45%",
     position: "relative",
     padding: "22px 32px 8px 19px",
+    [theme.breakpoints.down("sm")]: {
+      width: 255,
+      padding: "22px 8px 8px",
+    },
   },
   collapseIcon: {
     position: "absolute",
@@ -27,6 +31,12 @@ export const useStyles = makeStyles(theme => ({
     textTransform: "uppercase",
     cursor: "pointer",
     display: "flex",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      width: 235,
+      height: 88,
+      marginTop: 20,
+    },
   },
   switchButton: {
     display: "flex",
@@ -36,11 +46,18 @@ export const useStyles = makeStyles(theme => ({
     height: 33,
     borderRadius: 2,
     paddingTop: 4,
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
   },
   content: {
     marginTop: 21,
     overflowY: "scroll",
     height: 310,
+    [theme.breakpoints.down("sm")]: {
+      height: 245,
+      marginTop: 12,
+    },
   },
   typeTag: {
     borderRadius: 4,

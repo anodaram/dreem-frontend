@@ -87,10 +87,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       paddingLeft: "20px",
       paddingRight: "20px",
-    },
-    [theme.breakpoints.down("sm")]: {
-      paddingLeft: "16px",
-      paddingRight: "16px",
+      maxWidth: 670,
     },
     "& .infinite-scroll-component": {
       overflow: "visible !important",
@@ -103,9 +100,22 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     justifyContent: "center",
     flexDirection: "column",
     padding: "0 35px",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: 670,
+    },
     [theme.breakpoints.down("xs")]: {
       flexDirection: "column",
       alignItems: "flex-start",
+    },
+  },
+  titleSection: {
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+    justifyContent: "space-between",
+    maxWidth: 1280,
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: 670,
     },
   },
   title: {
@@ -170,9 +180,16 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     marginTop: "35px",
   },
   gameslider: {
+    height: 720,
+    maxWidth: 1280,
+    marginTop: 38,
+    position: "relative",
     border: "2px solid transparent",
     borderImageSource: "linear-gradient(180deg, rgba(255, 255, 255, 0) 42%, #E9FF26 100%)",
     borderImageSlice: "30%",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: 670,
+    },
   },
   gameContent: {
     backgroundImage: "linear-gradient(to top, rgba(0,0,0,1), rgba(255,0,0,0))",

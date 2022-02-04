@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import axios from "axios";
+
+import { useTheme, useMediaQuery } from "@material-ui/core";
 
 import Box from "shared/ui-kit/Box";
 import { MessageItem } from "./MessageItem";
 import { socket } from "components/Login/Auth";
-import { RootState } from "store/reducers/Reducer";
 import { setChat, setMessage } from "store/actions/MessageActions";
 
 import { default as ServerURL } from "shared/functions/getURL";
-import { RecordingBox } from "shared/ui-kit/RecordingBox";
 import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import EmojiPane from "shared/ui-kit/EmojiPane";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
@@ -22,6 +22,10 @@ import Moment from "react-moment";
 
 export const MessageFooter = props => {
   const { messages, setMessages, setMediaUpdate } = props;
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
   const dispatch = useDispatch();
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
@@ -37,6 +41,12 @@ export const MessageFooter = props => {
   useEffect(() => {
     setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");
   }, []);
+
+  useEffect(() => {
+    if (!showEmoji && inputRef && inputRef.current) {
+      inputRef.current.click();
+    }
+  }, [showEmoji]);
 
   const onChangeMessagePhoto = async (file: any) => {
     try {
@@ -247,21 +257,6 @@ export const MessageFooter = props => {
     }
   };
 
-  const deleteVoiceMessage = () => {
-    setAudioMessage(false);
-  };
-
-  function b64toBlob(dataURI) {
-    let byteString = atob(dataURI.split(",")[1]);
-    let ab = new ArrayBuffer(byteString.length);
-    let ia = new Uint8Array(ab);
-
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ab], { type: "image/jpeg" });
-  }
-
   const sendMessage = (audioMsg?: string) => {
     const trimMsg = msg.replace(/^\s+|\s+$/g, "");
     let userId: any = localStorage.getItem("userId");
@@ -270,7 +265,7 @@ export const MessageFooter = props => {
       let messageObj: any = {
         message: trimMsg || audioMsg,
         from: {
-          id: userId
+          id: userId,
         },
         created: Date.now(),
       };
@@ -300,12 +295,6 @@ export const MessageFooter = props => {
     setMsg(msg + emoji);
     setShowEmoji(false);
   };
-
-  useEffect(() => {
-    if (!showEmoji && inputRef && inputRef.current) {
-      inputRef.current.click();
-    }
-  }, [showEmoji]);
 
   return (
     <div className="message-footer1">
@@ -346,20 +335,22 @@ export const MessageFooter = props => {
               <img src={require("assets/icons/send_icon.svg")} alt="" />
             </Box>
           </Box>
-          <Box display="flex" alignItems="center" marginTop="10px" height="fit-content">
-            <Box className="emoji-icon" onClick={() => setShowEmoji(!showEmoji)} component="span">
-              <img src={require("assets/icons/emoji_icon.png")} ref={emojiRef} />
+          {!isMobile && !isTablet && (
+            <Box display="flex" alignItems="center" marginTop="10px" height="fit-content">
+              <Box className="emoji-icon" onClick={() => setShowEmoji(!showEmoji)} component="span">
+                <img src={require("assets/icons/emoji_icon.png")} ref={emojiRef} />
+              </Box>
+              {showEmoji && (
+                <EmojiPane
+                  open={showEmoji}
+                  anchorEl={emojiRef.current}
+                  handleClose={() => setShowEmoji(false)}
+                  addEmoji={addEmoji}
+                />
+              )}
+              <FileAttachment setStatus={setStatus} onFileChange={onFileChange} />
             </Box>
-            {showEmoji && (
-              <EmojiPane
-                open={showEmoji}
-                anchorEl={emojiRef.current}
-                handleClose={() => setShowEmoji(false)}
-                addEmoji={addEmoji}
-              />
-            )}
-            <FileAttachment setStatus={setStatus} onFileChange={onFileChange} />
-          </Box>
+          )}
         </Box>
       )}
     </div>
