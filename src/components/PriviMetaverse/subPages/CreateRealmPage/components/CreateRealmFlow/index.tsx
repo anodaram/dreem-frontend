@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 
-import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem, Button, TextField, InputAdornment } from "@material-ui/core";
+import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem, Button, TextField, InputAdornment, Hidden, Grid } from "@material-ui/core";
 
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
@@ -82,7 +82,7 @@ const CreateRealmFlow = ({
     if (step == 1) {
       handleCancel();
       return;
-    } 
+    }
     setStep(prev => prev - 1);
   };
   const handleNext = () => {
@@ -99,7 +99,7 @@ const CreateRealmFlow = ({
       case 4:
         steps[step - 1].completed = privacy === 'public' || collectionInfos.every(c => c.address && c.from && c.to) ? true : false;
         break;
-      
+
       default:
         break;
     }
@@ -185,10 +185,29 @@ const CreateRealmFlow = ({
   return (
     <>
       <div className={classes.otherContent}>
-        <div className={classes.typo1}>
-          <AssetIcon />
-          Creating New Realm
-        </div>
+        <Hidden smUp>
+          <Box
+            className={classes.backArrow}
+            onClick={() => { }}
+          >
+            <ArrowIcon />
+            <Box ml={1}>BACK</Box>
+          </Box>
+        </Hidden>
+        <Box className={classes.headTitle}>
+          <Hidden xsDown>
+            <Box
+              className={classes.backArrow}
+              onClick={() => { }}
+            >
+              <ArrowIcon />
+              <Box ml={1}>BACK</Box>
+            </Box>
+          </Hidden>
+          <div className={classes.typo1}>
+            Create New Realm
+          </div>
+        </Box>
         <CreatingStep curStep={step} status={steps} handleGoStep={handleGoStep} />
         {step == 1 && (
           <>
@@ -413,7 +432,57 @@ const CreateRealmFlow = ({
                 <Box className={classes.typo3} mb={3}>
                   Members of the realm and creators of different assets in the realm, be it extensions of materials and so on, can help define the financials and other important decisions of the Realm through voting and consensus.
                 </Box>
-                <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+                <Grid container spacing={4}>
+                  <Grid item sm={6} xs={12}>
+                    <Box width="100%">
+                      <Box display="flex" alignItems="center" justifyContent="space-between">
+                        <Box className={classes.itemTitle} mb={1}>
+                          Voting consensus
+                        </Box>
+                        <InfoTooltip tooltip={"Please give a Voting consensus."} />
+                      </Box>
+                      <Box className={classes.inputBigBox}>
+                        <TextField
+                          placeholder="00"
+                          value={votingConsensus}
+                          onChange={e => setVotingConsensus(e.target.value)}
+                          InputProps={{
+                            disableUnderline: true,
+                            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            style: {
+                              width: 70,
+                            }
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                  </Grid>
+                  <Grid item sm={6} xs={12}>
+                    <Box width="100%">
+                      <Box display="flex" alignItems="center" justifyContent="space-between">
+                        <Box className={classes.itemTitle} mb={1}>
+                          creator voting power
+                        </Box>
+                        <InfoTooltip tooltip={"Please give a Voting consensus."} />
+                      </Box>
+                      <Box className={classes.inputBigBox}>
+                        <TextField
+                          placeholder="00"
+                          value={votingPower}
+                          onChange={e => setVotingPower(e.target.value)}
+                          InputProps={{
+                            disableUnderline: true,
+                            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                            style: {
+                              width: 70,
+                            }
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                  </Grid>
+                </Grid>
+                {/* <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
                   <Box width="100%">
                     <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
                       <Box className={classes.itemTitle} mb={1}>
@@ -458,7 +527,7 @@ const CreateRealmFlow = ({
                       />
                     </Box>
                   </Box>
-                </Box>
+                </Box> */}
               </div>
             </Box>
           </>
@@ -624,6 +693,12 @@ const CreateRealmFlow = ({
     </>
   );
 };
+
+const ArrowIcon = ({ color = "white" }) => (
+  <svg width="27" height="16" viewBox="0 0 27 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M1.59766 7.77148H25.0781M1.59766 7.77148L7.59766 1.77148M1.59766 7.77148L7.59765 13.7715" stroke="white" stroke-width="2" stroke-linecap="square" />
+  </svg>
+);
 
 const IOSSwitch = styled((props: SwitchProps) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
