@@ -26,7 +26,6 @@ import { setScrollPositionInAllNFT, setTokenList } from "store/actions/MarketPla
 import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
 import Tag from "../GameDetailPage/components/Tag";
 import ActivityFeeds from "./components/ActivityFeeds";
-import { MessageBox } from "components/PriviMetaverse/components/Message/MessageBox";
 import { useNFTOptionsStyles } from "./index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -264,13 +263,14 @@ const NFTReserves = () => {
         <img src={require("assets/metaverseImages/nft_reserve_bg.png")} className={classes.imageBg} />
         <Box className={classes.sideBar}>
           {openSideBar ? (
-            <Box display="flex" flexDirection="column">
+            <Box>
               <ActivityFeeds onClose={() => setOpenSideBar(false)} />
-              <MessageBox />
             </Box>
           ) : (
-            <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
-              <ExpandIcon />
+            <Box className={classes.sideBar}>
+              <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
+                <ExpandIcon />
+              </Box>
             </Box>
           )}
         </Box>
@@ -299,7 +299,7 @@ const NFTReserves = () => {
                       size="medium"
                       className={classes.primaryButton}
                       onClick={() => {
-                        history.push("/P2E/manage_nft");
+                        history.push("/gameNFTS/manage_nft");
                       }}
                       style={{
                         width: isMobile ? "100%" : "auto",
@@ -591,7 +591,7 @@ const NFTReserves = () => {
                     <SecondaryButton
                       size="medium"
                       className={classes.showAll}
-                      onClick={() => history.push("/P2E/explorer")}
+                      onClick={() => history.push('/gameNFTS/explorer')}
                     >
                       Show All
                     </SecondaryButton>
