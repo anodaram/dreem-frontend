@@ -490,7 +490,7 @@ export default function GameDetailPage() {
               )}
             </Box>
           </Box>
-          <Box display={"flex"} alignItems={"center"} my={3.5}>
+          <Box display={"flex"} alignItems={"stretch"} my={3.5}>
             <Box width={"55%"} mr={1.5}>
               <TotalStats />
             </Box>
@@ -698,7 +698,7 @@ export default function GameDetailPage() {
               </Box>
             </>
           )}
-          {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed Chain={gameInfo.Chain} />}
+          {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed />}
           {selectedTab === TAB_OWNERS && <Owners />}
         </Box>
       </Box>
