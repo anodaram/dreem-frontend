@@ -12,7 +12,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     display: "flex",
     justifyContent: "center",
     marginTop: 72,
-    height: "100%",
+    height: "calc(100vh - 72px)",
     background: "#212121",
     border: "2px solid #151515",
     zIndex: 1,
