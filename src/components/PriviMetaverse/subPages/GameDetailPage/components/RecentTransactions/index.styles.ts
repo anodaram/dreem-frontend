@@ -8,6 +8,7 @@ export const useStyles = makeStyles(theme => ({
     padding: "27px 25px",
     width: "100%",
     maxHeight: 319,
+    flex: 1,
   },
   content: {
     marginTop: 16,

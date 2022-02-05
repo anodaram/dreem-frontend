@@ -14,7 +14,7 @@ import URL from "shared/functions/getURL";
 
 import "./MessageBox.css";
 
-export const MessageBox = ({ roomId }: { roomId: string }) => {
+export const MessageBox = ({ roomId }: { roomId?: string }) => {
   const dispatch = useDispatch();
 
   const sourceRef = useRef<any>();
@@ -140,9 +140,6 @@ export const MessageBox = ({ roomId }: { roomId: string }) => {
       height="50%"
       overflow="hidden"
     >
-      <Box display="flex" bgcolor="#151515" p="8px" width="fit-content" mx="19px" mt="22px">
-        <Box className={"tab selected"}>Live Chat</Box>
-      </Box>
       <MessageContent
         specialWidthInput={true}
         messages={messages}
