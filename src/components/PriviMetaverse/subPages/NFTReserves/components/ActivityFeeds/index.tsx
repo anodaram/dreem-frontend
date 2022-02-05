@@ -11,6 +11,7 @@ import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import { useStyles } from "./index.styles";
 import { getNftGameFeed } from "shared/services/API/DreemAPI";
 import { listenerSocket } from "components/Login/Auth";
+import { getAbbrAddress } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -202,7 +203,7 @@ export default function ActivityFeeds({ onClose }) {
                   <Box display={"flex"} flexDirection={"column"} ml={1.5}>
                     <Box className={classes.typo1}>{item.name}</Box>
                     <Box className={classes.typo2} mt={0.25}>
-                      {item.owner?.name}
+                      {item.owner?.name || getAbbrAddress(item.currentOwner, 7, 2)}
                     </Box>
                   </Box>
                 </Box>
