@@ -512,7 +512,7 @@ export default function GameDetailPage() {
               <Box width={"55%"} mr={1.5}>
                 <TotalStats />
               </Box>
-              <Box width={"calc(45% - 12px)"}>
+              <Box width={"calc(45% - 12px)"} display="flex">
                 <RecentTransactions />
               </Box>
             </Box>
