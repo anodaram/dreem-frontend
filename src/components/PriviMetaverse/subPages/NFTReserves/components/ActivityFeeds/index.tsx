@@ -19,6 +19,7 @@ export default function ActivityFeeds({ onClose }) {
   const classes = useStyles();
 
   const theme = useTheme();
+  const isBigTablet = useMediaQuery(theme.breakpoints.down("md"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
@@ -109,7 +110,7 @@ export default function ActivityFeeds({ onClose }) {
 
   return (
     <Box className={classes.root}>
-      {!isTablet && (
+      {!isBigTablet && (
         <div className={classes.collapseIcon} onClick={onClose}>
           <CollapseIcon />
         </div>
@@ -183,37 +184,32 @@ export default function ActivityFeeds({ onClose }) {
                   {item.type}
                 </Box>
               </Box>
-            ))) : (<Box>NO DATA</Box>))
-          : (loading ? (
-            <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
-              <LoadingWrapper loading={loading} />
-            </Box>
-          ) : nftList && nftList.length > 0 ?
-            (
-              nftList.map((item, index) =>
-              (
-                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5}>
-                  <Box display={"flex"} alignItems={"center"}>
-                    <Avatar
-                      size={49}
-                      rounded={false}
-                      radius={5}
-                      image={item?.image || getDefaultAvatar()}
-                    />
-                    <Box display={"flex"} flexDirection={"column"} ml={1.5}>
-                      <Box className={classes.typo1}>{item.name}</Box>
-                      <Box className={classes.typo2} mt={0.25}>
-                        {item.owner?.name || getAbbrAddress(item.currentOwner, 7, 2)}
-                      </Box>
-                    </Box>
+            ))
+          ) : (
+            <Box>NO DATA</Box>
+          )
+        ) : loading ? (
+          <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
+            <LoadingWrapper loading={loading} />
+          </Box>
+        ) : nftList && nftList.length > 0 ? (
+          nftList.map((item, index) => (
+            <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5}>
+              <Box display={"flex"} alignItems={"center"}>
+                <Avatar size={49} rounded={false} radius={5} image={item?.image || getDefaultAvatar()} />
+                <Box display={"flex"} flexDirection={"column"} ml={1.5}>
+                  <Box className={classes.typo1}>{item.name}</Box>
+                  <Box className={classes.typo2} mt={0.25}>
+                    {item.owner?.name || getAbbrAddress(item.currentOwner, 7, 2)}
                   </Box>
-                  <Box className={classes.orderTag}>{`# ${item.tokenId}`}</Box>
                 </Box>
-              ))
-            )
-          : (
+              </Box>
+              <Box className={classes.orderTag}>{`# ${item.tokenId}`}</Box>
+            </Box>
+          ))
+        ) : (
           <Box>NO DATA</Box>
-        ))}
+        )}
       </Box>
     </Box>
   );

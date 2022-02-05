@@ -91,7 +91,10 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       paddingLeft: "0px",
       paddingRight: "0px",
-      // maxWidth: 480,
+      maxWidth: 480,
+    },
+    [theme.breakpoints.down("xs")]: {
+      maxWidth: 350,
     },
   },
   titleBar: {
@@ -121,7 +124,10 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       maxWidth: (props: any) => (props.openSideBar ? 1000 : 1280),
     },
     [theme.breakpoints.down("sm")]: {
-      // maxWidth: 480,
+      maxWidth: 480,
+    },
+    [theme.breakpoints.down("xs")]: {
+      maxWidth: 350,
     },
   },
   title: {
@@ -157,6 +163,18 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       paddingBottom: 8,
     },
   },
+  headerButtonGroup: {
+    display: "flex",
+    alignItems: "center",
+    marginTop: 0,
+    [theme.breakpoints.down("md")]: {
+      marginTop: 16,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+      flexDirection: "column",
+    },
+  },
   primaryButton: {
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
     borderRadius: "5px !important",
@@ -171,7 +189,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("xs")]: {
       fontSize: "12px !important",
-      width: "193px !important",
+      width: "100% !important",
     },
   },
   gamePlayButton: {
@@ -196,7 +214,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   gameslider: {
     height: 720,
     maxWidth: 1280,
-    width: '100%',
+    width: "100%",
     marginTop: 38,
     position: "relative",
     border: "2px solid transparent",
@@ -206,8 +224,11 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       maxWidth: (props: any) => (props.openSideBar ? 1000 : 1280),
     },
     [theme.breakpoints.down("sm")]: {
-      // maxWidth: 480,
+      maxWidth: 480,
       height: 330,
+    },
+    [theme.breakpoints.down("xs")]: {
+      maxWidth: 350,
     },
   },
   gameContent: {
@@ -231,7 +252,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   sliderFooter: {
     position: "absolute",
     bottom: "-38px",
-    width: '100%'
+    width: "100%",
   },
   sliderLeft: {
     position: "absolute",
@@ -328,9 +349,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       [theme.breakpoints.down(1200)]: {
         right: 60,
       },
-      [theme.breakpoints.down(769)]: {
-        // display: "none",
-      },
+      [theme.breakpoints.down(769)]: {},
     },
     "& button.rec-arrow-right": {
       position: "absolute",
@@ -349,9 +368,6 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       width: "calc(100% + 24px)",
       "& .rec-carousel-item": {
         "& > .rec-item-wrapper": {
-          // minWidth: 330,
-          // maxWidth: 370,
-          // width: "unset",
           "& > div": {
             boxShadow: "none",
           },
@@ -495,6 +511,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       lineHeight: "21px",
       fontFamily: "Rany",
       opacity: 0.6,
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: 0,
     },
   },
 }));
