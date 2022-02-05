@@ -29,12 +29,8 @@ export default function NFTCard(props) {
 
   const [openContentPreview, setOpenContentPreview] = useState<boolean>(false);
 
-  const handleOpenDetail = () => {
-    if (props.item?.worldIsExtension || props.popup) {
-      setOpenContentPreview(true);
-    } else {
-      history.push(`/realms/${props?.item?.id}`);
-    }
+  const handleOpen = (id) => {
+    history.push(`/unfinished_mint/${id}`);
   };
 
   const handleClose = e => {
@@ -70,7 +66,7 @@ export default function NFTCard(props) {
               <div>{nft.item.collectionName}</div>
               <div>{nft.chain == "POLYGON" && <PolygonIcon/>}</div>
               <div><Box className={classes.status}>{nft.erc721MintedCount}/{nft.erc721TotalSupply}</Box></div>
-              <div><PrimaryButton className={classes.button} size="medium">continue minting</PrimaryButton></div>
+              <div><PrimaryButton className={classes.button} size="medium" onClick={()=>handleOpen(nft.item.updateHash)}>continue minting</PrimaryButton></div>
             </div>
           ))}
         </>

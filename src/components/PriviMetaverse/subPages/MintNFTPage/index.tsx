@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 
 import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled } from "@material-ui/core";
@@ -11,24 +11,16 @@ import { Modal, PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import { BlockchainNets } from "shared/constants/constants";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
-import { useModalStyles } from "./index.styles";
+import { mintNFTPageStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 import ContentProcessingOperationModal from "components/PriviMetaverse/modals/ContentProcessingOperationModal";
 
-const MintEditions = ({
-  amount,
-  hashId,
-  handleCancel,
-  handleMint
-}: {
-  amount: string,
-  hashId: string,
-  handleCancel: () => void;
-  handleMint: (amount: any) => void;
-}) => {
+export default function MintNFTPage() {
+
   const history = useHistory();
-  const classes = useModalStyles();
+  const classes = mintNFTPageStyles();
   const { showAlertMessage } = useAlertMessage();
+  const { id: hash } = useParams<{ id: string }>();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -36,44 +28,48 @@ const MintEditions = ({
   const [bunches, setBunches] = useState<any[]>([]);
   const [uploadSuccess, setUploadSuccess] = useState<any>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
-
   React.useEffect(() => {
-    const steps: Array<{}> = [{key: 0, amount: 0, status: null}];
-    for(var i = 1;i <= Math.ceil((Number(amount) / UnitEdition)); i++){
-      if(Number(amount) >= i * UnitEdition){
-        const batch = {key: i, amount: i*UnitEdition, status: null}
-        steps.push(batch)
-      } else{
-        const batch = {key: i, amount: Number(amount), status: null}
-        steps.push(batch)
+    MetaverseAPI.getUnfinishedNFT(hash)
+    .then(res => {
+      console.log(res)
+      if (res.success) {
+        const item = res.data;
       }
-    }
-    console.log(steps)
-    setBunches(steps)
-  }, [amount]);
+    })
+  }, []);
+  // React.useEffect(() => {
+  //   const steps: Array<{}> = [{key: 0, amount: 0, status: null}];
+  //   for(var i = 1;i <= Math.ceil((Number(amount) / UnitEdition)); i++){
+  //     if(Number(amount) >= i * UnitEdition){
+  //       const batch = {key: i, amount: i*UnitEdition, status: null}
+  //       steps.push(batch)
+  //     } else{
+  //       const batch = {key: i, amount: Number(amount), status: null}
+  //       steps.push(batch)
+  //     }
+  //   }
+  //   console.log(steps)
+  //   setBunches(steps)
+  // }, [amount]);
   const handleMintBatch = async (i, amount) => {
-    const res = await handleMint(amount)
-    console.log(res)
-    bunches.map((item, index)=>{
-      if(item.key == i) {
-        //@ts-ignore
-        if(res){
-          item.status = true;
-        } else {
-          item.status = false;
-        }
-      }
-    });
-
-    // const res = await handleMint(amount);
+    // const res = await handleMint(amount)
     // console.log(res)
     // bunches.map((item, index)=>{
     //   if(item.key == i) {
-    //     // if(!res)
-    //     item.status = true;
+    //     //@ts-ignore
+    //     if(res){
+    //       item.status = true;
+    //     } else {
+    //       item.status = false;
+    //     }
     //   }
-    // })
+    // });
   }
+
+  const handleCancel = () => {
+
+  }
+
   return (
     isUploading ? (
       <ContentProcessingOperationModal open={isUploading} txSuccess={uploadSuccess} onClose={()=>{setIsUploading(false)}}/>
@@ -121,6 +117,5 @@ const MintEditions = ({
       </Box>
     </div>
   );
-};
+}
 
-export default MintEditions;

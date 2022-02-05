@@ -332,7 +332,7 @@ const CreateAssetFlow = ({
       );
       if (resRoyalty.success) {
         let tokenIds: any = [];
-        for(let i = 0; i < resRoyalty.mintAmount; i++){
+        for(let i = 0; i < resRoyalty.amount; i++){
           tokenIds.push(Number(resRoyalty.initialId) + i)
         }
 

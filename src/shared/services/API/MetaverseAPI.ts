@@ -166,6 +166,20 @@ export const getUnfinishedNFTs = async () => {
     throw error;
   }
 };
+export const getUnfinishedNFT = async (hash) => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.get(`${METAVERSE_URL()}/web/asset/${hash}/mint/batch/`, config);
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const uploadWorld = async payload => {
   try {
