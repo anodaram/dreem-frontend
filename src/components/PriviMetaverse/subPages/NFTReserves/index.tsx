@@ -86,7 +86,6 @@ const NFTReserves = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { isSignedin } = useAuth();
-  const classes = useNFTOptionsStyles();
   const carouselRef = useRef<any>();
 
   const [popularGames, setPopularGames] = useState<any[]>([]);
@@ -104,10 +103,12 @@ const NFTReserves = () => {
   const width = useWindowDimensions().width;
 
   const theme = useTheme();
-  const isNormalScreen = useMediaQuery(theme.breakpoints.down(1800));
-  const isTablet = useMediaQuery(theme.breakpoints.down(1420));
-  const isNarrow = useMediaQuery(theme.breakpoints.down(860));
+  const isNormalScreen = useMediaQuery(theme.breakpoints.between(1421, 1800));
+  const isTablet = useMediaQuery(theme.breakpoints.between(861, 1420));
+  const isNarrow = useMediaQuery(theme.breakpoints.between(651, 860));
   const isMobile = useMediaQuery(theme.breakpoints.down(650));
+
+  const classes = useNFTOptionsStyles({ openSideBar });
 
   const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : 4;
   const loadingCount = React.useMemo(
@@ -154,7 +155,9 @@ const NFTReserves = () => {
 
       const updateMarketPlaceFeedHandler = _transaction => {
         if (transactions && transactions.length) {
-          const _transactions = transactions.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
+          const _transactions = transactions.map(transaction =>
+            _transaction.id === transaction.id ? _transaction : transaction
+          );
           setTransactions(_transactions);
         }
       };
@@ -304,7 +307,14 @@ const NFTReserves = () => {
         },
         {
           cell: (
-            <PrimaryButton onClick={() => { goToNft(row); }} size="medium" className={classes.viewButton} isRounded>
+            <PrimaryButton
+              onClick={() => {
+                goToNft(row);
+              }}
+              size="medium"
+              className={classes.viewButton}
+              isRounded
+            >
               View
             </PrimaryButton>
           ),
@@ -348,7 +358,7 @@ const NFTReserves = () => {
             <div className={classes.titleBar}>
               <Box className={classes.titleSection}>
                 <div className={classes.title}>Not your average NFT marketplace</div>
-                <Box display="flex" alignItems="center" mt={isTablet ? 2 : 0}>
+                <Box display="flex" alignItems="center" mt={isNormalScreen ? 2 : 0}>
                   <SecondaryButton
                     size="medium"
                     className={classes.primaryButton}
