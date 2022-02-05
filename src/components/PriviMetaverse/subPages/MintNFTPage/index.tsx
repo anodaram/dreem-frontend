@@ -1,12 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
+import Web3 from "web3";
 
 import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled } from "@material-ui/core";
 
+import { useSelector } from "react-redux";
+import { RootState } from "store/reducers/Reducer";
+import { switchNetwork } from "shared/functions/metamask";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { UnitEdition } from "shared/constants/constants";
+import { onUploadNonEncrypt } from "shared/ipfs/upload";
 import { Modal, PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import { BlockchainNets } from "shared/constants/constants";
@@ -14,13 +19,18 @@ import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { mintNFTPageStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 import ContentProcessingOperationModal from "components/PriviMetaverse/modals/ContentProcessingOperationModal";
+import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProgressModal";
 
 export default function MintNFTPage() {
 
   const history = useHistory();
   const classes = mintNFTPageStyles();
+  const user: any = useSelector((state: RootState) => state.user);
   const { showAlertMessage } = useAlertMessage();
+  const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
   const { id: hash } = useParams<{ id: string }>();
+  const { activate, chainId, account, library } = useWeb3React();
+  const [chain, setChain] = useState<string>(BlockchainNets[0].value);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -28,46 +38,193 @@ export default function MintNFTPage() {
   const [bunches, setBunches] = useState<any[]>([]);
   const [uploadSuccess, setUploadSuccess] = useState<any>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [batch, setBatch] = useState<any>();
+  const [amount, setAmount] = useState<any>();
+  const [uri, setUri] = useState<any>();
+  const [finishedAmount, setFinishedAmount] = useState<any>();
+  const [networkName, setNetworkName] = useState<string>("");
+  // Transaction Modal
+  const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
+  const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
+  const [txHash, setTxHash] = useState<string>("");
   React.useEffect(() => {
     MetaverseAPI.getUnfinishedNFT(hash)
     .then(res => {
       console.log(res)
       if (res.success) {
         const item = res.data;
+        setBatch(item)
+        setAmount(item.erc721TotalSupply)
+        setFinishedAmount(item.erc721MintedCount)
+        setUri(item.item.erc721Metadata)
       }
     })
   }, []);
-  // React.useEffect(() => {
-  //   const steps: Array<{}> = [{key: 0, amount: 0, status: null}];
-  //   for(var i = 1;i <= Math.ceil((Number(amount) / UnitEdition)); i++){
-  //     if(Number(amount) >= i * UnitEdition){
-  //       const batch = {key: i, amount: i*UnitEdition, status: null}
-  //       steps.push(batch)
-  //     } else{
-  //       const batch = {key: i, amount: Number(amount), status: null}
-  //       steps.push(batch)
-  //     }
-  //   }
-  //   console.log(steps)
-  //   setBunches(steps)
-  // }, [amount]);
+  React.useEffect(() => {
+    const steps: Array<{}> = [{key: 0, amount: 0, status: null}];
+    for(var i = 1;i <= Math.ceil((Number(amount) / UnitEdition)); i++){
+      if(Number(amount) >= i * UnitEdition){
+        const status = i*UnitEdition <= finishedAmount ? true : null
+        const batch = {key: i, amount: i*UnitEdition, status: status}
+        steps.push(batch)
+      } else{
+        const status =  Number(amount) <= finishedAmount ? true : null
+        const batch = {key: i, amount: Number(amount), status: status}
+        steps.push(batch)
+      }
+    }
+    console.log(finishedAmount, steps)
+    setBunches(steps)
+  }, [amount, finishedAmount]);
+
   const handleMintBatch = async (i, amount) => {
-    // const res = await handleMint(amount)
-    // console.log(res)
-    // bunches.map((item, index)=>{
-    //   if(item.key == i) {
-    //     //@ts-ignore
-    //     if(res){
-    //       item.status = true;
-    //     } else {
-    //       item.status = false;
-    //     }
-    //   }
-    // });
+    const res = mintMultipleEdition(amount)
+    bunches.map((item, index)=>{
+      if(item.key == i) {
+        //@ts-ignore
+        if(res){
+          item.status = true;
+        } else {
+          item.status = false;
+        }
+      }
+    });
   }
 
-  const handleCancel = () => {
+  const mintMultipleEdition = async (mintAmount: number) => {
+    let collectionData = await MetaverseAPI.getCollection(batch.item.collectionId);
+    collectionData = collectionData.data
+    let metaData;
+    if(!uri){
+      let metadata = await getMetadata(batch.item.updateHash);
+      metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
+      const metadatauri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
+      setUri(metadatauri)
+      console.log(metadatauri);
+    }
+    let isDraft = collectionData?.kind == "DRAFT" ? true : false;
+    console.log(collectionData)
+    let collectionAddr = collectionData.address;
+    let URI = uri ? uri : metaData.newFileCID
+    console.log(uri, URI)
+    const targetChain = BlockchainNets.find(net => net.value === chain);
+    setNetworkName(targetChain.name);
+    if (chainId && chainId !== targetChain?.chainId) {
+      const isHere = await switchNetwork(targetChain?.chainId || 0);
+      if (!isHere) {
+        showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+        return;
+      }
+    }
+    if(!library) {
+      showAlertMessage("Please check your network", { variant: "error" });
+      return false;
+    }
+    const web3APIHandler = targetChain.apiHandler;
+    const web3 = new Web3(library.provider);
+    console.log("----metadata:", metaData, isDraft);
 
+    if (isDraft) {
+      console.log("here-----");
+      let isRoyalty = batch.item.erc721RoyaltyPercentage > 0 ? true : false
+      const resRoyalty = await web3APIHandler.RoyaltyFactoryBatch.mint(
+        web3,
+        account,
+        {
+          name: collectionData.name,
+          symbol: collectionData.symbol,
+          amount: mintAmount,
+          uri : URI,
+          isRoyalty,
+          royaltyAddress: batch.item.erc721RoyaltyAddress,
+          royaltyPercentage: batch.item.erc721RoyaltyPercentage
+        },
+        setTxModalOpen,
+        setTxHash
+      );
+      if (resRoyalty.success) {
+        let tokenIds: any = [];
+        for(let i = 0; i < resRoyalty.amount; i++){
+          tokenIds.push(Number(resRoyalty.initialId) + i)
+        }
+
+        await MetaverseAPI.convertToNFTAssetBatch(
+          batch.item.updateHash,
+          resRoyalty.contractAddress,
+          targetChain.name,
+          tokenIds,
+          URI,
+          account,
+          batch.item.erc721RoyaltyAddress,
+          batch.item.erc721RoyaltyPercentage,
+          resRoyalty.txHash,
+          amount
+        );
+        setTxSuccess(true);
+        showAlertMessage(`Successfully asset minted`, { variant: "success" });
+        return true;
+      } else {
+        setTxSuccess(false);
+        return false;
+      }
+    } else {
+      console.log(URI)
+      let isRoyalty = batch.item.erc721RoyaltyPercentage > 0 ? true : false
+      const contractRes = await web3APIHandler.NFTWithRoyaltyBatch.mint(
+        web3,
+        account,
+        {
+          collectionAddress: collectionAddr,
+          to: account,
+          amount: mintAmount,
+          uri : URI,
+          isRoyalty,
+          royaltyAddress: batch.item.erc721RoyaltyAddress,
+          royaltyPercentage: batch.item.erc721RoyaltyPercentage
+        },
+        setTxModalOpen,
+        setTxHash
+      );
+
+      if (contractRes.success) {
+        console.log(contractRes);
+        let tokenIds: any = [];
+        console.log('contractRes---', contractRes)
+        for(let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++){
+          tokenIds.push(Number(i))
+        }
+        await MetaverseAPI.convertToNFTAssetBatch(
+          batch.item.updateHash,
+          contractRes.collectionAddress,
+          targetChain.name,
+          tokenIds,
+          URI,
+          contractRes.owner,
+          batch.item.erc721RoyaltyAddress,
+          batch.item.erc721RoyaltyPercentage,
+          contractRes.txHash,
+          amount
+        );
+        setTxSuccess(true);
+        showAlertMessage(`Successfully asset minted`, { variant: "success" });
+        return true
+      } else {
+        setTxSuccess(false);
+        return false
+      }
+    }
+  };
+
+  const getMetadata = async (hashId) => {
+    try {
+      const res = await MetaverseAPI.getNFTInfo(hashId)
+      return res.data
+    } catch (error) {
+      console.log('error in getting metadata',error)
+    }
+  }
+  const handleCancel = () => {
+    history.push(`/profile/${user?.address}`);
   }
 
   return (
@@ -78,7 +235,7 @@ export default function MintNFTPage() {
       <Box
         className={classes.content}
         style={{
-          padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
+          padding: isMobile ? "47px 22px 63px" : "100px 58px 50px",
         }}
       >
         <div className={classes.modalContent}>
@@ -115,6 +272,18 @@ export default function MintNFTPage() {
           </Box>
         </div>
       </Box>
+      {txModalOpen && (
+        <TransactionProgressModal
+          open={txModalOpen}
+          title="Minting your NFT"
+          transactionSuccess={txSuccess}
+          hash={txHash}
+          onClose={() => {
+            setTxSuccess(null);
+            setTxModalOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

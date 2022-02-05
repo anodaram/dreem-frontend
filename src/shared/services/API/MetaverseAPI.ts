@@ -209,9 +209,10 @@ export const uploadAsset = async payload => {
     const formData = new FormData();
     console.log(payload)
     Object.keys(payload).forEach(key => {
-      if (key === "image")
-        formData.append(key, payload[key], payload[key].name);
-      else formData.append(key, payload[key]);
+      // if (key === "image")
+      //   formData.append(key, payload[key], payload[key].name);
+      // else 
+      payload[key] && formData.append(key, payload[key]);
     });
 
     const token = localStorage.getItem("token");

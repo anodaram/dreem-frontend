@@ -19,7 +19,7 @@ export const mintNFTPageStyles = makeStyles(theme => ({
     color: "white",
     width: "755px",
     borderRadius: "0px",
-    maxHeight: "527px",
+    maxHeight: "700px",
     overflow: "auto",
 
     marginTop: 180,
