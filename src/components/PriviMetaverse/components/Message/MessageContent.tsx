@@ -379,14 +379,14 @@ export const MessageContent = ({
         }
         setFirstLoading(false);
       }, 100);
-    } else {
+    } else if (room) {
       getMessages(room);
     }
   }, [messages.length, room]);
 
   const handleScroll = React.useCallback(
     async e => {
-      if (e.target.scrollTop === 0 && hasMore) {
+      if (e.target.scrollTop === 0 && hasMore && room) {
         const lastMsgID = messages.length > 0 ? messages[0].id : null;
         const hasMoreMessage = await getMessages(room);
         setHasMore(hasMoreMessage);

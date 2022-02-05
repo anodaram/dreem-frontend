@@ -14,7 +14,7 @@ import URL from "shared/functions/getURL";
 
 import "./MessageBox.css";
 
-export const MessageBox = ({ roomId }: { roomId: string }) => {
+export const MessageBox = ({ roomId }: { roomId?: string }) => {
   const dispatch = useDispatch();
 
   const sourceRef = useRef<any>();
