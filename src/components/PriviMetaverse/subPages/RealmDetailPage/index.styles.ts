@@ -203,4 +203,80 @@ export const realmDetailPageStyles = makeStyles(theme => ({
     fontFamily: "GRIFTER",
     lineHeight: "104.5%",
   },
+  videoCtn: {
+    position: 'relative',
+  },
+  stat: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    padding: "116px 0px 51px 0px",
+    background: "linear-gradient(180deg, rgba(197, 255, 78, 0) 68.46%, rgba(228, 255, 45, 0.3) 95.05%), linear-gradient(180deg, rgba(0, 0, 0, 0) 9.5%, #17151A 69.7%)",
+    borderBottom: "2px solid #E9FF26",
+    "& > div:last-child":{
+      border: 'none',
+    }
+  },
+  statItem: {
+    color: '#E9FF26',
+    paddingLeft: 52,
+    width: '100%',
+    borderRight: '2px solid rgba(233, 255, 38, 0.2)',
+    [theme.breakpoints.down("xs")]: {
+      paddingLeft: 12,
+    },
+  },
+  val: {
+    textShadow: "0px 4px 7px rgba(230, 255, 42, 0.26)",
+    "fontFamily": "GRIFTER",
+    "fontStyle": "normal",
+    "fontWeight": "bold",
+    "fontSize": "34px",
+    "lineHeight": "36px",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 24,
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 14,
+    },
+  },
+  desc: {
+    "fontFamily": "Rany",
+    "fontStyle": "normal",
+    "fontWeight": "bold",
+    "fontSize": "14px",
+    "lineHeight": "150%",
+    textTransform: 'uppercase',
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 10,
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 8,
+    },
+  },
+  public: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 32,
+    left: 51,
+    "fontFamily": "Rany",
+    "fontStyle": "normal",
+    "fontWeight": "bold",
+    "fontSize": "20px",
+    "lineHeight": "190%",
+    color: "#E9FF26",
+    background: "#151515",
+    borderRadius: 4,
+    padding: '4px 18px',
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 10,
+      top: 12,
+      left: 30,
+      padding: '2px 8px',
+    },
+  }
 }));

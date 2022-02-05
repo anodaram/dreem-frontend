@@ -28,6 +28,8 @@ export const walletConnect = {
   },
 };
 
+export const GLOBAL_CHAT_ROOM = 'global';
+
 export const NftStates = ["For Sale", "For Blocking", "For Rental", "Blocked", "Rented"];
 
 export const UnitEdition = 20;

@@ -237,4 +237,14 @@ export const marketplaceFeedStyles = makeStyles(theme => ({
     borderImageSlice: 1,
     width: "100%",
   },
+  typeTag: {
+    borderRadius: 4,
+    padding: "9px 8px 7.5px",
+    textTransform: "uppercase",
+    fontSize: 10,
+    fontFamily: "Grifter",
+    fontWeight: 700,
+    color: "#212121",
+    display: "inline-block",
+  },
 }));

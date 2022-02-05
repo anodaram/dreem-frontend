@@ -90,8 +90,8 @@ export default function ExplorePage() {
         if (res.success) {
           const items = res.data.elements;
           if (items && items.length > 0) {
-            setExploreReamls(prev => (isInit ? res.data.items : [...prev, ...res.data.items]));
-            dispatch(setRealmsList([...realmsList, ...res.data.items]));
+            setExploreReamls(prev => (isInit ? items : [...prev, ...res.data.items]));
+            dispatch(setRealmsList([...realmsList, ...items]));
             if (res.data.page && curPage <= res.data.page.max) {
               setCurPage(curPage => curPage + 1);
               setLastPage(res.data.page.max);

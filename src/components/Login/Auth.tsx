@@ -67,10 +67,11 @@ const Auth = () => {
 
       // set socket with Listener
       if (!listenerSocket) {
-        const listenerSock = io(URL(), { query: { token: localStorage.getItem("token")?.toString() || "" } });
+        const listenerSock = io(LISTENER_URL(), {});
         listenerSock.connect();
         setListenerSocket(listenerSock);
       }
+      listenerSocket && listenerSocket.emit("connectTest");
 
       if (!user.email) {
         const token: string = localStorage.getItem("token") || "";

@@ -1,33 +1,37 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useHistory } from "react-router";
-import { useDispatch } from "react-redux";
+import { Hidden, useMediaQuery, useTheme } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
+import React, { useEffect, useRef, useState } from "react";
 import Carousel from "react-elastic-carousel";
 import Moment from "react-moment";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 
-import { useTheme, useMediaQuery, Hidden } from "@material-ui/core";
-
-import { setTokenList, setScrollPositionInAllNFT } from "store/actions/MarketPlace";
-import Box from "shared/ui-kit/Box";
-import { PrimaryButton, SecondaryButton, Variant } from "shared/ui-kit";
-import { getAllTokenInfos } from "shared/services/API/TokenAPI";
-import { useAuth } from "shared/contexts/AuthContext";
-import useWindowDimensions from "shared/hooks/useWindowDimensions";
-import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
-import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { ReactComponent as BinanceIcon } from "assets/icons/bsc.svg";
 import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
-import { userTrackMarketPlace } from "shared/services/API";
-import { GameSlider } from "components/PriviMetaverse/components/GameSlider";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
-import { Skeleton } from "@material-ui/lab";
 import FeaturedGameCard from "components/PriviMetaverse/components/cards/FeatureGameCard";
-import { getAllGameNFTs } from "shared/services/API/ReserveAPI";
-import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
-import Tag from "../GameDetailPage/components/Tag";
-import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
-import ActivityFeeds from "./components/ActivityFeeds";
+import { GameSlider } from "components/PriviMetaverse/components/GameSlider";
 import { MessageBox } from "components/PriviMetaverse/components/Message/MessageBox";
+import { useAuth } from "shared/contexts/AuthContext";
+import useWindowDimensions from "shared/hooks/useWindowDimensions";
+import { userTrackMarketPlace } from "shared/services/API";
+import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
+import { getAllGameNFTs } from "shared/services/API/ReserveAPI";
+import { getAllTokenInfos } from "shared/services/API/TokenAPI";
+import { PrimaryButton, SecondaryButton, Variant } from "shared/ui-kit";
+import Box from "shared/ui-kit/Box";
+import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
+import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
+import { setScrollPositionInAllNFT, setTokenList } from "store/actions/MarketPlace";
+
+import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
+import Tag from "../GameDetailPage/components/Tag";
+import ActivityFeeds from "./components/ActivityFeeds";
 import { useNFTOptionsStyles } from "./index.styles";
+import { getNftGameFeed } from "shared/services/API/DreemAPI";
+import { toDecimals } from "shared/functions/web3";
+import { RootState } from "store/reducers/Reducer";
+import { listenerSocket } from "components/Login/Auth";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -44,53 +48,27 @@ const gameList = [
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.",
     image: require("assets/backgrounds/community.jpeg"),
+    transfers: 5,
+    owners: 3,
+    transactions: 12,
   },
   {
     title: "Game Name 2",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.",
     image: require("assets/backgrounds/social.jpeg"),
+    transfers: 25,
+    owners: 5,
+    transactions: 2,
   },
   {
     title: "Game Name 3",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sagittis risus sapien, vitae consectetur odio faucibus vitae. Phasellus viverra nibh tortor, id venenatis nisl placerat eget.",
     image: require("assets/backgrounds/workInProgress.jpeg"),
-  },
-];
-
-const dummyRecentTransactions = [
-  {
-    image: "",
-    name: "Game Name",
-    type: "Rented",
-    Chain: "Polygon",
-    Price: "0.0834",
-    Time: new Date().getTime() - 1200000,
-  },
-  {
-    image: "",
-    name: "Game Name 2",
-    type: "Rented",
-    Chain: "Polygon",
-    Price: "0.0834",
-    Time: new Date().getTime() - 1200000,
-  },
-  {
-    image: "",
-    name: "Game Name 5",
-    type: "Rented",
-    Chain: "BSC",
-    Price: "0.834",
-    Time: new Date().getTime() - 420000,
-  },
-  {
-    image: "",
-    name: "Game Name",
-    type: "Rented",
-    Chain: "Polygon",
-    Price: "0.123",
-    Time: new Date().getTime() - 120000,
+    transfers: 7,
+    owners: 23,
+    transactions: 19,
   },
 ];
 
@@ -111,14 +89,17 @@ const NFTReserves = () => {
   const classes = useNFTOptionsStyles();
   const carouselRef = useRef<any>();
 
-  const [featuredGames, setFeaturedGames] = useState<any[]>([]);
-  const [loadingFeaturedGames, setLoadingFeaturedGames] = useState<boolean>(false);
+  const [popularGames, setPopularGames] = useState<any[]>([]);
+  const [loadingPopularGames, setLoadingPopularGames] = useState<boolean>(false);
   const [loadingNewListings, setLoadingNewListings] = useState<boolean>(false);
   const [openHowWorksModal, setOpenHowWorksModal] = useState<boolean>(false);
   const [newListings, setNewListings] = useState<any[]>([]);
-  const [recentTransactions, setRecentTransactions] = useState<any[]>(dummyRecentTransactions);
-  const [loadingTransactions, setLoadingTransctions] = useState<boolean>(false);
-  const [openSideBar, setOpenSideBar] = useState<boolean>(false);
+  const [openSideBar, setOpenSideBar] = useState<boolean>(true);
+
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactionloading, setTransactionLoading] = useState<boolean>(false);
+  const [transactionHasMore, setTransactionHasMore] = useState<boolean>(false);
+  const [lastTransactionId, setLastTransactionId] = useState<any>();
 
   const width = useWindowDimensions().width;
 
@@ -128,7 +109,7 @@ const NFTReserves = () => {
   const isNarrow = useMediaQuery(theme.breakpoints.down(860));
   const isMobile = useMediaQuery(theme.breakpoints.down(650));
 
-  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? 4 : 5;
+  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : 4;
   const loadingCount = React.useMemo(
     () => (width > 1700 ? 5 : width > 1420 ? 4 : width > 1200 ? 3 : width > 650 ? 2 : 1),
     [width]
@@ -143,6 +124,8 @@ const NFTReserves = () => {
     { headerName: "", headerAlign: "center" },
   ];
 
+  const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
+
   useEffect(() => {
     // initialize store
     getTokenList();
@@ -151,6 +134,7 @@ const NFTReserves = () => {
   useEffect(() => {
     getFeaturedGameData();
     getNewListings();
+    loadTransactions(true);
   }, []);
 
   useEffect(() => {
@@ -158,6 +142,62 @@ const NFTReserves = () => {
       userTrackMarketPlace();
     }
   }, [isSignedin]);
+
+  useEffect(() => {
+    if (listenerSocket) {
+      const addMarketPlaceFeedHandler = _transaction => {
+        if (transactions && transactions.length) {
+          const _transactions = transactions.filter(transaction => _transaction.id !== transaction.id);
+          setTransactions([_transaction].concat(_transactions));
+        }
+      };
+
+      const updateMarketPlaceFeedHandler = _transaction => {
+        if (transactions && transactions.length) {
+          const _transactions = transactions.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
+          setTransactions(_transactions);
+        }
+      };
+
+      listenerSocket.on("addMarketPlaceFeed", addMarketPlaceFeedHandler);
+      listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+
+      return () => {
+        listenerSocket.removeListener("addMarketPlaceFeed", addMarketPlaceFeedHandler);
+        listenerSocket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+      };
+    }
+  }, [listenerSocket]);
+
+  const loadTransactions = async (init = false) => {
+    if (transactionloading) return;
+    try {
+      setTransactionLoading(true);
+
+      const response = await getNftGameFeed({
+        gameId: undefined,
+        lastId: init ? undefined : lastTransactionId,
+        searchValue: undefined,
+        mode: isProd ? "main" : "test",
+        status: undefined,
+      });
+      if (response.success) {
+        const newCharacters = response.data.list;
+        const newLastId = response.data.lastId;
+        const newhasMore = response.data.hasMore;
+
+        setTransactions(prev => (init ? newCharacters : [...prev, ...newCharacters]));
+        setLastTransactionId(newLastId);
+        setTransactionHasMore(newhasMore);
+      } else {
+        setTransactions([]);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setTransactionLoading(false);
+    }
+  };
 
   const getNewListings = async () => {
     if (loadingNewListings) return;
@@ -183,17 +223,17 @@ const NFTReserves = () => {
   };
 
   const getFeaturedGameData = () => {
-    if (loadingFeaturedGames) return;
+    if (loadingPopularGames) return;
 
-    setLoadingFeaturedGames(true);
+    setLoadingPopularGames(true);
     MetaverseAPI.getNftGames("", "", "ALL")
       .then(res => {
         if (res && res.success) {
           const items = res.data.items;
-          setFeaturedGames(items);
+          setPopularGames(items);
         }
       })
-      .finally(() => setLoadingFeaturedGames(false));
+      .finally(() => setLoadingPopularGames(false));
   };
 
   const getTokenList = async () => {
@@ -208,10 +248,26 @@ const NFTReserves = () => {
     dispatch(setScrollPositionInAllNFT(e.target.scrollTop));
   };
 
+  const getTokenSymbol = addr => {
+    if (tokenList.length == 0 || !addr) return 0;
+    let token = tokenList.find(token => token.Address === addr);
+    return token?.Symbol || "";
+  };
+
+  const getTokenDecimal = addr => {
+    if (tokenList.length == 0) return 0;
+    let token = tokenList.find(token => token.Address === addr);
+    return token?.Decimals;
+  };
+
+  const goToNft = row => {
+    history.push(`/P2E/${row.collectionId}/${row.tokenId}`);
+  };
+
   const tableData = React.useMemo(() => {
     let data: Array<Array<CustomTableCellInfo>> = [];
-    if (recentTransactions && recentTransactions.length) {
-      data = recentTransactions.map(row => [
+    if (transactions && transactions.length) {
+      data = transactions.map(row => [
         {
           cell: (
             <div className={classes.titleWrapper}>
@@ -224,21 +280,31 @@ const NFTReserves = () => {
           cell: <Tag state={row.type.toLowerCase()} text={row.type} />,
         },
         {
-          cell: <div>{getChainImage(row.Chain)}</div>,
-        },
-        {
-          cell: <p className={classes.whiteText}>{row.Price}</p>,
+          cell: <div>{getChainImage(row.chain)}</div>,
         },
         {
           cell: (
             <p className={classes.whiteText}>
-              <Moment fromNow>{row.Time}</Moment>
+              {
+                +toDecimals(
+                  row.price || row.pricePerSecond * row.rentalTime,
+                  getTokenDecimal(row.paymentToken || row.fundingToken)
+                )
+              }{" "}
+              {getTokenSymbol(row.paymentToken || row.fundingToken)}
             </p>
           ),
         },
         {
           cell: (
-            <PrimaryButton onClick={() => {}} size="medium" className={classes.viewButton} isRounded>
+            <p className={classes.whiteText}>
+              <Moment fromNow>{+row.id}</Moment>
+            </p>
+          ),
+        },
+        {
+          cell: (
+            <PrimaryButton onClick={() => { goToNft(row); }} size="medium" className={classes.viewButton} isRounded>
               View
             </PrimaryButton>
           ),
@@ -247,35 +313,42 @@ const NFTReserves = () => {
     }
 
     return data;
-  }, [recentTransactions]);
+  }, [transactions]);
 
   return (
     <>
       <Box className={classes.main}>
-        <Box className={classes.sideBar}>
-          {openSideBar ? (
+        {isTablet && !isMobile && (
+          <Box className={classes.sideBar}>
             <Box display="flex" flexDirection="column">
               <ActivityFeeds onClose={() => setOpenSideBar(false)} />
               <MessageBox />
             </Box>
-          ) : (
-            <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
-              <ExpandIcon />
+          </Box>
+        )}
+        {!isTablet && !isMobile && (
+          <>
+            <Box className={classes.sideBar}>
+              {openSideBar ? (
+                <Box display="flex" flexDirection="column">
+                  <ActivityFeeds onClose={() => setOpenSideBar(false)} />
+                  <MessageBox />
+                </Box>
+              ) : (
+                <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
+                  <ExpandIcon />
+                </Box>
+              )}
             </Box>
-          )}
-        </Box>
+          </>
+        )}
+        <img src={require("assets/metaverseImages/nft_reserve_bg.png")} className={classes.imageBg} />
         <Box className={classes.limitedContent}>
           <div className={classes.content} id={"scrollContainer"} onScroll={handleScroll}>
             <div className={classes.titleBar}>
-              <Box
-                display="flex"
-                alignItems="center"
-                width="100%"
-                justifyContent="space-between"
-                maxWidth={1280}
-              >
+              <Box className={classes.titleSection}>
                 <div className={classes.title}>Not your average NFT marketplace</div>
-                <Box display="flex" alignItems="center">
+                <Box display="flex" alignItems="center" mt={isTablet ? 2 : 0}>
                   <SecondaryButton
                     size="medium"
                     className={classes.primaryButton}
@@ -302,7 +375,7 @@ const NFTReserves = () => {
                   )}
                 </Box>
               </Box>
-              <Box height={720} width={1280} position="relative" className={classes.gameslider} mt="38px">
+              <Box className={classes.gameslider}>
                 <img src={require("assets/icons/slider_footer.svg")} className={classes.sliderFooter} />
                 <img src={require("assets/icons/slider_left.svg")} className={classes.sliderLeft} />
                 <img src={require("assets/icons/slider_right.svg")} className={classes.sliderRight} />
@@ -312,37 +385,73 @@ const NFTReserves = () => {
                     return () => (
                       <Box position="relative" width="100%" height="100%">
                         <img src={game.image} width="100%" height="100%" className={classes.gameBgImage} />
-                        <Box
-                          padding="30px 105px 100px 105px"
-                          width="100%"
-                          height="100%"
-                          display="flex"
-                          flexDirection="column"
-                          alignItems="flex-start"
-                          justifyContent="space-between"
-                          className={classes.gameContent}
-                        >
-                          <Box className={classes.featuredGames}>
+                        <Box className={classes.gameContent}>
+                          <Box className={classes.popularGames}>
                             <GameIcon />
                             Featured Games
                           </Box>
-                          <Box display="flex" flexDirection="column" alignItems="flex-start">
-                            <Box fontFamily="Rany" fontWeight={700} fontSize="18px" color="#E9FF26">
+                          <Box
+                            display="flex"
+                            flexDirection="column"
+                            alignItems="flex-start"
+                            mt={isTablet ? 2 : 0}
+                          >
+                            <Box
+                              fontFamily="Rany"
+                              fontWeight={700}
+                              fontSize={isTablet ? 12 : 18}
+                              color="#E9FF26"
+                            >
                               COMING SOON
                             </Box>
-                            <Box fontFamily="GRIFTER" fontWeight={700} fontSize="72px" color="#fff" mt="11px">
+                            <Box
+                              fontFamily="GRIFTER"
+                              fontWeight={700}
+                              fontSize={isTablet ? 26 : 72}
+                              color="#fff"
+                              mt="11px"
+                            >
                               {game.title}
                             </Box>
                             <Box
                               fontFamily="Rany"
                               fontWeight={500}
                               textAlign="left"
-                              fontSize="20px"
+                              fontSize={isTablet ? 12 : 20}
                               color="#fff"
                               lineHeight="31px"
                               mt="20px"
                             >
                               {game.description}
+                            </Box>
+                            <Box display="flex" mt={3}>
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="flex-start"
+                                className={classes.gameInfoSection}
+                              >
+                                <span>{game.transfers}</span>
+                                <span>Transfers</span>
+                              </Box>
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="flex-start"
+                                className={classes.gameInfoSection}
+                              >
+                                <span>{game.owners}</span>
+                                <span>New Owners</span>
+                              </Box>
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="flex-start"
+                                className={classes.gameInfoSection}
+                              >
+                                <span>{game.transactions}</span>
+                                <span>marketplace transactions</span>
+                              </Box>
                             </Box>
                             <SecondaryButton
                               size="medium"
@@ -361,19 +470,19 @@ const NFTReserves = () => {
               </Box>
             </div>
             <div className={classes.NFTSection}>
-              {featuredGames && featuredGames.length ? (
+              {popularGames && popularGames.length ? (
                 <div className={classes.topGamesWrapper}>
                   <Box
                     className={`${classes.topGamesTitle} ${classes.fitContent}`}
                     justifyContent="space-between"
                   >
                     <span>Popular Games</span>
-                    {featuredGames &&
-                    featuredGames.length &&
+                    {popularGames &&
+                    popularGames.length &&
                     !isMobile &&
-                    ((isTablet && featuredGames.length > 2) ||
-                      (isNormalScreen && featuredGames.length > 3) ||
-                      featuredGames.length > 4) ? (
+                    ((isTablet && popularGames.length > 2) ||
+                      (isNormalScreen && popularGames.length > 3) ||
+                      popularGames.length > 4) ? (
                       <Box display="flex" alignItems="center">
                         <Box
                           className={classes.carouselNav}
@@ -428,13 +537,13 @@ const NFTReserves = () => {
                     )}
                   </Box>
                   <div className={`${classes.topNFTContent} ${classes.fitContent}`}>
-                    {featuredGames && featuredGames.length ? (
-                      !isMobile && (featuredGames.length === 2 || featuredGames.length === 3) ? (
+                    {popularGames && popularGames.length ? (
+                      !isMobile && (popularGames.length === 2 || popularGames.length === 3) ? (
                         <div className={classes.allNFTSection}>
                           <Box style={{ marginBottom: "24px" }}>
                             <MasonryGrid
                               gutter={"24px"}
-                              data={featuredGames}
+                              data={popularGames}
                               renderItem={item => (
                                 <FeaturedGameCard game={item} isLoading={Object.entries(item).length === 0} />
                               )}
@@ -451,7 +560,7 @@ const NFTReserves = () => {
                           ref={carouselRef}
                           itemPadding={[0, 12]}
                         >
-                          {featuredGames.map((item: any, i: Number) => (
+                          {popularGames.map((item: any, i: Number) => (
                             <div
                               key={item.id}
                               style={{
@@ -460,11 +569,11 @@ const NFTReserves = () => {
                                 display: "flex",
                                 justifyContent: isMobile
                                   ? "center"
-                                  : featuredGames.length === 2 && i === 1
+                                  : popularGames.length === 2 && i === 1
                                   ? "flex-end"
-                                  : featuredGames.length === 3 && i === 1
+                                  : popularGames.length === 3 && i === 1
                                   ? "center"
-                                  : featuredGames.length === 3 && i === 2
+                                  : popularGames.length === 3 && i === 2
                                   ? "flex-end"
                                   : "flex-start",
                               }}
@@ -474,7 +583,7 @@ const NFTReserves = () => {
                           ))}
                         </Carousel>
                       )
-                    ) : loadingFeaturedGames ? (
+                    ) : loadingPopularGames ? (
                       <MasonryGrid
                         gutter={"24px"}
                         data={Array(loadingCount).fill(0)}
@@ -485,7 +594,7 @@ const NFTReserves = () => {
                       <div></div>
                     )}
                   </div>
-                  {featuredGames && featuredGames.length && isMobile && featuredGames.length > 1 ? (
+                  {popularGames && popularGames.length && isMobile && popularGames.length > 1 ? (
                     <Box display="flex" justifyContent="flex-end" pr={3} pb={3}>
                       <Box display="flex" alignItems="center">
                         <Box
@@ -570,26 +679,24 @@ const NFTReserves = () => {
                   )}
                 </div>
               </div>
-              <Box>
+              <Box padding="0 32px">
                 <div className={classes.allNFTTitle}>
                   <span>Recent Transactions</span>
                 </div>
-                {recentTransactions.length > 0 && (
+                {transactions.length > 0 && (
                   <div className={classes.table}>
                     <CustomTable
                       variant={Variant.Transparent}
                       headers={tableHeaders}
                       rows={tableData}
-                      placeholderText="No data"
+                      placeholderText=""
                       sorted={{}}
                       theme="game transaction"
                     />
                   </div>
                 )}
-                {!loadingTransactions && recentTransactions?.length < 1 && (
-                  <Box textAlign="center" width="100%" mb={10} mt={2}>
-                    No NFTs
-                  </Box>
+                {!transactionloading && transactions?.length < 1 && (
+                  <Box textAlign="center" width="100%" mb={10} mt={2}></Box>
                 )}
               </Box>
             </div>
