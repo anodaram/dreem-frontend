@@ -14,7 +14,7 @@ import URL from "shared/functions/getURL";
 
 import "./MessageBox.css";
 
-export const MessageBox = ({ roomId = GLOBAL_CHAT_ROOM }: { roomId?: string }) => {
+export const MessageBox = ({ roomId }: { roomId: string }) => {
   const dispatch = useDispatch();
 
   const sourceRef = useRef<any>();
@@ -31,7 +31,6 @@ export const MessageBox = ({ roomId = GLOBAL_CHAT_ROOM }: { roomId?: string }) =
     if (socket) {
       const userId = localStorage.getItem("userId") || userSelector.id;
 
-      socket.emit("subscribe", roomId);
       socket.off("message");
       socket.on("message", message => {
         if (message.room !== roomId) {
@@ -61,8 +60,13 @@ export const MessageBox = ({ roomId = GLOBAL_CHAT_ROOM }: { roomId?: string }) =
             console.log(error);
           });
       });
+
+      if (roomId) {
+        socket.emit("subscribe", roomId);
+        setMessages([]);
+      }
     }
-  }, [socket]);
+  }, [socket, roomId]);
 
   useEffect(() => {
     if (!isOpenMessageBox) {
@@ -83,57 +87,58 @@ export const MessageBox = ({ roomId = GLOBAL_CHAT_ROOM }: { roomId?: string }) =
     }
   }, [isSendMessage]);
 
-  const getMessages = (isNew?: boolean): Promise<boolean> => {
-    return new Promise((resolve, reject) => {
-      if (!isNew && (loadingMessages || !hasMore)) {
-        resolve(true);
-        return;
-      }
-      if (isNew && loadingMessages) {
-        sourceRef.current?.cancel();
-      }
-      const cancelToken = axios.CancelToken;
-      sourceRef.current = cancelToken.source();
-      setLoadingMessages(true);
-      axios
-        .post(
-          `${URL()}/chat/getMessages`,
-          {
-            room: roomId,
-            pageIndex: isNew ? 0 : pageIndex,
-          },
-          {
-            cancelToken: sourceRef.current.token,
+  const getMessages = (room: string, isNew?: boolean) => {
+    if (!isNew && !hasMore && !roomId) {
+      return false;
+    }
+    if (isNew) {
+      sourceRef.current?.cancel();
+    }
+    const cancelToken = axios.CancelToken;
+    sourceRef.current = cancelToken.source();
+    setLoadingMessages(true);
+
+    axios
+      .post(
+        `${URL()}/chat/getMessages`,
+        {
+          room,
+          pageIndex: isNew ? 0 : pageIndex,
+        },
+        {
+          cancelToken: sourceRef.current.token,
+        }
+      )
+      .then(response => {
+        if (response.data.success) {
+          let newMessages = response.data.data;
+          if (!isNew) {
+            newMessages = [...response.data.data, ...messages];
           }
-        )
-        .then(response => {
-          if (response.data.success) {
-            let newMessages = response.data.data;
-            if (!isNew) {
-              newMessages = [...response.data.data, ...messages];
-            }
-            setMessages(newMessages);
-            setHasMore(response.data.hasMore);
-            setLoadingMessages(false);
-            resolve(response.data.hasMore);
-          }
-        })
-        .catch(error => {
+          setMessages(newMessages);
+          setHasMore(response.data.hasMore);
           setLoadingMessages(false);
-          reject(error);
-          console.log(error);
-        });
-    });
+          return hasMore;
+        }
+      })
+      .catch(error => {
+        setLoadingMessages(false);
+        console.log(error);
+        return false;
+      });
   };
 
   return (
     <Box
+      display="flex"
+      flexDirection="column"
       style={{
         background: "#212121",
         border: "2px solid #151515",
         boxShadow: "0px 38px 96px 17px rgba(1, 1, 13, 0.5), 0px 16px 1px -488px rgba(0, 0, 0, 0.18)",
-        height: "44%",
       }}
+      height="50%"
+      overflow="hidden"
     >
       <Box display="flex" bgcolor="#151515" p="8px" width="fit-content" mx="19px" mt="22px">
         <Box className={"tab selected"}>Live Chat</Box>

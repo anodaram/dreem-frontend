@@ -118,6 +118,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     [theme.breakpoints.down(1800)]: {
       flexDirection: "column",
       alignItems: "flex-start",
+      maxWidth: (props: any) => (props.openSideBar ? 1000 : 1280),
     },
     [theme.breakpoints.down("sm")]: {
       // maxWidth: 480,
