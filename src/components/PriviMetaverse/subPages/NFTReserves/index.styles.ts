@@ -9,18 +9,18 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     alignItems: "center",
   },
   imageBg: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
-    width: '100%'
+    width: "100%",
   },
   sideBar: {
     display: "flex",
     justifyContent: "center",
-    marginTop: 144,
-    height: "100%",
+    marginTop: 72,
+    height: "calc(100% - 72px)",
     background: "#212121",
     border: "2px solid #151515",
-    zIndex: 1
+    zIndex: 1,
   },
   expandIcon: {
     padding: 16,
@@ -58,7 +58,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     maxHeight: "100%",
     overflowX: "hidden",
     position: "relative",
-    padding: "160px 32px 45px",
+    padding: "160px 8px 45px",
     marginLeft: "auto",
     marginRight: "auto",
     "& > div > h2": {
@@ -67,7 +67,6 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       fontSize: "40px",
       lineHeight: "104.5%",
       margin: 0,
-      color: "#431AB7",
       [theme.breakpoints.down("xs")]: {
         fontSize: "28px",
       },
@@ -82,18 +81,17 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       lineHeight: "104.5%",
       marginBottom: "16px",
     },
-    [theme.breakpoints.down("md")]: {
+    "& .infinite-scroll-component": {
+      overflow: "visible !important",
+    },
+    [theme.breakpoints.down(1800)]: {
       paddingLeft: "30px",
       paddingRight: "30px",
-      maxWidth: 1280,
     },
     [theme.breakpoints.down("sm")]: {
       paddingLeft: "0px",
       paddingRight: "0px",
-      maxWidth: 480,
-    },
-    "& .infinite-scroll-component": {
-      overflow: "visible !important",
+      // maxWidth: 480,
     },
   },
   titleBar: {
@@ -102,7 +100,6 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
-    padding: "0 35px",
     [theme.breakpoints.down("sm")]: {
       maxWidth: 480,
       padding: 0,
@@ -118,10 +115,13 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     width: "100%",
     justifyContent: "space-between",
     maxWidth: 1280,
-    [theme.breakpoints.down("sm")]: {
-      maxWidth: 480,
+    [theme.breakpoints.down(1800)]: {
       flexDirection: "column",
       alignItems: "flex-start",
+      maxWidth: (props: any) => (props.openSideBar ? 1000 : 1280),
+    },
+    [theme.breakpoints.down("sm")]: {
+      // maxWidth: 480,
     },
   },
   title: {
@@ -196,13 +196,17 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   gameslider: {
     height: 720,
     maxWidth: 1280,
+    width: '100%',
     marginTop: 38,
     position: "relative",
     border: "2px solid transparent",
     borderImageSource: "linear-gradient(180deg, rgba(255, 255, 255, 0) 42%, #E9FF26 100%)",
     borderImageSlice: "30%",
+    [theme.breakpoints.down(1800)]: {
+      maxWidth: (props: any) => (props.openSideBar ? 1000 : 1280),
+    },
     [theme.breakpoints.down("sm")]: {
-      maxWidth: 480,
+      // maxWidth: 480,
       height: 330,
     },
   },
@@ -222,13 +226,12 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   },
   gameBgImage: {
     position: "absolute",
-    width: "100% !important",
-    height: "100% !important",
     zIndex: -1,
   },
   sliderFooter: {
     position: "absolute",
     bottom: "-38px",
+    width: '100%'
   },
   sliderLeft: {
     position: "absolute",
@@ -248,7 +251,10 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   NFTSection: {
     width: "100%",
     marginTop: 46,
-    maxWidth: 1400,
+    maxWidth: 1280,
+    [theme.breakpoints.down(1800)]: {
+      maxWidth: (props: any) => (props.openSideBar ? 1040 : 1280),
+    },
   },
   topGamesWrapper: {
     paddingTop: "50px",

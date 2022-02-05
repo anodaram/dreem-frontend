@@ -5,9 +5,10 @@ export const useStyles = makeStyles(theme => ({
     background: "#212121",
     border: "2px solid #151515",
     width: 398,
-    height: "45%",
+    height: "50%",
     position: "relative",
     padding: "22px 32px 8px 19px",
+    overflow: "hidden",
     [theme.breakpoints.down("sm")]: {
       width: 255,
       padding: "22px 8px 8px",
@@ -52,7 +53,7 @@ export const useStyles = makeStyles(theme => ({
   content: {
     marginTop: 21,
     overflowY: "scroll",
-    height: 310,
+    height: 325,
     [theme.breakpoints.down("sm")]: {
       height: 263,
       marginTop: 12,

@@ -1,14 +1,13 @@
+import { Skeleton } from "@material-ui/lab";
 import React from "react";
 import { useHistory } from "react-router";
+import { useLocation } from "react-router-dom";
 
-import { Skeleton } from "@material-ui/lab";
-
-import Box from "shared/ui-kit/Box";
-import { SecondaryButton } from "shared/ui-kit";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
+import { SecondaryButton } from "shared/ui-kit";
+import Box from "shared/ui-kit/Box";
 
 import { cardStyles } from "./index.style";
-import { useLocation } from "react-router-dom";
 
 const FeaturedGameCard = ({ game, isLoading = false }) => {
   const history = useHistory();
@@ -44,7 +43,7 @@ const FeaturedGameCard = ({ game, isLoading = false }) => {
         <>
           <div className={classes.cardImg}>
             <img
-              src={!game?.animation_url ? game?.Image : game?.CardImage}
+              src={game?.Image}
               style={{ width: "100%", objectFit: "cover" }}
             />
             <Box className={classes.chainImage}>
@@ -56,7 +55,7 @@ const FeaturedGameCard = ({ game, isLoading = false }) => {
           <div>
             <div className={classes.cardContentDiv}>
               <span className={classes.cardContentText}>Owners</span>
-              <span className={classes.cardContentAmount}>{game.Owners || 0}</span>
+              <span className={classes.cardContentAmount}>{game.owners_count || 0}</span>
             </div>
             <div className={classes.cardContentDiv}>
               <span className={classes.cardContentText}>Items</span>

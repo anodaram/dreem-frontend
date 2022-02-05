@@ -12,7 +12,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     display: "flex",
     justifyContent: "center",
     marginTop: 72,
-    height: "100%",
+    height: "calc(100vh - 72px)",
     background: "#212121",
     border: "2px solid #151515",
     zIndex: 1,
@@ -36,7 +36,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     color: "#ffffff",
   },
   fitContent: {
-    maxWidth: 1440,
+    maxWidth: (props: any) => (props.openSideBar ? 1000 : 1280),
     marginLeft: "auto",
     marginRight: "auto",
     [theme.breakpoints.down("md")]: {
@@ -83,7 +83,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     fontSize: 20,
     lineHeight: "155%",
     color: "#FFFFFF",
-    maxWidth: 738,
+    maxWidth: (props: any) => (props.openSideBar ? 738 : 540),
     marginTop: 24,
     maxHeight: 60,
     overflow: "hidden",

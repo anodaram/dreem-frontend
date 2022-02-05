@@ -299,7 +299,7 @@ export const MessageFooter = props => {
   };
 
   return (
-    <div className="message-footer1">
+    <Box className="message-footer1">
       {!audioMessage && (
         <Box display="flex" alignItems="top">
           <Box
@@ -355,7 +355,7 @@ export const MessageFooter = props => {
           )}
         </Box>
       )}
-    </div>
+    </Box>
   );
 };
 
@@ -379,16 +379,16 @@ export const MessageContent = ({
         }
         setFirstLoading(false);
       }, 100);
-    } else {
-      getMessages();
+    } else if (room) {
+      getMessages(room);
     }
-  }, [messages.length]);
+  }, [messages.length, room]);
 
   const handleScroll = React.useCallback(
     async e => {
-      if (e.target.scrollTop === 0 && hasMore) {
+      if (e.target.scrollTop === 0 && hasMore && room) {
         const lastMsgID = messages.length > 0 ? messages[0].id : null;
-        const hasMoreMessage = await getMessages();
+        const hasMoreMessage = await getMessages(room);
         setHasMore(hasMoreMessage);
         if (lastMsgID) {
           const el = document.getElementById(lastMsgID);
@@ -406,10 +406,13 @@ export const MessageContent = ({
   );
 
   return (
-    <div className="message-content-container">
+    <Box className="message-content-container">
+      <Box display="flex" bgcolor="#151515" p="8px" width="fit-content" mx="19px" mt="22px">
+        <Box className={"tab selected"}>Live Chat</Box>
+      </Box>
       <div className="item-list-container" id="messageContainer" ref={itemListRef} onScroll={handleScroll}>
         {loadingMessages || messages?.length > 0 ? (
-          <div className="item-list" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+          <Box className="item-list" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
             {loadingMessages && (
               <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
                 <LoadingWrapper loading={loadingMessages} />
@@ -435,7 +438,7 @@ export const MessageContent = ({
                 return (
                   <>
                     {hasDate && (
-                      <div
+                      <Box
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -444,7 +447,7 @@ export const MessageContent = ({
                           opacity: "0.6",
                         }}
                       >
-                        <div
+                        <Box
                           style={{
                             flex: "1",
                             height: "1px",
@@ -454,17 +457,17 @@ export const MessageContent = ({
                           }}
                         />
                         {curMsgDate === today ? (
-                          <div style={{ color: "#65CB63" }}>Today</div>
+                          <Box style={{ color: "#65CB63" }}>Today</Box>
                         ) : (
                           <>
                             {today - curMsgDate > 1 ? (
                               <Moment format="DD MMM YYYY hh:mm A">{item.created}</Moment>
                             ) : (
-                              <div>Yesterday</div>
+                              <Box>Yesterday</Box>
                             )}
                           </>
                         )}
-                        <div
+                        <Box
                           style={{
                             flex: "1",
                             height: "1px",
@@ -473,7 +476,7 @@ export const MessageContent = ({
                             opacity: "0.1",
                           }}
                         />
-                      </div>
+                      </Box>
                     )}
                     <MessageItem
                       key={item.id ?? `message-${index}`}
@@ -483,11 +486,11 @@ export const MessageContent = ({
                   </>
                 );
               })}
-          </div>
+          </Box>
         ) : (
-          <div className="no-items-label">
-            <div style={{ fontSize: 14 }}>No messages in the chat yet.</div>
-          </div>
+          <Box className="no-items-label">
+            <Box style={{ fontSize: 14 }}>No messages in the chat yet.</Box>
+          </Box>
         )}
       </div>
       <MessageFooter
@@ -497,6 +500,6 @@ export const MessageContent = ({
         setMessages={msgs => setMessages(msgs)}
         room={room}
       />
-    </div>
+    </Box>
   );
 };

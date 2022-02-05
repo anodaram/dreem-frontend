@@ -98,7 +98,6 @@ const tableHeaders: Array<CustomTableHeaderInfo> = [
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function GameDetailPage() {
-  const classes = gameDetailPageStyles();
   const tabsClasses = gameDetailTabsStyles();
   const filterClasses = useFilterSelectStyles();
   const dispatch = useDispatch();
@@ -138,6 +137,8 @@ export default function GameDetailPage() {
 
   const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
   const roomId = React.useMemo(() => gameInfo && `${gameInfo.Slug}-${gameInfo.Address}`, [gameInfo]);
+
+  const classes = gameDetailPageStyles({ openSideBar });
 
   const getTokenList = async () => {
     getAllTokenInfos().then(res => {
@@ -476,7 +477,7 @@ export default function GameDetailPage() {
                     <Box ml={0.5}>30 owners</Box>
                   </Box>
                 </Box>
-                <Box width={"738px"} height={"2px"} bgcolor="#FFFFFF10" />
+                <Box width={openSideBar ? 540 : 738} height={"2px"} bgcolor="#FFFFFF10" />
                 {gameInfo?.Chain && (
                   <>
                     <Box display="flex" alignItems="center" my={2}>
@@ -485,7 +486,7 @@ export default function GameDetailPage() {
                       </IconButton>
                       <span>{gameInfo?.Chain}</span>
                     </Box>
-                    <Box width={"738px"} height={"2px"} bgcolor="#FFFFFF10" />
+                    <Box width={openSideBar ? 540 : 738} height={"2px"} bgcolor="#FFFFFF10" />
                   </>
                 )}
                 <Box className={classes.description}>

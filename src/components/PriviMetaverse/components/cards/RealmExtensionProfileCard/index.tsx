@@ -15,6 +15,7 @@ import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import confirmAlert from "shared/ui-kit/ConfirmAlert";
 import ContentPreviewModal from "../../../modals/ContentPreviewModal";
+import DepositRequiredModal from "../../../modals/DepositRequiredModal";
 import EditRealmModal from "../../../modals/EditRealmModal";
 import EditExtensionModal from "../../../modals/EditExtensionModal";
 import { nftCardStyles } from "./index.styles";
@@ -39,6 +40,9 @@ export default function RealmExtensionProfileCard({
   const { draftId } = useParams<{ draftId?: string }>();
 
   const [openContentPreview, setOpenContentPreview] = useState<boolean>(
+    draftId && draftId == nft?.id ? true : false
+  );
+  const [openDepositRequired, setOpenDepositRequired] = useState<boolean>(
     draftId && draftId == nft?.id ? true : false
   );
 
@@ -80,7 +84,8 @@ export default function RealmExtensionProfileCard({
   };
 
   const handleOpenModal = () => {
-    setOpenContentPreview(true);
+    // setOpenContentPreview(true);
+    setOpenDepositRequired(true);
   };
 
   const handleOpenDraftModal = async () => {
@@ -258,6 +263,20 @@ export default function RealmExtensionProfileCard({
             handleRefresh={handleRefresh}
           />
         ))}
+      {openDepositRequired && (
+        <DepositRequiredModal
+          open={openDepositRequired}
+          onClose={() => setOpenDepositRequired(false)}
+          onApprove={() => {
+            setOpenDepositRequired(false);
+            history.push(`/apply_extension`);
+          }}
+          onConfirm={() => {
+            setOpenDepositRequired(false);
+            history.push(`/apply_extension`);
+          }}
+        />
+      )}
     </div>
   );
 }

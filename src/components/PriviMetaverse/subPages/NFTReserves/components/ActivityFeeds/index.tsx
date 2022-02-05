@@ -1,34 +1,18 @@
 import React, { useEffect, useState } from "react";
 
+import { getTrendingGameNfts } from "shared/services/API/ReserveAPI";
 import { useTheme, useMediaQuery } from "@material-ui/core";
 
 import Box from "shared/ui-kit/Box";
 import Avatar from "shared/ui-kit/Avatar";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
+import { LoadingWrapper } from "shared/ui-kit/Hocs";
+
 import { useStyles } from "./index.styles";
 import { getNftGameFeed } from "shared/services/API/DreemAPI";
 import { listenerSocket } from "components/Login/Auth";
 
-const Fake_Trending_Data = [
-  {
-    image: "",
-    nft_name: "cyberwave",
-    creator_name: "Creator name",
-    order: "10",
-  },
-  {
-    image: "",
-    nft_name: "catchking",
-    creator_name: "Creator name",
-    order: "2",
-  },
-  {
-    image: "",
-    nft_name: "botborgs",
-    creator_name: "Creator name",
-    order: "3",
-  },
-];
+const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function ActivityFeeds({ onClose }) {
   const classes = useStyles();
@@ -38,7 +22,8 @@ export default function ActivityFeeds({ onClose }) {
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
   const [selectedTab, setSelectedTab] = useState<"feed" | "trending">("feed");
-  const [nftList, setNftList] = React.useState<any[]>(Fake_Trending_Data);
+  const [nftList, setNftList] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const [transactions, setTransactions] = useState<any[]>([]);
   const [transactionloading, setTransactionLoading] = useState<boolean>(false);
@@ -51,7 +36,13 @@ export default function ActivityFeeds({ onClose }) {
     if (selectedTab === "feed") {
       loadTransactions(true);
     } else {
-      setNftList(Fake_Trending_Data);
+      setLoading(true)
+      getTrendingGameNfts({
+        mode: isProd ? "main" : "test"
+      }).then((res) => {
+        setNftList(res.data);
+      }).catch(() => {})
+      .finally(() => setLoading(false))
     }
   }, [selectedTab]);
 
@@ -193,7 +184,11 @@ export default function ActivityFeeds({ onClose }) {
                 </Box>
               </Box>
             ))) : (<Box>NO DATA</Box>))
-          : (nftList && nftList.length > 0 ?
+          : (loading ? (
+            <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
+              <LoadingWrapper loading={loading} />
+            </Box>
+          ) : nftList && nftList.length > 0 ?
             (nftList.map((item, index) =>
             (
               <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5}>
@@ -205,13 +200,13 @@ export default function ActivityFeeds({ onClose }) {
                     image={item?.image || getDefaultAvatar()}
                   />
                   <Box display={"flex"} flexDirection={"column"} ml={1.5}>
-                    <Box className={classes.typo1}>{item.nft_name}</Box>
+                    <Box className={classes.typo1}>{item.name}</Box>
                     <Box className={classes.typo2} mt={0.25}>
-                      {item.creator_name}
+                      {item.owner?.name}
                     </Box>
                   </Box>
                 </Box>
-                <Box className={classes.orderTag}>{`# ${item.order}`}</Box>
+                <Box className={classes.orderTag}>{`# ${item.tokenId}`}</Box>
               </Box>
             )))
             : (<Box>NO DATA</Box>))}
