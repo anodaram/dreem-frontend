@@ -93,6 +93,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       paddingRight: "0px",
       maxWidth: 480,
     },
+    [theme.breakpoints.down("xs")]: {
+      maxWidth: 350,
+    },
   },
   titleBar: {
     width: "100%",
@@ -122,6 +125,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("sm")]: {
       maxWidth: 480,
+    },
+    [theme.breakpoints.down("xs")]: {
+      maxWidth: 350,
     },
   },
   title: {
@@ -157,6 +163,18 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       paddingBottom: 8,
     },
   },
+  headerButtonGroup: {
+    display: "flex",
+    alignItems: "center",
+    marginTop: 0,
+    [theme.breakpoints.down("md")]: {
+      marginTop: 16,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+      flexDirection: "column",
+    },
+  },
   primaryButton: {
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
     borderRadius: "5px !important",
@@ -171,7 +189,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("xs")]: {
       fontSize: "12px !important",
-      width: "193px !important",
+      width: "100% !important",
     },
   },
   gamePlayButton: {
@@ -208,6 +226,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       maxWidth: 480,
       height: 330,
+    },
+    [theme.breakpoints.down("xs")]: {
+      maxWidth: 350,
     },
   },
   gameContent: {
@@ -495,6 +516,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       lineHeight: "21px",
       fontFamily: "Rany",
       opacity: 0.6,
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: 0,
     },
   },
 }));

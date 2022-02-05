@@ -321,7 +321,7 @@ const NFTReserves = () => {
             <div className={classes.titleBar}>
               <Box className={classes.titleSection}>
                 <div className={classes.title}>Not your average NFT marketplace</div>
-                <Box display="flex" alignItems="center" mt={isNormalScreen || isTablet || isNarrow ? 2 : 0}>
+                <Box className={classes.headerButtonGroup}>
                   <SecondaryButton
                     size="medium"
                     className={classes.primaryButton}
@@ -393,6 +393,7 @@ const NFTReserves = () => {
                               color="#fff"
                               lineHeight="31px"
                               mt="20px"
+                              maxWidth={isMobile ? 350 : "unset"}
                             >
                               {game.Description}
                             </Box>
@@ -666,7 +667,7 @@ const NFTReserves = () => {
                   )}
                 </div>
               </div>
-              <Box padding={isTablet || isNarrow ? 0 : "0 32px"}>
+              <Box padding={isTablet || isNarrow || isMobile ? 0 : "0 32px"}>
                 <div className={classes.allNFTTitle}>
                   <span>Recent Transactions</span>
                 </div>
