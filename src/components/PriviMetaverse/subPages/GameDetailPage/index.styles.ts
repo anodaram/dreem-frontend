@@ -94,7 +94,8 @@ export const gameDetailPageStyles = makeStyles(theme => ({
       fontSize: 16,
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: "14px",
+      maxWidth: "350px !important",
+      fontSize: 14,
       lineHeight: "21.7px",
     },
   },
@@ -128,6 +129,9 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       width: 220,
       height: 250,
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
     },
   },
   content: {
@@ -201,6 +205,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     minWidth: 274,
     height: 38,
     [theme.breakpoints.down("xs")]: {
+      minWidth: 230,
       padding: "8px",
     },
   },
@@ -320,7 +325,7 @@ export const gameDetailTabsStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       flex: 1,
       fontSize: 10,
-      padding: "8px 10px",
+      padding: "8px 0px",
       textAlign: "center",
     },
   },

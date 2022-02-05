@@ -447,13 +447,18 @@ export default function GameDetailPage() {
               <ArrowIcon />
               <Box ml={1}>Back</Box>
             </Box>
-            <Box display={"flex"} alignItems={"center"} mb={4}>
+            <Box display={"flex"} alignItems={"center"} mb={4} flexDirection={isMobile ? "column" : "row"}>
               <img
                 src={gameInfo?.Image || getDefaultBGImage()}
                 className={classes.gameInfoImg}
                 alt="game info image"
               />
-              <Box display={"flex"} flexDirection={"column"} ml={isTablet ? 3 : 7}>
+              <Box
+                display={"flex"}
+                flexDirection={"column"}
+                ml={isMobile ? 0 : isTablet ? 3 : 7}
+                mt={isMobile ? 2 : 0}
+              >
                 <Box className={classes.title} mb={3}>
                   {gameInfo?.CollectionName}
                 </Box>
@@ -461,9 +466,9 @@ export default function GameDetailPage() {
                   display={"flex"}
                   alignItems={"center"}
                   justifyContent={"space-between"}
-                  maxWidth={isTablet ? 470 : 580}
+                  maxWidth={isMobile ? 350 : isTablet ? 470 : 580}
                   mb={3}
-                  fontSize={isTablet ? 14 : 16}
+                  fontSize={isMobile ? 13 : isTablet ? 14 : 16}
                 >
                   <Box display={"flex"} alignItems={"center"}>
                     <Box mr={0.5}>{`Collection ID: ${gameInfo?.AddressShort || "xxx"}`}</Box>
@@ -480,7 +485,11 @@ export default function GameDetailPage() {
                     <Box ml={0.5}>30 owners</Box>
                   </Box>
                 </Box>
-                <Box width={isTablet ? 470 : openSideBar ? 540 : 738} height={"2px"} bgcolor="#FFFFFF10" />
+                <Box
+                  width={isMobile ? 350 : isTablet ? 470 : openSideBar ? 540 : 738}
+                  height={"2px"}
+                  bgcolor="#FFFFFF10"
+                />
                 {gameInfo?.Chain && (
                   <>
                     <Box display="flex" alignItems="center" my={isTablet ? 0.5 : 2}>
@@ -490,7 +499,7 @@ export default function GameDetailPage() {
                       <span>{gameInfo?.Chain}</span>
                     </Box>
                     <Box
-                      width={isTablet ? 470 : openSideBar ? 540 : 738}
+                      width={isMobile ? 350 : isTablet ? 470 : openSideBar ? 540 : 738}
                       height={"2px"}
                       bgcolor="#FFFFFF10"
                     />
