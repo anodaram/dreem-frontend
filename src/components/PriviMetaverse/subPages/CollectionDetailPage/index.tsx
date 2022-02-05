@@ -163,15 +163,16 @@ export default function CollectionDetailPage() {
         <Box className={classes.container} id="scrollContainer">
         <Box className={classes.fitContent} mb={2}>
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2.5}>
-            <Box className={classes.title}>{collectionData.name || ""}</Box>
+            <Box className={classes.title}>{collectionData?.name || ""}</Box>
             <div className={classes.createCollectionBtn} onClick={() => handleCreateItemModal()}>
               <PlusIcon />
               create new item
             </div>
           </Box>
-          <Box className={classes.symbol}>{collectionData.symbol || ""}</Box>
-          <Box className={classes.description}>{collectionData.description || ""}</Box>
+          <Box className={classes.symbol}>{collectionData?.symbol || ""}</Box>
+          <Box className={classes.description}>{collectionData?.description || ""}</Box>
         </Box>
+        <RealmExtensionProfileCard nft={{}} isLoading={false} />
         <InfiniteScroll
           hasChildren={nftData?.length > 0}
           dataLength={nftData?.length}
