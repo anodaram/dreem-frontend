@@ -82,7 +82,7 @@ const NFTReserves = () => {
   const classes = useNFTOptionsStyles({ openSideBar });
 
   const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : openSideBar ? 3 : 4;
-  const loadingCount = width > 1700 ? 5 : width > 1420 ? 4 : width > 1200 ? 3 : width > 650 ? 2 : 1
+  const loadingCount = width > 1700 ? 5 : width > 1420 ? 4 : width > 1200 ? 3 : width > 650 ? 2 : 1;
 
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     { headerName: "NFT" },
@@ -321,7 +321,7 @@ const NFTReserves = () => {
             <div className={classes.titleBar}>
               <Box className={classes.titleSection}>
                 <div className={classes.title}>Not your average NFT marketplace</div>
-                <Box display="flex" alignItems="center" mt={isNormalScreen ? 2 : 0}>
+                <Box display="flex" alignItems="center" mt={isNormalScreen || isTablet || isNarrow ? 2 : 0}>
                   <SecondaryButton
                     size="medium"
                     className={classes.primaryButton}
@@ -525,7 +525,7 @@ const NFTReserves = () => {
                               columnsCountBreakPoints={{
                                 ...COLUMNS_COUNT_BREAK_POINTS,
                                 1440: openSideBar ? 3 : 4,
-                                1800: 4
+                                1800: 4,
                               }}
                             />
                           </Box>
@@ -570,7 +570,7 @@ const NFTReserves = () => {
                         columnsCountBreakPoints={{
                           ...COLUMNS_COUNT_BREAK_POINTS,
                           1440: openSideBar ? 3 : 4,
-                          1800: 4
+                          1800: 4,
                         }}
                       />
                     ) : (
@@ -657,7 +657,7 @@ const NFTReserves = () => {
                         columnsCountBreakPoints={{
                           ...COLUMNS_COUNT_BREAK_POINTS,
                           1440: openSideBar ? 3 : 4,
-                          1800: 4
+                          1800: 4,
                         }}
                       />
                     </>
@@ -666,7 +666,7 @@ const NFTReserves = () => {
                   )}
                 </div>
               </div>
-              <Box padding="0 32px">
+              <Box padding={isTablet || isNarrow ? 0 : "0 32px"}>
                 <div className={classes.allNFTTitle}>
                   <span>Recent Transactions</span>
                 </div>

@@ -18,6 +18,7 @@ export default function ActivityFeeds({ onClose }) {
   const classes = useStyles();
 
   const theme = useTheme();
+  const isBigTablet = useMediaQuery(theme.breakpoints.down("md"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
@@ -36,13 +37,15 @@ export default function ActivityFeeds({ onClose }) {
     if (selectedTab === "feed") {
       loadTransactions(true);
     } else {
-      setLoading(true)
+      setLoading(true);
       getTrendingGameNfts({
-        mode: isProd ? "main" : "test"
-      }).then((res) => {
-        setNftList(res.data);
-      }).catch(() => {})
-      .finally(() => setLoading(false))
+        mode: isProd ? "main" : "test",
+      })
+        .then(res => {
+          setNftList(res.data);
+        })
+        .catch(() => {})
+        .finally(() => setLoading(false));
     }
   }, [selectedTab]);
 
@@ -57,7 +60,9 @@ export default function ActivityFeeds({ onClose }) {
 
       const updateMarketPlaceFeedHandler = _transaction => {
         if (transactions && transactions.length) {
-          const _transactions = transactions.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
+          const _transactions = transactions.map(transaction =>
+            _transaction.id === transaction.id ? _transaction : transaction
+          );
           setTransactions(_transactions);
         }
       };
@@ -104,7 +109,7 @@ export default function ActivityFeeds({ onClose }) {
 
   return (
     <Box className={classes.root}>
-      {!isTablet && (
+      {!isBigTablet && (
         <div className={classes.collapseIcon} onClick={onClose}>
           <CollapseIcon />
         </div>
@@ -144,21 +149,16 @@ export default function ActivityFeeds({ onClose }) {
             transactions.map((item, index) => (
               <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5}>
                 <Box display={"flex"} alignItems={"center"}>
-                  <Avatar
-                    size={32}
-                    rounded={true}
-                    radius={0}
-                    image={item?.image || getDefaultAvatar()}
-                  />
+                  <Avatar size={32} rounded={true} radius={0} image={item?.image || getDefaultAvatar()} />
                   <Box display={"flex"} flexDirection={"column"} ml={1.5}>
                     <Box className={classes.typo1}>{item.name}</Box>
                     <Box className={classes.typo2} mt={0.25}>
-                      {(
-                        item.operator ||
-                        item.seller ||
-                        item.fromSeller ||
-                        item.toSeller || ""
-                      ).substring(0, 6)}...{(item.operator || item.seller || item.fromSeller || item.toSeller || "").substring(
+                      {(item.operator || item.seller || item.fromSeller || item.toSeller || "").substring(
+                        0,
+                        6
+                      )}
+                      ...
+                      {(item.operator || item.seller || item.fromSeller || item.toSeller || "").substring(
                         (item.operator || item.seller || item.fromSeller || item.toSeller || "").length - 4,
                         (item.operator || item.seller || item.fromSeller || item.toSeller || "").length
                       )}
@@ -172,44 +172,43 @@ export default function ActivityFeeds({ onClose }) {
                       item.type && item.type.toLowerCase() === "rented"
                         ? "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)"
                         : item.type && item.type.toLowerCase() === "sold"
-                          ? "conic-gradient(from 31.61deg at 50% 50%, #91D502 -25.18deg, #E5FF46 15deg, rgba(186, 252, 0, 0.76) 103.13deg, #A3CC00 210deg, #91D502 334.82deg, #E5FF46 375deg)"
-                          : item.type && item.type.toLowerCase() === "blocked"
-                            ? "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)"
-                            : item.type && item.type.toLowerCase() === "transfer"
-                              ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
-                              : "",
+                        ? "conic-gradient(from 31.61deg at 50% 50%, #91D502 -25.18deg, #E5FF46 15deg, rgba(186, 252, 0, 0.76) 103.13deg, #A3CC00 210deg, #91D502 334.82deg, #E5FF46 375deg)"
+                        : item.type && item.type.toLowerCase() === "blocked"
+                        ? "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)"
+                        : item.type && item.type.toLowerCase() === "transfer"
+                        ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
+                        : "",
                   }}
                 >
                   {item.type}
                 </Box>
               </Box>
-            ))) : (<Box>NO DATA</Box>))
-          : (loading ? (
-            <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
-              <LoadingWrapper loading={loading} />
-            </Box>
-          ) : nftList && nftList.length > 0 ?
-            (nftList.map((item, index) =>
-            (
-              <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5}>
-                <Box display={"flex"} alignItems={"center"}>
-                  <Avatar
-                    size={49}
-                    rounded={false}
-                    radius={5}
-                    image={item?.image || getDefaultAvatar()}
-                  />
-                  <Box display={"flex"} flexDirection={"column"} ml={1.5}>
-                    <Box className={classes.typo1}>{item.name}</Box>
-                    <Box className={classes.typo2} mt={0.25}>
-                      {item.owner?.name}
-                    </Box>
+            ))
+          ) : (
+            <Box>NO DATA</Box>
+          )
+        ) : loading ? (
+          <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
+            <LoadingWrapper loading={loading} />
+          </Box>
+        ) : nftList && nftList.length > 0 ? (
+          nftList.map((item, index) => (
+            <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5}>
+              <Box display={"flex"} alignItems={"center"}>
+                <Avatar size={49} rounded={false} radius={5} image={item?.image || getDefaultAvatar()} />
+                <Box display={"flex"} flexDirection={"column"} ml={1.5}>
+                  <Box className={classes.typo1}>{item.name}</Box>
+                  <Box className={classes.typo2} mt={0.25}>
+                    {item.owner?.name}
                   </Box>
                 </Box>
-                <Box className={classes.orderTag}>{`# ${item.tokenId}`}</Box>
               </Box>
-            )))
-            : (<Box>NO DATA</Box>))}
+              <Box className={classes.orderTag}>{`# ${item.tokenId}`}</Box>
+            </Box>
+          ))
+        ) : (
+          <Box>NO DATA</Box>
+        )}
       </Box>
     </Box>
   );
