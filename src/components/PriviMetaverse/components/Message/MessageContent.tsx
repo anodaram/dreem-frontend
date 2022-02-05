@@ -380,15 +380,15 @@ export const MessageContent = ({
         setFirstLoading(false);
       }, 100);
     } else {
-      getMessages();
+      getMessages(room);
     }
-  }, [messages.length]);
+  }, [messages.length, room]);
 
   const handleScroll = React.useCallback(
     async e => {
       if (e.target.scrollTop === 0 && hasMore) {
         const lastMsgID = messages.length > 0 ? messages[0].id : null;
-        const hasMoreMessage = await getMessages();
+        const hasMoreMessage = await getMessages(room);
         setHasMore(hasMoreMessage);
         if (lastMsgID) {
           const el = document.getElementById(lastMsgID);
@@ -408,87 +408,89 @@ export const MessageContent = ({
   return (
     <div className="message-content-container">
       <div className="item-list-container" id="messageContainer" ref={itemListRef} onScroll={handleScroll}>
-        {loadingMessages || messages?.length > 0 ? (
-          <div className="item-list" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-            {loadingMessages && (
-              <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
-                <LoadingWrapper loading={loadingMessages} />
-              </Box>
-            )}
-            {messages?.length > 0 &&
-              messages.map((item, index) => {
-                // set date for new day message
-                let hasDate = false;
-                const today = new Date().getDate();
-                const curMsgDate = new Date(messages[index].created).getDate();
-                const lastMsgDate = index === 0 ? 0 : new Date(messages[index - 1].created).getDate();
+        <div>
+          {loadingMessages || messages?.length > 0 ? (
+            <div className="item-list" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+              {loadingMessages && (
+                <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
+                  <LoadingWrapper loading={loadingMessages} />
+                </Box>
+              )}
+              {messages?.length > 0 &&
+                messages.map((item, index) => {
+                  // set date for new day message
+                  let hasDate = false;
+                  const today = new Date().getDate();
+                  const curMsgDate = new Date(messages[index].created).getDate();
+                  const lastMsgDate = index === 0 ? 0 : new Date(messages[index - 1].created).getDate();
 
-                if (index === 0) {
-                  hasDate = true;
-                } else if (curMsgDate !== lastMsgDate) {
-                  hasDate = true;
-                }
-                if (hasDate) {
-                  curMsgDate === today;
-                }
+                  if (index === 0) {
+                    hasDate = true;
+                  } else if (curMsgDate !== lastMsgDate) {
+                    hasDate = true;
+                  }
+                  if (hasDate) {
+                    curMsgDate === today;
+                  }
 
-                return (
-                  <>
-                    {hasDate && (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          margin: "24px 0",
-                          color: "#7E7D95",
-                          opacity: "0.6",
-                        }}
-                      >
+                  return (
+                    <>
+                      {hasDate && (
                         <div
                           style={{
-                            flex: "1",
-                            height: "1px",
-                            background: "#7E7D95",
-                            marginRight: "10px",
-                            opacity: "0.1",
+                            display: "flex",
+                            alignItems: "center",
+                            margin: "24px 0",
+                            color: "#7E7D95",
+                            opacity: "0.6",
                           }}
-                        />
-                        {curMsgDate === today ? (
-                          <div style={{ color: "#65CB63" }}>Today</div>
-                        ) : (
-                          <>
-                            {today - curMsgDate > 1 ? (
-                              <Moment format="DD MMM YYYY hh:mm A">{item.created}</Moment>
-                            ) : (
-                              <div>Yesterday</div>
-                            )}
-                          </>
-                        )}
-                        <div
-                          style={{
-                            flex: "1",
-                            height: "1px",
-                            background: "#7E7D95",
-                            marginLeft: "10px",
-                            opacity: "0.1",
-                          }}
-                        />
-                      </div>
-                    )}
-                    <MessageItem
-                      key={item.id ?? `message-${index}`}
-                      message={item}
-                      messageContentRef={itemListRef}
-                    />
-                  </>
-                );
-              })}
-          </div>
-        ) : (
-          <div className="no-items-label">
-            <div style={{ fontSize: 14 }}>No messages in the chat yet.</div>
-          </div>
-        )}
+                        >
+                          <div
+                            style={{
+                              flex: "1",
+                              height: "1px",
+                              background: "#7E7D95",
+                              marginRight: "10px",
+                              opacity: "0.1",
+                            }}
+                          />
+                          {curMsgDate === today ? (
+                            <div style={{ color: "#65CB63" }}>Today</div>
+                          ) : (
+                            <>
+                              {today - curMsgDate > 1 ? (
+                                <Moment format="DD MMM YYYY hh:mm A">{item.created}</Moment>
+                              ) : (
+                                <div>Yesterday</div>
+                              )}
+                            </>
+                          )}
+                          <div
+                            style={{
+                              flex: "1",
+                              height: "1px",
+                              background: "#7E7D95",
+                              marginLeft: "10px",
+                              opacity: "0.1",
+                            }}
+                          />
+                        </div>
+                      )}
+                      <MessageItem
+                        key={item.id ?? `message-${index}`}
+                        message={item}
+                        messageContentRef={itemListRef}
+                      />
+                    </>
+                  );
+                })}
+            </div>
+          ) : (
+            <div className="no-items-label">
+              <div style={{ fontSize: 14 }}>No messages in the chat yet.</div>
+            </div>
+          )}
+        </div>
       </div>
       <MessageFooter
         setChat={setChat}

@@ -29,8 +29,9 @@ import { RootState } from "store/reducers/Reducer";
 import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
 import Tag from "../GameDetailPage/components/Tag";
 import ActivityFeeds from "./components/ActivityFeeds";
-import { useNFTOptionsStyles } from "./index.styles";
 import { listenerSocket } from "components/Login/Auth";
+import { GLOBAL_CHAT_ROOM } from "shared/constants/constants";
+import { useNFTOptionsStyles } from "./index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -81,7 +82,7 @@ const NFTReserves = () => {
   const classes = useNFTOptionsStyles({ openSideBar });
 
   const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : 4;
-  const loadingCount = width > 1700 ? 5 : width > 1420 ? 4 : width > 1200 ? 3 : width > 650 ? 2 : 1
+  const loadingCount = width > 1700 ? 5 : width > 1420 ? 4 : width > 1200 ? 3 : width > 650 ? 2 : 1;
 
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     { headerName: "NFT" },
@@ -176,7 +177,7 @@ const NFTReserves = () => {
       setLoadingNewListings(true);
 
       const response = await getTrendingGameNfts({
-        mode: isProd ? "main" : "test"
+        mode: isProd ? "main" : "test",
       });
 
       const nfts = response.data;
@@ -190,7 +191,7 @@ const NFTReserves = () => {
     if (loadingPopularGames) return;
 
     setLoadingPopularGames(true);
-    getPopularGames({ mode: isProd ? 'main' : 'test' })
+    getPopularGames({ mode: isProd ? "main" : "test" })
       .then(res => {
         if (res && res.success) {
           const items = res.data;
@@ -294,7 +295,7 @@ const NFTReserves = () => {
           <Box className={classes.sideBar}>
             <Box display="flex" flexDirection="column">
               <ActivityFeeds onClose={() => setOpenSideBar(false)} />
-              <MessageBox />
+              <MessageBox roomId={GLOBAL_CHAT_ROOM} />
             </Box>
           </Box>
         )}
@@ -304,7 +305,7 @@ const NFTReserves = () => {
               {openSideBar ? (
                 <Box display="flex" flexDirection="column">
                   <ActivityFeeds onClose={() => setOpenSideBar(false)} />
-                  <MessageBox />
+                  <MessageBox roomId={GLOBAL_CHAT_ROOM} />
                 </Box>
               ) : (
                 <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
@@ -350,7 +351,7 @@ const NFTReserves = () => {
               <Box
                 className={classes.gameslider}
                 style={{
-                  width: openSideBar ? 'auto' : '1280px'
+                  width: openSideBar ? "auto" : "1280px",
                 }}
               >
                 <img src={require("assets/icons/slider_footer.svg")} className={classes.sliderFooter} />
@@ -364,9 +365,12 @@ const NFTReserves = () => {
                         <img
                           src={game?.Image}
                           className={classes.gameBgImage}
-                          style={{ width: openSideBar ? 'auto' : '1280px !important', objectFit: "cover" }}
+                          style={{ width: openSideBar ? "auto" : "1280px !important", objectFit: "cover" }}
                         />
-                        <Box className={classes.gameContent} style={{ width: openSideBar ? 'auto' : '1280px' }}>
+                        <Box
+                          className={classes.gameContent}
+                          style={{ width: openSideBar ? "auto" : "1280px" }}
+                        >
                           <Box className={classes.popularGames}>
                             <GameIcon />
                             Featured Games
@@ -519,7 +523,10 @@ const NFTReserves = () => {
                   </Box>
                   <div className={`${classes.topNFTContent} ${classes.fitContent}`}>
                     {popularGames && popularGames.length ? (
-                      !isMobile && (popularGames.length === 1 || popularGames.length === 2 || popularGames.length === 3) ? (
+                      !isMobile &&
+                      (popularGames.length === 1 ||
+                        popularGames.length === 2 ||
+                        popularGames.length === 3) ? (
                         <div className={classes.allNFTSection}>
                           <Box style={{ marginBottom: "24px" }}>
                             <MasonryGrid
