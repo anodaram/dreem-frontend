@@ -130,7 +130,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
       width: 220,
       height: 250,
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("xs")]: {
       width: "100%",
     },
   },
