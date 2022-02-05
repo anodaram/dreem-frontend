@@ -15,7 +15,6 @@ export const GameSliderStyles = makeStyles(theme => ({
       width: "100% !important",
       textAlign: "center",
       fontSize: "18px",
-      color: "red",
 
       /* Center slide text vertically */
       display: "flex",

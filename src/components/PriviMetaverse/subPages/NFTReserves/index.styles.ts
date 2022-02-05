@@ -61,14 +61,12 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     padding: "160px 8px 45px",
     marginLeft: "auto",
     marginRight: "auto",
-    maxWidth: 1280,
     "& > div > h2": {
       fontFamily: "Grifter",
       fontWeight: "800",
       fontSize: "40px",
       lineHeight: "104.5%",
       margin: 0,
-      color: "#431AB7",
       [theme.breakpoints.down("xs")]: {
         fontSize: "28px",
       },
@@ -89,7 +87,6 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     [theme.breakpoints.down(1800)]: {
       paddingLeft: "30px",
       paddingRight: "30px",
-      maxWidth: (props: any) => (props.openSideBar ? 1000 : 1280),
     },
     [theme.breakpoints.down("sm")]: {
       paddingLeft: "0px",
@@ -119,7 +116,6 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     justifyContent: "space-between",
     maxWidth: 1280,
     [theme.breakpoints.down(1800)]: {
-      maxWidth: (props: any) => (props.openSideBar ? 1000 : 1280),
       flexDirection: "column",
       alignItems: "flex-start",
     },
@@ -199,6 +195,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   gameslider: {
     height: 720,
     maxWidth: 1280,
+    width: '100%',
     marginTop: 38,
     position: "relative",
     border: "2px solid transparent",
@@ -253,7 +250,10 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   NFTSection: {
     width: "100%",
     marginTop: 46,
-    maxWidth: 1400,
+    maxWidth: 1280,
+    [theme.breakpoints.down(1800)]: {
+      maxWidth: (props: any) => (props.openSideBar ? 1040 : 1280),
+    },
   },
   topGamesWrapper: {
     paddingTop: "50px",

@@ -80,7 +80,7 @@ const NFTReserves = () => {
 
   const classes = useNFTOptionsStyles({ openSideBar });
 
-  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : 4;
+  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : openSideBar ? 3 : 4;
   const loadingCount = width > 1700 ? 5 : width > 1420 ? 4 : width > 1200 ? 3 : width > 650 ? 2 : 1
 
   const tableHeaders: Array<CustomTableHeaderInfo> = [
@@ -347,12 +347,7 @@ const NFTReserves = () => {
                   )}
                 </Box>
               </Box>
-              <Box
-                className={classes.gameslider}
-                style={{
-                  width: openSideBar ? 'auto' : '1280px'
-                }}
-              >
+              <Box className={classes.gameslider}>
                 <img src={require("assets/icons/slider_footer.svg")} className={classes.sliderFooter} />
                 <img src={require("assets/icons/slider_left.svg")} className={classes.sliderLeft} />
                 <img src={require("assets/icons/slider_right.svg")} className={classes.sliderRight} />
@@ -377,14 +372,6 @@ const NFTReserves = () => {
                             alignItems="flex-start"
                             mt={isTablet ? 2 : 0}
                           >
-                            <Box
-                              fontFamily="Rany"
-                              fontWeight={700}
-                              fontSize={isTablet ? 12 : 18}
-                              color="#E9FF26"
-                            >
-                              COMING SOON
-                            </Box>
                             <Box
                               fontFamily="GRIFTER"
                               fontWeight={700}
@@ -528,7 +515,11 @@ const NFTReserves = () => {
                               renderItem={item => (
                                 <FeaturedGameCard game={item} isLoading={Object.entries(item).length === 0} />
                               )}
-                              columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS}
+                              columnsCountBreakPoints={{
+                                ...COLUMNS_COUNT_BREAK_POINTS,
+                                1440: openSideBar ? 3 : 4,
+                                1800: 4
+                              }}
                             />
                           </Box>
                         </div>
@@ -569,7 +560,11 @@ const NFTReserves = () => {
                         gutter={"24px"}
                         data={Array(loadingCount).fill(0)}
                         renderItem={_ => <Skeleton variant="rect" width={60} height={60} />}
-                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS}
+                        columnsCountBreakPoints={{
+                          ...COLUMNS_COUNT_BREAK_POINTS,
+                          1440: openSideBar ? 3 : 4,
+                          1800: 4
+                        }}
                       />
                     ) : (
                       <div></div>
@@ -652,7 +647,11 @@ const NFTReserves = () => {
                         gutter={"24px"}
                         data={newListings}
                         renderItem={(item, index) => <ExploreCard nft={item} key={`item-${index}`} />}
-                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS}
+                        columnsCountBreakPoints={{
+                          ...COLUMNS_COUNT_BREAK_POINTS,
+                          1440: openSideBar ? 3 : 4,
+                          1800: 4
+                        }}
                       />
                     </>
                   ) : (
