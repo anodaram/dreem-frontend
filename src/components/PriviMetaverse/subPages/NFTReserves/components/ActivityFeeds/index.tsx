@@ -11,6 +11,7 @@ import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import { useStyles } from "./index.styles";
 import { getNftGameFeed } from "shared/services/API/DreemAPI";
 import { listenerSocket } from "components/Login/Auth";
+import { getAbbrAddress } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -182,32 +183,37 @@ export default function ActivityFeeds({ onClose }) {
                   {item.type}
                 </Box>
               </Box>
-            ))
-          ) : (
-            <Box>NO DATA</Box>
-          )
-        ) : loading ? (
-          <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
-            <LoadingWrapper loading={loading} />
-          </Box>
-        ) : nftList && nftList.length > 0 ? (
-          nftList.map((item, index) => (
-            <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5}>
-              <Box display={"flex"} alignItems={"center"}>
-                <Avatar size={49} rounded={false} radius={5} image={item?.image || getDefaultAvatar()} />
-                <Box display={"flex"} flexDirection={"column"} ml={1.5}>
-                  <Box className={classes.typo1}>{item.name}</Box>
-                  <Box className={classes.typo2} mt={0.25}>
-                    {item.owner?.name}
-                  </Box>
-                </Box>
-              </Box>
-              <Box className={classes.orderTag}>{`# ${item.tokenId}`}</Box>
+            ))) : (<Box>NO DATA</Box>))
+          : (loading ? (
+            <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
+              <LoadingWrapper loading={loading} />
             </Box>
-          ))
-        ) : (
+          ) : nftList && nftList.length > 0 ?
+            (
+              nftList.map((item, index) =>
+              (
+                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5}>
+                  <Box display={"flex"} alignItems={"center"}>
+                    <Avatar
+                      size={49}
+                      rounded={false}
+                      radius={5}
+                      image={item?.image || getDefaultAvatar()}
+                    />
+                    <Box display={"flex"} flexDirection={"column"} ml={1.5}>
+                      <Box className={classes.typo1}>{item.name}</Box>
+                      <Box className={classes.typo2} mt={0.25}>
+                        {item.owner?.name || getAbbrAddress(item.currentOwner, 7, 2)}
+                      </Box>
+                    </Box>
+                  </Box>
+                  <Box className={classes.orderTag}>{`# ${item.tokenId}`}</Box>
+                </Box>
+              ))
+            )
+          : (
           <Box>NO DATA</Box>
-        )}
+        ))}
       </Box>
     </Box>
   );
