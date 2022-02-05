@@ -11,6 +11,7 @@ import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import { useStyles } from "./index.styles";
 import { getNftGameFeed } from "shared/services/API/DreemAPI";
 import { listenerSocket } from "components/Login/Auth";
+import { getAbbrAddress } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -199,7 +200,7 @@ export default function ActivityFeeds({ onClose }) {
                 <Box display={"flex"} flexDirection={"column"} ml={1.5}>
                   <Box className={classes.typo1}>{item.name}</Box>
                   <Box className={classes.typo2} mt={0.25}>
-                    {item.owner?.name}
+                    {item.owner?.name || getAbbrAddress(item.currentOwner, 7, 2)}
                   </Box>
                 </Box>
               </Box>
@@ -219,13 +220,13 @@ const CollapseIcon = () => (
     <path
       d="M4.02065 4L0.935547 4L0.935545 18.8085L4.02065 18.8085L4.02065 4Z"
       fill="white"
-      fill-opacity="0.5"
+      fillOpacity="0.5"
     />
     <path
       d="M8 11.25H22.5M8 11.25L14.5 5M8 11.25L14.5 17.5"
       stroke="white"
-      stroke-opacity="0.5"
-      stroke-width="3"
+      strokeOpacity="0.5"
+      strokeWidth="3"
     />
   </svg>
 );

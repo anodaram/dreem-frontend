@@ -404,7 +404,7 @@ const NFTReserves = () => {
                                 alignItems="flex-start"
                                 className={classes.gameInfoSection}
                               >
-                                <span>{game.Transfers}</span>
+                                <span>{game.Transfers || 0}</span>
                                 <span>Transfers</span>
                               </Box>
                               <Box
@@ -413,7 +413,7 @@ const NFTReserves = () => {
                                 alignItems="flex-start"
                                 className={classes.gameInfoSection}
                               >
-                                <span>{game.Count}</span>
+                                <span>{game.Count || 0}</span>
                                 <span>New Owners</span>
                               </Box>
                               <Box
@@ -422,7 +422,7 @@ const NFTReserves = () => {
                                 alignItems="flex-start"
                                 className={classes.gameInfoSection}
                               >
-                                <span>{game.transaction_count}</span>
+                                <span>{game.transaction_count || 0}</span>
                                 <span>marketplace transactions</span>
                               </Box>
                             </Box>
