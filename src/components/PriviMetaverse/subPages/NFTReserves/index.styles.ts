@@ -349,9 +349,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       [theme.breakpoints.down(1200)]: {
         right: 60,
       },
-      [theme.breakpoints.down(769)]: {
-        // display: "none",
-      },
+      [theme.breakpoints.down(769)]: {},
     },
     "& button.rec-arrow-right": {
       position: "absolute",
@@ -370,9 +368,6 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       width: "calc(100% + 24px)",
       "& .rec-carousel-item": {
         "& > .rec-item-wrapper": {
-          // minWidth: 330,
-          // maxWidth: 370,
-          // width: "unset",
           "& > div": {
             boxShadow: "none",
           },
