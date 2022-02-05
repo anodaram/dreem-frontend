@@ -26,6 +26,7 @@ import RealmMapPage from "./subPages/RealmMapPage";
 import WorldDetailPage from "./subPages/WorldDetailPage";
 import CreateRealmPage from "./subPages/CreateRealmPage";
 import MintNFTPage from "./subPages/MintNFTPage";
+import ApplyExtensionPage from "./subPages/ApplyExtensionPage";
 
 // import ClaimDreemPage from "./subPages/ClaimDreemPage";
 // import MetaversePage from "./subPages/MetaversePage";
@@ -43,6 +44,7 @@ export default function PriviMetaverseRouter(props) {
         <Route exact path="/realms/:id" component={RealmDetailPage} />
         <Route exact path="/realms/:id/:character_id" component={RealmDetailPage} />
         <Route exact path="/realms" component={ExplorePage} />
+        <Route exact path="/apply_extension" component={ApplyExtensionPage} />
         <Route exact path="/world/:id" component={WorldDetailPage} />
         <Route exact path="/unfinished_mint/:id" component={MintNFTPage} />
         <Route exact path="/avatars" component={ExploreAvatarPage} />
