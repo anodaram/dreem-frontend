@@ -36,7 +36,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     color: "#ffffff",
   },
   fitContent: {
-    maxWidth: 1440,
+    maxWidth: (props: any) => (props.openSideBar ? 1000 : 1280),
     marginLeft: "auto",
     marginRight: "auto",
     [theme.breakpoints.down("md")]: {
@@ -83,7 +83,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     fontSize: 20,
     lineHeight: "155%",
     color: "#FFFFFF",
-    maxWidth: 738,
+    maxWidth: (props: any) => (props.openSideBar ? 738 : 540),
     marginTop: 24,
     maxHeight: 60,
     overflow: "hidden",
