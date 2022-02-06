@@ -403,7 +403,7 @@ export default function RealmDetailPage() {
                   </Box>
                 </div>
               ) : (
-                <img src={realmData.worldImages[0]} alt="realm" />
+                <img src={realmData.worldImage} alt="realm" />
               )
             ) : null}
           </Box>
