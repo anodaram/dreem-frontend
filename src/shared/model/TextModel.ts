@@ -18,4 +18,12 @@ export default class TextModel
   public static construct(data: any): TextModel{
     return new TextModel(data);
   }
+  public static constructArray(data: any): TextModel[] {
+    let assets: TextModel[] = [];
+    for (let i = 0; i < data.length; ++i) {
+      let asset: TextModel = TextModel.construct(data[i]);
+      assets.push(asset);
+    }
+    return assets;
+  }
 }

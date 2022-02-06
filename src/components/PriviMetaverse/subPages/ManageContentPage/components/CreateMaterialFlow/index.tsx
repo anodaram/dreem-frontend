@@ -192,7 +192,9 @@ const CreateMaterialFlow = ({
       {openMintEditions ?
         <MintEditions
           amount={amount}
+          hashId = ''
           handleCancel={() => {setOpenMintEditions(false)}}
+          handleMint = {() => {}}
         /> 
       :
       <>

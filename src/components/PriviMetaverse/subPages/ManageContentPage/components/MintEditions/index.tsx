@@ -17,10 +17,14 @@ import ContentProcessingOperationModal from "components/PriviMetaverse/modals/Co
 
 const MintEditions = ({
   amount,
+  hashId,
   handleCancel,
+  handleMint
 }: {
   amount: string,
+  hashId: string,
   handleCancel: () => void;
+  handleMint: (amount: any) => void;
 }) => {
   const history = useHistory();
   const classes = useModalStyles();
@@ -34,16 +38,42 @@ const MintEditions = ({
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   React.useEffect(() => {
-    const steps: Array<number> = [0];
+    const steps: Array<{}> = [{key: 0, amount: 0, status: null}];
     for(var i = 1;i <= Math.ceil((Number(amount) / UnitEdition)); i++){
       if(Number(amount) >= i * UnitEdition){
-        steps.push(i*UnitEdition)
+        const batch = {key: i, amount: i*UnitEdition, status: null}
+        steps.push(batch)
       } else{
-        steps.push(Number(amount))
+        const batch = {key: i, amount: Number(amount), status: null}
+        steps.push(batch)
       }
     }
+    console.log(steps)
     setBunches(steps)
   }, [amount]);
+  const handleMintBatch = async (i, amount) => {
+    const res = await handleMint(amount)
+    console.log(res)
+    bunches.map((item, index)=>{
+      if(item.key == i) {
+        //@ts-ignore
+        if(res){
+          item.status = true;
+        } else {
+          item.status = false;
+        }
+      }
+    });
+
+    // const res = await handleMint(amount);
+    // console.log(res)
+    // bunches.map((item, index)=>{
+    //   if(item.key == i) {
+    //     // if(!res)
+    //     item.status = true;
+    //   }
+    // })
+  }
   return (
     isUploading ? (
       <ContentProcessingOperationModal open={isUploading} txSuccess={uploadSuccess} onClose={()=>{setIsUploading(false)}}/>
@@ -71,11 +101,15 @@ const MintEditions = ({
             index > 0 &&
             <Box className={classes.mintBox}>
               <Box className={classes.itemTitle}>
-                Batch {bunches[index - 1] + 1}-{item}
+                Batch {bunches[index - 1].amount + 1}-{item.amount}
               </Box>
-              <PrimaryButton className={classes.mintBtn} size="medium" onClick={()=>{}}>
-                Mint
+              {item.status ? 
+              <Box>Minted</Box>
+              :
+              <PrimaryButton className={classes.mintBtn} size="medium" onClick={()=>handleMintBatch(item.key, item.amount - (item.key - 1) * UnitEdition)}>
+                 {item.status == false ? "Try again" : "Mint"}
               </PrimaryButton>
+              }
             </Box>
           )}
           <Box display="flex" alignItems="center" justifyContent="center" mt={5}>

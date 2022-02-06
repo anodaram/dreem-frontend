@@ -26,6 +26,7 @@ import { usePageRefreshContext } from "shared/contexts/PageRefreshContext";
 import TabsView from "shared/ui-kit/TabsView";
 import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import RealmCard from "components/PriviMetaverse/components/cards/RealmCard";
+import NFTCard from "components/PriviMetaverse/subPages/CreatorPage/NFTCard";
 import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
@@ -50,6 +51,10 @@ const ProfileTabs = [
   //   key: "owned",
   //   title: "owned",
   // },
+  {
+    key: "wip",
+    title: "WIP",
+  },
 ];
 
 const MAX_NAME_LENGTH = 20;
@@ -79,6 +84,7 @@ export default function CreatorPage() {
   const [collections, setCollections] = useState<any[]>([]);
   const [nftContents, setNftContents] = useState<any[]>([]);
   const [likedRealms, setLikedRealms] = useState<any[]>([]);
+  const [nfts, setNfts] = useState<any[]>([]);
   const [likedAvatars, setLikedAvatars] = useState<any[]>([]);
   const [openFollowProfileModal, setOpenFollowProfileModal] = useState<boolean>(false);
   const [followsList, setFollowsList] = useState<any[]>([]);
@@ -264,6 +270,15 @@ export default function CreatorPage() {
       } else {
         setHasMore(false);
       }
+      MetaverseAPI.getUnfinishedNFTs()
+      .then(res => {
+        if (res.success) {
+          const items = res.data.elements;
+          if (items && items.length > 0) {
+            setNfts(res.data.elements);
+          }
+        }
+      })
     } catch (err) {
       console.error(err);
     }
@@ -892,6 +907,21 @@ export default function CreatorPage() {
                         {!loading && likedAvatars?.length < 1 && (
                           <Box textAlign="center" width="100%" mb={10} mt={2}>
                             No avatars
+                          </Box>
+                        )}
+                      </>
+                    )}
+                    {selectedTab === "wip" && (
+                      <>
+                        <Box mt={3} mb={2} className={classes.typo7}>
+                          Unfinished Minting
+                        </Box>
+                        {nfts?.length > 0 && (
+                        <NFTCard items={nfts} disableEffect popup isLoading={loading} />
+                        )}
+                        {!loading && nfts?.length < 1 && (
+                          <Box textAlign="center" width="100%" mb={10} mt={2}>
+                            No unfinished nfts
                           </Box>
                         )}
                       </>

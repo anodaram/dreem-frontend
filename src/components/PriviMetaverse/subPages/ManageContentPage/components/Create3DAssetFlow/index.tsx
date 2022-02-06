@@ -307,7 +307,9 @@ const Create3DAssetFlow = ({
       {openMintEditions ?
         <MintEditions
           amount={amount}
+          hashId = ''
           handleCancel={() => {setOpenMintEditions(false)}}
+          handleMint = {() => {}}
         /> 
       :
       <>

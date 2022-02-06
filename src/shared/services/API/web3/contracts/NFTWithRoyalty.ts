@@ -7,7 +7,7 @@ const MAX_PRIO_FEE = "50";
 
 const nftWithRoyalty = network => {
   const contractAddress = config[network].CONTRACT_ADDRESSES.ERC721_WITH_ROYALTY;
-
+  let txHash;
   const metadata = require("shared/connectors/web3/contracts/ERC721WithRoyalty.json");
 
   const mint = async (
@@ -35,10 +35,11 @@ const nftWithRoyalty = network => {
             console.log("transaction hash:", hash);
             setTxModalOpen(true);
             setTxHash(hash);
+            txHash = hash;
           });
         console.log("transaction succeed", response);
         const returnValues = response.events.RoyaltyNFT.returnValues;
-        resolve({ success: true, collectionAddress, tokenId: returnValues.initialId, owner: returnValues.owner, royaltyAddress: returnValues.royaltyAddress });
+        resolve({ success: true, txHash: txHash, collectionAddress, tokenId: returnValues.initialId, owner: returnValues.owner, royaltyAddress: returnValues.royaltyAddress });
       } catch (e) {
         console.log(e);
         resolve({ success: false });

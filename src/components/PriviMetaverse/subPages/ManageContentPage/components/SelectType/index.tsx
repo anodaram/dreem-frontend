@@ -48,7 +48,7 @@ const SelectType = ({ handleNext }: { handleNext: (asset: CreateAssetModel) => v
             className={`maskWrapper ${item.interactable === true ? "" : "disabled"}`}
             key={`trending-pod-${index}`}
             onClick={() => {
-              handleNext(item);
+              item.interactable && handleNext(item);
             }}
           >
             <div className={classes.mask}>

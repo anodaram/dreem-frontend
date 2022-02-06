@@ -137,13 +137,42 @@ export const getCollection = async collectionId => {
   }
 };
 
-export const getNFTInfo = async itemId => {
+export const getNFTInfo = async hashId => {
   try {
     const token = localStorage.getItem("token");
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(`${METAVERSE_URL()}/web/itemVersions/${itemId}/nft/`, config);
+    const resp = await axios.get(`${METAVERSE_URL()}/web/asset/${hashId}/mint/metadata/`, config);
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUnfinishedNFTs = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.get(`${METAVERSE_URL()}/web/assets/batches/`, config);
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+export const getUnfinishedNFT = async (hash) => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.get(`${METAVERSE_URL()}/web/asset/${hash}/mint/batch/`, config);
     if (resp.data) {
       return resp.data;
     }
@@ -172,6 +201,30 @@ export const uploadWorld = async payload => {
     }
   } catch (error) {
     console.log("error in uploading world:", error);
+  }
+};
+
+export const uploadAsset = async payload => {
+  try {
+    const formData = new FormData();
+    console.log(payload)
+    Object.keys(payload).forEach(key => {
+      // if (key === "image")
+      //   formData.append(key, payload[key], payload[key].name);
+      // else 
+      payload[key] && formData.append(key, payload[key]);
+    });
+
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.post(`${METAVERSE_URL()}/web/create/asset/upload/`, formData, config);
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    console.log("error in uploading asset:", error);
   }
 };
 
@@ -299,8 +352,23 @@ export const getCharacterData = async characterId => {
   }
 };
 
+export const getBatches = async hashId => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.get(`${METAVERSE_URL()}/web/asset/${hashId}/mint/batch/`, config);
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    console.log("error in getBatches:", error);
+  }
+};
+
 export const convertToNFTWorld = async (
-  worldId,
+  hashId,
   contractAddress,
   chain,
   nftId,
@@ -315,7 +383,7 @@ export const convertToNFTWorld = async (
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
     const resp = await axios.post(
-      `${METAVERSE_URL()}/web/itemVersions/${worldId}/mint/`,
+      `${METAVERSE_URL()}/web/itemVersions/${hashId}/mint/`,
       {
         collectionAddress: contractAddress,
         tokenIds: nftId,
@@ -324,6 +392,86 @@ export const convertToNFTWorld = async (
         chain: chain,
         royaltyPercentage: royaltyPercentage,
         royaltyAddress: royaltyAddress,
+      },
+      config
+    );
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const convertToNFTAsset = async (
+  hashId,
+  contractAddress,
+  chain,
+  nftId,
+  metadataCID,
+  owner,
+  royaltyAddress,
+  royaltyPercentage,
+  txHash,
+  totalSupply
+) => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.post(
+      `${METAVERSE_URL()}/web/itemVersions/${hashId}/mint/`,
+      {
+        collectionAddress: contractAddress,
+        tokenIds: nftId,
+        ownerAddress: owner,
+        metadataUrl: metadataCID,
+        chain: chain,
+        royaltyPercentage: royaltyPercentage,
+        royaltyAddress: royaltyAddress,
+        tx: txHash,
+        totalSupply: totalSupply
+      },
+      config
+    );
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const convertToNFTAssetBatch = async (
+  hashId,
+  contractAddress,
+  chain,
+  nftId,
+  metadataCID,
+  owner,
+  royaltyAddress,
+  royaltyPercentage,
+  txHash,
+  totalSupply
+) => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.post(
+      `${METAVERSE_URL()}/web/asset/${hashId}/mint/batch/`,
+      {
+        collectionAddress: contractAddress,
+        tokenIds: nftId,
+        ownerAddress: owner,
+        metadataUrl: metadataCID,
+        chain: chain,
+        royaltyPercentage: royaltyPercentage,
+        royaltyAddress: royaltyAddress,
+        tx: txHash,
+        totalSupply: totalSupply
       },
       config
     );
