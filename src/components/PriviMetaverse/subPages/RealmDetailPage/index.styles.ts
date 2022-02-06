@@ -256,13 +256,19 @@ export const realmDetailPageStyles = makeStyles(theme => ({
       fontSize: 8,
     },
   },
-  public: {
+  publicStateCtn: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
     top: 32,
     left: 51,
+    zIndex: 999,
+  },
+  public: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     "fontFamily": "Rany",
     "fontStyle": "normal",
     "fontWeight": "bold",
@@ -277,6 +283,21 @@ export const realmDetailPageStyles = makeStyles(theme => ({
       top: 12,
       left: 30,
       padding: '2px 8px',
+    },
+  },
+  seeDetailBtn: {
+    color: "#151515",
+    background: 'linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)',
+    borderRadius: 4,
+    "fontFamily": "Rany",
+    "fontStyle": "normal",
+    "fontWeight": "bold",
+    "fontSize": "20px",
+    "lineHeight": "190%",
+    padding: '4px 18px',
+    cursor: 'pointer',
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 10,
     },
   }
 }));
