@@ -98,7 +98,6 @@ const tableHeaders: Array<CustomTableHeaderInfo> = [
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function GameDetailPage() {
-  const classes = gameDetailPageStyles();
   const tabsClasses = gameDetailTabsStyles();
   const filterClasses = useFilterSelectStyles();
   const dispatch = useDispatch();
@@ -138,6 +137,8 @@ export default function GameDetailPage() {
 
   const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
   const roomId = React.useMemo(() => gameInfo && `${gameInfo.Slug}-${gameInfo.Address}`, [gameInfo]);
+
+  const classes = gameDetailPageStyles({ openSideBar });
 
   const getTokenList = async () => {
     getAllTokenInfos().then(res => {
@@ -404,18 +405,20 @@ export default function GameDetailPage() {
 
   return (
     <Box display="flex" height="100%">
-      <Box className={classes.sideBar}>
-        {openSideBar ? (
-          <Box display="flex" flexDirection="column">
-            <ActivityFeeds onClose={() => setOpenSideBar(false)} />
-            <MessageBox roomId={roomId} />
-          </Box>
-        ) : (
-          <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
-            <ExpandIcon />
-          </Box>
-        )}
-      </Box>
+      {!isTablet && (
+        <Box className={classes.sideBar}>
+          {openSideBar ? (
+            <Box display="flex" flexDirection="column">
+              <ActivityFeeds onClose={() => setOpenSideBar(false)} />
+              <MessageBox roomId={roomId} />
+            </Box>
+          ) : (
+            <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
+              <ExpandIcon />
+            </Box>
+          )}
+        </Box>
+      )}
       <Box className={classes.root} id="scrollContainer" onScroll={handleScroll}>
         <Box
           className={classes.headerBG}
@@ -444,13 +447,18 @@ export default function GameDetailPage() {
               <ArrowIcon />
               <Box ml={1}>Back</Box>
             </Box>
-            <Box display={"flex"} alignItems={"center"} mb={4}>
+            <Box display={"flex"} alignItems={"center"} mb={4} flexDirection={isMobile ? "column" : "row"}>
               <img
                 src={gameInfo?.Image || getDefaultBGImage()}
                 className={classes.gameInfoImg}
                 alt="game info image"
               />
-              <Box display={"flex"} flexDirection={"column"} ml={7}>
+              <Box
+                display={"flex"}
+                flexDirection={"column"}
+                ml={isMobile ? 0 : isTablet ? 3 : 7}
+                mt={isMobile ? 2 : 0}
+              >
                 <Box className={classes.title} mb={3}>
                   {gameInfo?.CollectionName}
                 </Box>
@@ -458,8 +466,9 @@ export default function GameDetailPage() {
                   display={"flex"}
                   alignItems={"center"}
                   justifyContent={"space-between"}
-                  maxWidth={580}
+                  maxWidth={isMobile ? 350 : isTablet ? 470 : 580}
                   mb={3}
+                  fontSize={isMobile ? 13 : isTablet ? 14 : 16}
                 >
                   <Box display={"flex"} alignItems={"center"}>
                     <Box mr={0.5}>{`Collection ID: ${gameInfo?.AddressShort || "xxx"}`}</Box>
@@ -476,16 +485,24 @@ export default function GameDetailPage() {
                     <Box ml={0.5}>30 owners</Box>
                   </Box>
                 </Box>
-                <Box width={"738px"} height={"2px"} bgcolor="#FFFFFF10" />
+                <Box
+                  width={isMobile ? 350 : isTablet ? 470 : openSideBar ? 540 : 738}
+                  height={"2px"}
+                  bgcolor="#FFFFFF10"
+                />
                 {gameInfo?.Chain && (
                   <>
-                    <Box display="flex" alignItems="center" my={2}>
+                    <Box display="flex" alignItems="center" my={isTablet ? 0.5 : 2}>
                       <IconButton aria-label="" style={{ cursor: "unset" }}>
                         <img src={getChainImageUrl(gameInfo?.Chain)} width={"22px"} />
                       </IconButton>
                       <span>{gameInfo?.Chain}</span>
                     </Box>
-                    <Box width={"738px"} height={"2px"} bgcolor="#FFFFFF10" />
+                    <Box
+                      width={isMobile ? 350 : isTablet ? 470 : openSideBar ? 540 : 738}
+                      height={"2px"}
+                      bgcolor="#FFFFFF10"
+                    />
                   </>
                 )}
                 <Box className={classes.description}>
@@ -508,11 +525,11 @@ export default function GameDetailPage() {
                 )}
               </Box>
             </Box>
-            <Box display={"flex"} alignItems={"stretch"} my={3.5}>
-              <Box width={"55%"} mr={1.5}>
+            <Box display={"flex"} alignItems={"stretch"} my={3.5} flexDirection={isTablet ? "column" : "row"}>
+              <Box width={isTablet ? "100%" : "55%"} mr={isTablet ? 0 : 1.5}>
                 <TotalStats />
               </Box>
-              <Box width={"calc(45% - 12px)"}>
+              <Box width={isTablet ? "100%" : "calc(45% - 12px)"} display="flex" mt={isTablet ? 2 : 0}>
                 <RecentTransactions />
               </Box>
             </Box>

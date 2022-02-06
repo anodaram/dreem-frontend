@@ -1,21 +1,19 @@
-import React, { useMemo } from "react";
-import { useHistory } from "react-router";
-import { useSelector } from "react-redux";
-
 import { Skeleton } from "@material-ui/lab";
+import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router";
+import { useLocation } from "react-router-dom";
 
-import { RootState } from "store/reducers/Reducer";
-import { toDecimals } from "shared/functions/web3";
-
-import Box from "shared/ui-kit/Box";
-import { Avatar, NFT_STATUS_COLORS } from "shared/ui-kit";
-import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
-import { getChainImageUrl } from "shared/functions/chainFucntions";
 import { NftStates } from "shared/constants/constants";
+import { getChainImageUrl } from "shared/functions/chainFucntions";
+import { toDecimals } from "shared/functions/web3";
 import { visitChainLink } from "shared/helpers";
+import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
+import { Avatar, NFT_STATUS_COLORS } from "shared/ui-kit";
+import Box from "shared/ui-kit/Box";
+import { RootState } from "store/reducers/Reducer";
 
 import { cardStyles } from "./index.style";
-import { useLocation } from "react-router-dom";
 
 const SECONDS_PER_HOUR = 3600;
 
@@ -60,9 +58,11 @@ const ExploreCard = ({ nft, isLoading = false }) => {
     } else {
       let name: string = "";
       name =
-        nft.owner?.firstName || nft.owner?.lastName
-          ? `${nft.owner?.firstName} ${nft.owner?.lastName}`
-          : ownerAddress?.substr(0, 5) + "..." + ownerAddress?.substr(ownerAddress.length - 5, 5) ?? "";
+        nft.owner?.name ??
+          (nft.owner?.firstName || nft.owner?.lastName
+            ? `${nft.owner?.firstName} ${nft.owner?.lastName}`
+            : ownerAddress?.substr(0, 5) + "..." + ownerAddress?.substr(ownerAddress.length - 5, 5) ?? "");
+          
 
       return name;
     }
