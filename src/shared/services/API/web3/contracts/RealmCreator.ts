@@ -19,17 +19,16 @@ const RealmCreator = network => {
   ): Promise<any> => {
     return new Promise(async resolve => {
       try {
-        const { name, symbol, uri, isRoyalty, royaltyAddress, royaltyPercentage } = payload;
-        const rAddress = isRoyalty ? royaltyAddress : zeroAddress()
-        const bps = isRoyalty ? royaltyPercentage * 100 : 0
+        const { uri, taxRate, creatorShare, votingConsensus, nftToAttachAddress, nftToAttachId } = payload;
+        // const rAddress = isRoyalty ? royaltyAddress : zeroAddress()
 
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
 
-        console.log("Getting gas....", contract, contractAddress, account, rAddress, bps);
-        const gas = await contract.methods.createRoyaltyERC721(name, symbol, uri, rAddress, bps, '').estimateGas({ from: account });
+        console.log("Getting gas....", contract, contractAddress, account, uri, taxRate, creatorShare, votingConsensus, nftToAttachAddress, nftToAttachId);
+        const gas = await contract.methods.createRealm(uri, taxRate, creatorShare, votingConsensus, nftToAttachAddress, nftToAttachId).estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
-          .createRoyaltyERC721(name, symbol, uri, rAddress, bps, '')
+          .createRealm(uri, taxRate, creatorShare, votingConsensus, nftToAttachAddress, nftToAttachId)
           .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", function (hash) {
             console.log("transaction hash:", hash);
@@ -38,8 +37,8 @@ const RealmCreator = network => {
             txHash = hash;
           });
         console.log("transaction succeed", response);
-
-        resolve({ success: true, txHash: txHash, contractAddress: response.events.LoyaltyERC721Created.returnValues.nft, tokenId: response.events.LoyaltyERC721Created.returnValues.initialId });
+        const returnValues = response.events.RealmCreated.returnValues
+        resolve({ success: true, txHash: txHash });
       } catch (e) {
         console.log(e);
         resolve({ success: false });

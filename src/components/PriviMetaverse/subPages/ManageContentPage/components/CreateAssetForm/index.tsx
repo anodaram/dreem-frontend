@@ -8,6 +8,7 @@ import Box from "shared/ui-kit/Box";
 import { FormData, InputFileContents, InputFiles, InputRefs } from "./interface";
 import { color2obj, obj2color } from "shared/helpers";
 
+import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
 import { ReactComponent as GLTFIcon } from "assets/icons/gltf.svg";
 
@@ -92,7 +93,7 @@ const CreateAssetForm = ({
           <Box className={classes.itemTitle} mb={1}>
             {asset.name?.value}
           </Box>
-          {/* <InfoTooltip tooltip={"Please give your texture a name."} /> */}
+          {asset.info?.value && <InfoTooltip tooltip={asset.info?.value} />}
         </Box>
         {asset.kind === "STRING" ? (
           asset.key === "ITEM_DESCRIPTION" ? (
@@ -116,7 +117,7 @@ const CreateAssetForm = ({
             />
           )
         ) : null}
-        {asset.kind === "FILE_TYPE_IMAGE" && (
+        {asset.kind === "FILE" && (
           <>
             <Box
               className={classes.uploadBox}
