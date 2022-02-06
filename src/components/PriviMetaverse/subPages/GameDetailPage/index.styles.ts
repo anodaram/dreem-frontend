@@ -60,8 +60,9 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     lineHeight: "100%",
     color: "white",
     maxWidth: 700,
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
       fontSize: 34,
+      maxWidth: 470,
     },
   },
   tabTitle: {
@@ -87,9 +88,14 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     marginTop: 24,
     maxHeight: 60,
     overflow: "hidden",
-    [theme.breakpoints.down("sm")]: {},
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "470px !important",
+      marginTop: 8,
+      fontSize: 16,
+    },
     [theme.breakpoints.down("xs")]: {
-      fontSize: "14px",
+      maxWidth: "350px !important",
+      fontSize: 14,
       lineHeight: "21.7px",
     },
   },
@@ -120,6 +126,13 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     width: 398,
     height: 398,
     borderRadius: 9,
+    [theme.breakpoints.down("sm")]: {
+      width: 220,
+      height: 250,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
   },
   content: {
     paddingBottom: 180,
@@ -192,6 +205,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     minWidth: 274,
     height: 38,
     [theme.breakpoints.down("xs")]: {
+      minWidth: 230,
       padding: "8px",
     },
   },
@@ -311,7 +325,7 @@ export const gameDetailTabsStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       flex: 1,
       fontSize: 10,
-      padding: "8px 10px",
+      padding: "8px 0px",
       textAlign: "center",
     },
   },

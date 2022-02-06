@@ -36,21 +36,21 @@ export default function TotalStats() {
       </Box>
       <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} width={"90%"} mt={3}>
         <Box display={"flex"} flexDirection={"column"}>
-          <Box className={classes.typo1}>2242 USDT</Box>
+          <Box className={classes.typo3}>2242 USDT</Box>
           <Box className={classes.typo2} mt={0.5}>
             Rented
           </Box>
         </Box>
         <Box width={"1px"} height={"46px"} bgcolor={"#ffffff10"} />
         <Box display={"flex"} flexDirection={"column"}>
-          <Box className={classes.typo1}>2456 USDT</Box>
+          <Box className={classes.typo3}>2456 USDT</Box>
           <Box className={classes.typo2} mt={0.5}>
             Blocked
           </Box>
         </Box>
         <Box width={"1px"} height={"46px"} bgcolor={"#ffffff10"} />
         <Box display={"flex"} flexDirection={"column"}>
-          <Box className={classes.typo1}>22 425 USDT</Box>
+          <Box className={classes.typo3}>22 425 USDT</Box>
           <Box className={classes.typo2} mt={0.5}>
             On Sold
           </Box>
