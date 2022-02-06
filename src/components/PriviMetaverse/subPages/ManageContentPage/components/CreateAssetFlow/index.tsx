@@ -94,6 +94,26 @@ const CreateAssetFlow = ({
   const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
   const [txHash, setTxHash] = useState<string>("");
 
+  const param = {
+    TEXTURE: {
+      texture: "ITEM_IMAGE_TEXTURE"
+    },
+    MATERIAL: {
+      surface: "ITEM_MATERIAL_SURFACE_TYPE",
+      blend: "ITEM_MATERIAL_BLENDING_MODE",
+      cull: "ITEM_MATERIAL_CULL_MODE",
+      alphaClip: "ITEM_MATERIAL_ALPHA_CLIPPING",
+      cutoff: "ITEM_MATERIAL_ALPHA_CLIPPING_THRESHOLD",
+      baseColor: "ITEM_MATERIAL_BASE_COLOR",
+      baseMap: "ITEM_MATERIAL_BASE_MAP",
+    },
+    WORLD: {
+      worldImage: "ITEM_WORLD_IMAGE",
+      worldVideo: "ITEM_WORLD_VIDEO",
+      worldLevel: "ITEM_WORLD_FILE",
+      worldData: "ITEM_WORLD_FILE_DATA",
+    },
+  }
   useEffect(() => {
     MetaverseAPI.getAssetMetadata(assetItem).then(res => {
       setMetadata(res.data);
@@ -131,9 +151,14 @@ const CreateAssetFlow = ({
     setStep(step);
   }
 
+
   const handleSaveDraft = async () => {
     setOpenPublic(false)
     if (validate()) {
+      if(!currentCollection) {
+        showAlertMessage('Please choose collection.', { variant: "error" });
+        return false;
+      }
       let payload: any = {};
       let collectionAddr = currentCollection.address;
       let tokenId;
@@ -144,11 +169,17 @@ const CreateAssetFlow = ({
       payload = {
         collectionId: currentCollection.id,
         item: assetItem,
+        isPublic: isPublic,
         name: formData.ITEM_NAME,
         description: formData.ITEM_DESCRIPTION,
-        texture: fileInputs.ITEM_IMAGE_TEXTURE,
-        isPublic: isPublic,
       };
+      const params = param[assetItem]
+      console.log(param, params)
+      Object.keys(params).map(function(key, index) {
+        console.log(key, formData[params[key]] ? formData[params[key]] : fileInputs[params[key]])
+        payload[key] = formData[params[key]] ? formData[params[key]] : fileInputs[params[key]]
+      });
+      console.log(payload)
 
       setIsUploading(true);
       setProgress(0);
