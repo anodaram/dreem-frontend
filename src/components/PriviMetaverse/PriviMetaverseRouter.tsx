@@ -30,7 +30,6 @@ import MintNFTPage from "./subPages/MintNFTPage";
 import ApplyExtensionPage from "./subPages/ApplyExtensionPage";
 
 // import ClaimDreemPage from "./subPages/ClaimDreemPage";
-// import MetaversePage from "./subPages/MetaversePage";
 
 export default function PriviMetaverseRouter(props) {
   return (
@@ -63,8 +62,7 @@ export default function PriviMetaverseRouter(props) {
         <Route exact path="/P2E/:collection_id" component={GameDetailPage} />
         <Route exact path="/P2E/:collection_id/:token_id" component={ExploreReserveDetailPage} />
         <Route exact path="/notifications" component={NotificationPage} />
-        {/* <Route exact path="/metaverse" component={MetaversePage} />
-        <Route exact path="/claim_dreem" component={ClaimDreemPage} /> */}
+        {/* <Route exact path="/claim_dreem" component={ClaimDreemPage} /> */}
         <Route exact path="/" component={MainPage} />
         <Route path="/404" component={Error404Page} />
         <Redirect to="/404" />
