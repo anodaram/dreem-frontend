@@ -193,8 +193,8 @@ export default function RealmMapPage() {
         }}>
           <div
             style={{
-              backgroundColor: "#e9ff26",
-              opacity: 0.7,
+              // backgroundColor: "#e9ff26",
+              // opacity: 0.7,
               width: "100%",
               height: "100%",
             }}>
