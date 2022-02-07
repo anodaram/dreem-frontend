@@ -24,7 +24,6 @@ export default function RealmMapPage() {
   const classes = realmMapPageStyles();
   const history = useHistory();
   const userSelector = useSelector(getUser);
-  const { id: realmId } = useParams<{ id: string }>();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [graphData, setGraphData] = React.useState<any>(null);
@@ -43,8 +42,8 @@ export default function RealmMapPage() {
   }, []);
 
   React.useEffect(() => {
-    if (mapData){
-      const nodes : any[] = [];
+    if (mapData) {
+      const nodes: any[] = [];
       const links: any[] = [];
       for (const key in mapData) {
         const map = mapData[key];
@@ -52,13 +51,17 @@ export default function RealmMapPage() {
           id: key,
           data: map.item,
         });
-        map.graphMetadata.nodes.map((target)=>{
+        map.graphMetadata?.nodes?.map((target) => {
           links.push({
             source: key,
             target
-          })
+          });
         });
       }
+      setGraphData({
+        nodes,
+        links
+      });
     }
   }, [mapData]);
 
@@ -102,7 +105,6 @@ export default function RealmMapPage() {
   }
 
   const onClickHandler = (node) => {
-    console.log("node_info", node);
     setSelMap(node.data);
     setShowModal(true);
     const distance = 100;
@@ -116,33 +118,52 @@ export default function RealmMapPage() {
   }
 
   const handleDetail = () => {
-    // if (extensionData?.worldIsExtension) {
-    //   setOpenContentPreview(true);
-    // } else {
-    //   history.push(`/realms/${extensionData.id}`);
-    // }
+    if (selMap?.worldIsExtension) {
+      setOpenContentPreview(true);
+    } else {
+      history.push(`/realms/${selMap.id}`);
+    }
   }
   const handleClose = e => {
     e.preventDefault();
     e.stopPropagation();
     setOpenContentPreview(false);
   };
-
+  
   const handlePlay = () => {
     if (detectMob()) {
       setShowPlayModal(true);
     } else {
-
-      customProtocolCheck(
-        "dreem://" + selMap.versionHashId,
-        () => {
-          setOpenNotAppModal(true);
-        },
-        () => {
-          console.log("successfully opened!");
-        },
-        3000
-      );
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      axios
+        .post(
+          `${METAVERSE_URL()}/getSessionHash/`,
+          {
+            worldId: selMap.id,
+            worldTitle: selMap.worldTitle,
+            worldAssetUrl: selMap.worldAssetUrl,
+            worldTag: selMap.worldTag,
+          },
+          config
+        )
+        .then(res => {
+          let data: any = res.data?.data?.stamp;
+          if (data) {
+            customProtocolCheck(
+              "dreem://" + data,
+              () => {
+                setOpenNotAppModal(true);
+              },
+              () => {
+                console.log("successfully opened!");
+              },
+              3000
+            );
+          }
+        });
     }
   };
 
@@ -163,13 +184,9 @@ export default function RealmMapPage() {
           height: "100%",
           borderRadius: 300,
           backgroundImage:
-            node.data && node.data.isFeature
-              ? node.data.worldBannerImage
-                ? `url("${node.data.worldBannerImage}")`
-                : `url(${getDefaultImageUrl()})`
-              : node.data.worldImages
-                ? `url("${node.data.worldImages}")`
-                : `url(${getDefaultImageUrl()})`,
+            node.data && node.data.worldImage
+              ? `url("${node.data.worldImage}")`
+              : `url(${getDefaultImageUrl()})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           overflow: "hidden",
@@ -209,7 +226,7 @@ export default function RealmMapPage() {
             graphData={graphData}
             backgroundColor="#00000000"
             linkColor={link => link === hoverLink ? "#78a9e6" : "#076fd0"}
-            linkWidth={link => link === hoverLink ? 2 : 1}
+            linkWidth={link => link === hoverLink ? 1 : 0.5}
             nodeThreeObject={(node) => {
               let imageTexture;
               let hasBlur = false;
@@ -258,15 +275,21 @@ export default function RealmMapPage() {
               <Box className={classes.pic}
                 style={{
                   backgroundImage:
-                  (selMap && selMap.worldImage)
-                        ? `url("${selMap.worldImage}")`
-                        : `url(${getDefaultImageUrl()})`,
+                    (selMap && selMap.worldImage)
+                      ? `url("${selMap.worldImage}")`
+                      : `url(${getDefaultImageUrl()})`,
                 }}>
               </Box>
               <Box className={classes.picLabel}>
+                {selMap.worldIsExtension ? (
                   <Box padding="10px" display="flex">
-                    <Box className={classes.extensionTag}>{selMap.itemKind}</Box>
+                    <Box className={classes.extensionTag}>Extension</Box>
                   </Box>
+                ) : (
+                  <Box padding="10px" display="flex">
+                    <Box className={classes.realmTag}>Realm</Box>
+                  </Box>
+                )}
               </Box>
             </Box>
             <Box className={classes.name}>
@@ -276,7 +299,7 @@ export default function RealmMapPage() {
               {selMap && selMap.worldDescription ? selMap.worldDescription : ""}
             </Box>
             <SecondaryButton
-            className={classes.btnDetail}
+              className={classes.btnDetail}
               size="medium"
               onClick={handleDetail}
             >
