@@ -1,15 +1,23 @@
 import React, { useEffect, useState, useRef } from "react";
 
+import { useWeb3React } from "@web3-react/core";
+import Web3 from "web3";
+import useIPFS from "shared/utils-IPFS/useIPFS";
 import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem, Button, TextField, InputAdornment, Hidden, Grid } from "@material-ui/core";
 
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
+import { switchNetwork } from "shared/functions/metamask";
+import { BlockchainNets } from "shared/constants/constants";
+import { onUploadNonEncrypt } from "shared/ipfs/upload";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import CreatingStep from "../CreatingStep";
 import CollectionList from "../CollectionList";
+import WorldList from "../WorldList";
 import ContentProcessingOperationModal from "components/PriviMetaverse/modals/ContentProcessingOperationModal";
+import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProgressModal";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
 import { useModalStyles } from "./index.styles";
 
@@ -56,6 +64,9 @@ const CreateRealmFlow = ({
   const classes = useModalStyles();
   const { showAlertMessage } = useAlertMessage();
 
+  const { activate, chainId, account, library } = useWeb3React();
+  const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
+  const [chain, setChain] = useState<string>(BlockchainNets[0].value);
   const [step, setStep] = useState<number>(1);
   const [steps, setSteps] = useState<any>(CreateSteps);
   const [title, setTitle] = useState<string>("");
@@ -66,6 +77,10 @@ const CreateRealmFlow = ({
   const [votingPower, setVotingPower] = useState<string>("");
   const [privacy, setPrivacy] = useState<string>('public');
   const [currentCollection, setCurrentCollection] = useState<any>(null);
+  const [worldHash, setWorldHash] = useState<any>(null);
+  const [nftAddress, setNFTAddress] = useState<any>(null);
+  const [nftId, setNFTId] = useState<any>(null);
+  const [networkName, setNetworkName] = useState<string>("");
   const [collectionInfos, setCollectionInfos] = useState<Array<CollectionInfo>>([{
     address: '',
     from: '',
@@ -85,6 +100,10 @@ const CreateRealmFlow = ({
 
   const [uploadSuccess, setUploadSuccess] = useState<any>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  // Transaction Modal
+  const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
+  const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
+  const [txHash, setTxHash] = useState<string>("");
 
   const handlePrev = () => {
     if (step == 1) {
@@ -183,51 +202,15 @@ const CreateRealmFlow = ({
   const handleSave = async () => {
     if (validate()) {
       let payload: any = {};
+      let savingDraft: any = {};
       let collectionAddr = currentCollection.address;
-
-
-      // const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
-      //   web3,
-      //   account,
-      //   {
-      //     collectionAddress: collectionAddr,
-      //     to: account,
-      //     uri,
-      //     isRoyalty,
-      //     royaltyAddress,
-      //     royaltyPercentage
-      //   },
-      //   setTxModalOpen,
-      //   setTxHash
-      // );
-
-      // if (contractRes.success) {
-      //   setTxSuccess(true);
-      //   showAlertMessage(`Successfully world minted`, { variant: "success" });
-      //   console.log(contractRes);
-      //   await MetaverseAPI.convertToNFTAssetBatch(
-      //     savingDraft.instance.hashId,
-      //     contractRes.collectionAddress,
-      //     targetChain.name,
-      //     [contractRes.tokenId],
-      //     metaData.newFileCID,
-      //     contractRes.owner,
-      //     royaltyAddress,
-      //     royaltyPercentage,
-      //     contractRes.txHash,
-      //     1
-      //   );
-      // } else {
-      //   setTxSuccess(false);
-      // }
-
 
       payload = {
         item: "REALM",
         name: title,
         description: description,
         realmSymbol: symbol,
-        masterRealmHash: '123456789',
+        masterRealmHash: worldHash,
         realmTaxation: taxation,
         realmVotingConsensus: votingConsensus,
         realmCreatorVotingPower: votingPower,
@@ -240,13 +223,70 @@ const CreateRealmFlow = ({
         if (!res.success) {
           showAlertMessage(`Failed to upload world`, { variant: "error" });
           setUploadSuccess(false);
+          return
         } else {
           setUploadSuccess(true);
-          showAlertMessage(`Created draft successfully`, { variant: "success" });
+          showAlertMessage(`Created draft successfully. minting NFT...`, { variant: "success" });
+          // setSavingDraft(res.data)
+          handleMintRealm(res.data)
         }
       });
     }
   };
+  const handleMintRealm = async (savingDraft) => {
+    setIsUploading(false);
+    console.log(savingDraft, savingDraft.mintMetadata);
+    const metaData = await onUploadNonEncrypt(savingDraft.mintMetadata, file => uploadWithNonEncryption(file));
+    console.log(metaData);
+    const targetChain = BlockchainNets.find(net => net.value === chain);
+    setNetworkName(targetChain.name);
+    if (chainId && chainId !== targetChain?.chainId) {
+      const isHere = await switchNetwork(targetChain?.chainId || 0);
+      if (!isHere) {
+        showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+        return;
+      }
+    }
+    if(!library) {
+      showAlertMessage("Please check your network", { variant: "error" });
+      return;
+    }
+    const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
+    console.log(uri);
+    const web3APIHandler = targetChain.apiHandler;
+    const web3 = new Web3(library.provider);
+    console.log('---', web3APIHandler.RealmCreator)
+    const contractRes = await web3APIHandler.RealmCreator.mint(
+      web3,
+      account,
+      {
+        uri,
+        taxRate: taxation,
+        creatorShare: votingPower,
+        votingConsensus: votingConsensus,
+        nftToAttachAddress: nftAddress,
+        nftToAttachId: nftId,
+      },
+      setTxModalOpen,
+      setTxHash
+    );
+
+    if (contractRes.success) {
+      console.log(contractRes);
+      await MetaverseAPI.realmMint(
+        savingDraft.instance.hashId,
+        contractRes.txHash,
+        targetChain.name,
+        contractRes.realmAddress,
+        contractRes.distributionManager,
+        contractRes.realmUpgraderAddress,
+      );
+      setTxSuccess(true);
+      showAlertMessage(`Successfully world minted`, { variant: "success" });
+    } else {
+      setTxSuccess(false);
+    }
+  }
   const handleAddCollection = () => {
     setCollectionInfos([
       ...collectionInfos,
@@ -823,11 +863,13 @@ const CreateRealmFlow = ({
           />
         )}
         {step === 6 && (
-          <CollectionList
+          <WorldList
             handleNext={() => {}}
             handleCancel={() => {}}
-            handleSelect={item => {
-              setCurrentCollection(item);
+            handleSelect={(hash, address, id) => {
+              setWorldHash(hash);
+              setNFTAddress(address);
+              setNFTId(id);
             }}
           />
         )}
@@ -848,6 +890,18 @@ const CreateRealmFlow = ({
 
       {isUploading && (
         <ContentProcessingOperationModal open={isUploading} txSuccess={uploadSuccess} onClose={()=>{setIsUploading(false)}}/>
+      )}
+      {txModalOpen && (
+        <TransactionProgressModal
+          open={txModalOpen}
+          title="Creating your Realm"
+          transactionSuccess={txSuccess}
+          hash={txHash}
+          onClose={() => {
+            setTxSuccess(null);
+            setTxModalOpen(false);
+          }}
+        />
       )}
     </>
   );

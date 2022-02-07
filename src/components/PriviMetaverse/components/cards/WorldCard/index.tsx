@@ -20,7 +20,7 @@ import EditRealmModal from "../../../modals/EditRealmModal";
 import EditExtensionModal from "../../../modals/EditExtensionModal";
 import { nftCardStyles } from "./index.styles";
 
-export default function RealmExtensionProfileCard({
+export default function WorldCard({
   nft,
   hideInfo,
   isHomePage,
@@ -89,8 +89,6 @@ export default function RealmExtensionProfileCard({
   };
 
   const handleOpenModal = () => {
-    // setOpenContentPreview(true);
-    setOpenDepositRequired(true);
     if (selectable) {
       //@ts-ignore
       handleClick()
@@ -147,13 +145,14 @@ export default function RealmExtensionProfileCard({
           <Skeleton variant="rect" width={"80%"} />
         </Box>
       ) : (
-        <div className={styles.card}>
+        <div className={styles.card}
+        style={{
+          borderRadius: 12,
+          border: isSelected ? "3px solid #E9FF26" : "1px solid #ED7B7B",
+          boxShadow: isSelected ? "0px 0px 14px 1px #DCFF35" : "unset",
+        }}
+        >
           <div className={styles.imageContent} onClick={handleOpenModal}
-          style={{
-            borderRadius: 12,
-            border: isSelected ? "3px solid #E9FF26" : "1px solid #ED7B7B",
-            boxShadow: isSelected ? "0px 0px 14px 1px #DCFF35" : "unset",
-          }}
           >
             <div
               className={styles.nftImage}
@@ -168,21 +167,6 @@ export default function RealmExtensionProfileCard({
               }}
               ref={parentNode}
             >
-              {nft.itemKind === "DRAFT_WORLD" ? (
-                nft.worldIsExtension ? (
-                  <Box padding="10px" display="flex">
-                    <Box className={styles.extensionTag}>Extension</Box>
-                  </Box>
-                ) : (
-                  <Box padding="10px" display="flex">
-                    <Box className={styles.draftTag}>Draft</Box>
-                  </Box>
-                )
-              ) : (
-                <Box padding="10px" display="flex">
-                  <Box className={styles.realmTag}>Realm</Box>
-                </Box>
-              )}
             </div>
           </div>
           <div className={styles.shapeIcon}>
@@ -198,7 +182,7 @@ export default function RealmExtensionProfileCard({
             <Box className={styles.infoDescription} mb={2}>
               {data.worldDescription || "No description"}
             </Box>
-            {!hideInfo && (
+            {/* {!hideInfo && (
               <>
                 <div className={styles.divider} />
                 {data ? (
@@ -221,36 +205,7 @@ export default function RealmExtensionProfileCard({
                   </div>
                 ) : null}
               </>
-            )}
-            {nft.itemKind === "WORLD" && isOwner && !isHomePage && (
-              <>
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                  <Box display="flex" alignItems="center">
-                    <FormControlLabel
-                      control={<IOSSwitch defaultChecked checked={isPublic} onChange={handlePublic} />}
-                      label={""}
-                      labelPlacement="end"
-                    />
-                    <Box className={styles.typo1}>Make Public</Box>
-                  </Box>
-
-                  <Box display="flex" alignItems="center">
-                    <Box className={styles.draftContent} onClick={handleRemove}>
-                      <RemoveIcon />
-                    </Box>
-                    {isLoadingMetaData ? (
-                      <Box minWidth={48} display="flex" justifyContent="center">
-                        <CircularProgress size={24} style={{ color: "#EEFF21" }} />
-                      </Box>
-                    ) : (
-                      <Box className={styles.draftContent} onClick={handleOpenDraftModal} ml={1}>
-                        <SettingIcon />
-                      </Box>
-                    )}
-                  </Box>
-                </Box>
-              </>
-            )}
+            )} */}
           </Box>
         </div>
       )}

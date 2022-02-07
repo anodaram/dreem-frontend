@@ -766,7 +766,7 @@ export default function GameDetailPage() {
               </>
             )}
             {selectedTab === TAB_MARKETPLACE_FEED && <MarketplaceFeed />}
-            {selectedTab === TAB_OWNERS && <Owners />}
+            {selectedTab === TAB_OWNERS && <Owners gameInfo={gameInfo} />}
           </Box>
         </Box>
       </Box>
