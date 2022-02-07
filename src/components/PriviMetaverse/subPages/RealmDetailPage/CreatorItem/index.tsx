@@ -66,13 +66,13 @@ export default function VotingItem(props) {
             />
             <Box className={classes.titleSection}>
               <Box className={classes.status}>STARTED THE REALM</Box>
-              <Box className={classes.title}>extension name here that’s two lines</Box>
-              <Box display="flex" alignItems="center" pb={3}>
+              <Box className={classes.title}>John Doe</Box>
+              <Box display="flex" alignItems="center">
                 <Box borderRight="2px solid rgba(255,255,255,0.5)">
                   <div className={classes.name}>@matthew99</div>
                 </Box>
                 <Box flex="0.05" />
-                <Box flex="0.7">
+                <Box width="100%">
                   <div className={classes.address}>0x4BCD...859A59a5f19 (visible only to you)</div>
                 </Box>
               </Box>
