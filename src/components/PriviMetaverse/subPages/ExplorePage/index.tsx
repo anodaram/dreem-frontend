@@ -10,7 +10,7 @@ import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
 import StyledCheckbox from "shared/ui-kit/Checkbox";
 import { Color } from "shared/ui-kit";
-
+import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { explorePage } from "./index.styles";
 
 import backImg1 from "assets/metaverseImages/shape_roadmap.png";
@@ -99,6 +99,7 @@ export default function ExplorePage() {
   const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
   const [selectedContentType, setSelectedContentType] = React.useState<string>("all");
   const [selectedAssetType, setSelectedAssetType] = React.useState<string>("world");
+  const [searchValue, setSearchValue] = React.useState<string>("");
 
   const loadingCount = React.useMemo(
     () => (width > 1200 ? 4 : width > 900 ? 3 : width > 600 ? 2 : 1),
@@ -282,7 +283,33 @@ export default function ExplorePage() {
       </Box>
       <Box className={classes.mainContent} id="scrollContainer">
         <Box className={classes.fitContent} mb={isTablet ? 6 : 12} px={isMobile ? 2 : 0}>
-          <Box className={classes.gradientText}>Explore avatars</Box>
+          <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+            <Box className={classes.gradientText}>Explore Assets</Box>
+            <div className={classes.searchSection}>
+              <InputWithLabelAndTooltip
+                type="text"
+                inputValue={searchValue}
+                placeHolder="Search collections"
+                onInputValueChange={e => {
+                  setSearchValue(e.target.value);
+                }}
+                style={{
+                  background: "transparent",
+                  margin: 0,
+                  marginRight: 8,
+                  marginLeft: 8,
+                  padding: 0,
+                  border: "none",
+                  height: "auto",
+                }}
+                theme="dark"
+              />
+              <Box display="flex" alignItems="center" justifyContent="center" style={{ cursor: "pointer" }}>
+                <SearchIcon />
+              </Box>
+            </div>
+          </Box>
+
           <InfiniteScroll
             hasChildren={avatars?.length > 0}
             dataLength={avatars?.length}
@@ -348,6 +375,17 @@ const CollapseIcon = () => (
       stroke="white"
       strokeOpacity="0.5"
       strokeWidth="3"
+    />
+  </svg>
+);
+
+export const SearchIcon = ({ color = "white" }) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12.9056 14.3199C11.551 15.3729 9.84871 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8C16 9.84871 15.3729 11.551 14.3199 12.9056L19.7071 18.2929C20.0976 18.6834 20.0976 19.3166 19.7071 19.7071C19.3166 20.0976 18.6834 20.0976 18.2929 19.7071L12.9056 14.3199ZM14 8C14 11.3137 11.3137 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C11.3137 2 14 4.68629 14 8Z"
+      fill={color}
     />
   </svg>
 );

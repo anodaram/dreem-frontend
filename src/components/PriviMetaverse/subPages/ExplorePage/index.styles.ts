@@ -57,8 +57,8 @@ export const explorePage = makeStyles(theme => ({
     fontFamily: "GRIFTER",
     fontStyle: "normal",
     fontWeight: "bold",
-    fontSize: "56px",
-    lineHeight: "67.2px",
+    fontSize: "40px",
+    lineHeight: "120%",
     alignItems: "center",
     letterSpacing: "0.02em",
     textTransform: "uppercase",
@@ -75,7 +75,8 @@ export const explorePage = makeStyles(theme => ({
   backImg1: {
     position: "absolute",
     top: 200,
-    left: -100,
+    left: 56,
+    transform: "rotate(180deg)",
     [theme.breakpoints.down("xs")]: {
       width: 100,
       left: -50,
@@ -84,7 +85,7 @@ export const explorePage = makeStyles(theme => ({
   backImg2: {
     position: "absolute",
     top: 400,
-    right: -141,
+    right: -480,
     [theme.breakpoints.down("md")]: {
       width: 400,
     },
@@ -118,5 +119,20 @@ export const explorePage = makeStyles(theme => ({
   },
   subFilterSection: {
     padding: "12px 24px 16px",
+  },
+  searchSection: {
+    background: "rgba(21, 21, 21, 0.3)",
+    border: "2px solid rgba(255, 255, 255, 0.5)",
+    display: "flex",
+    alignItems: "center",
+    padding: `${theme.spacing(1)}px`,
+    cursor: "pointer",
+    color: "#ffffff80",
+    minWidth: 290,
+    height: 48,
+    [theme.breakpoints.down("xs")]: {
+      minWidth: 230,
+      padding: "8px",
+    },
   },
 }));
