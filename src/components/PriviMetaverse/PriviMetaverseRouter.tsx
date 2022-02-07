@@ -11,6 +11,7 @@ import LandingPage from "components/Landing";
 import CollectionDetailPage from "./subPages/CollectionDetailPage";
 import RealmDetailPage from "./subPages/RealmDetailPage";
 import MainPage from "./subPages/MainPage";
+import ExploreRealmsPage from "./subPages/ExploreRealmsPage";
 import ExplorePage from "./subPages/ExplorePage";
 import UseScrollTop from "shared/hooks/useScrollTop";
 import Error404Page from "./subPages/Error404Page";
@@ -29,7 +30,6 @@ import MintNFTPage from "./subPages/MintNFTPage";
 import ApplyExtensionPage from "./subPages/ApplyExtensionPage";
 
 // import ClaimDreemPage from "./subPages/ClaimDreemPage";
-// import MetaversePage from "./subPages/MetaversePage";
 
 export default function PriviMetaverseRouter(props) {
   return (
@@ -40,10 +40,11 @@ export default function PriviMetaverseRouter(props) {
         <Route exact path="/create" component={ManageContentPage} />
         <Route exact path="/collection/:id" component={CollectionDetailPage} />
         <Route exact path="/create_realm" component={CreateRealmPage} />
+        <Route exact path="/explore" component={ExplorePage} />
         <Route exact path="/realms/map/:id" component={RealmMapPage} />
         <Route exact path="/realms/:id" component={RealmDetailPage} />
         <Route exact path="/realms/:id/:character_id" component={RealmDetailPage} />
-        <Route exact path="/realms" component={ExplorePage} />
+        <Route exact path="/realms" component={ExploreRealmsPage} />
         <Route exact path="/apply_extension" component={ApplyExtensionPage} />
         <Route exact path="/world/:id" component={WorldDetailPage} />
         <Route exact path="/unfinished_mint/:id" component={MintNFTPage} />
@@ -61,8 +62,7 @@ export default function PriviMetaverseRouter(props) {
         <Route exact path="/P2E/:collection_id" component={GameDetailPage} />
         <Route exact path="/P2E/:collection_id/:token_id" component={ExploreReserveDetailPage} />
         <Route exact path="/notifications" component={NotificationPage} />
-        {/* <Route exact path="/metaverse" component={MetaversePage} />
-        <Route exact path="/claim_dreem" component={ClaimDreemPage} /> */}
+        {/* <Route exact path="/claim_dreem" component={ClaimDreemPage} /> */}
         <Route exact path="/" component={MainPage} />
         <Route path="/404" component={Error404Page} />
         <Redirect to="/404" />
