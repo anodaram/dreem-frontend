@@ -7,7 +7,6 @@ export const explorePage = makeStyles(theme => ({
     display: "flex",
   },
   filterBar: {
-    width: 293,
     marginTop: 72,
     height: "calc(100% - 72px)",
     background: "#212121",
@@ -134,5 +133,9 @@ export const explorePage = makeStyles(theme => ({
       minWidth: 230,
       padding: "8px",
     },
+  },
+  expandIcon: {
+    padding: 16,
+    cursor: "pointer",
   },
 }));

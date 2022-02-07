@@ -132,154 +132,167 @@ export default function ExplorePage() {
 
   return (
     <Box className={classes.root}>
-      <Box className={classes.filterBar}>
-        <Box className={classes.filterHeader}>
-          <Box color="#ffffff50">Filtering</Box>
-          <div className={classes.iconButton} onClick={() => setOpenFilterBar(false)}>
-            <CollapseIcon />
-          </div>
-        </Box>
-        <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
-        <Box className={classes.filterMainSection}>
-          <Box className={classes.subFilterSection}>
-            <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
-              <Box color="#E9FF26">Status</Box>
-              <div className={classes.iconButton} onClick={() => setOpenStatusSection(prev => !prev)}>
-                {openStatusSection ? <UpArrowIcon /> : <DownArrowIcon />}
+      <Box
+        className={classes.filterBar}
+        style={{
+          minWidth: openFilterBar ? 293 : 55,
+        }}
+      >
+        {openFilterBar ? (
+          <>
+            <Box className={classes.filterHeader}>
+              <Box color="#ffffff50">Filtering</Box>
+              <div className={classes.iconButton} onClick={() => setOpenFilterBar(false)}>
+                <CollapseIcon />
               </div>
             </Box>
-            {openStatusSection && (
-              <Box mt={2}>
-                {Status_Options.map((item, index) => (
-                  <Box display={"flex"} alignItems={"center"} key={index} mb={1.5}>
-                    <StyledCheckbox buttonColor={Color.LightYellow} checked={true} name="checked" />
-                    <Box
-                      fontSize={14}
-                      color={item.color}
-                      style={{
-                        background: item.bgcolor,
-                        borderRadius: 5,
-                        padding: "0 8px",
-                      }}
-                    >
-                      {item.content}
-                    </Box>
-                  </Box>
-                ))}
-              </Box>
-            )}
-          </Box>
-          <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
-          <Box className={classes.subFilterSection}>
-            <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
-              <Box color="#E9FF26">Filter By</Box>
-              <div className={classes.iconButton} onClick={() => setOpenFilterBySection(prev => !prev)}>
-                {openFilterBySection ? <UpArrowIcon /> : <DownArrowIcon />}
-              </div>
-            </Box>
-            {openFilterBySection && (
-              <Box mt={2}>
-                {Filter_By_Options.map((item, index) => (
-                  <Box
-                    key={index}
-                    mb={1.5}
-                    fontSize={14}
-                    color={item === selectedContentType ? "#fff" : "#ffffff50"}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setSelectedContentType(item)}
-                  >
-                    {item}
-                  </Box>
-                ))}
-              </Box>
-            )}
-          </Box>
-          <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
-          <Box className={classes.subFilterSection}>
-            <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
-              <Box color="#E9FF26">Asset Type</Box>
-              <div className={classes.iconButton} onClick={() => setOpenAssetSection(prev => !prev)}>
-                {openAssetSection ? <UpArrowIcon /> : <DownArrowIcon />}
-              </div>
-            </Box>
-            {openAssetSection && (
-              <Box mt={2}>
-                {Asset_Type_Options.map((item, index) => (
-                  <Box
-                    display={"flex"}
-                    alignItems={"center"}
-                    key={index}
-                    mb={1.5}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setSelectedAssetType(item.content)}
-                  >
-                    <img src={item.image} width={24} height={24} alt="asset image" />
-                    <Box
-                      fontSize={14}
-                      color={item.content === selectedAssetType ? "#fff" : "#ffffff50"}
-                      ml={1.3}
-                    >
-                      {item.content}
-                    </Box>
-                  </Box>
-                ))}
-              </Box>
-            )}
-          </Box>
-          <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
-          <Box className={classes.subFilterSection}>
-            <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
-              <Box color="#E9FF26">Primary</Box>
-              <div className={classes.iconButton} onClick={() => setOpenPrimarySection(prev => !prev)}>
-                {openPrimarySection ? <UpArrowIcon /> : <DownArrowIcon />}
-              </div>
-            </Box>
-            {openPrimarySection && (
-              <Box mt={2}>
-                {Primary_Options.map((item, index) => (
-                  <Box display={"flex"} alignItems={"center"} key={index} mb={1.5}>
-                    <StyledCheckbox buttonColor={Color.LightYellow} checked={true} name="checked" />
-                    <Box display={"flex"} alignItems={"center"}>
-                      {item.image && <img src={item.image} alt="primary image" />}
-                      <Box fontSize={14} ml={0.5}>
-                        {item.content}
+            <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+            <Box className={classes.filterMainSection}>
+              <Box className={classes.subFilterSection}>
+                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                  <Box color="#E9FF26">Status</Box>
+                  <div className={classes.iconButton} onClick={() => setOpenStatusSection(prev => !prev)}>
+                    {openStatusSection ? <UpArrowIcon /> : <DownArrowIcon />}
+                  </div>
+                </Box>
+                {openStatusSection && (
+                  <Box mt={2}>
+                    {Status_Options.map((item, index) => (
+                      <Box display={"flex"} alignItems={"center"} key={index} mb={1.5}>
+                        <StyledCheckbox buttonColor={Color.LightYellow} checked={true} name="checked" />
+                        <Box
+                          fontSize={14}
+                          color={item.color}
+                          style={{
+                            background: item.bgcolor,
+                            borderRadius: 5,
+                            padding: "0 8px",
+                          }}
+                        >
+                          {item.content}
+                        </Box>
                       </Box>
-                    </Box>
+                    ))}
                   </Box>
-                ))}
+                )}
               </Box>
-            )}
-          </Box>
-          <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
-          <Box className={classes.subFilterSection}>
-            <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
-              <Box color="#E9FF26">Rarity</Box>
-              <div className={classes.iconButton} onClick={() => setOpenRaritySection(prev => !prev)}>
-                {openRaritySection ? <UpArrowIcon /> : <DownArrowIcon />}
-              </div>
+              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              <Box className={classes.subFilterSection}>
+                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                  <Box color="#E9FF26">Filter By</Box>
+                  <div className={classes.iconButton} onClick={() => setOpenFilterBySection(prev => !prev)}>
+                    {openFilterBySection ? <UpArrowIcon /> : <DownArrowIcon />}
+                  </div>
+                </Box>
+                {openFilterBySection && (
+                  <Box mt={2}>
+                    {Filter_By_Options.map((item, index) => (
+                      <Box
+                        key={index}
+                        mb={1.5}
+                        fontSize={14}
+                        color={item === selectedContentType ? "#fff" : "#ffffff50"}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setSelectedContentType(item)}
+                      >
+                        {item}
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              <Box className={classes.subFilterSection}>
+                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                  <Box color="#E9FF26">Asset Type</Box>
+                  <div className={classes.iconButton} onClick={() => setOpenAssetSection(prev => !prev)}>
+                    {openAssetSection ? <UpArrowIcon /> : <DownArrowIcon />}
+                  </div>
+                </Box>
+                {openAssetSection && (
+                  <Box mt={2}>
+                    {Asset_Type_Options.map((item, index) => (
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        key={index}
+                        mb={1.5}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setSelectedAssetType(item.content)}
+                      >
+                        <img src={item.image} width={24} height={24} alt="asset image" />
+                        <Box
+                          fontSize={14}
+                          color={item.content === selectedAssetType ? "#fff" : "#ffffff50"}
+                          ml={1.3}
+                        >
+                          {item.content}
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              <Box className={classes.subFilterSection}>
+                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                  <Box color="#E9FF26">Primary</Box>
+                  <div className={classes.iconButton} onClick={() => setOpenPrimarySection(prev => !prev)}>
+                    {openPrimarySection ? <UpArrowIcon /> : <DownArrowIcon />}
+                  </div>
+                </Box>
+                {openPrimarySection && (
+                  <Box mt={2}>
+                    {Primary_Options.map((item, index) => (
+                      <Box display={"flex"} alignItems={"center"} key={index} mb={1.5}>
+                        <StyledCheckbox buttonColor={Color.LightYellow} checked={true} name="checked" />
+                        <Box display={"flex"} alignItems={"center"}>
+                          {item.image && <img src={item.image} alt="primary image" />}
+                          <Box fontSize={14} ml={0.5}>
+                            {item.content}
+                          </Box>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              <Box className={classes.subFilterSection}>
+                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                  <Box color="#E9FF26">Rarity</Box>
+                  <div className={classes.iconButton} onClick={() => setOpenRaritySection(prev => !prev)}>
+                    {openRaritySection ? <UpArrowIcon /> : <DownArrowIcon />}
+                  </div>
+                </Box>
+                {openRaritySection && (
+                  <Box mt={2}>
+                    {Rarity_Options.map((item, index) => (
+                      <Box display={"flex"} alignItems={"center"} key={index} mb={1.5}>
+                        <StyledCheckbox buttonColor={Color.LightYellow} checked={true} name="checked" />
+                        <Box
+                          fontSize={14}
+                          color={item.color}
+                          style={{
+                            border: item.border,
+                            borderRadius: 5,
+                            padding: "0 8px",
+                          }}
+                        >
+                          {item.content}
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
             </Box>
-            {openRaritySection && (
-              <Box mt={2}>
-                {Rarity_Options.map((item, index) => (
-                  <Box display={"flex"} alignItems={"center"} key={index} mb={1.5}>
-                    <StyledCheckbox buttonColor={Color.LightYellow} checked={true} name="checked" />
-                    <Box
-                      fontSize={14}
-                      color={item.color}
-                      style={{
-                        border: item.border,
-                        borderRadius: 5,
-                        padding: "0 8px",
-                      }}
-                    >
-                      {item.content}
-                    </Box>
-                  </Box>
-                ))}
-              </Box>
-            )}
+          </>
+        ) : (
+          <Box className={classes.expandIcon} onClick={() => setOpenFilterBar(true)}>
+            <ExpandIcon />
           </Box>
-        </Box>
+        )}
       </Box>
       <Box className={classes.mainContent} id="scrollContainer">
         <Box className={classes.fitContent} mb={isTablet ? 6 : 12} px={isMobile ? 2 : 0}>
@@ -375,6 +388,22 @@ const CollapseIcon = () => (
       stroke="white"
       strokeOpacity="0.5"
       strokeWidth="3"
+    />
+  </svg>
+);
+
+export const ExpandIcon = () => (
+  <svg width="23" height="22" viewBox="0 0 23 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M18.9793 4L22.0645 4L22.0645 18.8085L18.9793 18.8085L18.9793 4Z"
+      fill="white"
+      fill-opacity="0.5"
+    />
+    <path
+      d="M15 11.25H0.5M15 11.25L8.5 5M15 11.25L8.5 17.5"
+      stroke="white"
+      stroke-opacity="0.5"
+      stroke-width="3"
     />
   </svg>
 );
