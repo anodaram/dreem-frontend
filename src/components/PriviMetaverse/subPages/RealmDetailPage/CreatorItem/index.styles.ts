@@ -154,6 +154,7 @@ export const votingItemStyles = makeStyles(theme => ({
     marginTop: 11,
     [theme.breakpoints.down("xs")]: {
       fontSize: 14,
+      marginTop: 0,
     },
   },
   arWrap: {},
