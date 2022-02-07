@@ -32,6 +32,7 @@ import ActivityFeeds from "./components/ActivityFeeds";
 import { listenerSocket } from "components/Login/Auth";
 import { GLOBAL_CHAT_ROOM } from "shared/constants/constants";
 import { useNFTOptionsStyles } from "./index.styles";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -100,6 +101,9 @@ const NFTReserves = () => {
   }, []);
 
   useEffect(() => {
+    setTransactions([]);
+    setTransactionHasMore(true);
+    setLastTransactionId(undefined);
     getPopularGameData();
     getNewListings();
     loadTransactions(true);
@@ -313,7 +317,7 @@ const NFTReserves = () => {
         )}
         <img src={require("assets/metaverseImages/nft_reserve_bg.png")} className={classes.imageBg} />
         <Box className={classes.limitedContent}>
-          <div className={classes.content} id={"scrollContainer"} onScroll={handleScroll}>
+          <div className={classes.content}>
             <div className={classes.titleBar}>
               <Box className={classes.titleSection}>
                 <div className={classes.title}>Not your average NFT marketplace</div>
@@ -682,21 +686,57 @@ const NFTReserves = () => {
                 <div className={classes.allNFTTitle}>
                   <span>Recent Transactions</span>
                 </div>
-                {transactions.length > 0 && (
-                  <div className={classes.table}>
-                    <CustomTable
-                      variant={Variant.Transparent}
-                      headers={tableHeaders}
-                      rows={tableData}
-                      placeholderText=""
-                      sorted={{}}
-                      theme="game transaction"
-                    />
-                  </div>
-                )}
-                {!transactionloading && transactions?.length < 1 && (
-                  <Box textAlign="center" width="100%" mb={10} mt={2}></Box>
-                )}
+                <Box>
+                  <InfiniteScroll
+                    hasChildren={transactions?.length > 0}
+                    dataLength={transactions?.length}
+                    scrollableTarget={"scrollContainer"}
+                    next={loadTransactions}
+                    hasMore={transactionHasMore}
+                    loader={
+                      transactionloading &&
+                      (
+                        <div
+                          style={{
+                            paddingTop: 8,
+                            paddingBottom: 8,
+                          }}
+                        >
+                          {Array(5)
+                            .fill(0)
+                            .map((_, index) => (
+                              <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
+                                <Skeleton variant="rect" width={60} height={60} />
+                                <Skeleton variant="rect" width="40%" height={24} style={{ marginLeft: "8px" }} />
+                                <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
+                                <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
+                              </Box>
+                            ))}
+                        </div>
+                      )
+                    }
+                  >
+                    {
+                      tableData.length > 0 && (
+                        <Box className={classes.table}>
+                          <CustomTable
+                            variant={Variant.Transparent}
+                            headers={tableHeaders}
+                            rows={tableData}
+                            placeholderText=""
+                            sorted={{}}
+                            theme="game transaction"
+                          />
+                        </Box>
+                      )
+                    }
+                  </InfiniteScroll>
+                  {!transactionloading && transactions?.length < 1 && (
+                    <Box textAlign="center" width="100%" mb={10} mt={2}>
+                      No Transactions
+                    </Box>
+                  )}
+                </Box>
               </Box>
             </div>
           </div>
