@@ -15,7 +15,7 @@ import nftWithRoyalty from "./contracts/NFTWithRoyalty";
 import royaltyFactory from "./contracts/RoyaltyFactory";
 import nftWithRoyaltyBatch from "./contracts/NFTWithRoyaltyBatch";
 import royaltyFactoryBatch from "./contracts/RoyaltyFactoryBatch";
-import realmCreator from "./contracts/RealmCreator";
+import RealmCreator from "./contracts/RealmCreator";
 import dreemLaunchpadVesting from "./contracts/DreemLaunchpadVesting";
 import openSalesManager from "./contracts/OpenSalesManager";
 import dreem from "./contracts/Dreem";
@@ -45,7 +45,7 @@ const api = network => {
     RoyaltyFactory: royaltyFactory(network),
     NFTWithRoyaltyBatch: nftWithRoyaltyBatch(network),
     RoyaltyFactoryBatch: royaltyFactoryBatch(network),
-    realmCreator: realmCreator(network),
+    RealmCreator: RealmCreator(network),
     openSalesManager: openSalesManager(network),
     DreemLaunchpadVesting: dreemLaunchpadVesting(network),
     Dreem: dreem(network),

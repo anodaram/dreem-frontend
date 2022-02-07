@@ -100,7 +100,7 @@ const CreateAssetForm = ({
             <textarea
               style={{ height: "130px" }}
               className={classes.input}
-              placeholder={asset.input.placeholder.value}
+              placeholder={asset.input?.placeholder?.value}
               value={formData[asset.key]}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setFormData({ ...formData, [asset.key]: e.target.value })
@@ -109,7 +109,7 @@ const CreateAssetForm = ({
           ) : (
             <input
               className={classes.input}
-              placeholder={asset.input.placeholder.value}
+              placeholder={asset.input?.placeholder?.value}
               value={formData[asset.key]}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setFormData({ ...formData, [asset.key]: e.target.value })
@@ -179,7 +179,7 @@ const CreateAssetForm = ({
               hidden
               type="file"
               style={{ display: "none" }}
-              accept={asset.input.formats?.mimeType}
+              accept={asset.input?.formats?.mimeType}
               onChange={onFileInput(asset.key)}
             />
           </>
@@ -206,7 +206,7 @@ const CreateAssetForm = ({
               getContentAnchorEl: null,
             }}
           >
-            {asset.options.map((option, index) => (
+            {asset.options?.map((option, index) => (
               <MenuItem key={`${asset.key}-OPTION-${index}`} value={option.value}>
                 {option.name.value}
               </MenuItem>

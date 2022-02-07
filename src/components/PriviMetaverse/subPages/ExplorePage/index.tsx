@@ -110,6 +110,66 @@ export default function ExplorePage() {
     loadAvatars(true);
   }, []);
 
+  const loadMore = (isInit = false) => {
+    if (!isInit && (!hasMore || loadingExplore)) return;
+
+    const filter = ["REALM"]
+    MetaverseAPI.getWorlds(12, curPage, "timestamp", filter, true, undefined, undefined, false)
+      .then(res => {
+        if (res.success) {
+          const items = res.data.elements;
+          if (items && items.length > 0) {
+            setExploreReamls(prev => (isInit ? items : [...prev, ...items]));
+            dispatch(setRealmsList([...realmsList, ...items]));
+            if (res.data.page && curPage <= res.data.page.max) {
+              setCurPage(curPage => curPage + 1);
+              setLastPage(res.data.page.max);
+            }
+          }
+        }
+      })
+      .finally(() => setLoadingExplore(false));
+  };
+
+  const loadFeatured = () => {
+    setLoadingFeatured(true);
+    const filter = ["REALM"]
+    MetaverseAPI.getFeaturedWorlds(filter)
+      .then(res => {
+        if (res.success) {
+          setFeaturedRealms(res.data.elements);
+        }
+      })
+      .finally(() => setLoadingFeatured(false));
+
+    setLoadingExplore(true);
+  };
+
+  const handlePrevSlide = () => {
+    if (curPageIndex === 0) {
+      carouselRef.current.goTo(featuredRealms.length - 1);
+      if (!isMobile) carouselRef1?.current.goTo(featuredRealms.length - 1);
+      setCurPageIndex(0);
+    } else {
+      carouselRef.current.slidePrev();
+      if (!isMobile) carouselRef1?.current.slidePrev();
+    }
+  };
+
+  const handlePrevSlideEnd = (nextItem, curPage) => {
+    setCurPageIndex(curPage);
+  };
+
+  const handleNextSlide = () => {
+    if (curPageIndex === featuredRealms.length - 1) {
+      carouselRef.current.goTo(0);
+      if (!isMobile) carouselRef1?.current.goTo(0);
+      setCurPageIndex(0);
+    } else {
+      carouselRef.current.slideNext();
+      if (!isMobile) carouselRef1?.current.slideNext();
+    }
+  }
   const loadAvatars = async (init = false) => {
     if (loading) return;
     try {
