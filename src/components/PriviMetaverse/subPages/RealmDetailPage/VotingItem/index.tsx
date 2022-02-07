@@ -7,6 +7,7 @@ import Box from "shared/ui-kit/Box";
 import Avatar from "shared/ui-kit/Avatar";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import { votingItemStyles } from "./index.styles";
+import ExtensionDraftVoteModal from "components/PriviMetaverse/modals/ExtensionDraftVoteModal";
 
 export default function VotingItem(props) {
   const { isLoading } = props;
@@ -18,7 +19,15 @@ export default function VotingItem(props) {
 
   // const [votingData, setVotingData] = React.useState<any>(props.item ?? {});
 
+  const [openExtensionDraftVoteModal, setOpenExtensionDraftVoteModal] = useState<boolean>(false);
+
   React.useEffect(() => { }, []);
+
+  const handleClose = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpenExtensionDraftVoteModal(false);
+  };
 
   return (
     <Box className={classes.root}>
@@ -51,6 +60,7 @@ export default function VotingItem(props) {
                 flexDirection="column"
                 alignItems="stretch"
                 className={classes.container}
+                onClick={() => setOpenExtensionDraftVoteModal(true)}
               >
                 <Box className={classes.titleSection}>
                   <Box flex={1}>
@@ -133,6 +143,7 @@ export default function VotingItem(props) {
                 flexDirection="column"
                 alignItems="stretch"
                 className={classes.container}
+                onClick={() => setOpenExtensionDraftVoteModal(true)}
               >
                 <Box display="flex">
                   <img
@@ -217,6 +228,7 @@ export default function VotingItem(props) {
                 alignItems="center"
                 justifyContent="space-between"
                 className={classes.container}
+                onClick={() => setOpenExtensionDraftVoteModal(true)}
               >
                 <img
                   className={classes.image}
@@ -290,6 +302,13 @@ export default function VotingItem(props) {
           </>
         )}
       </div>
+
+      {openExtensionDraftVoteModal && (
+        <ExtensionDraftVoteModal
+          open={openExtensionDraftVoteModal}
+          onClose={handleClose}
+        />
+      )}
     </Box>
   );
 }
