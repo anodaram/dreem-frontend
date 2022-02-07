@@ -152,6 +152,17 @@ export const realmDetailPageStyles = makeStyles(theme => ({
       marginRight: 8,
     },
   },
+  mapButton: {
+    background: "#151515 !important",
+    color: "#fff !important",
+    borderRadius: "100px !important",
+    display: "flex !important",
+    justifyContent: "center !important",
+    alignItems: "center !important",
+    textTransform: "uppercase",
+    padding: "0px 40px !important",
+    border: "none !important"
+  },
   content: {
     paddingTop: 90,
     background: "#151515",

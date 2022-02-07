@@ -17,13 +17,16 @@ export default function CreateRealmPage() {
 
   const [noMetamask, setNoMetamask] = React.useState<boolean>(false);
   const [metaDataForModal, setMetaDataForModal] = useState<any>(null);
+  const handleCancel = () => {
+    history.push(`/realms/`);
+  }
 
   return (
     <>
       <div className={classes.root} id="scrollContainer">
         <CreateRealmFlow 
           metaData={metaDataForModal}
-          handleCancel={() => {}}
+          handleCancel={() => handleCancel()}
         />
       </div>
       {noMetamask && <NoMetamaskModal open={noMetamask} onClose={() => setNoMetamask(false)} />}
