@@ -433,6 +433,9 @@ export default function RealmDetailPage() {
               onSelectTab={tab => {
                 setSelectedTab(tab.key);
               }}
+              style={{
+                justifyContent: "space-between",
+              }}
             />
             <Box marginTop={5.65} marginBottom={4.5}>
               { selectedTab === "extensions" ? (
