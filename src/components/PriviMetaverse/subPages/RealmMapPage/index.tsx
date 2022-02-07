@@ -30,8 +30,8 @@ export default function RealmMapPage() {
   const [graphData, setGraphData] = React.useState<any>(null);
   const [hoverNode, setHoverNode] = React.useState<any>(null);
   const [hoverLink, setHoverLink] = React.useState<any>(null);
-  const [realmData, setRealmData] = React.useState<any>({});
-  const [extensionData, setExtensionData] = React.useState<any>({});
+  const [mapData, setMapData] = React.useState<any>({});
+  const [selMap, setSelMap] = React.useState<any>({});
   const [openNotAppModal, setOpenNotAppModal] = React.useState<boolean>(false);
   const [showPlayModal, setShowPlayModal] = React.useState<boolean>(false);
   const [openContentPreview, setOpenContentPreview] = React.useState<boolean>(false);
@@ -39,10 +39,28 @@ export default function RealmMapPage() {
   const graphRef = React.useRef<ForceGraphMethods>();
 
   React.useEffect(() => {
-    if (realmId) {
-      loadRealm(realmId);
+    loadMap();
+  }, []);
+
+  React.useEffect(() => {
+    if (mapData){
+      const nodes : any[] = [];
+      const links: any[] = [];
+      for (const key in mapData) {
+        const map = mapData[key];
+        nodes.push({
+          id: key,
+          data: map.item,
+        });
+        map.graphMetadata.nodes.map((target)=>{
+          links.push({
+            source: key,
+            target
+          })
+        });
+      }
     }
-  }, [realmId]);
+  }, [mapData]);
 
   const EnterIcon = () => (
     <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -67,84 +85,25 @@ export default function RealmMapPage() {
     </svg>
   );
 
-  const mockImgs = [
-    "https://elb.ipfsprivi.com:8080/ipfs/QmUXfoKUo6kWmaqgRiaTXLWbgsBtsPh26qrrqjqePhNwKF",
-    "https://elb.ipfsprivi.com:8080/ipfs/Qmax1HaER2xAqNw8pQZWwu9ugV27QyPDKDvk5QrZhRoDEL",
-    "https://elb.ipfsprivi.com:8080/ipfs/QmZCrpmj9XoyG63fD5x389R7ymX3xGSSXEToGjoptr9PMy",
-    "https://elb.ipfsprivi.com:8080/ipfs/Qme4oWwrJcTj72SZs89kM3LfEWKDawrsg9Cyhmk2yzoCUZ",
-    "https://elb.ipfsprivi.com:8080/ipfs/Qmexie8YMYxsxPx8p2xBhH9zxakDHJS6bmALa8cMFoxsdG",
-  ]
-
-  const loadRealm = realmId => {
+  const loadMap = () => {
     setIsLoading(true);
-    MetaverseAPI.getWorld(realmId)
+    MetaverseAPI.getMapData()
       .then(res => {
-        if (res && res.data && res.data.extensions && res.data.extensions.length > 0) {
-          setRealmData(res.data);
-          let extensions = res.data.extensions;
-          //mock data for test * 200 data and change id ==> start//
-          let mockData: any[] = [];
-          let mockId = 1;
-          extensions.forEach(ele => {
-            for (let i = 0; i < 1000; i++) {
-              let mock = JSON.parse(JSON.stringify(ele));
-              mock.id = mockId;
-              mock.worldBannerImage = mockImgs[Math.round(Math.random() * (mockImgs.length - 1))]
-              mock.worldImages = mockImgs[Math.round(Math.random() * (mockImgs.length - 1))]
-              mock.worldTitle = "test title test title test title test title test title test title test title test title test title - " + mockId
-              mock.worldShortDescription = "test description test description test description test description test description test description test description test description test description test description  - " + mockId
-              mockData.push(mock);
-              mockId++;
-            }
-          });
-          extensions = mockData;
-          //mock data for test * 200 data and change id ==> end//
-
-          setGraphData({
-            nodes: extensions.map(extension => ({
-              id: extension.id,
-              data: extension,
-            })),
-            links: extensions.map(extension => ({
-              source: extension.id,
-              target: extensions[Math.round(Math.random() * (extensions.length - 1))].id
-            }))
-          });
+        if (res && res.data) {
+          setMapData(res.data);
         }
       })
       .finally(() => setIsLoading(false));
-  };
-
-  const drawCircle = (isHover = false) => {
-    let canvas = document.createElement("canvas");
-    canvas.id = "canvas";
-    canvas.width = 32;
-    canvas.height = 32;
-    let ctx = canvas.getContext("2d");
-    let PI2 = Math.PI * 2;
-    if (ctx) {
-      ctx.arc(16, 16, 16, 0, PI2, true);
-
-      if (isHover) {
-        ctx.fillStyle = "red";
-      } else {
-        ctx.fillStyle = "blue";
-      }
-
-      ctx.fill();
-      ctx.stroke();
-    }
-    return canvas;
   }
 
   const onCloseModal = () => {
     setShowModal(false);
-    setExtensionData(null);
+    setSelMap(null);
   }
 
   const onClickHandler = (node) => {
     console.log("node_info", node);
-    setExtensionData(node.data);
+    setSelMap(node.data);
     setShowModal(true);
     const distance = 100;
     const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
@@ -157,11 +116,11 @@ export default function RealmMapPage() {
   }
 
   const handleDetail = () => {
-    if (extensionData?.worldIsExtension) {
-      setOpenContentPreview(true);
-    } else {
-      history.push(`/realms/${extensionData.id}`);
-    }
+    // if (extensionData?.worldIsExtension) {
+    //   setOpenContentPreview(true);
+    // } else {
+    //   history.push(`/realms/${extensionData.id}`);
+    // }
   }
   const handleClose = e => {
     e.preventDefault();
@@ -173,36 +132,17 @@ export default function RealmMapPage() {
     if (detectMob()) {
       setShowPlayModal(true);
     } else {
-      const token = localStorage.getItem("token");
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-      axios
-        .post(
-          `${METAVERSE_URL()}/getSessionHash/`,
-          {
-            worldId: realmId,
-            worldTitle: realmData.worldTitle,
-            worldAssetUrl: realmData.worldAssetUrl,
-            worldTag: realmData.worldTag,
-          },
-          config
-        )
-        .then(res => {
-          let data: any = res.data?.data?.stamp;
-          if (data) {
-            customProtocolCheck(
-              "dreem://" + data,
-              () => {
-                setOpenNotAppModal(true);
-              },
-              () => {
-                console.log("successfully opened!");
-              },
-              3000
-            );
-          }
-        });
+
+      customProtocolCheck(
+        "dreem://" + selMap.versionHashId,
+        () => {
+          setOpenNotAppModal(true);
+        },
+        () => {
+          console.log("successfully opened!");
+        },
+        3000
+      );
     }
   };
 
@@ -273,7 +213,7 @@ export default function RealmMapPage() {
             nodeThreeObject={(node) => {
               let imageTexture;
               let hasBlur = false;
-              if (extensionData != null && extensionData.id === node.id) {
+              if (selMap != null && selMap.versionHashId === node.id) {
                 imageTexture = imgNodeSel;
                 hasBlur = true;
               }
@@ -318,32 +258,22 @@ export default function RealmMapPage() {
               <Box className={classes.pic}
                 style={{
                   backgroundImage:
-                    extensionData && extensionData.isFeature
-                      ? extensionData.worldBannerImage
-                        ? `url("${extensionData.worldBannerImage}")`
-                        : `url(${getDefaultImageUrl()})`
-                      : extensionData.worldImages
-                        ? `url("${extensionData.worldImages}")`
+                  (selMap && selMap.worldImage)
+                        ? `url("${selMap.worldImage}")`
                         : `url(${getDefaultImageUrl()})`,
                 }}>
               </Box>
               <Box className={classes.picLabel}>
-                {extensionData.worldIsExtension ? (
                   <Box padding="10px" display="flex">
-                    <Box className={classes.extensionTag}>Extension</Box>
+                    <Box className={classes.extensionTag}>{selMap.itemKind}</Box>
                   </Box>
-                ) : (
-                  <Box padding="10px" display="flex">
-                    <Box className={classes.realmTag}>Realm</Box>
-                  </Box>
-                )}
               </Box>
             </Box>
             <Box className={classes.name}>
-              {extensionData && extensionData.worldTitle ? extensionData.worldTitle : ""}
+              {selMap && selMap.worldTitle ? selMap.worldTitle : ""}
             </Box>
             <Box className={classes.description}>
-              {extensionData && extensionData.worldShortDescription ? extensionData.worldShortDescription : ""}
+              {selMap && selMap.worldDescription ? selMap.worldDescription : ""}
             </Box>
             <SecondaryButton
             className={classes.btnDetail}
@@ -374,8 +304,8 @@ export default function RealmMapPage() {
         {openContentPreview && (
           <ContentPreviewModal
             open={openContentPreview}
-            nftId={extensionData?.id}
-            isOwner={extensionData?.creatorId === userSelector.id}
+            nftId={selMap?.id}
+            isOwner={selMap?.submitter?.user?.priviId === userSelector.id}
             onClose={handleClose}
             handleRefresh={() => { }}
           />
