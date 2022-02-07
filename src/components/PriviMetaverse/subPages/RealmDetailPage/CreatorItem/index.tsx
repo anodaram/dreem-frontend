@@ -67,8 +67,8 @@ export default function VotingItem(props) {
             <Box className={classes.titleSection}>
               <Box className={classes.status}>STARTED THE REALM</Box>
               <Box className={classes.title}>John Doe</Box>
-              <Box display="flex" alignItems="center">
-                <Box borderRight="2px solid rgba(255,255,255,0.5)">
+              <Box className={classes.detailInfo}>
+                <Box className={classes.nameCtn}>
                   <div className={classes.name}>@matthew99</div>
                 </Box>
                 <Box flex="0.05" />
@@ -76,11 +76,19 @@ export default function VotingItem(props) {
                   <div className={classes.address}>0x4BCD...859A59a5f19 (visible only to you)</div>
                 </Box>
               </Box>
+              {isMobile && (
+                <Box display="flex" justifyContent="space-between" style={{marginTop: 10}}>
+                  <Box className={classes.address}>Voting Power </Box>
+                  <Box className={classes.votingPowerValue}>80% </Box>
+                </Box>
+              )}
             </Box>
-            <Box display="flex" flexDirection="column" alignItems="flex-end">
-              <Box className={classes.address}>Voting Power </Box>
-              <Box className={classes.votingPowerValue}>80% </Box>
-            </Box>
+            {!isMobile && (
+              <Box display="flex" flexDirection="column" alignItems="flex-end">
+                <Box className={classes.address}>Voting Power </Box>
+                <Box className={classes.votingPowerValue}>80% </Box>
+              </Box>  
+            )}
           </Box>
         )}
       </div>
