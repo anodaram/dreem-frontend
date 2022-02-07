@@ -3,9 +3,7 @@ import React from "react";
 import Box from "shared/ui-kit/Box";
 
 import { ownersStyles } from "./index.styles";
-import OwnersList from "../OwnersList";
 import { useParams } from "react-router-dom";
-import { getOwnersByGame } from "shared/services/API/DreemAPI";
 import { useMediaQuery, useTheme } from "@material-ui/core";
 import InfiniteScroll from "react-infinite-scroll-component";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
@@ -13,9 +11,10 @@ import { Skeleton } from "@material-ui/lab";
 import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
 import { Variant } from "shared/ui-kit";
 import { listenerSocket } from "components/Login/Auth";
+import { getGameNFTOwners } from "shared/services/API/ReserveAPI";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
-export default function Owners() {
+export default function Owners({ gameInfo }: any) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const classes = ownersStyles();
@@ -40,7 +39,7 @@ export default function Owners() {
     setOwners([]);
     setLastId(undefined);
     setHasMore(true);
-    loadNfts(true);
+    loadOwners(true);
   }, []);
 
   React.useEffect(() => {
@@ -80,23 +79,22 @@ export default function Owners() {
     }
   }, [listenerSocket]);
 
-  const loadNfts = async (init = false) => {
+  const loadOwners = async (init = false) => {
     if (loading) return;
     try {
       setLoading(true);
 
-      const response = await getOwnersByGame({
-        gameId: collection_id,
+      const response = await getGameNFTOwners({
+        collectionId: collection_id,
         mode: isProd ? "main" : "test",
-        lastId: init ? undefined : lastId,
+        startPos: init ? undefined : lastId,
+        pageSize: 20
       });
       if (response.success) {
-        let newOwners = response.data.list;
-        const newLastId = response.data.lastId;
-        const newhasMore = response.data.hasMore;
-        const totalCount = response.data.total_game_count;
-        setTotalGameCount(totalCount);
-        newOwners = newOwners.sort((a, b) => { return b.count - a.count })
+        let newOwners = response.owners;
+        const newLastId = newOwners[newOwners.length - 1].ownerAddress;
+        const newhasMore = response.owners.length === 20;
+        newOwners = newOwners.sort((a, b) => { return b.amount - a.amount })
         setOwners(prev => (init ? newOwners : [...prev, ...newOwners]));
         setLastId(newLastId);
         setHasMore(newhasMore);
@@ -116,14 +114,14 @@ export default function Owners() {
     if (owners && owners.length) {
       data = owners.map((row, key) => [
         { cell: <p className={classes.whiteText}>{key + 1}</p> },
-        { cell: <p className={classes.accTitle}>{`${row.address.substring(0, 6)}...${row.address.substring(row.address.length - 4, row.address.length)}`}</p> },
-        { cell: <p className={classes.whiteText}>{row.count}</p> },
-        { cell: <p className={classes.whiteText}>{totalGameCount == 0 ? 0 : (row.count / totalGameCount).toFixed(2)} %</p> },
+        { cell: <p className={classes.accTitle}>{`${row.ownerAddress.substring(0, 6)}...${row.ownerAddress.substring(row.ownerAddress.length - 4, row.ownerAddress.length)}`}</p> },
+        { cell: <p className={classes.whiteText}>{row.amount}</p> },
+        { cell: <p className={classes.whiteText}>{gameInfo.Count == 0 ? 0 : (row.amount / gameInfo.Count).toFixed(2)} %</p> },
       ]);
     }
 
     return data;
-  }, [owners, totalGameCount]);
+  }, [owners, gameInfo]);
 
 
   return (
@@ -153,7 +151,7 @@ export default function Owners() {
           hasChildren={owners?.length > 0}
           dataLength={owners?.length}
           scrollableTarget={"scrollContainer"}
-          next={loadNfts}
+          next={loadOwners}
           hasMore={hasMore}
           loader={
             loading &&
