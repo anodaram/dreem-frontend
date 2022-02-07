@@ -1,8 +1,10 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useMediaQuery, useTheme } from "@material-ui/core";
-
+import { RootState } from "store/reducers/Reducer";
+import { setRealmsList, setScrollPositionInRealms } from "store/actions/Realms";
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
@@ -80,6 +82,7 @@ const Rarity_Options = [
 export default function ExplorePage() {
   const classes = explorePage();
 
+  const dispatch = useDispatch();
   const history = useHistory();
   const width = useWindowDimensions().width;
 
@@ -100,6 +103,18 @@ export default function ExplorePage() {
   const [selectedContentType, setSelectedContentType] = React.useState<string>("all");
   const [selectedAssetType, setSelectedAssetType] = React.useState<string>("world");
   const [searchValue, setSearchValue] = React.useState<string>("");
+  const realmsList = useSelector((state: RootState) => state.realms.realmsList);
+  const [loadingFeatured, setLoadingFeatured] = React.useState<boolean>(false);
+  const [featuredRealms, setFeaturedRealms] = React.useState<any[]>([]);
+
+  const [curPage, setCurPage] = React.useState(1);
+  const [lastPage, setLastPage] = React.useState(1);
+  const [loadingExplore, setLoadingExplore] = React.useState<boolean>(false);
+  const [exploreRealms, setExploreReamls] = React.useState<any[]>(realmsList || []);
+
+  const carouselRef = React.useRef<any>();
+  const carouselRef1 = React.useRef<any>();
+  const [curPageIndex, setCurPageIndex] = React.useState<number>(0);
 
   const loadingCount = React.useMemo(
     () => (width > 1200 ? 4 : width > 900 ? 3 : width > 600 ? 2 : 1),
