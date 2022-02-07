@@ -47,11 +47,11 @@ export default function Owners({ gameInfo }: any) {
       const addOwnerHandler = (data) => {
         if (owners && owners.length) {
           const _owner = {
-            address: data.address,
-            count: data.count,
+            ownerAddress: data.address,
+            amount: data.count,
           }
 
-          const _owners = owners.filter((owner) => _owner.address !== owner.address);
+          const _owners = owners.filter((owner) => _owner.ownerAddress !== owner.ownerAddress);
           setOwners([_owner].concat(_owners));
           setTotalGameCount(data.total_game_count);
         }
@@ -59,11 +59,11 @@ export default function Owners({ gameInfo }: any) {
 
       const updateOwnerHandler = (data) => {
         const _owner = {
-          address: data.address,
-          count: data.count,
+          ownerAddress: data.address,
+          amount: data.count,
         }
         if (owners && owners.length) {
-          const _owners = owners.map((owner) => _owner.address === owner.address ? _owner : owner);
+          const _owners = owners.map((owner) => _owner.ownerAddress === owner.ownerAddress ? _owner : owner);
           setOwners(_owners);
           setTotalGameCount(data.total_game_count);
         }
@@ -94,6 +94,7 @@ export default function Owners({ gameInfo }: any) {
         let newOwners = response.owners;
         const newLastId = newOwners[newOwners.length - 1].ownerAddress;
         const newhasMore = response.owners.length === 20;
+        setTotalGameCount(gameInfo.Count);
         newOwners = newOwners.sort((a, b) => { return b.amount - a.amount })
         setOwners(prev => (init ? newOwners : [...prev, ...newOwners]));
         setLastId(newLastId);
@@ -116,12 +117,12 @@ export default function Owners({ gameInfo }: any) {
         { cell: <p className={classes.whiteText}>{key + 1}</p> },
         { cell: <p className={classes.accTitle}>{`${row.ownerAddress.substring(0, 6)}...${row.ownerAddress.substring(row.ownerAddress.length - 4, row.ownerAddress.length)}`}</p> },
         { cell: <p className={classes.whiteText}>{row.amount}</p> },
-        { cell: <p className={classes.whiteText}>{gameInfo.Count == 0 ? 0 : (row.amount / gameInfo.Count).toFixed(2)} %</p> },
+        { cell: <p className={classes.whiteText}>{totalGameCount == 0 ? 0 : (row.amount / totalGameCount).toFixed(2)} %</p> },
       ]);
     }
 
     return data;
-  }, [owners, gameInfo]);
+  }, [owners, totalGameCount]);
 
 
   return (
