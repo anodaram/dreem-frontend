@@ -129,11 +129,11 @@ export default function RealmDetailPage() {
 
   const loadRealm = realmId => {
     setIsLoading(true);
-    // MetaverseAPI.getWorld(realmId)
-    //   .then(res => {
-    //     setRealmData(res.data);
-    //   })
-    //   .finally(() => setIsLoading(false));
+    MetaverseAPI.getWorld(realmId)
+      .then(res => {
+        setRealmData(res.data);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   const handlePlay = () => {
