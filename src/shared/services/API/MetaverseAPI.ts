@@ -281,6 +281,17 @@ export const getArtist = async artistId => {
   }
 };
 
+export const getMapData = async () => {
+  try {
+    const resp = await axios.get(`${METAVERSE_URL()}/web/assets/map/`);
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    console.log("error in uploading map:", error);
+  }
+};
+
 export const getWorld = async worldId => {
   try {
     const token = localStorage.getItem("token");

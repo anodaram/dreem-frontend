@@ -81,8 +81,7 @@ const NFTReserves = () => {
 
   const classes = useNFTOptionsStyles({ openSideBar });
 
-  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : openSideBar ? 3 : 4;
-  const loadingCount = width > 1700 ? 5 : width > 1420 ? 4 : width > 1200 ? 3 : width > 650 ? 2 : 1;
+  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? openSideBar ? 3 : 4 : 4;
 
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     { headerName: "NFT" },
@@ -118,13 +117,6 @@ const NFTReserves = () => {
         getNewListings();
       };
 
-      const addMarketPlaceFeedHandler = _transaction => {
-        if (transactions && transactions.length) {
-          const _transactions = transactions.filter(transaction => _transaction.id !== transaction.id);
-          setTransactions([_transaction].concat(_transactions));
-        }
-      };
-
       const updateMarketPlaceFeedHandler = _transaction => {
         if (transactions && transactions.length) {
           const _transactions = transactions.map(transaction =>
@@ -135,12 +127,10 @@ const NFTReserves = () => {
       };
 
       listenerSocket.on("newNFT", newNFTHandler);
-      listenerSocket.on("addMarketPlaceFeed", addMarketPlaceFeedHandler);
       listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
 
       return () => {
         listenerSocket.removeListener("newNFT", newNFTHandler);
-        listenerSocket.removeListener("addMarketPlaceFeed", addMarketPlaceFeedHandler);
         listenerSocket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
       };
     }
@@ -233,7 +223,7 @@ const NFTReserves = () => {
   };
 
   const goToNft = row => {
-    history.push(`/P2E/${row.collectionId}/${row.tokenId}`);
+    history.push(`/P2E/${row.Slug}/${row.tokenId}`);
   };
 
   const tableData = React.useMemo(() => {
@@ -419,7 +409,7 @@ const NFTReserves = () => {
                                 alignItems="flex-start"
                                 className={classes.gameInfoSection}
                               >
-                                <span>{game.Count || 0}</span>
+                                <span>{game.owners_count || 0}</span>
                                 <span>New Owners</span>
                               </Box>
                               <Box
@@ -516,7 +506,22 @@ const NFTReserves = () => {
                     )}
                   </Box>
                   <div className={`${classes.topNFTContent} ${classes.fitContent}`}>
-                    {popularGames && popularGames.length ? (
+                    {loadingPopularGames ? (
+                      <div className={classes.allNFTSection}>
+                        <MasonryGrid
+                          gutter={"24px"}
+                          data={Array(itemsToShow).fill(0)}
+                          renderItem={item => (
+                            <FeaturedGameCard game={{}} isLoading={loadingPopularGames} />
+                          )}
+                          columnsCountBreakPoints={{
+                            ...COLUMNS_COUNT_BREAK_POINTS,
+                            1440: openSideBar ? 3 : 4,
+                            1800: 4,
+                          }}
+                        />
+                      </div>
+                    ) : popularGames && popularGames.length ? (
                       !isMobile &&
                       (popularGames.length === 1 ||
                         popularGames.length === 2 ||
@@ -569,17 +574,6 @@ const NFTReserves = () => {
                           ))}
                         </Carousel>
                       )
-                    ) : loadingPopularGames ? (
-                      <MasonryGrid
-                        gutter={"24px"}
-                        data={Array(loadingCount).fill(0)}
-                        renderItem={_ => <Skeleton variant="rect" width={60} height={60} />}
-                        columnsCountBreakPoints={{
-                          ...COLUMNS_COUNT_BREAK_POINTS,
-                          1440: openSideBar ? 3 : 4,
-                          1800: 4,
-                        }}
-                      />
                     ) : (
                       <div></div>
                     )}
@@ -655,7 +649,18 @@ const NFTReserves = () => {
                   </Hidden>
                 </div>
                 <div className={classes.allNFTSection}>
-                  {!loadingNewListings || newListings.length > 0 ? (
+                  {loadingNewListings ? (
+                    <MasonryGrid
+                      gutter={"24px"}
+                      data={Array(itemsToShow).fill(0)}
+                      renderItem={(item, index) => <ExploreCard nft={item} key={`item-${index}`} isLoading />}
+                      columnsCountBreakPoints={{
+                        ...COLUMNS_COUNT_BREAK_POINTS,
+                        1440: openSideBar ? 3 : 4,
+                        1800: 4,
+                      }}
+                    />
+                  ) : newListings.length > 0 ? (
                     <>
                       <MasonryGrid
                         gutter={"24px"}

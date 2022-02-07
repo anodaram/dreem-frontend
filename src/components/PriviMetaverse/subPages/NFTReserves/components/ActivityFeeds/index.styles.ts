@@ -89,9 +89,9 @@ export const useStyles = makeStyles(theme => ({
     fontFamily: "Rany",
     fontWeight: 400,
     color: "#ffffff50",
-    width: '100px',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden'
+    width: "100px",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
   },
 }));

@@ -29,13 +29,6 @@ export default function RecentTransactions() {
 
   useEffect(() => {
     if (listenerSocket) {
-      const addMarketPlaceFeedHandler = _transaction => {
-        if (transactions && transactions.length) {
-          const _transactions = transactions.filter(transaction => _transaction.id !== transaction.id);
-          setTransactions([_transaction].concat(_transactions));
-        }
-      };
-
       const updateMarketPlaceFeedHandler = _transaction => {
         if (transactions && transactions.length) {
           const _transactions = transactions.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
@@ -43,11 +36,9 @@ export default function RecentTransactions() {
         }
       };
 
-      listenerSocket.on("addMarketPlaceFeed", addMarketPlaceFeedHandler);
       listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
 
       return () => {
-        listenerSocket.removeListener("addMarketPlaceFeed", addMarketPlaceFeedHandler);
         listenerSocket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
       };
     }

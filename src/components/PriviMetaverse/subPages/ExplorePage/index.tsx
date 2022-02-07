@@ -1,342 +1,420 @@
 import React from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
-import Carousel from "react-elastic-carousel";
 import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
-import { RootState } from "store/reducers/Reducer";
-import { setRealmsList, setScrollPositionInRealms } from "store/actions/Realms";
-import {
-  setAllNFTList,
-  setCollectionNFTList,
-  setScrollPositionInCollection,
-  setScrollPositionInAllNFT,
-} from "store/actions/MarketPlace";
 import Box from "shared/ui-kit/Box";
-// import { PrimaryButton } from "shared/ui-kit";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
-import RealmCard from "components/PriviMetaverse/components/cards/RealmCard";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
-import { getDefaultImageUrl } from "shared/services/user/getUserAvatar";
-import { explorePageStyles } from "./index.styles";
+import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
+import StyledCheckbox from "shared/ui-kit/Checkbox";
+import { Color } from "shared/ui-kit";
+import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
+import { explorePage } from "./index.styles";
 
-import shapeImgTriangle from "assets/metaverseImages/shape_home_2.png";
-import shapeImgBlueArc from "assets/metaverseImages/shape_explorer_blue_arc.png";
-import { PrimaryButton } from "shared/ui-kit";
+import backImg1 from "assets/metaverseImages/shape_roadmap.png";
+import backImg2 from "assets/metaverseImages/shape_explorer_blue_arc.png";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
   600: 2,
+  900: 3,
   1200: 3,
-  1440: 3,
 };
-
-const filters = ["WORLD"];
+const Status_Options = [
+  { content: "all", color: "#ffffff50", bgcolor: "transparent" },
+  {
+    content: "for rent",
+    color: "#212121",
+    bgcolor:
+      "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)",
+  },
+  {
+    content: "rented",
+    color: "#212121",
+    bgcolor:
+      "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)",
+  },
+  {
+    content: "for sale",
+    color: "#212121",
+    bgcolor:
+      "conic-gradient(from 31.61deg at 50% 50%, #91D502 -25.18deg, #E5FF46 15deg, rgba(186, 252, 0, 0.76) 103.13deg, #A3CC00 210deg, #91D502 334.82deg, #E5FF46 375deg)",
+  },
+  {
+    content: "for reserve",
+    color: "#212121",
+    bgcolor:
+      "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
+  },
+  {
+    content: "Blocked",
+    color: "#212121",
+    bgcolor:
+      "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
+  },
+];
+const Filter_By_Options = ["all", "nft", "nft draft", "collection", "creators"];
+const Asset_Type_Options = [
+  { content: "world", image: require("assets/metaverseImages/asset_world.png") },
+  { content: "3d asset", image: require("assets/metaverseImages/asset_3d.png") },
+  { content: "texture", image: require("assets/metaverseImages/asset_texture.png") },
+  { content: "material", image: require("assets/metaverseImages/asset_material.png") },
+  { content: "character", image: require("assets/metaverseImages/asset_character.png") },
+];
+const Primary_Options = [
+  { content: "all", image: null },
+  { content: "water", image: require("assets/metaverseImages/primary_water.png") },
+  { content: "air", image: require("assets/metaverseImages/primary_air.png") },
+  { content: "land", image: require("assets/metaverseImages/primary_land.png") },
+];
+const Rarity_Options = [
+  { content: "all", color: "#ffffff50", border: "1px solid transparent" },
+  { content: "legendary", color: "#FF7E36", border: "1px solid #FF7E36" },
+  { content: "epic", color: "#9C5FFF", border: "1px solid #9C5FFF" },
+  { content: "rare", color: "#5F9FFF", border: "1px solid #5F9FFF" },
+  { content: "common", color: "#808A9A", border: "1px solid #808A9A" },
+];
 
 export default function ExplorePage() {
-  const classes = explorePageStyles();
+  const classes = explorePage();
+
   const history = useHistory();
-  const dispatch = useDispatch();
-
-  const scrollPosition = useSelector((state: RootState) => state.realms.scrollPositionInRealms);
-  const realmsList = useSelector((state: RootState) => state.realms.realmsList);
-
   const width = useWindowDimensions().width;
+
   const theme = useTheme();
-  const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [loadingFeatured, setLoadingFeatured] = React.useState<boolean>(false);
-  const [featuredRealms, setFeaturedRealms] = React.useState<any[]>([]);
-
-  const [curPage, setCurPage] = React.useState(1);
-  const [lastPage, setLastPage] = React.useState(1);
-  const [loadingExplore, setLoadingExplore] = React.useState<boolean>(false);
-  const [exploreRealms, setExploreReamls] = React.useState<any[]>(realmsList || []);
+  const [avatars, setAvatars] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [page, setPage] = React.useState<number>(1);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
+  const [openFilterBar, setOpenFilterBar] = React.useState<boolean>(true);
+  const [openStatusSection, setOpenStatusSection] = React.useState<boolean>(true);
+  const [openFilterBySection, setOpenFilterBySection] = React.useState<boolean>(true);
+  const [openAssetSection, setOpenAssetSection] = React.useState<boolean>(true);
+  const [openPrimarySection, setOpenPrimarySection] = React.useState<boolean>(true);
+  const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
+  const [selectedContentType, setSelectedContentType] = React.useState<string>("all");
+  const [selectedAssetType, setSelectedAssetType] = React.useState<string>("world");
+  const [searchValue, setSearchValue] = React.useState<string>("");
 
-  const carouselRef = React.useRef<any>();
-  const carouselRef1 = React.useRef<any>();
-  const [curPageIndex, setCurPageIndex] = React.useState<number>(0);
-
-  const [breakPoints] = React.useState<any[]>([
-    { width: theme.breakpoints.values.xs, itemsToShow: 2 },
-    { width: theme.breakpoints.values.sm, itemsToShow: 3 },
-    { width: theme.breakpoints.values.md, itemsToShow: 4 },
-    // { width: theme.breakpoints.values.lg, itemsToShow: 3 },
-  ]);
-
-  const loadingCount = React.useMemo(() => (width > 1200 ? 6 : width > 600 ? 3 : 6), [width]);
+  const loadingCount = React.useMemo(
+    () => (width > 1200 ? 4 : width > 900 ? 3 : width > 600 ? 2 : 1),
+    [width]
+  );
 
   React.useEffect(() => {
-    loadFeatured();
-    loadMore(true);
-
-    // initialize store
-    dispatch(setCollectionNFTList([]));
-    dispatch(setAllNFTList([]));
-    dispatch(setScrollPositionInAllNFT(0));
-    dispatch(setScrollPositionInCollection(0));
+    loadAvatars(true);
   }, []);
 
-  const loadMore = (isInit = false) => {
-    if (!isInit && (!hasMore || loadingExplore)) return;
-
-    MetaverseAPI.getWorlds(12, curPage, "timestamp", filters, true, undefined, undefined, false)
-      .then(res => {
-        if (res.success) {
-          const items = res.data.elements;
-          if (items && items.length > 0) {
-            setExploreReamls(prev => (isInit ? items : [...prev, ...items]));
-            dispatch(setRealmsList([...realmsList, ...items]));
-            if (res.data.page && curPage <= res.data.page.max) {
-              setCurPage(curPage => curPage + 1);
-              setLastPage(res.data.page.max);
-            }
-          }
-        }
-      })
-      .finally(() => setLoadingExplore(false));
-  };
-
-  const loadFeatured = () => {
-    setLoadingFeatured(true);
-    MetaverseAPI.getFeaturedWorlds(filters)
-      .then(res => {
-        if (res.success) {
-          setFeaturedRealms(res.data.elements);
-        }
-      })
-      .finally(() => setLoadingFeatured(false));
-
-    setLoadingExplore(true);
-  };
-
-  const handlePrevSlide = () => {
-    if (curPageIndex === 0) {
-      carouselRef.current.goTo(featuredRealms.length - 1);
-      if (!isMobile) carouselRef1?.current.goTo(featuredRealms.length - 1);
-      setCurPageIndex(0);
-    } else {
-      carouselRef.current.slidePrev();
-      if (!isMobile) carouselRef1?.current.slidePrev();
+  const loadAvatars = async (init = false) => {
+    if (loading) return;
+    try {
+      setLoading(true);
+      const response = await MetaverseAPI.getWorlds(12, page, "timestamp", ["CHARACTER"]);
+      if (response.success) {
+        const newAvatars = response.data.elements;
+        setAvatars(prev => (init ? newAvatars : [...prev, ...newAvatars]));
+        setPage(prev => prev + 1);
+        setHasMore(response.data.page.cur < response.data.page.max);
+      } else {
+        setAvatars([]);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handlePrevSlideEnd = (nextItem, curPage) => {
-    setCurPageIndex(curPage);
-  };
-
-  const handleNextSlide = () => {
-    if (curPageIndex === featuredRealms.length - 1) {
-      carouselRef.current.goTo(0);
-      if (!isMobile) carouselRef1?.current.goTo(0);
-      setCurPageIndex(0);
-    } else {
-      carouselRef.current.slideNext();
-      if (!isMobile) carouselRef1?.current.slideNext();
-    }
-  };
-
-  const handleNextSlideEnd = (nextItem, curPage) => {
-    setCurPageIndex(curPage);
-  };
-
-  const handleScroll = e => {
-    dispatch(setScrollPositionInRealms(e.target.scrollTop));
   };
 
   return (
-    <Box className={classes.root} id="scrollContainer" onScroll={handleScroll}>
-      <Box className={classes.realmContainer}>
-        <img className={classes.bgImgTriangle} src={shapeImgTriangle} alt="seedImg" />
-        <img className={classes.bgImgGreenCircle} src={shapeImgBlueArc} alt="seedImg" />
-        <Box className={classes.fitContent}>
-          <Box mb={8}>
-            <Box display="flex" flexDirection="row" whiteSpace="nowrap" overflow="hidden">
-              <span className={`${classes.gradientText} ${classes.gradient1} ${classes.fitSize}`}>
-                featured realms
-              </span>
-              <span className={`${classes.shadowText}  ${classes.fitSize}`}>featured realms</span>
+    <Box className={classes.root}>
+      <Box
+        className={classes.filterBar}
+        style={{
+          minWidth: openFilterBar ? 293 : 55,
+        }}
+      >
+        {openFilterBar ? (
+          <>
+            <Box className={classes.filterHeader}>
+              <Box color="#ffffff50">Filtering</Box>
+              <div className={classes.iconButton} onClick={() => setOpenFilterBar(false)}>
+                <CollapseIcon />
+              </div>
             </Box>
-            <Box className={classes.carousel} mt={4}>
-              {!loadingFeatured && (
-                <Box className={classes.arrowBox} mr={isTablet ? "-58px" : "20px"} onClick={handlePrevSlide}>
-                  <LeftIcon />
+            <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+            <Box className={classes.filterMainSection}>
+              <Box className={classes.subFilterSection}>
+                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                  <Box color="#E9FF26">Status</Box>
+                  <div className={classes.iconButton} onClick={() => setOpenStatusSection(prev => !prev)}>
+                    {openStatusSection ? <UpArrowIcon /> : <DownArrowIcon />}
+                  </div>
                 </Box>
-              )}
-              <Carousel
-                ref={carouselRef}
-                itemsToShow={1}
-                isRTL={false}
-                showArrows={false}
-                itemPadding={[0, 8, 0, 8]}
-                onNextEnd={handleNextSlideEnd}
-                onPrevEnd={handlePrevSlideEnd}
-                renderPagination={({ pages, activePage, onClick }) => {
-                  return (
-                    <Box mt={2} width="100%">
-                      {isMobile ? (
-                        <Box display="flex" alignItems="center" justifyContent="center">
-                          {pages.map(page => {
-                            const isActivePage = activePage === page;
-                            return (
-                              <>
-                                {!loadingFeatured && (
-                                  <Box
-                                    key={page}
-                                    style={{
-                                      width: 8,
-                                      height: 8,
-                                      margin: "0 5px",
-                                      borderRadius: "100vh",
-                                      background: isActivePage ? "#fff" : "rgba(255, 255, 255, 0.5)",
-                                    }}
-                                    onClick={() => {
-                                      onClick(page.toString());
-                                    }}
-                                  ></Box>
-                                )}
-                              </>
-                            );
-                          })}
-                        </Box>
-                      ) : (
-                        <Carousel
-                          ref={carouselRef1}
-                          enableTilt={false}
-                          breakPoints={breakPoints}
-                          isRTL={false}
-                          showArrows={false}
-                          pagination={false}
-                          itemPadding={[0, 8, 0, 8]}
-                        >
-                          {pages.map(page => {
-                            const isActivePage = activePage === page;
-                            return (
-                              <>
-                                {!loadingFeatured && (
-                                  <Box
-                                    key={page}
-                                    className={classes.carouselItem}
-                                    style={{
-                                      backgroundImage: featuredRealms[page]?.worldImage
-                                        ? `url("${featuredRealms[page]?.worldImage}")`
-                                        : `url(${getDefaultImageUrl()})`,
-                                      border: isActivePage ? "2px solid #E1E736" : "none",
-                                    }}
-                                    onClick={() => {
-                                      onClick(page.toString());
-                                    }}
-                                  ></Box>
-                                )}
-                              </>
-                            );
-                          })}
-                        </Carousel>
-                      )}
-                    </Box>
-                  );
-                }}
-              >
-                {(loadingFeatured ? Array(3).fill(0) : featuredRealms).map((item, index) => (
-                  <RealmCard
-                    key={`top-album-${index}`}
-                    item={item}
-                    disableEffect
-                    isFeature
-                    isLoading={loadingFeatured}
-                  />
-                ))}
-              </Carousel>
-              {!loadingFeatured && (
-                <Box className={classes.arrowBox} ml={isTablet ? "-58px" : "20px"} onClick={handleNextSlide}>
-                  <RightIcon />
-                </Box>
-              )}
-            </Box>
-          </Box>
-          <Box>
-            <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-              <Box className={classes.gradientText}>Explore realms</Box>
-              <PrimaryButton
-                size="medium"
-                style={{
-                  background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
-                  height: 48,
-                  minWidth: 249,
-                  textTransform: "uppercase",
-                  borderRadius: "100px",
-                  color: "#121212",
-                  paddingTop: 4,
-                }}
-                onClick={() => history.push("/create_realm")}
-              >
-                Create Realm
-              </PrimaryButton>
-            </Box>
-
-            <InfiniteScroll
-              hasChildren={exploreRealms.length > 0}
-              dataLength={exploreRealms.length}
-              scrollableTarget={"scrollContainer"}
-              next={loadMore}
-              hasMore={hasMore}
-              initialScrollY={scrollPosition - 350}
-              loader={
-                lastPage && curPage === lastPage ? (
+                {openStatusSection && (
                   <Box mt={2}>
-                    <MasonryGrid
-                      gutter={"16px"}
-                      data={Array(loadingCount).fill(0)}
-                      renderItem={(item, _) => <RealmCard isLoading={true} />}
-                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                    />
+                    {Status_Options.map((item, index) => (
+                      <Box display={"flex"} alignItems={"center"} key={index} mb={1.5}>
+                        <StyledCheckbox buttonColor={Color.LightYellow} checked={true} name="checked" />
+                        <Box
+                          fontSize={14}
+                          color={item.color}
+                          style={{
+                            background: item.bgcolor,
+                            borderRadius: 5,
+                            padding: "0 8px",
+                          }}
+                        >
+                          {item.content}
+                        </Box>
+                      </Box>
+                    ))}
                   </Box>
-                ) : (
-                  <></>
-                )
-              }
-            >
-              <Box mt={4}>
-                <MasonryGrid
-                  gutter={"16px"}
-                  data={exploreRealms}
-                  renderItem={(item, _) => <RealmCard item={item} isLoading={loadingExplore} />}
-                  columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                />
+                )}
               </Box>
-            </InfiniteScroll>
+              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              <Box className={classes.subFilterSection}>
+                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                  <Box color="#E9FF26">Filter By</Box>
+                  <div className={classes.iconButton} onClick={() => setOpenFilterBySection(prev => !prev)}>
+                    {openFilterBySection ? <UpArrowIcon /> : <DownArrowIcon />}
+                  </div>
+                </Box>
+                {openFilterBySection && (
+                  <Box mt={2}>
+                    {Filter_By_Options.map((item, index) => (
+                      <Box
+                        key={index}
+                        mb={1.5}
+                        fontSize={14}
+                        color={item === selectedContentType ? "#fff" : "#ffffff50"}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setSelectedContentType(item)}
+                      >
+                        {item}
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              <Box className={classes.subFilterSection}>
+                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                  <Box color="#E9FF26">Asset Type</Box>
+                  <div className={classes.iconButton} onClick={() => setOpenAssetSection(prev => !prev)}>
+                    {openAssetSection ? <UpArrowIcon /> : <DownArrowIcon />}
+                  </div>
+                </Box>
+                {openAssetSection && (
+                  <Box mt={2}>
+                    {Asset_Type_Options.map((item, index) => (
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        key={index}
+                        mb={1.5}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setSelectedAssetType(item.content)}
+                      >
+                        <img src={item.image} width={24} height={24} alt="asset image" />
+                        <Box
+                          fontSize={14}
+                          color={item.content === selectedAssetType ? "#fff" : "#ffffff50"}
+                          ml={1.3}
+                        >
+                          {item.content}
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              <Box className={classes.subFilterSection}>
+                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                  <Box color="#E9FF26">Primary</Box>
+                  <div className={classes.iconButton} onClick={() => setOpenPrimarySection(prev => !prev)}>
+                    {openPrimarySection ? <UpArrowIcon /> : <DownArrowIcon />}
+                  </div>
+                </Box>
+                {openPrimarySection && (
+                  <Box mt={2}>
+                    {Primary_Options.map((item, index) => (
+                      <Box display={"flex"} alignItems={"center"} key={index} mb={1.5}>
+                        <StyledCheckbox buttonColor={Color.LightYellow} checked={true} name="checked" />
+                        <Box display={"flex"} alignItems={"center"}>
+                          {item.image && <img src={item.image} alt="primary image" />}
+                          <Box fontSize={14} ml={0.5}>
+                            {item.content}
+                          </Box>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              <Box className={classes.subFilterSection}>
+                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                  <Box color="#E9FF26">Rarity</Box>
+                  <div className={classes.iconButton} onClick={() => setOpenRaritySection(prev => !prev)}>
+                    {openRaritySection ? <UpArrowIcon /> : <DownArrowIcon />}
+                  </div>
+                </Box>
+                {openRaritySection && (
+                  <Box mt={2}>
+                    {Rarity_Options.map((item, index) => (
+                      <Box display={"flex"} alignItems={"center"} key={index} mb={1.5}>
+                        <StyledCheckbox buttonColor={Color.LightYellow} checked={true} name="checked" />
+                        <Box
+                          fontSize={14}
+                          color={item.color}
+                          style={{
+                            border: item.border,
+                            borderRadius: 5,
+                            padding: "0 8px",
+                          }}
+                        >
+                          {item.content}
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+            </Box>
+          </>
+        ) : (
+          <Box className={classes.expandIcon} onClick={() => setOpenFilterBar(true)}>
+            <ExpandIcon />
           </Box>
+        )}
+      </Box>
+      <Box className={classes.mainContent} id="scrollContainer">
+        <Box className={classes.fitContent} mb={isTablet ? 6 : 12} px={isMobile ? 2 : 0}>
+          <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+            <Box className={classes.gradientText}>Explore Assets</Box>
+            <div className={classes.searchSection}>
+              <InputWithLabelAndTooltip
+                type="text"
+                inputValue={searchValue}
+                placeHolder="Search collections"
+                onInputValueChange={e => {
+                  setSearchValue(e.target.value);
+                }}
+                style={{
+                  background: "transparent",
+                  margin: 0,
+                  marginRight: 8,
+                  marginLeft: 8,
+                  padding: 0,
+                  border: "none",
+                  height: "auto",
+                }}
+                theme="dark"
+              />
+              <Box display="flex" alignItems="center" justifyContent="center" style={{ cursor: "pointer" }}>
+                <SearchIcon />
+              </Box>
+            </div>
+          </Box>
+
+          <InfiniteScroll
+            hasChildren={avatars?.length > 0}
+            dataLength={avatars?.length}
+            scrollableTarget={"scrollContainer"}
+            next={loadAvatars}
+            hasMore={hasMore}
+            loader={
+              loading && (
+                <Box mt={2}>
+                  <MasonryGrid
+                    gutter={"40px"}
+                    data={Array(loadingCount).fill(0)}
+                    renderItem={(_, index) => <AvatarCard isLoading={true} key={`avatar_loading_${index}`} />}
+                    columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                  />
+                </Box>
+              )
+            }
+          >
+            <Box mt={4}>
+              <MasonryGrid
+                gutter={"40px"}
+                data={avatars}
+                renderItem={(item, index) => <AvatarCard item={item} key={`avatar_${index}`} />}
+                columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+              />
+            </Box>
+          </InfiniteScroll>
+          {!loading && avatars?.length < 1 && (
+            <Box textAlign="center" width="100%" mb={10} mt={2} fontSize={22}>
+              No Data
+            </Box>
+          )}
         </Box>
       </Box>
+      <img className={classes.backImg1} src={backImg1} alt="back_1" />
+      <img className={classes.backImg2} src={backImg2} alt="back_2" />
     </Box>
   );
 }
 
-const RightIcon = () => (
-  <svg width="12" height="22" viewBox="0 0 12 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const UpArrowIcon = () => (
+  <svg width="19" height="12" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 8.69121L9.32795 3L16 9" stroke="#E9FF26" stroke-width="3" stroke-linecap="square" />
+  </svg>
+);
+
+export const DownArrowIcon = () => (
+  <svg width="19" height="12" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 3.30879L9.32795 9L16 3" stroke="#E9FF26" stroke-width="3" stroke-linecap="square" />
+  </svg>
+);
+
+const CollapseIcon = () => (
+  <svg width="23" height="22" viewBox="0 0 23 22" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
-      d="M2.2485 18.9332L10.3694 10.8123L2.24851 2.69141"
+      d="M4.02065 4L0.935547 4L0.935545 18.8085L4.02065 18.8085L4.02065 4Z"
+      fill="white"
+      fillOpacity="0.5"
+    />
+    <path
+      d="M8 11.25H22.5M8 11.25L14.5 5M8 11.25L14.5 17.5"
       stroke="white"
+      strokeOpacity="0.5"
       strokeWidth="3"
-      strokeLinecap="square"
-      strokeLinejoin="round"
     />
   </svg>
 );
 
-const LeftIcon = () => (
-  <svg width="12" height="22" viewBox="0 0 12 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const ExpandIcon = () => (
+  <svg width="23" height="22" viewBox="0 0 23 22" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
-      d="M9.69354 2.85449L1.57265 10.9754L9.69354 19.0963"
+      d="M18.9793 4L22.0645 4L22.0645 18.8085L18.9793 18.8085L18.9793 4Z"
+      fill="white"
+      fill-opacity="0.5"
+    />
+    <path
+      d="M15 11.25H0.5M15 11.25L8.5 5M15 11.25L8.5 17.5"
       stroke="white"
-      strokeWidth="3"
-      strokeLinecap="square"
-      strokeLinejoin="round"
+      stroke-opacity="0.5"
+      stroke-width="3"
+    />
+  </svg>
+);
+
+export const SearchIcon = ({ color = "white" }) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12.9056 14.3199C11.551 15.3729 9.84871 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8C16 9.84871 15.3729 11.551 14.3199 12.9056L19.7071 18.2929C20.0976 18.6834 20.0976 19.3166 19.7071 19.7071C19.3166 20.0976 18.6834 20.0976 18.2929 19.7071L12.9056 14.3199ZM14 8C14 11.3137 11.3137 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C11.3137 2 14 4.68629 14 8Z"
+      fill={color}
     />
   </svg>
 );
