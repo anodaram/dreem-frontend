@@ -35,6 +35,7 @@ import { NftStates } from "shared/constants/constants";
 import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
 import TotalStats from "./components/TotalStats";
 import RecentTransactions from "./components/RecentTransactions";
+import { listenerSocket } from "components/Login/Auth";
 import { MessageBox } from "components/PriviMetaverse/components/Message/MessageBox";
 import { ExpandIcon } from "../NFTReserves";
 import ActivityFeeds from "../NFTReserves/components/ActivityFeeds";
@@ -274,6 +275,25 @@ export default function GameDetailPage() {
     let token = tokenList.find(token => token.Address === addr);
     return token?.Decimals;
   };
+
+  React.useEffect(() => {
+    if (listenerSocket) {
+      const updateMarketPlaceFeedHandler = _nft => {
+        if (nfts && nfts.length) {
+          const _nfts = nfts.map(nft => (_nft.id === nft.id ? _nft : nft));
+          setNfts(_nfts);
+        }
+
+        loadGameInfo();
+      };
+
+      listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+
+      return () => {
+        listenerSocket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+      };
+    }
+  }, [listenerSocket]);
 
   const tableData = React.useMemo(() => {
     let data: Array<Array<CustomTableCellInfo>> = [];
