@@ -21,6 +21,7 @@ export default function Owners() {
   const classes = ownersStyles();
   const { collection_id }: { collection_id: string } = useParams();
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [lastId, setLastId] = React.useState<any>(undefined);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
   const [totalGameCount, setTotalGameCount] = React.useState<number>(0);
   const [owners, setOwners] = React.useState<any[]>([]);
@@ -37,6 +38,7 @@ export default function Owners() {
 
   React.useEffect(() => {
     setOwners([]);
+    setLastId(undefined);
     setHasMore(true);
     loadNfts(true);
   }, []);
@@ -51,7 +53,7 @@ export default function Owners() {
           }
 
           const _owners = owners.filter((owner) => _owner.address !== owner.address);
-          setOwners( [_owner].concat(_owners));
+          setOwners([_owner].concat(_owners));
           setTotalGameCount(data.total_game_count);
         }
       };
@@ -86,16 +88,21 @@ export default function Owners() {
       const response = await getOwnersByGame({
         gameId: collection_id,
         mode: isProd ? "main" : "test",
+        lastId: init ? undefined : lastId,
       });
       if (response.success) {
         let newOwners = response.data.list;
+        const newLastId = response.data.lastId;
+        const newhasMore = response.data.hasMore;
+        const totalCount = response.data.total_game_count;
+        setTotalGameCount(totalCount);
         newOwners = newOwners.sort((a, b) => { return b.count - a.count })
         setOwners(prev => (init ? newOwners : [...prev, ...newOwners]));
+        setLastId(newLastId);
+        setHasMore(newhasMore);
       } else {
         setOwners([]);
       }
-      setTotalGameCount(response.data.total_game_count);
-      setHasMore(false);
     } catch (error) {
       console.log(error);
     } finally {

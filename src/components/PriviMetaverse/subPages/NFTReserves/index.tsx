@@ -114,6 +114,10 @@ const NFTReserves = () => {
 
   useEffect(() => {
     if (listenerSocket) {
+      const newNFTHandler = () => {
+        getNewListings();
+      };
+
       const addMarketPlaceFeedHandler = _transaction => {
         if (transactions && transactions.length) {
           const _transactions = transactions.filter(transaction => _transaction.id !== transaction.id);
@@ -130,10 +134,12 @@ const NFTReserves = () => {
         }
       };
 
+      listenerSocket.on("newNFT", newNFTHandler);
       listenerSocket.on("addMarketPlaceFeed", addMarketPlaceFeedHandler);
       listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
 
       return () => {
+        listenerSocket.removeListener("newNFT", newNFTHandler);
         listenerSocket.removeListener("addMarketPlaceFeed", addMarketPlaceFeedHandler);
         listenerSocket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
       };

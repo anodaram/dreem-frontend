@@ -11,6 +11,7 @@ import NotAppModal from "components/PriviMetaverse/modals/NotAppModal";
 import RealmCard from "components/PriviMetaverse/components/cards/RealmCard";
 import OpenDesktopModal from "components/PriviMetaverse/modals/OpenDesktopModal";
 import CreateExtensionDraftModal from "components/PriviMetaverse/modals/CreateExtensionDraftModal";
+import RealmRestrictedModal from "components/PriviMetaverse/modals/RealmRestrictedModal";
 
 import { METAVERSE_URL } from "shared/functions/getURL";
 import Box from "shared/ui-kit/Box";
@@ -59,6 +60,11 @@ const RealmDetailTabs: TabItem[] = [
   // },
 ];
 
+const REALM_PUBLIC_STATE = {
+  PUBLIC: 'PUBLIC',
+  RESTRICTED: 'RESTRICTED',
+}
+
 export default function RealmDetailPage() {
   const classes = realmDetailPageStyles();
   const history = useHistory();
@@ -76,6 +82,7 @@ export default function RealmDetailPage() {
 
   const [fruitData, setFruitData] = React.useState<any>({});
   const [realmData, setRealmData] = React.useState<any>({});
+  const [realmPublicState, setRealmPublicState] = React.useState<any>(REALM_PUBLIC_STATE.RESTRICTED);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   // const [characters, setCharacters] = React.useState<any[]>([]);
   const [selectedTab, setSelectedTab] = React.useState<string>("extensions");
@@ -86,6 +93,7 @@ export default function RealmDetailPage() {
   const [openNotAppModal, setOpenNotAppModal] = React.useState<boolean>(false);
   const [showPlayModal, setShowPlayModal] = React.useState<boolean>(false);
   const [openCreateExtensionModal, setOpenCreateExtensionModal] = React.useState<boolean>(false);
+  const [openRealmRestrictedModal, setOpenRealmRestrictedModal] = React.useState<boolean>(false);
 
   const { shareMedia } = useShareMedia();
 
@@ -357,14 +365,21 @@ export default function RealmDetailPage() {
             {realmData.id ? (
               realmData.worldVideo ? (
                 <div className={classes.videoCtn}>
-                  <Box className={classes.public}>
-                    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.875 15.625C14.3247 15.625 15.5 14.4497 15.5 13C15.5 11.5503 14.3247 10.375 12.875 10.375C11.4253 10.375 10.25 11.5503 10.25 13C10.25 14.4497 11.4253 15.625 12.875 15.625Z" fill="#E9FF26"/>
-                      <path d="M20.9162 9.30751C18.7824 7.17706 15.8903 5.98047 12.875 5.98047C9.85966 5.98047 6.96758 7.17706 4.83373 9.30751L1.75373 12.3788C1.58979 12.544 1.4978 12.7673 1.4978 13C1.4978 13.2327 1.58979 13.4561 1.75373 13.6213L4.83373 16.6925C6.96826 18.8217 9.86008 20.0174 12.875 20.0174C15.8899 20.0174 18.7817 18.8217 20.9162 16.6925L23.9962 13.6213C24.1602 13.4561 24.2521 13.2327 24.2521 13C24.2521 12.7673 24.1602 12.544 23.9962 12.3788L20.9162 9.30751ZM12.875 17.375C12.0097 17.375 11.1638 17.1184 10.4444 16.6377C9.72489 16.157 9.16414 15.4737 8.833 14.6742C8.50187 13.8748 8.41523 12.9952 8.58404 12.1465C8.75285 11.2978 9.16953 10.5183 9.78138 9.90642C10.3932 9.29456 11.1728 8.87788 12.0215 8.70907C12.8701 8.54026 13.7498 8.6269 14.5492 8.95803C15.3486 9.28917 16.0319 9.84992 16.5127 10.5694C16.9934 11.2889 17.25 12.1347 17.25 13C17.25 14.1603 16.789 15.2731 15.9686 16.0936C15.1481 16.9141 14.0353 17.375 12.875 17.375Z" fill="#E9FF26"/>
-                    </svg>
-
-                    <Box ml={1}>PUBLIC REALM</Box>
-                  </Box>
+                  {realmPublicState == REALM_PUBLIC_STATE.PUBLIC ? (
+                    <Box className={classes.public}>
+                      <UnlockedIcon />
+                      <Box ml={1}>{realmPublicState} REALM</Box>
+                    </Box>
+                  ) : (
+                    <Box className={classes.publicStateCtn}>
+                      <Box className={classes.public}>
+                        <LockedIcon />
+                        <Box ml={1}>{realmPublicState} REALM</Box>
+                      </Box>
+                      <Box className={classes.seeDetailBtn} ml={1} onClick={() => {setOpenRealmRestrictedModal(true)}}>SEE DETAILS</Box>
+                    </Box>
+                  )}
+                  
                   <video
                     autoPlay
                     muted
@@ -515,6 +530,15 @@ export default function RealmDetailPage() {
           metaData={metaDataForModal}
         />
       )}
+      {openRealmRestrictedModal && (
+        <RealmRestrictedModal
+          open={openRealmRestrictedModal}
+          onClose={() => setOpenRealmRestrictedModal(false)}
+          realmId={realmId}
+          loadRealm={() => loadRealm(realmId)}
+          metaData={metaDataForModal}
+        />
+      )}
     </Box>
   );
 }
@@ -593,5 +617,18 @@ const ArrowIcon = ({ color = "white" }) => (
       stroke={color}
       strokeWidth="0.4"
     />
+  </svg>
+);
+
+const LockedIcon = ({ color = "white" }) => (
+  <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20.0909 11.8181H9.45457V8.27262C9.45457 7.3323 9.82811 6.4305 10.493 5.7656C11.1579 5.1007 12.0597 4.72716 13 4.72716C13.9403 4.72716 14.8421 5.1007 15.507 5.7656C16.1719 6.4305 16.5455 7.3323 16.5455 8.27262V9.45443H18.9091V8.27262C18.9091 6.70543 18.2866 5.20243 17.1784 4.09426C16.0702 2.98609 14.5672 2.36353 13 2.36353C11.4328 2.36353 9.92983 2.98609 8.82166 4.09426C7.71349 5.20243 7.09093 6.70543 7.09093 8.27262V11.8181H5.90911C5.59568 11.8181 5.29508 11.9426 5.07344 12.1642C4.85181 12.3859 4.72729 12.6865 4.72729 12.9999V22.4544C4.72729 22.7679 4.85181 23.0685 5.07344 23.2901C5.29508 23.5117 5.59568 23.6363 5.90911 23.6363H20.0909C20.4044 23.6363 20.705 23.5117 20.9266 23.2901C21.1482 23.0685 21.2728 22.7679 21.2728 22.4544V12.9999C21.2728 12.6865 21.1482 12.3859 20.9266 12.1642C20.705 11.9426 20.4044 11.8181 20.0909 11.8181ZM13 20.0908C12.5325 20.0908 12.0756 19.9522 11.6869 19.6925C11.2982 19.4327 10.9952 19.0636 10.8163 18.6317C10.6374 18.1998 10.5906 17.7245 10.6818 17.266C10.773 16.8075 10.9981 16.3864 11.3287 16.0558C11.6592 15.7253 12.0804 15.5001 12.5389 15.4089C12.9974 15.3177 13.4726 15.3645 13.9045 15.5434C14.3364 15.7223 14.7056 16.0253 14.9653 16.414C15.225 16.8027 15.3637 17.2597 15.3637 17.7272C15.3637 18.354 15.1146 18.9552 14.6714 19.3985C14.2281 19.8418 13.6269 20.0908 13 20.0908Z" fill="#E9FF26"/>
+  </svg>
+);
+
+const UnlockedIcon = ({ color = "white" }) => (
+  <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12.875 15.625C14.3247 15.625 15.5 14.4497 15.5 13C15.5 11.5503 14.3247 10.375 12.875 10.375C11.4253 10.375 10.25 11.5503 10.25 13C10.25 14.4497 11.4253 15.625 12.875 15.625Z" fill="#E9FF26"/>
+    <path d="M20.9162 9.30751C18.7824 7.17706 15.8903 5.98047 12.875 5.98047C9.85966 5.98047 6.96758 7.17706 4.83373 9.30751L1.75373 12.3788C1.58979 12.544 1.4978 12.7673 1.4978 13C1.4978 13.2327 1.58979 13.4561 1.75373 13.6213L4.83373 16.6925C6.96826 18.8217 9.86008 20.0174 12.875 20.0174C15.8899 20.0174 18.7817 18.8217 20.9162 16.6925L23.9962 13.6213C24.1602 13.4561 24.2521 13.2327 24.2521 13C24.2521 12.7673 24.1602 12.544 23.9962 12.3788L20.9162 9.30751ZM12.875 17.375C12.0097 17.375 11.1638 17.1184 10.4444 16.6377C9.72489 16.157 9.16414 15.4737 8.833 14.6742C8.50187 13.8748 8.41523 12.9952 8.58404 12.1465C8.75285 11.2978 9.16953 10.5183 9.78138 9.90642C10.3932 9.29456 11.1728 8.87788 12.0215 8.70907C12.8701 8.54026 13.7498 8.6269 14.5492 8.95803C15.3486 9.28917 16.0319 9.84992 16.5127 10.5694C16.9934 11.2889 17.25 12.1347 17.25 13C17.25 14.1603 16.789 15.2731 15.9686 16.0936C15.1481 16.9141 14.0353 17.375 12.875 17.375Z" fill="#E9FF26"/>
   </svg>
 );

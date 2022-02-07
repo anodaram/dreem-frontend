@@ -34,22 +34,18 @@ import ItemModel from "shared/model/ItemModel";
 
 const CreateSteps = [
   {
-    step: 1,
     label: 'NFT',
     completed: false
   },
   {
-    step: 2,
     label: 'Royalties',
     completed: false
   },
   {
-    step: 3,
     label: 'Files',
     completed: false
   },
   {
-    step: 4,
     label: 'Collection',
     completed: false
   },
@@ -70,7 +66,7 @@ const CreateAssetFlow = ({
   const [chain, setChain] = useState<string>(BlockchainNets[0].value);
   const [nftOption, setNftOption] = useState<string>("");
   const [step, setStep] = useState<number>(1);
-  const [steps, setSteps] = useState<any>(CreateSteps);
+  const [steps, setSteps] = useState<any>([]);
   const [amount, setAmount] = useState<string>("");
   const [royaltyAddress, setRoyaltyAddress] = useState<string>("");
   const [royaltyPercentage, setRoyaltyPercentage] = useState<number>();
@@ -94,6 +90,8 @@ const CreateAssetFlow = ({
   const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
   const [txHash, setTxHash] = useState<string>("");
 
+  const stepItem = React.useMemo(() => steps.find(s => s.step === step),  [step, steps]);
+
   const param = {
     TEXTURE: {
       texture: "ITEM_IMAGE_TEXTURE"
@@ -115,38 +113,44 @@ const CreateAssetFlow = ({
     },
   }
   useEffect(() => {
+    if (assetItem === "WORLD") {
+      setSteps(CreateSteps.slice(1).map((s, index) => ({ ...s, step: index + 1 })));
+    } else {
+      setSteps(CreateSteps.map((s, index) => ({ ...s, step: index + 1 })));
+    }
+
     MetaverseAPI.getAssetMetadata(assetItem).then(res => {
       setMetadata(res.data);
     });
   }, [assetItem]);
 
   const handlePrev = () => {
-    if(step == 1) handleCancel()
+    if (step == 1) handleCancel()
     setStep(prev => prev - 1);
   };
   const handleNext = () => {
-    console.log(steps[step-1])
-    switch (step) {
-      case 1:
-        steps[step-1].completed = (nftOption === 'single') || (nftOption === 'multiple' && amount) ? true : false;
+    switch (stepItem.label) {
+      case 'NFT':
+        steps[step - 1].completed = (nftOption === 'single') || (nftOption === 'multiple' && amount) ? true : false;
         break;
-      case 2:
-        steps[step-1].completed = (isRoyalty && royaltyPercentage && royaltyAddress) || (isRoyalty === false) ? true : false;
+      case 'Royalties':
+        steps[step - 1].completed = (isRoyalty && royaltyPercentage && royaltyAddress) || (isRoyalty === false) ? true : false;
         break;
-      case 3:
-        steps[step-1].completed = validate() ? true : false;
+      case 'Files':
+        steps[step - 1].completed = validate() ? true : false;
         break;
-      case 4:
-        steps[step-1].completed = currentCollection ? true : false;
+      case 'Collection':
+        steps[step - 1].completed = currentCollection ? true : false;
         break;
-    
+
       default:
         break;
     }
-    if(step < 4){
+    if (step < steps.length) {
       setStep(prev => prev + 1);
     }
   };
+
   const handleGoStep = step => {
     setStep(step);
   }
@@ -155,7 +159,7 @@ const CreateAssetFlow = ({
   const handleSaveDraft = async () => {
     setOpenPublic(false)
     if (validate()) {
-      if(!currentCollection) {
+      if (!currentCollection) {
         showAlertMessage('Please choose collection.', { variant: "error" });
         return false;
       }
@@ -175,7 +179,7 @@ const CreateAssetFlow = ({
       };
       const params = param[assetItem]
       console.log(param, params)
-      Object.keys(params).map(function(key, index) {
+      Object.keys(params).map(function (key, index) {
         console.log(key, formData[params[key]] ? formData[params[key]] : fileInputs[params[key]])
         payload[key] = formData[params[key]] ? formData[params[key]] : fileInputs[params[key]]
       });
@@ -200,11 +204,11 @@ const CreateAssetFlow = ({
       const res = await MetaverseAPI.getNFTInfo(hashId)
       return res.data
     } catch (error) {
-      console.log('error in getting metadata',error)
+      console.log('error in getting metadata', error)
     }
   }
   const mintSingleNFT = async () => {
-    if(!savingDraft){
+    if (!savingDraft) {
       showAlertMessage(`Save draft first`, { variant: "error" });
       return;
     }
@@ -225,7 +229,7 @@ const CreateAssetFlow = ({
         return;
       }
     }
-    if(!library) {
+    if (!library) {
       showAlertMessage("Please check your network", { variant: "error" });
       return;
     }
@@ -308,14 +312,14 @@ const CreateAssetFlow = ({
     }
   };
   const mintMultipleEdition = async (mintAmount: number) => {
-    if(!savingDraft){
+    if (!savingDraft) {
       showAlertMessage(`Save draft first`, { variant: "error" });
       return;
     }
     let collectionData = await MetaverseAPI.getCollection(currentCollection.id);
     collectionData = collectionData.data
     let metaData;
-    if(!uri){
+    if (!uri) {
       let metadata = await getMetadata(savingDraft.instance.hashId);
       metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
       const metadatauri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
@@ -336,7 +340,7 @@ const CreateAssetFlow = ({
         return;
       }
     }
-    if(!library) {
+    if (!library) {
       showAlertMessage("Please check your network", { variant: "error" });
       return false;
     }
@@ -353,7 +357,7 @@ const CreateAssetFlow = ({
           name: collectionData.name,
           symbol: collectionData.symbol,
           amount: mintAmount,
-          uri : URI,
+          uri: URI,
           isRoyalty,
           royaltyAddress,
           royaltyPercentage
@@ -363,7 +367,7 @@ const CreateAssetFlow = ({
       );
       if (resRoyalty.success) {
         let tokenIds: any = [];
-        for(let i = 0; i < resRoyalty.amount; i++){
+        for (let i = 0; i < resRoyalty.amount; i++) {
           tokenIds.push(Number(resRoyalty.initialId) + i)
         }
 
@@ -395,7 +399,7 @@ const CreateAssetFlow = ({
           collectionAddress: collectionAddr,
           to: account,
           amount: mintAmount,
-          uri : URI,
+          uri: URI,
           isRoyalty,
           royaltyAddress,
           royaltyPercentage
@@ -408,7 +412,7 @@ const CreateAssetFlow = ({
         console.log(contractRes);
         let tokenIds: any = [];
         console.log('contractRes---', contractRes)
-        for(let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++){
+        for (let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++) {
           tokenIds.push(Number(i))
         }
         await MetaverseAPI.convertToNFTAssetBatch(
@@ -438,7 +442,7 @@ const CreateAssetFlow = ({
   };
 
   const validate = () => {
-    if(metadata && metadata?.fields){
+    if (metadata && metadata?.fields) {
       for (let i = 0; i < metadata?.fields?.length; i++) {
         const field = metadata.fields[i];
         if (field.kind === "STRING") {
@@ -469,7 +473,7 @@ const CreateAssetFlow = ({
           }
           if (field.key && fileContents[field.key] && fileContents[field.key].dimension && field?.input?.min) {
             //@ts-ignore
-            if ( field?.input?.min.width > (fileContents[field.key].dimension?.width || 0) || field?.input?.min?.height > (fileContents[field.key].dimension?.height || 0)
+            if (field?.input?.min.width > (fileContents[field.key].dimension?.width || 0) || field?.input?.min?.height > (fileContents[field.key].dimension?.height || 0)
             ) {
               showAlertMessage(
                 `${field?.name?.value} is invalid. Minium image size is ${field?.input?.min?.width} x ${field?.input?.min?.height}`,
@@ -480,7 +484,7 @@ const CreateAssetFlow = ({
           }
           if (field.key && fileContents[field.key] && fileContents[field.key].dimension && field?.input?.max) {
             //@ts-ignore
-            if ( field?.input?.max?.width < (fileContents[field.key].dimension?.width || 0) || field?.input?.max?.height < (fileContents[field.key].dimension?.height || 0)
+            if (field?.input?.max?.width < (fileContents[field.key].dimension?.width || 0) || field?.input?.max?.height < (fileContents[field.key].dimension?.height || 0)
             ) {
               showAlertMessage(
                 `${field?.name?.value} is invalid. Maximum image size is ${field?.input?.max?.width} x ${field?.input?.max?.height}`,
@@ -497,237 +501,237 @@ const CreateAssetFlow = ({
   };
 
   return (
-    
+
     <>
       {openMintEditions ?
         <MintEditions
           amount={amount}
-          hashId = {savingDraft.instance.hashId}
-          handleCancel={() => {setOpenMintEditions(false)}}
-          handleMint = {(amount) => mintMultipleEdition(amount)}
-        /> 
-      :
-      <>
-        <div className={classes.otherContent}>
-          <div className={classes.typo1}>
-            <AssetIcon />
-            Creating New {capitalize(assetItem)}
-          </div>
-          <CreatingStep curStep={step} status={steps} handleGoStep={handleGoStep} />
-          { step == 1 &&
-            <Box
-              className={classes.content}
-              style={{
-                padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
-              }}
-            >
-              <div className={classes.modalContent}>
-                <Box display="flex" alignItems="center" justifyContent="center" mt={2.5}>
-                  <Box className={classes.title} mb={1}>
-                    select nft option
-                  </Box>
-                </Box>
-                <div className={classes.inputGroup}>
-                  <div className={classes.inputBox}>
-                    <input
-                      name="radio-group"
-                      className={classes.inputRadio}
-                      id="single"
-                      type="radio"
-                      checked={nftOption === 'single' && true}
-                      onChange={e => setNftOption(e.target.value == "on" ? "single" : "")}
-                    />
-                    <label htmlFor="single">single NFT(1/1)</label>
-                    <div className="check">
-                      <div className="inside"></div>
-                    </div>
-                  </div>
-                  <div className={classes.inputBox}>
-                    <input
-                      name="radio-group"
-                      className={classes.inputRadio}
-                      id="multi"
-                      type="radio"
-                      checked={nftOption === 'multiple' && true}
-                      onChange={e => {
-                        setNftOption(e.target.value == "on" ? "multiple" : "");
-                      }}
-                    />
-                    <label htmlFor="multi">multiple edition nft</label>
-                    <div className="check">
-                      <div className="inside"></div>
-                    </div>
-                  </div>
-                </div>
-                {nftOption == "multiple" && (
-                  <>
-                    <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
-                      <Box className={classes.itemTitle} mb={1}>
-                        How many nfts do you want minted from this asset?
-                      </Box>
-                    </Box>
-                    <input
-                      type="number"
-                      className={classes.inputText}
-                      placeholder=""
-                      value={amount}
-                      onChange={e => setAmount(e.target.value)}
-                    />
-                  </>
-                )}
-              </div>
-            </Box>
-          }
-          { step == 2 &&
-          
-            <Box
-              className={classes.content}
-              style={{
-                padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
-              }}
-            >
-              <div className={classes.modalContent}>
-                <Box display="flex" alignItems="center" justifyContent="center" mt={2.5}>
-                  <Box className={classes.title} mb={1}>
-                    do you want royalties from secondary sales of the nft(s)?
-                  </Box>
-                </Box>
-                <Box className={classes.typo3} mb={3}>
-                Every time the NFT is traded on OpenSea or Dreem, NFT holders can receive royalties to their wallet address. If you select “Yes”, be prepared to paste the recipient wallet address.
-                </Box>
-                <div className={classes.inputGroup}>
-                  <div className={classes.inputBox}>
-                    <input
-                      name="radio-group"
-                      className={classes.inputRadio}
-                      id='single'
-                      type='radio'
-                      checked={isRoyalty && true}
-                      onChange={e => setIsRoyalty(e.target.value == 'on' ? true : false)}
-                    />
-                    <label htmlFor="single">yes</label>
-                    <div className="check"><div className="inside"></div></div>
-                  </div>
-                  <div className={classes.inputBox}>
-                    <input
-                      name="radio-group"
-                      className={classes.inputRadio}
-                      id='multi'
-                      type='radio'
-                      checked={!isRoyalty && true}
-                      onChange={e => {setIsRoyalty(e.target.value == 'on' ? false : true)}}
-                    />
-                    <label htmlFor="multi">no</label>
-                    <div className="check"><div className="inside"></div></div>
-                  </div>
-                </div>
-                {isRoyalty &&
-                <>
-                  <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
-                    <Box className={classes.itemTitle} mb={1}>
-                      royalty share amount
-                    </Box>
-                    <InfoTooltip tooltip={"royalty share amount to receive profit"} />
-                  </Box>
-                  <Box position="relative">
-                    <input
-                      type='number'
-                      className={classes.inputText}
-                      placeholder="00.00"
-                      value={royaltyPercentage}
-                      onChange={e => setRoyaltyPercentage(Number(e.target.value))}
-                    />
-                    <div className={classes.percentLabel}>%</div>
-                  </Box>
-                  <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
-                    <Box className={classes.itemTitle} mb={1}>
-                      address to receive royalties
-                    </Box>
-                  </Box>
-                  <input
-                    className={classes.inputText}
-                    placeholder=""
-                    value={royaltyAddress}
-                    onChange={e => setRoyaltyAddress(e.target.value)}
-                  />
-                </>
-                }
-              </div>
-            </Box>
-          }
-          { step == 3 &&
-          <>
-            <Box
+          hashId={savingDraft.instance.hashId}
+          handleCancel={() => { setOpenMintEditions(false) }}
+          handleMint={(amount) => mintMultipleEdition(amount)}
+        />
+        :
+        <>
+          <div className={classes.otherContent}>
+            <div className={classes.typo1}>
+              <AssetIcon />
+              Creating New {capitalize(assetItem)}
+            </div>
+            <CreatingStep curStep={step} status={steps} handleGoStep={handleGoStep} />
+            {stepItem?.label == "NFT" &&
+              <Box
                 className={classes.content}
                 style={{
                   padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
                 }}
               >
                 <div className={classes.modalContent}>
-                  <CreateAssetForm
-                    metadata={metadata}
-                    formData={formData}
-                    setFormData={setFormData}
-                    fileInputs={fileInputs}
-                    setFileInputs={setFileInputs}
-                    fileContents={fileContents}
-                    setFileContents={setFileContents}
-                  />
+                  <Box display="flex" alignItems="center" justifyContent="center" mt={2.5}>
+                    <Box className={classes.title} mb={1}>
+                      select nft option
+                    </Box>
+                  </Box>
+                  <div className={classes.inputGroup}>
+                    <div className={classes.inputBox}>
+                      <input
+                        name="radio-group"
+                        className={classes.inputRadio}
+                        id="single"
+                        type="radio"
+                        checked={nftOption === 'single' && true}
+                        onChange={e => setNftOption(e.target.value == "on" ? "single" : "")}
+                      />
+                      <label htmlFor="single">single NFT(1/1)</label>
+                      <div className="check">
+                        <div className="inside"></div>
+                      </div>
+                    </div>
+                    <div className={classes.inputBox}>
+                      <input
+                        name="radio-group"
+                        className={classes.inputRadio}
+                        id="multi"
+                        type="radio"
+                        checked={nftOption === 'multiple' && true}
+                        onChange={e => {
+                          setNftOption(e.target.value == "on" ? "multiple" : "");
+                        }}
+                      />
+                      <label htmlFor="multi">multiple edition nft</label>
+                      <div className="check">
+                        <div className="inside"></div>
+                      </div>
+                    </div>
+                  </div>
+                  {nftOption == "multiple" && (
+                    <>
+                      <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+                        <Box className={classes.itemTitle} mb={1}>
+                          How many nfts do you want minted from this asset?
+                        </Box>
+                      </Box>
+                      <input
+                        type="number"
+                        className={classes.inputText}
+                        placeholder=""
+                        value={amount}
+                        onChange={e => setAmount(e.target.value)}
+                      />
+                    </>
+                  )}
                 </div>
               </Box>
-          </>
-          }
-        </div>
-        {step === 4 && (
-          <CollectionList
-            handleNext={() => {}}
-            handleCancel={() => {}}
-            handleSelect={item => {
-              setCurrentCollection(item);
-              steps[step-1].completed = true
-            }}
-          />
-        )}
+            }
+            {stepItem?.label == "Royalties" &&
 
-        {openPublic && (
-          <PublicOption
-            open={openPublic}
-            onClose={() => {
-              setOpenPublic(false);
-            }}
-            handleSubmit={() => handleSaveDraft()}
-            handleSelect={isPublic => setIsPublic(isPublic)}
-          />
-        )}
-        <Box className={classes.footer}>
-          <div className={classes.howToCreateBtn} onClick={handlePrev}>
-            back
+              <Box
+                className={classes.content}
+                style={{
+                  padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
+                }}
+              >
+                <div className={classes.modalContent}>
+                  <Box display="flex" alignItems="center" justifyContent="center" mt={2.5}>
+                    <Box className={classes.title} mb={1}>
+                      do you want royalties from secondary sales of the nft(s)?
+                    </Box>
+                  </Box>
+                  <Box className={classes.typo3} mb={3}>
+                    Every time the NFT is traded on OpenSea or Dreem, NFT holders can receive royalties to their wallet address. If you select “Yes”, be prepared to paste the recipient wallet address.
+                  </Box>
+                  <div className={classes.inputGroup}>
+                    <div className={classes.inputBox}>
+                      <input
+                        name="radio-group"
+                        className={classes.inputRadio}
+                        id='single'
+                        type='radio'
+                        checked={isRoyalty && true}
+                        onChange={e => setIsRoyalty(e.target.value == 'on' ? true : false)}
+                      />
+                      <label htmlFor="single">yes</label>
+                      <div className="check"><div className="inside"></div></div>
+                    </div>
+                    <div className={classes.inputBox}>
+                      <input
+                        name="radio-group"
+                        className={classes.inputRadio}
+                        id='multi'
+                        type='radio'
+                        checked={!isRoyalty && true}
+                        onChange={e => { setIsRoyalty(e.target.value == 'on' ? false : true) }}
+                      />
+                      <label htmlFor="multi">no</label>
+                      <div className="check"><div className="inside"></div></div>
+                    </div>
+                  </div>
+                  {isRoyalty &&
+                    <>
+                      <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+                        <Box className={classes.itemTitle} mb={1}>
+                          royalty share amount
+                        </Box>
+                        <InfoTooltip tooltip={"royalty share amount to receive profit"} />
+                      </Box>
+                      <Box position="relative">
+                        <input
+                          type='number'
+                          className={classes.inputText}
+                          placeholder="00.00"
+                          value={royaltyPercentage}
+                          onChange={e => setRoyaltyPercentage(Number(e.target.value))}
+                        />
+                        <div className={classes.percentLabel}>%</div>
+                      </Box>
+                      <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+                        <Box className={classes.itemTitle} mb={1}>
+                          address to receive royalties
+                        </Box>
+                      </Box>
+                      <input
+                        className={classes.inputText}
+                        placeholder=""
+                        value={royaltyAddress}
+                        onChange={e => setRoyaltyAddress(e.target.value)}
+                      />
+                    </>
+                  }
+                </div>
+              </Box>
+            }
+            {stepItem?.label == "Files" &&
+              <>
+                <Box
+                  className={classes.content}
+                  style={{
+                    padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
+                  }}
+                >
+                  <div className={classes.modalContent}>
+                    <CreateAssetForm
+                      metadata={metadata}
+                      formData={formData}
+                      setFormData={setFormData}
+                      fileInputs={fileInputs}
+                      setFileInputs={setFileInputs}
+                      fileContents={fileContents}
+                      setFileContents={setFileContents}
+                    />
+                  </div>
+                </Box>
+              </>
+            }
           </div>
-          {step < 4 && (
-            <PrimaryButton
-              size="medium"
-              className={classes.nextBtn}
-              // disabled={step === 1}
-              onClick={() => handleNext()}
-            >
-              next
-            </PrimaryButton>
+          {stepItem?.label == "Collection" && (
+            <CollectionList
+              handleNext={() => { }}
+              handleCancel={() => { }}
+              handleSelect={item => {
+                setCurrentCollection(item);
+                steps[step - 1].completed = true
+              }}
+            />
           )}
-          {step === 4 && (
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <div className={classes.howToCreateBtn} onClick={() => setOpenPublic(true)}>
-                create draft
-              </div>
-              <PrimaryButton size="medium" className={classes.nextBtn} onClick={() => {handleMint()}}>
-                mint nft
+
+          {openPublic && (
+            <PublicOption
+              open={openPublic}
+              onClose={() => {
+                setOpenPublic(false);
+              }}
+              handleSubmit={() => handleSaveDraft()}
+              handleSelect={isPublic => setIsPublic(isPublic)}
+            />
+          )}
+          <Box className={classes.footer}>
+            <div className={classes.howToCreateBtn} onClick={handlePrev}>
+              back
+            </div>
+            {step < steps.length && (
+              <PrimaryButton
+                size="medium"
+                className={classes.nextBtn}
+                // disabled={step === 1}
+                onClick={() => handleNext()}
+              >
+                next
               </PrimaryButton>
-            </Box>
-          )}
-        </Box>
-      </>
+            )}
+            {step === steps.length && (
+              <Box display="flex" alignItems="center" justifyContent="center">
+                <div className={classes.howToCreateBtn} onClick={() => setOpenPublic(true)}>
+                  create draft
+                </div>
+                <PrimaryButton size="medium" className={classes.nextBtn} onClick={() => { handleMint() }}>
+                  mint nft
+                </PrimaryButton>
+              </Box>
+            )}
+          </Box>
+        </>
       }
       {isUploading && (
-        <ContentProcessingOperationModal open={isUploading} txSuccess={uploadSuccess} onClose={()=>{setIsUploading(false)}}/>
+        <ContentProcessingOperationModal open={isUploading} txSuccess={uploadSuccess} onClose={() => { setIsUploading(false) }} />
       )}
       {txModalOpen && (
         <TransactionProgressModal
