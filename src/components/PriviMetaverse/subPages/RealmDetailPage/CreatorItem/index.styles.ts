@@ -84,7 +84,7 @@ export const votingItemStyles = makeStyles(theme => ({
     textTransform: "uppercase",
     // width: "fit-content",
     [theme.breakpoints.down("xs")]: {
-      fontSize: "10px",
+      fontSize: 14,
     },
   },
   infoSection: {
@@ -104,6 +104,20 @@ export const votingItemStyles = makeStyles(theme => ({
     fontSize: 18,
     lineHeight: "150%",
   },
+  detailInfo: {
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down("xs")]: {
+      flexDirection: 'column',
+    },
+  },
+  nameCtn: {
+    borderRight: "2px solid rgba(255,255,255,0.5)",
+    [theme.breakpoints.down("xs")]: {
+      borderRight: 'none',
+      width: '100%',
+    },
+  },
   name: {
     fontFamily: "Rany",
     fontStyle: "normal",
@@ -113,7 +127,7 @@ export const votingItemStyles = makeStyles(theme => ({
     color: 'rgba(255, 255, 255, 0.6)',
     paddingRight: 16,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 10,
+      fontSize: 14,
       paddingRight: 4,
     },
   },
@@ -126,8 +140,8 @@ export const votingItemStyles = makeStyles(theme => ({
     color: 'rgba(255, 255, 255, 0.8)',
     paddingLeft: 16,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 10,
-      paddingLeft: 4,
+      fontSize: 14,
+      paddingLeft: 0,
     },
   },
   votingPowerValue: {
@@ -139,7 +153,7 @@ export const votingItemStyles = makeStyles(theme => ({
     color: '#FFFFFF',
     marginTop: 11,
     [theme.breakpoints.down("xs")]: {
-      fontSize: "10px",
+      fontSize: 14,
     },
   },
   arWrap: {},
