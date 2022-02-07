@@ -81,13 +81,6 @@ export default function MarketplaceFeed() {
 
   React.useEffect(() => {
     if (listenerSocket) {
-      const addMarketPlaceFeedHandler = _nft => {
-        if (nfts && nfts.length) {
-          const _nfts = nfts.filter(nft => _nft.id !== nft.id);
-          setNfts([_nft].concat(_nfts));
-        }
-      };
-
       const updateMarketPlaceFeedHandler = _nft => {
         if (nfts && nfts.length) {
           const _nfts = nfts.map(nft => (_nft.id === nft.id ? _nft : nft));
@@ -95,11 +88,9 @@ export default function MarketplaceFeed() {
         }
       };
 
-      listenerSocket.on("addMarketPlaceFeed", addMarketPlaceFeedHandler);
       listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
 
       return () => {
-        listenerSocket.removeListener("addMarketPlaceFeed", addMarketPlaceFeedHandler);
         listenerSocket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
       };
     }
