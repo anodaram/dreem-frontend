@@ -40,7 +40,7 @@ export default function PriviMetaverseRouter(props) {
         <Route exact path="/create" component={ManageContentPage} />
         <Route exact path="/collection/:id" component={CollectionDetailPage} />
         <Route exact path="/create_realm" component={CreateRealmPage} />
-        <Route exact path="/realms/map/:id" component={RealmMapPage} />
+        <Route exact path="/realms/map" component={RealmMapPage} />
         <Route exact path="/realms/:id" component={RealmDetailPage} />
         <Route exact path="/realms/:id/:character_id" component={RealmDetailPage} />
         <Route exact path="/realms" component={ExplorePage} />
