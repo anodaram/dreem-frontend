@@ -527,7 +527,7 @@ export default function GameDetailPage() {
             </Box>
             <Box display={"flex"} alignItems={"stretch"} my={3.5} flexDirection={isTablet ? "column" : "row"}>
               <Box width={isTablet ? "100%" : "55%"} mr={isTablet ? 0 : 1.5}>
-                <TotalStats />
+                <TotalStats gameInfo={gameInfo} />
               </Box>
               <Box width={isTablet ? "100%" : "calc(45% - 12px)"} display="flex" mt={isTablet ? 2 : 0}>
                 <RecentTransactions />
