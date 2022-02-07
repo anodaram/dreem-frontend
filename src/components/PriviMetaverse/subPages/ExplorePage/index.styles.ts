@@ -4,22 +4,39 @@ export const explorePage = makeStyles(theme => ({
   root: {
     width: "100%",
     height: "100%",
-    position: "relative",
-    overflow: "auto",
-    zIndex: 1,
+    display: "flex",
   },
-  container: {
-    position: "absolute",
-    top: 150,
-    width: "100%",
+  filterBar: {
+    width: 293,
+    marginTop: 72,
+    height: "calc(100% - 72px)",
+    background: "#212121",
+    border: "2px solid #151515",
+    zIndex: 1,
+    display: "flex",
+    flexDirection: "column",
+    fontSize: 16,
+    fontWeight: 800,
+    lineHeight: "190%",
+    fontFamily: "Rany",
+    textTransform: "uppercase",
+  },
+  mainContent: {
+    width: "calc(100% - 293px)",
+    height: "calc(100% - 72px)",
+    marginTop: 72,
+    paddingTop: 32,
+    position: "relative",
     overflowY: "auto",
     overflowX: "hidden",
-    color: "#ffffff",
+    zIndex: 1,
   },
   fitContent: {
-    maxWidth: 1280,
-    marginLeft: "auto",
-    marginRight: "auto",
+    // maxWidth: 1280,
+    // marginLeft: "auto",
+    // marginRight: "auto",
+    paddingLeft: 110,
+    paddingRight: 110,
     [theme.breakpoints.down("md")]: {
       paddingLeft: 60,
       paddingRight: 60,
@@ -74,5 +91,32 @@ export const explorePage = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       width: 300,
     },
+  },
+  filterHeader: {
+    padding: "16px 28px 16px 24px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  filterMainSection: {
+    overflowY: "scroll",
+    "&::-webkit-scrollbar": {
+      width: 7,
+    },
+    "&::-webkit-scrollbar-track": {
+      background: "rgba(21, 21, 21, 0.2)",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "rgba(255, 255, 255, 0.5)",
+      borderRadius: 30,
+    },
+  },
+  iconButton: {
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
+  },
+  subFilterSection: {
+    padding: "12px 24px 16px",
   },
 }));
