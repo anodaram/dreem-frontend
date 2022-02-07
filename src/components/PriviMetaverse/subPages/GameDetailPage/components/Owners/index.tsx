@@ -88,14 +88,14 @@ export default function Owners({ gameInfo }: any) {
         collectionId: collection_id,
         mode: isProd ? "main" : "test",
         startPos: init ? undefined : lastId,
-        pageSize: 20
+        pageSize: 20,
+        orderBy: 'Amount'
       });
       if (response.success) {
         let newOwners = response.owners;
         const newLastId = newOwners[newOwners.length - 1].ownerAddress;
         const newhasMore = response.owners.length === 20;
         setTotalGameCount(gameInfo.Count);
-        newOwners = newOwners.sort((a, b) => { return b.amount - a.amount })
         setOwners(prev => (init ? newOwners : [...prev, ...newOwners]));
         setLastId(newLastId);
         setHasMore(newhasMore);
