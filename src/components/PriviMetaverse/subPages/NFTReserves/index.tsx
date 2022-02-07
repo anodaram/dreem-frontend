@@ -233,7 +233,7 @@ const NFTReserves = () => {
   };
 
   const goToNft = row => {
-    history.push(`/P2E/${row.collectionId}/${row.tokenId}`);
+    history.push(`/P2E/${row.Slug}/${row.tokenId}`);
   };
 
   const tableData = React.useMemo(() => {
@@ -419,7 +419,7 @@ const NFTReserves = () => {
                                 alignItems="flex-start"
                                 className={classes.gameInfoSection}
                               >
-                                <span>{game.Count || 0}</span>
+                                <span>{game.owners_count || 0}</span>
                                 <span>New Owners</span>
                               </Box>
                               <Box
