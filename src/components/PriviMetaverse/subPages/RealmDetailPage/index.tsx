@@ -50,14 +50,14 @@ const RealmDetailTabs: TabItem[] = [
     key: "extensions",
     title: "Extensions",
   },
-  {
-    key: "avatars",
-    title: "Avatars",
-  },
-  {
-    key: "assets",
-    title: "Assets",
-  },
+  // {
+  //   key: "avatars",
+  //   title: "Avatars",
+  // },
+  // {
+  //   key: "assets",
+  //   title: "Assets",
+  // },
   {
     key: "creators",
     title: "Creators",
@@ -96,9 +96,9 @@ export default function RealmDetailPage() {
   const [realmData, setRealmData] = React.useState<any>({});
   const [realmPublicState, setRealmPublicState] = React.useState<any>(REALM_PUBLIC_STATE.RESTRICTED);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  // const [characters, setCharacters] = React.useState<any[]>([]);
+  const [characters, setCharacters] = React.useState<any[]>([]);
   const [selectedTab, setSelectedTab] = React.useState<string>("extensions");
-  // const [isLoadingCharacters, setIsLoadingCharacters] = React.useState<boolean>(true);
+  const [isLoadingCharacters, setIsLoadingCharacters] = React.useState<boolean>(true);
   const [isLoadingMetaData, setIsLoadingMetaData] = React.useState<boolean>(false);
 
   const [metaDataForModal, setMetaDataForModal] = React.useState<any>(null);
@@ -127,10 +127,10 @@ export default function RealmDetailPage() {
         .then(res => {
           setFruitData(res.data.data);
         });
-      // setIsLoadingCharacters(true);
-      // MetaverseAPI.getCharacters(realmId)
-      //   .then(res => setCharacters(res.data.elements))
-      //   .finally(() => setIsLoadingCharacters(false));
+      setIsLoadingCharacters(true);
+      MetaverseAPI.getCharacters(realmId)
+        .then(res => setCharacters(res.data.elements))
+        .finally(() => setIsLoadingCharacters(false));
     }
   }, [realmId]);
 
@@ -248,7 +248,7 @@ export default function RealmDetailPage() {
                 <Box className={classes.iconBtn}>
                   <OpenSeaIcon />
                 </Box>
-                {isSignedin && (
+                {/* {isSignedin && (
                   <Box className={classes.iconBtn}>
                     <FruitSelect
                       fruitObject={fruitData}
@@ -258,7 +258,7 @@ export default function RealmDetailPage() {
                       style={{ background: "transparent" }}
                     />
                   </Box>
-                )}
+                )} */}
                 <div className={classes.iconBtn} onClick={handleShare}>
                   <ShareIcon />
                 </div>
@@ -479,22 +479,22 @@ export default function RealmDetailPage() {
                     )}
                   </Box>
                 </>
-              ) : selectedTab === "avatars" ? (
-                <>
-                  <Box className={classes.gradientText}>Avatars</Box>
-                  {/* <Box mt={4}>
-                    <MasonryGrid
-                      gutter={"16px"}
-                      data={isLoadingCharacters ? Array(loadingCount).fill(3) : characters}
-                      renderItem={(item, _) => <AvatarCard item={item} isLoading={isLoadingCharacters} />}
-                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                    />
-                  </Box> */}
-                </>
+              // ) : selectedTab === "avatars" ? (
+              //   <>
+              //     <Box className={classes.gradientText}>Avatars</Box>
+              //     <Box mt={4}>
+              //       <MasonryGrid
+              //         gutter={"16px"}
+              //         data={isLoadingCharacters ? Array(loadingCount).fill(3) : characters}
+              //         renderItem={(item, _) => <AvatarCard item={item} isLoading={isLoadingCharacters} />}
+              //         columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+              //       />
+              //     </Box>
+              //   </>
               ) : selectedTab === "creators" ? (
                 <Box className={classes.gradientText}>Creators</Box>
-              ) : selectedTab === "assets" ? (
-                <Box className={classes.gradientText}>Assets</Box>
+              // ) : selectedTab === "assets" ? (
+              //   <Box className={classes.gradientText}>Assets</Box>
               ) : selectedTab === "land" ? (
                 <Box className={classes.gradientText}>Land</Box>
               ) : (
