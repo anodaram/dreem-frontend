@@ -21,7 +21,7 @@ const RealmCreator = network => {
       try {
         const { uri, taxRate, creatorShare, votingConsensus, nftToAttachAddress, nftToAttachId } = payload;
         // const rAddress = isRoyalty ? royaltyAddress : zeroAddress()
-
+        console.log('params---', uri, taxRate, creatorShare, votingConsensus, nftToAttachAddress, nftToAttachId)
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
 
         console.log("Getting gas....", contract, contractAddress, account, uri, taxRate, creatorShare, votingConsensus, nftToAttachAddress, nftToAttachId);
