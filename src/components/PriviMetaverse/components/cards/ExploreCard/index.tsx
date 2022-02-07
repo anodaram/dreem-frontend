@@ -23,13 +23,14 @@ const ExploreCard = ({ nft, isLoading = false }) => {
   const classes = cardStyles();
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const user: any = useSelector((state: RootState) => state.user);
+  const collectionId = React.useMemo(() => nft.collectionId || nft.Slug, [nft]);
 
   const handleOpenExplore = () => {
-    history.push(`/P2E/${nft.collectionId}/${nft.tokenId}`);
+    history.push(`/P2E/${collectionId}/${nft.tokenId}`);
   };
 
   const handleOpenExploreNewTab = () => {
-    const url = window.location.href.replace(pathname, `/P2E/${nft.collectionId}/${nft.tokenId}`);
+    const url = window.location.href.replace(pathname, `/P2E/${collectionId}/${nft.tokenId}`);
     window.open(url, "_blank");
     return false;
   };
@@ -59,10 +60,9 @@ const ExploreCard = ({ nft, isLoading = false }) => {
       let name: string = "";
       name =
         nft.owner?.name ??
-          (nft.owner?.firstName || nft.owner?.lastName
-            ? `${nft.owner?.firstName} ${nft.owner?.lastName}`
-            : ownerAddress?.substr(0, 5) + "..." + ownerAddress?.substr(ownerAddress.length - 5, 5) ?? "");
-          
+        (nft.owner?.firstName || nft.owner?.lastName
+          ? `${nft.owner?.firstName} ${nft.owner?.lastName}`
+          : ownerAddress?.substr(0, 5) + "..." + ownerAddress?.substr(ownerAddress.length - 5, 5) ?? "");
 
       return name;
     }
