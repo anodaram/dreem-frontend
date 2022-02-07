@@ -25,6 +25,9 @@ export const useStyles = makeStyles(theme => ({
     fontFamily: "Grifter",
     color: "#fff",
     textTransform: "uppercase",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 18,
+    },
   },
   typo2: {
     fontSize: 14,
@@ -32,5 +35,15 @@ export const useStyles = makeStyles(theme => ({
     fontFamily: "Grifter",
     textTransform: "uppercase",
     color: "#ffffff50",
+  },
+  typo3: {
+    fontSize: 24,
+    fontWeight: 800,
+    fontFamily: "Grifter",
+    color: "#fff",
+    textTransform: "uppercase",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 14,
+    },
   },
 }));

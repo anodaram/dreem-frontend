@@ -11,7 +11,7 @@ import "swiper/components/pagination/pagination.min.css"
 import { GameSliderStyles } from './index.styles';
 SwiperCore.use([Pagination]);
 
-export const GameSlider = ({ games, paginationColor}) => {
+export const GameSlider = ({ games, paginationColor}: any) => {
   const classes = GameSliderStyles({ paginationColor, gameCount: (games || []).length });
   return (
     <div className={classes.container}>

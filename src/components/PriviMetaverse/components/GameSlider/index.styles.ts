@@ -12,9 +12,9 @@ export const GameSliderStyles = makeStyles(theme => ({
     },
 
     "& .swiper-slide": {
+      width: "100% !important",
       textAlign: "center",
       fontSize: "18px",
-      color: "red",
 
       /* Center slide text vertically */
       display: "flex",
