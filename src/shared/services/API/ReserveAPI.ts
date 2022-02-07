@@ -39,6 +39,18 @@ export async function getTrendingGameNfts(payload: any): Promise<any> {
   }
 }
 
+export async function getGameNFTOwners(payload: any): Promise<any> {
+  try {
+    const response = await axios.get(`${URL()}/metaverseReserve/getGameNFTOwners`, {
+      params: payload
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
 export async function getMarketplaceFee(): Promise<any> {
   try {
     const response = await axios.get(`${URL()}/metaverseReserve/getFee`);

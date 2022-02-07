@@ -29,6 +29,7 @@ import URL from "shared/functions/getURL";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import { detectMob } from "shared/helpers";
 import VotingItem from "./VotingItem";
+import CreatorItem from "./CreatorItem";
 import { realmDetailPageStyles } from "./index.styles";
 
 const COLUMNS_COUNT_BREAK_POINTS_THREE = {
@@ -496,12 +497,23 @@ export default function RealmDetailPage() {
               // ) : selectedTab === "assets" ? (
               //   <Box className={classes.gradientText}>Assets</Box>
               ) : selectedTab === "land" ? (
-                <Box className={classes.gradientText}>Land</Box>
+                <>
+                  <Box className={classes.gradientText}>Land</Box>
+                  <Box mt={2}>
+                      {[1, 2].map(v => {
+                        return (
+                          <Box mt={3}>
+                            <CreatorItem isLoading={false} />
+                          </Box>
+                        );
+                      })}
+                    </Box>
+                </>
               ) : (
                 <>
                   <Box className={classes.gradientText}>Voting</Box>
                   <Box mt={2}>
-                    {[1, 2, 3, 4, 5].map(v => {
+                    {[1, 2].map(v => {
                       return (
                         <Box mt={3}>
                           <VotingItem isLoading={false} />
