@@ -113,8 +113,9 @@ type NavItem = {
 const Navigator: NavItem[] = [
   { name: "PLAY", value: "play", link: "/play" },
   { name: "CREATE", value: "creations", link: "/create" },
-  { name: "REALMS", value: "realms", link: "/realms" },
-  { name: "AVATARS", value: "avatars", link: "/avatars" },
-  { name: "ASSETS", value: "assets", link: "/assets" },
+  { name: "EXPLORE", value: "explore", link: "/explore" },
+  // { name: "REALMS", value: "realms", link: "/realms" },
+  // { name: "AVATARS", value: "avatars", link: "/avatars" },
+  // { name: "ASSETS", value: "assets", link: "/assets" },
   { name: "GAME NFTS", value: "P2E", link: "/P2E" },
 ];
