@@ -487,7 +487,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   },
   gameInfoSection: {
     color: "#E9FF26",
-    padding: "0 90px",
+    padding: "0 75px",
     borderRight: "2px solid #E9FF2620",
     textTransform: "uppercase",
 

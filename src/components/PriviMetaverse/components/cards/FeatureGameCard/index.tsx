@@ -34,10 +34,9 @@ const FeaturedGameCard = ({ game, isLoading = false }) => {
       {isLoading ? (
         <Box className={classes.skeleton}>
           <Skeleton variant="rect" width="100%" height={330} />
+          <Skeleton variant="rect" width="100%" height={20} style={{ marginTop: "8px" }} />
+          <Skeleton variant="rect" width="100%" height={20} style={{ marginTop: "8px" }} />
           <Skeleton variant="rect" width="100%" height={40} style={{ marginTop: "8px" }} />
-          <Skeleton variant="rect" width="80%" height={40} style={{ marginTop: "8px" }} />
-          <Skeleton variant="rect" width="80%" height={40} style={{ marginTop: "8px" }} />
-          <Skeleton variant="rect" width="80%" height={35} style={{ marginTop: "8px" }} />
         </Box>
       ) : (
         <>

@@ -35,6 +35,7 @@ import { NftStates } from "shared/constants/constants";
 import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
 import TotalStats from "./components/TotalStats";
 import RecentTransactions from "./components/RecentTransactions";
+import { listenerSocket } from "components/Login/Auth";
 import { MessageBox } from "components/PriviMetaverse/components/Message/MessageBox";
 import { ExpandIcon } from "../NFTReserves";
 import ActivityFeeds from "../NFTReserves/components/ActivityFeeds";
@@ -95,8 +96,6 @@ const tableHeaders: Array<CustomTableHeaderInfo> = [
   },
 ];
 
-const isProd = process.env.REACT_APP_ENV === "prod";
-
 export default function GameDetailPage() {
   const tabsClasses = gameDetailTabsStyles();
   const filterClasses = useFilterSelectStyles();
@@ -139,6 +138,7 @@ export default function GameDetailPage() {
   const roomId = React.useMemo(() => gameInfo && `${gameInfo.Slug}-${gameInfo.Address}`, [gameInfo]);
 
   const classes = gameDetailPageStyles({ openSideBar });
+  const isProd = process.env.REACT_APP_ENV === "prod";
 
   const getTokenList = async () => {
     getAllTokenInfos().then(res => {
@@ -170,7 +170,10 @@ export default function GameDetailPage() {
 
   const loadGameInfo = async () => {
     try {
-      const res = await getGameInfo({ gameId: collection_id });
+      const res = await getGameInfo({
+        gameId: collection_id, 
+        mode: isProd ? "main" : "test"
+      });
       if (res.success) {
         let gf = res.data;
         if (gf.Address) {
@@ -272,6 +275,25 @@ export default function GameDetailPage() {
     let token = tokenList.find(token => token.Address === addr);
     return token?.Decimals;
   };
+
+  React.useEffect(() => {
+    if (listenerSocket) {
+      const updateMarketPlaceFeedHandler = _nft => {
+        if (nfts && nfts.length) {
+          const _nfts = nfts.map(nft => (_nft.id === nft.id ? _nft : nft));
+          setNfts(_nfts);
+        }
+
+        loadGameInfo();
+      };
+
+      listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+
+      return () => {
+        listenerSocket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
+      };
+    }
+  }, [listenerSocket]);
 
   const tableData = React.useMemo(() => {
     let data: Array<Array<CustomTableCellInfo>> = [];
@@ -435,7 +457,13 @@ export default function GameDetailPage() {
           }}
         />
         <Box className={classes.container}>
-          <Box className={classes.fitContent} mb={isTablet ? 6 : 12}>
+          <Box
+            className={classes.fitContent}
+            mb={isTablet ? 6 : 12}
+            style={{
+              maxWidth: openSideBar ? '1100px' : '1000px'
+            }}
+          >
             <Box
               color="#FFFFFF"
               mb={4}
@@ -482,7 +510,7 @@ export default function GameDetailPage() {
                   <Box width={"1px"} height={"8px"} bgcolor={"rgba(255, 255, 255, 0.15)"} />
                   <Box display={"flex"} alignItems={"center"}>
                     <ProfileUserIcon />
-                    <Box ml={0.5}>30 owners</Box>
+                    <Box ml={0.5}>{gameInfo?.owners_count || 0} owners</Box>
                   </Box>
                 </Box>
                 <Box
@@ -527,7 +555,7 @@ export default function GameDetailPage() {
             </Box>
             <Box display={"flex"} alignItems={"stretch"} my={3.5} flexDirection={isTablet ? "column" : "row"}>
               <Box width={isTablet ? "100%" : "55%"} mr={isTablet ? 0 : 1.5}>
-                <TotalStats />
+                <TotalStats gameInfo={gameInfo} />
               </Box>
               <Box width={isTablet ? "100%" : "calc(45% - 12px)"} display="flex" mt={isTablet ? 2 : 0}>
                 <RecentTransactions />
@@ -653,7 +681,11 @@ export default function GameDetailPage() {
 
                 <Box
                   className={classes.fitContent}
-                  style={{ paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}
+                  style={{
+                    paddingLeft: isMobile ? 16 : 0,
+                    paddingRight: isMobile ? 16 : 0,
+                    maxWidth: openSideBar ? '1100px' : '1000px'
+                  }}
                 >
                   <InfiniteScroll
                     hasChildren={nfts?.length > 0}
