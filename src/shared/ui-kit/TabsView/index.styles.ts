@@ -8,6 +8,7 @@ export const tabViewStyles = makeStyles(theme => ({
     border: "2px solid",
     borderImageSlice: "1",
     borderImageSource: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
+    justifyContent: "space-between",
     [theme.breakpoints.down("md")]: {
       fontSize: "12px",
       padding: "15px 11px",
@@ -23,7 +24,7 @@ export const tabViewStyles = makeStyles(theme => ({
     color: "white",
     marginRight: "38px",
     cursor: "pointer",
-    padding: "10px 96px 6px",
+    padding: "10px 32px 6px",
     fontFamily: "GRIFTER",
     fontSize: "16px",
     lineHeight: "120%",

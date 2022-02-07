@@ -236,7 +236,11 @@ const WorldList = ({
       "timestamp",
       Filters,
       false,
-      userSelector.address
+      userSelector.address,
+      null,
+      false,
+      false,
+      true
     ).then(res => {
         if (res.success) {
           const items = res.data.elements;

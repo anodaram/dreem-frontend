@@ -17,6 +17,7 @@ import CreatingStep from "../CreatingStep";
 import CollectionList from "../CollectionList";
 import WorldList from "../WorldList";
 import ContentProcessingOperationModal from "components/PriviMetaverse/modals/ContentProcessingOperationModal";
+import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProgressModal";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
 import { useModalStyles } from "./index.styles";
 
@@ -224,7 +225,7 @@ const CreateRealmFlow = ({
           setUploadSuccess(false);
           return
         } else {
-          // setUploadSuccess(true);
+          setUploadSuccess(true);
           showAlertMessage(`Created draft successfully. minting NFT...`, { variant: "success" });
           // setSavingDraft(res.data)
           handleMintRealm(res.data)
@@ -233,7 +234,7 @@ const CreateRealmFlow = ({
     }
   };
   const handleMintRealm = async (savingDraft) => {
-
+    setIsUploading(false);
     console.log(savingDraft, savingDraft.mintMetadata);
     const metaData = await onUploadNonEncrypt(savingDraft.mintMetadata, file => uploadWithNonEncryption(file));
     console.log(metaData);
@@ -271,21 +272,17 @@ const CreateRealmFlow = ({
     );
 
     if (contractRes.success) {
+      console.log(contractRes);
+      await MetaverseAPI.realmMint(
+        savingDraft.instance.hashId,
+        contractRes.txHash,
+        targetChain.name,
+        contractRes.realmAddress,
+        contractRes.distributionManager,
+        contractRes.realmUpgraderAddress,
+      );
       setTxSuccess(true);
       showAlertMessage(`Successfully world minted`, { variant: "success" });
-      console.log(contractRes);
-      // await MetaverseAPI.convertToNFTAssetBatch(
-      //   savingDraft.instance.hashId,
-      //   contractRes.collectionAddress,
-      //   targetChain.name,
-      //   [contractRes.tokenId],
-      //   metaData.newFileCID,
-      //   contractRes.owner,
-      //   royaltyAddress,
-      //   royaltyPercentage,
-      //   contractRes.txHash,
-      //   1
-      // );
     } else {
       setTxSuccess(false);
     }
@@ -893,6 +890,18 @@ const CreateRealmFlow = ({
 
       {isUploading && (
         <ContentProcessingOperationModal open={isUploading} txSuccess={uploadSuccess} onClose={()=>{setIsUploading(false)}}/>
+      )}
+      {txModalOpen && (
+        <TransactionProgressModal
+          open={txModalOpen}
+          title="Creating your Realm"
+          transactionSuccess={txSuccess}
+          hash={txHash}
+          onClose={() => {
+            setTxSuccess(null);
+            setTxModalOpen(false);
+          }}
+        />
       )}
     </>
   );

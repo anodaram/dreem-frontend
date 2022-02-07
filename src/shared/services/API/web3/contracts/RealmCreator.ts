@@ -23,6 +23,7 @@ const RealmCreator = network => {
         // const rAddress = isRoyalty ? royaltyAddress : zeroAddress()
         console.log('params---', uri, taxRate, creatorShare, votingConsensus, nftToAttachAddress, nftToAttachId)
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
+        console.log('contract-----', contract, contractAddress, metadata.abi)
 
         console.log("Getting gas....", contract, contractAddress, account, uri, taxRate, creatorShare, votingConsensus, nftToAttachAddress, nftToAttachId);
         const gas = await contract.methods.createRealm(uri, taxRate, creatorShare, votingConsensus, nftToAttachAddress, nftToAttachId).estimateGas({ from: account });
@@ -38,7 +39,8 @@ const RealmCreator = network => {
           });
         console.log("transaction succeed", response);
         const returnValues = response.events.RealmCreated.returnValues
-        resolve({ success: true, txHash: txHash });
+        console.log(returnValues)
+        resolve({ success: true, txHash: txHash, realmAddress: returnValues.realmAddress, distributionManager: returnValues.distributionManager, realmUpgraderAddress: returnValues.realmUpgraderAddress, nftAddress: returnValues.nftAddress, nftId: returnValues.nftId, owner: returnValues.owner, taxRate: returnValues.taxRage, creatorShare: returnValues.creatorShare });
       } catch (e) {
         console.log(e);
         resolve({ success: false });

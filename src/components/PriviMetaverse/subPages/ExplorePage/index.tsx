@@ -85,7 +85,8 @@ export default function ExplorePage() {
   const loadMore = (isInit = false) => {
     if (!isInit && (!hasMore || loadingExplore)) return;
 
-    MetaverseAPI.getWorlds(12, curPage, "timestamp", filters, true, undefined, undefined, false)
+    const filter = ["REALM"]
+    MetaverseAPI.getWorlds(12, curPage, "timestamp", filter, true, undefined, undefined, false)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -104,7 +105,8 @@ export default function ExplorePage() {
 
   const loadFeatured = () => {
     setLoadingFeatured(true);
-    MetaverseAPI.getFeaturedWorlds(filters)
+    const filter = ["REALM"]
+    MetaverseAPI.getFeaturedWorlds(filter)
       .then(res => {
         if (res.success) {
           setFeaturedRealms(res.data.elements);

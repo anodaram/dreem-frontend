@@ -56,7 +56,8 @@ export const getWorlds = async (
   ownerId?: string,
   itemIds?: any,
   isExtension?: boolean,
-  featured = false
+  featured = false,
+  isMinted?: boolean
 ) => {
   try {
     let params: any = {};
@@ -72,6 +73,7 @@ export const getWorlds = async (
     params = itemIds && itemIds.length > 0 ? { ...params, itemIds } : params;
     params = isExtension !== undefined ? { ...params, isExtension } : params;
     params = featured !== undefined ? { ...params, featured } : params;
+    params = isMinted !== undefined ? { ...params, isMinted } : params;
 
     const token = localStorage.getItem("token");
     const config = {
@@ -472,6 +474,38 @@ export const convertToNFTAssetBatch = async (
         royaltyAddress: royaltyAddress,
         tx: txHash,
         totalSupply: totalSupply
+      },
+      config
+    );
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const realmMint = async (
+  hashId,
+  txHash,
+  chain,
+  realmAddress,
+  distributionManager,
+  realmUpgraderAddress
+) => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.post(
+      `${METAVERSE_URL()}/web/realm/${hashId}/mint/`,
+      {
+        tx: txHash,
+        chain: chain,
+        realmAddress: realmAddress,
+        distributionManager: distributionManager,
+        realmUpgraderAddress: realmUpgraderAddress
       },
       config
     );
