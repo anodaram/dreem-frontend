@@ -244,7 +244,7 @@ export const extensionDraftVoteModalStyles = makeStyles(theme => ({
   },
   barLabel: {
     position: "absolute",
-    top: 2,
+    top: 7,
     left: 12,
     fontFamily: "Rany",
     fontStyle: "normal",
