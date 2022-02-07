@@ -33,7 +33,7 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   1440: 3,
 };
 
-const filters = ["WORLD"];
+const filters = ["REALM"];
 
 export default function ExploreRealmsPage() {
   const classes = exploreRealmsPageStyles();
