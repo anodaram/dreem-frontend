@@ -433,6 +433,9 @@ export default function RealmDetailPage() {
               onSelectTab={tab => {
                 setSelectedTab(tab.key);
               }}
+              style={{
+                justifyContent: "space-between",
+              }}
             />
             <Box marginTop={5.65} marginBottom={4.5}>
               { selectedTab === "extensions" ? (
@@ -493,21 +496,23 @@ export default function RealmDetailPage() {
               //     </Box>
               //   </>
               ) : selectedTab === "creators" ? (
-                <Box className={classes.gradientText}>Creators</Box>
+                <>
+                  <Box className={classes.gradientText}>Creators</Box>
+                  <Box mt={2}>
+                    {[1, 2].map(v => {
+                      return (
+                        <Box mt={3}>
+                          <CreatorItem isLoading={false} />
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                </>
               // ) : selectedTab === "assets" ? (
               //   <Box className={classes.gradientText}>Assets</Box>
               ) : selectedTab === "land" ? (
                 <>
                   <Box className={classes.gradientText}>Land</Box>
-                  <Box mt={2}>
-                      {[1, 2].map(v => {
-                        return (
-                          <Box mt={3}>
-                            <CreatorItem isLoading={false} />
-                          </Box>
-                        );
-                      })}
-                    </Box>
                 </>
               ) : (
                 <>
