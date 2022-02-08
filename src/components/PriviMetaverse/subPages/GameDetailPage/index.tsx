@@ -171,8 +171,8 @@ export default function GameDetailPage() {
   const loadGameInfo = async () => {
     try {
       const res = await getGameInfo({
-        gameId: collection_id, 
-        mode: isProd ? "main" : "test"
+        gameId: collection_id,
+        mode: isProd ? "main" : "test",
       });
       if (res.success) {
         let gf = res.data;
@@ -435,20 +435,20 @@ export default function GameDetailPage() {
 
   return (
     <Box display="flex" height="100%">
-      {!isTablet && (
-        <Box className={classes.sideBar}>
-          {openSideBar ? (
-            <Box display="flex" flexDirection="column">
-              <ActivityFeeds onClose={() => setOpenSideBar(false)} />
-              <MessageBox roomId={roomId} />
-            </Box>
-          ) : (
-            <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
-              <ExpandIcon />
-            </Box>
-          )}
-        </Box>
-      )}
+      {/* {!isTablet && ( */}
+      <Box className={classes.sideBar}>
+        {openSideBar ? (
+          <Box display="flex" flexDirection="column">
+            <ActivityFeeds onClose={() => setOpenSideBar(false)} />
+            <MessageBox roomId={roomId} />
+          </Box>
+        ) : (
+          <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
+            <ExpandIcon />
+          </Box>
+        )}
+      </Box>
+      {/* )} */}
       <Box className={classes.root} id="scrollContainer" onScroll={handleScroll}>
         <Box
           className={classes.headerBG}
@@ -469,7 +469,7 @@ export default function GameDetailPage() {
             className={classes.fitContent}
             mb={isTablet ? 6 : 12}
             style={{
-              maxWidth: openSideBar ? '1100px' : '1000px'
+              maxWidth: openSideBar ? "1100px" : "1000px",
             }}
           >
             <Box
@@ -483,7 +483,12 @@ export default function GameDetailPage() {
               <ArrowIcon />
               <Box ml={1}>Back</Box>
             </Box>
-            <Box display={"flex"} alignItems={"center"} mb={4} flexDirection={isMobile ? "column" : "row"}>
+            <Box
+              display={"flex"}
+              alignItems={"center"}
+              mb={4}
+              flexDirection={isMobile || (isTablet && openSideBar) ? "column" : "row"}
+            >
               <img
                 src={gameInfo?.Image || getDefaultBGImage()}
                 className={classes.gameInfoImg}
@@ -502,7 +507,7 @@ export default function GameDetailPage() {
                   display={"flex"}
                   alignItems={"center"}
                   justifyContent={"space-between"}
-                  maxWidth={isMobile ? 350 : isTablet ? 470 : 580}
+                  maxWidth={isMobile ? 350 : isTablet ? 420 : 580}
                   mb={3}
                   fontSize={isMobile ? 13 : isTablet ? 14 : 16}
                 >
@@ -585,11 +590,11 @@ export default function GameDetailPage() {
                 </Box>
                 <Box
                   display="flex"
-                  alignItems="center"
+                  alignItems={isTablet && openSideBar ? "start" : "center"}
                   justifyContent="space-between"
                   width={1}
                   mt={2}
-                  flexDirection={isMobile ? "column" : "row"}
+                  flexDirection={isMobile || (isTablet && openSideBar) ? "column" : "row"}
                 >
                   <Box
                     display="flex"
@@ -631,7 +636,7 @@ export default function GameDetailPage() {
                       ))}
                     </Select>
                   </Box>
-                  <Box className={classes.optionSection} mt={isMobile ? 1 : 0}>
+                  <Box className={classes.optionSection} mt={isMobile || (isTablet && openSideBar) ? 1 : 0}>
                     <div className={classes.filterButtonBox}>
                       <InputWithLabelAndTooltip
                         type="text"
@@ -694,7 +699,7 @@ export default function GameDetailPage() {
                   style={{
                     paddingLeft: isMobile ? 16 : 0,
                     paddingRight: isMobile ? 16 : 0,
-                    maxWidth: openSideBar ? '1100px' : '1000px'
+                    maxWidth: openSideBar ? "1100px" : "1000px",
                   }}
                 >
                   <InfiniteScroll
