@@ -14,7 +14,7 @@ import URL from "shared/functions/getURL";
 
 import "./MessageBox.css";
 
-export const MessageBox = ({ roomId }: { roomId?: string }) => {
+export const MessageBox = ({ roomId, nftHolder }: { roomId?: string; nftHolder?: boolean }) => {
   const dispatch = useDispatch();
 
   const sourceRef = useRef<any>();
@@ -147,6 +147,7 @@ export const MessageBox = ({ roomId }: { roomId?: string }) => {
         getMessages={getMessages}
         loadingMessages={loadingMessages}
         room={roomId}
+        nftHolder={nftHolder}
       />
     </Box>
   );
