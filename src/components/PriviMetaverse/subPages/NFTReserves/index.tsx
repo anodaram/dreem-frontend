@@ -139,7 +139,7 @@ const NFTReserves = () => {
         listenerSocket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
       };
     }
-  }, [listenerSocket, listenerSocket.connected]);
+  }, [listenerSocket]);
 
   const loadTransactions = async (init = false) => {
     if (transactionloading) return;
