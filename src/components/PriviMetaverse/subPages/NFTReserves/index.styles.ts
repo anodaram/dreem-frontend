@@ -94,7 +94,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       maxWidth: 480,
     },
     [theme.breakpoints.down("xs")]: {
-      maxWidth: 350,
+      maxWidth: 308,
     },
   },
   titleBar: {
@@ -167,7 +167,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center",
     marginTop: 0,
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("lg")]: {
       marginTop: 16,
     },
     [theme.breakpoints.down("xs")]: {
@@ -225,10 +225,11 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("sm")]: {
       maxWidth: 480,
-      height: 330,
+      maxHeight: 550,
     },
     [theme.breakpoints.down("xs")]: {
       maxWidth: 350,
+      minHeight: 400,
     },
   },
   gameContent: {
@@ -243,6 +244,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       padding: "18px",
       justifyContent: "flex-start",
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: "12px",
     },
   },
   gameBgImage: {
@@ -512,8 +516,18 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       fontFamily: "Rany",
       opacity: 0.6,
     },
+    [theme.breakpoints.down("sm")]: {
+      padding: "0px 48px",
+    },
     [theme.breakpoints.down("xs")]: {
-      padding: 0,
+      padding: "0px 24px",
+      alignItems: "center",
+      "& span:first-child": {
+        fontSize: 24,
+      },
+      "& span:last-child": {
+        fontSize: 12,
+      },
     },
   },
   listLoading: {

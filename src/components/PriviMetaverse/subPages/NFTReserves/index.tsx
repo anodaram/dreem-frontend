@@ -1,10 +1,12 @@
-import { Hidden, useMediaQuery, useTheme } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
 import React, { useEffect, useRef, useState } from "react";
 import Carousel from "react-elastic-carousel";
 import Moment from "react-moment";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import InfiniteScroll from "react-infinite-scroll-component";
+
+import { Hidden, useMediaQuery, useTheme } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 
 import { ReactComponent as BinanceIcon } from "assets/icons/bsc.svg";
 import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
@@ -23,16 +25,14 @@ import { PrimaryButton, SecondaryButton, Variant } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
-import { setScrollPositionInAllNFT, setTokenList } from "store/actions/MarketPlace";
+import { setTokenList } from "store/actions/MarketPlace";
 import { RootState } from "store/reducers/Reducer";
-
 import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
 import Tag from "../GameDetailPage/components/Tag";
 import ActivityFeeds from "./components/ActivityFeeds";
 import { listenerSocket } from "components/Login/Auth";
 import { GLOBAL_CHAT_ROOM } from "shared/constants/constants";
 import { useNFTOptionsStyles } from "./index.styles";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -82,7 +82,7 @@ const NFTReserves = () => {
 
   const classes = useNFTOptionsStyles({ openSideBar });
 
-  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? openSideBar ? 3 : 4 : 4;
+  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? (openSideBar ? 3 : 4) : 4;
 
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     { headerName: "NFT" },
@@ -118,6 +118,7 @@ const NFTReserves = () => {
   useEffect(() => {
     if (listenerSocket) {
       const newNFTHandler = (_e) => {
+        console.log('new NFT', _e)
         getNewListings();
       };
 
@@ -179,7 +180,7 @@ const NFTReserves = () => {
       const response = await getTrendingGameNfts({
         mode: isProd ? "main" : "test",
       });
-      if (response.status) {
+      if (response.success) {
         const nfts = response.data;
         setNewListings(nfts);
       }
@@ -208,10 +209,6 @@ const NFTReserves = () => {
         dispatch(setTokenList(res.tokens.filter(t => t.Symbol === "USDT")));
       }
     });
-  };
-
-  const handleScroll = e => {
-    dispatch(setScrollPositionInAllNFT(e.target.scrollTop));
   };
 
   const getTokenSymbol = addr => {
@@ -299,7 +296,7 @@ const NFTReserves = () => {
             </Box>
           </Box>
         )}
-        {!isTablet && !isMobile && (
+        {(!isTablet || isMobile) && (
           <>
             <Box className={classes.sideBar}>
               {openSideBar ? (
@@ -352,7 +349,6 @@ const NFTReserves = () => {
                 <img src={require("assets/icons/slider_footer.svg")} className={classes.sliderFooter} />
                 <img src={require("assets/icons/slider_left.svg")} className={classes.sliderLeft} />
                 <img src={require("assets/icons/slider_right.svg")} className={classes.sliderRight} />
-                {/* <img src={require("assets/icons/slider_rect.svg")} className={classes.sliderRect} /> */}
                 <GameSlider
                   games={featuredGames.map((game: any) => {
                     return () => (
@@ -393,11 +389,16 @@ const NFTReserves = () => {
                               color="#fff"
                               lineHeight="31px"
                               mt="20px"
-                              maxWidth={isMobile ? 350 : "unset"}
+                              maxWidth={isNarrow || isTablet ? 440 : isMobile ? 288 : "unset"}
                             >
                               {game.Description}
                             </Box>
-                            <Box display="flex" mt={3}>
+                            <Box
+                              display="flex"
+                              mt={3}
+                              maxWidth={isMobile ? 288 : "unset"}
+                              flexWrap={isMobile ? "wrap" : "unset"}
+                            >
                               <Box
                                 display="flex"
                                 flexDirection="column"
@@ -515,9 +516,7 @@ const NFTReserves = () => {
                         <MasonryGrid
                           gutter={"24px"}
                           data={Array(itemsToShow).fill(0)}
-                          renderItem={item => (
-                            <FeaturedGameCard game={{}} isLoading={loadingPopularGames} />
-                          )}
+                          renderItem={item => <FeaturedGameCard game={{}} isLoading={loadingPopularGames} />}
                           columnsCountBreakPoints={{
                             ...COLUMNS_COUNT_BREAK_POINTS,
                             1440: openSideBar ? 3 : 4,
@@ -694,8 +693,7 @@ const NFTReserves = () => {
                     next={loadTransactions}
                     hasMore={transactionHasMore}
                     loader={
-                      transactionloading &&
-                      (
+                      transactionloading && (
                         <div
                           style={{
                             paddingTop: 8,
@@ -707,29 +705,42 @@ const NFTReserves = () => {
                             .map((_, index) => (
                               <Box className={classes.listLoading} mb={1.5} key={`listLoading_${index}`}>
                                 <Skeleton variant="rect" width={60} height={60} />
-                                <Skeleton variant="rect" width="40%" height={24} style={{ marginLeft: "8px" }} />
-                                <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
-                                <Skeleton variant="rect" width="20%" height={24} style={{ marginLeft: "8px" }} />
+                                <Skeleton
+                                  variant="rect"
+                                  width="40%"
+                                  height={24}
+                                  style={{ marginLeft: "8px" }}
+                                />
+                                <Skeleton
+                                  variant="rect"
+                                  width="20%"
+                                  height={24}
+                                  style={{ marginLeft: "8px" }}
+                                />
+                                <Skeleton
+                                  variant="rect"
+                                  width="20%"
+                                  height={24}
+                                  style={{ marginLeft: "8px" }}
+                                />
                               </Box>
                             ))}
                         </div>
                       )
                     }
                   >
-                    {
-                      tableData.length > 0 && (
-                        <Box className={classes.table}>
-                          <CustomTable
-                            variant={Variant.Transparent}
-                            headers={tableHeaders}
-                            rows={tableData}
-                            placeholderText=""
-                            sorted={{}}
-                            theme="game transaction"
-                          />
-                        </Box>
-                      )
-                    }
+                    {tableData.length > 0 && (
+                      <Box className={classes.table}>
+                        <CustomTable
+                          variant={Variant.Transparent}
+                          headers={tableHeaders}
+                          rows={tableData}
+                          placeholderText=""
+                          sorted={{}}
+                          theme="game transaction"
+                        />
+                      </Box>
+                    )}
                   </InfiniteScroll>
                   {!transactionloading && transactions?.length < 1 && (
                     <Box textAlign="center" width="100%" mb={10} mt={2}>
