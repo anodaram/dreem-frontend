@@ -118,7 +118,7 @@ export default function GameDetailPage() {
   const breakFour = useMediaQuery(theme.breakpoints.up(1440));
 
   const { collection_id }: { collection_id: string } = useParams();
-  const [gameInfo, setGameInfo] = React.useState<any>(undefined);
+  const [gameInfo, setGameInfo] = React.useState<any>({});
 
   const [nfts, setNfts] = React.useState<any[]>(collectionNFTList || []);
   const [openSideBar, setOpenSideBar] = React.useState<boolean>(true);
