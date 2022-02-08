@@ -1,10 +1,8 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
+
 import { useMediaQuery, useTheme } from "@material-ui/core";
-import { RootState } from "store/reducers/Reducer";
-import { setRealmsList, setScrollPositionInRealms } from "store/actions/Realms";
+
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
@@ -22,7 +20,7 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
   600: 2,
   900: 3,
-  1200: 3,
+  1200: 4,
 };
 const Status_Options = [
   { content: "all", color: "#ffffff50", bgcolor: "transparent" },
@@ -80,10 +78,6 @@ const Rarity_Options = [
 ];
 
 export default function ExplorePage() {
-  const classes = explorePage();
-
-  const dispatch = useDispatch();
-  const history = useHistory();
   const width = useWindowDimensions().width;
 
   const theme = useTheme();
@@ -103,18 +97,8 @@ export default function ExplorePage() {
   const [selectedContentType, setSelectedContentType] = React.useState<string>("all");
   const [selectedAssetType, setSelectedAssetType] = React.useState<string>("world");
   const [searchValue, setSearchValue] = React.useState<string>("");
-  const realmsList = useSelector((state: RootState) => state.realms.realmsList);
-  const [loadingFeatured, setLoadingFeatured] = React.useState<boolean>(false);
-  const [featuredRealms, setFeaturedRealms] = React.useState<any[]>([]);
 
-  const [curPage, setCurPage] = React.useState(1);
-  const [lastPage, setLastPage] = React.useState(1);
-  const [loadingExplore, setLoadingExplore] = React.useState<boolean>(false);
-  const [exploreRealms, setExploreReamls] = React.useState<any[]>(realmsList || []);
-
-  const carouselRef = React.useRef<any>();
-  const carouselRef1 = React.useRef<any>();
-  const [curPageIndex, setCurPageIndex] = React.useState<number>(0);
+  const classes = explorePage({ openFilterBar });
 
   const loadingCount = React.useMemo(
     () => (width > 1200 ? 4 : width > 900 ? 3 : width > 600 ? 2 : 1),
@@ -125,66 +109,6 @@ export default function ExplorePage() {
     loadAvatars(true);
   }, []);
 
-  const loadMore = (isInit = false) => {
-    if (!isInit && (!hasMore || loadingExplore)) return;
-
-    const filter = ["REALM"]
-    MetaverseAPI.getWorlds(12, curPage, "timestamp", filter, true, undefined, undefined, false)
-      .then(res => {
-        if (res.success) {
-          const items = res.data.elements;
-          if (items && items.length > 0) {
-            setExploreReamls(prev => (isInit ? items : [...prev, ...items]));
-            dispatch(setRealmsList([...realmsList, ...items]));
-            if (res.data.page && curPage <= res.data.page.max) {
-              setCurPage(curPage => curPage + 1);
-              setLastPage(res.data.page.max);
-            }
-          }
-        }
-      })
-      .finally(() => setLoadingExplore(false));
-  };
-
-  const loadFeatured = () => {
-    setLoadingFeatured(true);
-    const filter = ["REALM"]
-    MetaverseAPI.getFeaturedWorlds(filter)
-      .then(res => {
-        if (res.success) {
-          setFeaturedRealms(res.data.elements);
-        }
-      })
-      .finally(() => setLoadingFeatured(false));
-
-    setLoadingExplore(true);
-  };
-
-  const handlePrevSlide = () => {
-    if (curPageIndex === 0) {
-      carouselRef.current.goTo(featuredRealms.length - 1);
-      if (!isMobile) carouselRef1?.current.goTo(featuredRealms.length - 1);
-      setCurPageIndex(0);
-    } else {
-      carouselRef.current.slidePrev();
-      if (!isMobile) carouselRef1?.current.slidePrev();
-    }
-  };
-
-  const handlePrevSlideEnd = (nextItem, curPage) => {
-    setCurPageIndex(curPage);
-  };
-
-  const handleNextSlide = () => {
-    if (curPageIndex === featuredRealms.length - 1) {
-      carouselRef.current.goTo(0);
-      if (!isMobile) carouselRef1?.current.goTo(0);
-      setCurPageIndex(0);
-    } else {
-      carouselRef.current.slideNext();
-      if (!isMobile) carouselRef1?.current.slideNext();
-    }
-  }
   const loadAvatars = async (init = false) => {
     if (loading) return;
     try {
@@ -370,68 +294,77 @@ export default function ExplorePage() {
         )}
       </Box>
       <Box className={classes.mainContent} id="scrollContainer">
-        <Box className={classes.fitContent} mb={isTablet ? 6 : 12} px={isMobile ? 2 : 0}>
-          <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
-            <Box className={classes.gradientText}>Explore Assets</Box>
-            <div className={classes.searchSection}>
-              <InputWithLabelAndTooltip
-                type="text"
-                inputValue={searchValue}
-                placeHolder="Search collections"
-                onInputValueChange={e => {
-                  setSearchValue(e.target.value);
-                }}
-                style={{
-                  background: "transparent",
-                  margin: 0,
-                  marginRight: 8,
-                  marginLeft: 8,
-                  padding: 0,
-                  border: "none",
-                  height: "auto",
-                }}
-                theme="dark"
-              />
-              <Box display="flex" alignItems="center" justifyContent="center" style={{ cursor: "pointer" }}>
-                <SearchIcon />
-              </Box>
-            </div>
-          </Box>
-
-          <InfiniteScroll
-            hasChildren={avatars?.length > 0}
-            dataLength={avatars?.length}
-            scrollableTarget={"scrollContainer"}
-            next={loadAvatars}
-            hasMore={hasMore}
-            loader={
-              loading && (
-                <Box mt={2}>
-                  <MasonryGrid
-                    gutter={"40px"}
-                    data={Array(loadingCount).fill(0)}
-                    renderItem={(_, index) => <AvatarCard isLoading={true} key={`avatar_loading_${index}`} />}
-                    columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                  />
+        {!(openFilterBar && isMobile) && (
+          <Box className={classes.fitContent} mb={isTablet ? 6 : 12} px={isMobile ? 2 : 0}>
+            <Box
+              display={"flex"}
+              alignItems={isMobile ? "start" : "center"}
+              justifyContent={"space-between"}
+              flexDirection={isMobile ? "column" : "row"}
+            >
+              <Box className={classes.gradientText}>Explore Assets</Box>
+              <div className={classes.searchSection}>
+                <InputWithLabelAndTooltip
+                  type="text"
+                  inputValue={searchValue}
+                  placeHolder="Search collections"
+                  onInputValueChange={e => {
+                    setSearchValue(e.target.value);
+                  }}
+                  style={{
+                    background: "transparent",
+                    margin: 0,
+                    marginRight: 8,
+                    marginLeft: 8,
+                    padding: 0,
+                    border: "none",
+                    height: "auto",
+                  }}
+                  theme="dark"
+                />
+                <Box display="flex" alignItems="center" justifyContent="center" style={{ cursor: "pointer" }}>
+                  <SearchIcon />
                 </Box>
-              )
-            }
-          >
-            <Box mt={4}>
-              <MasonryGrid
-                gutter={"40px"}
-                data={avatars}
-                renderItem={(item, index) => <AvatarCard item={item} key={`avatar_${index}`} />}
-                columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-              />
+              </div>
             </Box>
-          </InfiniteScroll>
-          {!loading && avatars?.length < 1 && (
-            <Box textAlign="center" width="100%" mb={10} mt={2} fontSize={22}>
-              No Data
-            </Box>
-          )}
-        </Box>
+
+            <InfiniteScroll
+              hasChildren={avatars?.length > 0}
+              dataLength={avatars?.length}
+              scrollableTarget={"scrollContainer"}
+              next={loadAvatars}
+              hasMore={hasMore}
+              loader={
+                loading && (
+                  <Box mt={2}>
+                    <MasonryGrid
+                      gutter={"40px"}
+                      data={Array(loadingCount).fill(0)}
+                      renderItem={(_, index) => (
+                        <AvatarCard isLoading={true} key={`avatar_loading_${index}`} />
+                      )}
+                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                    />
+                  </Box>
+                )
+              }
+            >
+              <Box mt={4}>
+                <MasonryGrid
+                  gutter={"40px"}
+                  data={avatars}
+                  renderItem={(item, index) => <AvatarCard item={item} key={`avatar_${index}`} />}
+                  columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                />
+              </Box>
+            </InfiniteScroll>
+            {!loading && avatars?.length < 1 && (
+              <Box textAlign="center" width="100%" mb={10} mt={2} fontSize={22}>
+                No Data
+              </Box>
+            )}
+          </Box>
+        )}
       </Box>
       <img className={classes.backImg1} src={backImg1} alt="back_1" />
       <img className={classes.backImg2} src={backImg2} alt="back_2" />
