@@ -128,7 +128,7 @@ const RoadMap = {
 const FILE_LINK_MAC = "https://dreem.fra1.digitaloceanspaces.com/Dreem.dmg";
 const FILE_LINK_WINDOWS = "https://dreem.fra1.digitaloceanspaces.com/Dreem.msi";
 
-const filters = ["WORLD"];
+const filters = ["REALM"];
 
 export default function HomePage() {
   const classes = homePageStyles();
