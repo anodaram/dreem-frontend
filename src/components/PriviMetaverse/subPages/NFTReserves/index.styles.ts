@@ -167,7 +167,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center",
     marginTop: 0,
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("lg")]: {
       marginTop: 16,
     },
     [theme.breakpoints.down("xs")]: {
