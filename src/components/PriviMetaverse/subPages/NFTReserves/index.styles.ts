@@ -94,7 +94,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       maxWidth: 480,
     },
     [theme.breakpoints.down("xs")]: {
-      maxWidth: 350,
+      maxWidth: 308,
     },
   },
   titleBar: {
