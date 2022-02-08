@@ -53,6 +53,11 @@ export default function CreatingRealmPage() {
   const [curPage, setCurPage] = React.useState(1);
   const [lastPage, setLastPage] = React.useState(0);
   const [loadingCollection, setLoadingCollection] = React.useState<boolean>(false);
+  const [showDepositRequireModal, setShowDepositRequireModal] = React.useState<boolean>(false);
+  // Transaction Modal
+  const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
+  const [txSuccess, setTxSuccess] = useState<string>("progress");
+  const [txHash, setTxHash] = useState<string>("");
 
   useEffect(() => {
     if (underMaintenanceSelector && Object.keys(underMaintenanceSelector).length > 0) {
@@ -95,7 +100,11 @@ export default function CreatingRealmPage() {
   };
 
   const handleNext = () => {
-    setStep(prev => prev + 1);
+    if(step == 0){
+      setStep(prev => prev + 1);
+    } else {
+      setShowDepositRequireModal(true)
+    }
   };
 
   const handlePrev = () => {
@@ -124,11 +133,11 @@ export default function CreatingRealmPage() {
     <>
       <div className={classes.root}>
         <div className={classes.otherContent} id="scrollContainer">
-          <Box>Apply extension</Box>
-          <Box>Select nft from your minted NFTs</Box>
-          <Box>All of your collections</Box>
           {step === 0 && (
             <> 
+              <Box className={classes.typo1}>Apply extension</Box>
+              <Box className={classes.typo3}>Select nft from your minted NFTs</Box>
+              <Box className={classes.typo4}>All of your collections</Box>
               <CollectionList
                 handleNext={() => {}}
                 handleCancel={() => {}}
@@ -139,16 +148,37 @@ export default function CreatingRealmPage() {
             </>
           )}
           {step === 1 && (
-            <WorldList
-              handleNext={() => {}}
-              handleCancel={() => {}}
-              handleSelect={(hash, address, id) => {
-                setWorldHash(hash);
-                setNFTAddress(address);
-                setNFTId(id);
-              }}
-            />
+            <>
+              {showDepositRequireModal ? (
+                <DepositRequiredModal
+                  open={showDepositRequireModal}
+                  onClose={()=>setShowDepositRequireModal(false)}
+                  onApprove={()=>{}}
+                  onConfirm={()=>{}}
+                />
+              ) :
+              (<>
+                <Box className={classes.typo4}>Apply extension</Box>
+                <Box className={classes.typo3}>Select one of your works on that collection to apply for and extension</Box>
+                <WorldList
+                  handleNext={() => {}}
+                  handleCancel={() => {}}
+                  handleSelect={(hash, address, id) => {
+                    setWorldHash(hash);
+                    setNFTAddress(address);
+                    setNFTId(id);
+                  }}
+                />
+              </>)}
+            </>
           )}
+          {txModalOpen && 
+            <TransactionProcessing
+              hash={txHash}
+              status={txSuccess}
+              backToHome={setStep(1)}
+  />
+          }
           <Box className={classes.footer}>
             <div className={classes.cancelBtn} onClick={handlePrev}>
               back

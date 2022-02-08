@@ -288,9 +288,6 @@ const WorldList = ({
       <div className={classes.otherContent}>
         {loadingCollection || collections.length ? (
           <>
-            <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
-              <Box className={classes.typo4}>Select one of your works on that collection to apply for and extension</Box>
-            </Box>
             <Box width={1} pb={20}>
               <InfiniteScroll
                 hasChildren={collections?.length > 0}
