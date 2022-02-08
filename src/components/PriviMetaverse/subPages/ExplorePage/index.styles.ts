@@ -21,7 +21,7 @@ export const explorePage = makeStyles(theme => ({
     textTransform: "uppercase",
   },
   mainContent: {
-    width: "calc(100% - 293px)",
+    width: (props: any) => (props.openFilterBar ? "calc(100% - 293px)" : "calc(100% - 55px)"),
     height: "calc(100% - 72px)",
     marginTop: 72,
     paddingTop: 32,
@@ -31,9 +31,6 @@ export const explorePage = makeStyles(theme => ({
     zIndex: 1,
   },
   fitContent: {
-    // maxWidth: 1280,
-    // marginLeft: "auto",
-    // marginRight: "auto",
     paddingLeft: 110,
     paddingRight: 110,
     [theme.breakpoints.down("md")]: {
@@ -63,13 +60,10 @@ export const explorePage = makeStyles(theme => ({
     textTransform: "uppercase",
     width: "fit-content",
     [theme.breakpoints.down("sm")]: {
-      fontSize: "40px",
+      fontSize: "28px",
       lineHeight: "48px",
     },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "34px",
-      lineHeight: "40.8px",
-    },
+    [theme.breakpoints.down("xs")]: {},
   },
   backImg1: {
     position: "absolute",
@@ -129,9 +123,13 @@ export const explorePage = makeStyles(theme => ({
     color: "#ffffff80",
     minWidth: 290,
     height: 48,
+    [theme.breakpoints.down("sm")]: {
+      minWidth: 200,
+      height: 38,
+    },
     [theme.breakpoints.down("xs")]: {
-      minWidth: 230,
-      padding: "8px",
+      minWidth: "100%",
+      marginTop: 8,
     },
   },
   expandIcon: {

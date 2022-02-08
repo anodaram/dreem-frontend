@@ -70,3 +70,7 @@ export const getDefaultBGImage = () => require("assets/backgrounds/digital_art_1
 export const getDefaultImageUrl = () => {
   return require(`assets/metaverseImages/new_world_default.png`);
 };
+
+export const getDefaultWorldImageUrl = () => {
+  return require(`assets/metaverseImages/world_default.png`);
+};
