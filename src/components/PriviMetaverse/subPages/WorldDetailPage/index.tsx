@@ -8,7 +8,7 @@ import { setSelTabWorldDetail } from "store/actions/World";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import Avatar from "shared/ui-kit/Avatar";
-import { getDefaultAvatar, getDefaultBGImage } from "shared/services/user/getUserAvatar";
+import { getDefaultAvatar, getDefaultWorldImageUrl } from "shared/services/user/getUserAvatar";
 import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
 import TabsView, { TabItem } from "shared/ui-kit/TabsView";
 import LandForSale from "./components/LandForSale";
@@ -74,7 +74,7 @@ export default function WorldDetailPage() {
                     <ShareIcon />
                   </div>
                 </Box>
-                <img src={getDefaultBGImage()} className={classes.worldImage} alt="nft image" />
+                <img src={getDefaultWorldImageUrl()} className={classes.worldImage} alt="nft image" />
               </Box>
             )}
             <Box
@@ -82,7 +82,6 @@ export default function WorldDetailPage() {
               alignItems={isMobile ? "start" : "center"}
               justifyContent="space-between"
               flexDirection={isMobile ? "column" : "row"}
-              width={450}
             >
               <Box display="flex" alignItems="center">
                 <Avatar size={42} rounded image={getDefaultAvatar()} />
@@ -196,7 +195,7 @@ export default function WorldDetailPage() {
               </PrimaryButton>
             </Box>
             {!isMobile && !isTablet && (
-              <img src={getDefaultBGImage()} className={classes.worldImage} alt="nft image" />
+              <img src={getDefaultWorldImageUrl()} className={classes.worldImage} alt="nft image" />
             )}
           </Box>
         </Box>

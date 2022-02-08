@@ -33,6 +33,9 @@ export const worldDetailPageStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("xs")]: {
       padding: "0px 16px",
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
     },
   },
   flexBox: {
@@ -72,15 +75,15 @@ export const worldDetailPageStyles = makeStyles(theme => ({
     },
   },
   worldImage: {
-    width: 600,
+    minWidth: 600,
     height: 600,
     [theme.breakpoints.down("sm")]: {
-      width: 675,
+      minWidth: 675,
       height: 450,
       marginBottom: 40,
     },
     [theme.breakpoints.down("xs")]: {
-      width: 345,
+      minWidth: 345,
       height: 320,
       marginBottom: 40,
     },
