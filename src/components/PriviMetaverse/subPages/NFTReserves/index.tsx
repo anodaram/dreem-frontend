@@ -1,10 +1,12 @@
-import { Hidden, useMediaQuery, useTheme } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
 import React, { useEffect, useRef, useState } from "react";
 import Carousel from "react-elastic-carousel";
 import Moment from "react-moment";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import InfiniteScroll from "react-infinite-scroll-component";
+
+import { Hidden, useMediaQuery, useTheme } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 
 import { ReactComponent as BinanceIcon } from "assets/icons/bsc.svg";
 import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
@@ -25,14 +27,12 @@ import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import { CustomTable, CustomTableCellInfo, CustomTableHeaderInfo } from "shared/ui-kit/Table";
 import { setTokenList } from "store/actions/MarketPlace";
 import { RootState } from "store/reducers/Reducer";
-
 import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
 import Tag from "../GameDetailPage/components/Tag";
 import ActivityFeeds from "./components/ActivityFeeds";
 import { listenerSocket } from "components/Login/Auth";
 import { GLOBAL_CHAT_ROOM } from "shared/constants/constants";
 import { useNFTOptionsStyles } from "./index.styles";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -117,7 +117,8 @@ const NFTReserves = () => {
 
   useEffect(() => {
     if (listenerSocket) {
-      const newNFTHandler = _e => {
+      const newNFTHandler = (_e) => {
+        console.log('new NFT', _e)
         getNewListings();
       };
 
@@ -179,7 +180,7 @@ const NFTReserves = () => {
       const response = await getTrendingGameNfts({
         mode: isProd ? "main" : "test",
       });
-      if (response.status) {
+      if (response.success) {
         const nfts = response.data;
         setNewListings(nfts);
       }
@@ -295,7 +296,7 @@ const NFTReserves = () => {
             </Box>
           </Box>
         )}
-        {!isTablet && !isMobile && (
+        {(!isTablet || isMobile) && (
           <>
             <Box className={classes.sideBar}>
               {openSideBar ? (
@@ -388,11 +389,16 @@ const NFTReserves = () => {
                               color="#fff"
                               lineHeight="31px"
                               mt="20px"
-                              maxWidth={isNarrow || isTablet ? 440 : isMobile ? 350 : "unset"}
+                              maxWidth={isNarrow || isTablet ? 440 : isMobile ? 288 : "unset"}
                             >
                               {game.Description}
                             </Box>
-                            <Box display="flex" mt={3}>
+                            <Box
+                              display="flex"
+                              mt={3}
+                              maxWidth={isMobile ? 288 : "unset"}
+                              flexWrap={isMobile ? "wrap" : "unset"}
+                            >
                               <Box
                                 display="flex"
                                 flexDirection="column"

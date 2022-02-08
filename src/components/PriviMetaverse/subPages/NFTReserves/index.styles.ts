@@ -94,7 +94,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       maxWidth: 480,
     },
     [theme.breakpoints.down("xs")]: {
-      maxWidth: 350,
+      maxWidth: 308,
     },
   },
   titleBar: {
@@ -167,7 +167,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center",
     marginTop: 0,
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("lg")]: {
       marginTop: 16,
     },
     [theme.breakpoints.down("xs")]: {
