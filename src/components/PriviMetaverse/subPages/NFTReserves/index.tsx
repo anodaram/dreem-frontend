@@ -117,7 +117,7 @@ const NFTReserves = () => {
 
   useEffect(() => {
     if (listenerSocket) {
-      const newNFTHandler = () => {
+      const newNFTHandler = (_e) => {
         getNewListings();
       };
 
@@ -179,10 +179,10 @@ const NFTReserves = () => {
       const response = await getTrendingGameNfts({
         mode: isProd ? "main" : "test",
       });
-
-      const nfts = response.data;
-
-      setNewListings(nfts);
+      if (response.status) {
+        const nfts = response.data;
+        setNewListings(nfts);
+      }
     } catch (err) {}
     setLoadingNewListings(false);
   };
