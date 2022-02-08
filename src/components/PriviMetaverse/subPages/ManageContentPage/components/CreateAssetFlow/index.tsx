@@ -67,7 +67,7 @@ const CreateAssetFlow = ({
   const [nftOption, setNftOption] = useState<string>("single");
   const [step, setStep] = useState<number>(1);
   const [steps, setSteps] = useState<any>([]);
-  const [amount, setAmount] = useState<string>("");
+  const [amount, setAmount] = useState<number>(0);
   const [royaltyAddress, setRoyaltyAddress] = useState<string>("");
   const [royaltyPercentage, setRoyaltyPercentage] = useState<number>();
   const [isRoyalty, setIsRoyalty] = useState<boolean>(false);
@@ -161,6 +161,10 @@ const CreateAssetFlow = ({
     if (validate()) {
       if (!currentCollection) {
         showAlertMessage('Please choose collection.', { variant: "error" });
+        return false;
+      }
+      if(nftOption === 'multiple' && Number(amount) < 2){
+        showAlertMessage(`please set the amount for Multiple edition`, { variant: "error" });
         return false;
       }
       let payload: any = {};
@@ -575,7 +579,7 @@ const CreateAssetFlow = ({
                         className={classes.inputText}
                         placeholder=""
                         value={amount}
-                        onChange={e => setAmount(e.target.value)}
+                        onChange={e => setAmount(Number(e.target.value))}
                       />
                     </>
                   )}
