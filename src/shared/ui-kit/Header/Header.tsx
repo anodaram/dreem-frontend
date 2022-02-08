@@ -7,7 +7,7 @@ import axios from "axios";
 
 import { Popper, ClickAwayListener, Grow, Paper, MenuList, MenuItem, Hidden, Box } from "@material-ui/core";
 
-import { socket } from "components/Login/Auth";
+import { listenerSocket, socket } from "components/Login/Auth";
 import { useNotifications } from "shared/contexts/NotificationsContext";
 import URL from "shared/functions/getURL";
 import { getUser, getUsersInfoList } from "store/selectors/user";
@@ -230,6 +230,20 @@ const Header = props => {
       }
     }
   }, [userId, userProfile]);
+
+  React.useEffect(() => {
+    if (listenerSocket) {
+      const successConnectHandler = (data) => {
+        console.log("================= listener socket is connected")
+      };
+
+      listenerSocket.on("successConnectTest", successConnectHandler);
+
+      return () => {
+        listenerSocket.removeListener("successConnectTest", successConnectHandler);
+      };
+    }
+  }, [listenerSocket]);
 
   useEffect(() => {
     setIsHideHeader(true);
