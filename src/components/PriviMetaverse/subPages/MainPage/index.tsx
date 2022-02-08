@@ -78,32 +78,32 @@ const RoadMap = {
       deadline: "DEC 2021",
     },
     {
-      milestone: "2022 Q1-Q2",
+      milestone: "2022",
       deadline: "",
     },
     {
-      milestone: "Realm creation + on-chain realm extensions",
+      milestone: "Game asset NFT marketplace",
       deadline: "Q1",
     },
     {
-      milestone: "Realm maps + customization",
+      milestone: "Realm maps + Generative avatars",
       deadline: "Q1",
     },
     {
-      milestone: "Generative characters",
+      milestone: "Realm creation + on-chain realm extensions editor",
       deadline: "Q1",
-    },
-    {
-      milestone: "Integration of blockchain based music and video streaming",
-      deadline: "Q1",
-    },
-    {
-      milestone: "NFT marketplace",
-      deadline: "Q2/Q1",
     },
     {
       milestone: "Realm monetization: events, objects, experiences, taxation, etc.",
       deadline: "Q2",
+    },
+    {
+      milestone: "Integration of blockchain based music and video streaming",
+      deadline: "Q2",
+    },
+    {
+      milestone: "Live collaboration tools",
+      deadline: "Q3",
     },
     {
       milestone: (
