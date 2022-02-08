@@ -117,13 +117,11 @@ const NFTReserves = () => {
 
   useEffect(() => {
     if (listenerSocket) {
-      const newNFTHandler = (e) => {
-        console.log('---new NFT', e)
+      const newNFTHandler = (_e) => {
         getNewListings();
       };
 
       const updateMarketPlaceFeedHandler = _transaction => {
-        console.log('---new feed', _transaction)
         if (transactions && transactions.length) {
           const _transactions = transactions.map(transaction =>
             _transaction.id === transaction.id ? _transaction : transaction
