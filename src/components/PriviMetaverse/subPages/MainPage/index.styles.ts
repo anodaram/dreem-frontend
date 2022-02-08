@@ -210,7 +210,7 @@ export const homePageStyles = makeStyles(theme => ({
     position: "absolute",
     width: 635,
     right: "-23px",
-    bottom: 20,
+    bottom: 500,
     [theme.breakpoints.down("md")]: {
       width: 425,
     },
@@ -221,17 +221,19 @@ export const homePageStyles = makeStyles(theme => ({
   },
   bgImgGreenCircle: {
     position: "absolute",
-    bottom: 550,
-    left: -140,
+    bottom: -160,
+    left: -220,
     right: "calc(50% - 185px)",
     [theme.breakpoints.down("sm")]: {
       // top: -100,
       right: -150,
+      left: -180,
       width: "300px",
     },
     [theme.breakpoints.down("xs")]: {
       width: "200px",
       left: -100,
+      bottom: -75,
     },
   },
   roadmapContainer: {
