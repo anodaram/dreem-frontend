@@ -13,8 +13,11 @@ import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
 import { PrimaryButton } from "shared/ui-kit";
 import TransactionProcessing from "./components/TransactionProcessing";
+import DepositRequiredModal from "components/PriviMetaverse/modals/DepositRequiredModal";
 import { RootState } from "../../../../store/reducers/Reducer";
 import { usePageStyles } from "./index.styles";
+import CollectionList from "./CollectionList";
+import WorldList from "./WorldList";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
@@ -44,6 +47,9 @@ export default function CreatingRealmPage() {
 
   const [currentCollection, setCurrentCollection] = useState<any>();
   const [collections, setCollections] = useState<any[]>([]);
+  const [worldHash, setWorldHash] = useState<any>(null);
+  const [nftAddress, setNFTAddress] = useState<any>(null);
+  const [nftId, setNFTId] = useState<any>(null);
   const [curPage, setCurPage] = React.useState(1);
   const [lastPage, setLastPage] = React.useState(0);
   const [loadingCollection, setLoadingCollection] = React.useState<boolean>(false);
@@ -116,100 +122,33 @@ export default function CreatingRealmPage() {
 
   return (
     <>
-      <div className={classes.root} id="scrollContainer">
-        {step === 0 && (
-          <div className={classes.content}>
-            <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
-              <div className={classes.backBtn} onClick={() => history.goBack()}>
-                <img src={require("assets/metaverseImages/back_arrow.png")} />
-                <span>BACK</span>
-              </div>
-              <div className={classes.typo1}>Apply Extension</div>
-              <Box minWidth={"100px"} />
-            </Box>
-            <Box className={classes.typo3} mt={"12px"} mb={"24px"}>
-              Select nft from your minted NFTs
-            </Box>
-            <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
-              <Box className={classes.typo4}>All of your collections</Box>
-              <div className={classes.createCollectionBtn} onClick={() => setStep(2)}>
-                <PlusIcon />
-                create new collection
-              </div>
-            </Box>
-            {collections.length ? (
-              <Box width={1}>
-                <InfiniteScroll
-                  hasChildren={collections.length > 0}
-                  dataLength={collections.length}
-                  scrollableTarget={"scrollContainer"}
-                  next={loadMore}
-                  hasMore={!!lastPage && curPage < lastPage}
-                  loader={
-                    lastPage && curPage === lastPage ? (
-                      <Box mt={2}>
-                        <MasonryGrid
-                          gutter={"16px"}
-                          data={Array(loadingCount).fill(0)}
-                          renderItem={(item, _) => <CollectionCard isLoading={true} />}
-                          columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                        />
-                      </Box>
-                    ) : (
-                      <></>
-                    )
-                  }
-                >
-                  <Box mt={4} mb={15}>
-                    <MasonryGrid
-                      gutter={"16px"}
-                      data={collections}
-                      renderItem={(item, _) => (
-                        <CollectionCard
-                          item={item}
-                          isLoading={loadingCollection}
-                          onClick={() => setCurrentCollection(item)}
-                        />
-                      )}
-                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                    />
-                  </Box>
-                </InfiniteScroll>
-              </Box>
-            ) : (
-              <>
-                <Box display="flex" alignItems="center" mt={6} mb={3}>
-                  <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    border="2px dashed #FFFFFF"
-                    borderRadius={12}
-                    mx={"30px"}
-                    className={classes.centerBox}
-                  >
-                    <img src={require("assets/metaverseImages/dreem_fav_icon.png")} />
-                  </Box>
-                  <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
-                </Box>
-                <Box className={classes.typo3}>
-                  No collections created yet, Create Collection with the button above.
-                </Box>
-              </>
-            )}
-          </div>
-        )}
-        {step === 1 && (
-          <div className={classes.content}>
-            <TransactionProcessing
-              hash={"0xf273a38fec99acf1e....eba"}
-              status="progress"
-              backToHome={() => setStep(0)}
+      <div className={classes.root}>
+        <div className={classes.otherContent} id="scrollContainer">
+          <Box>Apply extension</Box>
+          <Box>Select nft from your minted NFTs</Box>
+          <Box>All of your collections</Box>
+          {step === 0 && (
+            <> 
+              <CollectionList
+                handleNext={() => {}}
+                handleCancel={() => {}}
+                handleSelect={item => {
+                  setCurrentCollection(item);
+                }}
+              />
+            </>
+          )}
+          {step === 1 && (
+            <WorldList
+              handleNext={() => {}}
+              handleCancel={() => {}}
+              handleSelect={(hash, address, id) => {
+                setWorldHash(hash);
+                setNFTAddress(address);
+                setNFTId(id);
+              }}
             />
-          </div>
-        )}
-        {step === 0 && (
+          )}
           <Box className={classes.footer}>
             <div className={classes.cancelBtn} onClick={handlePrev}>
               back
@@ -217,13 +156,15 @@ export default function CreatingRealmPage() {
             <PrimaryButton
               size="medium"
               className={classes.nextBtn}
-              disabled={step === 0 && !currentCollection}
-              onClick={handleNext}
+              disabled={false}
+              onClick={
+                handleNext
+              }
             >
               next
             </PrimaryButton>
           </Box>
-        )}
+        </div>
       </div>
       {noMetamask && <NoMetamaskModal open={noMetamask} onClose={() => setNoMetamask(false)} />}
     </>

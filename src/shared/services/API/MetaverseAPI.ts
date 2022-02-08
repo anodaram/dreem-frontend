@@ -510,7 +510,7 @@ export const realmMint = async (
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
     const resp = await axios.post(
-      `${METAVERSE_URL()}/web/realm/${hashId}/mint/`,
+      `${METAVERSE_URL()}/web/asset/${hashId}/mint/batch/`,
       {
         tx: txHash,
         chain: chain,
