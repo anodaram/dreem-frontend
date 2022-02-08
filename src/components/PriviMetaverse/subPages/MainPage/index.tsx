@@ -613,7 +613,7 @@ export default function HomePage() {
 
             <Box className={classes.supportedNetworkTitle}>supported networks</Box>
             <Box display="flex" alignItems="center" justifyContent="space-between" style={{marginTop: 40}}>
-              <Grid container spacing={2}>
+              <Grid container spacing={4}>
                 <Grid item xs={12} sm={6}>
                   <Box className={classes.supportedNetworkBtn}>
                     <PolygonIcon />
