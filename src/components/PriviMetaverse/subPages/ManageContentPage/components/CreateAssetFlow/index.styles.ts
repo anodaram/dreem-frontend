@@ -5,9 +5,8 @@ export const useModalStyles = makeStyles(theme => ({
     background: "rgba(11, 21, 28, 0.6)",
     boxShadow: "0px 38px 96px 17px rgba(1, 1, 13, 0.25)",
     color: "white",
-    width: "755px",
     borderRadius: "0px",
-    maxHeight: "670px",
+    maxHeight: "calc(100vh - 370px)",
     overflow: "auto",
   },
   warningScreen: {
@@ -127,6 +126,9 @@ export const useModalStyles = makeStyles(theme => ({
     fontWeight: 500,
     "& span": {
       color: "#E9FF26",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "10px",
     },
   },
   uploadBtn: {
@@ -425,9 +427,10 @@ export const useModalStyles = makeStyles(theme => ({
     width: "100%",
     background: "rgba(0, 0, 0, 0.9)",
     backdropFilter: "blur(24px)",
-    padding: "14px 212px",
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
+    paddingTop: 14,
+    paddingBottom: 14,
   },
   inputGroup: {
     display: "flex",
