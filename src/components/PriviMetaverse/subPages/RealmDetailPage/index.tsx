@@ -342,7 +342,7 @@ export default function RealmDetailPage() {
                       </PrimaryButton>
                       <SecondaryButton
                         size="medium"
-                        onClick={() => history.push("/creating_extension")}
+                        onClick={() => history.push(`/creating_extension/${realmData?.id}`)}
                         style={{
                           background: "transparent",
                           textTransform: "uppercase",

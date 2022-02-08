@@ -281,7 +281,7 @@ const CreateRealmFlow = ({
 
     if (contractRes.success) {
       console.log(contractRes);
-      await MetaverseAPI.realmMint(
+      const resp = await MetaverseAPI.realmMint(
         savingDraft.instance.hashId,
         contractRes.txHash,
         targetChain.name,
@@ -289,8 +289,12 @@ const CreateRealmFlow = ({
         contractRes.distributionManager,
         contractRes.realmUpgraderAddress,
       );
-      setTxSuccess(true);
-      showAlertMessage(`Successfully world minted`, { variant: "success" });
+      if(resp.success){
+        setTxSuccess(true);
+        showAlertMessage(`Successfully world minted`, { variant: "success" });
+      } else{
+        setTxSuccess(false);
+      }
     } else {
       setTxSuccess(false);
     }

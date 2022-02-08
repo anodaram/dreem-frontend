@@ -40,7 +40,7 @@ const RealmCreator = network => {
         console.log("transaction succeed", response);
         const returnValues = response.events.RealmCreated.returnValues
         console.log(returnValues)
-        resolve({ success: true, txHash: txHash, realmAddress: returnValues.realmAddress, distributionManager: returnValues.distributionManager, realmUpgraderAddress: returnValues.realmUpgraderAddress, nftAddress: returnValues.nftAddress, nftId: returnValues.nftId, owner: returnValues.owner, taxRate: returnValues.taxRage, creatorShare: returnValues.creatorShare });
+        resolve({ success: true, txHash: txHash, realmAddress: returnValues.realmAddress, votingTime: returnValues.votingTime, distributionManager: returnValues.distributionManager, realmUpgraderAddress: returnValues.upgrader, nftAddress: returnValues.nftAddress, nftId: returnValues.nftId, owner: returnValues.owner, taxRate: returnValues.taxRage, creatorShare: returnValues.creatorShare });
       } catch (e) {
         console.log(e);
         resolve({ success: false });

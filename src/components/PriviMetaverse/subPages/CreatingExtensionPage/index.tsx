@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { useParams } from "react-router";
+import { useWeb3React } from "@web3-react/core";
+import Web3 from "web3";
 
+import { switchNetwork } from "shared/functions/metamask";
+import { BlockchainNets } from "shared/constants/constants";
 import Box from "shared/ui-kit/Box";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import NoMetamaskModal from "components/Connect/modals/NoMetamaskModal";
@@ -30,6 +35,9 @@ export default function CreatingRealmPage() {
   const history = useHistory();
   const underMaintenanceSelector = useSelector((state: RootState) => state.underMaintenanceInfo?.info);
 
+  const { id: realmId } = useParams<{ id: string }>();
+  const { activate, chainId, account, library } = useWeb3React();
+  const [chain, setChain] = useState<string>(BlockchainNets[0].value);
   const classes = usePageStyles();
   const { showAlertMessage } = useAlertMessage();
   const width = useWindowDimensions().width;
@@ -45,6 +53,8 @@ export default function CreatingRealmPage() {
 
   const loadingCount = React.useMemo(() => (width > 1000 ? 6 : width > 600 ? 3 : 6), [width]);
 
+  const [networkName, setNetworkName] = useState<string>("");
+  const [realmData, setRealmData] = useState<any>({});
   const [currentCollection, setCurrentCollection] = useState<any>();
   const [collections, setCollections] = useState<any[]>([]);
   const [worldHash, setWorldHash] = useState<any>(null);
@@ -74,8 +84,25 @@ export default function CreatingRealmPage() {
   }, [step]);
 
   useEffect(() => {
+    if (realmId) {
+      loadRealm(realmId);
+    }
+    // getSettings()
     loadMore()
   }, []);
+
+  const loadRealm = realmId => {
+    MetaverseAPI.getWorld(realmId)
+      .then(res => {
+        setRealmData(res.data);
+      })
+  };
+  const getSettings = () => {
+    MetaverseAPI.getMetaverseSetting()
+      .then(res => {
+        console.log(res)
+      })
+  };
 
   const handleOpenRealmModal = async () => {
     setIsLoadingMetaData(true);
@@ -129,6 +156,53 @@ export default function CreatingRealmPage() {
     .finally(() => setLoadingCollection(false));
   };
 
+  const handleConfirm = async () => {
+    const targetChain = BlockchainNets.find(net => net.value === chain);
+    setNetworkName(targetChain.name);
+    if (chainId && chainId !== targetChain?.chainId) {
+      const isHere = await switchNetwork(targetChain?.chainId || 0);
+      if (!isHere) {
+        showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+        return;
+      }
+    }
+    if(!library) {
+      showAlertMessage("Please check your network", { variant: "error" });
+      return;
+    }
+    const web3APIHandler = targetChain.apiHandler;
+    const web3 = new Web3(library.provider);
+    console.log('---', web3APIHandler.RealmFactory)
+    const contractRes = await web3APIHandler.RealmFactory.applyExtension(
+      web3,
+      account,
+      {
+        contractAddress: realmData?.realmAddress,
+        amount: 1000000,
+        nftToAttachAddress: nftAddress,
+        nftToAttachId: nftId,
+      },
+      setTxModalOpen,
+      setTxHash
+    );
+
+    if (contractRes.success) {
+      console.log(contractRes);
+      // await MetaverseAPI.realmMint(
+      //   savingDraft.instance.hashId,
+      //   contractRes.txHash,
+      //   targetChain.name,
+      //   contractRes.proposalId,
+      //   contractRes.owner,
+      //   contractRes.proposalType,
+      // );
+      setTxSuccess('success');
+      showAlertMessage(`Successfully applied extension`, { variant: "success" });
+    } else {
+      setTxSuccess('failed');
+    }
+  }
+
   return (
     <>
       <div className={classes.root}>
@@ -154,7 +228,7 @@ export default function CreatingRealmPage() {
                   open={showDepositRequireModal}
                   onClose={()=>setShowDepositRequireModal(false)}
                   onApprove={()=>{}}
-                  onConfirm={()=>{}}
+                  onConfirm={()=>handleConfirm()}
                 />
               ) :
               (<>
