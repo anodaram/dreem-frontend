@@ -438,3 +438,9 @@
     padding: 16px 8px;
   }
 }
+
+@media (max-width: 378px) {
+  .item-list-container {
+    max-width: 350px;
+  }
+}
