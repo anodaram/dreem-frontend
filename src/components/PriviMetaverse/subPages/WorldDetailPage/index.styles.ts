@@ -14,7 +14,7 @@ export const worldDetailPageStyles = makeStyles(theme => ({
   },
   container: {
     width: "100%",
-    paddingTop: 150,
+    padding: '150px 20px 20px',
     overflowY: "auto",
     overflowX: "hidden",
     color: "#ffffff",
@@ -75,15 +75,15 @@ export const worldDetailPageStyles = makeStyles(theme => ({
     },
   },
   worldImage: {
-    minWidth: 600,
+    // minWidth: 600,
     height: 600,
     [theme.breakpoints.down("sm")]: {
-      minWidth: 675,
+      // minWidth: 675,
       height: 450,
       marginBottom: 40,
     },
     [theme.breakpoints.down("xs")]: {
-      minWidth: 345,
+      // minWidth: 345,
       height: 320,
       marginBottom: 40,
     },
