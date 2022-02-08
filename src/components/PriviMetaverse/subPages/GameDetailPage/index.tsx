@@ -425,6 +425,14 @@ export default function GameDetailPage() {
     history.push(`/P2E/${nft.collectionId}/${nft.tokenId}`);
   };
 
+  const handleClickCollection = () => {
+    if (gameInfo.Chain.toLowerCase() === "polygon") {
+      window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/address/${gameInfo.Address}`, "_blank");
+    } else if (gameInfo.Chain.toLowerCase() === "bsc") {
+      window.open(`https://${!isProd ? "testnet." : ""}bscscan.com/address/${gameInfo.Address}`, "_blank");
+    }
+  };
+
   return (
     <Box display="flex" height="100%">
       {!isTablet && (
@@ -500,7 +508,9 @@ export default function GameDetailPage() {
                 >
                   <Box display={"flex"} alignItems={"center"}>
                     <Box mr={0.5}>{`Collection ID: ${gameInfo?.AddressShort || "xxx"}`}</Box>
-                    <LinkIcon />
+                    <Box onClick={handleClickCollection} style={{ cursor: "pointer" }}>
+                      <LinkIcon />
+                    </Box>
                   </Box>
                   <Box width={"1px"} height={"8px"} bgcolor={"rgba(255, 255, 255, 0.15)"} />
                   <Box display={"flex"} alignItems={"center"}>

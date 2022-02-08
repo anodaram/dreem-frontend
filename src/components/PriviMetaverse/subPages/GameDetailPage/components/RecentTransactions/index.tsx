@@ -5,7 +5,7 @@ import Avatar from "shared/ui-kit/Avatar";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import { useStyles } from "./index.styles";
 import { getNftGameFeed } from "shared/services/API/DreemAPI";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toDecimals } from "shared/functions/web3";
 import { RootState } from "store/reducers/Reducer";
@@ -13,6 +13,7 @@ import { listenerSocket } from "components/Login/Auth";
 
 export default function RecentTransactions() {
   const classes = useStyles();
+  const history = useHistory();
   const isProd = process.env.REACT_APP_ENV === "prod";
   const { collection_id }: { collection_id: string } = useParams();
 
@@ -85,6 +86,10 @@ export default function RecentTransactions() {
       setTransactionLoading(false);
     }
   };
+
+  const handleGotoNFT = (nft) => {
+    history.push(`/P2E/${nft.Slug}/${nft.tokenId}`);
+  }
   
   return (
     <Box className={classes.root}>
@@ -113,7 +118,7 @@ export default function RecentTransactions() {
               >
                 {item.type}
               </Box>
-              <Box style={{ cursor: "pointer" }}>
+              <Box style={{ cursor: "pointer" }} onClick={() => handleGotoNFT(item)}>
                 <ArrowIcon />
               </Box>
             </Box>
