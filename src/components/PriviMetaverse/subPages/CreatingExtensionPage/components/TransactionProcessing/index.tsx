@@ -11,7 +11,7 @@ const isDev = process.env.REACT_APP_ENV === "dev";
 
 interface IProps {
   hash: string;
-  status: "progress" | "success" | "fail";
+  status: string;
   backToHome: any;
 }
 

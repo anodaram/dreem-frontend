@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { useParams } from "react-router";
+import { useWeb3React } from "@web3-react/core";
+import Web3 from "web3";
 
+import { switchNetwork } from "shared/functions/metamask";
+import { BlockchainNets } from "shared/constants/constants";
 import Box from "shared/ui-kit/Box";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import NoMetamaskModal from "components/Connect/modals/NoMetamaskModal";
@@ -13,8 +18,11 @@ import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
 import { PrimaryButton } from "shared/ui-kit";
 import TransactionProcessing from "./components/TransactionProcessing";
+import DepositRequiredModal from "components/PriviMetaverse/modals/DepositRequiredModal";
 import { RootState } from "../../../../store/reducers/Reducer";
 import { usePageStyles } from "./index.styles";
+import CollectionList from "./CollectionList";
+import WorldList from "./WorldList";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
@@ -27,6 +35,9 @@ export default function CreatingRealmPage() {
   const history = useHistory();
   const underMaintenanceSelector = useSelector((state: RootState) => state.underMaintenanceInfo?.info);
 
+  const { id: realmId } = useParams<{ id: string }>();
+  const { activate, chainId, account, library } = useWeb3React();
+  const [chain, setChain] = useState<string>(BlockchainNets[0].value);
   const classes = usePageStyles();
   const { showAlertMessage } = useAlertMessage();
   const width = useWindowDimensions().width;
@@ -42,11 +53,21 @@ export default function CreatingRealmPage() {
 
   const loadingCount = React.useMemo(() => (width > 1000 ? 6 : width > 600 ? 3 : 6), [width]);
 
+  const [networkName, setNetworkName] = useState<string>("");
+  const [realmData, setRealmData] = useState<any>({});
   const [currentCollection, setCurrentCollection] = useState<any>();
   const [collections, setCollections] = useState<any[]>([]);
+  const [worldHash, setWorldHash] = useState<any>(null);
+  const [nftAddress, setNFTAddress] = useState<any>(null);
+  const [nftId, setNFTId] = useState<any>(null);
   const [curPage, setCurPage] = React.useState(1);
   const [lastPage, setLastPage] = React.useState(0);
   const [loadingCollection, setLoadingCollection] = React.useState<boolean>(false);
+  const [showDepositRequireModal, setShowDepositRequireModal] = React.useState<boolean>(false);
+  // Transaction Modal
+  const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
+  const [txSuccess, setTxSuccess] = useState<string>("progress");
+  const [txHash, setTxHash] = useState<string>("");
 
   useEffect(() => {
     if (underMaintenanceSelector && Object.keys(underMaintenanceSelector).length > 0) {
@@ -63,8 +84,25 @@ export default function CreatingRealmPage() {
   }, [step]);
 
   useEffect(() => {
+    if (realmId) {
+      loadRealm(realmId);
+    }
+    // getSettings()
     loadMore()
   }, []);
+
+  const loadRealm = realmId => {
+    MetaverseAPI.getWorld(realmId)
+      .then(res => {
+        setRealmData(res.data);
+      })
+  };
+  const getSettings = () => {
+    MetaverseAPI.getMetaverseSetting()
+      .then(res => {
+        console.log(res)
+      })
+  };
 
   const handleOpenRealmModal = async () => {
     setIsLoadingMetaData(true);
@@ -89,7 +127,11 @@ export default function CreatingRealmPage() {
   };
 
   const handleNext = () => {
-    setStep(prev => prev + 1);
+    if(step == 0){
+      setStep(prev => prev + 1);
+    } else {
+      setShowDepositRequireModal(true)
+    }
   };
 
   const handlePrev = () => {
@@ -114,102 +156,103 @@ export default function CreatingRealmPage() {
     .finally(() => setLoadingCollection(false));
   };
 
+  const handleConfirm = async () => {
+    const targetChain = BlockchainNets.find(net => net.value === chain);
+    setNetworkName(targetChain.name);
+    if (chainId && chainId !== targetChain?.chainId) {
+      const isHere = await switchNetwork(targetChain?.chainId || 0);
+      if (!isHere) {
+        showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+        return;
+      }
+    }
+    if(!library) {
+      showAlertMessage("Please check your network", { variant: "error" });
+      return;
+    }
+    const web3APIHandler = targetChain.apiHandler;
+    const web3 = new Web3(library.provider);
+    console.log('---', web3APIHandler.RealmFactory)
+    const contractRes = await web3APIHandler.RealmFactory.applyExtension(
+      web3,
+      account,
+      {
+        contractAddress: realmData?.realmAddress,
+        amount: 1000000,
+        nftToAttachAddress: nftAddress,
+        nftToAttachId: nftId,
+      },
+      setTxModalOpen,
+      setTxHash
+    );
+
+    if (contractRes.success) {
+      console.log(contractRes);
+      // await MetaverseAPI.realmMint(
+      //   savingDraft.instance.hashId,
+      //   contractRes.txHash,
+      //   targetChain.name,
+      //   contractRes.proposalId,
+      //   contractRes.owner,
+      //   contractRes.proposalType,
+      // );
+      setTxSuccess('success');
+      showAlertMessage(`Successfully applied extension`, { variant: "success" });
+    } else {
+      setTxSuccess('failed');
+    }
+  }
+
   return (
     <>
-      <div className={classes.root} id="scrollContainer">
-        {step === 0 && (
-          <div className={classes.content}>
-            <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
-              <div className={classes.backBtn} onClick={() => history.goBack()}>
-                <img src={require("assets/metaverseImages/back_arrow.png")} />
-                <span>BACK</span>
-              </div>
-              <div className={classes.typo1}>Apply Extension</div>
-              <Box minWidth={"100px"} />
-            </Box>
-            <Box className={classes.typo3} mt={"12px"} mb={"24px"}>
-              Select nft from your minted NFTs
-            </Box>
-            <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
+      <div className={classes.root}>
+        <div className={classes.otherContent} id="scrollContainer">
+          {step === 0 && (
+            <> 
+              <Box className={classes.typo1}>Apply extension</Box>
+              <Box className={classes.typo3}>Select nft from your minted NFTs</Box>
               <Box className={classes.typo4}>All of your collections</Box>
-              <div className={classes.createCollectionBtn} onClick={() => setStep(2)}>
-                <PlusIcon />
-                create new collection
-              </div>
-            </Box>
-            {collections.length ? (
-              <Box width={1}>
-                <InfiniteScroll
-                  hasChildren={collections.length > 0}
-                  dataLength={collections.length}
-                  scrollableTarget={"scrollContainer"}
-                  next={loadMore}
-                  hasMore={!!lastPage && curPage < lastPage}
-                  loader={
-                    lastPage && curPage === lastPage ? (
-                      <Box mt={2}>
-                        <MasonryGrid
-                          gutter={"16px"}
-                          data={Array(loadingCount).fill(0)}
-                          renderItem={(item, _) => <CollectionCard isLoading={true} />}
-                          columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                        />
-                      </Box>
-                    ) : (
-                      <></>
-                    )
-                  }
-                >
-                  <Box mt={4} mb={15}>
-                    <MasonryGrid
-                      gutter={"16px"}
-                      data={collections}
-                      renderItem={(item, _) => (
-                        <CollectionCard
-                          item={item}
-                          isLoading={loadingCollection}
-                          onClick={() => setCurrentCollection(item)}
-                        />
-                      )}
-                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
-                    />
-                  </Box>
-                </InfiniteScroll>
-              </Box>
-            ) : (
-              <>
-                <Box display="flex" alignItems="center" mt={6} mb={3}>
-                  <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    border="2px dashed #FFFFFF"
-                    borderRadius={12}
-                    mx={"30px"}
-                    className={classes.centerBox}
-                  >
-                    <img src={require("assets/metaverseImages/dreem_fav_icon.png")} />
-                  </Box>
-                  <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
-                </Box>
-                <Box className={classes.typo3}>
-                  No collections created yet, Create Collection with the button above.
-                </Box>
-              </>
-            )}
-          </div>
-        )}
-        {step === 1 && (
-          <div className={classes.content}>
+              <CollectionList
+                handleNext={() => {}}
+                handleCancel={() => {}}
+                handleSelect={item => {
+                  setCurrentCollection(item);
+                }}
+              />
+            </>
+          )}
+          {step === 1 && (
+            <>
+              {showDepositRequireModal ? (
+                <DepositRequiredModal
+                  open={showDepositRequireModal}
+                  onClose={()=>setShowDepositRequireModal(false)}
+                  onApprove={()=>{}}
+                  onConfirm={()=>handleConfirm()}
+                />
+              ) :
+              (<>
+                <Box className={classes.typo4}>Apply extension</Box>
+                <Box className={classes.typo3}>Select one of your works on that collection to apply for and extension</Box>
+                <WorldList
+                  handleNext={() => {}}
+                  handleCancel={() => {}}
+                  handleSelect={(hash, address, id) => {
+                    setWorldHash(hash);
+                    setNFTAddress(address);
+                    setNFTId(id);
+                  }}
+                />
+              </>)}
+            </>
+          )}
+          {txModalOpen && 
             <TransactionProcessing
-              hash={"0xf273a38fec99acf1e....eba"}
-              status="progress"
-              backToHome={() => setStep(0)}
-            />
-          </div>
-        )}
-        {step === 0 && (
+              hash={txHash}
+              status={txSuccess}
+              backToHome={setStep(1)}
+  />
+          }
           <Box className={classes.footer}>
             <div className={classes.cancelBtn} onClick={handlePrev}>
               back
@@ -217,13 +260,15 @@ export default function CreatingRealmPage() {
             <PrimaryButton
               size="medium"
               className={classes.nextBtn}
-              disabled={step === 0 && !currentCollection}
-              onClick={handleNext}
+              disabled={false}
+              onClick={
+                handleNext
+              }
             >
               next
             </PrimaryButton>
           </Box>
-        )}
+        </div>
       </div>
       {noMetamask && <NoMetamaskModal open={noMetamask} onClose={() => setNoMetamask(false)} />}
     </>
