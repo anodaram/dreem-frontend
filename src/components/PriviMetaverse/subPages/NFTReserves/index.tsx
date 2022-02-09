@@ -365,11 +365,11 @@ const NFTReserves = () => {
                         <img
                           src={game?.Image}
                           className={classes.gameBgImage}
-                          style={{ width: openSideBar ? "auto" : "1280px !important", objectFit: "cover" }}
+                          style={{ width: openSideBar ? "100%" : "1280px !important", objectFit: "cover" }}
                         />
                         <Box
                           className={classes.gameContent}
-                          style={{ width: openSideBar ? "auto" : "1280px" }}
+                          style={{ width: openSideBar ? "100%" : "1280px !important" }}
                         >
                           <Box className={classes.popularGames}>
                             <GameIcon />
