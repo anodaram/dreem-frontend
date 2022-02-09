@@ -21,8 +21,6 @@ import NotificationPage from "./subPages/NotificationPage";
 import NFTReserves from "./subPages/NFTReserves";
 import ManageNFTPage from "./subPages/NFTReserves/components/ManageNFTPage";
 import ExploreReserveDetailPage from "./subPages/NFTReserves/components/ExploreReserveDetailPage";
-import ExploreAvatarPage from "./subPages/ExploreAvatarPage";
-import ExploreAssetsPage from "./subPages/ExploreAssetsPage";
 import RealmMapPage from "./subPages/RealmMapPage";
 import WorldDetailPage from "./subPages/WorldDetailPage";
 import CreateRealmPage from "./subPages/CreateRealmPage";
@@ -48,8 +46,6 @@ export default function PriviMetaverseRouter(props) {
         <Route exact path="/apply_extension" component={ApplyExtensionPage} />
         <Route exact path="/world/:id" component={WorldDetailPage} />
         <Route exact path="/unfinished_mint/:id" component={MintNFTPage} />
-        <Route exact path="/avatars" component={ExploreAvatarPage} />
-        <Route exact path="/assets" component={ExploreAssetsPage} />
         <Route exact path="/nft/:nftId" component={HomePage} />,
         <Route exact path="/profile/:creatorAddress" component={CreatorPage} />
         <Route exact path="/profile/:creatorAddress/:draftId" component={CreatorPage} />
