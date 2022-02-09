@@ -283,8 +283,6 @@ export default function GameDetailPage() {
           const _nfts = nfts.map(nft => (_nft.id === nft.id ? _nft : nft));
           setNfts(_nfts);
         }
-
-        loadGameInfo();
       };
 
       listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
