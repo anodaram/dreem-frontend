@@ -60,7 +60,10 @@ export const useModalStyles = makeStyles(theme => ({
       border: '1px solid #FFFFFF',
       "&.hidden": {
         display: "none"
-      }
+      },
+      [theme.breakpoints.down("xs")]: {
+        width: 38,
+      },
     }
   },
   boxContainer: {
