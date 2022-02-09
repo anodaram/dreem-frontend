@@ -210,7 +210,7 @@ const CollectionList = ({
   const handleRefreshCollection = () => {
     setCurPage(1);
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, 1, "DESC", userSelector.address)
+    MetaverseAPI.getCollections(12, 1, "DESC", userSelector.id)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -230,7 +230,7 @@ const CollectionList = ({
 
   const loadData = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.address)
+    MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.id)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -249,7 +249,7 @@ const CollectionList = ({
   };
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.address)
+    MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.id)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;

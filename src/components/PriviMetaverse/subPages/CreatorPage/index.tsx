@@ -240,7 +240,7 @@ export default function CreatorPage() {
       }
 
       if (filters.length) {
-        MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.address).then(res => {
+        MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.id).then(res => {
           if (res.success) {
             const items = res.data.elements;
             if (items && items.length > 0) {

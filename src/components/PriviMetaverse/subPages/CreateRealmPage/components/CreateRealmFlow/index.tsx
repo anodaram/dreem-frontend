@@ -19,7 +19,7 @@ import WorldList from "../WorldList";
 import ContentProcessingOperationModal from "components/PriviMetaverse/modals/ContentProcessingOperationModal";
 import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProgressModal";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
-import { useModalStyles } from "./index.styles";
+import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 import { InfoIcon } from "shared/ui-kit/Icons";
 import { ReactComponent as DeleteIcon } from "assets/icons/remove.svg";
@@ -28,6 +28,7 @@ interface CollectionInfo {
   address: string;
   from: string;
   to: string;
+  chain: string;
 }
 
 const CreateSteps = [
@@ -62,6 +63,7 @@ const CreateRealmFlow = ({
 }) => {
   console.log('-----', metaData)
   const classes = useModalStyles();
+  const filterClasses = useFilterSelectStyles();
   const { showAlertMessage } = useAlertMessage();
 
   const { activate, chainId, account, library } = useWeb3React();
@@ -80,11 +82,13 @@ const CreateRealmFlow = ({
   const [worldHash, setWorldHash] = useState<any>(null);
   const [nftAddress, setNFTAddress] = useState<any>(null);
   const [nftId, setNFTId] = useState<any>(null);
+  const [networks, setNetworks] = useState<any>([]);
   const [networkName, setNetworkName] = useState<string>("");
   const [collectionInfos, setCollectionInfos] = useState<Array<CollectionInfo>>([{
     address: '',
     from: '',
-    to: ''
+    to: '',
+    chain
   }]);
   const [sizeSpec, setSizeSpec] = useState<any>(metaData);
 
@@ -104,6 +108,16 @@ const CreateRealmFlow = ({
   const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
   const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
   const [txHash, setTxHash] = useState<string>("");
+
+  useEffect(() => {
+    getSettings()
+  }, []);
+  const getSettings = () => {
+    MetaverseAPI.getNetworks()
+      .then(res => {
+        console.log('here',res)
+      })
+  };
 
   const handlePrev = () => {
     if (step == 1) {
@@ -306,6 +320,7 @@ const CreateRealmFlow = ({
         address: '',
         from: '',
         to: '',
+        chain: ''
       }
     ])
   }
@@ -799,6 +814,41 @@ const CreateRealmFlow = ({
                             }}
                           />
                         </Box>
+                        <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
+                          <Box className={classes.itemTitle} mb={1}>
+                            chain
+                          </Box>
+                          <InfoTooltip tooltip={"Please give a collection address."} />
+                        </Box>
+                        <Select
+                          value={c.chain}
+                          onChange={e => {
+                            let infos = [...collectionInfos];
+                            //@ts-ignore
+                            infos[i].chain = e.target.value ? e.target.value : '';
+                            setCollectionInfos(infos);
+                          }}
+                          disableUnderline
+                          className={classes.select}
+                          MenuProps={{
+                            classes: filterClasses,
+                            anchorOrigin: {
+                              vertical: "bottom",
+                              horizontal: "left",
+                            },
+                            transformOrigin: {
+                              vertical: "top",
+                              horizontal: "left",
+                            },
+                            getContentAnchorEl: null,
+                          }}
+                        >
+                          {networks.options?.map((option, index) => (
+                            <MenuItem key={`OPTION-${index}`} value={option.value}>
+                              {option.name.value}
+                            </MenuItem>
+                          ))}
+                        </Select>
                         <Box display="flex" alignItems="center" justifyContent="space-between" >
                           <Box width="100%">
                             <Box display="flex" alignItems="center" justifyContent="space-between" mt={2}>

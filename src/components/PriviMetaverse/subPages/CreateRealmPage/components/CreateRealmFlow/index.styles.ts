@@ -296,6 +296,7 @@ export const useModalStyles = makeStyles(theme => ({
     left: "calc(50% - 46px)",
   },
   select: {
+    width: "100%",
     background: "rgba(218, 230, 229, 0.06)",
     border: "1px solid rgba(218, 218, 219, 0.59)",
     padding: "14px 18px",
