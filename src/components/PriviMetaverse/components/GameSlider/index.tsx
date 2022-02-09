@@ -15,7 +15,12 @@ export const GameSlider = ({ games, paginationColor}: any) => {
   const classes = GameSliderStyles({ paginationColor, gameCount: (games || []).length });
   return (
     <div className={classes.container}>
-      <Swiper pagination={true}>
+      <Swiper
+        loop
+        resizeObserver
+        initialSlide={1}
+        pagination={{ clickable: true }}
+      >
         {
           games.map((game) => (
             <SwiperSlide>{game()}</SwiperSlide>
