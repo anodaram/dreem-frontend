@@ -22,7 +22,7 @@ import { onUploadNonEncrypt } from "shared/ipfs/upload";
 import "./MessageBox.css";
 
 export const MessageFooter = props => {
-  const { messages, setMessages, setMediaUpdate, room = GLOBAL_CHAT_ROOM } = props;
+  const { messages, setMessages, setMediaUpdate, room = GLOBAL_CHAT_ROOM, nftHolder = false } = props;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -36,6 +36,7 @@ export const MessageFooter = props => {
   const [status, setStatus] = useState<any>("");
   const emojiRef = useRef<any>();
   const inputRef = useRef<any>();
+  const chatEnabled = room === GLOBAL_CHAT_ROOM || nftHolder;
 
   const { setMultiAddr, uploadWithNonEncryption } = useIPFS();
 
@@ -244,6 +245,8 @@ export const MessageFooter = props => {
   };
 
   const onFileChange = (file: any, type: FileType) => {
+    if (!nftHolder) return;
+
     switch (type) {
       case FileType.IMAGE:
         onChangeMessagePhoto(file);
@@ -330,10 +333,20 @@ export const MessageFooter = props => {
                 fontFamily: "Rany",
                 fontWeight: 500,
               }}
+              disabled={!chatEnabled}
               reference={inputRef}
               multiline
             />
-            <Box component="span" onClick={() => sendMessage()} mx="8px" mt="8px">
+            <Box
+              component="span"
+              style={{
+                opacity: chatEnabled ? 1 : 0.6,
+                cursor: chatEnabled ? "pointer" : "not-allowed",
+              }}
+              onClick={() => chatEnabled && sendMessage()}
+              mx="8px"
+              mt="8px"
+            >
               <img src={require("assets/icons/send_icon.svg")} alt="" />
             </Box>
           </Box>
@@ -350,7 +363,7 @@ export const MessageFooter = props => {
                   addEmoji={addEmoji}
                 />
               )}
-              <FileAttachment setStatus={setStatus} onFileChange={onFileChange} />
+              <FileAttachment setStatus={setStatus} onFileChange={onFileChange} disabled={!chatEnabled} />
             </Box>
           )}
         </Box>
@@ -366,6 +379,7 @@ export const MessageContent = ({
   getMessages,
   loadingMessages,
   room,
+  nftHolder = false,
 }) => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [firstLoading, setFirstLoading] = useState<boolean>(true);
@@ -411,7 +425,11 @@ export const MessageContent = ({
         <Box className={"tab selected"}>Live Chat</Box>
       </Box>
       <div className="item-list-container" id="messageContainer" ref={itemListRef} onScroll={handleScroll}>
-        {loadingMessages || messages?.length > 0 ? (
+        {(room !== GLOBAL_CHAT_ROOM && !nftHolder) || loadingMessages || !messages?.length ? (
+          <Box className="no-items-label">
+            <Box style={{ fontSize: 14 }}>No messages in the chat yet.</Box>
+          </Box>
+        ) : (
           <Box className="item-list" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
             {loadingMessages && (
               <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
@@ -487,10 +505,6 @@ export const MessageContent = ({
                 );
               })}
           </Box>
-        ) : (
-          <Box className="no-items-label">
-            <Box style={{ fontSize: 14 }}>No messages in the chat yet.</Box>
-          </Box>
         )}
       </div>
       <MessageFooter
@@ -499,6 +513,7 @@ export const MessageContent = ({
         specialWidthInput={specialWidthInput}
         setMessages={msgs => setMessages(msgs)}
         room={room}
+        nftHolder={nftHolder}
       />
     </Box>
   );

@@ -1,22 +1,23 @@
-import React, {useMemo} from 'react';
+import React, { useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import { useFileAttachmentStyles } from './index.styles';
+import { useFileAttachmentStyles } from "./index.styles";
 
 export enum FileType {
-  IMAGE = 'image',
-  AUDIO = 'audio',
-  VIDEO = 'video',
-  OTHER = 'other',
-};
+  IMAGE = "image",
+  AUDIO = "audio",
+  VIDEO = "video",
+  OTHER = "other",
+}
 
 interface FileAttachmentProps {
   setStatus: (status) => void;
   onFileChange: (file: any, type: FileType) => void;
+  disabled?: boolean;
 }
 
-const FileAttachment = ({ setStatus, onFileChange }: FileAttachmentProps) => {
+const FileAttachment = ({ setStatus, onFileChange, disabled = false }: FileAttachmentProps) => {
   const classes = useFileAttachmentStyles();
-  
+
   const validateFile = file => {
     const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/x-icon"];
     if (validTypes.indexOf(file.type) === -1) {
@@ -137,6 +138,8 @@ const FileAttachment = ({ setStatus, onFileChange }: FileAttachmentProps) => {
   };
 
   const uploadAttachment = () => {
+    if (disabled) return;
+
     const inputElement = document.createElement("input");
     inputElement.type = "file";
     inputElement.accept = "video/*,image/*";
@@ -150,15 +153,21 @@ const FileAttachment = ({ setStatus, onFileChange }: FileAttachmentProps) => {
   };
 
   return (
-    <div className="file-attachment">
+    <div
+      className="file-attachment"
+    >
       <img
         className={classes.attachment}
+        style={{
+          opacity: disabled ? 0.6 : 1,
+          cursor: disabled ? "not-allowed" : "pointer",
+        }}
         src={require("assets/icons/file_attachment.svg")}
         alt="Attachment"
         onClick={uploadAttachment}
       />
     </div>
   );
-}
+};
 
 export default FileAttachment;

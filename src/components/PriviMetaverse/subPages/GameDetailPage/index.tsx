@@ -3,6 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { useDebounce } from "use-debounce/lib";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
+import { useWeb3React } from "@web3-react/core";
 
 import { useMediaQuery, useTheme, Select, MenuItem, IconButton } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
@@ -14,6 +15,7 @@ import { getGameInfo, getCharactersByGame } from "shared/services/API/DreemAPI";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
 import TabsView, { TabItem } from "shared/ui-kit/TabsView";
 import Owners from "./components/Owners";
+import { checkNFTHolder } from "shared/services/API/ReserveAPI";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { NFT_STATUS_COLORS, PrimaryButton, SecondaryButton } from "shared/ui-kit";
@@ -101,6 +103,7 @@ export default function GameDetailPage() {
   const filterClasses = useFilterSelectStyles();
   const dispatch = useDispatch();
 
+  const { account } = useWeb3React();
   const user = useSelector((state: RootState) => state.user);
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const collectionNFTList = useSelector((state: RootState) => state.marketPlace.collectionNFTList);
@@ -110,6 +113,7 @@ export default function GameDetailPage() {
   const width = useWindowDimensions().width;
 
   const theme = useTheme();
+
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -133,6 +137,7 @@ export default function GameDetailPage() {
   const [isListView, setIsListView] = React.useState<boolean>(false);
   const [openDescription, setOpenDescription] = React.useState<boolean>(false);
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
+  const [isNFTHolder, setIsNFTHolder] = React.useState<boolean>(false);
 
   const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
   const roomId = React.useMemo(() => gameInfo && `${gameInfo.Slug}-${gameInfo.Address}`, [gameInfo]);
@@ -159,6 +164,7 @@ export default function GameDetailPage() {
   React.useEffect(() => {
     loadGameInfo();
     getTokenList();
+    loadIsNFTHolder();
   }, []);
 
   React.useEffect(() => {
@@ -220,6 +226,23 @@ export default function GameDetailPage() {
       console.log(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadIsNFTHolder = async () => {
+    try {
+      if (!account) return;
+
+      const response = await checkNFTHolder({
+        collectionId: collection_id,
+        mode: isProd ? "main" : "test",
+        account: account
+      });
+      if (response.success) {
+        setIsNFTHolder(response.nftHolder);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -433,12 +456,11 @@ export default function GameDetailPage() {
 
   return (
     <Box display="flex" height="100%">
-      {/* {!isTablet && ( */}
       <Box className={classes.sideBar}>
         {openSideBar ? (
           <Box display="flex" flexDirection="column">
             <ActivityFeeds onClose={() => setOpenSideBar(false)} />
-            <MessageBox roomId={roomId} />
+            <MessageBox roomId={roomId} nftHolder={isNFTHolder} />
           </Box>
         ) : (
           <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
@@ -446,7 +468,6 @@ export default function GameDetailPage() {
           </Box>
         )}
       </Box>
-      {/* )} */}
       <Box className={classes.root} id="scrollContainer" onScroll={handleScroll}>
         <Box
           className={classes.headerBG}
