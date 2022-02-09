@@ -404,6 +404,7 @@ export const useModalStyles = makeStyles(theme => ({
     padding: "15px 37px 10px !important",
     textTransform: "uppercase",
     height: "50px !important",
+    cursor: "pointer !important",
   },
   nextBtn: {
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
