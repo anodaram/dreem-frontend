@@ -13,12 +13,19 @@ export const useStyles = makeStyles(theme => ({
       width: 255,
       padding: "22px 8px 8px",
     },
+    [theme.breakpoints.down("xs")]: {
+      width: 370,
+    },
   },
   collapseIcon: {
     position: "absolute",
     top: "16px",
     right: "18px",
     cursor: "pointer",
+    [theme.breakpoints.down("sm")]: {
+      top: 5,
+      right: 10,
+    },
   },
   switch: {
     width: 256,
@@ -33,9 +40,12 @@ export const useStyles = makeStyles(theme => ({
     cursor: "pointer",
     display: "flex",
     [theme.breakpoints.down("sm")]: {
-      flexDirection: "column",
-      width: 235,
-      height: 88,
+      width: 234,
+      marginTop: 10,
+      fontSize: 12,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: 256,
     },
   },
   switchButton: {
@@ -57,6 +67,9 @@ export const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       height: 263,
       marginTop: 12,
+    },
+    [theme.breakpoints.down("sm")]: {
+      height: 306,
     },
   },
   typeTag: {

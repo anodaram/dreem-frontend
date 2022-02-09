@@ -90,7 +90,7 @@ export default function WorldDetailPage() {
                   <Box className={classes.typo2}>0xcsdw20x...0xcsdw2</Box>
                 </Box>
               </Box>
-              <Box width={isMobile ? 0 : 2} height={isMobile ? 20 : 40} bgcolor="#ffffff20" />
+              <Box width={isMobile ? 0 : 2} height={isMobile ? 20 : 40} bgcolor="#ffffff20" margin="0 48px" />
               <Box display="flex" alignItems="center">
                 <Avatar size={42} rounded bordered image={getDefaultAvatar()} />
                 <Box display="flex" flexDirection="column" ml={0.5}>
@@ -195,7 +195,9 @@ export default function WorldDetailPage() {
               </PrimaryButton>
             </Box>
             {!isMobile && !isTablet && (
-              <img src={getDefaultWorldImageUrl()} className={classes.worldImage} alt="nft image" />
+              <div style={{paddingLeft: 20}}>
+                <img src={getDefaultWorldImageUrl()} className={classes.worldImage} alt="nft image" />
+              </div>
             )}
           </Box>
         </Box>

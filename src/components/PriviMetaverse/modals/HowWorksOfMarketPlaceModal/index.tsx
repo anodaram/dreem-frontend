@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useMediaQuery, useTheme } from "@material-ui/core";
 
 import Box from "shared/ui-kit/Box";
 import { Modal } from "shared/ui-kit";
@@ -25,18 +23,17 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "row",
     justifyContent: "center",
     padding: "48px 0",
-    // background: "linear-gradient(180deg, rgba(243, 254, 247, 0) 49.94%, #EEF2F6 96.61%), linear-gradient(97.63deg, #99CE00 26.36%, #0DCC9E 80%)"
+    [theme.breakpoints.down("xs")]: {
+      padding: "48px 0px 32px",
+    },
   },
   header: {
     fontSize: 32,
-    fontWeight: 400,
+    fontWeight: 800,
     color: "#ffffff",
     textTransform: "uppercase",
-    "& span": {
-      fontWeight: 800,
-    },
     [theme.breakpoints.down("xs")]: {
-      fontSize: "26px !important",
+      fontSize: "24px !important",
     },
   },
 
@@ -179,9 +176,7 @@ const HowWorksOfMarketPlaceModal = props => {
     >
       <Box className={classes.container}>
         <Box className={classes.dlgTitle}>
-          <div className={classes.header}>
-            <span>How does</span> it work?
-          </div>
+          <div className={classes.header}>How does it work?</div>
         </Box>
         <Box className={classes.mainBoxNew}>
           <Box display="flex">
@@ -203,8 +198,8 @@ const HowWorksOfMarketPlaceModal = props => {
               <Box className={classes.subTitleNew}>SIMPLE</Box>
               <Box className={classes.titleNew}>List For Sale</Box>
               <Box className={classes.descriptionNew}>
-                Sell your NFT as a price of your choosing, and have others make offers 
-                for you for price discovery.
+                Sell your NFT as a price of your choosing, and have others make offers for you for price
+                discovery.
               </Box>
             </Box>
           </Box>
@@ -229,10 +224,10 @@ const HowWorksOfMarketPlaceModal = props => {
               <Box className={classes.subBlock}>
                 <Box className={classes.subject}>For Blockers:</Box>
                 <Box className={classes.description}>
-                Find an NFT you've always wanted but lack the funds to buy it at that moment? 
-                Block the NFT by agreeing on a purchase value on a certain date for a deposit. 
-                When the time is up, you can either pay the remaining balance or choose not to buy it, 
-                however you lose the deposit. As a bonus, you can even use another Game NFT as collateral.
+                  Find an NFT you've always wanted but lack the funds to buy it at that moment? Block the NFT
+                  by agreeing on a purchase value on a certain date for a deposit. When the time is up, you
+                  can either pay the remaining balance or choose not to buy it, however you lose the deposit.
+                  As a bonus, you can even use another Game NFT as collateral.
                 </Box>
               </Box>
               <Box className={classes.subBlock}>
@@ -265,17 +260,18 @@ const HowWorksOfMarketPlaceModal = props => {
               <Box className={classes.subBlock}>
                 <Box className={classes.subject}>For users that want to play:</Box>
                 <Box className={classes.description}>
-                Often games require owning an NFT to enter the game, but what if you could rent an NFT for a short period 
-                of time to try it out? Rent an NFT that gets you access into the game for an agreed upon time, 
-                the NFT is then burned after the time expires.
+                  Often games require owning an NFT to enter the game, but what if you could rent an NFT for a
+                  short period of time to try it out? Rent an NFT that gets you access into the game for an
+                  agreed upon time, the NFT is then burned after the time expires.
                 </Box>
               </Box>
               <Box className={classes.subBlock}>
                 <Box className={classes.subject}>For users with inventory:</Box>
                 <Box className={classes.description}>
-                This is a great option if you don't want to sell your Game NFT, but you want to make fees from it. 
-                The rental feature is undercollaterallized, meaning that the renter does not need to lock collateral 
-                (which increases rental volume), instead a 3rd contract is created giving both parties necessary assurances.
+                  This is a great option if you don't want to sell your Game NFT, but you want to make fees
+                  from it. The rental feature is undercollaterallized, meaning that the renter does not need
+                  to lock collateral (which increases rental volume), instead a 3rd contract is created giving
+                  both parties necessary assurances.
                 </Box>
               </Box>
             </Box>

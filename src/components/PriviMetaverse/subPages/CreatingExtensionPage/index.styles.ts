@@ -13,6 +13,24 @@ export const usePageStyles = makeStyles(theme => ({
     backgroundSize: "100% 100%",
     position: "relative",
   },
+  otherContent: {
+    marginTop: 110,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    maxWidth: 1600,
+    marginLeft: "auto",
+    marginRight: "auto",
+    padding: "0 96px",
+    position: 'relative',
+    [theme.breakpoints.down("sm")]: {
+      padding: "0 24px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: "0 16px",
+    },
+  },
   backBtn: {
     display: "flex",
     alignItems: "center",

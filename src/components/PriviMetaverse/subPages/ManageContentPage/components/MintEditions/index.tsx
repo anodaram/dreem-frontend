@@ -21,7 +21,7 @@ const MintEditions = ({
   handleCancel,
   handleMint
 }: {
-  amount: string,
+  amount: number,
   hashId: string,
   handleCancel: () => void;
   handleMint: (amount: any) => void;

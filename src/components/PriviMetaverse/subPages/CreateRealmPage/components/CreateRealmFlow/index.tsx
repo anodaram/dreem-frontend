@@ -233,10 +233,18 @@ const CreateRealmFlow = ({
       });
     }
   };
+  const getMetadata = async (hashId) => {
+    try {
+      const res = await MetaverseAPI.getNFTInfo(hashId)
+      return res.data
+    } catch (error) {
+      console.log('error in getting metadata', error)
+    }
+  }
   const handleMintRealm = async (savingDraft) => {
     setIsUploading(false);
-    console.log(savingDraft, savingDraft.mintMetadata);
-    const metaData = await onUploadNonEncrypt(savingDraft.mintMetadata, file => uploadWithNonEncryption(file));
+    let metadata = await getMetadata(savingDraft.instance.hashId);
+    const metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
     console.log(metaData);
     const targetChain = BlockchainNets.find(net => net.value === chain);
     setNetworkName(targetChain.name);
@@ -273,7 +281,7 @@ const CreateRealmFlow = ({
 
     if (contractRes.success) {
       console.log(contractRes);
-      await MetaverseAPI.realmMint(
+      const resp = await MetaverseAPI.realmMint(
         savingDraft.instance.hashId,
         contractRes.txHash,
         targetChain.name,
@@ -281,8 +289,12 @@ const CreateRealmFlow = ({
         contractRes.distributionManager,
         contractRes.realmUpgraderAddress,
       );
-      setTxSuccess(true);
-      showAlertMessage(`Successfully world minted`, { variant: "success" });
+      if(resp.success){
+        setTxSuccess(true);
+        showAlertMessage(`Successfully world minted`, { variant: "success" });
+      } else{
+        setTxSuccess(false);
+      }
     } else {
       setTxSuccess(false);
     }

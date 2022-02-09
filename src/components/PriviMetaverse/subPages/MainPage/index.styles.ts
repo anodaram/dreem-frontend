@@ -134,6 +134,38 @@ export const homePageStyles = makeStyles(theme => ({
       lineHeight: "20px",
     },
   },
+  supportedNetworkTitle: {
+    "fontFamily": "GRIFTER",
+    "fontStyle": "normal",
+    "fontWeight": "bold",
+    "fontSize": "56px",
+    "lineHeight": "120%",
+    textTransform: "uppercase",
+    letterSpacing: "0.02em",
+    color: "#EEFF21",
+    marginTop: 278,
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 24,
+      marginTop: 110,
+    },
+  },
+  supportedNetworkBtn: {
+    background: "rgba(233, 255, 38, 0.04)",
+    border: "0.506192px solid #E9FF26",
+    boxSizing: "border-box",
+    borderRadius: "13px",
+    // width: "50%",
+    padding: "46px 0px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    [theme.breakpoints.down("xs")]: {
+      padding: "6px 0px",
+      "& svg": {
+        width: 100,
+      }
+    },
+  },
   button: {
     display: "flex",
     alignItems: "center",
@@ -178,7 +210,7 @@ export const homePageStyles = makeStyles(theme => ({
     position: "absolute",
     width: 635,
     right: "-23px",
-    bottom: 20,
+    bottom: 500,
     [theme.breakpoints.down("md")]: {
       width: 425,
     },
@@ -189,17 +221,19 @@ export const homePageStyles = makeStyles(theme => ({
   },
   bgImgGreenCircle: {
     position: "absolute",
-    bottom: 550,
-    left: -140,
+    bottom: -160,
+    left: -220,
     right: "calc(50% - 185px)",
     [theme.breakpoints.down("sm")]: {
       // top: -100,
       right: -150,
+      left: -180,
       width: "300px",
     },
     [theme.breakpoints.down("xs")]: {
       width: "200px",
       left: -100,
+      bottom: -75,
     },
   },
   roadmapContainer: {

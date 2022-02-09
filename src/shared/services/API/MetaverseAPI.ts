@@ -510,12 +510,12 @@ export const realmMint = async (
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
     const resp = await axios.post(
-      `${METAVERSE_URL()}/web/realm/${hashId}/mint/`,
+      `${METAVERSE_URL()}/web/asset/${hashId}/mint/batch/`,
       {
         tx: txHash,
         chain: chain,
         realmAddress: realmAddress,
-        distributionManager: distributionManager,
+        realmDistributionAddress: distributionManager,
         realmUpgraderAddress: realmUpgraderAddress
       },
       config
@@ -632,6 +632,23 @@ export const getAssetMetadata = async (item: string) => {
     if (resp.data) {
       return resp.data;
     }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMetaverseSetting = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.get(`${METAVERSE_URL()}/metaverse/setting`).then(res => {
+      const resp = res.data;
+      if (resp.success) {
+        return resp.data;
+      }
+    });
   } catch (error) {
     throw error;
   }

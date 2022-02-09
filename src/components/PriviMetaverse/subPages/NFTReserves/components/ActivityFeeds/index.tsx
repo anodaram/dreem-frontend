@@ -101,11 +101,9 @@ export default function ActivityFeeds({ onClose }) {
 
   return (
     <Box className={classes.root}>
-      {!isBigTablet && (
-        <div className={classes.collapseIcon} onClick={onClose}>
-          <CollapseIcon />
-        </div>
-      )}
+      <div className={classes.collapseIcon} onClick={onClose}>
+        <CollapseIcon />
+      </div>
       <div className={classes.switch}>
         <div
           className={classes.switchButton}
@@ -128,7 +126,6 @@ export default function ActivityFeeds({ onClose }) {
                 ? "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)"
                 : "transparent",
             color: selectedTab === "trending" ? "#212121" : "#fff",
-            marginTop: isTablet ? 8 : 0,
           }}
           onClick={() => setSelectedTab("trending")}
         >
@@ -177,7 +174,9 @@ export default function ActivityFeeds({ onClose }) {
               </Box>
             ))
           ) : (
-            <Box>NO DATA</Box>
+            <Box fontSize={16} fontFamily={"Rany"} ml={2}>
+              No Data
+            </Box>
           )
         ) : loading ? (
           <Box width="100%" display="flex" justifyContent="center" alignItems="center" flex={1}>
