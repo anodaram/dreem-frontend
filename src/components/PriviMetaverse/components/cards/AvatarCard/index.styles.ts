@@ -6,28 +6,15 @@ export const avatarCardStyles = makeStyles(theme => ({
     borderRadius: 12,
     border: "2px solid #EDFF1C",
     background: "black",
-    height: 445,
+    height: 390,
     display: "flex",
     flexDirection: "column",
     [theme.breakpoints.down("sm")]: {
-      height: 350,
+      height: 365,
     },
     [theme.breakpoints.down("xs")]: {
-      height: 386,
+      height: 365,
     },
-    // backgroundClip: "padding-box",
-    // "&::before": {
-    //   content: "''",
-    //   position: "absolute",
-    //   top: "0",
-    //   right: "0",
-    //   bottom: "0",
-    //   left: "0",
-    //   zIndex: "-1",
-    //   margin: "-2px",
-    //   borderRadius: "inherit",
-    //   background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
-    // },
   },
   container: {
     padding: "28px 24px 20px 24px",
@@ -63,12 +50,12 @@ export const avatarCardStyles = makeStyles(theme => ({
     objectFit: "contain",
     objectPosition: "center",
     width: "100%",
-    maxHeight: 266,
+    maxHeight: 230,
     [theme.breakpoints.down("sm")]: {
-      maxHeight: 209,
+      maxHeight: 220,
     },
     [theme.breakpoints.down("xs")]: {
-      maxHeight: 282,
+      maxHeight: 220,
     },
   },
   name: {
