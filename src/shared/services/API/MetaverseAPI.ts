@@ -57,7 +57,8 @@ export const getAssets = async (
   itemIds?: any,
   isExtension?: boolean,
   featured = false,
-  isMinted?: boolean
+  isMinted?: boolean,
+  searchValue = ""
 ) => {
   try {
     let params: any = {};
@@ -74,6 +75,7 @@ export const getAssets = async (
     params = isExtension !== undefined ? { ...params, isExtension } : params;
     params = featured !== undefined ? { ...params, featured } : params;
     params = isMinted !== undefined ? { ...params, isMinted } : params;
+    params = searchValue ? { ...params, searchValue } : params;
 
     const token = localStorage.getItem("token");
     const config = {
@@ -212,10 +214,12 @@ export const uploadAsset = async payload => {
     const formData = new FormData();
     console.log(payload);
     Object.keys(payload).forEach(key => {
-      // if (key === "image")
-      //   formData.append(key, payload[key], payload[key].name);
-      // else
-      payload[key] && formData.append(key, payload[key]);
+      if (key === "isPublic"){
+        formData.append(key, payload[key]);
+      }
+      else{
+        payload[key] && formData.append(key, payload[key]);
+      }
     });
 
     const token = localStorage.getItem("token");

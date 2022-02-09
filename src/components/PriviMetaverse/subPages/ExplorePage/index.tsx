@@ -1,5 +1,6 @@
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useDebounce } from "use-debounce/lib";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
@@ -95,8 +96,10 @@ export default function ExplorePage() {
   // const [openPrimarySection, setOpenPrimarySection] = React.useState<boolean>(true);
   // const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
   // const [selectedContentType, setSelectedContentType] = React.useState<string>("all");
-  const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["WORLD"]);
+  const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["CHARACTER"]);
   const [searchValue, setSearchValue] = React.useState<string>("");
+
+  const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const classes = explorePage({ openFilterBar });
 
@@ -106,20 +109,34 @@ export default function ExplorePage() {
   );
 
   React.useEffect(() => {
-    setAssetList([]);
-    setPage(1);
     loadData(true);
-  }, [selectedAssetTypes, selectedAssetTypes.length]);
+  }, [selectedAssetTypes, debouncedSearchValue]);
 
   const loadData = async (init = false) => {
     if (loading) return;
+
     try {
       setLoading(true);
-      const response = await MetaverseAPI.getAssets(12, page, "timestamp", selectedAssetTypes);
+
+      const search = debouncedSearchValue ? debouncedSearchValue : undefined;
+      const curPage = init ? 1 : page;
+      const response = await MetaverseAPI.getAssets(
+        12,
+        curPage,
+        "timestamp",
+        selectedAssetTypes,
+        true,
+        undefined,
+        undefined,
+        undefined,
+        false,
+        undefined,
+        search
+      );
       if (response.success) {
-        const newAvatars = response.data.elements;
-        setAssetList(prev => (init ? newAvatars : [...prev, ...newAvatars]));
-        setPage(prev => prev + 1);
+        const newData = response.data.elements;
+        setAssetList(prev => (init ? newData : [...prev, ...newData]));
+        setPage(curPage + 1);
         setHasMore(response.data.page.cur < response.data.page.max);
       } else {
         setAssetList([]);
@@ -247,7 +264,7 @@ export default function ExplorePage() {
                   </Box>
                 )}
               </Box>
-              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              {/* <Box width={1} height={"1px"} bgcolor={"#ffffff50"} /> */}
               {/* <Box className={classes.subFilterSection}>
                 <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
                   <Box color="#E9FF26">Primary</Box>
@@ -322,7 +339,7 @@ export default function ExplorePage() {
                 <InputWithLabelAndTooltip
                   type="text"
                   inputValue={searchValue}
-                  placeHolder="Search collections"
+                  placeHolder="Search assets"
                   onInputValueChange={e => {
                     setSearchValue(e.target.value);
                   }}
