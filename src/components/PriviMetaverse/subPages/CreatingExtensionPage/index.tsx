@@ -60,6 +60,8 @@ export default function CreatingRealmPage() {
   const [worldHash, setWorldHash] = useState<any>(null);
   const [nftAddress, setNFTAddress] = useState<any>(null);
   const [nftId, setNFTId] = useState<any>(null);
+  const [depositInfo, setDepositInfo] = useState<any>(null);
+  const [protocolFee, setProtocolFee] = useState<any>(null);
   const [curPage, setCurPage] = React.useState(1);
   const [lastPage, setLastPage] = React.useState(0);
   const [loadingCollection, setLoadingCollection] = React.useState<boolean>(false);
@@ -87,7 +89,7 @@ export default function CreatingRealmPage() {
     if (realmId) {
       loadRealm(realmId);
     }
-    // getSettings()
+    getSettings()
     loadMore()
   }, []);
 
@@ -98,9 +100,13 @@ export default function CreatingRealmPage() {
       })
   };
   const getSettings = () => {
-    MetaverseAPI.getMetaverseSetting()
+    MetaverseAPI.getDepositInfo()
       .then(res => {
-        console.log(res)
+        setDepositInfo(res.data)
+      })
+    MetaverseAPI.getProtocolFee()
+      .then(res => {
+        setProtocolFee(res.data)
       })
   };
 
@@ -226,6 +232,8 @@ export default function CreatingRealmPage() {
               {showDepositRequireModal ? (
                 <DepositRequiredModal
                   open={showDepositRequireModal}
+                  depositInfo={depositInfo}
+                  protocolFee={protocolFee}
                   onClose={()=>setShowDepositRequireModal(false)}
                   onApprove={()=>{}}
                   onConfirm={()=>handleConfirm()}

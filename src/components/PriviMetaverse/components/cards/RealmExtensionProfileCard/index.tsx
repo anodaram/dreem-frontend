@@ -59,11 +59,28 @@ export default function RealmExtensionProfileCard({
   const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
   const [imageIPFS, setImageIPFS] = useState<any>();
   const [isSelected, setIsSelected] = useState<boolean>(false);
+  const [depositInfo, setDepositInfo] = useState<any>(null);
+  const [protocolFee, setProtocolFee] = useState<any>(null);
 
+  React.useEffect(() => {
+    getSettings()
+  }, []);
+  
   React.useEffect(() => {
     setData(nft);
     setIsPublic(nft.isPublic);
   }, [nft]);
+
+  const getSettings = () => {
+    MetaverseAPI.getDepositInfo()
+      .then(res => {
+        setDepositInfo(res.data)
+      })
+    MetaverseAPI.getProtocolFee()
+      .then(res => {
+        setProtocolFee(res.data)
+      })
+  };
 
   const handleRemove = async () => {
     const confirm = await confirmAlert({
@@ -285,6 +302,8 @@ export default function RealmExtensionProfileCard({
       {openDepositRequired && (
         <DepositRequiredModal
           open={openDepositRequired}
+          depositInfo={depositInfo}
+          protocolFee={protocolFee}
           onClose={() => setOpenDepositRequired(false)}
           onApprove={() => {
             setOpenDepositRequired(false);
