@@ -138,6 +138,7 @@ const useStyles = makeStyles(theme => ({
       background: "transparent",
       margin: 0,
       padding: 0,
+      height: 16,
     },
     "& *": {
       color: "white",

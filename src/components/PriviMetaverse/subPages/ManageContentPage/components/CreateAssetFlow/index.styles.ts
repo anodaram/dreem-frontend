@@ -8,6 +8,8 @@ export const useModalStyles = makeStyles(theme => ({
     borderRadius: "0px",
     maxHeight: "calc(100vh - 370px)",
     overflow: "auto",
+    maxWidth: 755,
+    width: "100%",
   },
   warningScreen: {
     display: "flex",
