@@ -240,7 +240,7 @@ const WorldList = ({
 
   const loadData = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getAssets(12, 1, "timestamp", Filters, false, userSelector.address, null, false, false, true)
+    MetaverseAPI.getAssets(12, 1, "timestamp", Filters, false, userSelector.id, null, false, false, true)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -259,7 +259,7 @@ const WorldList = ({
   };
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getAssets(12, 1, "timestamp", Filters, false, userSelector.address)
+    MetaverseAPI.getAssets(12, 1, "timestamp", Filters, false, userSelector.id)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
