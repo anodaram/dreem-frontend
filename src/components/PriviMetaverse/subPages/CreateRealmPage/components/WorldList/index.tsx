@@ -343,7 +343,9 @@ const WorldList = ({
               </Box>
               <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
             </Box>
-            <Box className={classes.typo3}>No worlds created yet</Box>
+            <Box className={classes.typo3}>
+              No worlds minted yet
+            </Box>
           </Box>
         )}
       </div>
