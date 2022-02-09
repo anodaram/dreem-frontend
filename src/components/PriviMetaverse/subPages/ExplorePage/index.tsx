@@ -122,7 +122,7 @@ export default function ExplorePage() {
       const curPage = init ? 1 : page;
       const response = await MetaverseAPI.getAssets(
         12,
-        1,
+        curPage,
         "timestamp",
         selectedAssetTypes,
         true,
