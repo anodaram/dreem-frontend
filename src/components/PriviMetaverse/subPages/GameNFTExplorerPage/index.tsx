@@ -328,7 +328,7 @@ const GameNFTExplorerPage = () => {
         setReservedNftList([...reservedNftList, ...newNfts]);
       }
       dispatch(setAllNFTList([...allNFTList, ...newNfts]));
-      setHasMore(newNfts.length > 0);
+      setHasMore(newNfts.length == PAGE_SIZE);
       if (newNfts.length) {
         lastNFTId.current = newNfts[newNfts.length - 1].RandomId;
         lastCollectionId.current = newNfts[newNfts.length - 1].collectionId;
