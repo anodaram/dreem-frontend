@@ -318,7 +318,6 @@ const CollectionList = ({
           </>
         ) : (
           <Box pb={20}>
-            <Box className={classes.typo4}>All of your collections</Box>
             <Box display="flex" alignItems="center" mt={6} mb={3}>
               <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
               <Box

@@ -637,18 +637,31 @@ export const getAssetMetadata = async (item: string) => {
   }
 };
 
-export const getMetaverseSetting = async () => {
+export const getDepositInfo = async () => {
   try {
     const token = localStorage.getItem("token");
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(`${METAVERSE_URL()}/metaverse/setting`, config).then(res => {
-      const resp = res.data;
-      if (resp.success) {
-        return resp.data;
-      }
-    });
+    const resp = await axios.get(`${URL()}/metaverse/realmDeposit/`, config)
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getProtocolFee = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.get(`${URL()}/metaverse/protocolFee/`, config)
+    if (resp.data) {
+      return resp.data;
+    }
   } catch (error) {
     throw error;
   }

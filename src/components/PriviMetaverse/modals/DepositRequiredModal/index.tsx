@@ -34,11 +34,15 @@ import { switchNetwork } from "shared/functions/metamask";
 
 const DepositRequiredModal = ({
   open,
+  depositInfo,
+  protocolFee,
   onClose,
   onApprove,
   onConfirm,
 }: {
   open: boolean;
+  depositInfo: any;
+  protocolFee: any;
   onClose: (e) => void;
   onApprove: (e) => void;
   onConfirm: (e) => void;
@@ -92,7 +96,7 @@ const DepositRequiredModal = ({
         </Box>
         <Box className={classes.maticVal}>
           <MaticIcon />
-          <Box className={classes.maticTitle}>10 MATIC</Box>
+          <Box className={classes.maticTitle}>{depositInfo.amount} MATIC</Box>
         </Box>
         <Box className={classes.infos}>
           <Box className={classes.infoRow}>
