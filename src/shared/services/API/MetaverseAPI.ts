@@ -643,7 +643,7 @@ export const getMetaverseSetting = async () => {
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(`${METAVERSE_URL()}/metaverse/setting`).then(res => {
+    const resp = await axios.get(`${METAVERSE_URL()}/metaverse/setting`, config).then(res => {
       const resp = res.data;
       if (resp.success) {
         return resp.data;

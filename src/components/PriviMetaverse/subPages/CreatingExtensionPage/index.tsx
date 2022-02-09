@@ -87,7 +87,7 @@ export default function CreatingRealmPage() {
     if (realmId) {
       loadRealm(realmId);
     }
-    // getSettings()
+    getSettings()
     loadMore()
   }, []);
 
