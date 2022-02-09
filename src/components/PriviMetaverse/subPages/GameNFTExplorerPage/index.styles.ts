@@ -248,7 +248,6 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       color: "#fff !important",
     },
     "& svg path": {
-      fill: "#fff !important",
     },
     "& span": {
       color: "#EDFF1C !important",
@@ -303,6 +302,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   chainImage: {
     width: "20px",
     marginRight: "8px",
+    display: "flex",
   },
   table: {
     minHeight: 400,
@@ -412,6 +412,21 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     bottom: 0,
     right: "-59px",
   },
+  comingsoon: {
+    color: "#212121",
+    fontFamily: "GRIFTER",
+    fontStyle: "normal",
+    fontSize: "9px",
+    lineHeight: "120%",
+    textAlign: "center",
+    textTransform: "uppercase",
+    background: "#E9FF26",
+    borderRadius: "3px",
+    padding: "4px 15px 3px",
+    position: "absolute",
+    bottom: "-15px",
+    left: "calc(50% - 46px)",
+  },
 }));
 
 export const useFilterSelectStyles = makeStyles({
@@ -435,6 +450,38 @@ export const useFilterSelectStyles = makeStyles({
       padding: "2px 8px",
       minWidth: "200px",
       Height: "36px",
+      "&:last-child": {
+        marginBottom: 0,
+      },
+      "&:hover": {
+        color: "white",
+        border: "solid 1px #E9FF26",
+      },
+    },
+  },
+});
+
+export const useFilterSelectWithCommingSoonStyles = makeStyles({
+  paper: {
+    marginTop: "10px",
+    marginLeft: "-13px",
+    background: "#212121",
+    boxShadow: "0px 15px 35px -31px rgba(13, 12, 62, 0.19)",
+    color: "rgba(255, 255, 255, 0.5)",
+    "& svg": {
+      width: 18,
+      height: 18,
+    },
+  },
+  list: {
+    padding: "20px 8px 35px !important",
+    paddingRight: 8,
+    "& .MuiListItem-root": {
+      marginBottom: 10,
+      padding: "2px 8px",
+      minWidth: "200px",
+      Height: "36px",
+      overflow: "visible",
       "&:last-child": {
         marginBottom: 0,
       },
