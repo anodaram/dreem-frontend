@@ -465,13 +465,7 @@ export default function GameDetailPage() {
           }}
         />
         <Box className={classes.container}>
-          <Box
-            className={classes.fitContent}
-            mb={isTablet ? 6 : 12}
-            style={{
-              maxWidth: openSideBar ? "1100px" : "1000px",
-            }}
-          >
+          <Box className={classes.fitContent} mb={isTablet ? 6 : 12}>
             <Box
               color="#FFFFFF"
               mb={4}
@@ -497,7 +491,7 @@ export default function GameDetailPage() {
               <Box
                 display={"flex"}
                 flexDirection={"column"}
-                ml={isMobile ? 0 : isTablet ? 3 : 7}
+                ml={isMobile ? 7.5 : isTablet ? 3 : 7}
                 mt={isMobile ? 2 : 0}
               >
                 <Box className={classes.title} mb={3}>
@@ -507,7 +501,7 @@ export default function GameDetailPage() {
                   display={"flex"}
                   alignItems={"center"}
                   justifyContent={"space-between"}
-                  maxWidth={isMobile ? 350 : isTablet ? 420 : 580}
+                  maxWidth={isMobile ? 290 : isTablet ? 420 : 580}
                   mb={3}
                   fontSize={isMobile ? 13 : isTablet ? 14 : 16}
                 >
@@ -517,12 +511,12 @@ export default function GameDetailPage() {
                       <LinkIcon />
                     </Box>
                   </Box>
-                  <Box width={"1px"} height={"8px"} bgcolor={"rgba(255, 255, 255, 0.15)"} />
+                  {!isMobile && <Box width={"1px"} height={"8px"} bgcolor={"rgba(255, 255, 255, 0.15)"} />}
                   <Box display={"flex"} alignItems={"center"}>
                     <CopyIcon />
                     <Box ml={0.5}>{`${gameInfo?.Count || 0} minted`}</Box>
                   </Box>
-                  <Box width={"1px"} height={"8px"} bgcolor={"rgba(255, 255, 255, 0.15)"} />
+                  {!isMobile && <Box width={"1px"} height={"8px"} bgcolor={"rgba(255, 255, 255, 0.15)"} />}
                   <Box display={"flex"} alignItems={"center"}>
                     <ProfileUserIcon />
                     <Box ml={0.5}>{gameInfo?.owners_count || 0} owners</Box>
@@ -694,14 +688,7 @@ export default function GameDetailPage() {
                   </Box>
                 </Box>
 
-                <Box
-                  className={classes.fitContent}
-                  style={{
-                    paddingLeft: isMobile ? 16 : 0,
-                    paddingRight: isMobile ? 16 : 0,
-                    maxWidth: openSideBar ? "1100px" : "1000px",
-                  }}
-                >
+                <Box className={classes.fitContent}>
                   <InfiniteScroll
                     hasChildren={nfts?.length > 0}
                     dataLength={nfts?.length}

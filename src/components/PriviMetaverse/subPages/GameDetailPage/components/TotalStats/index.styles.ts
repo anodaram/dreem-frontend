@@ -8,6 +8,9 @@ export const useStyles = makeStyles(theme => ({
     padding: "29px 31px 56px",
     width: "100%",
     maxHeight: 319,
+    [theme.breakpoints.down("xs")]: {
+      padding: "29px 12px 32px",
+    },
   },
   title: {
     fontSize: 24,
