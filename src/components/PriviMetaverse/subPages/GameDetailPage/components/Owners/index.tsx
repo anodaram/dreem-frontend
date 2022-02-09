@@ -45,16 +45,16 @@ export default function Owners({ gameInfo }: any) {
   React.useEffect(() => {
     if (listenerSocket) {
       const addOwnerHandler = (data) => {
-        if (owners && owners.length) {
           const _owner = {
             ownerAddress: data.address,
             amount: data.count,
           }
 
-          const _owners = owners.filter((owner) => _owner.ownerAddress !== owner.ownerAddress);
-          setOwners([_owner].concat(_owners));
+          setOwners((prev) => {
+            const _owners = prev.filter((owner) => _owner.ownerAddress !== owner.ownerAddress);
+            return [_owner].concat(_owners);
+          });
           setTotalGameCount(data.total_game_count);
-        }
       };
 
       const updateOwnerHandler = (data) => {
@@ -62,11 +62,12 @@ export default function Owners({ gameInfo }: any) {
           ownerAddress: data.address,
           amount: data.count,
         }
-        if (owners && owners.length) {
-          const _owners = owners.map((owner) => _owner.ownerAddress === owner.ownerAddress ? _owner : owner);
-          setOwners(_owners);
-          setTotalGameCount(data.total_game_count);
-        }
+        
+        setOwners((prev) => {
+          const _owners = prev.map((owner) => _owner.ownerAddress === owner.ownerAddress ? _owner : owner);
+          return _owners;
+        });
+        setTotalGameCount(data.total_game_count);
       };
 
       listenerSocket.on("addOwner", addOwnerHandler);
