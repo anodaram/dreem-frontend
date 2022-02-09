@@ -13,6 +13,7 @@ import StyledCheckbox from "shared/ui-kit/Checkbox";
 import { Color } from "shared/ui-kit";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import WorldCard from "components/PriviMetaverse/components/cards/WorldCard";
+import AssetsCard from "components/PriviMetaverse/components/cards/AssetsCard";
 import { explorePage } from "./index.styles";
 
 import backImg1 from "assets/metaverseImages/shape_roadmap.png";
@@ -385,8 +386,10 @@ export default function ExplorePage() {
                   renderItem={(item, index) =>
                     item.itemKind === "WORLD" ? (
                       <WorldCard nft={item} selectable={false} key={`world_${index}`} />
-                    ) : (
+                    ) : item.itemKind === "CHARACTER" ? (
                       <AvatarCard item={item} key={`avatar_${index}`} />
+                    ) : (
+                      <AssetsCard item={item} key={`asset_${index}`} />
                     )
                   }
                   columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}

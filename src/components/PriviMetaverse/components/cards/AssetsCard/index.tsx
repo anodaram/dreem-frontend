@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router";
 
 import { Skeleton } from "@material-ui/lab";
@@ -34,7 +34,9 @@ export default function AssetsCard(props) {
       {isLoading ? (
         <Box className={classes.skeleton}>
           <Skeleton variant="rect" width="100%" height={226} />
-          <Skeleton variant="rect" width="100%" height={24} />
+          <Box my={2}>
+            <Skeleton variant="rect" width="100%" height={24} />
+          </Box>
           <Skeleton variant="rect" width="80%" height={24} />
         </Box>
       ) : (
@@ -47,10 +49,10 @@ export default function AssetsCard(props) {
             justifyContent="space-between"
             className={classes.container}
           >
-            <img className={classes.image} src={asset?.ipfsImage || getDefaultBGImage()} alt="robot" />
+            <img className={classes.image} src={asset?.textureThumbnail || getDefaultBGImage()} alt="robot" />
             <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Box className={classes.name}>{asset?.name || ""}</Box>
-              <PolygonIcon />
+              <Box className={classes.name}>{asset?.textureName || ""}</Box>
+              {/* <PolygonIcon /> */}
             </Box>
           </Box>
           <Box className={classes.divider} />
@@ -58,7 +60,7 @@ export default function AssetsCard(props) {
             <PrimaryButton
               size="medium"
               className={classes.button}
-              onClick={() => setOpenAssetDetailModal(true)}
+              // onClick={() => setOpenAssetDetailModal(true)}
             >
               see more
             </PrimaryButton>
