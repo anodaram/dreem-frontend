@@ -83,7 +83,7 @@ const NFTReserves = () => {
   const classes = useNFTOptionsStyles({ openSideBar });
 
   const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? openSideBar ? 3 : 4 : 4;
-  const MAX_NEW_LIST_LENGTH = 10
+  const MAX_NEW_LIST_LENGTH = 12
 
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     { headerName: "NFT" },
