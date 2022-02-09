@@ -36,7 +36,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     color: "#ffffff",
   },
   fitContent: {
-    maxWidth: (props: any) => (props.openSideBar ? 1000 : 1280),
+    maxWidth: (props: any) => (props.openSideBar ? 1040 : 1280),
     marginLeft: "auto",
     marginRight: "auto",
     [theme.breakpoints.down("md")]: {
@@ -45,12 +45,12 @@ export const gameDetailPageStyles = makeStyles(theme => ({
       paddingRight: 60,
     },
     [theme.breakpoints.down("sm")]: {
-      paddingLeft: 32,
-      paddingRight: 32,
+      paddingLeft: (props: any) => (props.openSideBar ? 16 : 32),
+      paddingRight: (props: any) => (props.openSideBar ? 16 : 32),
     },
     [theme.breakpoints.down("xs")]: {
-      paddingLeft: 24,
-      paddingRight: 24,
+      paddingLeft: "12px !important",
+      paddingRight: "12px !important",
     },
   },
   title: {
@@ -62,7 +62,12 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     maxWidth: 700,
     [theme.breakpoints.down("sm")]: {
       fontSize: 34,
-      maxWidth: 470,
+      maxWidth: 420,
+      marginTop: (props: any) => (props.openSideBar ? 24 : 0),
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 34,
+      maxWidth: "300px !important",
     },
   },
   tabTitle: {
@@ -89,12 +94,12 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     maxHeight: 60,
     overflow: "hidden",
     [theme.breakpoints.down("sm")]: {
-      maxWidth: "470px !important",
+      maxWidth: "420px !important",
       marginTop: 8,
       fontSize: 16,
     },
     [theme.breakpoints.down("xs")]: {
-      maxWidth: "350px !important",
+      maxWidth: "300px !important",
       fontSize: 14,
       lineHeight: "21.7px",
     },
@@ -127,11 +132,11 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     height: 398,
     borderRadius: 9,
     [theme.breakpoints.down("sm")]: {
-      width: 220,
+      width: (props: any) => (props.openSideBar ? "100%" : 220),
       height: 250,
     },
     [theme.breakpoints.down("xs")]: {
-      width: "100%",
+      width: "100% !important",
     },
   },
   content: {
@@ -205,7 +210,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     minWidth: 274,
     height: 38,
     [theme.breakpoints.down("xs")]: {
-      minWidth: 230,
+      minWidth: 195,
       padding: "8px",
     },
   },
