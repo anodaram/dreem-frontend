@@ -271,6 +271,7 @@ export default function ExploreRealmsPage() {
                   borderRadius: "100px",
                   color: "#121212",
                   paddingTop: 4,
+                  zIndex: 999,
                 }}
                 onClick={() => history.push("/create_realm")}
               >
