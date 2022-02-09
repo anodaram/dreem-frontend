@@ -15,7 +15,7 @@ import { getGameInfo, getCharactersByGame } from "shared/services/API/DreemAPI";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
 import TabsView, { TabItem } from "shared/ui-kit/TabsView";
 import Owners from "./components/Owners";
-import { getGameNFTOwners } from "shared/services/API/ReserveAPI";
+import { checkNFTHolder } from "shared/services/API/ReserveAPI";
 import ExploreCard from "components/PriviMetaverse/components/cards/ExploreCard";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import { NFT_STATUS_COLORS, PrimaryButton, SecondaryButton } from "shared/ui-kit";
@@ -125,7 +125,6 @@ export default function GameDetailPage() {
   const [gameInfo, setGameInfo] = React.useState<any>({});
 
   const [nfts, setNfts] = React.useState<any[]>(collectionNFTList || []);
-  const [owners, setOwners] = React.useState<any[]>([]);
   const [openSideBar, setOpenSideBar] = React.useState<boolean>(true);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [lastId, setLastId] = React.useState<any>(undefined);
@@ -138,10 +137,7 @@ export default function GameDetailPage() {
   const [isListView, setIsListView] = React.useState<boolean>(false);
   const [openDescription, setOpenDescription] = React.useState<boolean>(false);
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
-  const isNFTHolder = React.useMemo(
-    () => (owners.find(owner => owner.ownerAddress === account) ? true : false),
-    [owners, account]
-  );
+  const [isNFTHolder, setIsNFTHolder] = React.useState<boolean>(false);
 
   const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
   const roomId = React.useMemo(() => gameInfo && `${gameInfo.Slug}-${gameInfo.Address}`, [gameInfo]);
@@ -168,7 +164,7 @@ export default function GameDetailPage() {
   React.useEffect(() => {
     loadGameInfo();
     getTokenList();
-    loadOwners();
+    loadIsNFTHolder();
   }, []);
 
   React.useEffect(() => {
@@ -233,26 +229,20 @@ export default function GameDetailPage() {
     }
   };
 
-  const loadOwners = async () => {
-    if (loading) return;
+  const loadIsNFTHolder = async () => {
     try {
-      setLoading(true);
+      if (!account) return;
 
-      const response = await getGameNFTOwners({
+      const response = await checkNFTHolder({
         collectionId: collection_id,
         mode: isProd ? "main" : "test",
-        pageSize: 20,
-        orderBy: "Amount",
+        account: account
       });
       if (response.success) {
-        setOwners(response.owners);
-      } else {
-        setOwners([]);
+        setIsNFTHolder(response.nftHolder);
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 

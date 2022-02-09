@@ -2,11 +2,11 @@ import axios, { CancelToken } from "axios";
 
 import URL from "shared/functions/getURL";
 
-export async function getAllGameNFTs(payload: any,  cancelToken?: CancelToken): Promise<any> {
+export async function getAllGameNFTs(payload: any, cancelToken?: CancelToken): Promise<any> {
   try {
     const response = await axios.get(`${URL()}/metaverseReserve/getAllGameNFTs`, {
       params: payload,
-      cancelToken: cancelToken
+      cancelToken: cancelToken,
     });
     return response.data;
   } catch (e) {
@@ -18,7 +18,7 @@ export async function getAllGameNFTs(payload: any,  cancelToken?: CancelToken): 
 export async function getPopularGames(payload: any): Promise<any> {
   try {
     const response = await axios.get(`${URL()}/metaverseReserve/getPopularGames`, {
-      params: payload
+      params: payload,
     });
     return response.data;
   } catch (e) {
@@ -30,7 +30,7 @@ export async function getPopularGames(payload: any): Promise<any> {
 export async function getTrendingGameNfts(payload: any): Promise<any> {
   try {
     const response = await axios.get(`${URL()}/metaverseReserve/getTrendingGameNfts`, {
-      params: payload
+      params: payload,
     });
     return response.data;
   } catch (e) {
@@ -42,8 +42,22 @@ export async function getTrendingGameNfts(payload: any): Promise<any> {
 export async function getGameNFTOwners(payload: any): Promise<any> {
   try {
     const response = await axios.get(`${URL()}/metaverseReserve/getGameNFTOwners`, {
-      params: payload
+      params: payload,
     });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
+export async function checkNFTHolder(payload: {
+  collectionId: string;
+  account: string;
+  mode: string;
+}): Promise<any> {
+  try {
+    const response = await axios.post(`${URL()}/metaverseReserve/checkNFTHolder`, payload);
     return response.data;
   } catch (e) {
     console.log(e);
