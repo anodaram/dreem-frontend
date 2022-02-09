@@ -202,7 +202,7 @@ export default function CreatorPage() {
           for (let id of respRealmIds.data.data) {
             itemIds.push(parseInt(id));
           }
-          const realmsResp = await MetaverseAPI.getWorlds(
+          const realmsResp = await MetaverseAPI.getAssets(
             undefined,
             undefined,
             undefined,
@@ -240,17 +240,15 @@ export default function CreatorPage() {
       }
 
       if (filters.length) {
-
-        MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.address)
-        .then(res => {
+        MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.address).then(res => {
           if (res.success) {
             const items = res.data.elements;
             if (items && items.length > 0) {
               setCollections([...collections, ...res.data.elements]);
             }
           }
-        })
-        const inventoryResp = await MetaverseAPI.getWorlds(
+        });
+        const inventoryResp = await MetaverseAPI.getAssets(
           12,
           curPage,
           "timestamp",
@@ -270,15 +268,14 @@ export default function CreatorPage() {
       } else {
         setHasMore(false);
       }
-      MetaverseAPI.getUnfinishedNFTs()
-      .then(res => {
+      MetaverseAPI.getUnfinishedNFTs().then(res => {
         if (res.success) {
           const items = res.data.elements;
           if (items && items.length > 0) {
             setNfts(res.data.elements);
           }
         }
-      })
+      });
     } catch (err) {
       console.error(err);
     }
@@ -296,7 +293,7 @@ export default function CreatorPage() {
     // } else if (selectedTab === "realms") {
     //   filters = ["NFT_WORLD"];
     // }
-    const inventoryResp = await MetaverseAPI.getWorlds(
+    const inventoryResp = await MetaverseAPI.getAssets(
       12,
       1,
       "timestamp",
@@ -778,11 +775,7 @@ export default function CreatorPage() {
                           <Grid container spacing={3} style={{ marginBottom: 24 }}>
                             {collections?.map((item, index) => (
                               <Grid item key={`trending-pod-${index}`} md={4} sm={6} xs={12}>
-                                <CollectionCard
-                                  item={{ ...item }}
-                                  hideInfo
-                                  handleRefresh={handleRefresh}
-                                />
+                                <CollectionCard item={{ ...item }} hideInfo handleRefresh={handleRefresh} />
                               </Grid>
                             ))}
                           </Grid>
@@ -916,9 +909,7 @@ export default function CreatorPage() {
                         <Box mt={3} mb={2} className={classes.typo7}>
                           Unfinished Minting
                         </Box>
-                        {nfts?.length > 0 && (
-                        <NFTCard items={nfts} disableEffect popup isLoading={loading} />
-                        )}
+                        {nfts?.length > 0 && <NFTCard items={nfts} disableEffect popup isLoading={loading} />}
                         {!loading && nfts?.length < 1 && (
                           <Box textAlign="center" width="100%" mb={10} mt={2}>
                             No unfinished nfts

@@ -47,7 +47,7 @@ export const getFeaturedWorlds = async filters => {
   }
 };
 
-export const getWorlds = async (
+export const getAssets = async (
   portion = 10,
   pageNum = 1,
   sorting = "timestamp",
@@ -168,7 +168,8 @@ export const getUnfinishedNFTs = async () => {
     throw error;
   }
 };
-export const getUnfinishedNFT = async (hash) => {
+
+export const getUnfinishedNFT = async hash => {
   try {
     const token = localStorage.getItem("token");
     const config = {
@@ -209,11 +210,11 @@ export const uploadWorld = async payload => {
 export const uploadAsset = async payload => {
   try {
     const formData = new FormData();
-    console.log(payload)
+    console.log(payload);
     Object.keys(payload).forEach(key => {
       // if (key === "image")
       //   formData.append(key, payload[key], payload[key].name);
-      // else 
+      // else
       payload[key] && formData.append(key, payload[key]);
     });
 
@@ -346,7 +347,7 @@ export const getCharacters = async (
     }
   } catch (error) {
     console.log("error in getCharacters:", error);
-    throw error
+    throw error;
   }
 };
 
@@ -444,7 +445,7 @@ export const convertToNFTAsset = async (
         royaltyPercentage: royaltyPercentage,
         royaltyAddress: royaltyAddress,
         tx: txHash,
-        totalSupply: totalSupply
+        totalSupply: totalSupply,
       },
       config
     );
@@ -484,7 +485,7 @@ export const convertToNFTAssetBatch = async (
         royaltyPercentage: royaltyPercentage,
         royaltyAddress: royaltyAddress,
         tx: txHash,
-        totalSupply: totalSupply
+        totalSupply: totalSupply,
       },
       config
     );
@@ -516,7 +517,7 @@ export const realmMint = async (
         chain: chain,
         realmAddress: realmAddress,
         realmDistributionAddress: distributionManager,
-        realmUpgraderAddress: realmUpgraderAddress
+        realmUpgraderAddress: realmUpgraderAddress,
       },
       config
     );
@@ -637,18 +638,31 @@ export const getAssetMetadata = async (item: string) => {
   }
 };
 
-export const getMetaverseSetting = async () => {
+export const getDepositInfo = async () => {
   try {
     const token = localStorage.getItem("token");
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(`${METAVERSE_URL()}/metaverse/setting`).then(res => {
-      const resp = res.data;
-      if (resp.success) {
-        return resp.data;
-      }
-    });
+    const resp = await axios.get(`${URL()}/metaverse/realmDeposit/`, config)
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getProtocolFee = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.get(`${URL()}/metaverse/protocolFee/`, config)
+    if (resp.data) {
+      return resp.data;
+    }
   } catch (error) {
     throw error;
   }

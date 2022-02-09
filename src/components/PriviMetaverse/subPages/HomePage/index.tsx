@@ -75,7 +75,7 @@ export default function HomePage() {
   React.useEffect(() => {
     if (!underMaintenanceSelector.underMaintenance) {
       setLoadingTrending(true);
-      MetaverseAPI.getWorlds(5, 1, "rating", ["WORLD"], true)
+      MetaverseAPI.getAssets(5, 1, "rating", ["WORLD"], true)
         .then(res => {
           if (res.success) {
             setTrendingContents(res.data.elements);
@@ -95,7 +95,7 @@ export default function HomePage() {
 
   const getContents = curPage => {
     setLoadingNewest(true);
-    MetaverseAPI.getWorlds(12, curPage, "timestamp", ["WORLD"], true)
+    MetaverseAPI.getAssets(12, curPage, "timestamp", ["WORLD"], true)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;

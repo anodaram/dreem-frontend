@@ -147,7 +147,13 @@ const CreateAssetFlow = ({
         break;
     }
     if (step < steps.length) {
-      setStep(prev => prev + 1);
+      if(steps[step - 1].completed){
+        setStep(prev => prev + 1);
+      } else{
+        if(stepItem.label != 'Files'){
+          showAlertMessage('Please complete current step.', { variant: "error" });
+        }
+      }
     }
   };
 
@@ -446,6 +452,7 @@ const CreateAssetFlow = ({
   };
 
   const validate = () => {
+    console.log(metadata)
     if (metadata && metadata?.fields) {
       for (let i = 0; i < metadata?.fields?.length; i++) {
         const field = metadata.fields[i];
@@ -470,7 +477,7 @@ const CreateAssetFlow = ({
               return false;
             }
           }
-        } else if (field.kind === "FILE_TYPE_IMAGE") {
+        } else if (field.kind === "FILE") {
           if (field?.key && field?.input?.required && !fileInputs[field.key]) {
             showAlertMessage(`${field?.name?.value} is required`, { variant: "error" });
             return false;
@@ -494,6 +501,14 @@ const CreateAssetFlow = ({
                 `${field?.name?.value} is invalid. Maximum image size is ${field?.input?.max?.width} x ${field?.input?.max?.height}`,
                 { variant: "error" }
               );
+              return false;
+            }
+          }
+          if (field.key && fileContents[field.key] && field?.input?.formats){
+            //@ts-ignore
+            var el =  field?.input?.formats.some(i => i.name.includes(fileInputs[field.key]?.name.split(".").reverse()[0]));
+            if(!el) {
+              showAlertMessage(`${field.key} File is invalid.`, { variant: "error" });
               return false;
             }
           }
