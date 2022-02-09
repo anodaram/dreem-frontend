@@ -233,8 +233,8 @@ const Header = props => {
 
   React.useEffect(() => {
     if (listenerSocket) {
-      const successConnectHandler = (data) => {
-        console.log("================= listener socket is connected")
+      const successConnectHandler = data => {
+        console.log("================= listener socket is connected");
       };
 
       listenerSocket.on("successConnectTest", successConnectHandler);
@@ -677,10 +677,10 @@ type NavItem = {
 const Navigator: NavItem[] = [
   { name: "PLAY", value: "play", link: "/play" },
   { name: "CREATE", value: "creations", link: "/create" },
+  { name: "REALMS", value: "realms", link: "/realms" },
   { name: "EXPLORE", value: "explore", link: "/explore" },
-  // { name: "REALMS", value: "realms", link: "/realms" },
   // { name: "AVATARS", value: "avatars", link: "/avatars" },
   // { name: "ASSETS", value: "assets", link: "/assets" },
-  { name: "GAME NFTS", value: "P2E", link: "/P2E" },
+  { name: "P2E", value: "P2E", link: "/P2E" },
   // { name: "Claim Dreem", value: "claim_dreem", link: "/claim_dreem", authorize: true },
 ];

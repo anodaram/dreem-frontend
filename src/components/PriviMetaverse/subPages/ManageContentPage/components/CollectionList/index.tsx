@@ -210,7 +210,7 @@ const CollectionList = ({
   const handleRefreshCollection = () => {
     setCurPage(1);
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, 1, "DESC")
+    MetaverseAPI.getCollections(12, 1, "DESC", userSelector.address)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;

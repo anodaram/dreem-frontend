@@ -2,7 +2,17 @@ import React, { useEffect, useState, useRef } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 
-import { Grid, FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem } from "@material-ui/core";
+import {
+  Grid,
+  FormControlLabel,
+  useMediaQuery,
+  useTheme,
+  Switch,
+  SwitchProps,
+  styled,
+  Select,
+  MenuItem,
+} from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useTypedSelector } from "store/reducers/Reducer";
@@ -33,7 +43,7 @@ const COLUMNS_COUNT_BREAK_POINTS_THREE = {
   1000: 3,
   1440: 3,
 };
-const Filters = ["WORLD"]
+const Filters = ["WORLD"];
 const WorldList = ({
   handleNext,
   handleCancel,
@@ -219,7 +229,7 @@ const WorldList = ({
             if (res.data.page && curPage <= res.data.page.max) {
               setCurPage(curPage => curPage + 1);
               setLastPage(res.data.page.max);
-            } else{
+            } else {
               setHasMore(false);
             }
           }
@@ -230,18 +240,8 @@ const WorldList = ({
 
   const loadData = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getWorlds(
-      12,
-      1,
-      "timestamp",
-      Filters,
-      false,
-      userSelector.address,
-      null,
-      false,
-      false,
-      true
-    ).then(res => {
+    MetaverseAPI.getAssets(12, 1, "timestamp", Filters, false, userSelector.id, null, false, false, true)
+      .then(res => {
         if (res.success) {
           const items = res.data.elements;
           if (items && items.length > 0) {
@@ -249,7 +249,7 @@ const WorldList = ({
             if (res.data.page && curPage <= res.data.page.max) {
               setCurPage(curPage => curPage + 1);
               setLastPage(res.data.page.max);
-            } else{
+            } else {
               setHasMore(false);
             }
           }
@@ -259,14 +259,8 @@ const WorldList = ({
   };
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getWorlds(
-      12,
-      1,
-      "timestamp",
-      Filters,
-      false,
-      userSelector.address
-    ).then(res => {
+    MetaverseAPI.getAssets(12, 1, "timestamp", Filters, false, userSelector.id)
+      .then(res => {
         if (res.success) {
           const items = res.data.elements;
           if (items && items.length > 0) {
@@ -274,8 +268,8 @@ const WorldList = ({
             if (res.data.page && curPage <= res.data.page.max) {
               setCurPage(curPage => curPage + 1);
               setLastPage(res.data.page.max);
-              curPage >= res.data.page.max && setHasMore(false)
-            } else{
+              curPage >= res.data.page.max && setHasMore(false);
+            } else {
               setHasMore(false);
             }
           }
@@ -290,7 +284,9 @@ const WorldList = ({
         {loadingCollection || collections.length ? (
           <>
             <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
-              <Box className={classes.typo4}>Select one of your works on that collection to apply for and extension</Box>
+              <Box className={classes.typo4}>
+                Select one of your works on that collection to apply for and extension
+              </Box>
             </Box>
             <Box width={1} pb={20}>
               <InfiniteScroll
@@ -305,9 +301,7 @@ const WorldList = ({
                       <MasonryGrid
                         gutter={"16px"}
                         data={Array(loadingCount).fill(0)}
-                        renderItem={(item, _) => (
-                          <WorldCard nft={{}} isLoading={true} />
-                        )}
+                        renderItem={(item, _) => <WorldCard nft={{}} isLoading={true} />}
                         columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
                       />
                     </Box>
@@ -320,7 +314,9 @@ const WorldList = ({
                       <WorldCard
                         nft={item}
                         isLoading={loadingCollection}
-                        handleClick={() => handleSelect(item.versionHashId, item.collectionAddress, item.worldTokenId)}
+                        handleClick={() =>
+                          handleSelect(item.versionHashId, item.collectionAddress, item.worldTokenId)
+                        }
                         selectable={true}
                       />
                     </Grid>
@@ -348,7 +344,7 @@ const WorldList = ({
               <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
             </Box>
             <Box className={classes.typo3}>
-              No worlds created yet
+              No worlds minted yet
             </Box>
           </Box>
         )}

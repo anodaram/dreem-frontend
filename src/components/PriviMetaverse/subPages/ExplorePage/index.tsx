@@ -1,5 +1,6 @@
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useDebounce } from "use-debounce/lib";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
@@ -11,6 +12,8 @@ import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
 import StyledCheckbox from "shared/ui-kit/Checkbox";
 import { Color } from "shared/ui-kit";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
+import WorldCard from "components/PriviMetaverse/components/cards/WorldCard";
+import AssetsCard from "components/PriviMetaverse/components/cards/AssetsCard";
 import { explorePage } from "./index.styles";
 
 import backImg1 from "assets/metaverseImages/shape_roadmap.png";
@@ -20,62 +23,61 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
   600: 2,
   900: 3,
-  1200: 4,
 };
-const Status_Options = [
-  { content: "all", color: "#ffffff50", bgcolor: "transparent" },
-  {
-    content: "for rent",
-    color: "#212121",
-    bgcolor:
-      "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)",
-  },
-  {
-    content: "rented",
-    color: "#212121",
-    bgcolor:
-      "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)",
-  },
-  {
-    content: "for sale",
-    color: "#212121",
-    bgcolor:
-      "conic-gradient(from 31.61deg at 50% 50%, #91D502 -25.18deg, #E5FF46 15deg, rgba(186, 252, 0, 0.76) 103.13deg, #A3CC00 210deg, #91D502 334.82deg, #E5FF46 375deg)",
-  },
-  {
-    content: "for reserve",
-    color: "#212121",
-    bgcolor:
-      "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
-  },
-  {
-    content: "Blocked",
-    color: "#212121",
-    bgcolor:
-      "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
-  },
-];
-const Filter_By_Options = ["all", "nft", "nft draft", "collection", "creators"];
+// const Status_Options = [
+//   { content: "all", color: "#ffffff50", bgcolor: "transparent" },
+//   {
+//     content: "for rent",
+//     color: "#212121",
+//     bgcolor:
+//       "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)",
+//   },
+//   {
+//     content: "rented",
+//     color: "#212121",
+//     bgcolor:
+//       "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)",
+//   },
+//   {
+//     content: "for sale",
+//     color: "#212121",
+//     bgcolor:
+//       "conic-gradient(from 31.61deg at 50% 50%, #91D502 -25.18deg, #E5FF46 15deg, rgba(186, 252, 0, 0.76) 103.13deg, #A3CC00 210deg, #91D502 334.82deg, #E5FF46 375deg)",
+//   },
+//   {
+//     content: "for reserve",
+//     color: "#212121",
+//     bgcolor:
+//       "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
+//   },
+//   {
+//     content: "Blocked",
+//     color: "#212121",
+//     bgcolor:
+//       "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
+//   },
+// ];
+// const Filter_By_Options = ["all", "nft", "nft draft", "collection", "creators"];
 const Asset_Type_Options = [
-  { content: "world", image: require("assets/metaverseImages/asset_world.png") },
-  { content: "3d asset", image: require("assets/metaverseImages/asset_3d.png") },
-  { content: "texture", image: require("assets/metaverseImages/asset_texture.png") },
-  { content: "material", image: require("assets/metaverseImages/asset_material.png") },
-  { content: "character", image: require("assets/metaverseImages/asset_character.png") },
+  { content: "world", image: require("assets/metaverseImages/asset_world.png"), state: "WORLD" },
+  { content: "3d asset", image: require("assets/metaverseImages/asset_3d.png"), state: "MODEL" },
+  { content: "texture", image: require("assets/metaverseImages/asset_texture.png"), state: "TEXTURE" },
+  { content: "material", image: require("assets/metaverseImages/asset_material.png"), state: "MATERIAL" },
+  { content: "character", image: require("assets/metaverseImages/asset_character.png"), state: "CHARACTER" },
 ];
-const Primary_Options = [
-  { content: "all", image: null },
-  { content: "water", image: require("assets/metaverseImages/primary_water.png") },
-  { content: "air", image: require("assets/metaverseImages/primary_air.png") },
-  { content: "land", image: require("assets/metaverseImages/primary_land.png") },
-];
-const Rarity_Options = [
-  { content: "all", color: "#ffffff50", border: "1px solid transparent" },
-  { content: "legendary", color: "#FF7E36", border: "1px solid #FF7E36" },
-  { content: "epic", color: "#9C5FFF", border: "1px solid #9C5FFF" },
-  { content: "rare", color: "#5F9FFF", border: "1px solid #5F9FFF" },
-  { content: "common", color: "#808A9A", border: "1px solid #808A9A" },
-];
+// const Primary_Options = [
+//   { content: "all", image: null },
+//   { content: "water", image: require("assets/metaverseImages/primary_water.png") },
+//   { content: "air", image: require("assets/metaverseImages/primary_air.png") },
+//   { content: "land", image: require("assets/metaverseImages/primary_land.png") },
+// ];
+// const Rarity_Options = [
+//   { content: "all", color: "#ffffff50", border: "1px solid transparent" },
+//   { content: "legendary", color: "#FF7E36", border: "1px solid #FF7E36" },
+//   { content: "epic", color: "#9C5FFF", border: "1px solid #9C5FFF" },
+//   { content: "rare", color: "#5F9FFF", border: "1px solid #5F9FFF" },
+//   { content: "common", color: "#808A9A", border: "1px solid #808A9A" },
+// ];
 
 export default function ExplorePage() {
   const width = useWindowDimensions().width;
@@ -84,48 +86,71 @@ export default function ExplorePage() {
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [avatars, setAvatars] = React.useState<any[]>([]);
+  const [assetList, setAssetList] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [page, setPage] = React.useState<number>(1);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
   const [openFilterBar, setOpenFilterBar] = React.useState<boolean>(true);
-  const [openStatusSection, setOpenStatusSection] = React.useState<boolean>(true);
-  const [openFilterBySection, setOpenFilterBySection] = React.useState<boolean>(true);
+  // const [openStatusSection, setOpenStatusSection] = React.useState<boolean>(true);
+  // const [openFilterBySection, setOpenFilterBySection] = React.useState<boolean>(true);
   const [openAssetSection, setOpenAssetSection] = React.useState<boolean>(true);
-  const [openPrimarySection, setOpenPrimarySection] = React.useState<boolean>(true);
-  const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
-  const [selectedContentType, setSelectedContentType] = React.useState<string>("all");
-  const [selectedAssetType, setSelectedAssetType] = React.useState<string>("world");
+  // const [openPrimarySection, setOpenPrimarySection] = React.useState<boolean>(true);
+  // const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
+  // const [selectedContentType, setSelectedContentType] = React.useState<string>("all");
+  const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["WORLD"]);
   const [searchValue, setSearchValue] = React.useState<string>("");
+
+  const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const classes = explorePage({ openFilterBar });
 
-  const loadingCount = React.useMemo(
-    () => (width > 1200 ? 4 : width > 900 ? 3 : width > 600 ? 2 : 1),
-    [width]
-  );
+  const loadingCount = React.useMemo(() => (width > 900 ? 3 : width > 600 ? 2 : 1), [width]);
 
   React.useEffect(() => {
-    loadAvatars(true);
-  }, []);
+    loadData(true);
+  }, [selectedAssetTypes, debouncedSearchValue]);
 
-  const loadAvatars = async (init = false) => {
+  const loadData = async (init = false) => {
     if (loading) return;
+
     try {
       setLoading(true);
-      const response = await MetaverseAPI.getWorlds(12, page, "timestamp", ["CHARACTER"]);
+
+      const search = debouncedSearchValue ? debouncedSearchValue : undefined;
+      const curPage = init ? 1 : page;
+      const response = await MetaverseAPI.getAssets(
+        12,
+        curPage,
+        "timestamp",
+        selectedAssetTypes,
+        true,
+        undefined,
+        undefined,
+        undefined,
+        false,
+        undefined,
+        search
+      );
       if (response.success) {
-        const newAvatars = response.data.elements;
-        setAvatars(prev => (init ? newAvatars : [...prev, ...newAvatars]));
-        setPage(prev => prev + 1);
+        const newData = response.data.elements;
+        setAssetList(prev => (init ? newData : [...prev, ...newData]));
+        setPage(curPage + 1);
         setHasMore(response.data.page.cur < response.data.page.max);
       } else {
-        setAvatars([]);
+        setAssetList([]);
       }
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSelectedAssetTypes = asset => {
+    if (selectedAssetTypes.includes(asset.state)) {
+      setSelectedAssetTypes([...selectedAssetTypes.filter(item => item !== asset.state)]);
+    } else {
+      setSelectedAssetTypes([...selectedAssetTypes, asset.state]);
     }
   };
 
@@ -147,7 +172,7 @@ export default function ExplorePage() {
             </Box>
             <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
             <Box className={classes.filterMainSection}>
-              <Box className={classes.subFilterSection}>
+              {/* <Box className={classes.subFilterSection}>
                 <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
                   <Box color="#E9FF26">Status</Box>
                   <div className={classes.iconButton} onClick={() => setOpenStatusSection(prev => !prev)}>
@@ -200,7 +225,7 @@ export default function ExplorePage() {
                   </Box>
                 )}
               </Box>
-              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} /> */}
               <Box className={classes.subFilterSection}>
                 <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
                   <Box color="#E9FF26">Asset Type</Box>
@@ -217,12 +242,17 @@ export default function ExplorePage() {
                         key={index}
                         mb={1.5}
                         style={{ cursor: "pointer" }}
-                        onClick={() => setSelectedAssetType(item.content)}
+                        onClick={() => handleSelectedAssetTypes(item)}
                       >
+                        <StyledCheckbox
+                          buttonColor={Color.LightYellow}
+                          checked={selectedAssetTypes.includes(item.state)}
+                          name="checked"
+                        />
                         <img src={item.image} width={24} height={24} alt="asset image" />
                         <Box
                           fontSize={14}
-                          color={item.content === selectedAssetType ? "#fff" : "#ffffff50"}
+                          color={selectedAssetTypes.includes(item.state) ? "#fff" : "#ffffff50"}
                           ml={1.3}
                         >
                           {item.content}
@@ -232,8 +262,8 @@ export default function ExplorePage() {
                   </Box>
                 )}
               </Box>
-              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
-              <Box className={classes.subFilterSection}>
+              {/* <Box width={1} height={"1px"} bgcolor={"#ffffff50"} /> */}
+              {/* <Box className={classes.subFilterSection}>
                 <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
                   <Box color="#E9FF26">Primary</Box>
                   <div className={classes.iconButton} onClick={() => setOpenPrimarySection(prev => !prev)}>
@@ -284,7 +314,7 @@ export default function ExplorePage() {
                     ))}
                   </Box>
                 )}
-              </Box>
+              </Box> */}
             </Box>
           </>
         ) : (
@@ -307,7 +337,7 @@ export default function ExplorePage() {
                 <InputWithLabelAndTooltip
                   type="text"
                   inputValue={searchValue}
-                  placeHolder="Search collections"
+                  placeHolder="Search assets"
                   onInputValueChange={e => {
                     setSearchValue(e.target.value);
                   }}
@@ -329,10 +359,10 @@ export default function ExplorePage() {
             </Box>
 
             <InfiniteScroll
-              hasChildren={avatars?.length > 0}
-              dataLength={avatars?.length}
+              hasChildren={assetList?.length > 0}
+              dataLength={assetList?.length}
               scrollableTarget={"scrollContainer"}
-              next={loadAvatars}
+              next={loadData}
               hasMore={hasMore}
               loader={
                 loading && (
@@ -352,13 +382,21 @@ export default function ExplorePage() {
               <Box mt={4}>
                 <MasonryGrid
                   gutter={"40px"}
-                  data={avatars}
-                  renderItem={(item, index) => <AvatarCard item={item} key={`avatar_${index}`} />}
+                  data={assetList}
+                  renderItem={(item, index) =>
+                    item.itemKind === "WORLD" ? (
+                      <WorldCard nft={item} selectable={false} key={`world_${index}`} />
+                    ) : item.itemKind === "CHARACTER" ? (
+                      <AvatarCard item={item} key={`avatar_${index}`} />
+                    ) : (
+                      <AssetsCard item={item} key={`asset_${index}`} />
+                    )
+                  }
                   columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                 />
               </Box>
             </InfiniteScroll>
-            {!loading && avatars?.length < 1 && (
+            {!loading && assetList?.length < 1 && (
               <Box textAlign="center" width="100%" mb={10} mt={2} fontSize={22}>
                 No Data
               </Box>

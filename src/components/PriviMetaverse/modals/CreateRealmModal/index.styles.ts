@@ -86,7 +86,7 @@ export const useModalStyles = makeStyles(theme => ({
     lineHeight: "160%",
     outline: "none",
     color: "white",
-    padding: "12px 20px",
+    padding: "12px 30px",
   },
   uploadBox: {
     display: "flex",

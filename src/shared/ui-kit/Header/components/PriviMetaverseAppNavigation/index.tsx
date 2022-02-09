@@ -16,11 +16,11 @@ interface NavItemProps {
 const LeftNavigations: NavItemProps[] = [
   { name: "PLAY", value: "play", link: "/play" },
   { name: "CREATE", value: "creations", link: "/create" },
+  { name: "REALMS", value: "realms", link: "/realms" },
   { name: "EXPLORE", value: "explore", link: "/explore" },
-  // { name: "REALMS", value: "realms", link: "/realms" },
   // { name: "AVATARS", value: "avatars", link: "/avatars" },
   // { name: "ASSETS", value: "assets", link: "/assets" },
-  { name: "GAME NFTS", value: "P2E", link: "/P2E" },
+  { name: "P2E", value: "P2E", link: "/P2E" },
 ];
 
 const RightNavigations: NavItemProps[] = [

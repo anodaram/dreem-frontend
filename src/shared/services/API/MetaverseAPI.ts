@@ -47,7 +47,7 @@ export const getFeaturedWorlds = async filters => {
   }
 };
 
-export const getWorlds = async (
+export const getAssets = async (
   portion = 10,
   pageNum = 1,
   sorting = "timestamp",
@@ -57,7 +57,8 @@ export const getWorlds = async (
   itemIds?: any,
   isExtension?: boolean,
   featured = false,
-  isMinted?: boolean
+  isMinted?: boolean,
+  searchValue = ""
 ) => {
   try {
     let params: any = {};
@@ -74,6 +75,7 @@ export const getWorlds = async (
     params = isExtension !== undefined ? { ...params, isExtension } : params;
     params = featured !== undefined ? { ...params, featured } : params;
     params = isMinted !== undefined ? { ...params, isMinted } : params;
+    params = searchValue ? { ...params, searchValue } : params;
 
     const token = localStorage.getItem("token");
     const config = {
@@ -168,7 +170,8 @@ export const getUnfinishedNFTs = async () => {
     throw error;
   }
 };
-export const getUnfinishedNFT = async (hash) => {
+
+export const getUnfinishedNFT = async hash => {
   try {
     const token = localStorage.getItem("token");
     const config = {
@@ -209,12 +212,14 @@ export const uploadWorld = async payload => {
 export const uploadAsset = async payload => {
   try {
     const formData = new FormData();
-    console.log(payload)
+    console.log(payload);
     Object.keys(payload).forEach(key => {
-      // if (key === "image")
-      //   formData.append(key, payload[key], payload[key].name);
-      // else 
-      payload[key] && formData.append(key, payload[key]);
+      if (key === "isPublic"){
+        formData.append(key, payload[key]);
+      }
+      else{
+        payload[key] && formData.append(key, payload[key]);
+      }
     });
 
     const token = localStorage.getItem("token");
@@ -346,7 +351,7 @@ export const getCharacters = async (
     }
   } catch (error) {
     console.log("error in getCharacters:", error);
-    throw error
+    throw error;
   }
 };
 
@@ -444,7 +449,7 @@ export const convertToNFTAsset = async (
         royaltyPercentage: royaltyPercentage,
         royaltyAddress: royaltyAddress,
         tx: txHash,
-        totalSupply: totalSupply
+        totalSupply: totalSupply,
       },
       config
     );
@@ -484,7 +489,7 @@ export const convertToNFTAssetBatch = async (
         royaltyPercentage: royaltyPercentage,
         royaltyAddress: royaltyAddress,
         tx: txHash,
-        totalSupply: totalSupply
+        totalSupply: totalSupply,
       },
       config
     );
@@ -516,7 +521,7 @@ export const realmMint = async (
         chain: chain,
         realmAddress: realmAddress,
         realmDistributionAddress: distributionManager,
-        realmUpgraderAddress: realmUpgraderAddress
+        realmUpgraderAddress: realmUpgraderAddress,
       },
       config
     );
