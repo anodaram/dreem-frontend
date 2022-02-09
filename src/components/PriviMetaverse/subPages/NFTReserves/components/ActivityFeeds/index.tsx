@@ -142,14 +142,14 @@ export default function ActivityFeeds({ onClose }) {
                   <Box display={"flex"} flexDirection={"column"} ml={1.5}>
                     <Box className={classes.typo1}>{item.name}</Box>
                     <Box className={classes.typo2} mt={0.25}>
-                      {(item.operator || item.seller || item.fromSeller || item.toSeller || "").substring(
+                      {(item.operator || item.seller || item.fromSeller || item.toSeller || item.Address).substring(
                         0,
                         6
                       )}
                       ...
-                      {(item.operator || item.seller || item.fromSeller || item.toSeller || "").substring(
-                        (item.operator || item.seller || item.fromSeller || item.toSeller || "").length - 4,
-                        (item.operator || item.seller || item.fromSeller || item.toSeller || "").length
+                      {(item.operator || item.seller || item.fromSeller || item.toSeller || item.Address).substring(
+                        (item.operator || item.seller || item.fromSeller || item.toSeller || item.Address).length - 4,
+                        (item.operator || item.seller || item.fromSeller || item.toSeller || item.Address).length
                       )}
                     </Box>
                   </Box>
