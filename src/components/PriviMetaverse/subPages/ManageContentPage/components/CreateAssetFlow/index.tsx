@@ -137,7 +137,7 @@ const CreateAssetFlow = ({
         steps[step - 1].completed = (isRoyalty && royaltyPercentage && royaltyAddress) || (isRoyalty === false) ? true : false;
         break;
       case 'Files':
-        steps[step - 1].completed = validate() ? true : false;
+        steps[step - 1].completed = validate(true) ? true : false;
         break;
       case 'Collection':
         steps[step - 1].completed = currentCollection ? true : false;
@@ -156,6 +156,26 @@ const CreateAssetFlow = ({
       }
     }
   };
+  const checkCurrentStep = (stepItem) => {
+    console.log('-----', stepItem)
+    switch (stepItem.label) {
+      case 'NFT':
+        return (nftOption === 'single') || (nftOption === 'multiple' && amount) ? true : false;
+        break;
+      case 'Royalties':
+        return (isRoyalty && royaltyPercentage && royaltyAddress) || (isRoyalty === false) ? true : false;
+        break;
+      case 'Files':
+        return validate(false) ? true : false;
+        break;
+      case 'Collection':
+        return currentCollection ? true : false;
+        break;
+
+      default:
+        break;
+    }
+  };
 
   const handleGoStep = step => {
     setStep(step);
@@ -164,7 +184,7 @@ const CreateAssetFlow = ({
 
   const handleSaveDraft = async () => {
     setOpenPublic(false)
-    if (validate()) {
+    if (validate(false)) {
       if (!currentCollection) {
         showAlertMessage('Please choose collection.', { variant: "error" });
         return false;
@@ -451,26 +471,26 @@ const CreateAssetFlow = ({
     nftOption == "single" ? mintSingleNFT() : setOpenMintEditions(true);
   };
 
-  const validate = () => {
+  const validate = (withMessage) => {
     console.log(metadata)
     if (metadata && metadata?.fields) {
       for (let i = 0; i < metadata?.fields?.length; i++) {
         const field = metadata.fields[i];
         if (field.kind === "STRING") {
           if (field?.key && field?.input?.required && !formData[field?.key]) {
-            showAlertMessage(`${field?.name?.value} is required`, { variant: "error" });
+            withMessage && showAlertMessage(`${field?.name?.value} is required`, { variant: "error" });
             return false;
           }
           if (field?.key && formData[field.key] && field?.input?.range) {
             if (field?.input?.range.min && field?.input?.range.min > formData[field.key].length) {
-              showAlertMessage(
+              withMessage && showAlertMessage(
                 `${field?.name?.value} is invalid. Must be more than ${field.input.range.min} characters`,
                 { variant: "error" }
               );
               return false;
             }
             if (field.input.range.max && field.input.range.max < formData[field.key].length) {
-              showAlertMessage(
+              withMessage && showAlertMessage(
                 `${field?.name?.value} is invalid. Must be less than ${field.input.range.max} characters`,
                 { variant: "error" }
               );
@@ -479,14 +499,14 @@ const CreateAssetFlow = ({
           }
         } else if (field.kind === "FILE") {
           if (field?.key && field?.input?.required && !fileInputs[field.key]) {
-            showAlertMessage(`${field?.name?.value} is required`, { variant: "error" });
+            withMessage && showAlertMessage(`${field?.name?.value} is required`, { variant: "error" });
             return false;
           }
           if (field.key && fileContents[field.key] && fileContents[field.key].dimension && field?.input?.min) {
             //@ts-ignore
             if (field?.input?.min.width > (fileContents[field.key].dimension?.width || 0) || field?.input?.min?.height > (fileContents[field.key].dimension?.height || 0)
             ) {
-              showAlertMessage(
+              withMessage && showAlertMessage(
                 `${field?.name?.value} is invalid. Minium image size is ${field?.input?.min?.width} x ${field?.input?.min?.height}`,
                 { variant: "error" }
               );
@@ -497,7 +517,7 @@ const CreateAssetFlow = ({
             //@ts-ignore
             if (field?.input?.max?.width < (fileContents[field.key].dimension?.width || 0) || field?.input?.max?.height < (fileContents[field.key].dimension?.height || 0)
             ) {
-              showAlertMessage(
+              withMessage && showAlertMessage(
                 `${field?.name?.value} is invalid. Maximum image size is ${field?.input?.max?.width} x ${field?.input?.max?.height}`,
                 { variant: "error" }
               );
@@ -508,7 +528,7 @@ const CreateAssetFlow = ({
             //@ts-ignore
             var el =  field?.input?.formats.some(i => i.name.includes(fileInputs[field.key]?.name.split(".").reverse()[0]));
             if(!el) {
-              showAlertMessage(`${field.key} File is invalid.`, { variant: "error" });
+              withMessage && showAlertMessage(`${field.key} File is invalid.`, { variant: "error" });
               return false;
             }
           }
@@ -730,7 +750,7 @@ const CreateAssetFlow = ({
               <PrimaryButton
                 size="medium"
                 className={classes.nextBtn}
-                // disabled={step === 1}
+                disabled={!checkCurrentStep(steps[step-1])}
                 onClick={() => handleNext()}
               >
                 next
@@ -738,10 +758,10 @@ const CreateAssetFlow = ({
             )}
             {step === steps.length && (
               <Box display="flex" alignItems="center" justifyContent="center">
-                <div className={classes.howToCreateBtn} onClick={() => setOpenPublic(true)}>
+                <PrimaryButton size="medium" className={classes.howToCreateBtn} disabled={currentCollection ? false : true} onClick={() => setOpenPublic(true)}>
                   create draft
-                </div>
-                <PrimaryButton size="medium" className={classes.nextBtn} onClick={() => { handleMint() }}>
+                </PrimaryButton>
+                <PrimaryButton size="medium" className={classes.nextBtn} disabled={savingDraft ? false : true} onClick={() => { handleMint() }}>
                   mint nft
                 </PrimaryButton>
               </Box>
