@@ -150,7 +150,9 @@ const CreateAssetFlow = ({
       if(steps[step - 1].completed){
         setStep(prev => prev + 1);
       } else{
-        showAlertMessage('Please complete current step.', { variant: "error" });
+        if(stepItem.label != 'Files'){
+          showAlertMessage('Please complete current step.', { variant: "error" });
+        }
       }
     }
   };
@@ -504,9 +506,9 @@ const CreateAssetFlow = ({
           }
           if (field.key && fileContents[field.key] && field?.input?.formats){
             //@ts-ignore
-            if(!field?.input?.formats.toString().includes(fileContents[field.key]?.name.split(".").reverse()[0])) {
-              console.log(fileContents[field.key])
-              showAlertMessage(`File is invalid.`, { variant: "error" });
+            var el =  field?.input?.formats.some(i => i.name.includes(fileInputs[field.key]?.name.split(".").reverse()[0]));
+            if(!el) {
+              showAlertMessage(`${field.key} File is invalid.`, { variant: "error" });
               return false;
             }
           }
