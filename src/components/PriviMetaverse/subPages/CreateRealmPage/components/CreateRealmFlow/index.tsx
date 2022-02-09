@@ -115,7 +115,7 @@ const CreateRealmFlow = ({
   const getSettings = () => {
     MetaverseAPI.getNetworks()
       .then(res => {
-        console.log('here',res)
+        setNetworks(res.data?.Chains)
       })
   };
 
@@ -843,9 +843,9 @@ const CreateRealmFlow = ({
                             getContentAnchorEl: null,
                           }}
                         >
-                          {networks.options?.map((option, index) => (
-                            <MenuItem key={`OPTION-${index}`} value={option.value}>
-                              {option.name.value}
+                          {networks?.map((option, index) => (
+                            <MenuItem key={`OPTION-${index}`} value={option}>
+                              {option}
                             </MenuItem>
                           ))}
                         </Select>
@@ -939,7 +939,7 @@ const CreateRealmFlow = ({
 
       <Box className={classes.footer}>
         <div className={classes.howToCreateBtn} onClick={handlePrev}>
-          cancel
+          back
         </div>
         <PrimaryButton
           size="medium"
