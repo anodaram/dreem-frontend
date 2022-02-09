@@ -83,7 +83,7 @@ const NFTReserves = () => {
   const classes = useNFTOptionsStyles({ openSideBar });
 
   const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? openSideBar ? 3 : 4 : 4;
-  const MAX_NEW_LIST_LENGTH = 10
+  const MAX_NEW_LIST_LENGTH = 12
 
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     { headerName: "NFT" },
@@ -132,12 +132,12 @@ const NFTReserves = () => {
       };
 
       const updateMarketPlaceFeedHandler = _transaction => {
-        if (transactions && transactions.length) {
-          const _transactions = transactions.map(transaction =>
+        setTransactions((prev) => {
+          const _transactions = prev.map(transaction =>
             _transaction.id === transaction.id ? _transaction : transaction
           );
-          setTransactions(_transactions);
-        }
+          return _transactions;
+        });
       };
 
       listenerSocket.on("newNFT", newNFTHandler);
@@ -365,11 +365,11 @@ const NFTReserves = () => {
                         <img
                           src={game?.Image}
                           className={classes.gameBgImage}
-                          style={{ width: openSideBar ? "auto" : "1280px !important", objectFit: "cover" }}
+                          style={{ width: openSideBar ? "100%" : "1280px !important", objectFit: "cover" }}
                         />
                         <Box
                           className={classes.gameContent}
-                          style={{ width: openSideBar ? "auto" : "1280px" }}
+                          style={{ width: openSideBar ? "100%" : "1280px !important" }}
                         >
                           <Box className={classes.popularGames}>
                             <GameIcon />

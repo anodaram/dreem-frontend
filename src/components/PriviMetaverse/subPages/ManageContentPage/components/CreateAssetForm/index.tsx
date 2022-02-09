@@ -102,18 +102,18 @@ const CreateAssetForm = ({
               className={classes.input}
               placeholder={asset.input?.placeholder?.value}
               value={formData[asset.key]}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                setFormData({ ...formData, [asset.key]: e.target.value })
-              }
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>{
+                asset.input && setFormData({ ...formData, [asset.key]: e.target.value })
+              }}
             />
           ) : (
             <input
               className={classes.input}
               placeholder={asset.input?.placeholder?.value}
               value={formData[asset.key]}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormData({ ...formData, [asset.key]: e.target.value })
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
+                asset.input && setFormData({ ...formData, [asset.key]: e.target.value })
+              }}
             />
           )
         ) : null}
@@ -165,11 +165,12 @@ const CreateAssetForm = ({
                     <img width={26} src={require("assets/icons/image-icon.png")} alt="image" />
                   </Box>
                   <Box className={classes.controlBox} ml={5}>
-                    Drag image here or <span>browse media on your device</span>
+                    {/* Drag image here or <span>browse media on your device</span>
                     <br />
                     <span>Accepted files png, jpg, svg</span> minimum 600 x 600 px size for
                     <br />
-                    best viewing experience
+                    best viewing experience */}
+                    <div dangerouslySetInnerHTML={{__html: asset.input?.description?.value}} />
                   </Box>
                 </>
               )}
@@ -180,7 +181,7 @@ const CreateAssetForm = ({
               type="file"
               style={{ display: "none" }}
               accept={asset.input?.formats?.mimeType}
-              onChange={onFileInput(asset.key)}
+              onChange={asset.input && onFileInput(asset.key)}
             />
           </>
         )}
@@ -189,7 +190,7 @@ const CreateAssetForm = ({
             defaultValue={asset.value}
             value={formData[asset.key]}
             onChange={(e: React.ChangeEvent<{ value: unknown }>) => {
-              setFormData({ ...formData, [asset.key]: e.target.value });
+              asset.input && setFormData({ ...formData, [asset.key]: e.target.value });
             }}
             disableUnderline
             className={classes.select}
@@ -218,7 +219,7 @@ const CreateAssetForm = ({
             row
             value={formData[asset.key] || asset.value ? "yes" : "no"}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFormData({ ...formData, [asset.key]: e.target.value === "yes" });
+              asset.input && setFormData({ ...formData, [asset.key]: e.target.value === "yes" });
             }}
             className={classes.radio}
           >
@@ -231,7 +232,7 @@ const CreateAssetForm = ({
             <Slider
               value={formData[asset.key] || asset.value || 0}
               onChange={(event: any, newValue: number | number[]) => {
-                setFormData({ ...formData, [asset.key]: newValue });
+                asset.input && setFormData({ ...formData, [asset.key]: newValue });
               }}
               min={asset.range.min}
               max={asset.range.max}
@@ -244,9 +245,9 @@ const CreateAssetForm = ({
               min={asset.range.min}
               max={asset.range.max}
               step={0.01}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormData({ ...formData, [asset.key]: e.target.value })
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
+                asset.input && setFormData({ ...formData, [asset.key]: e.target.value })
+              }}
             />
           </Box>
         )}
@@ -258,7 +259,7 @@ const CreateAssetForm = ({
                 a: Number((asset.value.a / 255).toFixed(2)),
               }
             }
-            onChangeComplete={color => setFormData({ ...formData, [asset.key]: obj2color(color.rgb) })}
+            onChangeComplete={color => asset.input && setFormData({ ...formData, [asset.key]: obj2color(color.rgb) })}
           />
         )}
         {asset.kind === "ITEM" && (
@@ -309,7 +310,7 @@ const CreateAssetForm = ({
               hidden
               type="file"
               style={{ display: "none" }}
-              onChange={onFileInput(asset.key)}
+              onChange={asset.input && onFileInput(asset.key)}
             />
           </>
         )}
@@ -317,7 +318,7 @@ const CreateAssetForm = ({
     );
   };
 
-  return <Box>{metadata.fields.map((asset: any, index: number) => renderAsset(asset, index))}</Box>;
+  return <Box>{metadata.fields?.map((asset: any, index: number) => renderAsset(asset, index))}</Box>;
 };
 
 export default CreateAssetForm;

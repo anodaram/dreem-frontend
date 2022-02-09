@@ -53,12 +53,12 @@ export default function ActivityFeeds({ onClose }) {
   useEffect(() => {
     if (listenerSocket) {
       const updateMarketPlaceFeedHandler = _transaction => {
-        if (transactions && transactions.length) {
-          const _transactions = transactions.map(transaction =>
+        setTransactions((prev) => {
+          const _transactions = prev.map(transaction =>
             _transaction.id === transaction.id ? _transaction : transaction
           );
-          setTransactions(_transactions);
-        }
+          return _transactions;
+        });
       };
 
       listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);

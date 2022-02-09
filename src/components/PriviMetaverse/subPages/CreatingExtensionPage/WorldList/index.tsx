@@ -239,7 +239,7 @@ const WorldList = ({
 
   const loadData = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getAssets(12, 1, "timestamp", Filters, false, userSelector.address, null, false, false, true)
+    MetaverseAPI.getAssets(12, 1, "timestamp", Filters, false, userSelector.id, null, false, false, true)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -258,7 +258,7 @@ const WorldList = ({
   };
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getAssets(12, 1, "timestamp", Filters, false, userSelector.address)
+    MetaverseAPI.getAssets(12, 1, "timestamp", Filters, false, userSelector.id)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -337,7 +337,9 @@ const WorldList = ({
               </Box>
               <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
             </Box>
-            <Box className={classes.typo3}>No worlds created yet</Box>
+            <Box className={classes.typo3}>
+              No worlds minted yet
+            </Box>
           </Box>
         )}
       </div>

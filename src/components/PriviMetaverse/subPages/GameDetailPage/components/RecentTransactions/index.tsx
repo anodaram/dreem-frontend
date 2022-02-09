@@ -31,10 +31,10 @@ export default function RecentTransactions() {
   useEffect(() => {
     if (listenerSocket) {
       const updateMarketPlaceFeedHandler = _transaction => {
-        if (transactions && transactions.length) {
-          const _transactions = transactions.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
-          setTransactions(_transactions);
-        }
+        setTransactions((prev) => {
+          const _transactions = prev.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
+          return _transactions;
+        });
       };
 
       listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);

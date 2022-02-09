@@ -11,7 +11,7 @@ import Box from "shared/ui-kit/Box";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
 // import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { getUser } from "store/selectors/user";
-// import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
+import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 // import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 // import confirmAlert from "shared/ui-kit/ConfirmAlert";
 import ContentPreviewModal from "../../../modals/ContentPreviewModal";
@@ -42,6 +42,8 @@ export default function WorldCard({
   const { shareMedia } = useShareMedia();
   // const { showAlertMessage } = useAlertMessage();
   const { draftId } = useParams<{ draftId?: string }>();
+  const [depositInfo, setDepositInfo] = useState<any>(null);
+  const [protocolFee, setProtocolFee] = useState<any>(null);
 
   const [openContentPreview, setOpenContentPreview] = useState<boolean>(
     draftId && draftId == nft?.id ? true : false
@@ -61,16 +63,28 @@ export default function WorldCard({
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
   React.useEffect(() => {
+    getSettings();
+  }, []);
+
+  React.useEffect(() => {
     setData(nft);
     setIsPublic(nft.isPublic);
   }, [nft]);
+
+  const getSettings = () => {
+    MetaverseAPI.getDepositInfo().then(res => {
+      setDepositInfo(res.data);
+    });
+    MetaverseAPI.getProtocolFee().then(res => {
+      setProtocolFee(res.data);
+    });
+  };
 
   // const handleRemove = async () => {
   //   const confirm = await confirmAlert({
   //     title: "Remove realm",
   //     subTitle: "Are you sure about removing this realm?",
   //   });
-
   //   if (confirm) {
   //     MetaverseAPI.deleteWorld(nft.id)
   //       .then(res => {
@@ -86,6 +100,7 @@ export default function WorldCard({
   //         showAlertMessage(`Failed to delete world`, { variant: "error" });
   //       });
   //   }
+  // };
   // };
 
   const handleOpenModal = () => {
@@ -241,6 +256,8 @@ export default function WorldCard({
       {openDepositRequired && (
         <DepositRequiredModal
           open={openDepositRequired}
+          depositInfo={depositInfo}
+          protocolFee={protocolFee}
           onClose={() => setOpenDepositRequired(false)}
           onApprove={() => {
             setOpenDepositRequired(false);

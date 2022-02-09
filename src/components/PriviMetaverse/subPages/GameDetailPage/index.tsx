@@ -503,7 +503,7 @@ export default function GameDetailPage() {
               flexDirection={isMobile || (isTablet && openSideBar) ? "column" : "row"}
             >
               <img
-                src={gameInfo?.Image || getDefaultBGImage()}
+                src={gameInfo?.CardImage || getDefaultBGImage()}
                 className={classes.gameInfoImg}
                 alt="game info image"
               />
