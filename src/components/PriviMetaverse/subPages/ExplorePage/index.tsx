@@ -84,7 +84,7 @@ export default function ExplorePage() {
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [avatars, setAvatars] = React.useState<any[]>([]);
+  const [assetList, setAssetList] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [page, setPage] = React.useState<number>(1);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
@@ -106,6 +106,8 @@ export default function ExplorePage() {
   );
 
   React.useEffect(() => {
+    setAssetList([]);
+    setPage(1);
     loadData(true);
   }, [selectedAssetTypes, selectedAssetTypes.length]);
 
@@ -116,11 +118,11 @@ export default function ExplorePage() {
       const response = await MetaverseAPI.getAssets(12, page, "timestamp", selectedAssetTypes);
       if (response.success) {
         const newAvatars = response.data.elements;
-        setAvatars(prev => (init ? newAvatars : [...prev, ...newAvatars]));
+        setAssetList(prev => (init ? newAvatars : [...prev, ...newAvatars]));
         setPage(prev => prev + 1);
         setHasMore(response.data.page.cur < response.data.page.max);
       } else {
-        setAvatars([]);
+        setAssetList([]);
       }
     } catch (error) {
       console.log(error);
@@ -342,8 +344,8 @@ export default function ExplorePage() {
             </Box>
 
             <InfiniteScroll
-              hasChildren={avatars?.length > 0}
-              dataLength={avatars?.length}
+              hasChildren={assetList?.length > 0}
+              dataLength={assetList?.length}
               scrollableTarget={"scrollContainer"}
               next={loadData}
               hasMore={hasMore}
@@ -365,13 +367,13 @@ export default function ExplorePage() {
               <Box mt={4}>
                 <MasonryGrid
                   gutter={"40px"}
-                  data={avatars}
+                  data={assetList}
                   renderItem={(item, index) => <AvatarCard item={item} key={`avatar_${index}`} />}
                   columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                 />
               </Box>
             </InfiniteScroll>
-            {!loading && avatars?.length < 1 && (
+            {!loading && assetList?.length < 1 && (
               <Box textAlign="center" width="100%" mb={10} mt={2} fontSize={22}>
                 No Data
               </Box>
