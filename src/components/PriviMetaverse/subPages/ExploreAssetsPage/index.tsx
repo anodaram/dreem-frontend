@@ -77,7 +77,7 @@ export default function ExploreAssetsPage() {
       const assetType = AssetList.filter(item => item.value === filter)[0].type;
       const search = debouncedSearchValue ? debouncedSearchValue : undefined;
 
-      const response = await MetaverseAPI.getWorlds(12, page, "timestamp", [assetType]);
+      const response = await MetaverseAPI.getAssets(12, page, "timestamp", [assetType]);
       if (response.success) {
         const newData = response.data.elements;
         setAssets(prev => (init ? newData : [...prev, ...newData]));

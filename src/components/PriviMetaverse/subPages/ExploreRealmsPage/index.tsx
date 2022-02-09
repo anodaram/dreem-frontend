@@ -84,7 +84,7 @@ export default function ExploreRealmsPage() {
   const loadMore = (isInit = false) => {
     if (!isInit && (!hasMore || loadingExplore)) return;
 
-    MetaverseAPI.getWorlds(12, curPage, "timestamp", filters, true, undefined, undefined, false)
+    MetaverseAPI.getAssets(12, curPage, "timestamp", filters, true, undefined, undefined, false)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
