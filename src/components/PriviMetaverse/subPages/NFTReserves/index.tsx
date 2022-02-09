@@ -82,7 +82,8 @@ const NFTReserves = () => {
 
   const classes = useNFTOptionsStyles({ openSideBar });
 
-  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? (openSideBar ? 3 : 4) : 4;
+  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? openSideBar ? 3 : 4 : 4;
+  const MAX_NEW_LIST_LENGTH = 10
 
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     { headerName: "NFT" },
@@ -117,9 +118,17 @@ const NFTReserves = () => {
 
   useEffect(() => {
     if (listenerSocket) {
-      const newNFTHandler = (_e) => {
-        console.log('new NFT', _e)
-        getNewListings();
+      const newNFTHandler = data => {
+        let _newNFT = data?.nftData;
+        if (_newNFT && !loadingNewListings) {
+          setNewListings((prev) => {
+            const _newListings = prev.filter(nft => (_newNFT.collectionId !== nft.collectionId || _newNFT.tokenId !== nft.tokenId));
+            if (_newListings.length >= MAX_NEW_LIST_LENGTH) {
+              _newListings.pop();
+            }
+            return [_newNFT].concat(_newListings);
+          });
+        }
       };
 
       const updateMarketPlaceFeedHandler = _transaction => {
@@ -184,7 +193,7 @@ const NFTReserves = () => {
         const nfts = response.data;
         setNewListings(nfts);
       }
-    } catch (err) {}
+    } catch (err) { }
     setLoadingNewListings(false);
   };
 
@@ -452,11 +461,11 @@ const NFTReserves = () => {
                   >
                     <span>Popular Games</span>
                     {popularGames &&
-                    popularGames.length &&
-                    !isMobile &&
-                    ((isTablet && popularGames.length > 2) ||
-                      (isNormalScreen && popularGames.length > 3) ||
-                      popularGames.length > 4) ? (
+                      popularGames.length &&
+                      !isMobile &&
+                      ((isTablet && popularGames.length > 2) ||
+                        (isNormalScreen && popularGames.length > 3) ||
+                        popularGames.length > 4) ? (
                       <Box display="flex" alignItems="center">
                         <Box
                           className={classes.carouselNav}
@@ -526,9 +535,9 @@ const NFTReserves = () => {
                       </div>
                     ) : popularGames && popularGames.length ? (
                       !isMobile &&
-                      (popularGames.length === 1 ||
-                        popularGames.length === 2 ||
-                        popularGames.length === 3) ? (
+                        (popularGames.length === 1 ||
+                          popularGames.length === 2 ||
+                          popularGames.length === 3) ? (
                         <div className={classes.allNFTSection}>
                           <Box style={{ marginBottom: "24px" }}>
                             <MasonryGrid
@@ -564,12 +573,12 @@ const NFTReserves = () => {
                                 justifyContent: isMobile
                                   ? "center"
                                   : popularGames.length === 2 && i === 1
-                                  ? "flex-end"
-                                  : popularGames.length === 3 && i === 1
-                                  ? "center"
-                                  : popularGames.length === 3 && i === 2
-                                  ? "flex-end"
-                                  : "flex-start",
+                                    ? "flex-end"
+                                    : popularGames.length === 3 && i === 1
+                                      ? "center"
+                                      : popularGames.length === 3 && i === 2
+                                        ? "flex-end"
+                                        : "flex-start",
                               }}
                             >
                               <FeaturedGameCard game={item} />
