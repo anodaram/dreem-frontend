@@ -78,7 +78,6 @@ const CreateRealmFlow = ({
   const [votingConsensus, setVotingConsensus] = useState<string>("");
   const [votingPower, setVotingPower] = useState<string>("");
   const [privacy, setPrivacy] = useState<string>('public');
-  const [currentCollection, setCurrentCollection] = useState<any>(null);
   const [worldHash, setWorldHash] = useState<any>(null);
   const [nftAddress, setNFTAddress] = useState<any>(null);
   const [nftId, setNFTId] = useState<any>(null);
@@ -111,6 +110,9 @@ const CreateRealmFlow = ({
 
   useEffect(() => {
     getSettings()
+    // MetaverseAPI.getAssetMetadata('REALM').then(res => {
+    //   setSizeSpec(res.data);
+    // });
   }, []);
   const getSettings = () => {
     MetaverseAPI.getNetworks()
@@ -126,10 +128,33 @@ const CreateRealmFlow = ({
     }
     setStep(prev => prev - 1);
   };
+
+  const checkCurrentStep = (stepItem) => {
+    switch (step) {
+      case 1:
+        return validate(false) ? true : false;
+        break;
+      case 2:
+        return taxation ? true : false;
+        break;
+      case 3:
+        return votingConsensus && votingPower ? true : false;
+        break;
+      case 4:
+        return privacy === 'public' || collectionInfos.every(c => c.address && c.from && c.to) ? true : false;
+        break;
+      case 5:
+        return worldHash && nftId && nftAddress ? true : false;
+        break;
+
+      default:
+        break;
+    }
+  };
   const handleNext = () => {
     switch (step) {
       case 1:
-        steps[step - 1].completed = title && description && symbol && image && video && video.size <= 30 * 1024 * 1024 ? true : false;
+        steps[step - 1].completed = validate(true) ? true : false;
         break;
       case 2:
         steps[step - 1].completed = taxation ? true : false;
@@ -144,7 +169,7 @@ const CreateRealmFlow = ({
       default:
         break;
     }
-    if (step < 6) {
+    if (step < 5) {
       setStep(prev => prev + 1);
     } else {
       handleSave()
@@ -154,70 +179,55 @@ const CreateRealmFlow = ({
     setStep(step);
   }
 
-  const validate = () => {
-    // if(metadata && metadata?.fields){
-    //   for (let i = 0; i < metadata?.fields?.length; i++) {
-    //     const field = metadata.fields[i];
-    //     if (field.kind === "STRING") {
-    //       if (field?.key && field?.input?.required && !formData[field?.key]) {
-    //         showAlertMessage(`${field?.name?.value} is required`, { variant: "error" });
-    //         return false;
-    //       }
-    //       if (field?.key && formData[field.key] && field?.input?.range) {
-    //         if (field?.input?.range.min && field?.input?.range.min > formData[field.key].length) {
-    //           showAlertMessage(
-    //             `${field?.name?.value} is invalid. Must be more than ${field.input.range.min} characters`,
-    //             { variant: "error" }
-    //           );
-    //           return false;
-    //         }
-    //         if (field.input.range.max && field.input.range.max < formData[field.key].length) {
-    //           showAlertMessage(
-    //             `${field?.name?.value} is invalid. Must be less than ${field.input.range.max} characters`,
-    //             { variant: "error" }
-    //           );
-    //           return false;
-    //         }
-    //       }
-    //     } else if (field.kind === "FILE_TYPE_IMAGE") {
-    //       if (field?.key && field?.input?.required && !fileInputs[field.key]) {
-    //         showAlertMessage(`${field?.name?.value} is required`, { variant: "error" });
-    //         return false;
-    //       }
-    //       if (field.key && fileContents[field.key] && fileContents[field.key].dimension && field?.input?.min) {
-    //         //@ts-ignore
-    //         if ( field?.input?.min.width > (fileContents[field.key].dimension?.width || 0) || field?.input?.min?.height > (fileContents[field.key].dimension?.height || 0)
-    //         ) {
-    //           showAlertMessage(
-    //             `${field?.name?.value} is invalid. Minium image size is ${field?.input?.min?.width} x ${field?.input?.min?.height}`,
-    //             { variant: "error" }
-    //           );
-    //           return false;
-    //         }
-    //       }
-    //       if (field.key && fileContents[field.key] && fileContents[field.key].dimension && field?.input?.max) {
-    //         //@ts-ignore
-    //         if ( field?.input?.max?.width < (fileContents[field.key].dimension?.width || 0) || field?.input?.max?.height < (fileContents[field.key].dimension?.height || 0)
-    //         ) {
-    //           showAlertMessage(
-    //             `${field?.name?.value} is invalid. Maximum image size is ${field?.input?.max?.width} x ${field?.input?.max?.height}`,
-    //             { variant: "error" }
-    //           );
-    //           return false;
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+  const validate = (withMessage) => {
+    if (!title || !description || !image || !video) {
+      withMessage && showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
+      return false;
+    }
 
-    return true;
+    if (title.length < sizeSpec?.worldTitle.limit.min || title.length > sizeSpec?.worldTitle.limit.max) {
+      withMessage && showAlertMessage(
+        `Name field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldTitle.limit.min} to ${sizeSpec?.worldTitle.limit.max} characters`,
+        {
+          variant: "error",
+        }
+      );
+      return false;
+    } else if (
+      symbol.length < sizeSpec?.worldSymbol.limit.min ||
+      symbol.length > sizeSpec?.worldSymbol.limit.max
+    ) {
+      withMessage && showAlertMessage(
+        `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldSymbol.limit.min} to ${sizeSpec?.worldSymbol.limit.max} characters`,
+        { variant: "error" }
+      );
+      return false;
+    } else if (
+      description.length < sizeSpec?.worldDescription.limit.min ||
+      description.length > sizeSpec?.worldDescription.limit.max
+    ) {
+      withMessage && showAlertMessage(
+        `Description field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldDescription.limit.min} to ${sizeSpec?.worldDescription.limit.max} characters`,
+        { variant: "error" }
+      );
+      return false;
+    } else if (image.size > sizeSpec?.worldImage.limit.maxBytes) {
+      withMessage && showAlertMessage(`Image field invalid. Size cannot exceed ${sizeSpec?.worldImage.limit.readable}`, {
+        variant: "error",
+      });
+      return false;
+    } else if (video && video.size > sizeSpec?.worldVideo.limit.maxBytes) {
+      withMessage && showAlertMessage(`Video field invalid. Size cannot exceed ${sizeSpec?.worldVideo.limit.readable}`, {
+        variant: "error",
+      });
+      return false;
+    } else return true;
   };
 
   const handleSave = async () => {
-    if (validate()) {
+    if (validate(false)) {
       let payload: any = {};
       let savingDraft: any = {};
-      let collectionAddr = currentCollection.address;
 
       payload = {
         item: "REALM",
@@ -916,15 +926,6 @@ const CreateRealmFlow = ({
           </Box>
         )}
         {step === 5 && (
-          <CollectionList
-            handleNext={() => {}}
-            handleCancel={() => {}}
-            handleSelect={item => {
-              setCurrentCollection(item);
-            }}
-          />
-        )}
-        {step === 6 && (
           <WorldList
             handleNext={() => {}}
             handleCancel={() => {}}
@@ -944,6 +945,7 @@ const CreateRealmFlow = ({
         <PrimaryButton
           size="medium"
           className={classes.nextBtn}
+          disabled={!checkCurrentStep(steps[step-1])}
           onClick={() => handleNext()}
         >
           next

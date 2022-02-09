@@ -109,8 +109,8 @@ export default function WorldCard({
       handleClick();
       setIsSelected(isSelected => !isSelected);
     } else {
-      setOpenDepositRequired(true);
-      setOpenDepositRequired(true);
+      // setOpenDepositRequired(true);
+      setOpenContentPreview(true)
     }
   };
 
