@@ -31,15 +31,15 @@ export const explorePage = makeStyles(theme => ({
     zIndex: 1,
   },
   fitContent: {
-    paddingLeft: 110,
-    paddingRight: 110,
+    paddingLeft: (props: any) => (props.openFilterBar ? 110 : 140),
+    paddingRight: (props: any) => (props.openFilterBar ? 110 : 140),
     [theme.breakpoints.down("md")]: {
-      paddingLeft: 60,
-      paddingRight: 60,
+      paddingLeft: "60px !important",
+      paddingRight: "60px !important",
     },
     [theme.breakpoints.down("sm")]: {
-      paddingLeft: 32,
-      paddingRight: 32,
+      paddingLeft: "32px !important",
+      paddingRight: "32px !important",
     },
     [theme.breakpoints.down("xs")]: {
       paddingLeft: 24,

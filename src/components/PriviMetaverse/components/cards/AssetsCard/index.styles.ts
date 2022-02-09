@@ -6,14 +6,14 @@ export const avatarCardStyles = makeStyles(theme => ({
     borderRadius: 12,
     border: "2px solid #EDFF1C",
     background: "black",
-    height: 445,
+    height: 390,
     display: "flex",
     flexDirection: "column",
     [theme.breakpoints.down("sm")]: {
-      height: 350,
+      height: 365,
     },
     [theme.breakpoints.down("xs")]: {
-      height: 386,
+      height: 365,
     },
   },
   container: {
@@ -48,12 +48,12 @@ export const avatarCardStyles = makeStyles(theme => ({
   },
   image: {
     width: "100%",
-    height: 266,
+    height: 230,
     [theme.breakpoints.down("sm")]: {
-      maxHeight: 209,
+      maxHeight: 220,
     },
     [theme.breakpoints.down("xs")]: {
-      maxHeight: 282,
+      maxHeight: 220,
     },
   },
   name: {

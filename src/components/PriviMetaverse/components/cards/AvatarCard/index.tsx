@@ -41,7 +41,9 @@ export default function AvatarCard(props) {
       {isLoading ? (
         <Box className={classes.skeleton}>
           <Skeleton variant="rect" width="100%" height={226} />
-          <Skeleton variant="rect" width="100%" height={24} />
+          <Box my={2}>
+            <Skeleton variant="rect" width="100%" height={24} />
+          </Box>
           <Skeleton variant="rect" width="80%" height={24} />
         </Box>
       ) : (
