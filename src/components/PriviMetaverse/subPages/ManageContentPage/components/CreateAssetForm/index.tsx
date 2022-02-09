@@ -181,7 +181,7 @@ const CreateAssetForm = ({
               type="file"
               style={{ display: "none" }}
               accept={asset.input?.formats?.mimeType}
-              onChange={onFileInput(asset.key)}
+              onChange={asset.input && onFileInput(asset.key)}
             />
           </>
         )}
@@ -310,7 +310,7 @@ const CreateAssetForm = ({
               hidden
               type="file"
               style={{ display: "none" }}
-              onChange={onFileInput(asset.key)}
+              onChange={asset.input && onFileInput(asset.key)}
             />
           </>
         )}
@@ -318,7 +318,7 @@ const CreateAssetForm = ({
     );
   };
 
-  return <Box>{metadata.fields.map((asset: any, index: number) => renderAsset(asset, index))}</Box>;
+  return <Box>{metadata.fields?.map((asset: any, index: number) => renderAsset(asset, index))}</Box>;
 };
 
 export default CreateAssetForm;
