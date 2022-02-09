@@ -219,7 +219,7 @@ export const realmDetailPageStyles = makeStyles(theme => ({
   },
   stat: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     position: 'absolute',
     bottom: 0,
     width: '100%',
@@ -228,15 +228,29 @@ export const realmDetailPageStyles = makeStyles(theme => ({
     borderBottom: "2px solid #E9FF26",
     "& > div:last-child":{
       border: 'none',
-    }
+    },
+    [theme.breakpoints.down("xs")]: {
+      flexDirection: "column",
+      paddingBottom: 0,
+    },
   },
   statItem: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: 'flex-end',
+    padding: '0 10px',
     color: '#E9FF26',
-    paddingLeft: 52,
-    width: '100%',
-    borderRight: '2px solid rgba(233, 255, 38, 0.2)',
     [theme.breakpoints.down("xs")]: {
-      paddingLeft: 12,
+      flexDirection: "row",
+      justifyContent: "flex-start",
+      alignItems: "center",
+    },
+  },
+  statSplitter: {
+    width: 2,
+    backgroundColor: 'rgba(233, 255, 38, 0.2)',
+    [theme.breakpoints.down("xs")]: {
+      display: "none",
     },
   },
   val: {
@@ -250,7 +264,8 @@ export const realmDetailPageStyles = makeStyles(theme => ({
       fontSize: 24,
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14,
+      fontSize: 24,
+      width: 100,
     },
   },
   desc: {
@@ -263,9 +278,6 @@ export const realmDetailPageStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       fontSize: 10,
     },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: 8,
-    },
   },
   publicStateCtn: {
     display: 'flex',
@@ -275,6 +287,9 @@ export const realmDetailPageStyles = makeStyles(theme => ({
     top: 32,
     left: 51,
     zIndex: 999,
+    [theme.breakpoints.down("sm")]: {
+      top: 2,
+    },
   },
   public: {
     display: 'flex',

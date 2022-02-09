@@ -18,12 +18,12 @@ export const useModalStyles = makeStyles(theme => ({
     color: "FFFFFF"
   },
   content: {
-    display: "grid",
     justifyContent: "center",
     alignItems: "center",
     gridTemplateColumns: "1fr 1fr 1fr",
     width: "fit-content",
     margin: "auto",
+    maxWidth: 960,
     [theme.breakpoints.down("sm")]: {
       gridTemplateColumns: "1fr 1fr",
     },
@@ -33,7 +33,6 @@ export const useModalStyles = makeStyles(theme => ({
     "& .maskWrapper": {
       background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
       margin: "0 31px 31px 31px",
-      width: "300px",
       height: "400px",
       borderRadius: "16px",
       padding: "4px"

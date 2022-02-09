@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 
-import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled } from "@material-ui/core";
+import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Grid } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -43,22 +43,26 @@ const SelectType = ({ handleNext }: { handleNext: (asset: CreateAssetModel) => v
     <Box className={classes.container}>
       <h3 className={classes.title}>What do you want to create?</h3>
       <div className={classes.content}>
-        {assetTypes?.map((item, index) => (
-          <Box
-            className={`maskWrapper ${item.interactable === true ? "" : "disabled"}`}
-            key={`trending-pod-${index}`}
-            onClick={() => {
-              item.interactable && handleNext(item);
-            }}
-          >
-            <div className={classes.mask}>
-              <div className={classes.cardTitle}>{item.name?.value}</div>
-              <div className={classes.imageBox}>
-                <img src={item.icon} alt="" />
-              </div>
-            </div>
-          </Box>
-        ))}
+        <Grid container spacing={2}>
+          {assetTypes?.map((item, index) => (
+            <Grid item md={4} sm={6} xs={12}>
+              <Box
+                className={`maskWrapper ${item.interactable === true ? "" : "disabled"}`}
+                key={`trending-pod-${index}`}
+                onClick={() => {
+                  item.interactable && handleNext(item);
+                }}
+              >
+                <div className={classes.mask}>
+                  <div className={classes.cardTitle}>{item.name?.value}</div>
+                  <div className={classes.imageBox}>
+                    <img src={item.icon} alt="" />
+                  </div>
+                </div>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
       </div>
     </Box>
   );
