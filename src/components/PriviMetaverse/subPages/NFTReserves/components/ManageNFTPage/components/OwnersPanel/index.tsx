@@ -360,7 +360,9 @@ const OwnersPanel = () => {
             />
           </Box>
         ) : (
-          <div></div>
+          <Box fontSize={16} fontFamily={"Rany"} ml={3}>
+            No NFTs
+          </Box>
         )}
       </Box>
     </div>
