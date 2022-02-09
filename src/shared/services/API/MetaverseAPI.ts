@@ -671,3 +671,18 @@ export const getProtocolFee = async () => {
     throw error;
   }
 };
+
+export const getNetworks = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    };
+    const resp = await axios.get(`${URL()}/metaverse/realmCreationNetworks/`, config)
+    if (resp.data) {
+      return resp.data;
+    }
+  } catch (error) {
+    throw error;
+  }
+};

@@ -33,10 +33,11 @@ import TabsView, { TabItem } from "shared/ui-kit/TabsView";
 import { NftStates } from "shared/constants/constants";
 import ExploreCard from "../../components/cards/ExploreCard";
 import HowWorksOfMarketPlaceModal from "../../modals/HowWorksOfMarketPlaceModal";
-import { useFilterSelectStyles, useNFTOptionsStyles, useTabsStyles } from "./index.styles";
+import { useFilterSelectStyles, useFilterSelectWithCommingSoonStyles, useNFTOptionsStyles, useTabsStyles } from "./index.styles";
 
 import { ReactComponent as BinanceIcon } from "assets/icons/bsc.svg";
 import { ReactComponent as PolygonIcon } from "assets/icons/polygon.svg";
+import { ReactComponent as SolanaIcon } from "assets/icons/solana.svg";
 import { userTrackMarketPlace } from "shared/services/API";
 import { GameSlider } from "components/PriviMetaverse/components/GameSlider";
 import Axios, { CancelTokenSource } from "axios";
@@ -73,7 +74,7 @@ const FilterOptionsTabs: TabItem[] = [
   },
 ];
 
-const filterChainOptions = ["All", "BSC", "Polygon"];
+const filterChainOptions = ["All", "BSC", "Polygon", "SOLANA"];
 const filterStatusOptions = ["All", ...NftStates];
 
 const gameList = [
@@ -102,25 +103,27 @@ const getChainImage = chain => {
     return <BinanceIcon />;
   } else if (chain === filterChainOptions[2]) {
     return <PolygonIcon />;
+  } else if (chain === filterChainOptions[3]) {
+    return <SolanaIcon />;
   } else {
     return null;
   }
 };
 
 export const ArrowIcon = func => () =>
-  (
-    <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
-      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
-          stroke="#2D3047"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </Box>
-  );
+(
+  <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
+    <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
+        stroke="#2D3047"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </Box>
+);
 
 const GameNFTExplorerPage = () => {
   const history = useHistory();
@@ -128,6 +131,7 @@ const GameNFTExplorerPage = () => {
   const { isSignedin } = useAuth();
   const classes = useNFTOptionsStyles();
   const filterClasses = useFilterSelectStyles();
+  const filterWithComingSoonClasses = useFilterSelectWithCommingSoonStyles();
   const tabsClasses = useTabsStyles();
 
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
@@ -266,22 +270,22 @@ const GameNFTExplorerPage = () => {
         return user.firstName || user.lastName
           ? `${user.firstName} ${user.lastName}`
           : width > 700
-          ? nft.ownerAddress
-          : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
+            ? nft.ownerAddress
+            : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
             "";
       }
       return width > 700
         ? nft.ownerAddress
         : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
-            "";
+        "";
     } else {
       let name: string = "";
       name =
         nft.owner.firstName || nft.owner.lastName
           ? `${nft.owner.firstName} ${nft.owner.lastName}`
           : width > 700
-          ? nft.ownerAddress
-          : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
+            ? nft.ownerAddress
+            : nft.ownerAddress.substr(0, 5) + "..." + nft.ownerAddress.substr(nft.ownerAddress.length - 5, 5) ??
             "";
 
       return name;
@@ -416,8 +420,8 @@ const GameNFTExplorerPage = () => {
               <Box textAlign="center">
                 {!nftStatus(row).includes("Blocked") && row?.blockingSaleOffer?.Price
                   ? `${row.blockingSaleOffer.Price} ${getTokenSymbol(
-                      row.blockingSaleOffer.PaymentToken
-                    )} for ${row.blockingSaleOffer.ReservePeriod} Hour(s)`
+                    row.blockingSaleOffer.PaymentToken
+                  )} for ${row.blockingSaleOffer.ReservePeriod} Hour(s)`
                   : "_"}
               </Box>
             ),
@@ -427,11 +431,11 @@ const GameNFTExplorerPage = () => {
               <Box textAlign="center">
                 {!nftStatus(row).includes("Blocked") && row?.rentSaleOffer?.pricePerSecond * SECONDS_PER_HOUR
                   ? `${(
-                      +toDecimals(
-                        row.rentSaleOffer.pricePerSecond,
-                        getTokenDecimal(row.rentSaleOffer.fundingToken)
-                      ) * SECONDS_PER_HOUR
-                    ).toFixed(2)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
+                    +toDecimals(
+                      row.rentSaleOffer.pricePerSecond,
+                      getTokenDecimal(row.rentSaleOffer.fundingToken)
+                    ) * SECONDS_PER_HOUR
+                  ).toFixed(2)} ${getTokenSymbol(row.rentSaleOffer.fundingToken)}`
                   : "_"}
               </Box>
             ),
@@ -448,6 +452,9 @@ const GameNFTExplorerPage = () => {
   };
 
   const handleFilterChain = e => {
+    if (e.target.value === 'SOLANA'){
+      return;
+    }
     lastCollectionId.current = undefined;
     setIsFilterStatus(false);
     setIsFilterChain(true);
@@ -555,7 +562,7 @@ const GameNFTExplorerPage = () => {
                     </Box>
                   )}
                   MenuProps={{
-                    classes: filterClasses,
+                    classes: filterWithComingSoonClasses,
                     anchorOrigin: {
                       vertical: "bottom",
                       horizontal: "left",
@@ -572,6 +579,9 @@ const GameNFTExplorerPage = () => {
                     <MenuItem key={`filter-chain-${index}`} value={chain}>
                       <div className={classes.chainImage}>{getChainImage(chain)}</div>
                       {chain}
+                      {chain === 'SOLANA' && (
+                        <span className={classes.comingsoon}>coming soon</span>
+                      )}
                     </MenuItem>
                   ))}
                 </Select>
