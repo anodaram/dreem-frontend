@@ -116,9 +116,9 @@ export default function CreatorPage() {
   useEffect(() => {
     // check owner
     if (userSelector && userSelector.address) {
-      setIsOwner(userSelector.address === userInfo?.user?.address);
+      setIsOwner(userSelector.id === userInfo?.user?.id);
     }
-  }, [userInfo?.user?.address, userSelector.address]);
+  }, [userInfo?.user?.id, userSelector.id]);
 
   useEffect(() => {
     setSelectedTab("");
