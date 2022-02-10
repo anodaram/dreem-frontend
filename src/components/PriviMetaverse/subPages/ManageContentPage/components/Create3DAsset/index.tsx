@@ -31,6 +31,7 @@ import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
 import { ReactComponent as GLTFIcon } from "assets/icons/gltf.svg";
 import { ReactComponent as CharacterIcon } from "assets/icons/character.svg";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
 const Create3DAsset = ({
   metaData,

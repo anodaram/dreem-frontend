@@ -24,6 +24,7 @@ import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 import { InfoIcon } from "shared/ui-kit/Icons";
 import { ReactComponent as DeleteIcon } from "assets/icons/remove.svg";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
 interface CollectionInfo {
   address: string;

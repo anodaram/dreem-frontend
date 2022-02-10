@@ -28,6 +28,7 @@ import useIPFS from "shared/utils-IPFS/useIPFS";
 import { FilterAssetTypeOptions } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
 const CreateNFT = ({
   metaData,
