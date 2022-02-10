@@ -8,6 +8,17 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     overflow: "auto",
   },
   headerBG: {},
+  mobileSideBar: {
+    bottom: 0,
+    width: "100%",
+    height: 53,
+    background: "#212121",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    zIndex: 2,
+  },
   sideBar: {
     display: "flex",
     justifyContent: "center",
