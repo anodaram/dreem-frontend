@@ -56,7 +56,7 @@ export const sanitizeIfIpfsUrl = url => {
   if (!url) {
     return null;
   }
-  if (url.startsWith("ipfs://")) {
+  if (url.includes("ipfs://")) {
     return url.replace("ipfs://", "https://ipfs.io/ipfs/");
   }
   return url;
