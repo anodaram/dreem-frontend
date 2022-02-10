@@ -31,7 +31,7 @@ export default function ContentProcessingOperationModal({
       )}
       <Box className={classes.title} mt={4}>
         {txSuccess === true
-          ? "succesfully created"
+          ? "successfully created"
           : txSuccess === false
           ? "Transaction failed"
           : "Processing"}
