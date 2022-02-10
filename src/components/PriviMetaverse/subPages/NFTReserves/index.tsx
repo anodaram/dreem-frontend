@@ -512,7 +512,7 @@ const NFTReserves = () => {
                       flexDirection="row"
                       alignItems="center"
                       justifyContent={isMobile ? "space-between" : "flex-start"}
-                      width="100%"
+                      width={isMobile ? "100%" : "auto"}
                     >
                       <span>Popular Games</span>
                       {popularGames &&
