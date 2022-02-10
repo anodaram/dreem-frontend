@@ -11,6 +11,7 @@ import { closeNewChatModal, startChat, addChatInList } from "store/actions/Messa
 import { SearchInputBox } from "shared/ui-kit/SearchInputBox/SearchInputBox";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import { LoadingWrapper } from "shared/ui-kit/Hocs";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const useStyles = makeStyles({
   container: {
@@ -201,7 +202,7 @@ const NewChatModal = () => {
                 .map((user, index) => {
                   return (
                     <div className={classes.userItem} key={index} onClick={() => handleClick(user)}>
-                      <Avatar src={user.imageUrl ?? getDefaultAvatar()} alt={user.name} />
+                      <Avatar src={sanitizeIfIpfsUrl(user.imageUrl) ?? getDefaultAvatar()} alt={user.name} />
                       <div className={classes.userInfo}>
                         <div className={classes.userName}>{user.name}</div>
                         <div className={classes.userSlug} style={{ color: "#707582" }}>

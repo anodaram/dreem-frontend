@@ -211,7 +211,7 @@ const MessageItemFC = ({ message, messageContentRef }) => {
         {!isOwnMessage && (
           <div className="avatar-container" style={{ background: "transparent" }}>
             <img
-              src={message.from?.url || getDefaultAvatar()}
+              src={sanitizeIfIpfsUrl(message.from?.url) || getDefaultAvatar()}
               alt="Avatar"
               className="message-item-avatar"
               style={{

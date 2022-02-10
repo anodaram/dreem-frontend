@@ -395,7 +395,7 @@ export default function RealmDetailPage() {
                       backgroundPosition: "center",
                     }}
                   >
-                    <source src={realmData.worldVideo} type="video/mp4" />
+                    <source src={sanitizeIfIpfsUrl(realmData.worldVideo)} type="video/mp4" />
                   </video>
                   <Box className={classes.stat}>
                     <Box className={classes.statItem}>
