@@ -195,8 +195,10 @@ const CreateRealmFlow = ({
       );
       return false;
     } else if (
-      symbol.length < sizeSpec?.worldSymbol.limit.min ||
-      symbol.length > sizeSpec?.worldSymbol.limit.max
+      symbol.length < 5 ||
+      symbol.length > 4
+      // symbol.length < sizeSpec?.worldSymbol.limit.min ||
+      // symbol.length > sizeSpec?.worldSymbol.limit.max
     ) {
       withMessage && showAlertMessage(
         `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldSymbol.limit.min} to ${sizeSpec?.worldSymbol.limit.max} characters`,
@@ -464,9 +466,10 @@ const CreateRealmFlow = ({
                 </Box>
                 <input
                   className={classes.input}
-                  placeholder="NFT symbol"
+                  placeholder="ex. SMBLN"
                   value={symbol}
-                  onChange={e => setSymbol(e.target.value)}
+                  onChange={e => setSymbol(e.target.value.trim().toUpperCase())}
+                  maxLength={5}
                 />
                 <Box display="flex" alignItems="center" justifyContent="space-between">
                   <Box className={classes.itemTitle} mt={2.5} mb={1}>
