@@ -79,7 +79,7 @@ export default function RentSuccessModal({ open, nft, setNft, handleClose = () =
         You’ve rented {nft.name}.
       </Box>
       <Box className={classes.description} mb={5}>
-        Congrat’s you’ve succesfully rented <span>{nft.name}</span> at{" "}
+        Congrat’s you’ve successfully rented <span>{nft.name}</span> at{" "}
         <span>
           {rentHistory?.pricePerSecond && `${getAmount()} ${getTokenSymbol(rentHistory.fundingToken)}`}{" "}
         </span>

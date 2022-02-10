@@ -485,65 +485,76 @@ const NFTReserves = () => {
                     className={`${classes.topGamesTitle} ${classes.fitContent}`}
                     justifyContent="space-between"
                   >
-                    <span>Popular Games</span>
-                    {popularGames &&
-                    popularGames.length &&
-                    !isMobile &&
-                    ((isTablet && popularGames.length > 2) ||
-                      (isNormalScreen && popularGames.length > 3) ||
-                      popularGames.length > 4) ? (
-                      <Box display="flex" alignItems="center">
-                        <Box
-                          className={classes.carouselNav}
-                          onClick={() => {
-                            carouselRef.current.slidePrev();
-                          }}
-                        >
-                          <svg
-                            width="10"
-                            height="16"
-                            viewBox="0 0 10 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                    <Box display="flex" flexDirection="row">
+                      <span>Popular Games</span>
+                      {popularGames &&
+                      popularGames.length &&
+                      !isMobile &&
+                      ((isTablet && popularGames.length > 2) ||
+                        (isNormalScreen && popularGames.length > 3) ||
+                        popularGames.length > 4) ? (
+                        <Box display="flex" alignItems="center">
+                          <Box
+                            className={classes.carouselNav}
+                            onClick={() => {
+                              carouselRef.current.slidePrev();
+                            }}
                           >
-                            <path
-                              opacity="0.6"
-                              d="M7.61309 2L1.92187 7.69055L7.92187 13.6906"
-                              stroke="white"
-                              stroke-width="2.5"
-                              stroke-linecap="square"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </Box>
-                        <Box
-                          ml={3}
-                          className={classes.carouselNav}
-                          onClick={() => {
-                            carouselRef.current.slideNext();
-                          }}
-                        >
-                          <svg
-                            width="10"
-                            height="16"
-                            viewBox="0 0 10 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                            <svg
+                              width="10"
+                              height="16"
+                              viewBox="0 0 10 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                opacity="0.6"
+                                d="M7.61309 2L1.92187 7.69055L7.92187 13.6906"
+                                stroke="white"
+                                stroke-width="2.5"
+                                stroke-linecap="square"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </Box>
+                          <Box
+                            ml={2}
+                            className={classes.carouselNav}
+                            onClick={() => {
+                              carouselRef.current.slideNext();
+                            }}
                           >
-                            <path
-                              opacity="0.6"
-                              d="M2.38691 14L8.07813 8.30945L2.07813 2.30945"
-                              stroke="white"
-                              stroke-width="2.5"
-                              stroke-linecap="square"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
+                            <svg
+                              width="10"
+                              height="16"
+                              viewBox="0 0 10 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                opacity="0.6"
+                                d="M2.38691 14L8.07813 8.30945L2.07813 2.30945"
+                                stroke="white"
+                                stroke-width="2.5"
+                                stroke-linecap="square"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </Box>
                         </Box>
-                      </Box>
-                    ) : (
-                      <></>
-                    )}
+                      ) : (
+                        <></>
+                      )}
+                    </Box>
+                    <Hidden xsDown>
+                      <SecondaryButton
+                        size="medium"
+                        className={classes.showAll}
+                        onClick={() => history.push("/P2E/explorer")}
+                      >
+                        Show All
+                      </SecondaryButton>
+                    </Hidden>
                   </Box>
                   <div className={`${classes.topNFTContent} ${classes.fitContent}`}>
                     {loadingPopularGames ? (

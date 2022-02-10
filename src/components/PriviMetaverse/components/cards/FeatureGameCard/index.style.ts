@@ -6,7 +6,6 @@ export const cardStyles = makeStyles(theme => ({
     boxShadow: "0px 3px 1.50913px rgba(0, 0, 0, 0.3)",
     borderRadius: 16,
     cursor: "pointer",
-    padding: 24,
     background: "#151515",
     border: "2px solid #EEFF21",
     "&:hover": {
@@ -40,7 +39,6 @@ export const cardStyles = makeStyles(theme => ({
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
-    marginTop: "16px",
     marginBottom: "16px",
   },
   cardImg: {
@@ -48,7 +46,7 @@ export const cardStyles = makeStyles(theme => ({
     "& img": {
       borderRadius: 9,
       overflow: "hidden",
-      height: "330px",
+      height: "200px",
       objectFit: "contain",
     },
   },
