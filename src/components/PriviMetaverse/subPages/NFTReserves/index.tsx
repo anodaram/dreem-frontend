@@ -299,15 +299,7 @@ const NFTReserves = () => {
   return (
     <>
       <Box className={classes.main}>
-        {isTablet && (
-          <Box className={classes.sideBar}>
-            <Box display="flex" flexDirection="column">
-              <ActivityFeeds onClose={() => setOpenSideBar(false)} />
-              <MessageBox roomId={GLOBAL_CHAT_ROOM} />
-            </Box>
-          </Box>
-        )}
-        {!isTablet && !isMobile && !isNarrow && (
+        {!isMobile && !isNarrow && (
           <>
             <Box className={classes.sideBar}>
               {openSideBar ? (
