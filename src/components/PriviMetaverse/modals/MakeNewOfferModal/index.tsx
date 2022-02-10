@@ -458,7 +458,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
               offer was sent
             </div>
             <div style={{ color: "#ffffff50", fontSize: "16px", marginTop: "34px", textAlign: "center" }}>
-              You’ve succesfully send blocking offer for <br />
+              You’ve successfully send blocking offer for <br />
               [NFT NAME]
             </div>
             <PrimaryButton
