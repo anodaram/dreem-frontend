@@ -300,6 +300,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       "-webkit-text-fill-color": "transparent",
       "-webkit-background-clip": "text",
       lineHeight: "40.8px",
+      marginRight: "24px",
       [theme.breakpoints.down("sm")]: {
         fontSize: 20,
       },
