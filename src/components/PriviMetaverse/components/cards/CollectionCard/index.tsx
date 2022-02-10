@@ -18,6 +18,7 @@ import ContentPreviewModal from "../../../modals/ContentPreviewModal";
 import EditRealmModal from "../../../modals/EditRealmModal";
 import EditExtensionModal from "../../../modals/EditExtensionModal";
 import { collectionCardStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 export default function CollectionCard(props) {
   const { isLoading, item } = props;
@@ -75,7 +76,7 @@ export default function CollectionCard(props) {
             <div
               className={styles.collectionImage}
               style={{
-                backgroundImage: data.image ? `url("${data.image}")` : `url(${getDefaultImageUrl()})`,
+                backgroundImage: data.image ? `url("${sanitizeIfIpfsUrl(data.image)}")` : `url(${getDefaultImageUrl()})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 backgroundPosition: "center",

@@ -38,6 +38,7 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { CircularLoadingIndicator } from "shared/ui-kit";
 
 import "shared/ui-kit/Global.module.css";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 enum OpenType {
   Home = "HOME",
@@ -435,7 +436,7 @@ const Header = props => {
                     onClick={handleCreatePopup}
                     className="avatar"
                     style={{
-                      backgroundImage: imageIPFS ? `url(${imageIPFS})` : `url(${getDefaultAvatar()})`,
+                      backgroundImage: imageIPFS ? `url(${sanitizeIfIpfsUrl(imageIPFS)})` : `url(${getDefaultAvatar()})`,
                       cursor: ownUser ? "pointer" : "auto",
                       backgroundRepeat: "no-repeat",
                       backgroundSize: "cover",
@@ -541,7 +542,7 @@ const Header = props => {
                                   className="avatar"
                                   style={{
                                     backgroundImage: imageIPFS
-                                      ? `url(${imageIPFS})`
+                                      ? `url(${sanitizeIfIpfsUrl(imageIPFS)})`
                                       : `url(${getDefaultAvatar()})`,
                                     cursor: ownUser ? "pointer" : "auto",
                                     backgroundRepeat: "no-repeat",

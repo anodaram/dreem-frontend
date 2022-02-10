@@ -26,6 +26,7 @@ import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 import { FilterAssetTypeOptions } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const CreateNFT = ({
   metaData,
@@ -472,7 +473,7 @@ const CreateNFT = ({
                 <Box
                   className={classes.image}
                   style={{
-                    backgroundImage: `url(${imageFile})`,
+                    backgroundImage: `url(${sanitizeIfIpfsUrl(imageFile)})`,
                     backgroundSize: "cover",
                   }}
                 />
@@ -528,7 +529,7 @@ const CreateNFT = ({
                 <Box
                   className={classes.image}
                   style={{
-                    backgroundImage: `url(${videoFile})`,
+                    backgroundImage: `url(${sanitizeIfIpfsUrl(videoFile)})`,
                     backgroundSize: "cover",
                   }}
                 />

@@ -11,6 +11,7 @@ import { NotificationContent } from "shared/ui-kit/Header/components/Notificatio
 import { NotificationButtons } from "shared/ui-kit/Header/components/Notifications/NotificationButtons";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import { notificationPageStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const trashIcon = require("assets/icons/trash-red.svg");
 
@@ -91,7 +92,7 @@ const NotificationItem = ({ notification, removeNotification }) => {
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundImage: `url(${trashIcon})`,
+          backgroundImage: `url(${sanitizeIfIpfsUrl(trashIcon)})`,
           marginBottom: 4,
           marginLeft: 10,
           cursor: "pointer",
