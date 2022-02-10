@@ -12,6 +12,8 @@ import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
 import StyledCheckbox from "shared/ui-kit/Checkbox";
 import { Color } from "shared/ui-kit";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
+import WorldCard from "components/PriviMetaverse/components/cards/WorldCard";
+import AssetsCard from "components/PriviMetaverse/components/cards/AssetsCard";
 import { explorePage } from "./index.styles";
 
 import backImg1 from "assets/metaverseImages/shape_roadmap.png";
@@ -21,7 +23,6 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
   600: 2,
   900: 3,
-  1200: 4,
 };
 // const Status_Options = [
 //   { content: "all", color: "#ffffff50", bgcolor: "transparent" },
@@ -96,17 +97,14 @@ export default function ExplorePage() {
   // const [openPrimarySection, setOpenPrimarySection] = React.useState<boolean>(true);
   // const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
   // const [selectedContentType, setSelectedContentType] = React.useState<string>("all");
-  const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["CHARACTER"]);
+  const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["WORLD"]);
   const [searchValue, setSearchValue] = React.useState<string>("");
 
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const classes = explorePage({ openFilterBar });
 
-  const loadingCount = React.useMemo(
-    () => (width > 1200 ? 4 : width > 900 ? 3 : width > 600 ? 2 : 1),
-    [width]
-  );
+  const loadingCount = React.useMemo(() => (width > 900 ? 3 : width > 600 ? 2 : 1), [width]);
 
   React.useEffect(() => {
     loadData(true);
@@ -385,7 +383,15 @@ export default function ExplorePage() {
                 <MasonryGrid
                   gutter={"40px"}
                   data={assetList}
-                  renderItem={(item, index) => <AvatarCard item={item} key={`avatar_${index}`} />}
+                  renderItem={(item, index) =>
+                    item.itemKind === "WORLD" ? (
+                      <WorldCard nft={item} selectable={false} key={`world_${index}`} />
+                    ) : item.itemKind === "CHARACTER" ? (
+                      <AvatarCard item={item} key={`avatar_${index}`} />
+                    ) : (
+                      <AssetsCard item={item} key={`asset_${index}`} />
+                    )
+                  }
                   columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                 />
               </Box>

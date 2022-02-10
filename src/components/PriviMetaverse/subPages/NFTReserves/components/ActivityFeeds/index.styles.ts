@@ -102,7 +102,7 @@ export const useStyles = makeStyles(theme => ({
     fontFamily: "Rany",
     fontWeight: 400,
     color: "#ffffff50",
-    width: "100px",
+    width: "150px",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     overflow: "hidden",
