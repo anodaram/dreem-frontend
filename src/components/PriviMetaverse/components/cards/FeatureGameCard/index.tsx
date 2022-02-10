@@ -3,6 +3,8 @@ import React from "react";
 import { useHistory } from "react-router";
 import { useLocation } from "react-router-dom";
 
+import { useTheme, useMediaQuery } from "@material-ui/core";
+
 import { getChainImageUrl } from "shared/functions/chainFucntions";
 import { SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
@@ -13,6 +15,9 @@ const FeaturedGameCard = ({ game, isLoading = false }) => {
   const history = useHistory();
   const { pathname } = useLocation();
   const classes = cardStyles();
+
+  const theme = useTheme();
+  const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleOpenExplore = () => {
     history.push(`/P2E/${game.Slug}`);
@@ -41,10 +46,7 @@ const FeaturedGameCard = ({ game, isLoading = false }) => {
       ) : (
         <>
           <div className={classes.cardImg}>
-            <img
-              src={game?.Image}
-              style={{ width: "100%", objectFit: "cover", borderRadius: "16px" }}
-            />
+            <img src={game?.Image} style={{ width: "100%", objectFit: "cover", borderRadius: "16px" }} />
             <Box className={classes.chainImage}>
               <img src={getChainImageUrl(game?.Chain)} />
             </Box>
@@ -52,7 +54,7 @@ const FeaturedGameCard = ({ game, isLoading = false }) => {
           <Box
             display="flex"
             flexDirection="column"
-            padding="20px 24px 24px 24px"
+            padding={isTablet ? "20px 12px 24px " : "20px 24px 24px 24px"}
           >
             <div className={classes.cardNftName}>{`${game.CollectionName}`}</div>
             <div className={classes.divider} />

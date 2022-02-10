@@ -447,6 +447,10 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     background: "transparent !important",
     color: "#FFFFFF !important",
     padding: "0 30px !important",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "12px !important",
+      padding: "0 24px !important",
+    },
   },
   table: {
     width: "100%",
