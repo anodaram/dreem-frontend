@@ -1,4 +1,4 @@
-import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, Slider } from "@material-ui/core";
+import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, Slider, Button } from "@material-ui/core";
 import React, { useRef } from "react";
 import { ChromePicker } from "react-color";
 
@@ -11,6 +11,7 @@ import { color2obj, obj2color } from "shared/helpers";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
 import { ReactComponent as GLTFIcon } from "assets/icons/gltf.svg";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
@@ -145,8 +146,8 @@ const CreateAssetForm = ({
                     mr={3}
                   >
                     Uploaded {fileInputs[asset.key].name}
-                    <SecondaryButton
-                      size="medium"
+                    <Button
+                      startIcon={<RefreshIcon />}
                       onClick={e => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -154,9 +155,8 @@ const CreateAssetForm = ({
                         setFileContents({ ...fileContents, [asset.key]: null });
                       }}
                     >
-                      <img src={require("assets/metaverseImages/refresh.png")} />
-                      <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                    </SecondaryButton>
+                      CHANGE FILE
+                    </Button>
                   </Box>
                 </>
               ) : (
@@ -288,8 +288,8 @@ const CreateAssetForm = ({
                   <Box display="flex" alignItems="center" justifyContent="space-between" fontSize={12}>
                     <DocumentIcon /> {fileInputs[asset.key].name}
                   </Box>
-                  <SecondaryButton
-                    size="medium"
+                  <Button
+                    startIcon={<RefreshIcon />}
                     onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -297,9 +297,8 @@ const CreateAssetForm = ({
                       setFileContents({ ...fileContents, [asset.key]: null });
                     }}
                   >
-                    <img src={require("assets/metaverseImages/refresh.png")} />
-                    <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                  </SecondaryButton>
+                    CHANGE FILE
+                  </Button>
                 </Box>
               ) : (
                 <Box pt={0.5} display="flex" alignItems="center" justifyContent="space-between">

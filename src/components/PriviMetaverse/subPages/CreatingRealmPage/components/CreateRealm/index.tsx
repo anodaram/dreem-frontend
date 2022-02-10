@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 
-import { useMediaQuery, useTheme } from "@material-ui/core";
+import { useMediaQuery, useTheme, Button } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -16,6 +16,7 @@ import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingMo
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
 const CreateRealm = ({
   metaData,
@@ -442,8 +443,8 @@ const CreateRealm = ({
                   }}
                 />
                 <Box flex={1} display="flex" justifyContent="flex-end" mr={3}>
-                  <SecondaryButton
-                    size="medium"
+                  <Button
+                    startIcon={<RefreshIcon />}
                     onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -452,9 +453,8 @@ const CreateRealm = ({
                       imageInputRef.current?.click();
                     }}
                   >
-                    <img src={require("assets/metaverseImages/refresh.png")} />
-                    <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                  </SecondaryButton>
+                    CHANGE FILE
+                  </Button>
                 </Box>
               </>
             ) : (
@@ -498,8 +498,8 @@ const CreateRealm = ({
                   }}
                 />
                 <Box flex={1} display="flex" justifyContent="flex-end" mr={3}>
-                  <SecondaryButton
-                    size="medium"
+                  <Button
+                    startIcon={<RefreshIcon />}
                     onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -508,9 +508,8 @@ const CreateRealm = ({
                       videoInputRef.current?.click();
                     }}
                   >
-                    <img src={require("assets/metaverseImages/refresh.png")} />
-                    <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                  </SecondaryButton>
+                    CHANGE FILE
+                  </Button>
                 </Box>
               </>
             ) : (
@@ -553,8 +552,8 @@ const CreateRealm = ({
                 style={{ background: "#E9FF26 !important", borderRadius: "8px !important" }}
               >
                 {unity.name}
-                <SecondaryButton
-                  size="medium"
+                <Button
+                  startIcon={<RefreshIcon />}
                   onClick={e => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -563,9 +562,8 @@ const CreateRealm = ({
                     unityInputRef.current?.click();
                   }}
                 >
-                  <img src={require("assets/metaverseImages/refresh.png")} />
-                  <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                </SecondaryButton>
+                  CHANGE FILE
+                </Button>
               </Box>
             ) : (
               <Box pt={0.5}>Add Unity File</Box>

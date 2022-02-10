@@ -122,10 +122,6 @@ export const useModalStyles = makeStyles(theme => ({
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      height: 30,
-      "& svg": {
-        marginRight: 8,
-      },
     },
   },
   image: {

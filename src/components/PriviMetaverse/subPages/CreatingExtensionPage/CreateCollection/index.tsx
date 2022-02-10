@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 
-import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled } from "@material-ui/core";
+import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Button } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -13,6 +13,7 @@ import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 import ContentProcessingOperationModal from "components/PriviMetaverse/modals/ContentProcessingOperationModal";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
 const CreateCollection = ({
   handleNext,
@@ -180,8 +181,8 @@ const CreateCollection = ({
                 }}
               />
               <Box flex={1} display="flex" justifyContent="flex-end" mr={3}>
-                <SecondaryButton
-                  size="medium"
+                <Button
+                  startIcon={<RefreshIcon />}
                   onClick={e => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -190,9 +191,8 @@ const CreateCollection = ({
                     imageInputRef.current?.click();
                   }}
                 >
-                  <img src={require("assets/metaverseImages/refresh.png")} />
-                  <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                </SecondaryButton>
+                  CHANGE FILE
+                </Button>
               </Box>
             </>
           ) : (

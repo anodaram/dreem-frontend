@@ -23,6 +23,7 @@ import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 import { InfoIcon } from "shared/ui-kit/Icons";
 import { ReactComponent as DeleteIcon } from "assets/icons/remove.svg";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
 interface CollectionInfo {
   address: string;
@@ -491,8 +492,8 @@ const CreateRealmFlow = ({
                       />
                       <Box flex={1} display="flex" alignItems="center" marginLeft="24px" justifyContent="space-between" mr={3}>
                         Uploaded {video.name}
-                        <SecondaryButton
-                          size="medium"
+                        <Button
+                          startIcon={<RefreshIcon />}
                           onClick={e => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -501,9 +502,8 @@ const CreateRealmFlow = ({
                             videoInputRef.current?.click();
                           }}
                         >
-                          <img src={require("assets/metaverseImages/refresh.png")} />
-                          <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                        </SecondaryButton>
+                          CHANGE FILE
+                        </Button>
                       </Box>
                     </>
                   ) : (
@@ -554,7 +554,7 @@ const CreateRealmFlow = ({
                           }}
                         >
                           <img src={require("assets/metaverseImages/refresh.png")} />
-                          <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
+                          CHANGE FILE
                         </SecondaryButton>
                       </Box>
                     </>
