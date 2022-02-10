@@ -236,7 +236,7 @@ export default function GameDetailPage() {
       const response = await checkNFTHolder({
         collectionId: collection_id,
         mode: isProd ? "main" : "test",
-        account: account
+        account: account,
       });
       if (response.success) {
         setIsNFTHolder(response.nftHolder);
@@ -455,19 +455,50 @@ export default function GameDetailPage() {
   };
 
   return (
-    <Box display="flex" height="100%">
-      <Box className={classes.sideBar}>
-        {openSideBar ? (
-          <Box display="flex" flexDirection="column">
+    <Box display="flex" height="100%" position={"relative"}>
+      {!isMobile && (
+        <Box className={classes.sideBar}>
+          {openSideBar ? (
+            <Box display="flex" flexDirection="column">
+              <ActivityFeeds onClose={() => setOpenSideBar(false)} />
+              <MessageBox roomId={roomId} nftHolder={isNFTHolder} />
+            </Box>
+          ) : (
+            <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
+              <ExpandIcon />
+            </Box>
+          )}
+        </Box>
+      )}
+      {isMobile &&
+        (!openSideBar ? (
+          <Box className={classes.mobileSideBar} onClick={() => setOpenSideBar(true)}>
+            <Box width={"142px"} border={"5px solid #ffffff80"} borderRadius={"100px"} />
+          </Box>
+        ) : (
+          <Box
+            top={72}
+            position={"absolute"}
+            display={"flex"}
+            flexDirection={"column"}
+            width={"100%"}
+            height={"calc(100% - 72px)"}
+            zIndex={3}
+            bgcolor={"#212121"}
+          >
+            <Box
+              display="flex"
+              alignItems={"center"}
+              justifyContent={"center"}
+              height={"64px"}
+              onClick={() => setOpenSideBar(false)}
+            >
+              <Box width={"142px"} border={"5px solid #ffffff80"} borderRadius={"100px"} />
+            </Box>
             <ActivityFeeds onClose={() => setOpenSideBar(false)} />
             <MessageBox roomId={roomId} nftHolder={isNFTHolder} />
           </Box>
-        ) : (
-          <Box className={classes.expandIcon} onClick={() => setOpenSideBar(true)}>
-            <ExpandIcon />
-          </Box>
-        )}
-      </Box>
+        ))}
       <Box className={classes.root} id="scrollContainer" onScroll={handleScroll}>
         <Box
           className={classes.headerBG}
