@@ -85,6 +85,7 @@ const CreateAssetFlow = ({
   const [formData, setFormData] = useState<FormData>({});
   const [fileInputs, setFileInputs] = useState<InputFiles>({});
   const [fileContents, setFileContents] = useState<InputFileContents>({});
+  const [savingType, setSavingType] = useState<string>("");
   // Transaction Modal
   const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
   const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
@@ -223,8 +224,16 @@ const CreateAssetFlow = ({
           setUploadSuccess(false);
         } else {
           setSavingDraft(res.data);
-          setUploadSuccess(true);
-          showAlertMessage(`Created draft successfully`, { variant: "success" });
+          if(savingType == 'draft'){
+            setUploadSuccess(true);
+            showAlertMessage(`Created draft successfully`, { variant: "success" });
+          } else if(savingType == 'nft'){
+            setUploadSuccess(true);
+            setIsUploading(false);
+            handleMint(res.data)
+          } else{
+            showAlertMessage(`Something is wrong`, { variant: "error" });
+          }
         }
       });
     }
@@ -237,11 +246,12 @@ const CreateAssetFlow = ({
       console.log('error in getting metadata', error)
     }
   }
-  const mintSingleNFT = async () => {
-    if (!savingDraft) {
+  const mintSingleNFT = async (data) => {
+    if (!data) {
       showAlertMessage(`Save draft first`, { variant: "error" });
       return;
     }
+    const savingDraft = data;
     let collectionData = await MetaverseAPI.getCollection(currentCollection.id);
     collectionData = collectionData.data
     let metadata = await getMetadata(savingDraft.instance.hashId);
@@ -286,10 +296,8 @@ const CreateAssetFlow = ({
         setTxHash
       );
       if (resRoyalty.success) {
-        setTxSuccess(true);
-        showAlertMessage(`Successfully world minted`, { variant: "success" });
 
-        await MetaverseAPI.convertToNFTAssetBatch(
+        const resp = await MetaverseAPI.convertToNFTAssetBatch(
           savingDraft.instance.hashId,
           resRoyalty.contractAddress,
           targetChain.name,
@@ -301,6 +309,13 @@ const CreateAssetFlow = ({
           resRoyalty.txHash,
           1
         );
+        if(resp.success){
+          setTxSuccess(true);
+          showAlertMessage(`Successfully minted`, { variant: "success" });
+        } else{
+          setTxSuccess(false);
+          showAlertMessage(`Something went wrong`, { variant: "error" });
+        }
       } else {
         setTxSuccess(false);
       }
@@ -322,9 +337,9 @@ const CreateAssetFlow = ({
 
       if (contractRes.success) {
         setTxSuccess(true);
-        showAlertMessage(`Successfully world minted`, { variant: "success" });
+        showAlertMessage(`Successfully asset minted`, { variant: "success" });
         console.log(contractRes);
-        await MetaverseAPI.convertToNFTAssetBatch(
+        const resp = await MetaverseAPI.convertToNFTAssetBatch(
           savingDraft.instance.hashId,
           contractRes.collectionAddress,
           targetChain.name,
@@ -336,6 +351,13 @@ const CreateAssetFlow = ({
           contractRes.txHash,
           1
         );
+        if(resp.success){
+          setTxSuccess(true);
+          showAlertMessage(`Successfully asset minted`, { variant: "success" });
+        } else{
+          setTxSuccess(false);
+          showAlertMessage(`Something went wrong`, { variant: "error" });
+        }
       } else {
         setTxSuccess(false);
       }
@@ -401,7 +423,7 @@ const CreateAssetFlow = ({
           tokenIds.push(Number(resRoyalty.initialId) + i)
         }
 
-        await MetaverseAPI.convertToNFTAssetBatch(
+        const resp = await MetaverseAPI.convertToNFTAssetBatch(
           savingDraft.instance.hashId,
           resRoyalty.contractAddress,
           targetChain.name,
@@ -413,9 +435,15 @@ const CreateAssetFlow = ({
           resRoyalty.txHash,
           amount
         );
-        setTxSuccess(true);
-        showAlertMessage(`Successfully asset minted`, { variant: "success" });
-        return true;
+        if(resp.success){
+          setTxSuccess(true);
+          showAlertMessage(`Successfully asset minted`, { variant: "success" });
+          return true;
+        } else{
+          setTxSuccess(true);
+          showAlertMessage(`Something went wrong`, { variant: "error" });
+          return false;
+        }
       } else {
         setTxSuccess(false);
         return false;
@@ -445,7 +473,7 @@ const CreateAssetFlow = ({
         for (let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++) {
           tokenIds.push(Number(i))
         }
-        await MetaverseAPI.convertToNFTAssetBatch(
+        const resp = await MetaverseAPI.convertToNFTAssetBatch(
           savingDraft.instance.hashId,
           contractRes.collectionAddress,
           targetChain.name,
@@ -457,9 +485,15 @@ const CreateAssetFlow = ({
           contractRes.txHash,
           amount
         );
-        setTxSuccess(true);
-        showAlertMessage(`Successfully asset minted`, { variant: "success" });
-        return true
+        if(resp.success){
+          setTxSuccess(true);
+          showAlertMessage(`Successfully asset minted`, { variant: "success" });
+          return true;
+        } else{
+          setTxSuccess(true);
+          showAlertMessage(`Something went wrong`, { variant: "error" });
+          return false;
+        }
       } else {
         setTxSuccess(false);
         return false
@@ -467,8 +501,13 @@ const CreateAssetFlow = ({
     }
   };
 
-  const handleMint = () => {
-    nftOption == "single" ? mintSingleNFT() : setOpenMintEditions(true);
+  const handlePublic = (option) => {
+    setSavingType(option)
+    setOpenPublic(true)
+  };
+
+  const handleMint = (data) => {
+    nftOption == "single" ? mintSingleNFT(data) : setOpenMintEditions(true);
   };
 
   const validate = (withMessage) => {
@@ -758,10 +797,10 @@ const CreateAssetFlow = ({
             )}
             {step === steps.length && (
               <Box display="flex" alignItems="center" justifyContent="center">
-                <PrimaryButton size="medium" className={classes.howToCreateBtn} disabled={currentCollection ? false : true} onClick={() => setOpenPublic(true)}>
+                <PrimaryButton size="medium" className={classes.howToCreateBtn} disabled={currentCollection ? false : true} onClick={() => handlePublic("draft")}>
                   create draft
                 </PrimaryButton>
-                <PrimaryButton size="medium" className={classes.nextBtn} disabled={savingDraft ? false : true} onClick={() => { handleMint() }}>
+                <PrimaryButton size="medium" className={classes.nextBtn} disabled={currentCollection ? false : true} onClick={() => { handlePublic("nft") }}>
                   mint nft
                 </PrimaryButton>
               </Box>
