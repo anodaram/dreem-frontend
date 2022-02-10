@@ -138,9 +138,10 @@ const NFTReserves = () => {
 
       const updateMarketPlaceFeedHandler = _transaction => {
         setTransactions(prev => {
-          const _transactions = prev.map(transaction =>
-            _transaction.id === transaction.id ? _transaction : transaction
-          );
+          let _transactions = prev.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
+          if (_transactions.length === 0 || _transactions[0].id < _transaction.id){
+            _transactions = [_transaction].concat(_transactions);
+          }
           return _transactions;
         });
       };
@@ -254,8 +255,25 @@ const NFTReserves = () => {
           ),
         },
         {
-          cell: <Tag state={row.type.toLowerCase()} text={row.type} />,
-        },
+          cell: (
+            <Box
+            className={classes.typeTag}
+            style={{
+              background:
+                row.type && row.type.toLowerCase() === "rented"
+                  ? "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)"
+                  : row.type && row.type.toLowerCase() === "sold"
+                  ? "conic-gradient(from 31.61deg at 50% 50%, #91D502 -25.18deg, #E5FF46 15deg, rgba(186, 252, 0, 0.76) 103.13deg, #A3CC00 210deg, #91D502 334.82deg, #E5FF46 375deg)"
+                  : row.type && row.type.toLowerCase() === "blocked"
+                  ? "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)"
+                  : row.type && row.type.toLowerCase() === "transfer"
+                  ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
+                  : "",
+            }}
+          >
+            {row.type}
+          </Box>
+          )},
         {
           cell: <div>{getChainImage(row.chain)}</div>,
         },
@@ -495,7 +513,7 @@ const NFTReserves = () => {
                       flexDirection="row"
                       alignItems="center"
                       justifyContent={isMobile ? "space-between" : "flex-start"}
-                      width="100%"
+                      width={isMobile ? "100%" : "auto"}
                     >
                       <span>Popular Games</span>
                       {popularGames &&
@@ -561,7 +579,7 @@ const NFTReserves = () => {
                       <SecondaryButton
                         size="medium"
                         className={classes.showAll}
-                        onClick={() => history.push("/P2E/explorer")}
+                        onClick={() => history.push("/P2E/explorer_games")}
                       >
                         Show All
                       </SecondaryButton>

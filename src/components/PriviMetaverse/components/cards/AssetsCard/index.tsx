@@ -89,18 +89,18 @@ export default function AssetsCard(props) {
             <PrimaryButton
               size="medium"
               className={classes.button}
-              // onClick={() => setOpenAssetDetailModal(true)}
+              onClick={() => setOpenAssetDetailModal(true)}
             >
               see more
             </PrimaryButton>
           </Box>
         </>
       )}
-      {openCharacterDetailModal && (
+      {(item.itemKind === "MODEL" || item.itemKind === "TEXTURE") && openCharacterDetailModal && (
         <AssetDetailModal
           open={openCharacterDetailModal}
           id={asset.id}
-          assetData={item.realm}
+          assetData={item}
           onClose={() => setOpenAssetDetailModal(false)}
           onFruit={updateFruit}
         />
