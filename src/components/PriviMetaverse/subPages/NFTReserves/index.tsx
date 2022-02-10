@@ -402,7 +402,7 @@ const NFTReserves = () => {
                             display="flex"
                             flexDirection="column"
                             alignItems="flex-start"
-                            mt={isTablet ? 2 : 0}
+                            mt={0}
                           >
                             <Box
                               fontFamily="GRIFTER"
@@ -410,22 +410,32 @@ const NFTReserves = () => {
                               fontSize={isTablet || isMobile || isNarrow ? 26 : 72}
                               color="#fff"
                               mt="11px"
+                              style={{
+                                width: isTablet || isNarrow ? "400px" : "100%",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textAlign: "left"
+                              }}
                             >
-                              {game.title}
+                              {game.CollectionName}
                             </Box>
                             <Box
                               fontFamily="Rany"
                               fontWeight={500}
                               textAlign="left"
-                              fontSize={isTablet || isMobile || isNarrow ? 12 : 20}
+                              fontSize={isTablet || isNarrow ? 12 : 20}
                               color="#fff"
-                              lineHeight="31px"
-                              mt="20px"
+                              lineHeight={isTablet || isNarrow ? "16px" : "31px"}
+                              mt={isTablet || isNarrow ? "0px" : "20px"}
                               maxWidth={isNarrow || isTablet ? 440 : isMobile ? "100%" : "unset"}
                             >
-                              {game.Description}
+                              {game.Description.slice(0, 200) + (game.Description.length > 200 ? '...' : '')}
                             </Box>
-                            <Box display="flex" mt={3}>
+                            <Box
+                              display="flex" 
+                              mt={isTablet || isNarrow ? 0.5 : 3}
+                            >
                               <Box
                                 display="flex"
                                 flexDirection="column"
@@ -477,7 +487,7 @@ const NFTReserves = () => {
                     className={`${classes.topGamesTitle} ${classes.fitContent}`}
                     justifyContent="space-between"
                   >
-                    <Box display="flex" flexDirection="row">
+                    <Box display="flex" flexDirection="row" alignItems="center">
                       <span>Popular Games</span>
                       {popularGames &&
                       popularGames.length &&
@@ -767,7 +777,7 @@ const NFTReserves = () => {
                       )
                     }
                   >
-                    {tableData.length > 0 && (
+                    {isNormalScreen && tableData.length > 0 && (
                       <Box className={classes.table}>
                         <CustomTable
                           variant={Variant.Transparent}
@@ -779,6 +789,62 @@ const NFTReserves = () => {
                         />
                       </Box>
                     )}
+                    {(isTablet || isNarrow) && 
+                      transactions.map((transaction) => (
+                        <Box className={classes.transactionItemGradientWrapper}>
+                          <Box className={classes.transactionItemWrapper}>
+                            <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
+                              <Box display="flex" flexDirection="row" alignItems="center">
+                                <img className={classes.titleImg} src={transaction.image} style={{ margin: 0, marginRight: 20 }}/>
+                                <p className={classes.textTitle}>{transaction.name}</p>
+                              </Box>
+                              <Box
+                                className={classes.typeTag}
+                                style={{
+                                  background:
+                                    transaction.type && transaction.type.toLowerCase() === "rented"
+                                      ? "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)"
+                                      : transaction.type && transaction.type.toLowerCase() === "sold"
+                                      ? "conic-gradient(from 31.61deg at 50% 50%, #91D502 -25.18deg, #E5FF46 15deg, rgba(186, 252, 0, 0.76) 103.13deg, #A3CC00 210deg, #91D502 334.82deg, #E5FF46 375deg)"
+                                      : transaction.type && transaction.type.toLowerCase() === "blocked"
+                                      ? "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)"
+                                      : transaction.type && transaction.type.toLowerCase() === "transfer"
+                                      ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
+                                      : "",
+                                }}
+                              >
+                                {transaction.type}
+                              </Box>
+                            </Box>
+                            <Box display="flex" flexDirection="row" mt={2} alignItems="center" justifyContent="space-between">
+                              <div>{getChainImage(transaction.chain)}</div>
+                              <p className={classes.whiteText}>
+                                {
+                                  +toDecimals(
+                                    transaction.price || transaction.pricePerSecond * transaction.rentalTime,
+                                    getTokenDecimal(transaction.paymentToken || transaction.fundingToken)
+                                  )
+                                }{" "}
+                                {getTokenSymbol(transaction.paymentToken || transaction.fundingToken)}
+                              </p>
+                              <p className={classes.whiteText}>
+                                <Moment fromNow>{+transaction.id}</Moment>
+                              </p>
+                              <PrimaryButton
+                                onClick={() => {
+                                  goToNft(transaction);
+                                }}
+                                size="medium"
+                                className={classes.viewButton}
+                                isRounded
+                              >
+                                View
+                              </PrimaryButton>
+                            </Box>
+                          </Box>
+                        </Box>
+                      ))
+                    }
                   </InfiniteScroll>
                   {!transactionloading && transactions?.length < 1 && (
                     <Box textAlign="center" width="100%" mb={10} mt={2}>
