@@ -11,6 +11,7 @@ import {
   styled,
   Select,
   MenuItem,
+  Button,
 } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
@@ -27,6 +28,7 @@ import useIPFS from "shared/utils-IPFS/useIPFS";
 import { FilterAssetTypeOptions } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
 const CreateNFT = ({
   metaData,
@@ -478,8 +480,8 @@ const CreateNFT = ({
                   }}
                 />
                 <Box flex={1} display="flex" justifyContent="flex-end" mr={3}>
-                  <SecondaryButton
-                    size="medium"
+                  <Button
+                    startIcon={<RefreshIcon />}
                     onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -488,9 +490,8 @@ const CreateNFT = ({
                       imageInputRef.current?.click();
                     }}
                   >
-                    <img src={require("assets/metaverseImages/refresh.png")} />
-                    <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                  </SecondaryButton>
+                    CHANGE FILE
+                  </Button>
                 </Box>
               </>
             ) : (
@@ -534,8 +535,8 @@ const CreateNFT = ({
                   }}
                 />
                 <Box flex={1} display="flex" justifyContent="flex-end" mr={3}>
-                  <SecondaryButton
-                    size="medium"
+                  <Button
+                    startIcon={<RefreshIcon />}
                     onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -544,9 +545,8 @@ const CreateNFT = ({
                       videoInputRef.current?.click();
                     }}
                   >
-                    <img src={require("assets/metaverseImages/refresh.png")} />
-                    <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                  </SecondaryButton>
+                    CHANGE FILE
+                  </Button>
                 </Box>
               </>
             ) : (
@@ -589,8 +589,8 @@ const CreateNFT = ({
                 style={{ background: "#E9FF26 !important", borderRadius: "8px !important" }}
               >
                 {unity.name}
-                <SecondaryButton
-                  size="medium"
+                <Button
+                  startIcon={<RefreshIcon />}
                   onClick={e => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -599,9 +599,8 @@ const CreateNFT = ({
                     unityInputRef.current?.click();
                   }}
                 >
-                  <img src={require("assets/metaverseImages/refresh.png")} />
-                  <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                </SecondaryButton>
+                  CHANGE FILE
+                </Button>
               </Box>
             ) : (
               <Box pt={0.5}>Add Unity File</Box>
@@ -634,8 +633,8 @@ const CreateNFT = ({
                 style={{ background: "#E9FF26 !important", borderRadius: "8px !important" }}
               >
                 {entity.name}
-                <SecondaryButton
-                  size="medium"
+                <Button
+                  startIcon={<RefreshIcon />}
                   onClick={e => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -644,9 +643,8 @@ const CreateNFT = ({
                     entityInputRef.current?.click();
                   }}
                 >
-                  <img src={require("assets/metaverseImages/refresh.png")} />
-                  <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                </SecondaryButton>
+                  CHANGE FILE
+                </Button>
               </Box>
             ) : (
               <Box pt={0.5}>Add Data File</Box>

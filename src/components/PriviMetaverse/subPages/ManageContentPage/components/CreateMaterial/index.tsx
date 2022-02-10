@@ -11,6 +11,7 @@ import {
   styled,
   Select,
   MenuItem,
+  Button,
 } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
@@ -29,6 +30,7 @@ import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
 import { ReactComponent as UnityIcon } from "assets/icons/unity.svg";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
 const CreateMaterial = ({
   metaData,
@@ -347,8 +349,8 @@ const CreateMaterial = ({
                   mr={3}
                 >
                   Uploaded {image.name}
-                  <SecondaryButton
-                    size="medium"
+                  <Button
+                    startIcon={<RefreshIcon />}
                     onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -357,9 +359,8 @@ const CreateMaterial = ({
                       imageInputRef.current?.click();
                     }}
                   >
-                    <img src={require("assets/metaverseImages/refresh.png")} />
-                    <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                  </SecondaryButton>
+                    CHANGE FILE
+                  </Button>
                 </Box>
               </>
             ) : (
@@ -400,8 +401,8 @@ const CreateMaterial = ({
                 <Box display="flex" alignItems="center" justifyContent="space-between" fontSize={12}>
                   <DocumentIcon /> {unity.name}
                 </Box>
-                <SecondaryButton
-                  size="medium"
+                <Button
+                  startIcon={<RefreshIcon />}
                   onClick={e => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -410,9 +411,8 @@ const CreateMaterial = ({
                     unityInputRef.current?.click();
                   }}
                 >
-                  <img src={require("assets/metaverseImages/refresh.png")} />
-                  <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                </SecondaryButton>
+                  CHANGE FILE
+                </Button>
               </Box>
             ) : (
               <Box pt={0.5} display="flex" alignItems="center" justifyContent="space-between">

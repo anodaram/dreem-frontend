@@ -11,6 +11,7 @@ import {
   styled,
   Select,
   MenuItem,
+  Button,
 } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
@@ -27,6 +28,7 @@ import useIPFS from "shared/utils-IPFS/useIPFS";
 import { FilterAssetTypeOptions } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
 const CreateTexture = ({
   metaData,
@@ -345,8 +347,8 @@ const CreateTexture = ({
                   mr={3}
                 >
                   Uploaded {image.name}
-                  <SecondaryButton
-                    size="medium"
+                  <Button
+                    startIcon={<RefreshIcon />}
                     onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -355,9 +357,8 @@ const CreateTexture = ({
                       imageInputRef.current?.click();
                     }}
                   >
-                    <img src={require("assets/metaverseImages/refresh.png")} />
-                    <span style={{ marginTop: 1, marginLeft: 8 }}>CHANGE FILE</span>
-                  </SecondaryButton>
+                    CHANGE FILE
+                  </Button>
                 </Box>
               </>
             ) : (
