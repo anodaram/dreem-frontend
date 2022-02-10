@@ -195,10 +195,8 @@ const CreateRealmFlow = ({
       );
       return false;
     } else if (
-      symbol.length < 5 ||
-      symbol.length > 4
-      // symbol.length < sizeSpec?.worldSymbol.limit.min ||
-      // symbol.length > sizeSpec?.worldSymbol.limit.max
+      symbol.length < sizeSpec?.worldSymbol.limit.min ||
+      symbol.length > sizeSpec?.worldSymbol.limit.max
     ) {
       withMessage && showAlertMessage(
         `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldSymbol.limit.min} to ${sizeSpec?.worldSymbol.limit.max} characters`,
