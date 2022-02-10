@@ -181,7 +181,7 @@ const CreateRealmFlow = ({
   }
 
   const validate = (withMessage) => {
-    if (!title || !description || !image || !video) {
+    if (!title || !description || !image) {
       withMessage && showAlertMessage(`Please fill all the fields to proceed`, { variant: "error" });
       return false;
     }
