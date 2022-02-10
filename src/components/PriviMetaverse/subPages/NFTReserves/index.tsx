@@ -402,7 +402,7 @@ const NFTReserves = () => {
                             display="flex"
                             flexDirection="column"
                             alignItems="flex-start"
-                            mt={isTablet ? 2 : 0}
+                            mt={0}
                           >
                             <Box
                               fontFamily="GRIFTER"
@@ -432,7 +432,10 @@ const NFTReserves = () => {
                             >
                               {game.Description.slice(0, 200) + (game.Description.length > 200 ? '...' : '')}
                             </Box>
-                            <Box display="flex" mt={3}>
+                            <Box
+                              display="flex" 
+                              mt={isTablet || isNarrow ? 0.5 : 3}
+                            >
                               <Box
                                 display="flex"
                                 flexDirection="column"
