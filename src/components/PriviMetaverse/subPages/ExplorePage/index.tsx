@@ -140,7 +140,7 @@ export default function ExplorePage() {
         setAssetList([]);
       }
     } catch (error) {
-      console.log(error);
+      console.log("error: ", error);
     } finally {
       setLoading(false);
     }
