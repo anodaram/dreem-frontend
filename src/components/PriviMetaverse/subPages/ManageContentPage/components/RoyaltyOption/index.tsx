@@ -2,7 +2,16 @@ import React, { useEffect, useState, useRef } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 
-import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem } from "@material-ui/core";
+import {
+  FormControlLabel,
+  useMediaQuery,
+  useTheme,
+  Switch,
+  SwitchProps,
+  styled,
+  Select,
+  MenuItem,
+} from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -15,14 +24,10 @@ import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProg
 import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingModal";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "shared/utils-IPFS/useIPFS";
-import { FilterWorldAssetOptions } from "shared/constants/constants";
+import { FilterAssetTypeOptions } from "shared/constants/constants";
 import { useModalStyles } from "./index.styles";
 
-const RoyaltyOption = ({
-  handleNext,
-}: {
-  handleNext: () => void;
-}) => {
+const RoyaltyOption = ({ handleNext }: { handleNext: () => void }) => {
   const classes = useModalStyles();
   const { showAlertMessage } = useAlertMessage();
 
@@ -48,61 +53,68 @@ const RoyaltyOption = ({
             </Box>
           </Box>
           <Box className={classes.typo3} mb={3}>
-          Every time the NFT is traded on OpenSea or Dreem, NFT holders can receive royalties to their wallet address. If you select “Yes”, be prepared to paste the recipient wallet address.
+            Every time the NFT is traded on OpenSea or Dreem, NFT holders can receive royalties to their
+            wallet address. If you select “Yes”, be prepared to paste the recipient wallet address.
           </Box>
           <div className={classes.inputGroup}>
             <div className={classes.inputBox}>
               <input
                 name="radio-group"
                 className={classes.input}
-                id='single'
-                type='radio'
+                id="single"
+                type="radio"
                 // value={title}
-                onChange={e => setIsSelected(e.target.value == 'on' ? true : false)}
+                onChange={e => setIsSelected(e.target.value == "on" ? true : false)}
               />
               <label htmlFor="single">yes</label>
-              <div className="check"><div className="inside"></div></div>
+              <div className="check">
+                <div className="inside"></div>
+              </div>
             </div>
             <div className={classes.inputBox}>
               <input
                 name="radio-group"
                 className={classes.input}
-                id='multi'
-                type='radio'
+                id="multi"
+                type="radio"
                 // value={title}
-                onChange={e => {setIsSelected(e.target.value == 'on' ? false : true)}}
+                onChange={e => {
+                  setIsSelected(e.target.value == "on" ? false : true);
+                }}
               />
               <label htmlFor="multi">no</label>
-              <div className="check"><div className="inside"></div></div>
+              <div className="check">
+                <div className="inside"></div>
+              </div>
             </div>
           </div>
-          {isSelected &&
-          <>
-            <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
-              <Box className={classes.itemTitle} mb={1}>
-                royalty share amount
+          {isSelected && (
+            <>
+              <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+                <Box className={classes.itemTitle} mb={1}>
+                  royalty share amount
+                </Box>
               </Box>
-            </Box>
-            <input
-              type='number'
-              className={classes.inputText}
-              placeholder=""
-              value={amount}
-              onChange={e => setAmount(e.target.value)}
-            />
-            <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
-              <Box className={classes.itemTitle} mb={1}>
-                address to receive royalties
+              <input
+                type="number"
+                className={classes.inputText}
+                placeholder=""
+                value={amount}
+                onChange={e => setAmount(e.target.value)}
+              />
+              <Box display="flex" alignItems="center" justifyContent="space-between" mt={2.5}>
+                <Box className={classes.itemTitle} mb={1}>
+                  address to receive royalties
+                </Box>
               </Box>
-            </Box>
-            <input
-              className={classes.inputText}
-              placeholder=""
-              value={address}
-              onChange={e => setAddress(e.target.value)}
-            />
-          </>
-          }
+              <input
+                className={classes.inputText}
+                placeholder=""
+                value={address}
+                onChange={e => setAddress(e.target.value)}
+              />
+            </>
+          )}
         </div>
       </Box>
     </>

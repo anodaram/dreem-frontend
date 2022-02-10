@@ -429,18 +429,18 @@
   -webkit-box-orient: "vertical";
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .item-list-container {
     margin: 12px 8px;
-    max-width: 235px;
+    max-width: 260px;
   }
   .message-footer1 {
     padding: 16px 8px;
   }
 }
 
-@media (max-width: 378px) {
+@media (max-width: 600px) {
   .item-list-container {
-    max-width: 350px;
+    max-width: 100%;
   }
 }

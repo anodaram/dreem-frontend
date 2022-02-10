@@ -22,6 +22,17 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     border: "2px solid #151515",
     zIndex: 1,
   },
+  mobileSideBar: {
+    bottom: 0,
+    width: "100%",
+    height: 53,
+    background: "#212121",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    zIndex: 2,
+  },
   expandIcon: {
     padding: 16,
     cursor: "pointer",
@@ -94,7 +105,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       maxWidth: 480,
     },
     [theme.breakpoints.down("xs")]: {
-      maxWidth: 308,
+      maxWidth: 362,
     },
   },
   titleBar: {
@@ -225,11 +236,12 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("sm")]: {
       maxWidth: 480,
-      maxHeight: 550,
+      maxHeight: 300,
     },
     [theme.breakpoints.down("xs")]: {
       maxWidth: 350,
       minHeight: 400,
+      maxHeight: 500,
     },
   },
   gameContent: {
@@ -257,6 +269,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     position: "absolute",
     bottom: "-38px",
     width: "100%",
+    [theme.breakpoints.down("sm")]: {
+      bottom: "-20px"
+    },
   },
   sliderLeft: {
     position: "absolute",
@@ -300,6 +315,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       "-webkit-text-fill-color": "transparent",
       "-webkit-background-clip": "text",
       lineHeight: "40.8px",
+      marginRight: "24px",
       [theme.breakpoints.down("sm")]: {
         fontSize: 20,
       },
@@ -434,6 +450,10 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     background: "transparent !important",
     color: "#FFFFFF !important",
     padding: "0 30px !important",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "12px !important",
+      padding: "0 24px !important",
+    },
   },
   table: {
     width: "100%",
@@ -487,6 +507,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("sm")]: {
       fontSize: 12,
+      padding: "4px 8px",
     },
   },
   gameInfoSection: {
@@ -518,12 +539,20 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("sm")]: {
       padding: "0px 48px",
+      "& span:first-child": {
+        fontSize: 18,
+      },
+      "& span:last-child": {
+        fontSize: 12,
+        lineHeight: "14px",
+        textAlign: "left"
+      },
     },
     [theme.breakpoints.down("xs")]: {
       padding: "0px 24px",
       alignItems: "center",
       "& span:first-child": {
-        fontSize: 24,
+        fontSize: 18,
       },
       "& span:last-child": {
         fontSize: 12,
@@ -542,5 +571,28 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       backgroundColor: "#505050",
       borderRadius: 6,
     },
+  },
+  transactionItemGradientWrapper: {
+    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
+    padding: "2px",
+    borderRadius: "8px",
+    marginBottom: 16
+  },
+  transactionItemWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    padding: "16px",
+    borderRadius: "8px",
+    background: "#151515"
+  },
+  typeTag: {
+    borderRadius: 4,
+    padding: "9px 8px 7.5px",
+    textTransform: "uppercase",
+    fontSize: 10,
+    fontFamily: "Grifter",
+    fontWeight: 700,
+    color: "#212121",
+    height: 24,
   },
 }));

@@ -4,34 +4,31 @@ export const collectionDetailPageStyles = makeStyles(theme => ({
   root: {
     width: "100%",
     height: "100%",
-    backgroundImage: `url(${require("assets/metaverseImages/background_body.png")})`,
-    backgroundRepeat: "inherit",
-    backgroundSize: "100% 100%",
+    background: "#151515",
     position: "relative",
+    backgroundImage: `url(${require("assets/metaverseImages/nft_reserve_bg.png")})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "100% 45%",
   },
   container: {
     width: "100%",
-    marginTop: 71,
+    height: "100%",
+    marginTop: 72,
     paddingTop: 80,
     overflowY: "auto",
     overflowX: "hidden",
     color: "#ffffff",
+    [theme.breakpoints.down("md")]: {
+      paddingTop: 80,
+    },
     [theme.breakpoints.down("sm")]: {
       paddingTop: 40,
     },
-    "& > img": {
-      position: "absolute",
-      top: -70,
-      right: -40,
-      [theme.breakpoints.down("sm")]: {
-        top: -100,
-        right: -150,
-      },
-      [theme.breakpoints.down("sm")]: {
-        top: -148,
-        right: -168,
-      },
-    },
+  },
+  imageBg: {
+    position: "absolute",
+    top: 0,
+    width: "100%",
   },
   fitContent: {
     maxWidth: 1280,
@@ -61,28 +58,12 @@ export const collectionDetailPageStyles = makeStyles(theme => ({
   title: {
     fontSize: 72,
     fontWeight: 700,
-    lineHeight: "62px",
+    lineHeight: "100%",
     textTransform: "uppercase",
     color: "#fff",
+    marginBottom: 4,
     [theme.breakpoints.down("xs")]: {
       fontSize: 34,
-    },
-  },
-  createCollectionBtn: {
-    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
-    borderRadius: 12,
-    fontSize: 16,
-    fontWeight: 700,
-    lineHeight: "19.2px",
-    fontFamily: "GRIFTER",
-    padding: "14px 18px",
-    color: "#212121",
-    cursor: "pointer",
-    textTransform: "uppercase",
-    display: "flex",
-    alignItems: "center",
-    "& svg": {
-      marginRight: 12,
     },
   },
   description: {
@@ -110,67 +91,67 @@ export const collectionDetailPageStyles = makeStyles(theme => ({
     color: "#E9FF26",
     marginBottom: 26,
   },
-  otherContent: {
-    marginTop: 120,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    maxWidth: 1600,
-    marginLeft: "auto",
-    marginRight: "auto",
-    padding: "0 96px",
-    [theme.breakpoints.down("sm")]: {
-      padding: "0 24px",
+  select: {
+    marginTop: "8px",
+    background: "#212121",
+    padding: "8px 12px",
+    "& + &": {
+      marginLeft: 10,
     },
-    [theme.breakpoints.down("xs")]: {
-      padding: "0 16px",
+    "& .MuiSelect-root": {
+      padding: "0px 4px",
+      fontFamily: "Rany",
+      fontWeight: 700,
+      fontSize: 14,
+      color: "rgba(255, 255, 255, 0.5)",
+      marginRight: 8,
+      "&:focus": {
+        backgroundColor: "unset",
+      },
+      "& svg": {
+        width: 18,
+        height: 18,
+      },
+      "& span": {
+        fontSize: 14,
+        fontWeight: 700,
+        color: "#E9FF26",
+      },
     },
-  },
-  typo1: {
-    fontSize: 40,
-    fontWeight: "bold",
-    lineHeight: "120%",
-    textAlign: "center",
-    fontFamily: "GRIFTER",
-    textTransform: "uppercase",
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 30,
-      lineHeight: "30px",
-    },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: 22,
-      lineHeight: "22px",
-      width: 280,
-    },
-  },
-  typo2: {
-    fontSize: 62,
-    fontWeight: 700,
-    lineHeight: "62px",
-    textAlign: "center",
-    fontFamily: "GRIFTER",
-    textTransform: "uppercase",
-    marginBottom: 8,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "48px",
-      lineHeight: "48px",
-    },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "34px",
-      lineHeight: "34px",
-      width: 280,
-    },
-  },
-  typo3: {
-    fontSize: 16,
-    fontWeight: 400,
-    lineHeight: "175%",
-    fontFamily: "Rany",
-    textAlign: "center",
-    [theme.breakpoints.down("xs")]: {
-      textAlign: "center",
-      width: 280,
+    "& svg path": {
+      stroke: "#E9FF26",
     },
   },
 }));
+
+export const useFilterSelectStyles = makeStyles({
+  paper: {
+    marginTop: "10px",
+    marginLeft: "-13px",
+    background: "#212121",
+    boxShadow: "0px 15px 35px -31px rgba(13, 12, 62, 0.19)",
+    color: "rgba(255, 255, 255, 0.5)",
+    "& svg": {
+      width: 18,
+      height: 18,
+      marginRight: 8,
+    },
+  },
+  list: {
+    padding: "20px 8px!important",
+    paddingRight: 8,
+    "& .MuiListItem-root": {
+      marginBottom: 10,
+      padding: "2px 8px",
+      minWidth: "200px",
+      Height: "36px",
+      "&:last-child": {
+        marginBottom: 0,
+      },
+      "&:hover": {
+        color: "white",
+        border: "solid 1px #E9FF26",
+      },
+    },
+  },
+});

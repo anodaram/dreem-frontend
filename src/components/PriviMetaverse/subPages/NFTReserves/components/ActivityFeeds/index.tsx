@@ -53,7 +53,7 @@ export default function ActivityFeeds({ onClose }) {
   useEffect(() => {
     if (listenerSocket) {
       const updateMarketPlaceFeedHandler = _transaction => {
-        setTransactions((prev) => {
+        setTransactions(prev => {
           const _transactions = prev.map(transaction =>
             _transaction.id === transaction.id ? _transaction : transaction
           );
@@ -101,9 +101,11 @@ export default function ActivityFeeds({ onClose }) {
 
   return (
     <Box className={classes.root}>
-      <div className={classes.collapseIcon} onClick={onClose}>
-        <CollapseIcon />
-      </div>
+      {!isMobile && (
+        <div className={classes.collapseIcon} onClick={onClose}>
+          <CollapseIcon />
+        </div>
+      )}
       <div className={classes.switch}>
         <div
           className={classes.switchButton}
@@ -142,14 +144,25 @@ export default function ActivityFeeds({ onClose }) {
                   <Box display={"flex"} flexDirection={"column"} ml={1.5}>
                     <Box className={classes.typo1}>{item.name}</Box>
                     <Box className={classes.typo2} mt={0.25}>
-                      {(item.operator || item.seller || item.fromSeller || item.toSeller || item.Address).substring(
-                        0,
-                        6
-                      )}
+                      {(
+                        item.operator ||
+                        item.seller ||
+                        item.fromSeller ||
+                        item.toSeller ||
+                        item.Address
+                      ).substring(0, 6)}
                       ...
-                      {(item.operator || item.seller || item.fromSeller || item.toSeller || item.Address).substring(
-                        (item.operator || item.seller || item.fromSeller || item.toSeller || item.Address).length - 4,
-                        (item.operator || item.seller || item.fromSeller || item.toSeller || item.Address).length
+                      {(
+                        item.operator ||
+                        item.seller ||
+                        item.fromSeller ||
+                        item.toSeller ||
+                        item.Address
+                      ).substring(
+                        (item.operator || item.seller || item.fromSeller || item.toSeller || item.Address)
+                          .length - 4,
+                        (item.operator || item.seller || item.fromSeller || item.toSeller || item.Address)
+                          .length
                       )}
                     </Box>
                   </Box>

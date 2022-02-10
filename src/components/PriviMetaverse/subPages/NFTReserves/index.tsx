@@ -76,14 +76,14 @@ const NFTReserves = () => {
 
   const theme = useTheme();
   const isNormalScreen = useMediaQuery(theme.breakpoints.between(1421, 1800));
-  const isTablet = useMediaQuery(theme.breakpoints.between(861, 1420));
-  const isNarrow = useMediaQuery(theme.breakpoints.between(651, 860));
+  const isTablet = useMediaQuery(theme.breakpoints.between(768, 1420));
+  const isNarrow = useMediaQuery(theme.breakpoints.between(651, 768));
   const isMobile = useMediaQuery(theme.breakpoints.down(650));
 
   const classes = useNFTOptionsStyles({ openSideBar });
 
-  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? openSideBar ? 3 : 4 : 4;
-  const MAX_NEW_LIST_LENGTH = 12
+  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? (openSideBar ? 3 : 4) : 4;
+  const MAX_NEW_LIST_LENGTH = 12;
 
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     { headerName: "NFT" },
@@ -121,8 +121,10 @@ const NFTReserves = () => {
       const newNFTHandler = data => {
         let _newNFT = data?.nftData;
         if (_newNFT && !loadingNewListings) {
-          setNewListings((prev) => {
-            const _newListings = prev.filter(nft => (_newNFT.collectionId !== nft.collectionId || _newNFT.tokenId !== nft.tokenId));
+          setNewListings(prev => {
+            const _newListings = prev.filter(
+              nft => _newNFT.collectionId !== nft.collectionId || _newNFT.tokenId !== nft.tokenId
+            );
             if (_newListings.length >= MAX_NEW_LIST_LENGTH) {
               _newListings.pop();
             }
@@ -132,7 +134,7 @@ const NFTReserves = () => {
       };
 
       const updateMarketPlaceFeedHandler = _transaction => {
-        setTransactions((prev) => {
+        setTransactions(prev => {
           const _transactions = prev.map(transaction =>
             _transaction.id === transaction.id ? _transaction : transaction
           );
@@ -193,7 +195,7 @@ const NFTReserves = () => {
         const nfts = response.data;
         setNewListings(nfts);
       }
-    } catch (err) { }
+    } catch (err) {}
     setLoadingNewListings(false);
   };
 
@@ -297,15 +299,7 @@ const NFTReserves = () => {
   return (
     <>
       <Box className={classes.main}>
-        {isTablet && !isMobile && (
-          <Box className={classes.sideBar}>
-            <Box display="flex" flexDirection="column">
-              <ActivityFeeds onClose={() => setOpenSideBar(false)} />
-              <MessageBox roomId={GLOBAL_CHAT_ROOM} />
-            </Box>
-          </Box>
-        )}
-        {(!isTablet || isMobile) && (
+        {!isMobile && !isNarrow && (
           <>
             <Box className={classes.sideBar}>
               {openSideBar ? (
@@ -321,6 +315,35 @@ const NFTReserves = () => {
             </Box>
           </>
         )}
+        {isMobile &&
+          (!openSideBar ? (
+            <Box className={classes.mobileSideBar} onClick={() => setOpenSideBar(true)}>
+              <Box width={"142px"} border={"5px solid #ffffff80"} borderRadius={"100px"} />
+            </Box>
+          ) : (
+            <Box
+              top={72}
+              position={"absolute"}
+              display={"flex"}
+              flexDirection={"column"}
+              width={"100%"}
+              height={"calc(100% - 72px)"}
+              zIndex={3}
+              bgcolor={"#212121"}
+            >
+              <Box
+                display="flex"
+                alignItems={"center"}
+                justifyContent={"center"}
+                height={"64px"}
+                onClick={() => setOpenSideBar(false)}
+              >
+                <Box width={"142px"} border={"5px solid #ffffff80"} borderRadius={"100px"} />
+              </Box>
+              <ActivityFeeds onClose={() => setOpenSideBar(false)} />
+              <MessageBox roomId={GLOBAL_CHAT_ROOM} />
+            </Box>
+          ))}
         <img src={require("assets/metaverseImages/nft_reserve_bg.png")} className={classes.imageBg} />
         <Box className={classes.limitedContent}>
           <div className={classes.content}>
@@ -379,34 +402,39 @@ const NFTReserves = () => {
                             display="flex"
                             flexDirection="column"
                             alignItems="flex-start"
-                            mt={isTablet ? 2 : 0}
+                            mt={0}
                           >
                             <Box
                               fontFamily="GRIFTER"
                               fontWeight={700}
-                              fontSize={isTablet ? 26 : 72}
+                              fontSize={isTablet || isMobile || isNarrow ? 26 : 72}
                               color="#fff"
                               mt="11px"
+                              style={{
+                                width: isTablet || isNarrow ? "400px" : "100%",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textAlign: "left"
+                              }}
                             >
-                              {game.title}
+                              {game.CollectionName}
                             </Box>
                             <Box
                               fontFamily="Rany"
                               fontWeight={500}
                               textAlign="left"
-                              fontSize={isTablet ? 12 : 20}
+                              fontSize={isTablet || isNarrow ? 12 : 20}
                               color="#fff"
-                              lineHeight="31px"
-                              mt="20px"
-                              maxWidth={isNarrow || isTablet ? 440 : isMobile ? 288 : "unset"}
+                              lineHeight={isTablet || isNarrow ? "16px" : "31px"}
+                              mt={isTablet || isNarrow ? "0px" : "20px"}
+                              maxWidth={isNarrow || isTablet ? 440 : isMobile ? "100%" : "unset"}
                             >
-                              {game.Description}
+                              {game.Description.slice(0, 200) + (game.Description.length > 200 ? '...' : '')}
                             </Box>
                             <Box
-                              display="flex"
-                              mt={3}
-                              maxWidth={isMobile ? 288 : "unset"}
-                              flexWrap={isMobile ? "wrap" : "unset"}
+                              display="flex" 
+                              mt={isTablet || isNarrow ? 0.5 : 3}
                             >
                               <Box
                                 display="flex"
@@ -459,65 +487,76 @@ const NFTReserves = () => {
                     className={`${classes.topGamesTitle} ${classes.fitContent}`}
                     justifyContent="space-between"
                   >
-                    <span>Popular Games</span>
-                    {popularGames &&
+                    <Box display="flex" flexDirection="row" alignItems="center">
+                      <span>Popular Games</span>
+                      {popularGames &&
                       popularGames.length &&
                       !isMobile &&
                       ((isTablet && popularGames.length > 2) ||
                         (isNormalScreen && popularGames.length > 3) ||
                         popularGames.length > 4) ? (
-                      <Box display="flex" alignItems="center">
-                        <Box
-                          className={classes.carouselNav}
-                          onClick={() => {
-                            carouselRef.current.slidePrev();
-                          }}
-                        >
-                          <svg
-                            width="10"
-                            height="16"
-                            viewBox="0 0 10 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                        <Box display="flex" alignItems="center">
+                          <Box
+                            className={classes.carouselNav}
+                            onClick={() => {
+                              carouselRef.current.slidePrev();
+                            }}
                           >
-                            <path
-                              opacity="0.6"
-                              d="M7.61309 2L1.92187 7.69055L7.92187 13.6906"
-                              stroke="white"
-                              stroke-width="2.5"
-                              stroke-linecap="square"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </Box>
-                        <Box
-                          ml={3}
-                          className={classes.carouselNav}
-                          onClick={() => {
-                            carouselRef.current.slideNext();
-                          }}
-                        >
-                          <svg
-                            width="10"
-                            height="16"
-                            viewBox="0 0 10 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                            <svg
+                              width="10"
+                              height="16"
+                              viewBox="0 0 10 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                opacity="0.6"
+                                d="M7.61309 2L1.92187 7.69055L7.92187 13.6906"
+                                stroke="white"
+                                stroke-width="2.5"
+                                stroke-linecap="square"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </Box>
+                          <Box
+                            ml={2}
+                            className={classes.carouselNav}
+                            onClick={() => {
+                              carouselRef.current.slideNext();
+                            }}
                           >
-                            <path
-                              opacity="0.6"
-                              d="M2.38691 14L8.07813 8.30945L2.07813 2.30945"
-                              stroke="white"
-                              stroke-width="2.5"
-                              stroke-linecap="square"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
+                            <svg
+                              width="10"
+                              height="16"
+                              viewBox="0 0 10 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                opacity="0.6"
+                                d="M2.38691 14L8.07813 8.30945L2.07813 2.30945"
+                                stroke="white"
+                                stroke-width="2.5"
+                                stroke-linecap="square"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </Box>
                         </Box>
-                      </Box>
-                    ) : (
-                      <></>
-                    )}
+                      ) : (
+                        <></>
+                      )}
+                    </Box>
+                    <Hidden xsDown>
+                      <SecondaryButton
+                        size="medium"
+                        className={classes.showAll}
+                        onClick={() => history.push("/P2E/explorer")}
+                      >
+                        Show All
+                      </SecondaryButton>
+                    </Hidden>
                   </Box>
                   <div className={`${classes.topNFTContent} ${classes.fitContent}`}>
                     {loadingPopularGames ? (
@@ -535,9 +574,9 @@ const NFTReserves = () => {
                       </div>
                     ) : popularGames && popularGames.length ? (
                       !isMobile &&
-                        (popularGames.length === 1 ||
-                          popularGames.length === 2 ||
-                          popularGames.length === 3) ? (
+                      (popularGames.length === 1 ||
+                        popularGames.length === 2 ||
+                        popularGames.length === 3) ? (
                         <div className={classes.allNFTSection}>
                           <Box style={{ marginBottom: "24px" }}>
                             <MasonryGrid
@@ -573,12 +612,12 @@ const NFTReserves = () => {
                                 justifyContent: isMobile
                                   ? "center"
                                   : popularGames.length === 2 && i === 1
-                                    ? "flex-end"
-                                    : popularGames.length === 3 && i === 1
-                                      ? "center"
-                                      : popularGames.length === 3 && i === 2
-                                        ? "flex-end"
-                                        : "flex-start",
+                                  ? "flex-end"
+                                  : popularGames.length === 3 && i === 1
+                                  ? "center"
+                                  : popularGames.length === 3 && i === 2
+                                  ? "flex-end"
+                                  : "flex-start",
                               }}
                             >
                               <FeaturedGameCard game={item} />
@@ -738,7 +777,7 @@ const NFTReserves = () => {
                       )
                     }
                   >
-                    {tableData.length > 0 && (
+                    {isNormalScreen && tableData.length > 0 && (
                       <Box className={classes.table}>
                         <CustomTable
                           variant={Variant.Transparent}
@@ -750,6 +789,62 @@ const NFTReserves = () => {
                         />
                       </Box>
                     )}
+                    {(isTablet || isNarrow) && 
+                      transactions.map((transaction) => (
+                        <Box className={classes.transactionItemGradientWrapper}>
+                          <Box className={classes.transactionItemWrapper}>
+                            <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
+                              <Box display="flex" flexDirection="row" alignItems="center">
+                                <img className={classes.titleImg} src={transaction.image} style={{ margin: 0, marginRight: 20 }}/>
+                                <p className={classes.textTitle}>{transaction.name}</p>
+                              </Box>
+                              <Box
+                                className={classes.typeTag}
+                                style={{
+                                  background:
+                                    transaction.type && transaction.type.toLowerCase() === "rented"
+                                      ? "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)"
+                                      : transaction.type && transaction.type.toLowerCase() === "sold"
+                                      ? "conic-gradient(from 31.61deg at 50% 50%, #91D502 -25.18deg, #E5FF46 15deg, rgba(186, 252, 0, 0.76) 103.13deg, #A3CC00 210deg, #91D502 334.82deg, #E5FF46 375deg)"
+                                      : transaction.type && transaction.type.toLowerCase() === "blocked"
+                                      ? "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)"
+                                      : transaction.type && transaction.type.toLowerCase() === "transfer"
+                                      ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
+                                      : "",
+                                }}
+                              >
+                                {transaction.type}
+                              </Box>
+                            </Box>
+                            <Box display="flex" flexDirection="row" mt={2} alignItems="center" justifyContent="space-between">
+                              <div>{getChainImage(transaction.chain)}</div>
+                              <p className={classes.whiteText}>
+                                {
+                                  +toDecimals(
+                                    transaction.price || transaction.pricePerSecond * transaction.rentalTime,
+                                    getTokenDecimal(transaction.paymentToken || transaction.fundingToken)
+                                  )
+                                }{" "}
+                                {getTokenSymbol(transaction.paymentToken || transaction.fundingToken)}
+                              </p>
+                              <p className={classes.whiteText}>
+                                <Moment fromNow>{+transaction.id}</Moment>
+                              </p>
+                              <PrimaryButton
+                                onClick={() => {
+                                  goToNft(transaction);
+                                }}
+                                size="medium"
+                                className={classes.viewButton}
+                                isRounded
+                              >
+                                View
+                              </PrimaryButton>
+                            </Box>
+                          </Box>
+                        </Box>
+                      ))
+                    }
                   </InfiniteScroll>
                   {!transactionloading && transactions?.length < 1 && (
                     <Box textAlign="center" width="100%" mb={10} mt={2}>

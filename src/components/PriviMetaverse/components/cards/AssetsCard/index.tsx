@@ -35,9 +35,19 @@ export default function AssetsCard(props) {
     if (item.itemKind === "TEXTURE") {
       return asset?.textureThumbnail;
     } else if (item.itemKind === "MODEL") {
-      return asset?.modelThumbnail;
+      return asset?.modelImage;
     } else if (item.itemKind === "MATERIAL") {
-      return asset?.materialThumbnail;
+      return asset?.materialImage;
+    }
+  }, [item]);
+
+  const assetDescription = useMemo(() => {
+    if (item.itemKind === "TEXTURE") {
+      return asset?.textureDescription;
+    } else if (item.itemKind === "MODEL") {
+      return asset?.modelDescription;
+    } else if (item.itemKind === "MATERIAL") {
+      return asset?.materialDescription;
     }
   }, [item]);
 

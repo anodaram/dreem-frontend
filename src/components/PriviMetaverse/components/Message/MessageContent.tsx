@@ -425,7 +425,7 @@ export const MessageContent = ({
         <Box className={"tab selected"}>Live Chat</Box>
       </Box>
       <div className="item-list-container" id="messageContainer" ref={itemListRef} onScroll={handleScroll}>
-        {(room !== GLOBAL_CHAT_ROOM && !nftHolder) || loadingMessages || !messages?.length ? (
+        {(room !== GLOBAL_CHAT_ROOM && !nftHolder) || !messages?.length ? (
           <Box className="no-items-label">
             <Box style={{ fontSize: 14 }}>No messages in the chat yet.</Box>
           </Box>
