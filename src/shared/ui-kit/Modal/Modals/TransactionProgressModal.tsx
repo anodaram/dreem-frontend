@@ -73,7 +73,7 @@ export default function TransactionProgressModal({
           </span>
         ) : transactionSuccess === false ? (
           <span>
-            Unfortunatelly transaction didn’t went through, please try again later.
+            Unfortunately transaction didn’t go through, please try again later.
             <br />
             You can check your transaction link below.
           </span>
@@ -81,7 +81,7 @@ export default function TransactionProgressModal({
           <span>
             Everything went well.
             <br />
-            You can chack your transaction link below.
+            You can check your transaction link below.
           </span>
         ) : null}
       </Box>
