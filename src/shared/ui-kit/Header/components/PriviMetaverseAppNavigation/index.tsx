@@ -89,7 +89,7 @@ const PriviMetaverseAppNavigation = () => {
           return false;
         }
       } else {
-        return location.pathname.includes(nav.link ?? "");
+        return location.pathname.startsWith(nav.link ?? "");
       }
     });
 
