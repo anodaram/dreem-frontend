@@ -402,18 +402,22 @@ export default function RealmDetailPage() {
                       <Box className={classes.val}>5</Box>
                       <Box className={classes.desc}>visitors online</Box>
                     </Box>
+                    <div className={classes.statSplitter}></div>
                     <Box className={classes.statItem}>
                       <Box className={classes.val}>{realmData.realmTaxation}%</Box>
                       <Box className={classes.desc}>taxation</Box>
                     </Box>
+                    <div className={classes.statSplitter}></div>
                     <Box className={classes.statItem}>
                       <Box className={classes.val}>{realmData.worldCount}</Box>
                       <Box className={classes.desc}>worlds</Box>
                     </Box>
+                    <div className={classes.statSplitter}></div>
                     <Box className={classes.statItem}>
                       <Box className={classes.val}>{realmData.creatorCount}</Box>
                       <Box className={classes.desc}>creators</Box>
                     </Box>
+                    <div className={classes.statSplitter}></div>
                     <Box className={classes.statItem}>
                       <Box className={classes.val}>{realmData.realmVotingConsensus}%</Box>
                       <Box className={classes.desc}>governance consensus</Box>

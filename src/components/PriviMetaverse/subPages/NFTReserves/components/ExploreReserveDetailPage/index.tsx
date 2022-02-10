@@ -24,7 +24,7 @@ import {
   acceptBlockingOffer,
   getNFTOwnerAddress,
 } from "shared/services/API/ReserveAPI";
-import { resetStatus } from "shared/services/API/ReserveAPI";
+import { claimBackRent } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
 import { getChainForNFT } from "shared/functions/metamask";
@@ -395,7 +395,7 @@ const ExploreReserveDetailPage = () => {
           tokenId: Number(nft.tokenId),
         }).then(res => {
           if (res.success) {
-            resetStatus({
+            claimBackRent({
               CollectionId: nft.collectionId,
               TokenId: nft.tokenId,
               mode: isProd ? "main" : "test",
@@ -648,7 +648,7 @@ const ExploreReserveDetailPage = () => {
                     onRent={() => setOpenRentSccess(true)}
                   />
                 )
-              ) : isRenter ? (
+              ) : isRenter && isRentedNFT ? (
                 // Renter pages
                 <RentedDetailSection
                   nft={nft}

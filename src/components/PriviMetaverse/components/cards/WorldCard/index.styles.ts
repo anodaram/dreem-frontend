@@ -86,6 +86,7 @@ export const nftCardStyles = makeStyles(theme => ({
     "-webkit-text-fill-color": "transparent",
     "-webkit-background-clip": "text",
     width: "fit-content",
+    minHeight: 56,
   },
   infoDescription: {
     fontWeight: 400,
@@ -217,7 +218,7 @@ export const nftCardStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    padding: "30px 72px 70px",
+    padding: "30px 24px 70px",
     height: "100%",
     background: "unset",
     [theme.breakpoints.down("sm")]: {

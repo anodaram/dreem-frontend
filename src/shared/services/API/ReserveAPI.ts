@@ -373,6 +373,18 @@ export async function rentNFT(payload: any): Promise<any> {
   }
 }
 
+export async function claimBackRent(payload: any): Promise<any> {
+  try {
+    const response = await axios.post(`${URL()}/metaverseReserve/claimBackRent`, {
+      ...payload,
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
 export async function resetStatus(payload: any): Promise<any> {
   try {
     const response = await axios.post(`${URL()}/metaverseReserve/resetStatus`, {
