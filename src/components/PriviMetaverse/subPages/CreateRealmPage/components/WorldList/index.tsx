@@ -74,6 +74,7 @@ const WorldList = ({
   const [description, setDescription] = useState<string>("");
   const { chainId, account, library } = useWeb3React();
   const [isPublic, setIsPublic] = useState<boolean>(true);
+  const [selectedWorld, setSelectedWorld] = useState<number>(0);
 
   const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
   const [isDraft, setIsDraft] = useState<boolean>(true);
@@ -314,10 +315,14 @@ const WorldList = ({
                       <WorldCard
                         nft={item}
                         isLoading={loadingCollection}
-                        handleClick={() =>
+                        handleClick={() =>{
                           handleSelect(item.versionHashId, item.collectionAddress, item.worldTokenId)
+                          setSelectedWorld(item.id)
+                          console.log(item.id)
+                        }
                         }
                         selectable={true}
+                        selected={item.id == selectedWorld}
                       />
                     </Grid>
                   ))}

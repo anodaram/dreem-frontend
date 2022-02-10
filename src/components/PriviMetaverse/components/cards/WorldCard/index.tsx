@@ -27,7 +27,8 @@ export default function WorldCard({
   handleRefresh,
   handleClick,
   isLoading,
-  selectable
+  selectable,
+  selected=false
 }: {
   nft?: any;
   hideInfo?: boolean;
@@ -36,7 +37,9 @@ export default function WorldCard({
   handleClick?: () => void;
   isLoading?: boolean;
   selectable?: boolean;
+  selected?: boolean;
 }) {
+  console.log(selected, nft.id)
   const history = useHistory();
   const styles = nftCardStyles();
   const { shareMedia } = useShareMedia();
@@ -60,7 +63,6 @@ export default function WorldCard({
   const [openEditRealmModal, setOpenEditRealmModal] = useState<boolean>(false);
   const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
   const [imageIPFS, setImageIPFS] = useState<any>();
-  const [isSelected, setIsSelected] = useState<boolean>(false);
 
   React.useEffect(() => {
     getSettings()
@@ -109,7 +111,6 @@ export default function WorldCard({
     if (selectable) {
       //@ts-ignore
       handleClick()
-      setIsSelected(isSelected => !isSelected);
     } else {
       // setOpenDepositRequired(true);
       setOpenContentPreview(true)
@@ -165,8 +166,8 @@ export default function WorldCard({
         <div className={styles.card}
         style={{
           borderRadius: 12,
-          border: isSelected ? "3px solid #E9FF26" : "1px solid #ED7B7B",
-          boxShadow: isSelected ? "0px 0px 14px 1px #DCFF35" : "unset",
+          border: selected ? "3px solid #E9FF26" : "1px solid #ED7B7B",
+          boxShadow: selected ? "0px 0px 14px 1px #DCFF35" : "unset",
         }}
         >
           <div className={styles.imageContent} onClick={handleOpenModal}
