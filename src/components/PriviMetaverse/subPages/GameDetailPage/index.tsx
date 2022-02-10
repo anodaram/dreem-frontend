@@ -45,6 +45,13 @@ import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const SECONDS_PER_HOUR = 3600;
 
+const COLUMNS_COUNT_BREAK_POINTS_THREE = {
+  375: 1,
+  600: 3,
+  1200: 3,
+  1440: 3,
+};
+
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   400: 1,
   700: 2,
@@ -139,7 +146,10 @@ export default function GameDetailPage() {
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
   const [isNFTHolder, setIsNFTHolder] = React.useState<boolean>(false);
 
-  const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
+  const loadingCount = React.useMemo(
+    () => (width > 1000 ? (openSideBar ? 3 : 4) : width > 600 ? 1 : 2),
+    [width, openSideBar]
+  );
   const roomId = React.useMemo(() => gameInfo && `${gameInfo.Slug}-${gameInfo.Address}`, [gameInfo]);
 
   const classes = gameDetailPageStyles({ openSideBar });
@@ -489,7 +499,9 @@ export default function GameDetailPage() {
             width: "100%",
             height: "100%",
             backgroundImage: gameInfo?.Image
-              ? `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%), url(${sanitizeIfIpfsUrl(gameInfo.Image)})`
+              ? `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%), url(${sanitizeIfIpfsUrl(
+                  gameInfo.Image
+                )})`
               : `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
@@ -787,7 +799,9 @@ export default function GameDetailPage() {
                           renderItem={item => (
                             <ExploreCard nft={item} isLoading={Object.entries(item).length === 0} />
                           )}
-                          columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                          columnsCountBreakPoints={
+                            openSideBar ? COLUMNS_COUNT_BREAK_POINTS_THREE : COLUMNS_COUNT_BREAK_POINTS_FOUR
+                          }
                         />
                       </Box>
                     )}
