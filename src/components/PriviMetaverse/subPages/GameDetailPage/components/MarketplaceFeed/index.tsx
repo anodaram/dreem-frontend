@@ -81,10 +81,13 @@ export default function MarketplaceFeed() {
 
   React.useEffect(() => {
     if (listenerSocket) {
-      const updateMarketPlaceFeedHandler = _nft => {
-        setNfts((prev) => {
-          const _nfts = prev.map(nft => (_nft.id === nft.id ? _nft : nft));
-          return _nfts;
+      const updateMarketPlaceFeedHandler = _transaction => {
+        setNfts(prev => {
+          let _transactions = prev.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
+          if (_transactions.length === 0 || _transactions[0].id < _transaction.id){
+            _transactions = [_transaction].concat(_transactions);
+          }
+          return _transactions;
         });
       };
 
@@ -169,6 +172,19 @@ export default function MarketplaceFeed() {
 
   const tableData = React.useMemo(() => {
     let data: Array<Array<CustomTableCellInfo>> = [];
+    const accTitle = item => {
+      const info = item.operator ||
+      item.seller ||
+      item.fromSeller ||
+      item.toSeller ||
+      item.Address || undefined;
+  
+      if (info){ 
+        return info.substring(0, 6) + "..." + info.substring(info.length - 4, info.length);
+      }
+      return "";
+    }
+
     if (nfts && nfts.length) {
       data = nfts.map(row => [
         {
@@ -187,15 +203,7 @@ export default function MarketplaceFeed() {
         },
         {
           cell: (
-            <p className={classes.accTitle}>{`${(
-              row.operator ||
-              row.seller ||
-              row.fromSeller ||
-              row.toSeller || ""
-            ).substring(0, 6)}...${(row.operator || row.seller || row.fromSeller || row.toSeller || "").substring(
-              (row.operator || row.seller || row.fromSeller || row.toSeller || "").length - 4,
-              (row.operator || row.seller || row.fromSeller || row.toSeller || "").length
-            )}`}</p>
+            <p className={classes.accTitle}>{accTitle(row)}</p>
           ),
         },
         {

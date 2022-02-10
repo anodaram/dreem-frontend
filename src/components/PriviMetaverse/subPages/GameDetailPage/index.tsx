@@ -302,11 +302,14 @@ export default function GameDetailPage() {
 
   React.useEffect(() => {
     if (listenerSocket) {
-      const updateMarketPlaceFeedHandler = _nft => {
-        if (nfts && nfts.length) {
-          const _nfts = nfts.map(nft => (_nft.id === nft.id ? _nft : nft));
-          setNfts(_nfts);
-        }
+      const updateMarketPlaceFeedHandler = _transaction => {
+        setNfts(prev => {
+          let _transactions = prev.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
+          if (_transactions.length === 0 || _transactions[0].id < _transaction.id){
+            _transactions = [_transaction].concat(_transactions);
+          }
+          return _transactions;
+        });
       };
 
       listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
