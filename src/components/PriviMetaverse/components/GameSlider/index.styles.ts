@@ -36,6 +36,9 @@ export const GameSliderStyles = makeStyles(theme => ({
       opacity: 1,
       borderRadius: 0,
       background: "rgba(255,255,255,0.5)",
+      [theme.breakpoints.down("sm")]: {
+        width: (props: any) => (props.gameCount ? `${300 / props.gameCount}px` : "0px"),
+      },
     },
 
     "& .swiper-pagination-bullet-active": {
@@ -52,7 +55,7 @@ export const GameSliderStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       "& .swiper-pagination": {
         bottom: "16px !important",
-        marginLeft: "0px !important",
+        marginLeft: "18px !important",
       },
     },
   },

@@ -225,7 +225,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("sm")]: {
       maxWidth: 480,
-      maxHeight: 550,
+      maxHeight: 300,
     },
     [theme.breakpoints.down("xs")]: {
       maxWidth: 350,
@@ -257,6 +257,9 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     position: "absolute",
     bottom: "-38px",
     width: "100%",
+    [theme.breakpoints.down("sm")]: {
+      bottom: "-20px"
+    },
   },
   sliderLeft: {
     position: "absolute",
@@ -488,6 +491,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("sm")]: {
       fontSize: 12,
+      padding: "4px 8px",
     },
   },
   gameInfoSection: {
@@ -519,6 +523,14 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("sm")]: {
       padding: "0px 48px",
+      "& span:first-child": {
+        fontSize: 18,
+      },
+      "& span:last-child": {
+        fontSize: 12,
+        lineHeight: "14px",
+        textAlign: "left"
+      },
     },
     [theme.breakpoints.down("xs")]: {
       padding: "0px 24px",
@@ -543,5 +555,28 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       backgroundColor: "#505050",
       borderRadius: 6,
     },
+  },
+  transactionItemGradientWrapper: {
+    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
+    padding: "2px",
+    borderRadius: "8px",
+    marginBottom: 16
+  },
+  transactionItemWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    padding: "16px",
+    borderRadius: "8px",
+    background: "#151515"
+  },
+  typeTag: {
+    borderRadius: 4,
+    padding: "9px 8px 7.5px",
+    textTransform: "uppercase",
+    fontSize: 10,
+    fontFamily: "Grifter",
+    fontWeight: 700,
+    color: "#212121",
+    height: 24,
   },
 }));
