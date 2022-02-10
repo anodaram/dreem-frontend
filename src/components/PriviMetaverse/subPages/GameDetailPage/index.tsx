@@ -42,6 +42,7 @@ import { MessageBox } from "components/PriviMetaverse/components/Message/Message
 import { ExpandIcon } from "../NFTReserves";
 import ActivityFeeds from "../NFTReserves/components/ActivityFeeds";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const SECONDS_PER_HOUR = 3600;
 
@@ -506,7 +507,7 @@ export default function GameDetailPage() {
             width: "100%",
             height: "100%",
             backgroundImage: gameInfo?.Image
-              ? `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%), url(${gameInfo.Image})`
+              ? `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%), url(${sanitizeIfIpfsUrl(gameInfo.Image)})`
               : `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
@@ -534,7 +535,7 @@ export default function GameDetailPage() {
               flexDirection={isMobile || (isTablet && openSideBar) ? "column" : "row"}
             >
               <img
-                src={gameInfo?.CardImage || getDefaultBGImage()}
+                src={sanitizeIfIpfsUrl(gameInfo?.CardImage) || getDefaultBGImage()}
                 className={classes.gameInfoImg}
                 alt="game info image"
               />

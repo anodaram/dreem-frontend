@@ -209,7 +209,7 @@ const GameMediaDetailModal = ({
                 <Box className={classes.nftPreviewSection}>
                   {isVideo ? (
                     <ReactPlayer
-                      url={nft?.ipfsImage}
+                      url={sanitizeIfIpfsUrl(nft?.ipfsImage)}
                       ref={playerVideoItem}
                       controls
                       progressInterval={200}
@@ -311,7 +311,7 @@ const GameMediaDetailModal = ({
             <Box className={classes.nftPreviewSection}>
               {isVideo ? (
                 <ReactPlayer
-                  url={nft?.ipfsImage}
+                  url={sanitizeIfIpfsUrl(nft?.ipfsImage)}
                   ref={playerVideoItem}
                   controls
                   progressInterval={200}

@@ -21,7 +21,7 @@ import AddressView from "shared/ui-kit/AddressView";
 import { CloseIcon, ShareIcon } from "shared/ui-kit/Icons";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
 import { useAuth } from "shared/contexts/AuthContext";
-import { detectMob } from "shared/helpers";
+import { detectMob, sanitizeIfIpfsUrl } from "shared/helpers";
 import NotAppModal from "components/PriviMetaverse/modals/NotAppModal";
 import OpenDesktopModal from "components/PriviMetaverse/modals/OpenDesktopModal";
 import EditRealmModal from "../EditRealmModal";
@@ -308,7 +308,7 @@ const ContentPreviewModal = ({
                           }}
                         />
                       ) : nft.worldImage ? (
-                        <img src={nft.worldImage} width="100%" height="80%" />
+                        <img src={sanitizeIfIpfsUrl(nft.worldImage)} width="100%" height="80%" />
                       ) : null}
                     </Box>
                   )}
@@ -403,7 +403,7 @@ const ContentPreviewModal = ({
                     }}
                   />
                 ) : nft.worldImage ? (
-                  <img src={nft.worldImage} width="100%" height="80%" />
+                  <img src={sanitizeIfIpfsUrl(nft.worldImage)} width="100%" height="80%" />
                 ) : null}
               </div>
             )}

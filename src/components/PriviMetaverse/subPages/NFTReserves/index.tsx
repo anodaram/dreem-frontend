@@ -33,6 +33,7 @@ import ActivityFeeds from "./components/ActivityFeeds";
 import { listenerSocket } from "components/Login/Auth";
 import { GLOBAL_CHAT_ROOM } from "shared/constants/constants";
 import { useNFTOptionsStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -245,7 +246,7 @@ const NFTReserves = () => {
         {
           cell: (
             <div className={classes.titleWrapper}>
-              <img className={classes.titleImg} src={row.image} />
+              <img className={classes.titleImg} src={sanitizeIfIpfsUrl(row.image)} />
               <p className={classes.textTitle}>{row.name}</p>
             </div>
           ),
@@ -386,7 +387,7 @@ const NFTReserves = () => {
                     return () => (
                       <Box position="relative" width="100%" height="100%">
                         <img
-                          src={game?.Image}
+                          src={sanitizeIfIpfsUrl(game?.Image)}
                           className={classes.gameBgImage}
                           style={{ width: openSideBar ? "100%" : "1280px !important", objectFit: "cover" }}
                         />
@@ -795,7 +796,7 @@ const NFTReserves = () => {
                           <Box className={classes.transactionItemWrapper}>
                             <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
                               <Box display="flex" flexDirection="row" alignItems="center">
-                                <img className={classes.titleImg} src={transaction.image} style={{ margin: 0, marginRight: 20 }}/>
+                                <img className={classes.titleImg} src={sanitizeIfIpfsUrl(transaction.image)} style={{ margin: 0, marginRight: 20 }}/>
                                 <p className={classes.textTitle}>{transaction.name}</p>
                               </Box>
                               <Box

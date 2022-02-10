@@ -7,6 +7,7 @@ import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import { profileFollowsModalStyles } from "./index.styles";
 import { StyledSkeleton } from "shared/ui-kit/Styled-components/StyledComponents";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const arePropsEqual = (prevProps, currProps) => {
   return (
@@ -50,7 +51,7 @@ const ProfileFollowsModal = React.memo(
           ) : (
             <div className={classes.usersList}>
               {list.map((item, index) => {
-                const avatar = (item.anon ? require(`assets/anonAvatars/${item.urlIpfsImage}`) : item.urlIpfsImage) || getDefaultAvatar();
+                const avatar = (item.anon ? require(`assets/anonAvatars/${item.urlIpfsImage}`) : sanitizeIfIpfsUrl(item.urlIpfsImage)) || getDefaultAvatar();
                 return (
                   <Box
                     className={classes.followRow}
@@ -74,7 +75,7 @@ const ProfileFollowsModal = React.memo(
                           <div
                             className={classes.avatar}
                             style={{
-                              backgroundImage: `url('${avatar}')`,
+                              backgroundImage: `url('${sanitizeIfIpfsUrl(avatar)}')`,
                               backgroundRepeat: "no-repeat",
                               backgroundSize: "cover",
                               backgroundPosition: "center",

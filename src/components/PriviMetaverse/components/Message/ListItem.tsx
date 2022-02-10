@@ -12,6 +12,7 @@ import { Color } from "shared/ui-kit";
 import { _arrayBufferToBase64 } from "shared/functions/commonFunctions";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import { checkUserConnected } from "shared/services/API";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 export const ListItem: React.FunctionComponent<any> = ({
   chat,
@@ -91,7 +92,7 @@ export const ListItem: React.FunctionComponent<any> = ({
         <div
           className="message-list-avatar"
           style={{
-            backgroundImage: `url("${otherUser.userFoto ?? getDefaultAvatar()}")`,
+            backgroundImage: `url("${sanitizeIfIpfsUrl(otherUser.userFoto) ?? getDefaultAvatar()}")`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",

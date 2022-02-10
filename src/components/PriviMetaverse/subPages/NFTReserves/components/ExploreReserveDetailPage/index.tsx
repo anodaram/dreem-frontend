@@ -45,6 +45,7 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { ContractInstance } from "shared/connectors/web3/functions";
 import NFTReserveMarketplaceContract from "shared/connectors/web3/contracts/reserve/ReserveMarketplace.json";
 import { exploreOptionDetailPageStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -449,7 +450,7 @@ const ExploreReserveDetailPage = () => {
               borderRadius="20px"
               style={{
                 minWidth: "40%",
-                backgroundImage: `url("${!nft?.animation_url ? nft?.image : nft?.CardImage}")`,
+                backgroundImage: `url("${sanitizeIfIpfsUrl(!nft?.animation_url ? nft?.image : nft?.CardImage)}")`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "contain",
                 backgroundPosition: "center",

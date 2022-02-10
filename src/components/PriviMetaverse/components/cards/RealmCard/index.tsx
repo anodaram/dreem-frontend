@@ -9,6 +9,7 @@ import { getDefaultImageUrl } from "shared/services/user/getUserAvatar";
 import { realmCardStyles } from "./index.styles";
 import ContentPreviewModal from "components/PriviMetaverse/modals/ContentPreviewModal";
 import { getUser } from "store/selectors/user";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 export default function RealmCard(props) {
   const classes = realmCardStyles(props);
@@ -49,10 +50,10 @@ export default function RealmCard(props) {
               backgroundImage:
                 props.item && props.isFeature
                   ? props.item.worldBanner
-                    ? `url("${props.item.worldBanner}")`
+                    ? `url("${sanitizeIfIpfsUrl(props.item.worldBanner)}")`
                     : `url(${getDefaultImageUrl()})`
                   : props.item.worldImage
-                  ? `url("${props.item.worldImage}")`
+                  ? `url("${sanitizeIfIpfsUrl(props.item.worldImage)}")`
                   : `url(${getDefaultImageUrl()})`,
             }}
           >

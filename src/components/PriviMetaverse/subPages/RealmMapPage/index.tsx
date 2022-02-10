@@ -10,7 +10,7 @@ import { Box } from "@material-ui/core";
 import { CloseIcon } from "shared/ui-kit/Icons";
 import { getDefaultImageUrl } from "shared/services/user/getUserAvatar";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
-import { detectMob } from "shared/helpers";
+import { detectMob, sanitizeIfIpfsUrl } from "shared/helpers";
 import axios from "axios";
 import { METAVERSE_URL } from "shared/functions/getURL";
 import OpenDesktopModal from "components/PriviMetaverse/modals/OpenDesktopModal";
@@ -185,7 +185,7 @@ export default function RealmMapPage() {
           borderRadius: 300,
           backgroundImage:
             node.data && node.data.worldImage
-              ? `url("${node.data.worldImage}")`
+              ? `url("${sanitizeIfIpfsUrl(node.data.worldImage)}")`
               : `url(${getDefaultImageUrl()})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -276,7 +276,7 @@ export default function RealmMapPage() {
                 style={{
                   backgroundImage:
                     (selMap && selMap.worldImage)
-                      ? `url("${selMap.worldImage}")`
+                      ? `url("${sanitizeIfIpfsUrl(selMap.worldImage)}")`
                       : `url(${getDefaultImageUrl()})`,
                 }}>
               </Box>

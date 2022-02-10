@@ -8,6 +8,7 @@ import { metaverseCardStyles } from "./index.styles";
 
 import { IconButton } from "@material-ui/core";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 export default function MetaverseCard(props) {
   const classes = metaverseCardStyles(props);
@@ -36,7 +37,7 @@ export default function MetaverseCard(props) {
           <Box
             className={classes.image}
             style={{
-              backgroundImage: nft?.CardImage ? `url("${nft?.CardImage}")` : `url(${getDefaultImageUrl()})`,
+              backgroundImage: nft?.CardImage ? `url("${sanitizeIfIpfsUrl(nft?.CardImage)}")` : `url(${getDefaultImageUrl()})`,
             }}
           />
           <Box className={classes.info}>

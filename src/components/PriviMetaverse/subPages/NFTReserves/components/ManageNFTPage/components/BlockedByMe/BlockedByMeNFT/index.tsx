@@ -11,6 +11,7 @@ import Box from "shared/ui-kit/Box";
 import { RootState } from "store/reducers/Reducer";
 import RangeSlider from "shared/ui-kit/RangeSlider";
 import { blockedByMeNFTStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
@@ -93,7 +94,7 @@ export default ({ item, isLoading }: { item: any; isLoading?: boolean }) => {
         <Box display={"flex"} flexDirection={"column"} className={classes.container}>
           <Box display="flex" alignItems="center" color="#fff" width="100%">
             <img
-              src={item?.image ?? require(`assets/backgrounds/digital_art_1.png`)}
+              src={sanitizeIfIpfsUrl(item?.image) ?? require(`assets/backgrounds/digital_art_1.png`)}
               className={classes.nftImage}
               alt={item.nftName}
             />

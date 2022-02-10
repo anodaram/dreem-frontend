@@ -14,6 +14,7 @@ import TransactionProgressModal from "components/PriviMetaverse/modals/Transacti
 // import ProcessingPaymentModal from "components/PriviMetaverse/modals/ProcessingPaymentModal";
 import { closeBlockingHistory } from "shared/services/API/ReserveAPI";
 import { checkChainID, getChainForNFT } from "shared/functions/metamask";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 const isProd = process.env.REACT_APP_ENV === "prod";
 
 export default function ClaimYourNFTModal({ open, claimType, handleClose = () => { }, onConfirm, nft }) {
@@ -102,7 +103,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
   return (
     <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.container}>
       <Box className={classes.card}>
-        <img src={nft.image || nft.content_url} className={classes.cardImg} />
+        <img src={sanitizeIfIpfsUrl(nft.image || nft.content_url)} className={classes.cardImg} />
         {transactionSuccess && (
           <Box className={classes.checkMark}>
             <img src={require("assets/icons/check.svg")} alt="check" />
