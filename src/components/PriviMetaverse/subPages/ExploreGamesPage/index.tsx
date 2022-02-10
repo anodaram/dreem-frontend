@@ -405,6 +405,19 @@ const ExploreGamesPage = () => {
         <img src={require("assets/metaverseImages/rectangle_yellow_top.png")} className={classes.image2} />
         <Box className={classes.limitedContent}>
           <div className={classes.content} id={"scrollContainer"} onScroll={handleScroll}>
+            {!isMobile && (
+              <Box
+                color="white"
+                mb={4}
+                style={{ width: "fit-content", cursor: "pointer" }}
+                onClick={() => history.goBack()}
+                display="flex"
+                alignItems="center"
+              >
+                <ArrowSvgIcon />
+                <Box ml={1}>Back</Box>
+              </Box>
+            )}
             <Box className={classes.title}>Explore all games</Box>
             <Box
               display="flex"
@@ -540,6 +553,17 @@ export const SearchIcon = ({ color = "white" }) => (
       clipRule="evenodd"
       d="M12.9056 14.3199C11.551 15.3729 9.84871 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8C16 9.84871 15.3729 11.551 14.3199 12.9056L19.7071 18.2929C20.0976 18.6834 20.0976 19.3166 19.7071 19.7071C19.3166 20.0976 18.6834 20.0976 18.2929 19.7071L12.9056 14.3199ZM14 8C14 11.3137 11.3137 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C11.3137 2 14 4.68629 14 8Z"
       fill={color}
+    />
+  </svg>
+);
+
+export const ArrowSvgIcon = ({ color = "white" }) => (
+  <svg width="57" height="15" viewBox="0 0 57 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M7.29892 0.85612L7.15468 0.716853L7.01577 0.861441L0.855773 7.27344L0.72266 7.412L0.855773 7.55056L7.01577 13.9626L7.15218 14.1045L7.29628 13.9704L8.10828 13.2144L8.25661 13.0763L8.11656 12.9298L3.56791 8.172H55.756H55.956V7.972V6.852V6.652H55.756H3.56969L8.11618 1.92261L8.25449 1.77874L8.11092 1.64012L7.29892 0.85612Z"
+      fill={color}
+      stroke={color}
+      strokeWidth="0.4"
     />
   </svg>
 );
