@@ -361,7 +361,7 @@ const CollectionList = ({
         </div>
       ) : (
         <div className={classes.otherContent}>
-          <div className={classes.typo1}>Creating New Collection</div>
+          <div className={classes.typo1}>Creating New Collection4</div>
           <Box className={classes.typo3} mb={3}>
             Fill all the details of your new collection
           </Box>
