@@ -22,7 +22,7 @@ const CreatingStep = ({
   curStep,
   status,
   // handleNext,
-  // handleCancel,
+  // handleCancel
   handleGoStep,
 }: {
   curStep: any;

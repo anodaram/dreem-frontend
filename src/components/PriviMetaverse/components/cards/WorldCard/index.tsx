@@ -39,7 +39,6 @@ export default function WorldCard({
   selectable?: boolean;
   selected?: boolean;
 }) {
-  console.log(selected, nft.id)
   const history = useHistory();
   const styles = nftCardStyles();
   const { shareMedia } = useShareMedia();
