@@ -736,7 +736,7 @@ export default function CreatorPage() {
               </div>
               <div className={classes.nftContentSection}>
                 <TabsView
-                  tabs={ProfileTabs}
+                  tabs={isOwner ? ProfileTabs : ProfileTabs.filter(t => t.key != 'wip')}
                   onSelectTab={tab => {
                     setSelectedTab(tab.key);
                     dispatch(setSelTabProfile(tab.key));
