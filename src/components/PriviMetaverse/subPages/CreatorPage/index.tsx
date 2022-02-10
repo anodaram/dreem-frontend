@@ -818,6 +818,8 @@ export default function CreatorPage() {
                                   nft={{ ...nft }}
                                   hideInfo
                                   handleRefresh={handleRefresh}
+                                  selectable={false}
+                                  selected={false}
                                 />
                               </Grid>
                             ))}
