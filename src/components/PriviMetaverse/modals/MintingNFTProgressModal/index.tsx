@@ -19,6 +19,7 @@ import { useModalStyles } from "./index.styles";
 import { ReactComponent as TelegramIcon } from "assets/snsIcons/telegram.svg";
 import { ReactComponent as TwitterIcon } from "assets/snsIcons/twitter.svg";
 import { ReactComponent as WhatsappIcon } from "assets/snsIcons/whatsapp.svg";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 // import { ReactComponent as DiscordIcon } from "assets/snsIcons/discord.svg";
 // import { ReactComponent as InstagramIcon } from "assets/snsIcons/instagram.svg";
 // import { ReactComponent as YoutubeIcon } from "assets/snsIcons/youtube.svg";
@@ -65,7 +66,7 @@ export default function MintingNFTProgressModal({
   return (
     <Modal showCloseIcon isOpen={open} onClose={onClose} className={classes.root} size="small">
       {txSuccess === true ? (
-        <img src={nftImage || getDefaultBGImage()} className={classes.nftImage} />
+        <img src={sanitizeIfIpfsUrl(nftImage) || getDefaultBGImage()} className={classes.nftImage} />
       ) : txSuccess === false ? (
         <img src={require("assets/metaverseImages/result_fail.png")} width="135px" height="135px" />
       ) : (

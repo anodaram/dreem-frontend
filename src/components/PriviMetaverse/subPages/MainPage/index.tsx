@@ -19,7 +19,7 @@ import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { CircularLoadingIndicator, PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
-import { detectMob } from "shared/helpers";
+import { detectMob, sanitizeIfIpfsUrl } from "shared/helpers";
 import { forceDownload } from "shared/helpers/file_download";
 import { getDefaultImageUrl } from "shared/services/user/getUserAvatar";
 import { useAuth } from "shared/contexts/AuthContext";
@@ -484,7 +484,7 @@ export default function HomePage() {
                                     className={classes.carouselItem}
                                     style={{
                                       backgroundImage: featuredRealms[page]?.worldImage
-                                        ? `url("${featuredRealms[page]?.worldImage}")`
+                                        ? `url("${sanitizeIfIpfsUrl(featuredRealms[page]?.worldImage)}")`
                                         : `url(${getDefaultImageUrl()})`,
                                       border: isActivePage ? "2px solid #E1E736" : "none",
                                     }}

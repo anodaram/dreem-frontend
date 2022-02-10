@@ -19,6 +19,7 @@ import DepositRequiredModal from "../../../modals/DepositRequiredModal";
 import EditRealmModal from "../../../modals/EditRealmModal";
 import EditExtensionModal from "../../../modals/EditExtensionModal";
 import { nftCardStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 export default function RealmExtensionProfileCard({
   nft,
@@ -178,7 +179,7 @@ export default function RealmExtensionProfileCard({
               className={styles.nftImage}
               style={{
                 backgroundImage: data.worldImage
-                  ? `url("${data.worldImage}")`
+                  ? `url("${sanitizeIfIpfsUrl(data.worldImage)}")`
                   : `url(${getDefaultImageUrl()})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",

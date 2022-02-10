@@ -19,6 +19,7 @@ import DepositRequiredModal from "../../../modals/DepositRequiredModal";
 import EditRealmModal from "../../../modals/EditRealmModal";
 import EditExtensionModal from "../../../modals/EditExtensionModal";
 import { nftCardStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 export default function WorldCard({
   nft,
@@ -39,7 +40,6 @@ export default function WorldCard({
   selectable?: boolean;
   selected?: boolean;
 }) {
-  console.log(selected, nft.id)
   const history = useHistory();
   const styles = nftCardStyles();
   const { shareMedia } = useShareMedia();
@@ -175,7 +175,7 @@ export default function WorldCard({
               className={styles.nftImage}
               style={{
                 backgroundImage: data.worldImage
-                  ? `url("${data.worldImage}")`
+                  ? `url("${sanitizeIfIpfsUrl(data.worldImage)}")`
                   : `url(${getDefaultImageUrl()})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",

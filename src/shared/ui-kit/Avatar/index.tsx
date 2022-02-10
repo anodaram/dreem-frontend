@@ -1,6 +1,7 @@
 import React, { DetailedHTMLProps, FC, HTMLAttributes } from "react";
 import cls from "classnames";
 import styles from "./index.module.scss";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 interface IAvatar extends Partial<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>> {
   type?: "text" | "image";
@@ -45,7 +46,7 @@ const Avatar: FC<IAvatar> = ({
       {type === "image" ? (
         <div
           style={{
-            backgroundImage: image !== "" ? `url("${image}")` : "none",
+            backgroundImage: image !== "" ? `url("${sanitizeIfIpfsUrl(image)}")` : "none",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",

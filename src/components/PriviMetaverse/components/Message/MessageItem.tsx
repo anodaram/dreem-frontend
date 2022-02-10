@@ -18,6 +18,7 @@ import useIPFS from "../../../../shared/utils-IPFS/useIPFS";
 import { onGetNonDecrypt } from "../../../../shared/ipfs/get";
 import { _arrayBufferToBase64 } from "../../../../shared/functions/commonFunctions";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const useStyles = makeStyles(theme => ({
   dialogContainer: {
@@ -210,7 +211,7 @@ const MessageItemFC = ({ message, messageContentRef }) => {
         {!isOwnMessage && (
           <div className="avatar-container" style={{ background: "transparent" }}>
             <img
-              src={message.from?.url || getDefaultAvatar()}
+              src={sanitizeIfIpfsUrl(message.from?.url) || getDefaultAvatar()}
               alt="Avatar"
               className="message-item-avatar"
               style={{
@@ -233,7 +234,7 @@ const MessageItemFC = ({ message, messageContentRef }) => {
                 handleOpenModalPhotoFullScreen();
               }}
               style={{
-                backgroundImage: `url(${fileIPFS ? fileIPFS : ""})`,
+                backgroundImage: `url(${fileIPFS ? sanitizeIfIpfsUrl(fileIPFS) : ""})`,
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",

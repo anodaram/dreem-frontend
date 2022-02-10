@@ -23,7 +23,7 @@ import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 import { InfoIcon } from "shared/ui-kit/Icons";
 import { ReactComponent as DeleteIcon } from "assets/icons/remove.svg";
-import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 interface CollectionInfo {
   address: string;
@@ -464,9 +464,10 @@ const CreateRealmFlow = ({
                 </Box>
                 <input
                   className={classes.input}
-                  placeholder="NFT symbol"
+                  placeholder="ex. SMBLN"
                   value={symbol}
-                  onChange={e => setSymbol(e.target.value)}
+                  onChange={e => setSymbol(e.target.value.trim().toUpperCase())}
+                  maxLength={5}
                 />
                 <Box display="flex" alignItems="center" justifyContent="space-between">
                   <Box className={classes.itemTitle} mt={2.5} mb={1}>
@@ -486,7 +487,7 @@ const CreateRealmFlow = ({
                       <Box
                         className={classes.image}
                         style={{
-                          backgroundImage: `url(${videoFile})`,
+                          backgroundImage: `url(${sanitizeIfIpfsUrl(videoFile)})`,
                           backgroundSize: "cover",
                         }}
                       />
@@ -537,7 +538,7 @@ const CreateRealmFlow = ({
                       <Box
                         className={classes.image}
                         style={{
-                          backgroundImage: `url(${imageFile})`,
+                          backgroundImage: `url(${sanitizeIfIpfsUrl(imageFile)})`,
                           backgroundSize: "cover",
                         }}
                       />

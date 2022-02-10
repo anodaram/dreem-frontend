@@ -11,6 +11,7 @@ import { getDefaultImageUrl } from "shared/services/user/getUserAvatar";
 import { nftCardStyles } from "./index.styles";
 import ContentPreviewModal from "components/PriviMetaverse/modals/ContentPreviewModal";
 import { getUser } from "store/selectors/user";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 export default function NFTCard(props) {
   const headers = [
@@ -61,7 +62,7 @@ export default function NFTCard(props) {
           </Box>
           {items?.map((nft, i) => (
             <div className={classes.row}>
-              <div><img className={classes.image} src={nft.item.textureThumbnail} alt="NFT image" /></div>
+              <div><img className={classes.image} src={sanitizeIfIpfsUrl(nft.item.textureThumbnail)} alt="NFT image" /></div>
               <div>{nft.item.erc721Name}</div>
               <div>{nft.item.collectionName}</div>
               <div>{nft.chain == "POLYGON" && <PolygonIcon/>}</div>

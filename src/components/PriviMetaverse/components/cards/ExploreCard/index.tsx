@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 import { NftStates } from "shared/constants/constants";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
 import { toDecimals } from "shared/functions/web3";
-import { visitChainLink } from "shared/helpers";
+import { sanitizeIfIpfsUrl, visitChainLink } from "shared/helpers";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
 import { Avatar, NFT_STATUS_COLORS } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
@@ -71,7 +71,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
   const avtarUrl = React.useMemo(() => {
     const ownerAddress = nft.ownerAddress ?? nft.owner_of;
     if (ownerAddress?.toLowerCase() === user.address.toLowerCase()) {
-      return user.urlIpfsImage ?? user.ipfsImage ?? getDefaultAvatar();
+      return sanitizeIfIpfsUrl(user.urlIpfsImage) ?? sanitizeIfIpfsUrl(user.ipfsImage) ?? getDefaultAvatar();
     }
     return getExternalAvatar();
   }, [nft, user]);
@@ -126,7 +126,7 @@ const ExploreCard = ({ nft, isLoading = false }) => {
       ) : (
         <>
           <div className={classes.cardImg}>
-            <img src={!nft?.animation_url ? nft?.image : nft?.CardImage} style={{ width: "100%" }} />
+            <img src={sanitizeIfIpfsUrl(!nft?.animation_url ? nft?.image : nft?.CardImage)} style={{ width: "100%" }} />
             <Box className={classes.nftStates} display="flex" flexDirection="column">
               {nftStatus.length > 0 &&
                 nftStatus.map(status => (

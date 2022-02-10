@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles, MenuItem, Select } from "@material-ui/core";
 import { StyledMenuItem } from "shared/ui-kit/Styled-components/StyledComponents";
 import Box from "shared/ui-kit/Box";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const useStyles = makeStyles(theme => ({
   select: {
@@ -254,7 +255,7 @@ export const ReserveTokenSelect = ({
         tokens.map((token, index) => (
           <StyledMenuItem value={token.Address} key={token.Name + "-" + index}>
             <Box display="flex" alignItems="center" fontFamily="Rany">
-              <img className={classes.tokenImage} src={token.ImageUrl} alt={token.Name} />
+              <img className={classes.tokenImage} src={sanitizeIfIpfsUrl(token.ImageUrl)} alt={token.Name} />
               {token.Symbol}
             </Box>
           </StyledMenuItem>

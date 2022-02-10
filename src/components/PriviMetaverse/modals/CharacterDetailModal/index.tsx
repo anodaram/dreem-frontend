@@ -2,15 +2,14 @@ import React, { Fragment, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useTypedSelector } from "store/reducers/Reducer";
 import Axios from "axios";
+
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
 import URL from "shared/functions/getURL";
-
 import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import Avatar from "shared/ui-kit/Avatar";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
-// import { getChainImageUrl } from "shared/functions/chainFucntions";
 import { characterDetailModalStyles } from "./index.styles";
 import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
 import { LoadingWrapper } from "shared/ui-kit/Hocs";
@@ -27,7 +26,6 @@ declare global {
   }
 }
 
-const isProd = process.env.REACT_APP_ENV === "prod";
 const CharacterDetailModal = ({
   id,
   realmData,
@@ -55,24 +53,6 @@ const CharacterDetailModal = ({
   const { showAlertMessage } = useAlertMessage();
   const { shareMedia } = useShareMedia();
 
-  const chainName = chain => {
-    if (!chain) return "";
-    const ch = chain.toLowerCase();
-    if (ch === "polygon" || ch === "mumbai") {
-      return "Polygon";
-    } else if (ch === "ethereum" || ch === "eth") {
-      return "Ethereum";
-    } else if (ch === "wax") {
-      return "Wax";
-    } else if (ch === "klaytn") {
-      return "Klaytn";
-    } else {
-      return chain;
-    }
-
-    return "";
-  };
-
   const [media, setMedia] = React.useState<any>(null);
   const [nft, setNFT] = React.useState<any>(null);
   const anchorShareMenuRef = React.useRef<HTMLDivElement>(null);
@@ -82,11 +62,6 @@ const CharacterDetailModal = ({
       (async () => {
         const res = await MetaverseAPI.getCharacterData(id);
         let media = {};
-        // const GENERATOR_ARTBLOCK_URL = "https://generator.artblocks.io/";
-        // const API_ARTBLOCK_URL = "https://api.artblocks.io/image/";
-        // if (media?.url && media?.url.includes(GENERATOR_ARTBLOCK_URL)) {
-        //   media.url = media?.url.replace(GENERATOR_ARTBLOCK_URL, API_ARTBLOCK_URL);
-        // }
 
         setNFT(res.data);
 
@@ -104,51 +79,6 @@ const CharacterDetailModal = ({
       })();
     }
   }, [id]);
-
-  // const contractAddress = React.useMemo(() => {
-  //   const address = nft?.nftCollection || nft?.token_address || nft?.collection_address || "";
-  //   return address.length > 17
-  //     ? address.substr(0, 13) + "..." + address.substr(address.length - 3, 3)
-  //     : address;
-  // }, [nft?.nftCollection, nft?.token_address, nft?.collection_address]);
-
-  // const isVideo = React.useMemo(() => {
-  //   if (!nft) return;
-  //   return !nft?.UrlMainPhoto && !nft?.Url && nft?.url?.endsWith("mp4");
-  // }, [nft]);
-
-  // const handleClickAddress = () => {
-  //   const address = nft?.nftCollection || nft?.token_address || nft?.collection_address || "";
-  //   if (
-  //     chainName(nft?.chainsFullName || nft?.BlockchainNetwork || nft?.blockchain || nft?.chain) === "Polygon"
-  //   ) {
-  //     window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/address/${address}`, "_blank");
-  //   } else {
-  //     window.open(`https://${!isProd ? "rinkeby." : ""}etherscan.io/address/${address}`, "_blank");
-  //   }
-  // };
-
-  // const handleClickAddressFor = () => {
-  //   if (nft?.blockchain.toLowerCase() === "eth") {
-  //     window.open(`https://etherscan.io/token/${nft?.collectionAddress}`, "_blank");
-  //   } else if (nft?.blockchain.toLowerCase() === "polygon") {
-  //     window.open(`https://polygonscan.com/token/${nft?.collectionAddress}`, "_blank");
-  //   } else if (nft?.blockchain.toLowerCase() === "klaytn") {
-  //     window.open(`https://scope.klaytn.com/nft/${nft?.collectionAddress}`, "_blank");
-  //   }
-  // };
-
-  // const handleOpenlink = () => {
-  //   if (nft?.openseaUrl || nft?.link || nft?.metadata?.external_url) {
-  //     window.open(nft?.openseaUrl || nft?.link || nft?.metadata?.external_url, "_blank");
-  //   }
-  // };
-
-  // const handleOpenIPFSlink = () => {
-  //   if (nft?.token_url || nft?.metadataUri || nft?.token_uri) {
-  //     window.open(nft?.token_url || nft?.metadataUri || nft?.token_uri, "_blank");
-  //   }
-  // };
 
   const handleFruit = type => {
     if (media.fruits?.filter(f => f.fruitId === type)?.find(f => f.userId === user.id)) {
@@ -175,6 +105,8 @@ const CharacterDetailModal = ({
   const handleClickShare = () => {
     shareMedia("Character", `realms/${nft.realm.id}/${nft.id}`);
   };
+
+  console.log("nft=====================", nft);
 
   return (
     <Modal size="medium" isOpen={open} onClose={onClose} showCloseIcon className={classes.root}>
@@ -234,7 +166,7 @@ const CharacterDetailModal = ({
                   </Fragment>
                   <Box display="flex" alignItems="center" color="#fff" className={classes.rotateText}>
                     <RotateIcon />
-                    <span>Rotate the character with your mouse</span>
+                    <span>Rotate the model with your mouse</span>
                   </Box>
                 </Box>
               )}
@@ -260,112 +192,6 @@ const CharacterDetailModal = ({
                 Defined by community
               </Box>
             </Box>
-            {/* <Box display="flex" flexDirection="column">
-              {nft?.blockchain === PlatformType.Privi && (
-                <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-                  <Box className={classes.typo4}>Proof of Authenthcity</Box>
-                  <Box className={classes.typo4}>_</Box>
-                </Box>
-              )}
-              {(nft?.token_url || nft?.metadataUri || nft?.token_uri) && (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  pt={2}
-                  mb={2}
-                  borderTop="1px solid #283137"
-                  onClick={handleOpenIPFSlink}
-                  style={{ cursor: "pointer" }}
-                >
-                  <Box className={classes.typo4}>IPFS</Box>
-                  <ExpandIcon />
-                </Box>
-              )}
-              {!nft?.nftCollection && !nft?.token_address && nft?.blockchain !== PlatformType.Privi && (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  pt={2}
-                  mb={2}
-                  onClick={handleOpenlink}
-                  style={{ cursor: "pointer" }}
-                >
-                  <Box className={classes.typo4}>See on Opensea</Box>
-                  <ExpandIcon />
-                </Box>
-              )}
-              {nft?.blockchain &&
-                (nft?.blockchain.toLowerCase() === "eth" ||
-                  nft?.blockchain.toLowerCase() === "polygon" ||
-                  nft?.blockchain.toLowerCase() === "klaytn") && (
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    pt={2}
-                    mb={2}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <Box className={classes.typo4}>Contract Address</Box>
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      style={{ cursor: "pointer" }}
-                      onClick={handleClickAddressFor}
-                    >
-                      <Box className={classes.typo4} color="#EA7097" mr={1}>
-                        {nft?.collectionAddress?.substr(0, 13) +
-                          "..." +
-                          nft?.collectionAddress?.substr(nft?.collectionAddress?.length - 3, 3)}
-                      </Box>
-                      <ExpandIcon />
-                    </Box>
-                  </Box>
-                )}
-              {contractAddress && (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  pt={2}
-                  mb={2}
-                  borderTop="1px solid #283137"
-                >
-                  <Box className={classes.typo4}>Contract Address</Box>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    style={{ cursor: "pointer" }}
-                    onClick={handleClickAddress}
-                  >
-                    <Box className={classes.typo4} color="#EA7097" mr={1}>
-                      {contractAddress}
-                    </Box>
-                    <ExpandIcon />
-                  </Box>
-                </Box>
-              )}
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-                pt={2}
-                borderTop="1px solid #283137"
-              >
-                <Box className={classes.typo4}>Minted on</Box>
-                <Box display="flex" alignItems="center" mt={1}>
-                  <img src={getChainImageUrl(nft?.BlockchainNetwork)} width={"22px"} />
-                  <Box className={classes.typo4} color="#EA7097" mx={1} mt={"2px"}>
-                    {chainName(
-                      nft?.chainsFullName || nft?.BlockchainNetwork || nft?.blockchain || nft?.chain
-                    )}{" "}
-                    Chain
-                  </Box>
-                </Box>
-              </Box>
-            </Box> */}
           </Box>
           {!isMobile && (
             <Box className={classes.nftPreviewSection}>
@@ -382,7 +208,7 @@ const CharacterDetailModal = ({
               </Fragment>
               <Box display="flex" alignItems="center" color="#fff" className={classes.rotateText}>
                 <RotateIcon />
-                <span>Rotate the character with your mouse</span>
+                <span>Rotate the model with your mouse</span>
               </Box>
             </Box>
           )}
@@ -393,32 +219,6 @@ const CharacterDetailModal = ({
 };
 
 export default CharacterDetailModal;
-
-// const ExpandIcon = () => (
-//   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-//     <path
-//       d="M8.24988 5.25H4.49988C4.10205 5.25 3.72052 5.40804 3.43922 5.68934C3.15791 5.97064 2.99988 6.35218 2.99988 6.75V13.5C2.99988 13.8978 3.15791 14.2794 3.43922 14.5607C3.72052 14.842 4.10205 15 4.49988 15H11.2499C11.6477 15 12.0292 14.842 12.3105 14.5607C12.5918 14.2794 12.7499 13.8978 12.7499 13.5V9.75"
-//       stroke="#EA7097"
-//       strokeWidth="1.125"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     />
-//     <path
-//       d="M7.49988 10.5L14.9999 3"
-//       stroke="#EA7097"
-//       strokeWidth="1.125"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     />
-//     <path
-//       d="M11.25 3H15V6.75"
-//       stroke="#EA7097"
-//       strokeWidth="1.125"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     />
-//   </svg>
-// );
 
 const ShareIcon = () => (
   <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">

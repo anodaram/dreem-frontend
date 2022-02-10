@@ -54,9 +54,10 @@ export default function ActivityFeeds({ onClose }) {
     if (listenerSocket) {
       const updateMarketPlaceFeedHandler = _transaction => {
         setTransactions(prev => {
-          const _transactions = prev.map(transaction =>
-            _transaction.id === transaction.id ? _transaction : transaction
-          );
+          let _transactions = prev.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
+          if (_transactions.length === 0 || _transactions[0].id < _transaction.id){
+            _transactions = [_transaction].concat(_transactions);
+          }
           return _transactions;
         });
       };
@@ -98,6 +99,19 @@ export default function ActivityFeeds({ onClose }) {
       setTransactionLoading(false);
     }
   };
+
+  const accTitle = item => {
+    const info = item.operator ||
+    item.seller ||
+    item.fromSeller ||
+    item.toSeller ||
+    item.Address || undefined;
+
+    if (info){ 
+      return info.substring(0, 6) + "..." + info.substring(info.length - 4, info.length);
+    }
+    return "";
+  }
 
   return (
     <Box className={classes.root}>
@@ -144,26 +158,7 @@ export default function ActivityFeeds({ onClose }) {
                   <Box display={"flex"} flexDirection={"column"} ml={1.5}>
                     <Box className={classes.typo1}>{item.name}</Box>
                     <Box className={classes.typo2} mt={0.25}>
-                      {(
-                        item.operator ||
-                        item.seller ||
-                        item.fromSeller ||
-                        item.toSeller ||
-                        item.Address
-                      ).substring(0, 6)}
-                      ...
-                      {(
-                        item.operator ||
-                        item.seller ||
-                        item.fromSeller ||
-                        item.toSeller ||
-                        item.Address
-                      ).substring(
-                        (item.operator || item.seller || item.fromSeller || item.toSeller || item.Address)
-                          .length - 4,
-                        (item.operator || item.seller || item.fromSeller || item.toSeller || item.Address)
-                          .length
-                      )}
+                      {accTitle(item)}
                     </Box>
                   </Box>
                 </Box>

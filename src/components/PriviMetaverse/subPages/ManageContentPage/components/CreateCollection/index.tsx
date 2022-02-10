@@ -13,7 +13,7 @@ import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 import ContentProcessingOperationModal from "components/PriviMetaverse/modals/ContentProcessingOperationModal";
-import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const CreateCollection = ({
   handleNext,
@@ -176,7 +176,7 @@ const CreateCollection = ({
               <Box
                 className={classes.image}
                 style={{
-                  backgroundImage: `url(${imageFile})`,
+                  backgroundImage: `url(${sanitizeIfIpfsUrl(imageFile)})`,
                   backgroundSize: "cover",
                 }}
               />

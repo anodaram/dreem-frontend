@@ -30,7 +30,7 @@ import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
 import { ReactComponent as GLTFIcon } from "assets/icons/gltf.svg";
 import { ReactComponent as CharacterIcon } from "assets/icons/character.svg";
-import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const Create3DAsset = ({
   metaData,
@@ -336,7 +336,7 @@ const Create3DAsset = ({
                 <Box
                   className={classes.image}
                   style={{
-                    backgroundImage: `url(${imageFile})`,
+                    backgroundImage: `url(${sanitizeIfIpfsUrl(imageFile)})`,
                     backgroundSize: "cover",
                   }}
                 />

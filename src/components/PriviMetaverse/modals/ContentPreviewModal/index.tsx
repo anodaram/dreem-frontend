@@ -21,7 +21,7 @@ import AddressView from "shared/ui-kit/AddressView";
 import { CloseIcon, ShareIcon } from "shared/ui-kit/Icons";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
 import { useAuth } from "shared/contexts/AuthContext";
-import { detectMob } from "shared/helpers";
+import { detectMob, sanitizeIfIpfsUrl } from "shared/helpers";
 import NotAppModal from "components/PriviMetaverse/modals/NotAppModal";
 import OpenDesktopModal from "components/PriviMetaverse/modals/OpenDesktopModal";
 import EditRealmModal from "../EditRealmModal";
@@ -90,9 +90,9 @@ const ContentPreviewModal = ({
           setCurrentCollection(res2.data);
           console.log(res2.data, res1.data.collectionId)
         });
-        MetaverseAPI.getNFTInfo(res1.data.id).then(res3 => {
+        MetaverseAPI.getNFTInfo(res1.data.versionHashId).then(res3 => {
           setMetadata(res3.data);
-          console.log(res3.data, res1.data.id)
+          console.log(res3.data, res1.data.versionHashId)
         });
       });
     }
@@ -157,18 +157,25 @@ const ContentPreviewModal = ({
         setTxHash
       );
       if (resRoyalty.success) {
-        await MetaverseAPI.convertToNFTWorld(
-          nft.id,
+        const resp = await MetaverseAPI.convertToNFTAssetBatch(
+          nft.versionHashId,
           resRoyalty.contractAddress,
           targetChain.name,
           [resRoyalty.tokenId],
           metaData.newFileCID,
           account,
           "0x0000000000000000000000000000000000000000",
-          0
+          0,
+          resRoyalty.txHash,
+          1
         );
-        setTxSuccess(true);
-        showAlertMessage(`Successfully world minted`, { variant: "success" });
+        if(resp.success){
+          setTxSuccess(true);
+          showAlertMessage(`Successfully world minted`, { variant: "success" });
+        } else{
+          setTxSuccess(false);
+          showAlertMessage(`Something went wrong`, { variant: "error" });
+        }
       } else {
         setTxSuccess(false);
       }
@@ -187,7 +194,7 @@ const ContentPreviewModal = ({
 
       if (contractRes.success) {
         console.log(contractRes);
-        await MetaverseAPI.convertToNFTWorld(
+        const resp = await MetaverseAPI.convertToNFTWorld(
           nft.id,
           contractRes.collectionAddress,
           targetChain.name,
@@ -197,8 +204,13 @@ const ContentPreviewModal = ({
           contractRes.royaltyAddress,
           0
         );
-        setTxSuccess(true);
-        showAlertMessage(`Successfully world minted`, { variant: "success" });
+        if(resp.success){
+          setTxSuccess(true);
+          showAlertMessage(`Successfully world minted`, { variant: "success" });
+        } else{
+          setTxSuccess(false);
+          showAlertMessage(`Something went wrong`, { variant: "error" });
+        }
       } else {
         setTxSuccess(false);
       }
@@ -308,7 +320,7 @@ const ContentPreviewModal = ({
                           }}
                         />
                       ) : nft.worldImage ? (
-                        <img src={nft.worldImage} width="100%" height="80%" />
+                        <img src={sanitizeIfIpfsUrl(nft.worldImage)} width="100%" height="80%" />
                       ) : null}
                     </Box>
                   )}
@@ -403,7 +415,7 @@ const ContentPreviewModal = ({
                     }}
                   />
                 ) : nft.worldImage ? (
-                  <img src={nft.worldImage} width="100%" height="80%" />
+                  <img src={sanitizeIfIpfsUrl(nft.worldImage)} width="100%" height="80%" />
                 ) : null}
               </div>
             )}

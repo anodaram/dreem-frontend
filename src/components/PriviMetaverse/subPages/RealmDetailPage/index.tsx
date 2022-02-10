@@ -27,7 +27,7 @@ import { useAuth } from "shared/contexts/AuthContext";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import URL from "shared/functions/getURL";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
-import { detectMob } from "shared/helpers";
+import { detectMob, sanitizeIfIpfsUrl } from "shared/helpers";
 import VotingItem from "./VotingItem";
 import CreatorItem from "./CreatorItem";
 import { realmDetailPageStyles } from "./index.styles";
@@ -388,14 +388,14 @@ export default function RealmDetailPage() {
                     muted
                     loop
                     style={{
-                      // backgroundImage: `url("${realmData.worldImages[0]}")`,
-                      backgroundImage: `url("${realmData.worldVideo}")`,
+                      // backgroundImage: `url("${sanitizeIfIpfsUrl(realmData.worldImages[0])}")`,
+                      backgroundImage: `url("${sanitizeIfIpfsUrl(realmData.worldVideo)}")`,
                       backgroundSize: "cover",
                       backgroundRepeat: "no-repeat",
                       backgroundPosition: "center",
                     }}
                   >
-                    <source src={realmData.worldVideo} type="video/mp4" />
+                    <source src={sanitizeIfIpfsUrl(realmData.worldVideo)} type="video/mp4" />
                   </video>
                   <Box className={classes.stat}>
                     <Box className={classes.statItem}>
@@ -425,7 +425,7 @@ export default function RealmDetailPage() {
                   </Box>
                 </div>
               ) : (
-                <img src={realmData.worldImage} alt="realm" />
+                <img src={sanitizeIfIpfsUrl(realmData.worldImage)} alt="realm" />
               )
             ) : null}
           </Box>

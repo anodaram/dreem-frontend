@@ -102,10 +102,10 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       paddingLeft: "0px",
       paddingRight: "0px",
-      maxWidth: 480,
+      maxWidth: (props: any) => (props.openSideBar ? 480 : 700),
     },
     [theme.breakpoints.down("xs")]: {
-      maxWidth: 362,
+      maxWidth: "362px !important",
     },
   },
   titleBar: {
@@ -115,7 +115,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     justifyContent: "center",
     flexDirection: "column",
     [theme.breakpoints.down("sm")]: {
-      maxWidth: 480,
+      maxWidth: (props: any) => (props.openSideBar ? 480 : 700),
       padding: 0,
     },
     [theme.breakpoints.down("xs")]: {
@@ -240,8 +240,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("xs")]: {
       maxWidth: 350,
-      minHeight: 400,
-      maxHeight: 500,
+      maxHeight: 400,
     },
   },
   gameContent: {
@@ -550,12 +549,14 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down("xs")]: {
       padding: "0px 24px",
-      alignItems: "center",
+      alignItems: "flex-start",
       "& span:first-child": {
         fontSize: 18,
       },
       "& span:last-child": {
         fontSize: 12,
+        lineHeight: "14px",
+        textAlign: "left"
       },
     },
   },

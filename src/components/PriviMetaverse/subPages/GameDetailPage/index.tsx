@@ -37,13 +37,20 @@ import { NftStates } from "shared/constants/constants";
 import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
 import TotalStats from "./components/TotalStats";
 import RecentTransactions from "./components/RecentTransactions";
-import { listenerSocket } from "components/Login/Auth";
 import { MessageBox } from "components/PriviMetaverse/components/Message/MessageBox";
 import { ExpandIcon } from "../NFTReserves";
 import ActivityFeeds from "../NFTReserves/components/ActivityFeeds";
 import { gameDetailPageStyles, gameDetailTabsStyles, useFilterSelectStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const SECONDS_PER_HOUR = 3600;
+
+const COLUMNS_COUNT_BREAK_POINTS_THREE = {
+  375: 1,
+  600: 3,
+  1200: 3,
+  1440: 3,
+};
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   400: 1,
@@ -139,7 +146,10 @@ export default function GameDetailPage() {
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
   const [isNFTHolder, setIsNFTHolder] = React.useState<boolean>(false);
 
-  const loadingCount = React.useMemo(() => (width > 1000 ? 4 : width > 600 ? 1 : 2), [width]);
+  const loadingCount = React.useMemo(
+    () => (width > 1000 ? (openSideBar ? 3 : 4) : width > 600 ? 1 : 2),
+    [width, openSideBar]
+  );
   const roomId = React.useMemo(() => gameInfo && `${gameInfo.Slug}-${gameInfo.Address}`, [gameInfo]);
 
   const classes = gameDetailPageStyles({ openSideBar });
@@ -298,23 +308,6 @@ export default function GameDetailPage() {
     let token = tokenList.find(token => token.Address === addr);
     return token?.Decimals;
   };
-
-  React.useEffect(() => {
-    if (listenerSocket) {
-      const updateMarketPlaceFeedHandler = _nft => {
-        if (nfts && nfts.length) {
-          const _nfts = nfts.map(nft => (_nft.id === nft.id ? _nft : nft));
-          setNfts(_nfts);
-        }
-      };
-
-      listenerSocket.on("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
-
-      return () => {
-        listenerSocket.removeListener("updateMarketPlaceFeed", updateMarketPlaceFeedHandler);
-      };
-    }
-  }, [listenerSocket]);
 
   const tableData = React.useMemo(() => {
     let data: Array<Array<CustomTableCellInfo>> = [];
@@ -506,7 +499,9 @@ export default function GameDetailPage() {
             width: "100%",
             height: "100%",
             backgroundImage: gameInfo?.Image
-              ? `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%), url(${gameInfo.Image})`
+              ? `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%), url(${sanitizeIfIpfsUrl(
+                  gameInfo.Image
+                )})`
               : `linear-gradient(180deg, rgba(21,21,21,0) 15%, rgba(21,21,21,1) 60%)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
@@ -534,7 +529,7 @@ export default function GameDetailPage() {
               flexDirection={isMobile || (isTablet && openSideBar) ? "column" : "row"}
             >
               <img
-                src={gameInfo?.CardImage || getDefaultBGImage()}
+                src={sanitizeIfIpfsUrl(gameInfo?.CardImage) || getDefaultBGImage()}
                 className={classes.gameInfoImg}
                 alt="game info image"
               />
@@ -804,7 +799,9 @@ export default function GameDetailPage() {
                           renderItem={item => (
                             <ExploreCard nft={item} isLoading={Object.entries(item).length === 0} />
                           )}
-                          columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                          columnsCountBreakPoints={
+                            openSideBar ? COLUMNS_COUNT_BREAK_POINTS_THREE : COLUMNS_COUNT_BREAK_POINTS_FOUR
+                          }
                         />
                       </Box>
                     )}

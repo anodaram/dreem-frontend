@@ -27,7 +27,7 @@ import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 import { FilterAssetTypeOptions } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
-import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const CreateTexture = ({
   metaData,
@@ -333,7 +333,7 @@ const CreateTexture = ({
                 <Box
                   className={classes.image}
                   style={{
-                    backgroundImage: `url(${imageFile})`,
+                    backgroundImage: `url(${sanitizeIfIpfsUrl(imageFile)})`,
                     backgroundSize: "cover",
                   }}
                 />

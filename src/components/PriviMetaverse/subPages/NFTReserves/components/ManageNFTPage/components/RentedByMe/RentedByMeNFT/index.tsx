@@ -10,6 +10,7 @@ import { toDecimals } from "shared/functions/web3";
 import { PrimaryButton } from "shared/ui-kit";
 import { RentedByMeNFTStyles } from "./index.styles";
 import { useHistory } from "react-router-dom";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 export default ({
@@ -99,7 +100,7 @@ export default ({
       ) : (
         <Box display="flex" alignItems="center" color="#fff" width="100%" className={classes.container}>
           <img
-            src={item?.image ?? require(`assets/backgrounds/digital_art_1.png`)}
+            src={sanitizeIfIpfsUrl(item?.image) ?? require(`assets/backgrounds/digital_art_1.png`)}
             className={classes.nftImage}
             alt={item?.name}
           />

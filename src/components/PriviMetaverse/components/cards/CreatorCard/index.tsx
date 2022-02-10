@@ -10,6 +10,7 @@ import { useTypedSelector } from "store/reducers/Reducer";
 import { getUser } from "store/selectors";
 import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
 import { useUserConnections } from "shared/contexts/UserConnectionsContext";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 // import useIPFS from "../../../../shared/utils-IPFS/useIPFS";
 // import getPhotoIPFS from "../../../../shared/functions/getPhotoIPFS";
 
@@ -101,7 +102,7 @@ export default function CreatorCard({ data, customSize }: { data: any; customSiz
         justifyContent="space-between"
         style={{
           backgroundImage: `url(${
-            imageIPFS ? imageIPFS : require(`assets/metaverseImages/default_bg_image.png`)
+            imageIPFS ? sanitizeIfIpfsUrl(imageIPFS) : require(`assets/metaverseImages/default_bg_image.png`)
           })`,
           backgroundSize: "cover",
         }}

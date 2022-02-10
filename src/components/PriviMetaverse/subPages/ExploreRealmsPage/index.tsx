@@ -25,6 +25,7 @@ import { exploreRealmsPageStyles } from "./index.styles";
 
 import shapeImgTriangle from "assets/metaverseImages/shape_home_2.png";
 import shapeImgBlueArc from "assets/metaverseImages/shape_explorer_blue_arc.png";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
@@ -223,7 +224,7 @@ export default function ExploreRealmsPage() {
                                     className={classes.carouselItem}
                                     style={{
                                       backgroundImage: featuredRealms[page]?.worldImage
-                                        ? `url("${featuredRealms[page]?.worldImage}")`
+                                        ? `url("${sanitizeIfIpfsUrl(featuredRealms[page]?.worldImage)}")`
                                         : `url(${getDefaultImageUrl()})`,
                                       border: isActivePage ? "2px solid #E1E736" : "none",
                                     }}

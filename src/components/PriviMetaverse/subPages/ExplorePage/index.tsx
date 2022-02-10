@@ -18,6 +18,7 @@ import { explorePage } from "./index.styles";
 
 import backImg1 from "assets/metaverseImages/shape_roadmap.png";
 import backImg2 from "assets/metaverseImages/shape_explorer_blue_arc.png";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
@@ -140,7 +141,7 @@ export default function ExplorePage() {
         setAssetList([]);
       }
     } catch (error) {
-      console.log(error);
+      console.log("error: ", error);
     } finally {
       setLoading(false);
     }
@@ -249,7 +250,7 @@ export default function ExplorePage() {
                           checked={selectedAssetTypes.includes(item.state)}
                           name="checked"
                         />
-                        <img src={item.image} width={24} height={24} alt="asset image" />
+                        <img src={sanitizeIfIpfsUrl(item.image)} width={24} height={24} alt="asset image" />
                         <Box
                           fontSize={14}
                           color={selectedAssetTypes.includes(item.state) ? "#fff" : "#ffffff50"}
@@ -276,7 +277,7 @@ export default function ExplorePage() {
                       <Box display={"flex"} alignItems={"center"} key={index} mb={1.5}>
                         <StyledCheckbox buttonColor={Color.LightYellow} checked={true} name="checked" />
                         <Box display={"flex"} alignItems={"center"}>
-                          {item.image && <img src={item.image} alt="primary image" />}
+                          {item.image && <img src={sanitizeIfIpfsUrl(item.image)} alt="primary image" />}
                           <Box fontSize={14} ml={0.5}>
                             {item.content}
                           </Box>

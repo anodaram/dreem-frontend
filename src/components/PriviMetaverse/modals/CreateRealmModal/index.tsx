@@ -17,6 +17,7 @@ import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingMo
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "../../../../shared/utils-IPFS/useIPFS";
 import { useModalStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const CreateRealmModal = ({
   open,
@@ -430,7 +431,7 @@ const CreateRealmModal = ({
                 <Box
                   className={classes.image}
                   style={{
-                    backgroundImage: `url(${imageFile})`,
+                    backgroundImage: `url(${sanitizeIfIpfsUrl(imageFile)})`,
                     backgroundSize: "cover",
                   }}
                 />
@@ -486,7 +487,7 @@ const CreateRealmModal = ({
                 <Box
                   className={classes.image}
                   style={{
-                    backgroundImage: `url(${videoFile})`,
+                    backgroundImage: `url(${sanitizeIfIpfsUrl(videoFile)})`,
                     backgroundSize: "cover",
                   }}
                 />

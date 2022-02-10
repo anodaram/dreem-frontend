@@ -6,7 +6,7 @@ import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 
 import { FormData, InputFileContents, InputFiles, InputRefs } from "./interface";
-import { color2obj, obj2color } from "shared/helpers";
+import { color2obj, obj2color, sanitizeIfIpfsUrl } from "shared/helpers";
 
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
@@ -133,7 +133,7 @@ const CreateAssetForm = ({
                   <Box
                     className={classes.image}
                     style={{
-                      backgroundImage: `url(${fileContents[asset.key]?.src})`,
+                      backgroundImage: `url(${sanitizeIfIpfsUrl(fileContents[asset.key]?.src)})`,
                       backgroundSize: "cover",
                     }}
                   />

@@ -16,7 +16,7 @@ import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingMo
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { useModalStyles } from "./index.styles";
 import useIPFS from "shared/utils-IPFS/useIPFS";
-import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const CreateRealm = ({
   metaData,
@@ -438,7 +438,7 @@ const CreateRealm = ({
                 <Box
                   className={classes.image}
                   style={{
-                    backgroundImage: `url(${imageFile})`,
+                    backgroundImage: `url(${sanitizeIfIpfsUrl(imageFile)})`,
                     backgroundSize: "cover",
                   }}
                 />
@@ -493,7 +493,7 @@ const CreateRealm = ({
                 <Box
                   className={classes.image}
                   style={{
-                    backgroundImage: `url(${videoFile})`,
+                    backgroundImage: `url(${sanitizeIfIpfsUrl(videoFile)})`,
                     backgroundSize: "cover",
                   }}
                 />

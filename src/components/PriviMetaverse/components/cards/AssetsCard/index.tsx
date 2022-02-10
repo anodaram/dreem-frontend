@@ -7,6 +7,7 @@ import Box from "shared/ui-kit/Box";
 import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
 import AssetDetailModal from "components/PriviMetaverse/modals/AssetDetailModal";
 import { avatarCardStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 export default function AssetsCard(props) {
   const { isLoading, item } = props;
@@ -78,7 +79,7 @@ export default function AssetsCard(props) {
             justifyContent="space-between"
             className={classes.container}
           >
-            <img className={classes.image} src={assetThumbnail || getDefaultBGImage()} alt="robot" />
+            <img className={classes.image} src={sanitizeIfIpfsUrl(assetThumbnail) || getDefaultBGImage()} alt="robot" />
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Box className={classes.name}>{assetName || ""}</Box>
             </Box>
@@ -88,18 +89,18 @@ export default function AssetsCard(props) {
             <PrimaryButton
               size="medium"
               className={classes.button}
-              // onClick={() => setOpenAssetDetailModal(true)}
+              onClick={() => setOpenAssetDetailModal(true)}
             >
               see more
             </PrimaryButton>
           </Box>
         </>
       )}
-      {openCharacterDetailModal && (
+      {(item.itemKind === "MODEL" || item.itemKind === "TEXTURE") && openCharacterDetailModal && (
         <AssetDetailModal
           open={openCharacterDetailModal}
           id={asset.id}
-          assetData={item.realm}
+          assetData={item}
           onClose={() => setOpenAssetDetailModal(false)}
           onFruit={updateFruit}
         />
