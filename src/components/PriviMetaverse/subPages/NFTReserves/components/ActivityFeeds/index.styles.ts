@@ -10,7 +10,7 @@ export const useStyles = makeStyles(theme => ({
     padding: "22px 32px 8px 19px",
     overflow: "hidden",
     [theme.breakpoints.down("sm")]: {
-      width: 255,
+      width: 280,
       padding: "22px 8px 8px",
     },
     [theme.breakpoints.down("xs")]: {
