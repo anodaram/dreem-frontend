@@ -27,7 +27,7 @@ export default function RealmExtensionProfileCard({
   handleRefresh,
   handleClick,
   isLoading,
-  selectable
+  selectable,
 }: {
   nft?: any;
   hideInfo?: boolean;
@@ -63,23 +63,21 @@ export default function RealmExtensionProfileCard({
   const [protocolFee, setProtocolFee] = useState<any>(null);
 
   React.useEffect(() => {
-    getSettings()
+    getSettings();
   }, []);
-  
+
   React.useEffect(() => {
     setData(nft);
     setIsPublic(nft.isPublic);
   }, [nft]);
 
   const getSettings = () => {
-    MetaverseAPI.getDepositInfo()
-      .then(res => {
-        setDepositInfo(res.data)
-      })
-    MetaverseAPI.getProtocolFee()
-      .then(res => {
-        setProtocolFee(res.data)
-      })
+    MetaverseAPI.getDepositInfo().then(res => {
+      setDepositInfo(res.data);
+    });
+    MetaverseAPI.getProtocolFee().then(res => {
+      setProtocolFee(res.data);
+    });
   };
 
   const handleRemove = async () => {
@@ -110,7 +108,7 @@ export default function RealmExtensionProfileCard({
     setOpenDepositRequired(true);
     if (selectable) {
       //@ts-ignore
-      handleClick()
+      handleClick();
       setIsSelected(isSelected => !isSelected);
     } else {
       setOpenDepositRequired(true);
@@ -159,18 +157,22 @@ export default function RealmExtensionProfileCard({
     <div className={styles.cardBorderWrapper}>
       {isLoading ? (
         <Box className={styles.skeleton}>
-          <Skeleton variant="rect" width="100%" />
-          <Skeleton variant="rect" width={"100%"} />
-          <Skeleton variant="rect" width={"80%"} />
+          <Skeleton variant="rect" width="100%" height={240} />
+          <Box my={3}>
+            <Skeleton variant="rect" width={"100%"} height={24} />
+          </Box>
+          <Skeleton variant="rect" width={"80%"} height={24} />
         </Box>
       ) : (
         <div className={styles.card}>
-          <div className={styles.imageContent} onClick={handleOpenModal}
-          style={{
-            borderRadius: 12,
-            border: isSelected ? "3px solid #E9FF26" : "1px solid #ED7B7B",
-            boxShadow: isSelected ? "0px 0px 14px 1px #DCFF35" : "unset",
-          }}
+          <div
+            className={styles.imageContent}
+            onClick={handleOpenModal}
+            style={{
+              borderRadius: 12,
+              border: isSelected ? "3px solid #E9FF26" : "1px solid #ED7B7B",
+              boxShadow: isSelected ? "0px 0px 14px 1px #DCFF35" : "unset",
+            }}
           >
             <div
               className={styles.nftImage}
@@ -228,7 +230,12 @@ export default function RealmExtensionProfileCard({
                     }}
                   >
                     <Box display="flex" alignItems="center" width={1}>
-                      <Avatar size={24} rounded bordered image={data.worldCreator?.user?.avatarUrl || getDefaultAvatar()} />
+                      <Avatar
+                        size={24}
+                        rounded
+                        bordered
+                        image={data.worldCreator?.user?.avatarUrl || getDefaultAvatar()}
+                      />
                       <div className={styles.creatorName}>{data.worldCreator?.character?.name}</div>
                     </Box>
                     <Box display="flex" alignItems="center">

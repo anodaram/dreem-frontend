@@ -28,7 +28,7 @@ export const walletConnect = {
   },
 };
 
-export const GLOBAL_CHAT_ROOM = 'global';
+export const GLOBAL_CHAT_ROOM = "global";
 
 export const NftStates = ["For Sale", "For Blocking", "For Rental", "Blocked", "Rented"];
 
@@ -480,4 +480,4 @@ export const EUROPEAN_COUNTRIES = [
   },
 ];
 
-export const FilterWorldAssetOptions = ["WORLD", "CHARACTER", "TEXTURE", "MATERIAL"];
+export const FilterAssetTypeOptions = ["WORLD", "3D ASSET", "TEXTURE", "MATERIAL", "CHARACTER"];
