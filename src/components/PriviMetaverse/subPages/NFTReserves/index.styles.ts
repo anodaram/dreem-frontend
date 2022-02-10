@@ -22,6 +22,17 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     border: "2px solid #151515",
     zIndex: 1,
   },
+  mobileSideBar: {
+    bottom: 0,
+    width: "100%",
+    height: 53,
+    background: "#212121",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    zIndex: 2,
+  },
   expandIcon: {
     padding: 16,
     cursor: "pointer",
@@ -94,7 +105,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       maxWidth: 480,
     },
     [theme.breakpoints.down("xs")]: {
-      maxWidth: 308,
+      maxWidth: 362,
     },
   },
   titleBar: {
@@ -230,6 +241,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
     [theme.breakpoints.down("xs")]: {
       maxWidth: 350,
       minHeight: 400,
+      maxHeight: 500,
     },
   },
   gameContent: {
@@ -523,7 +535,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       padding: "0px 24px",
       alignItems: "center",
       "& span:first-child": {
-        fontSize: 24,
+        fontSize: 18,
       },
       "& span:last-child": {
         fontSize: 12,

@@ -14,7 +14,7 @@ export const useStyles = makeStyles(theme => ({
       padding: "22px 8px 8px",
     },
     [theme.breakpoints.down("xs")]: {
-      width: 370,
+      width: "100%",
     },
   },
   collapseIcon: {
