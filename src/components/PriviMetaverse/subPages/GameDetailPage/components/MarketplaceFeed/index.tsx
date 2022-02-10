@@ -82,6 +82,9 @@ export default function MarketplaceFeed() {
   React.useEffect(() => {
     if (listenerSocket) {
       const updateMarketPlaceFeedHandler = _transaction => {
+        if (collection_id !== _transaction.slug){
+          return;
+        }
         setNfts(prev => {
           let _transactions = prev.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
           if (_transactions.length === 0 || _transactions[0].id < _transaction.id){
@@ -167,7 +170,7 @@ export default function MarketplaceFeed() {
   };
 
   const goToNft = row => {
-    history.push(`/P2E/${row.collectionId}/${row.tokenId}`);
+    history.push(`/P2E/${row.slug}/${row.tokenId}`);
   };
 
   const tableData = React.useMemo(() => {
