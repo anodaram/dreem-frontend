@@ -44,6 +44,8 @@ const COLUMNS_COUNT_BREAK_POINTS = {
   1440: 4,
 };
 
+const TYPE_TRANSFER = "TRANSFER";
+
 const getChainImage = chain => {
   if (chain === "BSC") {
     return <BinanceIcon />;
@@ -260,13 +262,12 @@ const NFTReserves = () => {
         {
           cell: (
             <p className={classes.whiteText}>
-              {
-                +toDecimals(
-                  row.price || row.pricePerSecond * row.rentalTime,
-                  getTokenDecimal(row.paymentToken || row.fundingToken)
-                )
-              }{" "}
-              {getTokenSymbol(row.paymentToken || row.fundingToken)}
+              {row.type === TYPE_TRANSFER
+                ? "-"
+                : `${+toDecimals(
+                    row.price || row.pricePerSecond * row.rentalTime,
+                    getTokenDecimal(row.paymentToken || row.fundingToken)
+                  )} ${getTokenSymbol(row.paymentToken || row.fundingToken)}`}
             </p>
           ),
         },
