@@ -2,7 +2,16 @@ import React, { useEffect, useState, useRef } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 
-import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem } from "@material-ui/core";
+import {
+  FormControlLabel,
+  useMediaQuery,
+  useTheme,
+  Switch,
+  SwitchProps,
+  styled,
+  Select,
+  MenuItem,
+} from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -15,7 +24,7 @@ import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProg
 import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingModal";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "shared/utils-IPFS/useIPFS";
-import { FilterWorldAssetOptions } from "shared/constants/constants";
+import { FilterAssetTypeOptions } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 const CreateTexture = ({
@@ -69,7 +78,7 @@ const CreateTexture = ({
 
   const [openAssetSelect, setOpenAssetSelect] = useState<boolean>(false);
   const [openCollectionSelect, setOpenCollectionSelect] = useState<boolean>(false);
-  const [filterAsset, setFilterAsset] = useState<string>(FilterWorldAssetOptions[0]);
+  const [filterAsset, setFilterAsset] = useState<string>(FilterAssetTypeOptions[0]);
   const [filterCollection, setFilterCollection] = useState<string>("");
   useEffect(() => {
     setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");
@@ -204,15 +213,15 @@ const CreateTexture = ({
         }
       );
       return false;
-    // } else if (
-    //   symbol.length < sizeSpec?.worldSymbol.limit.min ||
-    //   symbol.length > sizeSpec?.worldSymbol.limit.max
-    // ) {
-    //   showAlertMessage(
-    //     `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldSymbol.limit.min} to ${sizeSpec?.worldSymbol.limit.max} characters`,
-    //     { variant: "error" }
-    //   );
-    //   return false;
+      // } else if (
+      //   symbol.length < sizeSpec?.worldSymbol.limit.min ||
+      //   symbol.length > sizeSpec?.worldSymbol.limit.max
+      // ) {
+      //   showAlertMessage(
+      //     `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldSymbol.limit.min} to ${sizeSpec?.worldSymbol.limit.max} characters`,
+      //     { variant: "error" }
+      //   );
+      //   return false;
     } else if (
       description.length < sizeSpec?.worldDescription.limit.min ||
       description.length > sizeSpec?.worldDescription.limit.max
@@ -235,7 +244,7 @@ const CreateTexture = ({
     } else if (
       !sizeSpec?.worldLevel.supportedFormats.toString().includes(unity.name.split(".").reverse()[0])
     ) {
-      console.log(sizeSpec, metaData, unity.name.split(".").reverse()[0])
+      console.log(sizeSpec, metaData, unity.name.split(".").reverse()[0]);
       showAlertMessage(`World file is invalid.`, { variant: "error" });
       return false;
     } else if (unity.size > sizeSpec?.worldLevel.limit.maxBytes) {
@@ -326,7 +335,14 @@ const CreateTexture = ({
                     backgroundSize: "cover",
                   }}
                 />
-                <Box flex={1} display="flex" alignItems="center" marginLeft="24px" justifyContent="space-between" mr={3}>
+                <Box
+                  flex={1}
+                  display="flex"
+                  alignItems="center"
+                  marginLeft="24px"
+                  justifyContent="space-between"
+                  mr={3}
+                >
                   Uploaded {image.name}
                   <SecondaryButton
                     size="medium"

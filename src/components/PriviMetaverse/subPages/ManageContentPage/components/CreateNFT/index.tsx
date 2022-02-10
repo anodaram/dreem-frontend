@@ -2,7 +2,16 @@ import React, { useEffect, useState, useRef } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 
-import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem } from "@material-ui/core";
+import {
+  FormControlLabel,
+  useMediaQuery,
+  useTheme,
+  Switch,
+  SwitchProps,
+  styled,
+  Select,
+  MenuItem,
+} from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -15,7 +24,7 @@ import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProg
 import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingModal";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "shared/utils-IPFS/useIPFS";
-import { FilterWorldAssetOptions } from "shared/constants/constants";
+import { FilterAssetTypeOptions } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 const CreateNFT = ({
@@ -24,14 +33,14 @@ const CreateNFT = ({
   handleCancel,
   handleRefresh,
   collection,
-  isCollectionPage
+  isCollectionPage,
 }: {
   metaData: any;
   handleNext: () => void;
   handleCancel: () => void;
   handleRefresh: () => void;
-  collection: any,
-  isCollectionPage: boolean
+  collection: any;
+  isCollectionPage: boolean;
 }) => {
   const classes = useModalStyles();
   const filterClasses = useFilterSelectStyles();
@@ -55,9 +64,9 @@ const CreateNFT = ({
   const [isPublic, setIsPublic] = useState<boolean>(true);
 
   const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
-  const [isDraft, setIsDraft] = useState<boolean>(collection?.kind=="DRAFT" ? true : false);
-  console.log(isDraft, collection?.kind)
-  console.log(collection)
+  const [isDraft, setIsDraft] = useState<boolean>(collection?.kind == "DRAFT" ? true : false);
+  console.log(isDraft, collection?.kind);
+  console.log(collection);
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -79,7 +88,7 @@ const CreateNFT = ({
 
   const [openAssetSelect, setOpenAssetSelect] = useState<boolean>(false);
   const [openCollectionSelect, setOpenCollectionSelect] = useState<boolean>(false);
-  const [filterAsset, setFilterAsset] = useState<string>(FilterWorldAssetOptions[0]);
+  const [filterAsset, setFilterAsset] = useState<string>(FilterAssetTypeOptions[0]);
   const [filterCollection, setFilterCollection] = useState<string>("");
   useEffect(() => {
     setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");
@@ -224,15 +233,15 @@ const CreateNFT = ({
         }
       );
       return false;
-    // } else if (
-    //   symbol.length < sizeSpec?.worldSymbol.limit.min ||
-    //   symbol.length > sizeSpec?.worldSymbol.limit.max
-    // ) {
-    //   showAlertMessage(
-    //     `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldSymbol.limit.min} to ${sizeSpec?.worldSymbol.limit.max} characters`,
-    //     { variant: "error" }
-    //   );
-    //   return false;
+      // } else if (
+      //   symbol.length < sizeSpec?.worldSymbol.limit.min ||
+      //   symbol.length > sizeSpec?.worldSymbol.limit.max
+      // ) {
+      //   showAlertMessage(
+      //     `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldSymbol.limit.min} to ${sizeSpec?.worldSymbol.limit.max} characters`,
+      //     { variant: "error" }
+      //   );
+      //   return false;
     } else if (
       description.length < sizeSpec?.worldDescription.limit.min ||
       description.length > sizeSpec?.worldDescription.limit.max
@@ -255,7 +264,7 @@ const CreateNFT = ({
     } else if (
       !sizeSpec?.worldLevel.supportedFormats.toString().includes(unity.name.split(".").reverse()[0])
     ) {
-      console.log(sizeSpec, metaData, unity.name.split(".").reverse()[0])
+      console.log(sizeSpec, metaData, unity.name.split(".").reverse()[0]);
       showAlertMessage(`World file is invalid.`, { variant: "error" });
       return false;
     } else if (unity.size > sizeSpec?.worldLevel.limit.maxBytes) {
@@ -299,8 +308,7 @@ const CreateNFT = ({
           if (!res.success) {
             showAlertMessage(`Failed to upload world`, { variant: "error" });
             setShowUploadingModal(false);
-          } else{
-
+          } else {
             // if (isDraft) {
             //   setProgress(100);
             //   setShowUploadingModal(false);
@@ -309,32 +317,37 @@ const CreateNFT = ({
             //   handleRefresh()
             // } else {
 
-              setShowUploadingModal(false);
-              showAlertMessage(`Created draft successfully`, { variant: "success" });
-              console.log('----metadata', res.data.metadata, chainId, BlockchainNets.find(net => net.value === chain))
-              const metadata = await onUploadNonEncrypt(res.data.metadata, file =>
-                uploadWithNonEncryption(file)
-              );
-              setProgress(100);
-              setShowUploadingModal(false);
+            setShowUploadingModal(false);
+            showAlertMessage(`Created draft successfully`, { variant: "success" });
+            console.log(
+              "----metadata",
+              res.data.metadata,
+              chainId,
+              BlockchainNets.find(net => net.value === chain)
+            );
+            const metadata = await onUploadNonEncrypt(res.data.metadata, file =>
+              uploadWithNonEncryption(file)
+            );
+            setProgress(100);
+            setShowUploadingModal(false);
 
-              const targetChain = BlockchainNets.find(net => net.value === chain);
+            const targetChain = BlockchainNets.find(net => net.value === chain);
 
-              if (chainId && chainId !== targetChain?.chainId) {
-                const isHere = await switchNetwork(targetChain?.chainId || 0);
-                if (!isHere) {
-                  showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
-                  return;
-                }
+            if (chainId && chainId !== targetChain?.chainId) {
+              const isHere = await switchNetwork(targetChain?.chainId || 0);
+              if (!isHere) {
+                showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+                return;
               }
+            }
 
-              const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metadata.newFileCID}`;
-              const web3APIHandler = targetChain.apiHandler;
-              const web3 = new Web3(library.provider);
-              console.log('----metadata:', metadata, isDraft)
+            const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metadata.newFileCID}`;
+            const web3APIHandler = targetChain.apiHandler;
+            const web3 = new Web3(library.provider);
+            console.log("----metadata:", metadata, isDraft);
 
             if (isDraft) {
-              console.log('here-----')
+              console.log("here-----");
               const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
                 web3,
                 account,
@@ -357,10 +370,10 @@ const CreateNFT = ({
                   resRoyalty.tokenId,
                   metadata.newFileCID,
                   account,
-                  '0x0000000000000000000000000000000000000000',
+                  "0x0000000000000000000000000000000000000000",
                   0
                 );
-                handleRefresh()
+                handleRefresh();
               } else {
                 setTxSuccess(false);
               }
@@ -380,7 +393,7 @@ const CreateNFT = ({
               if (contractRes.success) {
                 setTxSuccess(true);
                 showAlertMessage(`Successfully world minted`, { variant: "success" });
-                console.log(contractRes)
+                console.log(contractRes);
                 await MetaverseAPI.convertToNFTWorld(
                   res.data.item.id,
                   contractRes.collectionAddress,
@@ -391,7 +404,7 @@ const CreateNFT = ({
                   contractRes.royaltyAddress,
                   0
                 );
-                handleRefresh()
+                handleRefresh();
               } else {
                 setTxSuccess(false);
               }
@@ -401,7 +414,7 @@ const CreateNFT = ({
         .catch(err => {
           setShowUploadingModal(false);
           showAlertMessage(`Failed to upload world`, { variant: "error" });
-          console.log(err)
+          console.log(err);
         });
     }
   };

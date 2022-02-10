@@ -2,7 +2,17 @@ import React, { useEffect, useState, useRef } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 
-import { Grid, FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem } from "@material-ui/core";
+import {
+  Grid,
+  FormControlLabel,
+  useMediaQuery,
+  useTheme,
+  Switch,
+  SwitchProps,
+  styled,
+  Select,
+  MenuItem,
+} from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useTypedSelector } from "store/reducers/Reducer";
@@ -25,7 +35,7 @@ import CreatingStep from "../CreatingStep";
 import NFTOption from "../NFTOption";
 import CreateCollection from "../CreateCollection";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
-import { FilterWorldAssetOptions } from "shared/constants/constants";
+import { FilterAssetTypeOptions } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 const COLUMNS_COUNT_BREAK_POINTS_THREE = {
@@ -219,7 +229,7 @@ const CollectionList = ({
             if (res.data.page && curPage <= res.data.page.max) {
               setCurPage(curPage => curPage + 1);
               setLastPage(res.data.page.max);
-            } else{
+            } else {
               setHasMore(false);
             }
           }
@@ -239,7 +249,7 @@ const CollectionList = ({
             if (res.data.page && curPage <= res.data.page.max) {
               setCurPage(curPage => curPage + 1);
               setLastPage(res.data.page.max);
-            } else{
+            } else {
               setHasMore(false);
             }
           }
@@ -258,8 +268,8 @@ const CollectionList = ({
             if (res.data.page && curPage <= res.data.page.max) {
               setCurPage(curPage => curPage + 1);
               setLastPage(res.data.page.max);
-              curPage >= res.data.page.max && setHasMore(false)
-            } else{
+              curPage >= res.data.page.max && setHasMore(false);
+            } else {
               setHasMore(false);
             }
           }
@@ -270,97 +280,101 @@ const CollectionList = ({
 
   return (
     <>
-    {!openCreateCollectionModal ?
-      <div className={classes.otherContent}>
-        {loadingCollection || collections.length ? (
-          <>
-            <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
-              <Box className={classes.typo4}>Select Collection</Box>
-              <div className={classes.createCollectionBtn} onClick={() => setOpenCreateCollectionModal(true)}>
-                <PlusIcon />
-                create new collection
-              </div>
-            </Box>
-            <Box width={1} pb={20}>
-              <InfiniteScroll
-                hasChildren={collections?.length > 0}
-                dataLength={collections?.length}
-                scrollableTarget={"scrollContainer"}
-                next={loadMore}
-                hasMore={hasMore}
-                loader={
-                  loadingCollection && (
-                    <Box mt={2}>
-                      <MasonryGrid
-                        gutter={"16px"}
-                        data={Array(loadingCount).fill(0)}
-                        renderItem={(item, _) => (
-                          <CollectionCard nft={{}} isLoading={true} />
-                        )}
-                        columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
-                      />
-                    </Box>
-                  )
-                }
-              >
-                <Grid container spacing={3} style={{ marginBottom: 24 }}>
-                  {collections?.map((item, index) => (
-                    <Grid item key={`trending-pod-${index}`} md={4} sm={6} xs={12}>
-                      <CollectionCard
-                        item={item}
-                        isLoading={loadingCollection}
-                        onClick={() => handleSelect(item)}
-                        selectable={true}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              </InfiniteScroll>
-            </Box>
-          </>
-        ) : (
-          <Box pb={20}>
-            <Box className={classes.typo4}>All of your collections</Box>
-            <Box display="flex" alignItems="center" mt={6} mb={3}>
-              <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                border="2px dashed #FFFFFF"
-                borderRadius={12}
-                mx={"30px"}
-                className={classes.centerBox}
-              >
-                <img src={require("assets/metaverseImages/dreem_fav_icon.png")} />
+      {!openCreateCollectionModal ? (
+        <div className={classes.otherContent}>
+          {loadingCollection || collections.length ? (
+            <>
+              <Box display="flex" alignItems="center" justifyContent="space-between" width={1}>
+                <Box className={classes.typo4}>Select Collection</Box>
+                <div
+                  className={classes.createCollectionBtn}
+                  onClick={() => setOpenCreateCollectionModal(true)}
+                >
+                  <PlusIcon />
+                  create new collection
+                </div>
               </Box>
-              <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
+              <Box width={1} pb={20}>
+                <InfiniteScroll
+                  hasChildren={collections?.length > 0}
+                  dataLength={collections?.length}
+                  scrollableTarget={"scrollContainer"}
+                  next={loadMore}
+                  hasMore={hasMore}
+                  loader={
+                    loadingCollection && (
+                      <Box mt={2}>
+                        <MasonryGrid
+                          gutter={"16px"}
+                          data={Array(loadingCount).fill(0)}
+                          renderItem={(item, _) => <CollectionCard nft={{}} isLoading={true} />}
+                          columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
+                        />
+                      </Box>
+                    )
+                  }
+                >
+                  <Grid container spacing={3} style={{ marginBottom: 24 }}>
+                    {collections?.map((item, index) => (
+                      <Grid item key={`trending-pod-${index}`} md={4} sm={6} xs={12}>
+                        <CollectionCard
+                          item={item}
+                          isLoading={loadingCollection}
+                          onClick={() => handleSelect(item)}
+                          selectable={true}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </InfiniteScroll>
+              </Box>
+            </>
+          ) : (
+            <Box pb={20}>
+              <Box className={classes.typo4}>All of your collections</Box>
+              <Box display="flex" alignItems="center" mt={6} mb={3}>
+                <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  border="2px dashed #FFFFFF"
+                  borderRadius={12}
+                  mx={"30px"}
+                  className={classes.centerBox}
+                >
+                  <img src={require("assets/metaverseImages/dreem_fav_icon.png")} />
+                </Box>
+                <Box border="2px dashed #FFFFFF40" borderRadius={12} className={classes.sideBox} />
+              </Box>
+              <Box className={classes.typo3}>
+                No collections created yet, Create Collection with the button above.
+              </Box>
+              <Box display="flex" alignItems="center" justifyContent="center" width={1} mt="20px">
+                <div
+                  className={classes.createCollectionBtn}
+                  onClick={() => setOpenCreateCollectionModal(true)}
+                >
+                  <PlusIcon />
+                  create new collection
+                </div>
+              </Box>
             </Box>
-            <Box className={classes.typo3}>
-              No collections created yet, Create Collection with the button above.
-            </Box>
-            <Box display="flex" alignItems="center" justifyContent="center" width={1} mt="20px">
-              <div className={classes.createCollectionBtn} onClick={() => setOpenCreateCollectionModal(true)}>
-                <PlusIcon />
-                create new collection
-              </div>
-            </Box>
+          )}
+        </div>
+      ) : (
+        <div className={classes.otherContent}>
+          <div className={classes.typo1}>Creating New Collection</div>
+          <Box className={classes.typo3} mb={3}>
+            Fill all the details of your new collection
           </Box>
-        )}
-      </div>
-      :
-      <div className={classes.otherContent}>
-        <div className={classes.typo1}>Creating New Collection</div>
-        <Box className={classes.typo3} mb={3}>
-          Fill all the details of your new collection
-        </Box>
-        <CreateCollection
-          handleNext={() => {}}
-          handleCancel={() => setOpenCreateCollectionModal(false)}
-          handleRefresh={() => handleRefreshCollection()}
-        />
-      </div>
-      }
+          <CreateCollection
+            handleNext={() => {}}
+            handleCancel={() => setOpenCreateCollectionModal(false)}
+            handleRefresh={() => handleRefreshCollection()}
+          />
+        </div>
+      )}
       {/* {step > 2 || (step === 2 && collections.length) ? (
         <Box className={classes.footer}>
           <div className={classes.howToCreateBtn} onClick={handlePrev}>
