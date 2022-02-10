@@ -165,12 +165,17 @@ const CreateAssetForm = ({
                     <img width={26} src={require("assets/icons/image-icon.png")} alt="image" />
                   </Box>
                   <Box className={classes.controlBox} ml={5}>
-                    {/* Drag image here or <span>browse media on your device</span>
+                    Drag image here or <span>browse media on your device</span>
                     <br />
-                    <span>Accepted files png, jpg, svg</span> minimum 600 x 600 px size for
-                    <br />
-                    best viewing experience */}
-                    <div dangerouslySetInnerHTML={{__html: asset.input?.description?.value}} />
+                    <span>Accepted files {asset.input?.formats?.map(f => f.name).join(', ')}</span> 
+                    {asset.input?.min && 
+                      ` minimum ${asset.input?.min?.width} x ${asset.input?.min?.height} px `
+                    }
+                    {asset.input?.max && 
+                      ` maximum ${asset.input?.max?.width} x ${asset.input?.max?.height} px size`
+                    }
+                    {/* for best viewing experience */}
+                    {/* <div dangerouslySetInnerHTML={{__html: asset.input?.description?.value}} /> */}
                   </Box>
                 </>
               )}
