@@ -17,16 +17,16 @@ export const cardStyles = makeStyles(theme => ({
     borderRadius: "8px",
     width: 30,
     height: 30,
-    position: 'absolute',
+    position: "absolute",
     top: 7,
     right: 7,
     display: "flex",
     justifyContent: "center",
-    alignItems: 'center',
-    '& img': {
+    alignItems: "center",
+    "& img": {
       width: 17,
-      height: 17
-    }
+      height: 17,
+    },
   },
   cardNftName: {
     fontFamily: "GRIFTER",
@@ -108,6 +108,9 @@ export const cardStyles = makeStyles(theme => ({
     border: "none !important",
     padding: "2px 24px !important",
     marginTop: 21,
-    width: "100% !important"
-  }
+    width: "100% !important",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "12px !important",
+    },
+  },
 }));

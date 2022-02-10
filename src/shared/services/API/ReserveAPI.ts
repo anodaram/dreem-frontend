@@ -15,6 +15,19 @@ export async function getAllGameNFTs(payload: any, cancelToken?: CancelToken): P
   }
 }
 
+export async function getAllGames(payload: any, cancelToken?: CancelToken): Promise<any> {
+  try {
+    const response = await axios.get(`${URL()}/metaverseReserve/getAllGames`, {
+      params: payload,
+      cancelToken: cancelToken,
+    });
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e.message);
+  }
+}
+
 export async function getPopularGames(payload: any): Promise<any> {
   try {
     const response = await axios.get(`${URL()}/metaverseReserve/getPopularGames`, {

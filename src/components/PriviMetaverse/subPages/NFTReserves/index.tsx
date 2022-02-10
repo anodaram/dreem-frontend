@@ -76,14 +76,14 @@ const NFTReserves = () => {
 
   const theme = useTheme();
   const isNormalScreen = useMediaQuery(theme.breakpoints.between(1421, 1800));
-  const isTablet = useMediaQuery(theme.breakpoints.between(861, 1420));
-  const isNarrow = useMediaQuery(theme.breakpoints.between(651, 860));
+  const isTablet = useMediaQuery(theme.breakpoints.between(768, 1420));
+  const isNarrow = useMediaQuery(theme.breakpoints.between(651, 768));
   const isMobile = useMediaQuery(theme.breakpoints.down(650));
 
   const classes = useNFTOptionsStyles({ openSideBar });
 
-  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? openSideBar ? 3 : 4 : 4;
-  const MAX_NEW_LIST_LENGTH = 12
+  const itemsToShow = isMobile ? 1 : isNarrow ? 2 : isTablet ? 3 : isNormalScreen ? (openSideBar ? 3 : 4) : 4;
+  const MAX_NEW_LIST_LENGTH = 12;
 
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     { headerName: "NFT" },
@@ -121,8 +121,10 @@ const NFTReserves = () => {
       const newNFTHandler = data => {
         let _newNFT = data?.nftData;
         if (_newNFT && !loadingNewListings) {
-          setNewListings((prev) => {
-            const _newListings = prev.filter(nft => (_newNFT.collectionId !== nft.collectionId || _newNFT.tokenId !== nft.tokenId));
+          setNewListings(prev => {
+            const _newListings = prev.filter(
+              nft => _newNFT.collectionId !== nft.collectionId || _newNFT.tokenId !== nft.tokenId
+            );
             if (_newListings.length >= MAX_NEW_LIST_LENGTH) {
               _newListings.pop();
             }
@@ -132,7 +134,7 @@ const NFTReserves = () => {
       };
 
       const updateMarketPlaceFeedHandler = _transaction => {
-        setTransactions((prev) => {
+        setTransactions(prev => {
           const _transactions = prev.map(transaction =>
             _transaction.id === transaction.id ? _transaction : transaction
           );
@@ -193,7 +195,7 @@ const NFTReserves = () => {
         const nfts = response.data;
         setNewListings(nfts);
       }
-    } catch (err) { }
+    } catch (err) {}
     setLoadingNewListings(false);
   };
 
@@ -297,15 +299,7 @@ const NFTReserves = () => {
   return (
     <>
       <Box className={classes.main}>
-        {isTablet && !isMobile && (
-          <Box className={classes.sideBar}>
-            <Box display="flex" flexDirection="column">
-              <ActivityFeeds onClose={() => setOpenSideBar(false)} />
-              <MessageBox roomId={GLOBAL_CHAT_ROOM} />
-            </Box>
-          </Box>
-        )}
-        {(!isTablet || isMobile) && (
+        {!isMobile && !isNarrow && (
           <>
             <Box className={classes.sideBar}>
               {openSideBar ? (
@@ -321,6 +315,35 @@ const NFTReserves = () => {
             </Box>
           </>
         )}
+        {isMobile &&
+          (!openSideBar ? (
+            <Box className={classes.mobileSideBar} onClick={() => setOpenSideBar(true)}>
+              <Box width={"142px"} border={"5px solid #ffffff80"} borderRadius={"100px"} />
+            </Box>
+          ) : (
+            <Box
+              top={72}
+              position={"absolute"}
+              display={"flex"}
+              flexDirection={"column"}
+              width={"100%"}
+              height={"calc(100% - 72px)"}
+              zIndex={3}
+              bgcolor={"#212121"}
+            >
+              <Box
+                display="flex"
+                alignItems={"center"}
+                justifyContent={"center"}
+                height={"64px"}
+                onClick={() => setOpenSideBar(false)}
+              >
+                <Box width={"142px"} border={"5px solid #ffffff80"} borderRadius={"100px"} />
+              </Box>
+              <ActivityFeeds onClose={() => setOpenSideBar(false)} />
+              <MessageBox roomId={GLOBAL_CHAT_ROOM} />
+            </Box>
+          ))}
         <img src={require("assets/metaverseImages/nft_reserve_bg.png")} className={classes.imageBg} />
         <Box className={classes.limitedContent}>
           <div className={classes.content}>
@@ -384,7 +407,7 @@ const NFTReserves = () => {
                             <Box
                               fontFamily="GRIFTER"
                               fontWeight={700}
-                              fontSize={isTablet || isNarrow ? 26 : 72}
+                              fontSize={isTablet || isMobile || isNarrow ? 26 : 72}
                               color="#fff"
                               mt="11px"
                               style={{
@@ -405,16 +428,11 @@ const NFTReserves = () => {
                               color="#fff"
                               lineHeight={isTablet || isNarrow ? "16px" : "31px"}
                               mt={isTablet || isNarrow ? "0px" : "20px"}
-                              maxWidth={isNarrow || isTablet ? 440 : isMobile ? 288 : "unset"}
+                              maxWidth={isNarrow || isTablet ? 440 : isMobile ? "100%" : "unset"}
                             >
                               {game.Description.slice(0, 200) + (game.Description.length > 200 ? '...' : '')}
                             </Box>
-                            <Box
-                              display="flex"
-                              mt={isTablet || isNarrow ? 0.5 : 3}
-                              maxWidth={isMobile ? 288 : "unset"}
-                              flexWrap={isMobile ? "wrap" : "unset"}
-                            >
+                            <Box display="flex" mt={3}>
                               <Box
                                 display="flex"
                                 flexDirection="column"
@@ -469,11 +487,11 @@ const NFTReserves = () => {
                     <Box display="flex" flexDirection="row" alignItems="center">
                       <span>Popular Games</span>
                       {popularGames &&
-                        popularGames.length &&
-                        !isMobile &&
-                        ((isTablet && popularGames.length > 2) ||
-                          (isNormalScreen && popularGames.length > 3) ||
-                          popularGames.length > 4) ? (
+                      popularGames.length &&
+                      !isMobile &&
+                      ((isTablet && popularGames.length > 2) ||
+                        (isNormalScreen && popularGames.length > 3) ||
+                        popularGames.length > 4) ? (
                         <Box display="flex" alignItems="center">
                           <Box
                             className={classes.carouselNav}
@@ -526,15 +544,16 @@ const NFTReserves = () => {
                       ) : (
                         <></>
                       )}
-                    </Box><Hidden xsDown>
-                    <SecondaryButton
-                      size="medium"
-                      className={classes.showAll}
-                      onClick={() => history.push("/P2E/explorer")}
-                    >
-                      Show All
-                    </SecondaryButton>
-                  </Hidden>
+                    </Box>
+                    <Hidden xsDown>
+                      <SecondaryButton
+                        size="medium"
+                        className={classes.showAll}
+                        onClick={() => history.push("/P2E/explorer")}
+                      >
+                        Show All
+                      </SecondaryButton>
+                    </Hidden>
                   </Box>
                   <div className={`${classes.topNFTContent} ${classes.fitContent}`}>
                     {loadingPopularGames ? (
@@ -552,9 +571,9 @@ const NFTReserves = () => {
                       </div>
                     ) : popularGames && popularGames.length ? (
                       !isMobile &&
-                        (popularGames.length === 1 ||
-                          popularGames.length === 2 ||
-                          popularGames.length === 3) ? (
+                      (popularGames.length === 1 ||
+                        popularGames.length === 2 ||
+                        popularGames.length === 3) ? (
                         <div className={classes.allNFTSection}>
                           <Box style={{ marginBottom: "24px" }}>
                             <MasonryGrid
@@ -590,12 +609,12 @@ const NFTReserves = () => {
                                 justifyContent: isMobile
                                   ? "center"
                                   : popularGames.length === 2 && i === 1
-                                    ? "flex-end"
-                                    : popularGames.length === 3 && i === 1
-                                      ? "center"
-                                      : popularGames.length === 3 && i === 2
-                                        ? "flex-end"
-                                        : "flex-start",
+                                  ? "flex-end"
+                                  : popularGames.length === 3 && i === 1
+                                  ? "center"
+                                  : popularGames.length === 3 && i === 2
+                                  ? "flex-end"
+                                  : "flex-start",
                               }}
                             >
                               <FeaturedGameCard game={item} />

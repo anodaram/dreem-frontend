@@ -112,7 +112,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
       <div className={classes.title}>Claim your Game NFT & Collateral</div>
       <div className={classes.description}>
         {transactionSuccess
-          ? `Congrats, you’ve succesfully ${claimType}ed your NFT ${nft.name} and Collateral. here is summary`
+          ? `Congrats, you’ve successfully ${claimType}ed your NFT ${nft.name} and Collateral. here is summary`
           : ''}
       </div>
       <Box

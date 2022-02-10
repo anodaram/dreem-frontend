@@ -5,9 +5,9 @@ export const useModalStyles = makeStyles(theme => ({
     background: "rgba(11, 21, 28, 0.6)",
     boxShadow: "0px 38px 96px 17px rgba(1, 1, 13, 0.25)",
     color: "white",
-    width: "755px",
+    maxWidth: "755px",
     borderRadius: "0px",
-    maxHeight: "527px",
+    maxHeight: "calc(100vh - 370px)",
     overflow: "auto",
   },
   warningScreen: {
