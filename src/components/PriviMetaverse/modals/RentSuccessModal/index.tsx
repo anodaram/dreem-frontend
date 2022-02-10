@@ -7,7 +7,7 @@ import { BlockchainNets } from "shared/constants/constants";
 import { useWeb3React } from "@web3-react/core";
 import { toDecimals } from "shared/functions/web3";
 import { RootState } from "store/reducers/Reducer";
-import { formatDuration } from "shared/helpers/utils";
+import { formatDuration, sanitizeIfIpfsUrl } from "shared/helpers/utils";
 
 import { RentSuccessModalStyles } from "./index.style";
 import Web3 from "web3";
@@ -68,7 +68,7 @@ export default function RentSuccessModal({ open, nft, setNft, handleClose = () =
     <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.container}>
       <Box className={classes.borderBox} mb={5}>
         <Box className={classes.box}>
-          <img src={nft.image} alt="nft" />
+          <img src={sanitizeIfIpfsUrl(nft.image)} alt="nft" />
           <Box className={classes.tag}>RENTED</Box>
           <Box className={classes.gameName} mt={2}>
             {nft.name}

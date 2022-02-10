@@ -7,6 +7,7 @@ import { useModalStyles } from "./index.styles";
 
 import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
 import { ReactComponent as UnityIcon } from "assets/icons/unity.svg";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 type DRAFT_TYPE = "WORLD" | "CHARACTER" | "MATERIAL" | "TEXTURE" | "MODEL" | "ERC721";
 
@@ -225,7 +226,7 @@ const EditFilesDraft = ({ draftContent }) => {
             <Box
               className={classes.image}
               style={{
-                backgroundImage: `url(${imageFile})`,
+                backgroundImage: `url(${sanitizeIfIpfsUrl(imageFile)})`,
                 backgroundSize: "cover",
               }}
             />
@@ -293,7 +294,7 @@ const EditFilesDraft = ({ draftContent }) => {
                 <Box
                   className={classes.image}
                   style={{
-                    backgroundImage: `url(${videoFile})`,
+                    backgroundImage: `url(${sanitizeIfIpfsUrl(videoFile)})`,
                     backgroundSize: "cover",
                   }}
                 />

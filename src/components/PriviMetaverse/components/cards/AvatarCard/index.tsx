@@ -7,6 +7,7 @@ import { PrimaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import CharacterDetailModal from "components/PriviMetaverse/modals/CharacterDetailModal";
 import { avatarCardStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 export default function AvatarCard(props) {
   const { isLoading, item } = props;
@@ -56,7 +57,7 @@ export default function AvatarCard(props) {
             justifyContent="space-between"
             className={classes.container}
           >
-            <img className={classes.image} src={media?.characterImage} alt="robot" />
+            <img className={classes.image} src={sanitizeIfIpfsUrl(media?.characterImage)} alt="robot" />
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Box className={classes.name}>{media?.characterName}</Box>
               {/* <PolygonIcon /> */}

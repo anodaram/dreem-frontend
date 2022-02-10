@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, BoxProps } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 interface SkeletonBoxProps extends BoxProps {
   image?: boolean;
@@ -21,7 +22,7 @@ const SkeletonBox: React.FC<SkeletonBoxProps> = ({ image, children, ...props }: 
       {...props}
       style={{
         ...props.style,
-        backgroundImage: `url(${image})`,
+        backgroundImage: `url(${sanitizeIfIpfsUrl(image)})`,
       }}
     >
       {children}

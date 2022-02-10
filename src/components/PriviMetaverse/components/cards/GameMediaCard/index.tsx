@@ -6,6 +6,7 @@ import Box from "shared/ui-kit/Box";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 import { Avatar } from "shared/ui-kit";
 import { gameMediaCardStyles } from "./index.styles";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 export default function GameMediaCard(props) {
   const { isLoading, item, gameInfo } = props;
@@ -44,7 +45,7 @@ export default function GameMediaCard(props) {
               history.push(`/P2E/${gameInfo.Slug}/${item.id}`);
             }}
           >
-            <img className={classes.image} src={media?.image} alt="robot" />
+            <img className={classes.image} src={sanitizeIfIpfsUrl(media?.image)} alt="robot" />
             <Box display="flex" alignItems="center" justifyContent="space-between" mt={2}>
               <Box className={classes.name}>
                 {media?.gameInfo?.Chain === "Solana"

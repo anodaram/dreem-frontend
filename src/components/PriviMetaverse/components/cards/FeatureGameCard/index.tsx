@@ -10,6 +10,7 @@ import { SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 
 import { cardStyles } from "./index.style";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const FeaturedGameCard = ({ game, isLoading = false }) => {
   const history = useHistory();
@@ -46,7 +47,7 @@ const FeaturedGameCard = ({ game, isLoading = false }) => {
       ) : (
         <>
           <div className={classes.cardImg}>
-            <img src={game?.Image} style={{ width: "100%", objectFit: "cover", borderRadius: "16px" }} />
+            <img src={sanitizeIfIpfsUrl(game?.Image)} style={{ width: "100%", objectFit: "cover", borderRadius: "16px" }} />
             <Box className={classes.chainImage}>
               <img src={getChainImageUrl(game?.Chain)} />
             </Box>

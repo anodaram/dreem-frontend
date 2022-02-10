@@ -11,6 +11,7 @@ import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingMo
 import useIPFS from "../../../../shared/utils-IPFS/useIPFS";
 import { useModalStyles } from "./index.styles";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const CreateExtensionDraftModal = ({ realmId, onClose, open, loadRealm, metaData }) => {
   const classes = useModalStyles();
@@ -316,7 +317,7 @@ const CreateExtensionDraftModal = ({ realmId, onClose, open, loadRealm, metaData
                 <Box
                   className={classes.image}
                   style={{
-                    backgroundImage: `url(${imageFile})`,
+                    backgroundImage: `url(${sanitizeIfIpfsUrl(imageFile)})`,
                     backgroundSize: "cover",
                   }}
                 />
@@ -372,7 +373,7 @@ const CreateExtensionDraftModal = ({ realmId, onClose, open, loadRealm, metaData
                 <Box
                   className={classes.image}
                   style={{
-                    backgroundImage: `url(${videoFile})`,
+                    backgroundImage: `url(${sanitizeIfIpfsUrl(videoFile)})`,
                     backgroundSize: "cover",
                   }}
                 />

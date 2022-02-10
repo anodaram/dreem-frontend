@@ -23,6 +23,7 @@ import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 import { InfoIcon } from "shared/ui-kit/Icons";
 import { ReactComponent as DeleteIcon } from "assets/icons/remove.svg";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 interface CollectionInfo {
   address: string;
@@ -488,7 +489,7 @@ const CreateRealmFlow = ({
                       <Box
                         className={classes.image}
                         style={{
-                          backgroundImage: `url(${videoFile})`,
+                          backgroundImage: `url(${sanitizeIfIpfsUrl(videoFile)})`,
                           backgroundSize: "cover",
                         }}
                       />
@@ -540,7 +541,7 @@ const CreateRealmFlow = ({
                       <Box
                         className={classes.image}
                         style={{
-                          backgroundImage: `url(${imageFile})`,
+                          backgroundImage: `url(${sanitizeIfIpfsUrl(imageFile)})`,
                           backgroundSize: "cover",
                         }}
                       />

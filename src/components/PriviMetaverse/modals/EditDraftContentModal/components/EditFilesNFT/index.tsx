@@ -8,6 +8,7 @@ import { useTypedSelector } from "store/reducers/Reducer";
 
 import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
 import { ReactComponent as UnityIcon } from "assets/icons/unity.svg";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 type DRAFT_TYPE = "WORLD" | "CHARACTER" | "MATERIAL" | "TEXTURE" | "MODEL" | "ERC721";
 
@@ -384,7 +385,7 @@ const EditFilesNFT = ({
             <Box
               className={classes.image}
               style={{
-                backgroundImage: `url(${imageFile})`,
+                backgroundImage: `url(${sanitizeIfIpfsUrl(imageFile)})`,
                 backgroundSize: "cover",
               }}
             />
@@ -445,7 +446,7 @@ const EditFilesNFT = ({
             <Box
               className={classes.image}
               style={{
-                backgroundImage: `url(${videoFile})`,
+                backgroundImage: `url(${sanitizeIfIpfsUrl(videoFile)})`,
                 backgroundSize: "cover",
               }}
             />

@@ -28,6 +28,7 @@ import { FilterAssetTypeOptions } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
 import { ReactComponent as UnityIcon } from "assets/icons/unity.svg";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 const CreateMaterial = ({
   metaData,
@@ -333,7 +334,7 @@ const CreateMaterial = ({
                 <Box
                   className={classes.image}
                   style={{
-                    backgroundImage: `url(${imageFile})`,
+                    backgroundImage: `url(${sanitizeIfIpfsUrl(imageFile)})`,
                     backgroundSize: "cover",
                   }}
                 />
