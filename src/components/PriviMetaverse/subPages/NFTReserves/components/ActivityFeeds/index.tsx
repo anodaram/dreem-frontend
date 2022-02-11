@@ -12,6 +12,7 @@ import { useStyles } from "./index.styles";
 import { getNftGameFeed } from "shared/services/API/DreemAPI";
 import { listenerSocket } from "components/Login/Auth";
 import { getAbbrAddress } from "shared/helpers";
+import { useHistory } from "react-router-dom";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -31,6 +32,7 @@ export default function ActivityFeeds({ onClose }) {
   const [transactionloading, setTransactionLoading] = useState<boolean>(false);
   const [transactionHasMore, setTransactionHasMore] = useState<boolean>(false);
   const [lastTransactionId, setLastTransactionId] = useState<any>();
+  const history = useHistory();
 
   const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -113,6 +115,10 @@ export default function ActivityFeeds({ onClose }) {
     return "";
   }
 
+  const goToNft = item => {
+    history.push(`/P2E/${item.slug || item.Slug}/${item.tokenId}`);
+  };
+
   return (
     <Box className={classes.root}>
       {!isMobile && (
@@ -152,7 +158,8 @@ export default function ActivityFeeds({ onClose }) {
         {selectedTab === "feed" ? (
           transactions && transactions.length > 0 ? (
             transactions.map((item, index) => (
-              <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5}>
+              <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5} 
+              style={{ cursor: "pointer" }} onClick={()=>{goToNft(item);}}>
                 <Box display={"flex"} alignItems={"center"}>
                   <Avatar size={32} rounded={true} radius={0} image={item?.image || getDefaultAvatar()} />
                   <Box display={"flex"} flexDirection={"column"} ml={1.5}>
