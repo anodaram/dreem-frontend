@@ -67,7 +67,7 @@ const CreateAssetFlow = ({
   const [nftOption, setNftOption] = useState<string>("single");
   const [step, setStep] = useState<number>(1);
   const [steps, setSteps] = useState<any>([]);
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<number>();
   const [royaltyAddress, setRoyaltyAddress] = useState<string>("");
   const [royaltyPercentage, setRoyaltyPercentage] = useState<number>();
   const [isRoyalty, setIsRoyalty] = useState<boolean>(false);
@@ -158,7 +158,6 @@ const CreateAssetFlow = ({
     }
   };
   const checkCurrentStep = (stepItem) => {
-    console.log('-----', stepItem)
     switch (stepItem.label) {
       case 'NFT':
         return (nftOption === 'single') || (nftOption === 'multiple' && amount) ? true : false;
@@ -190,16 +189,11 @@ const CreateAssetFlow = ({
         showAlertMessage('Please choose collection.', { variant: "error" });
         return false;
       }
-      if(nftOption === 'multiple' && Number(amount) < 2){
+      if(nftOption === 'multiple' && Number(amount || 0) < 2){
         showAlertMessage(`please set the amount for Multiple edition`, { variant: "error" });
         return false;
       }
       let payload: any = {};
-      let collectionAddr = currentCollection.address;
-      let tokenId;
-      console.log(formData)
-      console.log(fileInputs)
-      console.log(fileContents)
 
       payload = {
         collectionId: currentCollection.id,
@@ -398,10 +392,8 @@ const CreateAssetFlow = ({
     }
     const web3APIHandler = targetChain.apiHandler;
     const web3 = new Web3(library.provider);
-    console.log("----metadata:", metaData, isDraft);
 
     if (isDraft) {
-      console.log("here-----");
       const resRoyalty = await web3APIHandler.RoyaltyFactoryBatch.mint(
         web3,
         account,
@@ -469,7 +461,6 @@ const CreateAssetFlow = ({
       if (contractRes.success) {
         console.log(contractRes);
         let tokenIds: any = [];
-        console.log('contractRes---', contractRes)
         for (let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++) {
           tokenIds.push(Number(i))
         }
@@ -583,7 +574,7 @@ const CreateAssetFlow = ({
     <>
       {openMintEditions ?
         <MintEditions
-          amount={amount}
+          amount={amount || 0}
           hashId={savingDraft.instance.hashId}
           handleCancel={() => { setOpenMintEditions(false) }}
           handleMint={(amount) => mintMultipleEdition(amount)}
@@ -651,7 +642,7 @@ const CreateAssetFlow = ({
                       <input
                         type="number"
                         className={classes.inputText}
-                        placeholder=""
+                        placeholder="0"
                         value={amount}
                         onChange={e => setAmount(Number(e.target.value))}
                       />

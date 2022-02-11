@@ -55,14 +55,9 @@ export default function AvatarCard(props) {
         </Box>
       ) : (
         <>
-          <Box
-            flex={1}
-            position="relative"
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-between"
-            className={classes.container}
-          >
+          <Box className={classes.container}>
+            {item?.itemKind === "CHARACTER" && <div className={classes.avatarTag}>Avatar</div>}
+            {!item?.minted && <div className={classes.draftTag}>Draft</div>}
             <div className={classes.shapeIcon}>
               <ShapeIcon
                 style={{ cusor: "pointer" }}

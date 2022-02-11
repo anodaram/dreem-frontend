@@ -480,7 +480,6 @@ const CreateRealmFlow = ({
                   onClick={() => !video && videoInputRef.current?.click()}
                   style={{
                     cursor: video ? undefined : "pointer",
-                    height: video ? 110 : 80,
                   }}
                 >
                   {video ? (
@@ -531,7 +530,6 @@ const CreateRealmFlow = ({
                   onClick={() => !image && imageInputRef.current?.click()}
                   style={{
                     cursor: image ? undefined : "pointer",
-                    height: image ? 110 : 80,
                   }}
                 >
                   {image ? (
@@ -545,8 +543,8 @@ const CreateRealmFlow = ({
                       />
                       <Box flex={1} display="flex" alignItems="center" marginLeft="24px" justifyContent="space-between" mr={3}>
                         Uploaded {image.name}
-                        <SecondaryButton
-                          size="medium"
+                        <Button
+                          startIcon={<RefreshIcon />}
                           onClick={e => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -555,9 +553,8 @@ const CreateRealmFlow = ({
                             imageInputRef.current?.click();
                           }}
                         >
-                          <img src={require("assets/metaverseImages/refresh.png")} />
                           CHANGE FILE
-                        </SecondaryButton>
+                        </Button>
                       </Box>
                     </>
                   ) : (

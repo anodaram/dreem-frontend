@@ -81,14 +81,13 @@ export default function AssetsCard(props) {
         </Box>
       ) : (
         <>
-          <Box
-            flex={1}
-            position="relative"
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-between"
-            className={classes.container}
-          >
+          <Box className={classes.container}>
+            {item?.itemKind === "MODEL" ? (
+              <div className={classes.modelTag}>3D Asset</div>
+            ) : (
+              <div className={classes.modelTag}>{item?.itemKind}</div>
+            )}
+            {!item?.minted && <div className={classes.draftTag}>Draft</div>}
             <div className={classes.shapeIcon}>
               <ShapeIcon
                 style={{ cusor: "pointer" }}
@@ -97,7 +96,11 @@ export default function AssetsCard(props) {
                 }}
               />
             </div>
-            <img className={classes.image} src={sanitizeIfIpfsUrl(assetThumbnail) || getDefaultBGImage()} alt="robot" />
+            <img
+              className={classes.image}
+              src={sanitizeIfIpfsUrl(assetThumbnail) || getDefaultBGImage()}
+              alt="robot"
+            />
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Box className={classes.name}>{assetName || ""}</Box>
             </Box>

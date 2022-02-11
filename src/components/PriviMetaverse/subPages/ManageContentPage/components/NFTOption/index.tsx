@@ -94,7 +94,7 @@ const NFTOption = ({ handleNext }: { handleNext: () => void }) => {
               <input
                 type="number"
                 className={classes.inputText}
-                placeholder=""
+                placeholder="0"
                 value={NFT}
                 onChange={e => setNFT(e.target.value)}
               />

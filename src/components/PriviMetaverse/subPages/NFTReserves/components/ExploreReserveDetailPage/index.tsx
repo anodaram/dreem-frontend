@@ -134,35 +134,36 @@ const ExploreReserveDetailPage = () => {
   useEffect(() => {
     if (!nft) return;
 
+    getAllTokenInfos().then(({ tokens }) => {
+      if (tokens) {
+        const nftTokens = tokens.find(token => token.Network.toLowerCase() === nftChain.name.toLowerCase());
+        dispatch(setTokenList([nftTokens]));
+      }
+    });
+
     const nftChain = getChainForNFT(nft);
     if (!nftChain) return;
 
+    if (!library) return;
     const web3APIHandler = nftChain.apiHandler;
     const web3 = new Web3(library.provider);
-    Promise.all([getAllTokenInfos(), web3APIHandler.RentalManager.vaultAddress(web3, account)]).then(
-      ([{ tokens }, { vaultAddress }]) => {
-        if (tokens) {
-          const nftTokens = tokens.find(token => token.Network.toLowerCase() === nftChain.name.toLowerCase());
-          dispatch(setTokenList([nftTokens]));
-        }
-
-        if (vaultAddress) {
-          Promise.all([
-            web3APIHandler.Vault.isTokenInVault(web3, vaultAddress, {
-              collectionId: nft.Address,
-              tokenId: Number(nft.tokenId),
-            }),
-            web3APIHandler.Vault.originalOwner(web3, vaultAddress, {
-              collectionId: nft.Address,
-              tokenId: Number(nft.tokenId),
-            }),
-          ]).then(([{ isInVault }, { originalOwner }]) => {
-            setIsTokenInVault(isInVault);
-            setOriginalOwner(originalOwner);
-          });
-        }
+    web3APIHandler.RentalManager.vaultAddress(web3, account).then(({ vaultAddress }) => {
+      if (vaultAddress) {
+        Promise.all([
+          web3APIHandler.Vault.isTokenInVault(web3, vaultAddress, {
+            collectionId: nft.Address,
+            tokenId: Number(nft.tokenId),
+          }),
+          web3APIHandler.Vault.originalOwner(web3, vaultAddress, {
+            collectionId: nft.Address,
+            tokenId: Number(nft.tokenId),
+          }),
+        ]).then(([{ isInVault }, { originalOwner }]) => {
+          setIsTokenInVault(isInVault);
+          setOriginalOwner(originalOwner);
+        });
       }
-    );
+    });
   }, [nft]);
 
   const getData = async () => {
@@ -450,7 +451,9 @@ const ExploreReserveDetailPage = () => {
               borderRadius="20px"
               style={{
                 minWidth: "40%",
-                backgroundImage: `url("${sanitizeIfIpfsUrl(!nft?.animation_url ? nft?.image : nft?.CardImage)}")`,
+                backgroundImage: `url("${sanitizeIfIpfsUrl(
+                  !nft?.animation_url ? nft?.image : nft?.CardImage
+                )}")`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "contain",
                 backgroundPosition: "center",

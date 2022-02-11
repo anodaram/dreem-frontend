@@ -326,7 +326,6 @@ const CreateTexture = ({
             onClick={() => !image && imageInputRef.current?.click()}
             style={{
               cursor: image ? undefined : "pointer",
-              height: image ? 110 : 80,
             }}
           >
             {image ? (
