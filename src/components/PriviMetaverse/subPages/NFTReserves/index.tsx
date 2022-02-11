@@ -458,7 +458,7 @@ const NFTReserves = () => {
                             >
                               {game.Description.slice(0, 200) + (game.Description.length > 200 ? "..." : "")}
                             </Box>
-                            <Box display="flex" mt={isTablet || isNarrow ? 0.5 : 3}>
+                            <Box display="flex" mt={isTablet || isNarrow ? 0.5 : 3} justifyContent={'space-between'} width={1}>
                               <Box
                                 display="flex"
                                 flexDirection="column"
@@ -468,6 +468,7 @@ const NFTReserves = () => {
                                 <span>{game.Transfers || 0}</span>
                                 <span>Transfers</span>
                               </Box>
+                              <Box width={'2px'} height={'56px'} bgcolor={'#E9FF2620'} />
                               <Box
                                 display="flex"
                                 flexDirection="column"
@@ -477,6 +478,7 @@ const NFTReserves = () => {
                                 <span>{game.owners_count || 0}</span>
                                 <span>New Owners</span>
                               </Box>
+                              <Box width={'2px'} height={'56px'} bgcolor={'#E9FF2620'} />
                               <Box
                                 display="flex"
                                 flexDirection="column"
