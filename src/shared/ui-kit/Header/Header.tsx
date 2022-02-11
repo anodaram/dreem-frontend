@@ -130,10 +130,12 @@ const Header = props => {
 
   useEffect(() => {
     getPhotoUser();
-  }, [userSelector.id, profileAvatarChanged]);
+  }, [userSelector?.address, profileAvatarChanged]);
 
   const getPhotoUser = async () => {
-    if (userSelector?.infoImage?.newFileCID && userSelector?.infoImage?.metadata?.properties?.name) {
+    if (userSelector?.infoImage?.avatarUrl) {
+      setImageIPFS(userSelector?.infoImage?.avatarUrl);
+    } else if (userSelector?.infoImage?.newFileCID && userSelector?.infoImage?.metadata?.properties?.name) {
       setImageIPFS(
         await getPhotoIPFS(
           userSelector.infoImage.newFileCID,
@@ -141,8 +143,6 @@ const Header = props => {
           downloadWithNonDecryption
         )
       );
-    } else if (userSelector?.infoImage?.avatarUrl) {
-      setImageIPFS(userSelector?.infoImage?.avatarUrl);
     }
   };
 
@@ -251,7 +251,6 @@ const Header = props => {
 
   const handleProfile = e => {
     handleCloseMobileMenu(e);
-    console.log("userSelector=============", userSelector);
     history.push(`/profile/${userSelector.urlSlug}`);
     setAnchorEl(null);
   };
@@ -276,14 +275,20 @@ const Header = props => {
     setOnSigning(true);
     API.signInWithMetamaskWallet(account, web3, "Dreem")
       .then(res => {
-        console.log("sign in res=================", res);
         if (res.isSignedIn) {
           setSignedin(true);
           let data = res.data.user;
-          data.infoImage = {
-            avatarUrl: res.data.user.avatarUrl,
-          };
-          dispatch(setUser({ ...data, urlSlug: data.name, name: `${data.firstName} ${data.lastName}` }));
+          dispatch(
+            setUser({
+              ...data,
+              infoImage: {
+                ...data.infoImage,
+                avatarUrl: res.data.user.avatarUrl,
+              },
+              urlSlug: data.name,
+              name: `${data.firstName} ${data.lastName}`,
+            })
+          );
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
           localStorage.setItem("userId", data.priviId);
@@ -536,8 +541,8 @@ const Header = props => {
                               <div className="avatar-container">
                                 <div
                                   style={{
-                                    backgroundImage: userSelector?.infoImage?.avatarUrl
-                                      ? `url(${sanitizeIfIpfsUrl(userSelector?.infoImage?.avatarUrl)})`
+                                    backgroundImage: imageIPFS
+                                      ? `url(${sanitizeIfIpfsUrl(imageIPFS)})`
                                       : `url(${getDefaultAvatar()})`,
                                     cursor: ownUser ? "pointer" : "auto",
                                     backgroundRepeat: "no-repeat",

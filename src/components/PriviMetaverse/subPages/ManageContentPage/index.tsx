@@ -110,7 +110,17 @@ export default function ManageContentPage() {
         if (res.isSignedIn) {
           setSignedin(true);
           const data = res.data.user;
-          dispatch(setUser({ ...data, urlSlug: data.name, name: `${data.firstName} ${data.lastName}` }));
+          dispatch(
+            setUser({
+              ...data,
+              infoImage: {
+                ...data.infoImage,
+                avatarUrl: res.data.user.avatarUrl,
+              },
+              urlSlug: data.name,
+              name: `${data.firstName} ${data.lastName}`,
+            })
+          );
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
           localStorage.setItem("userId", data.priviId);
