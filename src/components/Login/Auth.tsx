@@ -19,6 +19,7 @@ import { IPFSContextProvider } from "shared/contexts/IPFSContext";
 import { useAuth } from "shared/contexts/AuthContext";
 import NavBar from "shared/ui-kit/Navigation/NavBar";
 import URL, { LISTENER_URL } from "shared/functions/getURL";
+import { detectMob } from "shared/helpers";
 
 export let socket: SocketIOClient.Socket;
 export let listenerSocket : SocketIOClient.Socket;
@@ -103,6 +104,16 @@ const Auth = () => {
     }
   }, [account]);
 
+  useEffect(() => {
+    if (!detectMob()) {
+      (window as any)?.ethereum?.on("accountsChanged", accounts => {
+        if (isSignedin && !accounts.length) {
+          handleLogout();
+        }
+      });
+    }
+  }, []);
+  
   const handleLogout = () => {
     setSignedin(false);
     dispatch(signOut());
@@ -112,14 +123,6 @@ const Auth = () => {
     localStorage.removeItem("address");
     window.location.href = "/";
   };
-
-  // useEffect(() => {
-  //   (window as any).ethereum.on("accountsChanged", accounts => {
-  //     if (isSignedin && !accounts.length) {
-  //       handleLogout();
-  //     }
-  //   });
-  // });
 
   return (
     <Router>
