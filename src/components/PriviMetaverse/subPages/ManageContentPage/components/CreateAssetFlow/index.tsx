@@ -85,7 +85,7 @@ const CreateAssetFlow = ({
   const [formData, setFormData] = useState<FormData>({});
   const [fileInputs, setFileInputs] = useState<InputFiles>({});
   const [fileContents, setFileContents] = useState<InputFileContents>({});
-  const [savingType, setSavingType] = useState<string>("");
+  const [savingType, setSavingType] = useState<string>("nft");
   // Transaction Modal
   const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
   const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
@@ -494,7 +494,7 @@ const CreateAssetFlow = ({
 
   const handlePublic = (option) => {
     setSavingType(option)
-    setOpenPublic(true)
+    option == 'draft' ? setOpenPublic(true) : handleSaveDraft()
   };
 
   const handleMint = (data) => {
