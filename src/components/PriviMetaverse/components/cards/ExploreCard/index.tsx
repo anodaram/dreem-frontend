@@ -8,6 +8,7 @@ import { NftStates } from "shared/constants/constants";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
 import { toDecimals } from "shared/functions/web3";
 import { sanitizeIfIpfsUrl, visitChainLink } from "shared/helpers";
+import { checkNFTHolder } from "shared/services/API/ReserveAPI";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
 import { Avatar, NFT_STATUS_COLORS } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
@@ -16,6 +17,7 @@ import { RootState } from "store/reducers/Reducer";
 import { cardStyles } from "./index.style";
 
 const SECONDS_PER_HOUR = 3600;
+const isProd = process.env.REACT_APP_ENV === "prod";
 
 const ExploreCard = ({ nft, isLoading = false }) => {
   const history = useHistory();
@@ -85,8 +87,16 @@ const ExploreCard = ({ nft, isLoading = false }) => {
       const ownerAddress = nft.ownerAddress ?? nft.owner_of;
       if (ownerAddress?.toLowerCase() === user?.address?.toLowerCase()) {
         history.push(`/profile/${user?.urlSlug}`);
-      } else {
-        history.push(`/profile/${ownerAddress}`);
+      } else if (ownerAddress) {
+        checkNFTHolder({
+          collectionId: collectionId,
+          mode: isProd ? "main" : "test",
+          account: ownerAddress,
+        }).then(res => {
+          if (res.nftHolder) {
+            history.push(`/profile/${ownerAddress}`);
+          }
+        });
       }
     }
   };
@@ -126,7 +136,10 @@ const ExploreCard = ({ nft, isLoading = false }) => {
       ) : (
         <>
           <div className={classes.cardImg}>
-            <img src={sanitizeIfIpfsUrl(!nft?.animation_url ? nft?.image : nft?.CardImage)} style={{ width: "100%" }} />
+            <img
+              src={sanitizeIfIpfsUrl(!nft?.animation_url ? nft?.image : nft?.CardImage)}
+              style={{ width: "100%" }}
+            />
             <Box className={classes.nftStates} display="flex" flexDirection="column">
               {nftStatus.length > 0 &&
                 nftStatus.map(status => (
