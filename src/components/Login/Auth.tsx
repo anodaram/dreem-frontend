@@ -103,6 +103,14 @@ const Auth = () => {
     }
   }, [account]);
 
+  useEffect(() => {
+    (window as any)?.ethereum?.on("accountsChanged", accounts => {
+      if (isSignedin && !accounts.length) {
+        handleLogout();
+      }
+    });
+  }, []);
+  
   const handleLogout = () => {
     setSignedin(false);
     dispatch(signOut());
