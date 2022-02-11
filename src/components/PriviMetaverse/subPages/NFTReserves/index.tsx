@@ -45,6 +45,7 @@ const COLUMNS_COUNT_BREAK_POINTS = {
 };
 
 const TYPE_TRANSFER = "TRANSFER";
+const TYPE_MINT = "MINT";
 
 const getChainImage = chain => {
   if (chain === "BSC") {
@@ -284,7 +285,7 @@ const NFTReserves = () => {
         {
           cell: (
             <p className={classes.whiteText}>
-              {row.type === TYPE_TRANSFER
+              {row.type === TYPE_TRANSFER || row.type === TYPE_MINT
                 ? "-"
                 : `${+toDecimals(
                     row.price || row.pricePerSecond * row.rentalTime,
@@ -811,7 +812,7 @@ const NFTReserves = () => {
                             >
                               <div>{getChainImage(transaction.chain)}</div>
                               <p className={classes.whiteText}>
-                                {transaction.type === TYPE_TRANSFER
+                                {transaction.type === TYPE_TRANSFER || transaction.type === TYPE_MINT
                                   ? "-"
                                   : `${+toDecimals(
                                       transaction.price ||
@@ -888,7 +889,7 @@ const NFTReserves = () => {
                             >
                               <div>{getChainImage(transaction.chain)}</div>
                               <p className={classes.whiteText}>
-                                {transaction.type === TYPE_TRANSFER
+                                {transaction.type === TYPE_TRANSFER || transaction.type === TYPE_MINT
                                   ? "-"
                                   : `${+toDecimals(
                                       transaction.price ||
