@@ -309,7 +309,6 @@ const CreateExtensionDraftModal = ({ realmId, onClose, open, loadRealm, metaData
             onClick={() => !image && imageInputRef.current?.click()}
             style={{
               cursor: image ? undefined : "pointer",
-              height: image ? 110 : 80,
             }}
           >
             {image ? (
@@ -365,7 +364,6 @@ const CreateExtensionDraftModal = ({ realmId, onClose, open, loadRealm, metaData
             onClick={() => !video && videoInputRef.current?.click()}
             style={{
               cursor: video ? undefined : "pointer",
-              height: video ? 110 : 80,
             }}
           >
             {video ? (
