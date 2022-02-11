@@ -64,12 +64,12 @@ const TAB_MARKETPLACE_FEED = "marketplace_feed";
 const TAB_OWNERS = "owners";
 const GameDetailTabs: TabItem[] = [
   {
-    key: TAB_NFTS,
-    title: "NFTs",
-  },
-  {
     key: TAB_MARKETPLACE_FEED,
     title: "MARKETPLACE FEED",
+  },
+  {
+    key: TAB_NFTS,
+    title: "NFTs",
   },
   {
     key: TAB_OWNERS,
@@ -137,7 +137,7 @@ export default function GameDetailPage() {
   const [lastId, setLastId] = React.useState<any>(undefined);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
 
-  const [selectedTab, setSelectedTab] = React.useState<string>(TAB_NFTS);
+  const [selectedTab, setSelectedTab] = React.useState<string>(TAB_MARKETPLACE_FEED);
   const [filterStatus, setFilterStatus] = React.useState<string>(filterStatusOptions[0]);
   const [openStatusSelect, setOpenStatusSelect] = React.useState<boolean>(false);
   const [searchValue, setSearchValue] = React.useState<string>("");
