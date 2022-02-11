@@ -6,6 +6,7 @@ import { useTheme, useMediaQuery } from "@material-ui/core";
 
 import Box from "shared/ui-kit/Box";
 import Moment from "react-moment";
+import { useWeb3React } from "@web3-react/core";
 import { socket } from "components/Login/Auth";
 import { MessageItem } from "./MessageItem";
 import { setChat, setMessage } from "store/actions/MessageActions";
@@ -25,6 +26,7 @@ export const MessageFooter = props => {
   const { messages, setMessages, setMediaUpdate, room = GLOBAL_CHAT_ROOM, nftHolder = false } = props;
 
   const theme = useTheme();
+  const { account } = useWeb3React();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -36,7 +38,7 @@ export const MessageFooter = props => {
   const [status, setStatus] = useState<any>("");
   const emojiRef = useRef<any>();
   const inputRef = useRef<any>();
-  const chatEnabled = room === GLOBAL_CHAT_ROOM || nftHolder;
+  const chatEnabled = account && (room === GLOBAL_CHAT_ROOM || nftHolder);
 
   const { setMultiAddr, uploadWithNonEncryption } = useIPFS();
 
@@ -352,7 +354,15 @@ export const MessageFooter = props => {
           </Box>
           {!isMobile && !isTablet && (
             <Box display="flex" alignItems="center" marginTop="10px" height="fit-content">
-              <Box className="emoji-icon" onClick={() => setShowEmoji(!showEmoji)} component="span">
+              <Box
+                className="emoji-icon"
+                onClick={() => chatEnabled && setShowEmoji(!showEmoji)}
+                component="span"
+                style={{
+                  opacity: chatEnabled ? 1 : 0.6,
+                  cursor: chatEnabled ? 'pointer' : 'not-allowed'
+                }}
+              >
                 <img src={require("assets/icons/emoji_icon.png")} ref={emojiRef} />
               </Box>
               {showEmoji && (
