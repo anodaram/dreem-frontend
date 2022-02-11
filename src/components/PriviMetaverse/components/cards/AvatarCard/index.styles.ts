@@ -82,6 +82,15 @@ export const avatarCardStyles = makeStyles(theme => ({
       lineHeight: "31px !important",
     },
   },
+  shapeIcon: {
+    position: "absolute",
+    top: 8,
+    right: 10,
+    cursor: "pointer",
+    padding: "10px 10px 8px 8px",
+    background: "#212121",
+    borderRadius: "50%",
+  },
   image: {
     objectFit: "contain",
     objectPosition: "center",

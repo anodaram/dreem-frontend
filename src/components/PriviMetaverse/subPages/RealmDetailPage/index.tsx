@@ -137,7 +137,7 @@ export default function RealmDetailPage() {
 
   const loadRealm = realmId => {
     setIsLoading(true);
-    MetaverseAPI.getWorld(realmId)
+    MetaverseAPI.getAsset(realmId)
       .then(res => {
         setRealmData(res.data);
       })

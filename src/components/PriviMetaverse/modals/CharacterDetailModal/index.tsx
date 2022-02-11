@@ -64,7 +64,6 @@ const CharacterDetailModal = ({
         let media = {};
 
         setNFT(res.data);
-
         const characterId = id.toString();
         const resFruit = await Axios.get(`${URL()}/dreemRealm/characterGetFruitData`, {
           params: {
@@ -106,8 +105,6 @@ const CharacterDetailModal = ({
     shareMedia("Character", `realms/${nft.realm.id}/${nft.id}`);
   };
 
-  console.log("nft=====================", nft);
-
   return (
     <Modal size="medium" isOpen={open} onClose={onClose} showCloseIcon className={classes.root}>
       <Box className={classes.container} height={1}>
@@ -120,7 +117,7 @@ const CharacterDetailModal = ({
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     onClose();
-                    history.push(`/realms/${realmData.id}`);
+                    history.push(`/realms/${realmData?.id}`);
                   }}
                 >
                   {realmData?.worldTitle}

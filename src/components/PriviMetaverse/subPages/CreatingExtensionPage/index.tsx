@@ -94,7 +94,7 @@ export default function CreatingRealmPage() {
   }, []);
 
   const loadRealm = realmId => {
-    MetaverseAPI.getWorld(realmId)
+    MetaverseAPI.getAsset(realmId)
       .then(res => {
         setRealmData(res.data);
       })
