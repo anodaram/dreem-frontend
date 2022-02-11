@@ -65,7 +65,6 @@ export default function MarketplaceFeed() {
   const history = useHistory();
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     { headerName: "NFT" },
-    { headerName: "Account" },
     { headerName: "Price", sortable: true, headerAlign: "center" },
     { headerName: "Date", headerAlign: "center" },
     { headerName: "Transaction type", headerAlign: "center" },
@@ -206,11 +205,6 @@ export default function MarketplaceFeed() {
                 )}...${row.collection.substring(row.collection.length - 4, row.collection.length)}`}</p>
               </div>
             </div>
-          ),
-        },
-        {
-          cell: (
-            <p className={classes.accTitle}>{accTitle(row)}</p>
           ),
         },
         {

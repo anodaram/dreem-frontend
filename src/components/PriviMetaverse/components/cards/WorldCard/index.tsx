@@ -12,6 +12,7 @@ import { useShareMedia } from "shared/contexts/ShareMediaContext";
 // import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { getUser } from "store/selectors/user";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 // import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 // import confirmAlert from "shared/ui-kit/ConfirmAlert";
 import ContentPreviewModal from "../../../modals/ContentPreviewModal";
@@ -19,7 +20,6 @@ import DepositRequiredModal from "../../../modals/DepositRequiredModal";
 import EditRealmModal from "../../../modals/EditRealmModal";
 import EditExtensionModal from "../../../modals/EditExtensionModal";
 import { nftCardStyles } from "./index.styles";
-import { sanitizeIfIpfsUrl } from "shared/helpers";
 
 export default function WorldCard({
   nft,
@@ -29,7 +29,7 @@ export default function WorldCard({
   handleClick,
   isLoading,
   selectable,
-  selected=false
+  selected = false,
 }: {
   nft?: any;
   hideInfo?: boolean;
@@ -44,10 +44,10 @@ export default function WorldCard({
   const styles = nftCardStyles();
   const { shareMedia } = useShareMedia();
   // const { showAlertMessage } = useAlertMessage();
+
   const { draftId } = useParams<{ draftId?: string }>();
   const [depositInfo, setDepositInfo] = useState<any>(null);
   const [protocolFee, setProtocolFee] = useState<any>(null);
-
   const [openContentPreview, setOpenContentPreview] = useState<boolean>(
     draftId && draftId == nft?.id ? true : false
   );
@@ -61,8 +61,9 @@ export default function WorldCard({
   const [metaDataForModal, setMetaDataForModal] = React.useState<any>(null);
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [openEditRealmModal, setOpenEditRealmModal] = useState<boolean>(false);
-  const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
-  const [imageIPFS, setImageIPFS] = useState<any>();
+  // const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
+
+  const isOwner = nft && nft.submitter?.user?.priviId === userSelector.id;
 
   React.useEffect(() => {
     getSettings();
@@ -81,6 +82,17 @@ export default function WorldCard({
       setProtocolFee(res.data);
     });
   };
+
+  const handleOpenModal = () => {
+    if (selectable && handleClick) {
+      handleClick();
+    } else {
+      // setOpenDepositRequired(true);
+      setOpenContentPreview(true);
+    }
+  };
+
+  console.log("nft========================", nft);
 
   // const handleRemove = async () => {
   //   const confirm = await confirmAlert({
@@ -104,16 +116,6 @@ export default function WorldCard({
   //   }
   // };
   // };
-
-  const handleOpenModal = () => {
-    if (selectable) {
-      //@ts-ignore
-      handleClick()
-    } else {
-      // setOpenDepositRequired(true);
-      setOpenContentPreview(true)
-    }
-  };
 
   // const handleOpenDraftModal = async () => {
   //   setIsLoadingMetaData(true);
@@ -150,8 +152,6 @@ export default function WorldCard({
   //     });
   // };
 
-  const isOwner = nft && nft.submitter?.user?.priviId === userSelector.id;
-
   return (
     <div className={styles.cardBorderWrapper}>
       {isLoading ? (
@@ -163,13 +163,16 @@ export default function WorldCard({
           <Skeleton variant="rect" width={"80%"} height={24} />
         </Box>
       ) : (
-        <div className={styles.card}
-        style={{
-          borderRadius: 12,
-          border: selected ? "3px solid #E9FF26" : "1px solid #ED7B7B",
-          boxShadow: selected ? "0px 0px 14px 1px #DCFF35" : "unset",
-        }}
+        <div
+          className={styles.card}
+          style={{
+            borderRadius: 12,
+            border: selected ? "3px solid #E9FF26" : "1px solid #ED7B7B",
+            boxShadow: selected ? "0px 0px 14px 1px #DCFF35" : "unset",
+          }}
         >
+          {nft?.itemKind === "WORLD" && <div className={styles.extensionTag}>World</div>}
+          {!nft?.minted && <div className={styles.draftTag}>Draft</div>}
           <div className={styles.imageContent} onClick={handleOpenModal}>
             <div
               className={styles.nftImage}
