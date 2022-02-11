@@ -6,6 +6,7 @@ import { useMediaQuery, useTheme } from "@material-ui/core";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch } from "react-redux";
 
+import { useAuth } from "shared/contexts/AuthContext";
 import { setMarketFee, setTokenList } from "store/actions/MarketPlace";
 import { BackButton } from "components/PriviMetaverse/components/BackButton";
 import CancelReserveModal from "components/PriviMetaverse/modals/CancelReserveModal";
@@ -54,6 +55,7 @@ const ExploreReserveDetailPage = () => {
   const dispatch = useDispatch();
   const { collection_id, token_id }: { collection_id: string; token_id: string } = useParams();
 
+  const { isSignedin } = useAuth();
   const { shareMedia } = useShareMedia();
   const { showAlertMessage } = useAlertMessage();
   const { account, library, chainId } = useWeb3React();
@@ -498,17 +500,22 @@ const ExploreReserveDetailPage = () => {
                   >
                     <ShareWhiteIcon />
                   </span>
-                  <SecondaryButton
-                    className={classes.detailsButton}
-                    size="small"
-                    onClick={() => syncNft()}
-                    ml={2}
-                  >
-                    <IconButtonWrapper style={{ marginLeft: -10 }} rotate={syncing}>
-                      <RefreshIcon />
-                    </IconButtonWrapper>
-                    <Box paddingTop={"4px"}>Sync NFT</Box>
-                  </SecondaryButton>
+
+                  {isSignedin ? (
+                    <SecondaryButton
+                      className={classes.detailsButton}
+                      size="small"
+                      onClick={() => syncNft()}
+                      ml={2}
+                    >
+                      <IconButtonWrapper style={{ marginLeft: -10 }} rotate={syncing}>
+                        <RefreshIcon />
+                      </IconButtonWrapper>
+                      <Box paddingTop={"4px"}>Sync NFT</Box>
+                    </SecondaryButton>
+                  ) : (
+                    <></>
+                  )}
                 </Box>
               </Box>
               <Box

@@ -292,39 +292,43 @@ const OwnersPanel = () => {
             </Box>
           ))}
         </Box>
-        <Box
-          style={{
-            flex: 1,
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          <PrimaryButton
-            onClick={() => {
-              clickRefreshBtn();
-            }}
-            size="small"
+        {isSignedin ? (
+          <Box
             style={{
-              background: "#3b4834",
-              fontFamily: "Rany",
-              fontStyle: "normal",
-              fontWeight: 600,
-              fontSize: "12px",
-              lineHeight: "15px",
-              textAlign: "center",
-              color: "#E9FF26",
+              flex: 1,
               display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 0,
+              justifyContent: "flex-end",
             }}
           >
-            <IconButtonWrapper style={{ marginLeft: -10 }} rotate={loading}>
-              <RefreshIcon />
-            </IconButtonWrapper>
-            Sync NFTs
-          </PrimaryButton>
-        </Box>
+            <PrimaryButton
+              onClick={() => {
+                clickRefreshBtn();
+              }}
+              size="small"
+              style={{
+                background: "#3b4834",
+                fontFamily: "Rany",
+                fontStyle: "normal",
+                fontWeight: 600,
+                fontSize: "12px",
+                lineHeight: "15px",
+                textAlign: "center",
+                color: "#E9FF26",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 0,
+              }}
+            >
+              <IconButtonWrapper style={{ marginLeft: -10 }} rotate={loading}>
+                <RefreshIcon />
+              </IconButtonWrapper>
+              Sync NFTs
+            </PrimaryButton>
+          </Box>
+        ) : (
+          <></>
+        )}
       </Box>
       <Box sx={{ flexGrow: 1, width: "100%", paddingBottom: isMobile ? 70 : isTablet ? 50 : 0 }}>
         {userNFTs && userNFTs.length ? (
