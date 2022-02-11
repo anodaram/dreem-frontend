@@ -106,7 +106,6 @@ export default function RecentTransactions() {
             <Box className={classes.nftItem}>
               <Avatar size={40} rounded={false} radius={4} image={item?.image || getDefaultAvatar()} />
               <Box className={classes.typo1}>{item.name}</Box>
-              <Box className={classes.typo1}>{+toDecimals(item.price || (item.pricePerSecond * item.rentalTime), getTokenDecimal(item.paymentToken || item.fundingToken))} {getTokenSymbol(item.paymentToken || item.fundingToken)}</Box>
               <Box
                 className={classes.typeTag}
                 style={{
