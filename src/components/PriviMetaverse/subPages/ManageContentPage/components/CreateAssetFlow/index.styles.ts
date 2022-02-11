@@ -97,6 +97,7 @@ export const useModalStyles = makeStyles(theme => ({
     alignItems: "center",
     background: "rgba(238, 242, 247, 0.06)",
     border: "1px dashed #FFFFFF",
+    padding: "12px 0",
     "& button": {
       color: "white",
       background: "transparent",
@@ -107,6 +108,7 @@ export const useModalStyles = makeStyles(theme => ({
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      minWidth: "unset",
     },
   },
   image: {
@@ -545,6 +547,7 @@ export const useAssetStyles = makeStyles(theme => ({
     alignItems: "center",
     background: "rgba(238, 242, 247, 0.06)",
     border: "1px dashed #FFFFFF",
+    padding: "12px 0",
     "& button": {
       color: "white",
       background: "transparent",
@@ -555,6 +558,7 @@ export const useAssetStyles = makeStyles(theme => ({
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      minWidth: "unset",
     },
   },
   image: {

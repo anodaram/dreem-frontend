@@ -431,7 +431,6 @@ const CreateRealm = ({
             onClick={() => !image && imageInputRef.current?.click()}
             style={{
               cursor: image ? undefined : "pointer",
-              height: image ? 110 : 80,
             }}
           >
             {image ? (
@@ -486,7 +485,6 @@ const CreateRealm = ({
             onClick={() => !video && videoInputRef.current?.click()}
             style={{
               cursor: video ? undefined : "pointer",
-              height: video ? 110 : 80,
             }}
           >
             {video ? (
