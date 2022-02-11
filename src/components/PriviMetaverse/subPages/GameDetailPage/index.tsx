@@ -151,6 +151,7 @@ export default function GameDetailPage() {
     [width, openSideBar]
   );
   const roomId = React.useMemo(() => gameInfo && `${gameInfo.Slug}-${gameInfo.Address}`, [gameInfo]);
+  const cardImage = React.useMemo(() => gameInfo && sanitizeIfIpfsUrl(gameInfo.CardImage), [gameInfo]);
 
   const classes = gameDetailPageStyles({ openSideBar });
   const isProd = process.env.REACT_APP_ENV === "prod";
@@ -528,13 +529,19 @@ export default function GameDetailPage() {
               mb={4}
               flexDirection={isMobile || (isTablet && openSideBar) ? "column" : "row"}
             >
-              <img
-                src={sanitizeIfIpfsUrl(gameInfo?.CardImage) || getDefaultBGImage()}
-                className={classes.gameInfoImg}
-                alt="game info image"
-              />
+              {!cardImage ? (
+                <Skeleton
+                  variant="rect"
+                  width={398}
+                  height={398}
+                  className={classes.gameInfoImg}
+                />
+              ) : (
+                <img src={cardImage} className={classes.gameInfoImg} alt="game info image" />
+              )}
               <Box
                 display={"flex"}
+                flex={1}
                 flexDirection={"column"}
                 ml={isMobile ? 7.5 : isTablet ? 3 : 7}
                 mt={isMobile ? 2 : 0}
@@ -734,7 +741,6 @@ export default function GameDetailPage() {
                 </Box>
 
                 <Box className={classes.fitContent}>
-                  
                   {!loading && nfts?.length < 1 ? (
                     <Box textAlign="center" width="100%" mb={10} mt={2}>
                       No NFTs

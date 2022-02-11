@@ -142,6 +142,7 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     width: 398,
     height: 398,
     borderRadius: 9,
+    background: '#313131',
     [theme.breakpoints.down("sm")]: {
       width: (props: any) => (props.openSideBar ? "100%" : 220),
       height: 250,
