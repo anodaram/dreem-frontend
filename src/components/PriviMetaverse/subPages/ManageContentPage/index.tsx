@@ -110,7 +110,7 @@ export default function ManageContentPage() {
         if (res.isSignedIn) {
           setSignedin(true);
           const data = res.data.user;
-          dispatch(setUser(data));
+          dispatch(setUser({ ...data, urlSlug: data.name, name: `${data.firstName} ${data.lastName}` }));
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
           localStorage.setItem("userId", data.priviId);
@@ -239,7 +239,6 @@ export default function ManageContentPage() {
     //         setStep(prev => prev + 1);
     //       }
     //       break;
-
     //     default:
     //       break;
     //   }
@@ -354,7 +353,7 @@ export default function ManageContentPage() {
     }
   };
   const mintNFT = async () => {
-    if(!savingDraft){
+    if (!savingDraft) {
       showAlertMessage(`Save draft first`, { variant: "error" });
       return;
     }
@@ -374,7 +373,7 @@ export default function ManageContentPage() {
         return;
       }
     }
-    if(!library) {
+    if (!library) {
       showAlertMessage("Please check your network", { variant: "error" });
       return;
     }
@@ -396,7 +395,7 @@ export default function ManageContentPage() {
           uri,
           isRoyalty,
           royaltyAddress,
-          royaltyPercentage
+          royaltyPercentage,
         },
         setTxModalOpen,
         setTxHash
@@ -428,7 +427,7 @@ export default function ManageContentPage() {
           uri,
           isRoyalty,
           royaltyAddress,
-          royaltyPercentage
+          royaltyPercentage,
         },
         setTxModalOpen,
         setTxHash
@@ -529,10 +528,7 @@ export default function ManageContentPage() {
           />
         )}
         {step == 2 && selectedAsset?.key && (
-          <CreateAssetFlow 
-            assetItem={selectedAsset.key}
-            handleCancel={handlePrev}
-          />
+          <CreateAssetFlow assetItem={selectedAsset.key} handleCancel={handlePrev} />
         )}
       </div>
       {/* {openCreateNftModal && (
@@ -546,4 +542,3 @@ export default function ManageContentPage() {
     </>
   );
 }
-

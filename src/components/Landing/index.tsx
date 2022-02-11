@@ -68,7 +68,7 @@ const LandingPage = () => {
           setSignedin(true);
           // setIsAuthorized(true);
           const data = res.data.user;
-          dispatch(setUser(data));
+          dispatch(setUser({ ...data, urlSlug: data.name, name: `${data.firstName} ${data.lastName}` }));
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
           localStorage.setItem("userId", data.priviId);

@@ -9,12 +9,9 @@ import { Popper, ClickAwayListener, Grow, Paper, MenuList, MenuItem, Hidden, Box
 
 import { listenerSocket, socket } from "components/Login/Auth";
 import { useNotifications } from "shared/contexts/NotificationsContext";
-import URL from "shared/functions/getURL";
 import { getUser, getUsersInfoList } from "store/selectors/user";
 import { setUser, signOut } from "store/actions/User";
-import { capitalize } from "shared/helpers/string";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
-import { createUserInfo, setUsersInfoList } from "store/actions/UsersInfo";
 import { useAuth } from "shared/contexts/AuthContext";
 
 import { IconNotifications } from "./components/Toolbar/IconNotifications";
@@ -69,7 +66,6 @@ const Header = props => {
   const history = useHistory();
   const dispatch = useDispatch();
   const userSelector = useSelector(getUser);
-  const usersInfoList = useSelector(getUsersInfoList);
   const underMaintenanceSelector = useSelector((state: RootState) => state.underMaintenanceInfo?.info);
   const publicy = useSelector((state: RootState) => state.underMaintenanceInfo?.publicy);
 
@@ -194,10 +190,6 @@ const Header = props => {
     setOpenNotificationModal(false);
   };
 
-  const handleCloseContributionModal = () => {};
-
-  const handleOpenModalShareContribution = () => {};
-
   const viewMore = notification => {
     setOpenNotificationModal(false);
     switch (notification.type) {
@@ -259,6 +251,7 @@ const Header = props => {
 
   const handleProfile = e => {
     handleCloseMobileMenu(e);
+    console.log("userSelector=============", userSelector);
     history.push(`/profile/${userSelector.urlSlug}`);
     setAnchorEl(null);
   };
@@ -283,13 +276,14 @@ const Header = props => {
     setOnSigning(true);
     API.signInWithMetamaskWallet(account, web3, "Dreem")
       .then(res => {
+        console.log("sign in res=================", res);
         if (res.isSignedIn) {
           setSignedin(true);
           let data = res.data.user;
           data.infoImage = {
             avatarUrl: res.data.user.avatarUrl,
           };
-          dispatch(setUser(data));
+          dispatch(setUser({ ...data, urlSlug: data.name, name: `${data.firstName} ${data.lastName}` }));
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
           localStorage.setItem("userId", data.priviId);
@@ -436,7 +430,9 @@ const Header = props => {
                     onClick={handleCreatePopup}
                     className="avatar"
                     style={{
-                      backgroundImage: imageIPFS ? `url(${sanitizeIfIpfsUrl(imageIPFS)})` : `url(${getDefaultAvatar()})`,
+                      backgroundImage: imageIPFS
+                        ? `url(${sanitizeIfIpfsUrl(imageIPFS)})`
+                        : `url(${getDefaultAvatar()})`,
                       cursor: ownUser ? "pointer" : "auto",
                       backgroundRepeat: "no-repeat",
                       backgroundSize: "cover",
@@ -536,13 +532,12 @@ const Header = props => {
                         </Hidden>
                         {account && (
                           <>
-                            <MenuItem onClick={handleProfile}>
+                            <MenuItem onClick={handleProfile} style={{ fontFamily: "Grifter" }}>
                               <div className="avatar-container">
                                 <div
-                                  className="avatar"
                                   style={{
-                                    backgroundImage: imageIPFS
-                                      ? `url(${sanitizeIfIpfsUrl(imageIPFS)})`
+                                    backgroundImage: userSelector?.infoImage?.avatarUrl
+                                      ? `url(${sanitizeIfIpfsUrl(userSelector?.infoImage?.avatarUrl)})`
                                       : `url(${getDefaultAvatar()})`,
                                     cursor: ownUser ? "pointer" : "auto",
                                     backgroundRepeat: "no-repeat",
@@ -550,7 +545,7 @@ const Header = props => {
                                     backgroundPosition: "center",
                                     width: 44,
                                     height: 44,
-                                    marginLeft: 0,
+                                    borderRadius: "50%",
                                   }}
                                 />
                               </div>
