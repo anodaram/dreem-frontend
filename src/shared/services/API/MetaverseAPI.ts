@@ -232,6 +232,7 @@ export const uploadAsset = async payload => {
     }
   } catch (error) {
     console.log("error in uploading asset:", error);
+    return false
   }
 };
 

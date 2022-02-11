@@ -28,8 +28,8 @@ import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
 interface CollectionInfo {
   address: string;
-  from: string;
-  to: string;
+  firstIndex: string;
+  lastIndex: string;
   chain: string;
 }
 
@@ -87,8 +87,8 @@ const CreateRealmFlow = ({
   const [networkName, setNetworkName] = useState<string>("");
   const [collectionInfos, setCollectionInfos] = useState<Array<CollectionInfo>>([{
     address: '',
-    from: '',
-    to: '',
+    firstIndex: '',
+    lastIndex: '',
     chain
   }]);
   const [sizeSpec, setSizeSpec] = useState<any>(metaData);
@@ -143,7 +143,7 @@ const CreateRealmFlow = ({
         return votingConsensus && votingPower ? true : false;
         break;
       case 4:
-        return privacy === 'public' || collectionInfos.every(c => c.address && c.from && c.to) ? true : false;
+        return privacy === 'public' || collectionInfos.every(c => c.address && c.firstIndex && c.lastIndex) ? true : false;
         break;
       case 5:
         return worldHash && nftId && nftAddress ? true : false;
@@ -165,7 +165,7 @@ const CreateRealmFlow = ({
         steps[step - 1].completed = votingConsensus && votingPower ? true : false;
         break;
       case 4:
-        steps[step - 1].completed = privacy === 'public' || collectionInfos.every(c => c.address && c.from && c.to) ? true : false;
+        steps[step - 1].completed = privacy === 'public' || collectionInfos.every(c => c.address && c.firstIndex && c.lastIndex) ? true : false;
         break;
 
       default:
@@ -230,7 +230,6 @@ const CreateRealmFlow = ({
     if (validate(false)) {
       let payload: any = {};
       let savingDraft: any = {};
-
       payload = {
         item: "REALM",
         name: title,
@@ -242,21 +241,27 @@ const CreateRealmFlow = ({
         realmCreatorVotingPower: votingPower,
         realmImage: image,
         realmVideo: video,
+        realmRestrictions: collectionInfos
       };
 
       setIsUploading(true);
-      MetaverseAPI.uploadAsset(payload).then(async res => {
-        if (!res.success) {
-          showAlertMessage(`Failed to upload world`, { variant: "error" });
-          setUploadSuccess(false);
-          return
-        } else {
-          setUploadSuccess(true);
-          showAlertMessage(`Created draft successfully. minting NFT...`, { variant: "success" });
-          // setSavingDraft(res.data)
-          handleMintRealm(res.data)
-        }
-      });
+      try {
+        MetaverseAPI.uploadAsset(payload).then(async res => {
+          if (!res.success) {
+            showAlertMessage(`Failed to upload world`, { variant: "error" });
+            setUploadSuccess(false);
+            return
+          } else {
+            setUploadSuccess(true);
+            showAlertMessage(`Created draft successfully. minting NFT...`, { variant: "success" });
+            // setSavingDraft(res.data)
+            handleMintRealm(res.data)
+          }
+        });
+      } catch (error) {
+        showAlertMessage(`Failed to upload world`, { variant: "error" });
+        setUploadSuccess(false);
+      }
     }
   };
   const getMetadata = async (hashId) => {
@@ -330,8 +335,8 @@ const CreateRealmFlow = ({
       ...collectionInfos,
       {
         address: '',
-        from: '',
-        to: '',
+        firstIndex: '',
+        lastIndex: '',
         chain: ''
       }
     ])
@@ -869,10 +874,10 @@ const CreateRealmFlow = ({
                               <input
                                 className={classes.inputText}
                                 placeholder="00.00"
-                                value={c.from}
+                                value={c.firstIndex}
                                 onChange={e => {
                                   let infos = [...collectionInfos];
-                                  infos[i].from = e.target.value;
+                                  infos[i].firstIndex = e.target.value;
                                   setCollectionInfos(infos);
                                 }}
                               />
@@ -889,10 +894,10 @@ const CreateRealmFlow = ({
                               <input
                                 className={classes.inputText}
                                 placeholder="00.00"
-                                value={c.to}
+                                value={c.lastIndex}
                                 onChange={e => {
                                   let infos = [...collectionInfos];
-                                  infos[i].to = e.target.value;
+                                  infos[i].lastIndex = e.target.value;
                                   setCollectionInfos(infos);
                                 }}
                               />
