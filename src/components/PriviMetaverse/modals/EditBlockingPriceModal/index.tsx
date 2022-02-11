@@ -26,8 +26,8 @@ const isProd = process.env.REACT_APP_ENV === "prod";
 export default function EditBlockingPriceModal({ open, handleClose, offer, nft, setNft }) {
   const classes = MakeEditBlockingPriceModalStyles();
   const { account, library, chainId } = useWeb3React();
-  const [price, setPrice] = React.useState<number>();
-  const [period, setPeriod] = React.useState<number>();
+  const [price, setPrice] = useState<number>();
+  const [period, setPeriod] = useState<number>();
   const [collateralPercent, setCollateralPercent] = useState<number>();
   const [selectedChain, setSelectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
@@ -62,7 +62,9 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
-        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+          variant: "error",
+        });
         return;
       }
     }
@@ -112,14 +114,18 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
 
   const handleApprove = async () => {
     if (!price || !period || !collateralPercent) {
-      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+        variant: "error",
+      });
       return;
     }
 
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
-        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+          variant: "error",
+        });
         return;
       }
     }
@@ -157,14 +163,18 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
 
   const handleConfirm = async () => {
     if (!price || !period || !collateralPercent) {
-      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+        variant: "error",
+      });
       return;
     }
 
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
-        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+          variant: "error",
+        });
         return;
       }
     }
@@ -188,7 +198,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
           reservePeriod: Number(period) * 3600 * 24,
           validityPeriod: 365 * 3600 * 24,
           buyerToMatch: "0x0000000000000000000000000000000000000000",
-          mode: 1
+          mode: 1,
         },
         setHash
       );
@@ -258,7 +268,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
         >
           <span className={classes.cancelTitle}>Are you sure about editing this blocking price? </span>
           <span className={classes.cancelDesc}>
-             This will require a few changes to the smart contract, this may take a few moments
+            This will require a few changes to the smart contract, this may take a few moments
           </span>
           <Box display="flex" alignItems="center" justifyContent="space-between" style={{ width: "80%" }}>
             <PrimaryButton size="medium" className={classes.cancelButton} onClick={handleClose}>

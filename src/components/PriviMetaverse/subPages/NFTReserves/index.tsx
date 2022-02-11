@@ -45,6 +45,7 @@ const COLUMNS_COUNT_BREAK_POINTS = {
 };
 
 const TYPE_TRANSFER = "TRANSFER";
+const TYPE_MINT = "MINT";
 
 const getChainImage = chain => {
   if (chain === "BSC") {
@@ -241,7 +242,7 @@ const NFTReserves = () => {
   };
 
   const goToNft = row => {
-    history.push(`/P2E/${row.Slug}/${row.tokenId}`);
+    history.push(`/P2E/${row.slug || row.Slug}/${row.tokenId}`);
   };
 
   const tableData = React.useMemo(() => {
@@ -271,6 +272,7 @@ const NFTReserves = () => {
                     : row.type && row.type.toLowerCase() === "transfer"
                     ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
                     : "",
+                color: row.type && row.type.toLowerCase() === "mint" ? "white" : "#212121",
               }}
             >
               {row.type}
@@ -283,7 +285,7 @@ const NFTReserves = () => {
         {
           cell: (
             <p className={classes.whiteText}>
-              {row.type === TYPE_TRANSFER
+              {row.type === TYPE_TRANSFER || row.type === TYPE_MINT
                 ? "-"
                 : `${+toDecimals(
                     row.price || row.pricePerSecond * row.rentalTime,
@@ -456,7 +458,7 @@ const NFTReserves = () => {
                             >
                               {game.Description.slice(0, 200) + (game.Description.length > 200 ? "..." : "")}
                             </Box>
-                            <Box display="flex" mt={isTablet || isNarrow ? 0.5 : 3}>
+                            <Box display="flex" mt={isTablet || isNarrow ? 0.5 : 3} justifyContent={'space-between'} width={1}>
                               <Box
                                 display="flex"
                                 flexDirection="column"
@@ -466,6 +468,7 @@ const NFTReserves = () => {
                                 <span>{game.Transfers || 0}</span>
                                 <span>Transfers</span>
                               </Box>
+                              <Box width={'2px'} height={'56px'} bgcolor={'#E9FF2620'} />
                               <Box
                                 display="flex"
                                 flexDirection="column"
@@ -475,6 +478,7 @@ const NFTReserves = () => {
                                 <span>{game.owners_count || 0}</span>
                                 <span>New Owners</span>
                               </Box>
+                              <Box width={'2px'} height={'56px'} bgcolor={'#E9FF2620'} />
                               <Box
                                 display="flex"
                                 flexDirection="column"
@@ -792,6 +796,10 @@ const NFTReserves = () => {
                                       : transaction.type && transaction.type.toLowerCase() === "transfer"
                                       ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
                                       : "",
+                                  color:
+                                    transaction.type && transaction.type.toLowerCase() === "mint"
+                                      ? "white"
+                                      : "#212121",
                                 }}
                               >
                                 {transaction.type}
@@ -806,7 +814,7 @@ const NFTReserves = () => {
                             >
                               <div>{getChainImage(transaction.chain)}</div>
                               <p className={classes.whiteText}>
-                                {transaction.type === TYPE_TRANSFER
+                                {transaction.type === TYPE_TRANSFER || transaction.type === TYPE_MINT
                                   ? "-"
                                   : `${+toDecimals(
                                       transaction.price ||
@@ -864,6 +872,10 @@ const NFTReserves = () => {
                                       : transaction.type && transaction.type.toLowerCase() === "transfer"
                                       ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
                                       : "",
+                                  color:
+                                    transaction.type && transaction.type.toLowerCase() === "mint"
+                                      ? "white"
+                                      : "#212121",
                                 }}
                               >
                                 {transaction.type}
@@ -879,7 +891,7 @@ const NFTReserves = () => {
                             >
                               <div>{getChainImage(transaction.chain)}</div>
                               <p className={classes.whiteText}>
-                                {transaction.type === TYPE_TRANSFER
+                                {transaction.type === TYPE_TRANSFER || transaction.type === TYPE_MINT
                                   ? "-"
                                   : `${+toDecimals(
                                       transaction.price ||
