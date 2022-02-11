@@ -545,8 +545,8 @@ const CreateRealmFlow = ({
                       />
                       <Box flex={1} display="flex" alignItems="center" marginLeft="24px" justifyContent="space-between" mr={3}>
                         Uploaded {image.name}
-                        <SecondaryButton
-                          size="medium"
+                        <Button
+                          startIcon={<RefreshIcon />}
                           onClick={e => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -555,9 +555,8 @@ const CreateRealmFlow = ({
                             imageInputRef.current?.click();
                           }}
                         >
-                          <img src={require("assets/metaverseImages/refresh.png")} />
                           CHANGE FILE
-                        </SecondaryButton>
+                        </Button>
                       </Box>
                     </>
                   ) : (
