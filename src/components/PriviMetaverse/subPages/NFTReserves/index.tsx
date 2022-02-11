@@ -242,7 +242,7 @@ const NFTReserves = () => {
   };
 
   const goToNft = row => {
-    history.push(`/P2E/${row.Slug}/${row.tokenId}`);
+    history.push(`/P2E/${row.slug || row.Slug}/${row.tokenId}`);
   };
 
   const tableData = React.useMemo(() => {
