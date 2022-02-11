@@ -49,14 +49,9 @@ export default function AvatarCard(props) {
         </Box>
       ) : (
         <>
-          <Box
-            flex={1}
-            position="relative"
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-between"
-            className={classes.container}
-          >
+          <Box className={classes.container}>
+            {item?.itemKind === "CHARACTER" && <div className={classes.avatarTag}>Avatar</div>}
+            {!item?.minted && <div className={classes.draftTag}>Draft</div>}
             <img className={classes.image} src={sanitizeIfIpfsUrl(media?.characterImage)} alt="robot" />
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Box className={classes.name}>{media?.characterName}</Box>
