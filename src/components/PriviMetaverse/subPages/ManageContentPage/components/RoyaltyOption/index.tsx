@@ -98,7 +98,7 @@ const RoyaltyOption = ({ handleNext }: { handleNext: () => void }) => {
               <input
                 type="number"
                 className={classes.inputText}
-                placeholder=""
+                placeholder="0"
                 value={amount}
                 onChange={e => setAmount(e.target.value)}
               />

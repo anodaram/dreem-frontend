@@ -25,7 +25,7 @@ export default function AddCollateralModal({ open, handleClose, nft, refresh }) 
   const classes = ReserveNftModalStyles();
   const { collection_id, token_id } = useParams<{ collection_id: string; token_id: string }>();
   const { account, library, chainId } = useWeb3React();
-  const [price, setPrice] = useState<number>(0);
+  const [price, setPrice] = useState<number>();
   const [selectedChain] = useState<any>(getChainForNFT(nft));
   const tokenList = useSelector((state: RootState) => state.marketPlace.tokenList);
   const fee = useSelector((state: RootState) => Number(state.marketPlace.fee));

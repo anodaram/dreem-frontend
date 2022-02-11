@@ -72,7 +72,7 @@ const EditNFTDraft = () => {
           <input
             type="text"
             className={classes.inputText}
-            placeholder=""
+            placeholder="0"
             value={nft}
             onChange={e => setNft(e.target.value)}
           />
