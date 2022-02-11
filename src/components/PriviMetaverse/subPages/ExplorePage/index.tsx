@@ -333,7 +333,7 @@ export default function ExplorePage() {
               justifyContent={"space-between"}
               flexDirection={isMobile ? "column" : "row"}
             >
-              <Box className={classes.gradientText}>Explore Assets</Box>
+              <Box className={classes.gradientText}>Explore Dreem</Box>
               <div className={classes.searchSection}>
                 <InputWithLabelAndTooltip
                   type="text"
