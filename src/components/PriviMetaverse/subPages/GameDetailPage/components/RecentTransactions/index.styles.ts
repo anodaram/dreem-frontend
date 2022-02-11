@@ -13,7 +13,7 @@ export const useStyles = makeStyles(theme => ({
   content: {
     marginTop: 16,
     overflowY: "scroll",
-    maxHeight: 250,
+    maxHeight: 222,
   },
   nftItem: {
     display: "flex",
@@ -46,5 +46,9 @@ export const useStyles = makeStyles(theme => ({
     fontFamily: "Rany",
     textTransform: "uppercase",
     color: "#fff",
+    width: 200,
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap'
   },
 }));

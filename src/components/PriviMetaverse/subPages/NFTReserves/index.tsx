@@ -267,8 +267,8 @@ const NFTReserves = () => {
       .then(res => {
         if (res && res.success) {
           const items = res.data;
-          setPopularGames(items);
-          setFeaturedGames(items);
+          setPopularGames(items.sort((a, b) => b.transaction_count - a.transaction_count));
+          setFeaturedGames(items.sort((a, b) => b.transaction_count - a.transaction_count));
         }
       })
       .finally(() => setLoadingPopularGames(false));
