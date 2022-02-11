@@ -271,6 +271,7 @@ const NFTReserves = () => {
                     : row.type && row.type.toLowerCase() === "transfer"
                     ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
                     : "",
+                color: row.type && row.type.toLowerCase() === "mint" ? "white" : "#212121",
               }}
             >
               {row.type}
@@ -792,6 +793,10 @@ const NFTReserves = () => {
                                       : transaction.type && transaction.type.toLowerCase() === "transfer"
                                       ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
                                       : "",
+                                  color:
+                                    transaction.type && transaction.type.toLowerCase() === "mint"
+                                      ? "white"
+                                      : "#212121",
                                 }}
                               >
                                 {transaction.type}
@@ -864,6 +869,10 @@ const NFTReserves = () => {
                                       : transaction.type && transaction.type.toLowerCase() === "transfer"
                                       ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
                                       : "",
+                                  color:
+                                    transaction.type && transaction.type.toLowerCase() === "mint"
+                                      ? "white"
+                                      : "#212121",
                                 }}
                               >
                                 {transaction.type}
