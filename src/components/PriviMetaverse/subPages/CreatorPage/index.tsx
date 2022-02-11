@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -78,8 +78,8 @@ export default function CreatorPage() {
 
   const { creatorAddress } = useParams<{ creatorAddress: string }>();
   const userSelector = useTypedSelector(state => state.user);
-  const [userInfo, setUserInfo] = useState<any>({});
-  const [creator, setCreator] = useState<any>({});
+  const [userInfo, setUserInfo] = useState<any>({ ...userSelector });
+  // const [creator, setCreator] = useState<any>({});
   const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [collections, setCollections] = useState<any[]>([]);
@@ -116,34 +116,22 @@ export default function CreatorPage() {
 
   useEffect(() => {
     // check owner
+    setUserInfo({ ...userSelector });
     if (userSelector && userSelector.address) {
-      setIsOwner(userSelector.id === userInfo?.user?.id);
+      setIsOwner(userSelector.address === userInfo?.address);
     }
-  }, [userInfo?.user?.id, userSelector.id]);
+  }, [userInfo?.address, userSelector.address]);
 
   useEffect(() => {
     setSelectedTab("");
 
     (async () => {
       try {
-        MetaverseAPI.getUserInfo(creatorAddress)
-          .then(res => {
-            if (res.success) {
-              setUserInfo(res.data);
-            } else {
-              throw new Error("Can't find user from privi database");
-            }
-          })
-          .catch(err => {
-            console.error(err);
-          });
         const userResp = await axios.get(`${URL()}/user/getBasicInfo/${creatorAddress}/`);
         const userData = userResp.data.data;
 
         if (userResp.data.success) {
-          setCreator({
-            userInfo: userData,
-          });
+          setUserInfo({ ...userData });
           setSelectedTab(selTab || "drafts");
 
           setLoading(false);
@@ -159,13 +147,13 @@ export default function CreatorPage() {
   }, [creatorAddress]);
 
   useEffect(() => {
-    if (isOwner === false && creator.userInfo?.id) {
-      setIsFollowing(isUserFollowed(creator.userInfo.id));
+    if (isOwner === false && userInfo?.id) {
+      setIsFollowing(isUserFollowed(userInfo.id));
     }
-  }, [creator.userInfo?.id, isOwner]);
+  }, [userInfo?.id, isOwner]);
 
   useEffect(() => {
-    if (creator?.userInfo) {
+    if (userInfo) {
       (async () => {
         try {
           setLoading(true);
@@ -196,7 +184,7 @@ export default function CreatorPage() {
         // get liked realms
         const respRealmIds = await axios.get(`${URL()}/dreemRealm/getLikedRealms`, {
           params: {
-            userId: creator.userInfo?.id,
+            userId: userInfo?.id,
           },
         });
         if (respRealmIds?.data?.data?.length > 0) {
@@ -223,7 +211,7 @@ export default function CreatorPage() {
         itemIds = [];
         const respAvatarIds = await axios.get(`${URL()}/dreemRealm/characterGetLiked`, {
           params: {
-            userId: creator.userInfo?.id,
+            userId: userInfo?.id,
           },
         });
         if (respAvatarIds?.data?.data?.length > 0) {
@@ -255,7 +243,7 @@ export default function CreatorPage() {
           "timestamp",
           filters,
           false,
-          creator.userInfo?.id
+          userInfo?.id
         );
 
         if (inventoryResp.success) {
@@ -289,20 +277,8 @@ export default function CreatorPage() {
     setNftContents([]);
 
     let filters = ["WORLD"];
-    // if (selectedTab === "drafts") {
-    //   filters = ["DRAFT_WORLD"];
-    // } else if (selectedTab === "realms") {
-    //   filters = ["NFT_WORLD"];
-    // }
-    const inventoryResp = await MetaverseAPI.getAssets(
-      12,
-      1,
-      "timestamp",
-      filters,
-      false,
-      creator.userInfo.id
-    );
-    if (inventoryResp.success && creator && creator.userInfo) {
+    const inventoryResp = await MetaverseAPI.getAssets(12, 1, "timestamp", filters, false, userInfo.id);
+    if (inventoryResp.success && userInfo) {
       setNftContents([...inventoryResp.data.elements]);
       if (inventoryResp.data.page && curPage <= inventoryResp.data.page.max) {
         if (inventoryResp.data.page && inventoryResp.data.page.max > curPage) {
@@ -318,12 +294,9 @@ export default function CreatorPage() {
   const handleProfileRefresh = async () => {
     try {
       setLoadingProfile(true);
-      const userResp = await axios.get(`${URL()}/user/getBasicInfo/${creator.userInfo.id}`);
+      const userResp = await axios.get(`${URL()}/user/getBasicInfo/${userInfo.id}`);
       if (userResp.data.success) {
-        setCreator(prev => ({
-          ...prev,
-          userInfo: userResp.data.data,
-        }));
+        setUserInfo(prev => ({ ...prev, ...userResp.data.data }));
         return true;
       } else {
         throw new Error("update failed");
@@ -358,13 +331,10 @@ export default function CreatorPage() {
           setterUser.hasPhoto = true;
           if (setterUser.id) {
             dispatch(setUser(setterUser));
-            setCreator(prev => ({
+            setUserInfo(prev => ({
               ...prev,
-              userInfo: {
-                ...prev.userInfo,
-                infoImage: setterUser.infoImage,
-                urlIpfsImage: setterUser.urlIpfsImage,
-              },
+              infoImage: setterUser.infoImage,
+              urlIpfsImage: setterUser.urlIpfsImage,
             }));
           }
           setProfileAvatarChanged(Date.now());
@@ -375,8 +345,8 @@ export default function CreatorPage() {
       });
   };
 
-  const getCreatorName = () => {
-    const creatorName = userInfo?.user?.firstName + userInfo?.user?.lastName;
+  const getCreatorName = useMemo(() => {
+    const creatorName = userInfo?.name;
     if (!creatorName) {
       return "";
     } else if (creatorName > MAX_NAME_LENGTH) {
@@ -387,10 +357,10 @@ export default function CreatorPage() {
     } else {
       return creatorName;
     }
-  };
+  }, [userInfo]);
 
-  const getCreatorSlug = () => {
-    const creatorSlug = creator?.userInfo?.urlSlug || "";
+  const getCreatorSlug = useMemo(() => {
+    const creatorSlug = userInfo?.urlSlug || "";
     if (creatorSlug > MAX_NAME_LENGTH) {
       return `${creatorSlug?.substring(0, 6)}...${creatorSlug?.substring(
         creatorSlug?.length - 11,
@@ -399,7 +369,7 @@ export default function CreatorPage() {
     } else {
       return creatorSlug;
     }
-  };
+  }, [userInfo]);
 
   const onVerifyProfileClicked = () => {
     setOpenVerifyProfileModal(true);
@@ -419,7 +389,7 @@ export default function CreatorPage() {
   const getFollowing = async () => {
     try {
       setIsLoadingFollows(true);
-      const following = (await UserConnectionsAPI.getFollowings(creator?.userInfo?.id, !!isOwner)) as any[];
+      const following = (await UserConnectionsAPI.getFollowings(userInfo?.id, !!isOwner)) as any[];
       setFollowsList(following.filter(item => item.isFollowing === 2) || []);
     } catch (error) {
       console.log("error", error);
@@ -431,7 +401,7 @@ export default function CreatorPage() {
   const getFollowers = async () => {
     try {
       setIsLoadingFollows(true);
-      const followers = (await UserConnectionsAPI.getFollowers(creator?.userInfo?.id, !!isOwner)) as any[];
+      const followers = (await UserConnectionsAPI.getFollowers(userInfo?.id, !!isOwner)) as any[];
       setFollowsList(followers.filter(item => item.isFollower === 2) || []);
     } catch (error) {
       console.log("error", error);
@@ -444,7 +414,7 @@ export default function CreatorPage() {
     e.stopPropagation();
     e.preventDefault();
 
-    const userId = creator?.userInfo?.id;
+    const userId = userInfo?.id;
     if (isFollowing < 0 || !userId || isOwner !== false) return;
 
     setIsLoading(true);
@@ -485,7 +455,7 @@ export default function CreatorPage() {
                     <Box className={classes.avatarBox}>
                       <Avatar
                         size={isMobile ? 83 : 126}
-                        image={userInfo?.user?.avatarUrl || getDefaultAvatar()}
+                        image={userInfo?.urlIpfsImage || getDefaultAvatar()}
                         onClick={() => {
                           if (isOwner) {
                             if (inputRef && inputRef.current) {
@@ -531,7 +501,7 @@ export default function CreatorPage() {
                   <Box display="flex" flexDirection="column" width={1}>
                     <Box className={classes.profileContent}>
                       <Box display="flex" flexDirection="column" maxWidth={1}>
-                        {creator?.userInfo?.twitterVerified && (
+                        {userInfo?.twitterVerified && (
                           <Box display="flex" alignItems="center">
                             <img
                               src={require("assets/icons/verified_filled_yellow.png")}
@@ -540,7 +510,7 @@ export default function CreatorPage() {
                             <div className={classes.verify}>VERIFIED PROFILE</div>
                           </Box>
                         )}
-                        <div className={classes.typo2}>{getCreatorName()}</div>
+                        <div className={classes.typo2}>{getCreatorName}</div>
                       </Box>
                       <Box className={classes.actionButtonsContainer}>
                         <Box className={classes.profileContentButtons}>
@@ -556,7 +526,7 @@ export default function CreatorPage() {
                               padding: "7px 10px",
                               minWidth: 43,
                             }}
-                            onClick={() => shareMedia("Creator", `profile/${userInfo?.user?.address}`)}
+                            onClick={() => shareMedia("Creator", `profile/${userInfo?.address}`)}
                           >
                             <ShapeIcon />
                           </PrimaryButton>
@@ -637,18 +607,15 @@ export default function CreatorPage() {
                       </Box>
                     </Box>
                     <Box className={classes.profileMetaBox} mt={2}>
-                      <Box className={classes.typo3}>{`@${userInfo?.user?.priviId}`}</Box>
+                      <Box className={classes.typo3}>{`@${getCreatorSlug}`}</Box>
                       <Box className={classes.metaBoxDivider} />
-                      {userInfo?.user?.address && (
+                      {userInfo?.address && (
                         <Box display="flex" alignItems="center">
                           <img src={require("assets/walletImages/metamask.svg")} width={25} />
                           <Box ml={1} className={classes.typo4}>
-                            {`${userInfo?.user?.address?.substring(
-                              0,
-                              6
-                            )}...${userInfo?.user?.address?.substring(
-                              userInfo?.user?.address?.length - 11,
-                              userInfo?.user?.address.length
+                            {`${userInfo?.address?.substring(0, 6)}...${userInfo?.address?.substring(
+                              userInfo?.address?.length - 11,
+                              userInfo?.address.length
                             )} `}
                           </Box>
                         </Box>
@@ -656,21 +623,21 @@ export default function CreatorPage() {
                       <Box className={classes.metaBoxDivider} />
                     </Box>
                     <Box mt={3} width={1} className={classes.typo3} style={{ color: "#fff" }}>
-                      {creator && creator.userInfo ? creator.userInfo.bio : ""}
+                      {userInfo ? userInfo.bio : ""}
                     </Box>
                     <Box display="flex" alignItems="center" justifyContent="flex-start" mt={3}>
-                      {creator?.userInfo?.twitter && (
+                      {userInfo?.twitter && (
                         <Box
                           className={classes.socialLinkButton}
                           style={{ background: "#1DA1F2" }}
                           onClick={() => {
-                            window.open(`https://twitter.com/${creator?.userInfo?.twitter}`, "_blank");
+                            window.open(`https://twitter.com/${userInfo?.twitter}`, "_blank");
                           }}
                         >
                           <TwitterIcon />
                         </Box>
                       )}
-                      {creator?.userInfo?.instagram && (
+                      {userInfo?.instagram && (
                         <Box
                           className={classes.socialLinkButton}
                           style={{
@@ -679,16 +646,13 @@ export default function CreatorPage() {
                           }}
                           ml={1}
                           onClick={() => {
-                            window.open(
-                              `https://www.instagram.com/${creator?.userInfo?.instagram}`,
-                              "_blank"
-                            );
+                            window.open(`https://www.instagram.com/${userInfo?.instagram}`, "_blank");
                           }}
                         >
                           <InstagramIcon />
                         </Box>
                       )}
-                      {creator?.userInfo?.facebook && (
+                      {userInfo?.facebook && (
                         <Box
                           className={classes.socialLinkButton}
                           style={{
@@ -697,7 +661,7 @@ export default function CreatorPage() {
                           }}
                           ml={1}
                           onClick={() => {
-                            window.open(`https://www.facebook.com/${creator?.userInfo?.facebook}`, "_blank");
+                            window.open(`https://www.facebook.com/${userInfo?.facebook}`, "_blank");
                           }}
                         >
                           <FacebookIcon />
@@ -707,7 +671,7 @@ export default function CreatorPage() {
                     <Box className={classes.profileMetaBox} mt={3} maxWidth="460px" width="fit-content">
                       <Box className={classes.followingBox}>
                         <Box display="flex" flexDirection="column" flex="1">
-                          <div className={classes.typo5}>{creator?.userInfo?.numFollowers || "0"}</div>
+                          <div className={classes.typo5}>{userInfo?.numFollowers || "0"}</div>
                           <Box
                             className={classes.typo6}
                             mt={1}
@@ -719,7 +683,7 @@ export default function CreatorPage() {
                         </Box>
                         <Box className={classes.metaBoxDivider1} />
                         <Box display="flex" flexDirection="column" flex="1">
-                          <div className={classes.typo5}>{creator?.userInfo?.numFollowings || "0"}</div>
+                          <div className={classes.typo5}>{userInfo?.numFollowings || "0"}</div>
                           <Box
                             className={classes.typo6}
                             mt={1}
@@ -736,7 +700,7 @@ export default function CreatorPage() {
               </div>
               <div className={classes.nftContentSection}>
                 <TabsView
-                  tabs={isOwner ? ProfileTabs : ProfileTabs.filter(t => t.key != 'wip')}
+                  tabs={isOwner ? ProfileTabs : ProfileTabs.filter(t => t.key != "wip")}
                   onSelectTab={tab => {
                     setSelectedTab(tab.key);
                     dispatch(setSelTabProfile(tab.key));
@@ -957,7 +921,7 @@ export default function CreatorPage() {
                 display: "flex",
                 alignItems: "center",
               }}
-              onClick={() => shareMedia("Creator", `profile/${creator?.userInfo?.urlSlug}`)}
+              onClick={() => shareMedia("Creator", `profile/${userInfo?.urlSlug}`)}
             >
               <ShapeIcon />
               <Box ml={1} mt={0.5}>

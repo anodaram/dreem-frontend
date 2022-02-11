@@ -59,7 +59,7 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
 //       "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
 //   },
 // ];
-// const Filter_By_Options = ["all", "nft", "nft draft", "collection", "creators"];
+const Filter_By_Options = ["nft draft", "nft", "collection", "creators"];
 const Asset_Type_Options = [
   { content: "world", image: require("assets/metaverseImages/asset_world.png"), state: "WORLD" },
   { content: "3d asset", image: require("assets/metaverseImages/asset_3d.png"), state: "MODEL" },
@@ -95,11 +95,11 @@ export default function ExplorePage() {
   const [hasMore, setHasMore] = React.useState<boolean>(true);
   const [openFilterBar, setOpenFilterBar] = React.useState<boolean>(true);
   // const [openStatusSection, setOpenStatusSection] = React.useState<boolean>(true);
-  // const [openFilterBySection, setOpenFilterBySection] = React.useState<boolean>(true);
+  const [openFilterBySection, setOpenFilterBySection] = React.useState<boolean>(true);
   const [openAssetSection, setOpenAssetSection] = React.useState<boolean>(true);
   // const [openPrimarySection, setOpenPrimarySection] = React.useState<boolean>(true);
   // const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
-  // const [selectedContentType, setSelectedContentType] = React.useState<string>("all");
+  const [selectedContentType, setSelectedContentType] = React.useState<string>("nft draft");
   const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["WORLD"]);
   const [searchValue, setSearchValue] = React.useState<string>("");
 
@@ -213,8 +213,8 @@ export default function ExplorePage() {
                     ))}
                   </Box>
                 )}
-              </Box>
-              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              </Box> 
+              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} /> */}
               <Box className={classes.subFilterSection}>
                 <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
                   <Box color="#E9FF26">Filter By</Box>
@@ -239,7 +239,7 @@ export default function ExplorePage() {
                   </Box>
                 )}
               </Box>
-              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} /> */}
+              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
               <Box className={classes.subFilterSection}>
                 <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
                   <Box color="#E9FF26">Asset Type</Box>

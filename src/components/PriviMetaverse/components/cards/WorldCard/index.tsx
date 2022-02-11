@@ -94,8 +94,6 @@ export default function WorldCard({
     }
   };
 
-  console.log("nft========================", nft);
-
   // const handleRemove = async () => {
   //   const confirm = await confirmAlert({
   //     title: "Remove realm",
