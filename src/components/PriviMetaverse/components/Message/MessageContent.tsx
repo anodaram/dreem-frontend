@@ -247,7 +247,7 @@ export const MessageFooter = props => {
   };
 
   const onFileChange = (file: any, type: FileType) => {
-    if (!nftHolder) return;
+    if (!chatEnabled) return;
 
     switch (type) {
       case FileType.IMAGE:

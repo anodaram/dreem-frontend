@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { useFileAttachmentStyles } from "./index.styles";
 
 export enum FileType {
@@ -15,8 +15,11 @@ interface FileAttachmentProps {
   disabled?: boolean;
 }
 
+const MAX_FILE_SIZE = 1024 * 1024 * 10;
+
 const FileAttachment = ({ setStatus, onFileChange, disabled = false }: FileAttachmentProps) => {
   const classes = useFileAttachmentStyles();
+  const { showAlertMessage } = useAlertMessage();
 
   const validateFile = file => {
     const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/x-icon"];
@@ -131,9 +134,15 @@ const FileAttachment = ({ setStatus, onFileChange, disabled = false }: FileAttac
 
   const fileInputMessageAttachment = e => {
     e.preventDefault();
-    const files = e.target.files;
+
+    const files: FileList = e.target.files;
     if (files.length) {
-      handleFilesAttachment(files);
+      const maxFileSize = Array.from(files).sort((f1, f2) => f2.size - f1.size)[0].size;
+      if (maxFileSize > MAX_FILE_SIZE) {
+        showAlertMessage("File size can not be bigger than 10MB.", { variant: "error" });
+      } else {
+        handleFilesAttachment(files);
+      }
     }
   };
 
@@ -142,7 +151,7 @@ const FileAttachment = ({ setStatus, onFileChange, disabled = false }: FileAttac
 
     const inputElement = document.createElement("input");
     inputElement.type = "file";
-    inputElement.accept = "video/*,image/*";
+    inputElement.accept = ".png, .jpeg, .svg, .gif, .mp3, .mp4";
     inputElement.multiple = true;
 
     // set onchange event to call callback when user has selected file
@@ -153,9 +162,7 @@ const FileAttachment = ({ setStatus, onFileChange, disabled = false }: FileAttac
   };
 
   return (
-    <div
-      className="file-attachment"
-    >
+    <div className="file-attachment">
       <img
         className={classes.attachment}
         style={{
