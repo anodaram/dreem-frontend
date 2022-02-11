@@ -155,6 +155,17 @@ const NFTReserves = () => {
       };
 
       const updateMarketPlaceFeedHandler = _transaction => {
+        if (_transaction.type === 'TRANSFER') {
+          setFeaturedGames(prev => {
+            const updateFeaturedGames = [...prev];
+            const index = updateFeaturedGames.findIndex(game => game.collectionId === _transaction.slug);
+            if (index !== -1) {
+              updateFeaturedGames[index].Transfers += 1;
+            }
+
+            return updateFeaturedGames
+          });
+        }
         setTransactions(prev => {
           let _transactions = prev.map(transaction =>
             _transaction.id === transaction.id ? _transaction : transaction
@@ -267,8 +278,8 @@ const NFTReserves = () => {
       .then(res => {
         if (res && res.success) {
           const items = res.data;
-          setPopularGames(items.sort((a, b) => b.transaction_count - a.transaction_count));
-          setFeaturedGames(items.sort((a, b) => b.transaction_count - a.transaction_count));
+          setPopularGames(items.sort((a, b) => (b.Transfers || 0) - (a.Transfers || 0)));
+          setFeaturedGames(items.sort((a, b) => (b.Transfers || 0) - (a.Transfers || 0)));
         }
       })
       .finally(() => setLoadingPopularGames(false));
