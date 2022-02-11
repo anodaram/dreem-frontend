@@ -125,7 +125,6 @@ const CreateAssetForm = ({
               onClick={() => !fileInputs[asset.key] && inputRef.current[asset.key]?.click()}
               style={{
                 cursor: fileInputs[asset.key] ? undefined : "pointer",
-                height: fileInputs[asset.key] ? 110 : 80,
               }}
             >
               {fileInputs[asset.key] ? (

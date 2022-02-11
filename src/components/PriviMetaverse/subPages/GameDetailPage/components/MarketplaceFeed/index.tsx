@@ -24,6 +24,7 @@ import { getChainImageUrl } from "shared/functions/chainFucntions";
 import { useHistory } from "react-router-dom";
 import { listenerSocket } from "components/Login/Auth";
 import Moment from "react-moment";
+import { sanitizeIfIpfsUrl } from "shared/helpers";
 // TODO: mock data delete and change for real data
 
 const filterStatusOptions = ["All", "RENTED", "SOLD", "BLOCKED"];
@@ -64,13 +65,15 @@ export default function MarketplaceFeed() {
   const history = useHistory();
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     { headerName: "NFT" },
-    { headerName: "Account" },
     { headerName: "Price", sortable: true, headerAlign: "center" },
     { headerName: "Date", headerAlign: "center" },
     { headerName: "Transaction type", headerAlign: "center" },
     { headerName: "Explorer", headerAlign: "center" },
     { headerName: "", headerAlign: "center" },
   ];
+
+  const TYPE_TRANSFER = "TRANSFER";
+  const TYPE_MINT = "MINT";
 
   React.useEffect(() => {
     setNfts([]);
@@ -170,7 +173,7 @@ export default function MarketplaceFeed() {
   };
 
   const goToNft = row => {
-    history.push(`/P2E/${row.slug}/${row.tokenId}`);
+    history.push(`/P2E/${row.slug || row.Slug}/${row.tokenId}`);
   };
 
   const tableData = React.useMemo(() => {
@@ -193,7 +196,7 @@ export default function MarketplaceFeed() {
         {
           cell: (
             <div className={classes.titleWrapper}>
-              <img className={classes.titleImg} src={row.image} />
+              <img className={classes.titleImg} src={sanitizeIfIpfsUrl(row.image)} />
               <div className={classes.textBox}>
                 <p className={classes.textTitle}>{row.name}</p>
                 <p className={classes.description}>{`${row.collection.substring(
@@ -206,15 +209,13 @@ export default function MarketplaceFeed() {
         },
         {
           cell: (
-            <p className={classes.accTitle}>{accTitle(row)}</p>
-          ),
-        },
-        {
-          cell: (
-            <p className={classes.whiteText}>{`${+toDecimals(
-              row.price || row.pricePerSecond * row.rentalTime,
-              getTokenDecimal(row.paymentToken || row.fundingToken)
-            )} ${getTokenSymbol(row.paymentToken || row.fundingToken)}`}</p>
+            <p className={classes.whiteText}>
+              {row.type === TYPE_TRANSFER || row.type === TYPE_MINT
+                ? "-"
+                : `${+toDecimals(
+                    row.price || row.pricePerSecond * row.rentalTime,
+                    getTokenDecimal(row.paymentToken || row.fundingToken)
+                  )} ${getTokenSymbol(row.paymentToken || row.fundingToken)}`}</p>
           ),
         },
         {

@@ -511,10 +511,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
   },
   gameInfoSection: {
     color: "#E9FF26",
-    padding: "0 75px",
-    borderRight: "2px solid #E9FF2620",
     textTransform: "uppercase",
-
     "&:first-child": {
       paddingLeft: 0,
     },
@@ -527,7 +524,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       fontWeight: 700,
       fontSize: 34,
       lineHeight: "35.53px",
-      fontFamily: "GRIFTER",
+      fontFamily: "Rany",
     },
     "& span:last-child": {
       fontWeight: 700,
