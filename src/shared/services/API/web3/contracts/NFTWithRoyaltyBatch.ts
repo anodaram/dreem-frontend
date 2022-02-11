@@ -8,7 +8,7 @@ const MAX_PRIO_FEE = "50";
 const nftWithRoyalty = network => {
   const contractAddress = config[network].CONTRACT_ADDRESSES.ERC721_WITH_ROYALTY;
 
-  const metadata = require("shared/connectors/web3/contracts/ERC721WithRoyaltyBatch.json");
+  const metadata = require("shared/connectors/web3/contracts/ERC721WithRoyalty.json");
   let txHash;
   const mint = async (
     web3: Web3,

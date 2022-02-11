@@ -6,9 +6,9 @@ import config from "shared/connectors/web3/config";
 const MAX_PRIO_FEE = "50";
 
 const royaltyFactoryBatch = network => {
-  const contractAddress = config[network].CONTRACT_ADDRESSES.ROYALTYFACTORYBATCH;
+  const contractAddress = config[network].CONTRACT_ADDRESSES.ROYALTYFACTORY;
   let txHash;
-  const metadata = require("shared/connectors/web3/contracts/RoyaltyFactoryBatch.json");
+  const metadata = require("shared/connectors/web3/contracts/RoyaltyFactory.json");
 
   const mint = async (
     web3: Web3,
