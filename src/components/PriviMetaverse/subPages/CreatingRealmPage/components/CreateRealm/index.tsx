@@ -3,6 +3,7 @@ import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 
 import { useMediaQuery, useTheme, Button } from "@material-ui/core";
+import ReactPlayer from "react-player";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -38,6 +39,7 @@ const CreateRealm = ({
   const [imageFile, setImageFile] = useState<any>(null);
   const [video, setVideo] = useState<any>(null);
   const [videoFile, setVideoFile] = useState<any>(null);
+  const [videoThumbnailURL, setVideoThumbnailURL] = useState<any>('');
   const [unity, setUnity] = useState<any>(null);
   const [unityFile, setUnityFile] = useState<any>(null);
   const [entity, setEntity] = useState<any>(null);
@@ -115,6 +117,7 @@ const CreateRealm = ({
   const handleVideoFiles = (files: any) => {
     if (files && files[0]) {
       setVideo(files[0]);
+      setVideoThumbnailURL(URL.createObjectURL(files[0]));
 
       const reader = new FileReader();
       reader.addEventListener("load", () => {
@@ -489,13 +492,9 @@ const CreateRealm = ({
           >
             {video ? (
               <>
-                <Box
-                  className={classes.image}
-                  style={{
-                    backgroundImage: `url(${sanitizeIfIpfsUrl(videoFile)})`,
-                    backgroundSize: "cover",
-                  }}
-                />
+                <div style={{marginLeft: 20}}>
+                  <ReactPlayer playing={false} controls={false} url={videoThumbnailURL} width="85" height={85} />
+                </div>
                 <Box flex={1} display="flex" justifyContent="flex-end" mr={3}>
                   <Button
                     startIcon={<RefreshIcon />}

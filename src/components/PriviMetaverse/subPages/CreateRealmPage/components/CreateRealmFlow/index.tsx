@@ -4,6 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem, Button, TextField, InputAdornment, Hidden, Grid } from "@material-ui/core";
+import ReactPlayer from "react-player";
 
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
@@ -99,6 +100,7 @@ const CreateRealmFlow = ({
   const [imageFile, setImageFile] = useState<any>(null);
   const [video, setVideo] = useState<any>(null);
   const [videoFile, setVideoFile] = useState<any>(null);
+  const [videoThumbnailURL, setVideoThumbnailURL] = useState<any>('');
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -389,6 +391,7 @@ const CreateRealmFlow = ({
   const handleVideoFiles = (files: any) => {
     if (files && files[0]) {
       setVideo(files[0]);
+      setVideoThumbnailURL(URL.createObjectURL(files[0]));
 
       const reader = new FileReader();
       reader.addEventListener("load", () => {
@@ -489,13 +492,9 @@ const CreateRealmFlow = ({
                 >
                   {video ? (
                     <>
-                      <Box
-                        className={classes.image}
-                        style={{
-                          backgroundImage: `url(${sanitizeIfIpfsUrl(videoFile)})`,
-                          backgroundSize: "cover",
-                        }}
-                      />
+                      <div style={{marginLeft: 20}}>
+                        <ReactPlayer playing={false} controls={false} url={videoThumbnailURL} width="85" height={85} />
+                      </div>
                       <Box flex={1} display="flex" alignItems="center" marginLeft="24px" justifyContent="space-between" mr={3}>
                         Uploaded {video.name}
                         <Button
