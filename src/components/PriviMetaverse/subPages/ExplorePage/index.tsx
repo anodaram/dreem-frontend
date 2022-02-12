@@ -445,9 +445,14 @@ export default function ExplorePage() {
                   data={assetList}
                   renderItem={(item, index) =>
                     selectedContentType === "collection" ? (
-                      <CollectionCard item={item} selectable={false} key={`collection_${index}`} />
+                      <CollectionCard
+                        item={item}
+                        isLoading={loading}
+                        selectable={false}
+                        key={`collection_${index}`}
+                      />
                     ) : item.itemKind === "WORLD" ? (
-                      <WorldCard nft={item} selectable={false} key={`world_${index}`} />
+                      <WorldCard nft={item} selectable={false} isLoading={loading} key={`world_${index}`} />
                     ) : item.itemKind === "CHARACTER" ? (
                       <AvatarCard item={item} key={`avatar_${index}`} />
                     ) : (

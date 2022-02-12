@@ -45,9 +45,11 @@ export default function CollectionCard(props) {
     >
       {isLoading ? (
         <Box className={styles.skeleton}>
-          <Skeleton variant="rect" width="100%" />
-          <Skeleton variant="rect" width={"100%"} />
-          <Skeleton variant="rect" width={"80%"} />
+          <Skeleton variant="rect" width="100%" height={140} />
+          <Box my={3}>
+            <Skeleton variant="rect" width={"100%"} height={24} />
+          </Box>
+          <Skeleton variant="rect" width={"80%"} height={24} />
         </Box>
       ) : (
         <div className={styles.card}>

@@ -4,7 +4,7 @@ export const avatarCardStyles = makeStyles(theme => ({
   card: {
     position: "relative",
     borderRadius: 12,
-    border: "2px solid #EDFF1C",
+    border: "2px solid #ED7B7B",
     background: "black",
     height: 390,
     display: "flex",
