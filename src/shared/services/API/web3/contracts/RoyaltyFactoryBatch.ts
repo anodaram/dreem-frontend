@@ -39,7 +39,7 @@ const royaltyFactoryBatch = network => {
           });
         console.log("transaction succeed", response);
 
-        resolve({ success: true, txHash: txHash, contractAddress: response.events.LoyaltyERC721Created.returnValues.nft, initialId: response.events.LoyaltyERC721Created.returnValues.initialId, amount: response.events.LoyaltyERC721Created.returnValues.amount });
+        resolve({ success: true, txHash: txHash, contractAddress: response.events.LoyaltyERC721Created.returnValues.nft, initialId: response.events.LoyaltyERC721Created.returnValues.initialId, amount: response.events.LoyaltyERC721Created.returnValues.amount, batchId: response.events.BatchMint.returnValues.batchId });
       } catch (e) {
         console.log(e);
         resolve({ success: false });

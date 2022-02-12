@@ -2,7 +2,10 @@ import React from "react";
 
 import Box from "shared/ui-kit/Box";
 import { Modal, PrimaryButton } from "shared/ui-kit";
+import { useHistory, useParams } from "react-router-dom";
 import { useModalStyles } from "./index.styles";
+import { useSelector } from "react-redux";
+import { RootState } from "store/reducers/Reducer";
 
 require("dotenv").config();
 const isProd = process.env.REACT_APP_ENV === "prod";
@@ -17,6 +20,12 @@ export default function ContentProcessingOperationModal({
   txSuccess: boolean | null;
 }) {
   const classes = useModalStyles();
+  const history = useHistory();
+  const user: any = useSelector((state: RootState) => state.user);
+
+  const goToProfile = () => {
+    history.push(`/profile/${user?.address}`);
+  }
 
   return (
     <Modal showCloseIcon isOpen={open} onClose={onClose} className={classes.root} size="small">
@@ -69,7 +78,7 @@ export default function ContentProcessingOperationModal({
               fontSize: 18,
               paddingTop: 5,
             }}
-            onClick={() => {}}
+            onClick={() => {goToProfile()}}
           >
             Go To Profile
           </PrimaryButton>

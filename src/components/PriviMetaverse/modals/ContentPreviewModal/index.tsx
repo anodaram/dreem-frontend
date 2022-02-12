@@ -167,7 +167,8 @@ const ContentPreviewModal = ({
           "0x0000000000000000000000000000000000000000",
           0,
           resRoyalty.txHash,
-          1
+          1,
+          undefined
         );
         if(resp.success){
           setTxSuccess(true);

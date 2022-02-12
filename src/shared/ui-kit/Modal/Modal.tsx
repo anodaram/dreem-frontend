@@ -20,7 +20,7 @@ type ModalProps = {
 
 export const Modal: React.FunctionComponent<ModalProps> = React.memo(
   ({ isOpen, onClose, size, children, className, showCloseIcon, theme, wrapperPadding, style, backTrans }) => (
-    <MuiModal open={isOpen} onClose={onClose} BackdropProps={{ style: { background: backTrans ? "transparent": "#03080B", opacity: backTrans ? 1 : 0.9 } }}>
+    <MuiModal open={isOpen} onClose={onClose} BackdropProps={{ style: { background: "#03080B", opacity: 0.9 } }}>
       <ModalWrapper>
         <ModalContent
           theme={theme}
