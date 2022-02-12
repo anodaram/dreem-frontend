@@ -26,6 +26,7 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   600: 2,
   900: 3,
 };
+
 // const Status_Options = [
 //   { content: "all", color: "#ffffff50", bgcolor: "transparent" },
 //   {
@@ -101,6 +102,7 @@ export default function ExplorePage() {
   // const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
   const [selectedContentType, setSelectedContentType] = React.useState<string>("all assets");
   const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["WORLD"]);
+  const [isDisabledAssetTypeFilter, setIsDisabledAssetTypeFilter] = React.useState<boolean>(false);
   const [searchValue, setSearchValue] = React.useState<string>("");
 
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
@@ -110,16 +112,26 @@ export default function ExplorePage() {
   const loadingCount = React.useMemo(() => (width > 900 ? 3 : width > 600 ? 2 : 1), [width]);
 
   React.useEffect(() => {
-    loadData(true);
-  }, [selectedAssetTypes, debouncedSearchValue]);
+    if (
+      selectedContentType === "all assets" ||
+      selectedContentType === "draft" ||
+      selectedContentType === "nft"
+    ) {
+      setIsDisabledAssetTypeFilter(false);
+      loadData(true);
+    } else {
+      setIsDisabledAssetTypeFilter(true);
+    }
+  }, [selectedContentType, selectedAssetTypes, debouncedSearchValue]);
 
   React.useEffect(() => {
     let itemKind;
-    if(itemId){
+    if (itemId) {
+      setLoading(true);
       MetaverseAPI.getAsset(itemId).then(res => {
-        itemKind = res.data?.itemKind
-        setLoading(false)
-        setSelectedAssetTypes([itemKind])
+        itemKind = res.data?.itemKind;
+        setLoading(false);
+        setSelectedAssetTypes([itemKind]);
       });
     }
   }, [itemId]);
@@ -130,6 +142,8 @@ export default function ExplorePage() {
     try {
       setLoading(true);
 
+      const isMinted =
+        selectedContentType === "draft" ? false : selectedContentType === "nft" ? true : undefined;
       const search = debouncedSearchValue ? debouncedSearchValue : undefined;
       const curPage = init ? 1 : page;
       const response = await MetaverseAPI.getAssets(
@@ -142,7 +156,7 @@ export default function ExplorePage() {
         undefined,
         undefined,
         false,
-        undefined,
+        isMinted,
         search
       );
       if (response.success) {
@@ -239,45 +253,55 @@ export default function ExplorePage() {
                   </Box>
                 )}
               </Box>
-              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
-              <Box className={classes.subFilterSection}>
-                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
-                  <Box color="#E9FF26">Asset Type</Box>
-                  <div className={classes.iconButton} onClick={() => setOpenAssetSection(prev => !prev)}>
-                    {openAssetSection ? <UpArrowIcon /> : <DownArrowIcon />}
-                  </div>
-                </Box>
-                {openAssetSection && (
-                  <Box mt={2}>
-                    {Asset_Type_Options.map((item, index) => (
-                      <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        key={index}
-                        mb={1.5}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleSelectedAssetTypes(item)}
-                      >
-                        <StyledCheckbox
-                          buttonColor={Color.LightYellow}
-                          checked={selectedAssetTypes.includes(item.state)}
-                          name="checked"
-                        />
-                        <img src={sanitizeIfIpfsUrl(item.image)} width={24} height={24} alt="asset image" />
-                        <Box
-                          fontSize={14}
-                          color={selectedAssetTypes.includes(item.state) ? "#fff" : "#ffffff50"}
-                          ml={1.3}
-                        >
-                          {item.content}
-                        </Box>
+              {!isDisabledAssetTypeFilter && (
+                <>
+                  <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+                  <Box className={classes.subFilterSection}>
+                    <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                      <Box color="#E9FF26">Asset Type</Box>
+                      <div className={classes.iconButton} onClick={() => setOpenAssetSection(prev => !prev)}>
+                        {openAssetSection ? <UpArrowIcon /> : <DownArrowIcon />}
+                      </div>
+                    </Box>
+                    {openAssetSection && (
+                      <Box mt={2}>
+                        {Asset_Type_Options.map((item, index) => (
+                          <Box
+                            display={"flex"}
+                            alignItems={"center"}
+                            key={index}
+                            mb={1.5}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleSelectedAssetTypes(item)}
+                          >
+                            <StyledCheckbox
+                              buttonColor={Color.LightYellow}
+                              checked={selectedAssetTypes.includes(item.state)}
+                              name="checked"
+                              disabled={true}
+                            />
+                            <img
+                              src={sanitizeIfIpfsUrl(item.image)}
+                              width={24}
+                              height={24}
+                              alt="asset image"
+                            />
+                            <Box
+                              fontSize={14}
+                              color={selectedAssetTypes.includes(item.state) ? "#fff" : "#ffffff50"}
+                              ml={1.3}
+                            >
+                              {item.content}
+                            </Box>
+                          </Box>
+                        ))}
                       </Box>
-                    ))}
+                    )}
                   </Box>
-                )}
-              </Box>
-              {/* <Box width={1} height={"1px"} bgcolor={"#ffffff50"} /> */}
-              {/* <Box className={classes.subFilterSection}>
+                </>
+              )}
+              {/* <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              <Box className={classes.subFilterSection}>
                 <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
                   <Box color="#E9FF26">Primary</Box>
                   <div className={classes.iconButton} onClick={() => setOpenPrimarySection(prev => !prev)}>
