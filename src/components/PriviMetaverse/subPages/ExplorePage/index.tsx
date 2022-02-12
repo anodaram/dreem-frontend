@@ -58,7 +58,7 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
 //       "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
 //   },
 // ];
-const Filter_By_Options = ["nft draft", "nft", "collection", "creators"];
+const Filter_By_Options = ["all assets", "draft", "nft", "collection", "creators"];
 const Asset_Type_Options = [
   { content: "world", image: require("assets/metaverseImages/asset_world.png"), state: "WORLD" },
   { content: "3d asset", image: require("assets/metaverseImages/asset_3d.png"), state: "MODEL" },
@@ -97,7 +97,7 @@ export default function ExplorePage() {
   const [openAssetSection, setOpenAssetSection] = React.useState<boolean>(true);
   // const [openPrimarySection, setOpenPrimarySection] = React.useState<boolean>(true);
   // const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
-  const [selectedContentType, setSelectedContentType] = React.useState<string>("nft draft");
+  const [selectedContentType, setSelectedContentType] = React.useState<string>("all assets");
   const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["WORLD"]);
   const [searchValue, setSearchValue] = React.useState<string>("");
 
