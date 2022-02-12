@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 
+import LinearProgress from "@material-ui/core/LinearProgress";
 import { useTheme, useMediaQuery } from "@material-ui/core";
 
 import Box from "shared/ui-kit/Box";
@@ -21,11 +22,23 @@ import useIPFS from "shared/utils-IPFS/useIPFS";
 import { onUploadNonEncrypt } from "shared/ipfs/upload";
 
 import "./MessageBox.css";
+import { makeStyles } from "@material-ui/styles";
+
+export const messageContentStyles = makeStyles(theme => ({
+  root: {
+    background: "rgba(21, 21, 21, 0.3)",
+    "& .MuiLinearProgress-barColorPrimary": {
+      background: "#E2FF2E",
+      borderRadius: 10,
+    },
+  },
+}));
 
 export const MessageFooter = props => {
-  const { messages, setMessages, setMediaUpdate, room = GLOBAL_CHAT_ROOM, nftHolder = false } = props;
+  const { messages, setMessages, room = GLOBAL_CHAT_ROOM, nftHolder = false } = props;
 
   const theme = useTheme();
+  const classes = messageContentStyles();
   const { account } = useWeb3React();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
@@ -40,7 +53,7 @@ export const MessageFooter = props => {
   const inputRef = useRef<any>();
   const chatEnabled = account && (room === GLOBAL_CHAT_ROOM || nftHolder);
 
-  const { setMultiAddr, uploadWithNonEncryption } = useIPFS();
+  const { setMultiAddr, uploadWithNonEncryption, progress } = useIPFS();
 
   useEffect(() => {
     setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");
@@ -89,8 +102,6 @@ export const MessageFooter = props => {
               key: Math.random(),
               variant: "success",
             });
-
-            setMediaUpdate(Math.random());
           } else {
             console.log(response.data);
             setStatus({
@@ -304,7 +315,14 @@ export const MessageFooter = props => {
   };
 
   return (
-    <Box className="message-footer1">
+    <Box className="message-footer1" position="relative">
+      {progress ? (
+        <Box position="absolute" top={0} left={0} width="100%">
+          <LinearProgress variant="determinate" value={progress} className={classes.root} />
+        </Box>
+      ) : (
+        <></>
+      )}
       {!audioMessage && (
         <Box display="flex" alignItems="top">
           <Box
@@ -360,7 +378,7 @@ export const MessageFooter = props => {
                 component="span"
                 style={{
                   opacity: chatEnabled ? 1 : 0.6,
-                  cursor: chatEnabled ? 'pointer' : 'not-allowed'
+                  cursor: chatEnabled ? "pointer" : "not-allowed",
                 }}
               >
                 <img src={require("assets/icons/emoji_icon.png")} ref={emojiRef} />
@@ -432,10 +450,10 @@ export const MessageContent = ({
   return (
     <Box className="message-content-container">
       <Box display="flex" bgcolor="#151515" p="8px" width="fit-content" mx="19px" mt="22px">
-        <Box className={"tab selected"}>{`${room === GLOBAL_CHAT_ROOM ? "GLOBAL" : "OWNERS"} LIVE CHAT`}</Box>
+        <Box className={"tab selected"}>{`${room === GLOBAL_CHAT_ROOM ? "GLOBAL" : "COLLECTION HOLDER"} LIVE CHAT`}</Box>
       </Box>
       <div className="item-list-container" id="messageContainer" ref={itemListRef} onScroll={handleScroll}>
-        {(room !== GLOBAL_CHAT_ROOM && !nftHolder) || !messages?.length ? (
+        {!messages?.length ? (
           <Box className="no-items-label">
             <Box style={{ fontSize: 14 }}>No messages in the chat yet.</Box>
           </Box>

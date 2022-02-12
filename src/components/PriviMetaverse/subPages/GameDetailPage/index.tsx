@@ -530,12 +530,7 @@ export default function GameDetailPage() {
               flexDirection={isMobile || (isTablet && openSideBar) ? "column" : "row"}
             >
               {!cardImage ? (
-                <Skeleton
-                  variant="rect"
-                  width={398}
-                  height={398}
-                  className={classes.gameInfoImg}
-                />
+                <Skeleton variant="rect" width={398} height={398} className={classes.gameInfoLoading} />
               ) : (
                 <img src={cardImage} className={classes.gameInfoImg} alt="game info image" />
               )}

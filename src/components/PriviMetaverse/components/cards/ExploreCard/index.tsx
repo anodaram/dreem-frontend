@@ -72,7 +72,10 @@ const ExploreCard = ({ nft, isLoading = false }) => {
 
   const avtarUrl = React.useMemo(() => {
     const ownerAddress = nft.ownerAddress ?? nft.owner_of;
-    if (ownerAddress?.toLowerCase() === user.address.toLowerCase()) {
+
+    if (nft?.owner) {
+      return sanitizeIfIpfsUrl(nft.owner.urlIpfsImage) ?? getDefaultAvatar();
+    } else if (ownerAddress?.toLowerCase() === user.address.toLowerCase()) {
       return sanitizeIfIpfsUrl(user.urlIpfsImage) ?? sanitizeIfIpfsUrl(user.ipfsImage) ?? getDefaultAvatar();
     }
     return getExternalAvatar();

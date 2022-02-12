@@ -9,12 +9,9 @@ import { Popper, ClickAwayListener, Grow, Paper, MenuList, MenuItem, Hidden, Box
 
 import { listenerSocket, socket } from "components/Login/Auth";
 import { useNotifications } from "shared/contexts/NotificationsContext";
-import URL from "shared/functions/getURL";
 import { getUser, getUsersInfoList } from "store/selectors/user";
 import { setUser, signOut } from "store/actions/User";
-import { capitalize } from "shared/helpers/string";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
-import { createUserInfo, setUsersInfoList } from "store/actions/UsersInfo";
 import { useAuth } from "shared/contexts/AuthContext";
 
 import { IconNotifications } from "./components/Toolbar/IconNotifications";
@@ -69,7 +66,6 @@ const Header = props => {
   const history = useHistory();
   const dispatch = useDispatch();
   const userSelector = useSelector(getUser);
-  const usersInfoList = useSelector(getUsersInfoList);
   const underMaintenanceSelector = useSelector((state: RootState) => state.underMaintenanceInfo?.info);
   const publicy = useSelector((state: RootState) => state.underMaintenanceInfo?.publicy);
 
@@ -134,10 +130,12 @@ const Header = props => {
 
   useEffect(() => {
     getPhotoUser();
-  }, [userSelector.id, profileAvatarChanged]);
+  }, [userSelector?.address, profileAvatarChanged]);
 
   const getPhotoUser = async () => {
-    if (userSelector?.infoImage?.newFileCID && userSelector?.infoImage?.metadata?.properties?.name) {
+    if (userSelector?.infoImage?.avatarUrl) {
+      setImageIPFS(userSelector?.infoImage?.avatarUrl);
+    } else if (userSelector?.infoImage?.newFileCID && userSelector?.infoImage?.metadata?.properties?.name) {
       setImageIPFS(
         await getPhotoIPFS(
           userSelector.infoImage.newFileCID,
@@ -145,8 +143,6 @@ const Header = props => {
           downloadWithNonDecryption
         )
       );
-    } else if (userSelector?.infoImage?.avatarUrl) {
-      setImageIPFS(userSelector?.infoImage?.avatarUrl);
     }
   };
 
@@ -193,10 +189,6 @@ const Header = props => {
   const handleOpenContributionModal = () => {
     setOpenNotificationModal(false);
   };
-
-  const handleCloseContributionModal = () => {};
-
-  const handleOpenModalShareContribution = () => {};
 
   const viewMore = notification => {
     setOpenNotificationModal(false);
@@ -286,10 +278,17 @@ const Header = props => {
         if (res.isSignedIn) {
           setSignedin(true);
           let data = res.data.user;
-          data.infoImage = {
-            avatarUrl: res.data.user.avatarUrl,
-          };
-          dispatch(setUser(data));
+          dispatch(
+            setUser({
+              ...data,
+              infoImage: {
+                ...data.infoImage,
+                avatarUrl: res.data.user.avatarUrl,
+              },
+              urlSlug: data.name,
+              name: `${data.firstName} ${data.lastName}`,
+            })
+          );
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
           localStorage.setItem("userId", data.priviId);
@@ -436,7 +435,9 @@ const Header = props => {
                     onClick={handleCreatePopup}
                     className="avatar"
                     style={{
-                      backgroundImage: imageIPFS ? `url(${sanitizeIfIpfsUrl(imageIPFS)})` : `url(${getDefaultAvatar()})`,
+                      backgroundImage: imageIPFS
+                        ? `url(${sanitizeIfIpfsUrl(imageIPFS)})`
+                        : `url(${getDefaultAvatar()})`,
                       cursor: ownUser ? "pointer" : "auto",
                       backgroundRepeat: "no-repeat",
                       backgroundSize: "cover",
@@ -536,10 +537,9 @@ const Header = props => {
                         </Hidden>
                         {account && (
                           <>
-                            <MenuItem onClick={handleProfile}>
+                            <MenuItem onClick={handleProfile} style={{ fontFamily: "Grifter" }}>
                               <div className="avatar-container">
                                 <div
-                                  className="avatar"
                                   style={{
                                     backgroundImage: imageIPFS
                                       ? `url(${sanitizeIfIpfsUrl(imageIPFS)})`
@@ -550,7 +550,7 @@ const Header = props => {
                                     backgroundPosition: "center",
                                     width: 44,
                                     height: 44,
-                                    marginLeft: 0,
+                                    borderRadius: "50%",
                                   }}
                                 />
                               </div>

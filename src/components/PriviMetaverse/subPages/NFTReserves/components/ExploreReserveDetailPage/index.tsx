@@ -6,6 +6,7 @@ import { useMediaQuery, useTheme } from "@material-ui/core";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch } from "react-redux";
 
+import { useAuth } from "shared/contexts/AuthContext";
 import { setMarketFee, setTokenList } from "store/actions/MarketPlace";
 import { BackButton } from "components/PriviMetaverse/components/BackButton";
 import CancelReserveModal from "components/PriviMetaverse/modals/CancelReserveModal";
@@ -54,6 +55,7 @@ const ExploreReserveDetailPage = () => {
   const dispatch = useDispatch();
   const { collection_id, token_id }: { collection_id: string; token_id: string } = useParams();
 
+  const { isSignedin } = useAuth();
   const { shareMedia } = useShareMedia();
   const { showAlertMessage } = useAlertMessage();
   const { account, library, chainId } = useWeb3React();
@@ -415,6 +417,10 @@ const ExploreReserveDetailPage = () => {
     });
   };
 
+  const gotoCollection = nft => {
+    history.push(`/P2E/${nft.collectionId}`);
+  };
+
   return (
     <Box style={{ position: "relative", flex: 1, display: "flex", justifyContent: "center" }}>
       <div className={classes.content}>
@@ -498,17 +504,22 @@ const ExploreReserveDetailPage = () => {
                   >
                     <ShareWhiteIcon />
                   </span>
-                  <SecondaryButton
-                    className={classes.detailsButton}
-                    size="small"
-                    onClick={() => syncNft()}
-                    ml={2}
-                  >
-                    <IconButtonWrapper style={{ marginLeft: -10 }} rotate={syncing}>
-                      <RefreshIcon />
-                    </IconButtonWrapper>
-                    <Box paddingTop={"4px"}>Sync NFT</Box>
-                  </SecondaryButton>
+
+                  {isSignedin ? (
+                    <SecondaryButton
+                      className={classes.detailsButton}
+                      size="small"
+                      onClick={() => syncNft()}
+                      ml={2}
+                    >
+                      <IconButtonWrapper style={{ marginLeft: -10 }} rotate={syncing}>
+                        <RefreshIcon />
+                      </IconButtonWrapper>
+                      <Box paddingTop={"4px"}>Sync NFT</Box>
+                    </SecondaryButton>
+                  ) : (
+                    <></>
+                  )}
                 </Box>
               </Box>
               <Box
@@ -520,8 +531,8 @@ const ExploreReserveDetailPage = () => {
                 <Box
                   flex={1}
                   display="flex"
-                  flexDirection={isMobileScreen ? "column" : "row"}
-                  alignItems="center"
+                  flexDirection="column"
+                  alignItems={isMobileScreen ? "center" : "flex-start"}
                   ml={0.25}
                   mr={1.25}
                   style={{ overflow: "hidden" }}
@@ -533,6 +544,15 @@ const ExploreReserveDetailPage = () => {
                     title={nft.name}
                   >
                     {nft.name}
+                  </Text>
+                  <Text
+                    color={Color.Black}
+                    className={classes.collectionName}
+                    style={{ marginBottom: 4, fontSize: "20px !important", cursor: "pointer" }}
+                    title={nft.name}
+                    onClick={()=>{gotoCollection(nft)}}
+                  >
+                    {nft.CollectionName}
                   </Text>
                 </Box>
                 <Box display="flex" flexDirection="row" alignItems="center">

@@ -40,11 +40,11 @@ export const IPFSContextProvider = ({ children }) => {
     }
   };
 
-  const uploadWithFileName = async file => {
+  const uploadWithFileName = async (file, showModal = true) => {
     console.log('------ file3', file, ipfs)
     if (file) {
       setIsUpload(true);
-      setShowUploadingModal(true);
+      setShowUploadingModal(showModal);
 
       if (file.creator_address || file.creatorId) {
         // It's an object, not a file.
@@ -109,16 +109,16 @@ export const IPFSContextProvider = ({ children }) => {
     return { added, newFile, keyData };
   };
 
-  const uploadWithNonEncryption = async file => {
-    let added = await uploadFile(file);
+  const uploadWithNonEncryption = async (file, showModal = true) => {
+    let added = await uploadFile(file, showModal);
     return { added };
   };
 
-  const uploadFile = async file => {
+  const uploadFile = async (file, showModal = true) => {
     return new Promise(async (resolve, reject) => {
       TimeLogger.start("Upload2IPFS");
       console.log('------ file2', file)
-      const added = await uploadWithFileName(file);
+      const added = await uploadWithFileName(file, showModal);
       TimeLogger.end("Upload2IPFS");
       resolve(added);
     });
@@ -221,10 +221,10 @@ export const IPFSContextProvider = ({ children }) => {
     }*/
   };
 
-  const upload = async file => {
+  const upload = async (file, showModal = true) => {
     try {
       setIsUpload(true);
-      setShowUploadingModal(true);
+      setShowUploadingModal(showModal);
       const added = await ipfs.add(file, {
         progress: prog => {
           const value = ((100.0 * prog) / file.size).toFixed(0);
@@ -248,6 +248,7 @@ export const IPFSContextProvider = ({ children }) => {
     ipfs,
     setMultiAddr,
     isConnected,
+    progress,
     getFiles,
     uploadWithFileName,
     upload,
