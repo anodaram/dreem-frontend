@@ -26,10 +26,10 @@ const nftWithRoyalty = network => {
         const contract = ContractInstance(web3, metadata.abi, collectionAddress);
 
         console.log("Getting gas....", contract, collectionAddress, to, account, uri, rAddress, bps);
-        const gas = await contract.methods.mintMasterBatch(name, symbol, amount, uri, rAddress, bps, '').estimateGas({ from: account });
+        const gas = await contract.methods.mintMasterBatch(to, amount, uri, rAddress, bps, '').estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
-          .mintMasterBatch(name, symbol, amount, uri, rAddress, bps, '')
+          .mintMasterBatch(to, amount, uri, rAddress, bps, '')
           .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", function (hash) {
             console.log("transaction hash:", hash);
