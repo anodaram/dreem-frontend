@@ -145,13 +145,17 @@ const ContentPreviewModal = ({
 
     if (isDraft) {
       console.log("here-----");
-      const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
+      const resRoyalty = await web3APIHandler.RoyaltyFactoryBatch.mint(
         web3,
         account,
         {
           name: collectionData.name,
           symbol: collectionData.symbol,
-          uri,
+          amount: 1,
+          uri: uri,
+          isRoyalty: false,
+          royaltyAddress: '0x0000000000000000000000000000000000000000',
+          royaltyPercentage: 0
         },
         setTxModalOpen,
         setTxHash
@@ -161,14 +165,14 @@ const ContentPreviewModal = ({
           nft.versionHashId,
           resRoyalty.contractAddress,
           targetChain.name,
-          [resRoyalty.tokenId],
+          [resRoyalty.startTokenId],
           metaData.newFileCID,
           account,
           "0x0000000000000000000000000000000000000000",
           0,
           resRoyalty.txHash,
           1,
-          undefined
+          resRoyalty.batchId
         );
         if(resp.success){
           setTxSuccess(true);
@@ -181,13 +185,19 @@ const ContentPreviewModal = ({
         setTxSuccess(false);
       }
     } else {
-      const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
+      const contractRes = await web3APIHandler.NFTWithRoyaltyBatch.mint(
         web3,
         account,
         {
           collectionAddress: collectionAddr,
+          name: collectionData.name,
+          symbol: collectionData.symbol,
           to: account,
-          uri,
+          amount: 1,
+          uri: uri,
+          isRoyalty: false,
+          royaltyAddress: '0x0000000000000000000000000000000000000000',
+          royaltyPercentage: 0
         },
         setTxModalOpen,
         setTxHash
@@ -195,15 +205,18 @@ const ContentPreviewModal = ({
 
       if (contractRes.success) {
         console.log(contractRes);
-        const resp = await MetaverseAPI.convertToNFTWorld(
-          nft.id,
+        const resp = await MetaverseAPI.convertToNFTAssetBatch(
+          nft.versionHashId,
           contractRes.collectionAddress,
           targetChain.name,
-          [contractRes.tokenId],
-          metaData.newFileCID,
+          [contractRes.startTokenId],
+          uri,
           contractRes.owner,
-          contractRes.royaltyAddress,
-          0
+          '0x0000000000000000000000000000000000000000',
+          0,
+          contractRes.txHash,
+          1,
+          contractRes.batchId
         );
         if(resp.success){
           setTxSuccess(true);

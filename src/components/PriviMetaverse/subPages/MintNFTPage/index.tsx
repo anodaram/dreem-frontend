@@ -147,7 +147,7 @@ export default function MintNFTPage() {
       );
       if (resRoyalty.success) {
         let tokenIds: any = [];
-        for(let i = 0; i < resRoyalty.amount || i < 20; i++){
+        for (let i = 0; i < Number(resRoyalty.amount) && i < 20; i++) {
           tokenIds.push(Number(resRoyalty.initialId) + i)
         }
 
@@ -165,12 +165,12 @@ export default function MintNFTPage() {
           resRoyalty.batchId
         );
         if(resp.success){
-          setBatchId(resp.data.masterBatchId)
+          setBatchId(resRoyalty.batchId)
           setTxSuccess(true);
           showAlertMessage(`Successfully asset minted`, { variant: "success" });
           return true;
         } else{
-          setTxSuccess(true);
+          setTxSuccess(false);
           showAlertMessage(`Something went wrong`, { variant: "error" });
           return false;
         }
@@ -184,6 +184,7 @@ export default function MintNFTPage() {
           web3,
           account,
           {
+            collectionAddress: collectionAddr,
             batchId: batchId
           },
           setTxModalOpen,
@@ -194,29 +195,29 @@ export default function MintNFTPage() {
           console.log(contractRes);
           let tokenIds: any = [];
           console.log('contractRes---', contractRes)
-          for(let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++){
+          for (let i = Number(contractRes.startTokenId); i < Number(contractRes.endTokenId); i++) {
             tokenIds.push(Number(i))
           }
           const resp = await MetaverseAPI.convertToNFTAssetBatch(
             batch.item.updateHash,
-            '',
-            '',
+            contractRes.collectionAddress,
+            targetChain.name,
             tokenIds,
-            '',
-            '',
-            '',
-            '',
+            URI,
+            contractRes.owner,
+            batch.item.erc721RoyaltyAddress,
+            batch.item.erc721RoyaltyPercentage,
             contractRes.txHash,
-            undefined,
+            amount,
             contractRes.batchId
           );
           if(resp.success){
-            setBatchId(resp.data.masterBatchId)
+            setBatchId(contractRes.batchId)
             setTxSuccess(true);
             showAlertMessage(`Successfully asset minted`, { variant: "success" });
             return true;
           } else{
-            setTxSuccess(true);
+            setTxSuccess(false);
             showAlertMessage(`Something went wrong`, { variant: "error" });
             return false;
           }
@@ -248,7 +249,7 @@ export default function MintNFTPage() {
           console.log(contractRes);
           let tokenIds: any = [];
           console.log('contractRes---', contractRes)
-          for(let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++){
+          for (let i = Number(contractRes.startTokenId); i < Number(contractRes.endTokenId); i++) {
             tokenIds.push(Number(i))
           }
           const resp = await MetaverseAPI.convertToNFTAssetBatch(
@@ -265,12 +266,12 @@ export default function MintNFTPage() {
             contractRes.batchId
           );
           if(resp.success){
-            setBatchId(resp.data.masterBatchId)
+            setBatchId(contractRes.batchId)
             setTxSuccess(true);
             showAlertMessage(`Successfully asset minted`, { variant: "success" });
             return true;
           } else{
-            setTxSuccess(true);
+            setTxSuccess(false);
             showAlertMessage(`Something went wrong`, { variant: "error" });
             return false;
           }

@@ -275,14 +275,14 @@ const CreateAssetFlow = ({
     console.log("----metadata:", metaData, isDraft);
 
     if (isDraft) {
-      console.log("here-----");
-      const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
+      const resRoyalty = await web3APIHandler.RoyaltyFactoryBatch.mint(
         web3,
         account,
         {
           name: collectionData.name,
           symbol: collectionData.symbol,
-          uri,
+          amount: 1,
+          uri: uri,
           isRoyalty,
           royaltyAddress,
           royaltyPercentage
@@ -290,39 +290,46 @@ const CreateAssetFlow = ({
         setTxModalOpen,
         setTxHash
       );
+      console.log(resRoyalty)
       if (resRoyalty.success) {
-
         const resp = await MetaverseAPI.convertToNFTAssetBatch(
           savingDraft.instance.hashId,
           resRoyalty.contractAddress,
           targetChain.name,
-          [resRoyalty.tokenId],
-          metaData.newFileCID,
+          [1],
+          uri,
           account,
           royaltyAddress,
           royaltyPercentage,
           resRoyalty.txHash,
           1,
-          undefined
+          resRoyalty.batchId
         );
         if(resp.success){
+          setBatchId(resRoyalty.batchId)
           setTxSuccess(true);
-          showAlertMessage(`Successfully minted`, { variant: "success" });
+          showAlertMessage(`Successfully asset minted`, { variant: "success" });
+          return true;
         } else{
-          setTxSuccess(false);
+          setTxSuccess(true);
           showAlertMessage(`Something went wrong`, { variant: "error" });
+          return false;
         }
       } else {
         setTxSuccess(false);
+        return false;
       }
     } else {
-      const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
+      const contractRes = await web3APIHandler.NFTWithRoyaltyBatch.mint(
         web3,
         account,
         {
           collectionAddress: collectionAddr,
+          name: collectionData.name,
+          symbol: collectionData.symbol,
           to: account,
-          uri,
+          amount: 1,
+          uri: uri,
           isRoyalty,
           royaltyAddress,
           royaltyPercentage
@@ -330,33 +337,36 @@ const CreateAssetFlow = ({
         setTxModalOpen,
         setTxHash
       );
+      console.log(contractRes)
 
       if (contractRes.success) {
-        setTxSuccess(true);
-        showAlertMessage(`Successfully asset minted`, { variant: "success" });
         console.log(contractRes);
         const resp = await MetaverseAPI.convertToNFTAssetBatch(
           savingDraft.instance.hashId,
           contractRes.collectionAddress,
           targetChain.name,
-          [contractRes.tokenId],
-          metaData.newFileCID,
+          [contractRes.startTokenId],
+          uri,
           contractRes.owner,
           royaltyAddress,
           royaltyPercentage,
           contractRes.txHash,
           1,
-          undefined
+          contractRes.batchId
         );
         if(resp.success){
+          setBatchId(contractRes.batchId)
           setTxSuccess(true);
           showAlertMessage(`Successfully asset minted`, { variant: "success" });
+          return true;
         } else{
-          setTxSuccess(false);
+          setTxSuccess(true);
           showAlertMessage(`Something went wrong`, { variant: "error" });
+          return false;
         }
       } else {
         setTxSuccess(false);
+        return false
       }
     }
   };
@@ -399,6 +409,7 @@ const CreateAssetFlow = ({
     const web3 = new Web3(library.provider);
 
     if (isDraft) {
+      console.log('first')
       const resRoyalty = await web3APIHandler.RoyaltyFactoryBatch.mint(
         web3,
         account,
@@ -417,7 +428,7 @@ const CreateAssetFlow = ({
       console.log(resRoyalty)
       if (resRoyalty.success) {
         let tokenIds: any = [];
-        for (let i = 0; i < resRoyalty.amount && i < 20; i++) {
+        for (let i = 0; i < Number(resRoyalty.amount) && i < 20; i++) {
           tokenIds.push(Number(resRoyalty.initialId) + i)
         }
 
@@ -450,10 +461,12 @@ const CreateAssetFlow = ({
       }
     } else {
       if(batchId){
+        console.log('second', batchId)
         const contractRes = await web3APIHandler.NFTWithRoyaltyBatch.mintBatchFromId(
           web3,
           account,
           {
+            collectionAddress: collectionAddr,
             batchId: batchId
           },
           setTxModalOpen,
@@ -464,20 +477,20 @@ const CreateAssetFlow = ({
         if (contractRes.success) {
           console.log(contractRes);
           let tokenIds: any = [];
-          for (let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++) {
+          for (let i = Number(contractRes.startTokenId); i < Number(contractRes.endTokenId); i++) {
             tokenIds.push(Number(i))
           }
           const resp = await MetaverseAPI.convertToNFTAssetBatch(
             savingDraft.instance.hashId,
-            '',
-            '',
+            contractRes.collectionAddress,
+            targetChain.name,
             tokenIds,
-            '',
-            '',
-            '',
-            '',
+            URI,
+            contractRes.owner,
+            royaltyAddress,
+            royaltyPercentage,
             contractRes.txHash,
-            undefined,
+            amount,
             contractRes.batchId
           );
           if(resp.success){
@@ -486,7 +499,7 @@ const CreateAssetFlow = ({
             showAlertMessage(`Successfully asset minted`, { variant: "success" });
             return true;
           } else{
-            setTxSuccess(true);
+            setTxSuccess(false);
             showAlertMessage(`Something went wrong`, { variant: "error" });
             return false;
           }
@@ -495,6 +508,7 @@ const CreateAssetFlow = ({
           return false
         }
       } else{
+        console.log('third')
         const contractRes = await web3APIHandler.NFTWithRoyaltyBatch.mint(
           web3,
           account,
@@ -517,9 +531,10 @@ const CreateAssetFlow = ({
         if (contractRes.success) {
           console.log(contractRes);
           let tokenIds: any = [];
-          for (let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++) {
+          for (let i = Number(contractRes.startTokenId); i < Number(contractRes.endTokenId); i++) {
             tokenIds.push(Number(i))
           }
+          console.log(tokenIds)
           const resp = await MetaverseAPI.convertToNFTAssetBatch(
             savingDraft.instance.hashId,
             contractRes.collectionAddress,
@@ -539,7 +554,7 @@ const CreateAssetFlow = ({
             showAlertMessage(`Successfully asset minted`, { variant: "success" });
             return true;
           } else{
-            setTxSuccess(true);
+            setTxSuccess(false);
             showAlertMessage(`Something went wrong`, { variant: "error" });
             return false;
           }
