@@ -16,6 +16,7 @@ import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import WorldCard from "components/PriviMetaverse/components/cards/WorldCard";
 import AssetsCard from "components/PriviMetaverse/components/cards/AssetsCard";
 import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
+import CreatorCard from "components/PriviMetaverse/components/cards/CreatorCard";
 import { explorePage } from "./index.styles";
 
 import backImg1 from "assets/metaverseImages/shape_roadmap.png";
@@ -91,7 +92,7 @@ export default function ExplorePage() {
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { itemId } = useParams<{ itemId?: string }>();
-  const [assetList, setAssetList] = React.useState<any[]>([]);
+  const [dreemList, setDreemList] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [page, setPage] = React.useState<number>(1);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
@@ -124,6 +125,8 @@ export default function ExplorePage() {
       setIsDisabledAssetTypeFilter(true);
       if (selectedContentType === "collection") {
         loadCollectionData(true);
+      } else if (selectedContentType === "creators") {
+        loadCreatorsData(true);
       }
     }
   }, [selectedContentType, selectedAssetTypes, debouncedSearchValue]);
@@ -165,11 +168,11 @@ export default function ExplorePage() {
       );
       if (response.success) {
         const newData = response.data.elements;
-        setAssetList(prev => (init ? newData : [...prev, ...newData]));
+        setDreemList(prev => (init ? newData : [...prev, ...newData]));
         setPage(curPage + 1);
         setHasMore(response.data.page.cur < response.data.page.max);
       } else {
-        setAssetList([]);
+        setDreemList([]);
       }
     } catch (error) {
       console.log("error: ", error);
@@ -186,11 +189,29 @@ export default function ExplorePage() {
       .then(res => {
         if (res.success) {
           const newData = res.data.elements;
-          setAssetList(prev => (init ? newData : [...prev, ...newData]));
+          setDreemList(prev => (init ? newData : [...prev, ...newData]));
           setPage(curPage + 1);
           setHasMore(res.data.page.cur < res.data.page.max);
         } else {
-          setAssetList([]);
+          setDreemList([]);
+        }
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const loadCreatorsData = async (init = false) => {
+    setLoading(true);
+
+    const curPage = init ? 1 : page;
+    MetaverseAPI.getCreators(12, curPage, "DESC")
+      .then(res => {
+        if (res.success) {
+          const newData = res.data.elements;
+          setDreemList(prev => (init ? newData : [...prev, ...newData]));
+          setPage(curPage + 1);
+          setHasMore(res.data.page.cur < res.data.page.max);
+        } else {
+          setDreemList([]);
         }
       })
       .finally(() => setLoading(false));
@@ -419,10 +440,16 @@ export default function ExplorePage() {
             </Box>
 
             <InfiniteScroll
-              hasChildren={assetList?.length > 0}
-              dataLength={assetList?.length}
+              hasChildren={dreemList?.length > 0}
+              dataLength={dreemList?.length}
               scrollableTarget={"scrollContainer"}
-              next={selectedContentType === "collection" ? loadCollectionData : loadAssetData}
+              next={
+                selectedContentType === "collection"
+                  ? loadCollectionData
+                  : selectedContentType === "creators"
+                  ? loadCreatorsData
+                  : loadAssetData
+              }
               hasMore={hasMore}
               loader={
                 loading && (
@@ -442,7 +469,7 @@ export default function ExplorePage() {
               <Box mt={4}>
                 <MasonryGrid
                   gutter={"40px"}
-                  data={assetList}
+                  data={dreemList}
                   renderItem={(item, index) =>
                     selectedContentType === "collection" ? (
                       <CollectionCard
@@ -451,6 +478,8 @@ export default function ExplorePage() {
                         selectable={false}
                         key={`collection_${index}`}
                       />
+                    ) : selectedContentType === "creators" ? (
+                      <CreatorCard data={item} />
                     ) : item.itemKind === "WORLD" ? (
                       <WorldCard nft={item} selectable={false} isLoading={loading} key={`world_${index}`} />
                     ) : item.itemKind === "CHARACTER" ? (
@@ -463,7 +492,7 @@ export default function ExplorePage() {
                 />
               </Box>
             </InfiniteScroll>
-            {!loading && assetList?.length < 1 && (
+            {!loading && dreemList?.length < 1 && (
               <Box textAlign="center" width="100%" mb={10} mt={2} fontSize={22}>
                 No Data
               </Box>
