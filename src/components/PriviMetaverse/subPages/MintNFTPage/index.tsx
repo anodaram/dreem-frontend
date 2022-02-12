@@ -74,7 +74,6 @@ export default function MintNFTPage() {
         steps.push(batch)
       }
     }
-    console.log(finishedAmount, steps)
     setBunches(steps)
   }, [amount, finishedAmount]);
 
@@ -103,13 +102,10 @@ export default function MintNFTPage() {
       metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
       const metadatauri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
       setUri(metadatauri)
-      console.log(metadatauri);
     }
     let isDraft = collectionData?.kind == "DRAFT" ? true : false;
-    console.log(collectionData)
     let collectionAddr = collectionData.address;
     let URI = uri ? uri : metaData.newFileCID
-    console.log(uri, URI)
     const targetChain = BlockchainNets.find(net => net.value === chain);
     setNetworkName(targetChain.name);
     if (chainId && chainId !== targetChain?.chainId) {
@@ -125,10 +121,8 @@ export default function MintNFTPage() {
     }
     const web3APIHandler = targetChain.apiHandler;
     const web3 = new Web3(library.provider);
-    console.log("----metadata:", metaData, isDraft);
 
     if (isDraft) {
-      console.log("here-----");
       let isRoyalty = batch.item.erc721RoyaltyPercentage > 0 ? true : false
       const resRoyalty = await web3APIHandler.RoyaltyFactoryBatch.mint(
         web3,
@@ -194,7 +188,6 @@ export default function MintNFTPage() {
         if (contractRes.success) {
           console.log(contractRes);
           let tokenIds: any = [];
-          console.log('contractRes---', contractRes)
           for (let i = Number(contractRes.startTokenId); i < Number(contractRes.endTokenId); i++) {
             tokenIds.push(Number(i))
           }
@@ -248,7 +241,6 @@ export default function MintNFTPage() {
         if (contractRes.success) {
           console.log(contractRes);
           let tokenIds: any = [];
-          console.log('contractRes---', contractRes)
           for (let i = Number(contractRes.startTokenId); i < Number(contractRes.endTokenId); i++) {
             tokenIds.push(Number(i))
           }

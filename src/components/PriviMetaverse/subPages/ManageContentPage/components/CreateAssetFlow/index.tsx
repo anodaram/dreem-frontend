@@ -204,12 +204,9 @@ const CreateAssetFlow = ({
         description: formData.ITEM_DESCRIPTION,
       };
       const params = param[assetItem]
-      console.log(param, params)
       Object.keys(params).map(function (key, index) {
-        console.log(key, formData[params[key]] ? formData[params[key]] : fileInputs[params[key]])
         payload[key] = formData[params[key]] ? formData[params[key]] : fileInputs[params[key]]
       });
-      console.log(payload)
 
       setIsUploading(true);
       setProgress(0);
@@ -254,7 +251,6 @@ const CreateAssetFlow = ({
     let isDraft = collectionData?.kind == "DRAFT" ? true : false;
 
     const metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
-    console.log(metaData, collectionData);
     const targetChain = BlockchainNets.find(net => net.value === chain);
     setNetworkName(targetChain.name);
     if (chainId && chainId !== targetChain?.chainId) {
@@ -269,10 +265,8 @@ const CreateAssetFlow = ({
       return;
     }
     const uri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
-    console.log(uri);
     const web3APIHandler = targetChain.apiHandler;
     const web3 = new Web3(library.provider);
-    console.log("----metadata:", metaData, isDraft);
 
     if (isDraft) {
       const resRoyalty = await web3APIHandler.RoyaltyFactoryBatch.mint(
@@ -290,7 +284,6 @@ const CreateAssetFlow = ({
         setTxModalOpen,
         setTxHash
       );
-      console.log(resRoyalty)
       if (resRoyalty.success) {
         const resp = await MetaverseAPI.convertToNFTAssetBatch(
           savingDraft.instance.hashId,
@@ -340,7 +333,6 @@ const CreateAssetFlow = ({
       console.log(contractRes)
 
       if (contractRes.success) {
-        console.log(contractRes);
         const resp = await MetaverseAPI.convertToNFTAssetBatch(
           savingDraft.instance.hashId,
           contractRes.collectionAddress,
@@ -377,21 +369,16 @@ const CreateAssetFlow = ({
     }
     let collectionData = await MetaverseAPI.getCollection(currentCollection.id);
     collectionData = collectionData.data
-    console.log('collectionData---', collectionData)
-    console.log('batchId---', batchId)
     let metaData;
     if (!uri) {
       let metadata = await getMetadata(savingDraft.instance.hashId);
       metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
       const metadatauri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
       setUri(metadatauri)
-      console.log(metadatauri);
     }
     let isDraft = collectionData?.kind == "DRAFT" ? true : false;
-    console.log(collectionData)
     let collectionAddr = collectionData.address;
     let URI = uri ? uri : metaData.newFileCID
-    console.log(uri, URI)
     const targetChain = BlockchainNets.find(net => net.value === chain);
     setNetworkName(targetChain.name);
     if (chainId && chainId !== targetChain?.chainId) {
@@ -409,7 +396,6 @@ const CreateAssetFlow = ({
     const web3 = new Web3(library.provider);
 
     if (isDraft) {
-      console.log('first')
       const resRoyalty = await web3APIHandler.RoyaltyFactoryBatch.mint(
         web3,
         account,
@@ -461,7 +447,6 @@ const CreateAssetFlow = ({
       }
     } else {
       if(batchId){
-        console.log('second', batchId)
         const contractRes = await web3APIHandler.NFTWithRoyaltyBatch.mintBatchFromId(
           web3,
           account,
@@ -475,7 +460,6 @@ const CreateAssetFlow = ({
         console.log(contractRes)
 
         if (contractRes.success) {
-          console.log(contractRes);
           let tokenIds: any = [];
           for (let i = Number(contractRes.startTokenId); i < Number(contractRes.endTokenId); i++) {
             tokenIds.push(Number(i))
@@ -508,7 +492,6 @@ const CreateAssetFlow = ({
           return false
         }
       } else{
-        console.log('third')
         const contractRes = await web3APIHandler.NFTWithRoyaltyBatch.mint(
           web3,
           account,
@@ -529,12 +512,10 @@ const CreateAssetFlow = ({
         console.log(contractRes)
 
         if (contractRes.success) {
-          console.log(contractRes);
           let tokenIds: any = [];
           for (let i = Number(contractRes.startTokenId); i < Number(contractRes.endTokenId); i++) {
             tokenIds.push(Number(i))
           }
-          console.log(tokenIds)
           const resp = await MetaverseAPI.convertToNFTAssetBatch(
             savingDraft.instance.hashId,
             contractRes.collectionAddress,
@@ -576,7 +557,6 @@ const CreateAssetFlow = ({
   };
 
   const validate = (withMessage) => {
-    console.log(metadata)
     if (metadata && metadata?.fields) {
       for (let i = 0; i < metadata?.fields?.length; i++) {
         const field = metadata.fields[i];
