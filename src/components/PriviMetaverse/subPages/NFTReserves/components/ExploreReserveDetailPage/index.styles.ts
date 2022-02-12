@@ -96,6 +96,24 @@ export const exploreOptionDetailPageStyles = makeStyles(theme => ({
       fontSize: "28px !important",
     },
   },
+  collectionName: {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    fontFamily: "GRIFTER",
+    fontStyle: "normal",
+    fontWeight: "normal",
+    fontSize: "30px !important",
+    lineHeight: "120%",
+    mixBlendMode: "normal",
+    textTransform: "uppercase",
+    background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
+    "-webkit-text-fill-color": "transparent",
+    "-webkit-background-clip": "text",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "20px !important",
+    },
+  },
   artist: {
     "& + &": {
       marginLeft: -12,
