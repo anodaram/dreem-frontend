@@ -66,7 +66,7 @@ export default function MarketplaceFeed() {
   const tableHeaders: Array<CustomTableHeaderInfo> = [
     { headerName: "NFT" },
     { headerName: "Price", sortable: true, headerAlign: "center" },
-    { headerName: "Date", headerAlign: "center" },
+    { headerName: "Time", headerAlign: "center" },
     { headerName: "Transaction type", headerAlign: "center" },
     { headerName: "Explorer", headerAlign: "center" },
     { headerName: "", headerAlign: "center" },
@@ -85,12 +85,14 @@ export default function MarketplaceFeed() {
   React.useEffect(() => {
     if (listenerSocket) {
       const updateMarketPlaceFeedHandler = _transaction => {
-        if (collection_id !== _transaction.slug){
+        if (collection_id !== _transaction.slug) {
           return;
         }
         setNfts(prev => {
-          let _transactions = prev.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
-          if (_transactions.length === 0 || _transactions[0].id < _transaction.id){
+          let _transactions = prev.map(transaction =>
+            _transaction.id === transaction.id ? _transaction : transaction
+          );
+          if (_transactions.length === 0 || _transactions[0].id < _transaction.id) {
             _transactions = [_transaction].concat(_transactions);
           }
           return _transactions;
@@ -179,17 +181,14 @@ export default function MarketplaceFeed() {
   const tableData = React.useMemo(() => {
     let data: Array<Array<CustomTableCellInfo>> = [];
     const accTitle = item => {
-      const info = item.operator ||
-      item.seller ||
-      item.fromSeller ||
-      item.toSeller ||
-      item.Address || undefined;
-  
-      if (info){ 
+      const info =
+        item.operator || item.seller || item.fromSeller || item.toSeller || item.Address || undefined;
+
+      if (info) {
         return info.substring(0, 6) + "..." + info.substring(info.length - 4, info.length);
       }
       return "";
-    }
+    };
 
     if (nfts && nfts.length) {
       data = nfts.map(row => [
@@ -215,35 +214,48 @@ export default function MarketplaceFeed() {
                 : `${+toDecimals(
                     row.price || row.pricePerSecond * row.rentalTime,
                     getTokenDecimal(row.paymentToken || row.fundingToken)
-                  )} ${getTokenSymbol(row.paymentToken || row.fundingToken)}`}</p>
+                  )} ${getTokenSymbol(row.paymentToken || row.fundingToken)}`}
+            </p>
           ),
         },
         {
-          cell: <p className={classes.whiteText}><Moment fromNow format="DD/MMM/YYYY">{+row.id}</Moment></p>
+          cell: (
+            <p className={classes.whiteText}>
+              <Moment fromNow>{+row.id}</Moment>
+            </p>
+          ),
         },
         {
-          cell: <Box className={classes.typeTag}
-            style={{
-              background:
-                row.type && row.type.toLowerCase() === "rented"
-                  ? "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)"
-                  : row.type && row.type.toLowerCase() === "sold"
+          cell: (
+            <Box
+              className={classes.typeTag}
+              style={{
+                background:
+                  row.type && row.type.toLowerCase() === "rented"
+                    ? "conic-gradient(from 31.61deg at 50% 50%, #F2C525 -73.13deg, #EBBD27 15deg, rgba(213, 168, 81, 0.76) 103.13deg, #EBED7C 210deg, #F2C525 286.87deg, #EBBD27 375deg)"
+                    : row.type && row.type.toLowerCase() === "sold"
                     ? "conic-gradient(from 31.61deg at 50% 50%, #91D502 -25.18deg, #E5FF46 15deg, rgba(186, 252, 0, 0.76) 103.13deg, #A3CC00 210deg, #91D502 334.82deg, #E5FF46 375deg)"
                     : row.type && row.type.toLowerCase() === "blocked"
-                      ? "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)"
-                      : row.type && row.type.toLowerCase() === "transfer"
-                        ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
-                        : "",
-            }}
-          >
-            {row.type}
-          </Box>
+                    ? "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)"
+                    : row.type && row.type.toLowerCase() === "transfer"
+                    ? "conic-gradient(from 180deg at 50% 50%, #C7CAFE 0deg, rgba(196, 214, 250, 0.92) 135deg, rgba(238, 239, 244, 0.75) 230.62deg, rgba(114, 145, 255, 0.87) 303.75deg, #C7CAFE 360deg)"
+                    : "",
+              }}
+            >
+              {row.type}
+            </Box>
+          ),
         },
         {
-          cell: <div onClick={() => { goToScan(row.transactionHash, row.chain) }}>{
-            <img src={getChainImageUrl(row.chain)} width={"22px"} />
-          }
-          </div>
+          cell: (
+            <div
+              onClick={() => {
+                goToScan(row.transactionHash, row.chain);
+              }}
+            >
+              {<img src={getChainImageUrl(row.chain)} width={"22px"} />}
+            </div>
+          ),
         },
         {
           cell: (
@@ -347,29 +359,26 @@ export default function MarketplaceFeed() {
             </div>
           )}
         </InfiniteScroll>
-        {!loading && nfts?.length < 1 && (
-          <Box textAlign="center" width="100%" mb={10} mt={2}>
-          </Box>
-        )}
+        {!loading && nfts?.length < 1 && <Box textAlign="center" width="100%" mb={10} mt={2}></Box>}
       </Box>
     </>
   );
 }
 
 export const ArrowIconComponent = func => () =>
-(
-  <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
-    <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
-        stroke="#2D3047"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  </Box>
-);
+  (
+    <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
+      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
+          stroke="#2D3047"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </Box>
+  );
 
 export const SearchIcon = ({ color = "white" }) => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
