@@ -18,7 +18,7 @@ export default function CreatorCard({ item }: { item: any }) {
         <ShapeIcon
           style={{ cusor: "pointer" }}
           onClick={e => {
-            shareMedia("creator", `explore/${creatorInfo?.creator?.character?.kind || ""}`);
+            shareMedia("creator", `profile/${creatorInfo?.creator?.user?.name || ""}`);
           }}
         />
       </div>
