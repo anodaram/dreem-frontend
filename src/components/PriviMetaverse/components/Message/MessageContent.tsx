@@ -450,7 +450,7 @@ export const MessageContent = ({
   return (
     <Box className="message-content-container">
       <Box display="flex" bgcolor="#151515" p="8px" width="fit-content" mx="19px" mt="22px">
-        <Box className={"tab selected"}>{`${room === GLOBAL_CHAT_ROOM ? "GLOBAL" : "OWNERS"} LIVE CHAT`}</Box>
+        <Box className={"tab selected"}>{`${room === GLOBAL_CHAT_ROOM ? "GLOBAL" : "COLLECTION HOLDER`c"} LIVE CHAT`}</Box>
       </Box>
       <div className="item-list-container" id="messageContainer" ref={itemListRef} onScroll={handleScroll}>
         {(room !== GLOBAL_CHAT_ROOM && !nftHolder) || !messages?.length ? (
