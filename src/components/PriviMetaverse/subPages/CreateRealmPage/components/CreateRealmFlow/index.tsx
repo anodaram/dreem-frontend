@@ -409,25 +409,7 @@ const CreateRealmFlow = ({
   return (
     <>
       <div className={classes.otherContent}>
-        <Hidden smUp>
-          <Box
-            className={classes.backArrow}
-            onClick={() => { }}
-          >
-            <ArrowIcon />
-            <Box ml={1}>BACK</Box>
-          </Box>
-        </Hidden>
-        <Box className={classes.headTitle}>
-          <Hidden xsDown>
-            <Box
-              className={classes.backArrow}
-              onClick={() => { }}
-            >
-              <ArrowIcon />
-              <Box ml={1}>BACK</Box>
-            </Box>
-          </Hidden>
+        <Box className={classes.headTitle}>\
           <div className={classes.typo1}>
             Create New Realm
           </div>
