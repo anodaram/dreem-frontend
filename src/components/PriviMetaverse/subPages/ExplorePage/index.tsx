@@ -102,7 +102,7 @@ export default function ExplorePage() {
   const [openAssetSection, setOpenAssetSection] = React.useState<boolean>(true);
   // const [openPrimarySection, setOpenPrimarySection] = React.useState<boolean>(true);
   // const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
-  const [selectedContentType, setSelectedContentType] = React.useState<string>("creators");
+  const [selectedContentType, setSelectedContentType] = React.useState<string>("all assets");
   const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["WORLD"]);
   const [isDisabledAssetTypeFilter, setIsDisabledAssetTypeFilter] = React.useState<boolean>(false);
   const [searchValue, setSearchValue] = React.useState<string>("");
@@ -114,6 +114,7 @@ export default function ExplorePage() {
   const loadingCount = React.useMemo(() => (width > 900 ? 3 : width > 600 ? 2 : 1), [width]);
 
   React.useEffect(() => {
+    setDreemList([]);
     if (
       selectedContentType === "all assets" ||
       selectedContentType === "draft" ||
@@ -414,29 +415,38 @@ export default function ExplorePage() {
               flexDirection={isMobile ? "column" : "row"}
             >
               <Box className={classes.gradientText}>Explore Dreem</Box>
-              <div className={classes.searchSection}>
-                <InputWithLabelAndTooltip
-                  type="text"
-                  inputValue={searchValue}
-                  placeHolder="Search assets"
-                  onInputValueChange={e => {
-                    setSearchValue(e.target.value);
-                  }}
-                  style={{
-                    background: "transparent",
-                    margin: 0,
-                    marginRight: 8,
-                    marginLeft: 8,
-                    padding: 0,
-                    border: "none",
-                    height: "auto",
-                  }}
-                  theme="dark"
-                />
-                <Box display="flex" alignItems="center" justifyContent="center" style={{ cursor: "pointer" }}>
-                  <SearchIcon />
-                </Box>
-              </div>
+              {(selectedContentType === "all assets" ||
+                selectedContentType === "draft" ||
+                selectedContentType === "nft") && (
+                <div className={classes.searchSection}>
+                  <InputWithLabelAndTooltip
+                    type="text"
+                    inputValue={searchValue}
+                    placeHolder="Search assets"
+                    onInputValueChange={e => {
+                      setSearchValue(e.target.value);
+                    }}
+                    style={{
+                      background: "transparent",
+                      margin: 0,
+                      marginRight: 8,
+                      marginLeft: 8,
+                      padding: 0,
+                      border: "none",
+                      height: "auto",
+                    }}
+                    theme="dark"
+                  />
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <SearchIcon />
+                  </Box>
+                </div>
+              )}
             </Box>
 
             <InfiniteScroll
@@ -457,9 +467,7 @@ export default function ExplorePage() {
                     <MasonryGrid
                       gutter={"40px"}
                       data={Array(loadingCount).fill(0)}
-                      renderItem={(_, index) => (
-                        <AvatarCard isLoading={true} key={`avatar_loading_${index}`} />
-                      )}
+                      renderItem={(_, index) => <AvatarCard isLoading={true} key={`loading_${index}`} />}
                       columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                     />
                   </Box>

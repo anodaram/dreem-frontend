@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { useTheme, useMediaQuery } from "@material-ui/core";
+
 import Box from "shared/ui-kit/Box";
 import Avatar from "shared/ui-kit/Avatar";
 import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
@@ -9,6 +11,10 @@ import { creatorCardStyles } from "./index.styles";
 export default function CreatorCard({ item }: { item: any }) {
   const classes = creatorCardStyles();
   const { shareMedia } = useShareMedia();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [creatorInfo, setCreatorInfo] = useState<any>(item);
 
@@ -23,7 +29,11 @@ export default function CreatorCard({ item }: { item: any }) {
         />
       </div>
       <Box className={classes.avatarSection}>
-        <Avatar size={233} rounded image={creatorInfo?.creator?.user?.avatarUrl || getDefaultAvatar()} />
+        <Avatar
+          size={isTablet ? 150 : 233}
+          rounded
+          image={creatorInfo?.creator?.user?.avatarUrl || getDefaultAvatar()}
+        />
       </Box>
       <Box
         height={"1px"}
