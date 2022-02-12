@@ -20,6 +20,7 @@ import DepositRequiredModal from "../../../modals/DepositRequiredModal";
 import EditRealmModal from "../../../modals/EditRealmModal";
 import EditExtensionModal from "../../../modals/EditExtensionModal";
 import { nftCardStyles } from "./index.styles";
+import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
 
 export default function WorldCard({
   nft,
@@ -63,9 +64,9 @@ export default function WorldCard({
   const isOwner = nft && nft.submitter?.user?.priviId === userSelector.id;
 
   React.useEffect(() => {
-    if(itemId && !nft){
+    if (itemId && !nft) {
       MetaverseAPI.getAsset(itemId).then(res => {
-        nft = res.data
+        nft = res.data;
       });
     }
     // getSettings();
@@ -179,7 +180,7 @@ export default function WorldCard({
               style={{
                 backgroundImage: data.worldImage
                   ? `url("${sanitizeIfIpfsUrl(data.worldImage)}")`
-                  : `url(${getDefaultImageUrl()})`,
+                  : `url(${getDefaultBGImage()})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
@@ -275,10 +276,6 @@ export default function WorldCard({
     </div>
   );
 }
-
-const getDefaultImageUrl = () => {
-  return require(`assets/metaverseImages/new_world_default.png`);
-};
 
 const ShapeIcon = props => (
   <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

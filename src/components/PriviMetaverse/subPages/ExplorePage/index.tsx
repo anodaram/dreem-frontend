@@ -102,7 +102,7 @@ export default function ExplorePage() {
   const [openAssetSection, setOpenAssetSection] = React.useState<boolean>(true);
   // const [openPrimarySection, setOpenPrimarySection] = React.useState<boolean>(true);
   // const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
-  const [selectedContentType, setSelectedContentType] = React.useState<string>("all assets");
+  const [selectedContentType, setSelectedContentType] = React.useState<string>("creators");
   const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["WORLD"]);
   const [isDisabledAssetTypeFilter, setIsDisabledAssetTypeFilter] = React.useState<boolean>(false);
   const [searchValue, setSearchValue] = React.useState<string>("");
@@ -479,7 +479,7 @@ export default function ExplorePage() {
                         key={`collection_${index}`}
                       />
                     ) : selectedContentType === "creators" ? (
-                      <CreatorCard data={item} />
+                      <CreatorCard item={item} key={`creator_${index}`} />
                     ) : item.itemKind === "WORLD" ? (
                       <WorldCard nft={item} selectable={false} isLoading={loading} key={`world_${index}`} />
                     ) : item.itemKind === "CHARACTER" ? (
