@@ -417,6 +417,10 @@ const ExploreReserveDetailPage = () => {
     });
   };
 
+  const gotoCollection = nft => {
+    history.push(`/P2E/${nft.collectionId}`);
+  };
+
   return (
     <Box style={{ position: "relative", flex: 1, display: "flex", justifyContent: "center" }}>
       <div className={classes.content}>
@@ -527,8 +531,8 @@ const ExploreReserveDetailPage = () => {
                 <Box
                   flex={1}
                   display="flex"
-                  flexDirection={isMobileScreen ? "column" : "row"}
-                  alignItems="center"
+                  flexDirection="column"
+                  alignItems={isMobileScreen ? "center" : "flex-start"}
                   ml={0.25}
                   mr={1.25}
                   style={{ overflow: "hidden" }}
@@ -540,6 +544,15 @@ const ExploreReserveDetailPage = () => {
                     title={nft.name}
                   >
                     {nft.name}
+                  </Text>
+                  <Text
+                    color={Color.Black}
+                    className={classes.collectionName}
+                    style={{ marginBottom: 4, fontSize: "20px !important", cursor: "pointer" }}
+                    title={nft.name}
+                    onClick={()=>{gotoCollection(nft)}}
+                  >
+                    {nft.CollectionName}
                   </Text>
                 </Box>
                 <Box display="flex" flexDirection="row" alignItems="center">
