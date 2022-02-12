@@ -1,6 +1,7 @@
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDebounce } from "use-debounce/lib";
+import { useParams } from "react-router";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
@@ -87,6 +88,7 @@ export default function ExplorePage() {
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const { itemId } = useParams<{ itemId?: string }>();
   const [assetList, setAssetList] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [page, setPage] = React.useState<number>(1);
@@ -110,6 +112,17 @@ export default function ExplorePage() {
   React.useEffect(() => {
     loadData(true);
   }, [selectedAssetTypes, debouncedSearchValue]);
+
+  React.useEffect(() => {
+    let itemKind;
+    if(itemId){
+      MetaverseAPI.getAsset(itemId).then(res => {
+        itemKind = res.data?.itemKind
+        setLoading(false)
+        setSelectedAssetTypes([itemKind])
+      });
+    }
+  }, [itemId]);
 
   const loadData = async (init = false) => {
     if (loading) return;

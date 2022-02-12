@@ -19,7 +19,7 @@ import { toDecimals } from "shared/functions/web3";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import { userTrackMarketPlace } from "shared/services/API";
 import { getNftGameFeed } from "shared/services/API/DreemAPI";
-import { getPopularGames, getTrendingGameNfts } from "shared/services/API/ReserveAPI";
+import { checkNFTHolder, getPopularGames, getTrendingGameNfts } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { PrimaryButton, SecondaryButton, Variant } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
@@ -34,6 +34,7 @@ import { listenerSocket } from "components/Login/Auth";
 import { GLOBAL_CHAT_ROOM } from "shared/constants/constants";
 import { useNFTOptionsStyles } from "./index.styles";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
+import { gameDetailPageStyles } from "../GameDetailPage/index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -44,6 +45,7 @@ const COLUMNS_COUNT_BREAK_POINTS = {
   1440: 4,
 };
 
+const TYPE_SOLD = "SOLD";
 const TYPE_TRANSFER = "TRANSFER";
 const TYPE_MINT = "MINT";
 
@@ -135,9 +137,35 @@ const NFTReserves = () => {
             return [_newNFT].concat(_newListings);
           });
         }
+
+        if (_newNFT) {
+          setPopularGames(prev => {
+            const targetGame = prev.find(game => game.Address === _newNFT.collection);
+            if (!targetGame) return prev;
+  
+            return prev.map(game => {
+              if (game.Address === _newNFT.collection) {
+                game.transaction_count = game.transaction_count + 1
+                game.Count = game.Count + 1
+              }
+              return game;
+            }).sort((a, b) => b.transaction_count - a.transaction_count)
+          })
+        }
       };
 
       const updateMarketPlaceFeedHandler = _transaction => {
+        if (_transaction.type === 'TRANSFER') {
+          setFeaturedGames(prev => {
+            const updateFeaturedGames = [...prev];
+            const index = updateFeaturedGames.findIndex(game => game.collectionId === _transaction.slug);
+            if (index !== -1) {
+              updateFeaturedGames[index].Transfers += 1;
+            }
+
+            return updateFeaturedGames
+          });
+        }
         setTransactions(prev => {
           let _transactions = prev.map(transaction =>
             _transaction.id === transaction.id ? _transaction : transaction
@@ -147,6 +175,42 @@ const NFTReserves = () => {
           }
           return _transactions;
         });
+
+        // Reorder by transaction count
+        setPopularGames(prev => {
+          const targetGame = prev.find(game => game.Address === _transaction.collection);
+          if (!targetGame) return prev;
+
+          return prev.map(game => {
+            if (game.Address === _transaction.collection) {
+              game.transaction_count = game.transaction_count + 1
+            }
+            return game;
+          }).sort((a, b) => b.transaction_count - a.transaction_count)
+        })
+
+        // Update owners count when sold a NFT
+        if (_transaction.type === TYPE_SOLD) {
+          checkNFTHolder({
+            collectionId: _transaction.collection,
+            mode: isProd ? "main" : "test",
+            account: _transaction.to,
+          }).then(res => {
+            if (!res.nftHolder) {
+              setPopularGames(prev => {
+                const targetGame = prev.find(game => game.Address === _transaction.collection);
+                if (!targetGame) return prev;
+    
+                return prev.map(game => {
+                  if (game.Address === _transaction.collection) {
+                    game.owners_count = game.owners_count + 1
+                  }
+                  return game;
+                })
+              })
+            }
+          })
+        }
       };
 
       listenerSocket.on("newNFT", newNFTHandler);
@@ -214,8 +278,8 @@ const NFTReserves = () => {
       .then(res => {
         if (res && res.success) {
           const items = res.data;
-          setPopularGames(items);
-          setFeaturedGames(items);
+          setPopularGames(items.sort((a, b) => (b.Transfers || 0) - (a.Transfers || 0)));
+          setFeaturedGames(items.sort((a, b) => (b.Transfers || 0) - (a.Transfers || 0)));
         }
       })
       .finally(() => setLoadingPopularGames(false));
@@ -458,7 +522,12 @@ const NFTReserves = () => {
                             >
                               {game.Description.slice(0, 200) + (game.Description.length > 200 ? "..." : "")}
                             </Box>
-                            <Box display="flex" mt={isTablet || isNarrow ? 0.5 : 3} justifyContent={'space-between'} width={1}>
+                            <Box
+                              display="flex"
+                              mt={isTablet || isNarrow ? 0.5 : 3}
+                              justifyContent={"space-between"}
+                              width={1}
+                            >
                               <Box
                                 display="flex"
                                 flexDirection="column"
@@ -468,7 +537,7 @@ const NFTReserves = () => {
                                 <span>{game.Transfers || 0}</span>
                                 <span>Transfers</span>
                               </Box>
-                              <Box width={'2px'} height={'56px'} bgcolor={'#E9FF2620'} />
+                              <Box width={"2px"} height={"56px"} bgcolor={"#E9FF2620"} />
                               <Box
                                 display="flex"
                                 flexDirection="column"
@@ -478,7 +547,7 @@ const NFTReserves = () => {
                                 <span>{game.owners_count || 0}</span>
                                 <span>New Owners</span>
                               </Box>
-                              <Box width={'2px'} height={'56px'} bgcolor={'#E9FF2620'} />
+                              <Box width={"2px"} height={"56px"} bgcolor={"#E9FF2620"} />
                               <Box
                                 display="flex"
                                 flexDirection="column"

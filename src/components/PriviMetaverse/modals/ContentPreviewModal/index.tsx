@@ -84,7 +84,7 @@ const ContentPreviewModal = ({
 
   React.useEffect(() => {
     if (open && nftId) {
-      MetaverseAPI.getWorld(nftId).then(res1 => {
+      MetaverseAPI.getAsset(nftId).then(res1 => {
         setNFT(res1.data);
         MetaverseAPI.getCollection(res1.data.collectionId).then(res2 => {
           setCurrentCollection(res2.data);
@@ -433,7 +433,7 @@ const ContentPreviewModal = ({
               //     metaData={metaDataForModal}
               //     realmData={nft}
               //     handleRefresh={() => {
-              //       MetaverseAPI.getWorld(nftId).then(res => {
+              //       MetaverseAPI.getAsset(nftId).then(res => {
               //         setNFT(res.data);
               //       });
               //       handleRefresh && handleRefresh();
@@ -446,7 +446,7 @@ const ContentPreviewModal = ({
               //     metaData={metaDataForModal}
               //     realmData={nft}
               //     handleRefresh={() => {
-              //       MetaverseAPI.getWorld(nftId).then(res => {
+              //       MetaverseAPI.getAsset(nftId).then(res => {
               //         setNFT(res.data);
               //       });
               //       handleRefresh && handleRefresh();

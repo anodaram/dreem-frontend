@@ -44,16 +44,13 @@ export default function WorldCard({
   const styles = nftCardStyles();
   const { shareMedia } = useShareMedia();
   // const { showAlertMessage } = useAlertMessage();
-
-  const { draftId } = useParams<{ draftId?: string }>();
+  const { itemId } = useParams<{ itemId?: string }>();
   const [depositInfo, setDepositInfo] = useState<any>(null);
   const [protocolFee, setProtocolFee] = useState<any>(null);
   const [openContentPreview, setOpenContentPreview] = useState<boolean>(
-    draftId && draftId == nft?.id ? true : false
+    itemId && itemId == nft?.versionHashId ? true : false
   );
-  const [openDepositRequired, setOpenDepositRequired] = useState<boolean>(
-    draftId && draftId == nft?.id ? true : false
-  );
+  const [openDepositRequired, setOpenDepositRequired] = useState<boolean>(false);
 
   const [data, setData] = useState<any>({});
   const parentNode = React.useRef<any>();
@@ -66,7 +63,12 @@ export default function WorldCard({
   const isOwner = nft && nft.submitter?.user?.priviId === userSelector.id;
 
   React.useEffect(() => {
-    getSettings();
+    if(itemId && !nft){
+      MetaverseAPI.getAsset(itemId).then(res => {
+        nft = res.data
+      });
+    }
+    // getSettings();
   }, []);
 
   React.useEffect(() => {
@@ -190,7 +192,7 @@ export default function WorldCard({
             <ShapeIcon
               style={{ cusor: "pointer" }}
               onClick={e => {
-                shareMedia("NFT", `realms/${data.id}`);
+                shareMedia("NFT", `explore/${data.versionHashId}`);
               }}
             />
           </div>
@@ -230,7 +232,7 @@ export default function WorldCard({
       {openContentPreview && (
         <ContentPreviewModal
           open={openContentPreview}
-          nftId={nft.id}
+          nftId={nft.versionHashId}
           isOwner={isOwner}
           onClose={() => setOpenContentPreview(false)}
           handleRefresh={handleRefresh}

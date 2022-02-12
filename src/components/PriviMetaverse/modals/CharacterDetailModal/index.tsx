@@ -64,7 +64,6 @@ const CharacterDetailModal = ({
         let media = {};
 
         setNFT(res.data);
-
         const characterId = id.toString();
         const resFruit = await Axios.get(`${URL()}/dreemRealm/characterGetFruitData`, {
           params: {
@@ -118,7 +117,7 @@ const CharacterDetailModal = ({
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     onClose();
-                    history.push(`/realms/${realmData.id}`);
+                    history.push(`/realms/${realmData?.id}`);
                   }}
                 >
                   {realmData?.worldTitle}

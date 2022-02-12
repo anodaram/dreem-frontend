@@ -524,7 +524,7 @@ export const useNFTOptionsStyles = makeStyles(theme => ({
       fontWeight: 700,
       fontSize: 34,
       lineHeight: "35.53px",
-      fontFamily: "GRIFTER",
+      fontFamily: "Rany",
     },
     "& span:last-child": {
       fontWeight: 700,

@@ -232,6 +232,7 @@ export const uploadAsset = async payload => {
     }
   } catch (error) {
     console.log("error in uploading asset:", error);
+    return false
   }
 };
 
@@ -299,18 +300,18 @@ export const getMapData = async () => {
   }
 };
 
-export const getWorld = async worldId => {
+export const getAsset = async hash => {
   try {
     const token = localStorage.getItem("token");
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(`${METAVERSE_URL()}/web/public/itemVersions/${worldId}/`, config);
+    const resp = await axios.get(`${METAVERSE_URL()}/web/public/itemVersions/hash/${hash}/`, config);
     if (resp.data) {
       return resp.data;
     }
   } catch (error) {
-    console.log("error in uploading world:", error);
+    console.log("error in getting asset:", error);
   }
 };
 

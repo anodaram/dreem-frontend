@@ -36,6 +36,7 @@ import VerifyProfileModal from "../../modals/VerifyProfileModal";
 import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
 import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProfileCard";
 import WorldCard from "../../components/cards/WorldCard";
+import AssetsCard from "components/PriviMetaverse/components/cards/AssetsCard";
 import FollowProfileModal from "../../modals/FollowProfileModal";
 import { creatorPageStyles } from "./index.styles";
 
@@ -778,13 +779,19 @@ export default function CreatorPage() {
                           <Grid container spacing={3} style={{ marginBottom: 24 }}>
                             {nftContents?.map((nft, index) => (
                               <Grid item key={`trending-pod-${index}`} md={4} sm={6} xs={12}>
-                                <WorldCard
-                                  nft={{ ...nft }}
-                                  hideInfo
-                                  handleRefresh={handleRefresh}
-                                  selectable={false}
-                                  selected={false}
-                                />
+                                {nft.itemKind === "WORLD" ? (
+                                  <WorldCard
+                                    nft={{ ...nft }}
+                                    hideInfo
+                                    handleRefresh={handleRefresh}
+                                    selectable={false}
+                                    selected={false}
+                                  />
+                                ) : nft.itemKind === "CHARACTER" ? (
+                                  <AvatarCard item={nft} />
+                                ) : (
+                                  <AssetsCard item={nft} />
+                                )}
                               </Grid>
                             ))}
                           </Grid>
