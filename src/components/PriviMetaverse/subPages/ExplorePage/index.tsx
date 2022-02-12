@@ -15,6 +15,7 @@ import { Color } from "shared/ui-kit";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import WorldCard from "components/PriviMetaverse/components/cards/WorldCard";
 import AssetsCard from "components/PriviMetaverse/components/cards/AssetsCard";
+import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
 import { explorePage } from "./index.styles";
 
 import backImg1 from "assets/metaverseImages/shape_roadmap.png";
@@ -118,9 +119,12 @@ export default function ExplorePage() {
       selectedContentType === "nft"
     ) {
       setIsDisabledAssetTypeFilter(false);
-      loadData(true);
+      loadAssetData(true);
     } else {
       setIsDisabledAssetTypeFilter(true);
+      if (selectedContentType === "collection") {
+        loadCollectionData(true);
+      }
     }
   }, [selectedContentType, selectedAssetTypes, debouncedSearchValue]);
 
@@ -136,7 +140,7 @@ export default function ExplorePage() {
     }
   }, [itemId]);
 
-  const loadData = async (init = false) => {
+  const loadAssetData = async (init = false) => {
     if (loading) return;
 
     try {
@@ -172,6 +176,24 @@ export default function ExplorePage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadCollectionData = async (init = false) => {
+    setLoading(true);
+
+    const curPage = init ? 1 : page;
+    MetaverseAPI.getCollections(12, curPage, "DESC")
+      .then(res => {
+        if (res.success) {
+          const newData = res.data.elements;
+          setAssetList(prev => (init ? newData : [...prev, ...newData]));
+          setPage(curPage + 1);
+          setHasMore(res.data.page.cur < res.data.page.max);
+        } else {
+          setAssetList([]);
+        }
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleSelectedAssetTypes = asset => {
@@ -400,7 +422,7 @@ export default function ExplorePage() {
               hasChildren={assetList?.length > 0}
               dataLength={assetList?.length}
               scrollableTarget={"scrollContainer"}
-              next={loadData}
+              next={selectedContentType === "collection" ? loadCollectionData : loadAssetData}
               hasMore={hasMore}
               loader={
                 loading && (
@@ -422,7 +444,9 @@ export default function ExplorePage() {
                   gutter={"40px"}
                   data={assetList}
                   renderItem={(item, index) =>
-                    item.itemKind === "WORLD" ? (
+                    selectedContentType === "collection" ? (
+                      <CollectionCard item={item} selectable={false} key={`collection_${index}`} />
+                    ) : item.itemKind === "WORLD" ? (
                       <WorldCard nft={item} selectable={false} key={`world_${index}`} />
                     ) : item.itemKind === "CHARACTER" ? (
                       <AvatarCard item={item} key={`avatar_${index}`} />
