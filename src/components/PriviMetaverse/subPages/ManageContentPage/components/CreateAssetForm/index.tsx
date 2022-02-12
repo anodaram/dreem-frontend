@@ -1,6 +1,7 @@
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, Slider, Button } from "@material-ui/core";
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import { ChromePicker } from "react-color";
+import ReactPlayer from "react-player";
 
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
@@ -35,7 +36,10 @@ const CreateAssetForm = ({
   const classes = useModalStyles();
   const filterClasses = useFilterSelectStyles();
 
+  const [videoThumbnailURL, setVideoThumbnailURL] = useState<any>({});
+
   const inputRef = useRef<InputRefs>({});
+
 
   const onFileInput = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -44,6 +48,7 @@ const CreateAssetForm = ({
     if (files && files.length) {
       if (files && files[0]) {
         setFileInputs({ ...fileInputs, [key]: files[0] });
+        setVideoThumbnailURL({...videoThumbnailURL, [key]: URL.createObjectURL(files[0])});
 
         const reader = new FileReader();
         reader.addEventListener("load", () => {
@@ -129,6 +134,11 @@ const CreateAssetForm = ({
             >
               {fileInputs[asset.key] ? (
                 <>
+                 {asset.fileKind == "VIDEO" ? (
+                   <div style={{marginLeft: 20}}>
+                    <ReactPlayer playing={false} controls={false} url={videoThumbnailURL[asset.key]} width="85" height={85} />
+                  </div>
+                 ) : (
                   <Box
                     className={classes.image}
                     style={{
@@ -136,6 +146,8 @@ const CreateAssetForm = ({
                       backgroundSize: "cover",
                     }}
                   />
+                 )}
+                  
                   <Box
                     flex={1}
                     display="flex"
