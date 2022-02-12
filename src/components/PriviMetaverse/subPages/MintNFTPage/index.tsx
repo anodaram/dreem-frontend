@@ -43,6 +43,7 @@ export default function MintNFTPage() {
   const [uri, setUri] = useState<any>();
   const [finishedAmount, setFinishedAmount] = useState<any>();
   const [networkName, setNetworkName] = useState<string>("");
+  const [batchId, setBatchId] = useState<string>("");
   // Transaction Modal
   const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
   const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
@@ -77,8 +78,8 @@ export default function MintNFTPage() {
     setBunches(steps)
   }, [amount, finishedAmount]);
 
-  const handleMintBatch = async (i, amount) => {
-    const res = mintMultipleEdition(amount)
+  const handleMintBatch = async (i) => {
+    const res = mintMultipleEdition()
     bunches.map((item, index)=>{
       if(item.key == i) {
         //@ts-ignore
@@ -91,12 +92,14 @@ export default function MintNFTPage() {
     });
   }
 
-  const mintMultipleEdition = async (mintAmount: number) => {
+  const mintMultipleEdition = async () => {
     let collectionData = await MetaverseAPI.getCollection(batch.item.collectionId);
     collectionData = collectionData.data
     let metaData;
+    let batchId;
     if(!uri){
       let metadata = await getMetadata(batch.item.updateHash);
+      batchId = metadata.masterBatchId
       metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
       const metadatauri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
       setUri(metadatauri)
@@ -133,7 +136,7 @@ export default function MintNFTPage() {
         {
           name: collectionData.name,
           symbol: collectionData.symbol,
-          amount: mintAmount,
+          amount: amount,
           uri : URI,
           isRoyalty,
           royaltyAddress: batch.item.erc721RoyaltyAddress,
@@ -144,11 +147,11 @@ export default function MintNFTPage() {
       );
       if (resRoyalty.success) {
         let tokenIds: any = [];
-        for(let i = 0; i < resRoyalty.amount; i++){
+        for(let i = 0; i < resRoyalty.amount || i < 20; i++){
           tokenIds.push(Number(resRoyalty.initialId) + i)
         }
 
-        await MetaverseAPI.convertToNFTAssetBatch(
+        const resp = await MetaverseAPI.convertToNFTAssetBatch(
           batch.item.updateHash,
           resRoyalty.contractAddress,
           targetChain.name,
@@ -158,59 +161,123 @@ export default function MintNFTPage() {
           batch.item.erc721RoyaltyAddress,
           batch.item.erc721RoyaltyPercentage,
           resRoyalty.txHash,
-          amount
+          amount,
+          resRoyalty.batchId
         );
-        setTxSuccess(true);
-        showAlertMessage(`Successfully asset minted`, { variant: "success" });
-        return true;
+        if(resp.success){
+          setBatchId(resp.data.masterBatchId)
+          setTxSuccess(true);
+          showAlertMessage(`Successfully asset minted`, { variant: "success" });
+          return true;
+        } else{
+          setTxSuccess(true);
+          showAlertMessage(`Something went wrong`, { variant: "error" });
+          return false;
+        }
       } else {
         setTxSuccess(false);
         return false;
       }
     } else {
-      console.log(URI)
-      let isRoyalty = batch.item.erc721RoyaltyPercentage > 0 ? true : false
-      const contractRes = await web3APIHandler.NFTWithRoyaltyBatch.mint(
-        web3,
-        account,
-        {
-          collectionAddress: collectionAddr,
-          to: account,
-          amount: mintAmount,
-          uri : URI,
-          isRoyalty,
-          royaltyAddress: batch.item.erc721RoyaltyAddress,
-          royaltyPercentage: batch.item.erc721RoyaltyPercentage
-        },
-        setTxModalOpen,
-        setTxHash
-      );
-
-      if (contractRes.success) {
-        console.log(contractRes);
-        let tokenIds: any = [];
-        console.log('contractRes---', contractRes)
-        for(let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++){
-          tokenIds.push(Number(i))
-        }
-        await MetaverseAPI.convertToNFTAssetBatch(
-          batch.item.updateHash,
-          contractRes.collectionAddress,
-          targetChain.name,
-          tokenIds,
-          URI,
-          contractRes.owner,
-          batch.item.erc721RoyaltyAddress,
-          batch.item.erc721RoyaltyPercentage,
-          contractRes.txHash,
-          amount
+      if(batchId){
+        const contractRes = await web3APIHandler.NFTWithRoyaltyBatch.mintBatchFromId(
+          web3,
+          account,
+          {
+            batchId: batchId
+          },
+          setTxModalOpen,
+          setTxHash
         );
-        setTxSuccess(true);
-        showAlertMessage(`Successfully asset minted`, { variant: "success" });
-        return true
+  
+        if (contractRes.success) {
+          console.log(contractRes);
+          let tokenIds: any = [];
+          console.log('contractRes---', contractRes)
+          for(let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++){
+            tokenIds.push(Number(i))
+          }
+          const resp = await MetaverseAPI.convertToNFTAssetBatch(
+            batch.item.updateHash,
+            '',
+            '',
+            tokenIds,
+            '',
+            '',
+            '',
+            '',
+            contractRes.txHash,
+            undefined,
+            contractRes.batchId
+          );
+          if(resp.success){
+            setBatchId(resp.data.masterBatchId)
+            setTxSuccess(true);
+            showAlertMessage(`Successfully asset minted`, { variant: "success" });
+            return true;
+          } else{
+            setTxSuccess(true);
+            showAlertMessage(`Something went wrong`, { variant: "error" });
+            return false;
+          }
+        } else {
+          setTxSuccess(false);
+          return false
+        }
       } else {
-        setTxSuccess(false);
-        return false
+        let isRoyalty = batch.item.erc721RoyaltyPercentage > 0 ? true : false
+        const contractRes = await web3APIHandler.NFTWithRoyaltyBatch.mint(
+          web3,
+          account,
+          {
+            collectionAddress: collectionAddr,
+            name: collectionData.name,
+            symbol: collectionData.symbol,
+            to: account,
+            amount: amount,
+            uri : URI,
+            isRoyalty,
+            royaltyAddress: batch.item.erc721RoyaltyAddress,
+            royaltyPercentage: batch.item.erc721RoyaltyPercentage
+          },
+          setTxModalOpen,
+          setTxHash
+        );
+
+        if (contractRes.success) {
+          console.log(contractRes);
+          let tokenIds: any = [];
+          console.log('contractRes---', contractRes)
+          for(let i = contractRes.startTokenId; i <= contractRes.endTokenId; i++){
+            tokenIds.push(Number(i))
+          }
+          const resp = await MetaverseAPI.convertToNFTAssetBatch(
+            batch.item.updateHash,
+            contractRes.collectionAddress,
+            targetChain.name,
+            tokenIds,
+            URI,
+            contractRes.owner,
+            batch.item.erc721RoyaltyAddress,
+            batch.item.erc721RoyaltyPercentage,
+            contractRes.txHash,
+            amount,
+            contractRes.batchId
+          );
+          if(resp.success){
+            setBatchId(resp.data.masterBatchId)
+            setTxSuccess(true);
+            showAlertMessage(`Successfully asset minted`, { variant: "success" });
+            return true;
+          } else{
+            setTxSuccess(true);
+            showAlertMessage(`Something went wrong`, { variant: "error" });
+            return false;
+          }
+        } else {
+          setTxSuccess(false);
+          return false
+        }
       }
     }
   };
@@ -259,7 +326,7 @@ export default function MintNFTPage() {
               {item.status ? 
               <Box>Minted</Box>
               :
-              <PrimaryButton className={classes.mintBtn} size="medium" onClick={()=>handleMintBatch(item.key, item.amount - (item.key - 1) * UnitEdition)}>
+              <PrimaryButton className={classes.mintBtn} size="medium" onClick={()=>handleMintBatch(item.key)}>
                  {item.status == false ? "Try again" : "Mint"}
               </PrimaryButton>
               }

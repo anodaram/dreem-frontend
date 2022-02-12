@@ -472,7 +472,8 @@ export const convertToNFTAssetBatch = async (
   royaltyAddress,
   royaltyPercentage,
   txHash,
-  totalSupply
+  totalSupply,
+  batchId
 ) => {
   try {
     const token = localStorage.getItem("token");
@@ -491,6 +492,7 @@ export const convertToNFTAssetBatch = async (
         royaltyAddress: royaltyAddress,
         tx: txHash,
         totalSupply: totalSupply,
+        masterBatchId: batchId
       },
       config
     );
