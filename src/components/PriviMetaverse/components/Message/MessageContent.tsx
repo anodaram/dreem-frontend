@@ -55,8 +55,6 @@ export const MessageFooter = props => {
 
   const { setMultiAddr, uploadWithNonEncryption, progress } = useIPFS();
 
-  console.log("calling here:", progress);
-
   useEffect(() => {
     setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");
   }, []);
