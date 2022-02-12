@@ -214,10 +214,9 @@ export const uploadAsset = async payload => {
     const formData = new FormData();
     console.log(payload);
     Object.keys(payload).forEach(key => {
-      if (key === "isPublic"){
+      if (key === "isPublic") {
         formData.append(key, payload[key]);
-      }
-      else{
+      } else {
         payload[key] && formData.append(key, payload[key]);
       }
     });
@@ -232,7 +231,7 @@ export const uploadAsset = async payload => {
     }
   } catch (error) {
     console.log("error in uploading asset:", error);
-    return false
+    return false;
   }
 };
 
@@ -259,28 +258,27 @@ export const uploadCollection = async payload => {
   }
 };
 
-export const getAritsts = async (portion = 0, page = 0) => {
+export const getCreators = async (portion = 10, pageNum = 1, sorting = "DESC") => {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    let params: any = {};
+    let page = {
+      page: pageNum,
+      size: portion,
+      sort: sorting,
     };
-    const resp = await axios.get(`${METAVERSE_URL()}/getCreators/portion/${portion}/page/${page}/`, config);
-    if (resp.data) {
-      return resp.data;
-    }
-  } catch (error) {
-    throw error;
-  }
-};
+    params = { ...params, page };
 
-export const getArtist = async artistId => {
-  try {
     const token = localStorage.getItem("token");
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(`${METAVERSE_URL()}/creators/${artistId}/`, config);
+    const resp = await axios.post(
+      `${METAVERSE_URL()}/web/public/creators/`,
+      {
+        ...params,
+      },
+      config
+    );
     if (resp.data) {
       return resp.data;
     }
@@ -651,7 +649,7 @@ export const getDepositInfo = async () => {
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(`${URL()}/metaverse/realmDeposit/`, config)
+    const resp = await axios.get(`${URL()}/metaverse/realmDeposit/`, config);
     if (resp.data) {
       return resp.data;
     }
@@ -666,7 +664,7 @@ export const getProtocolFee = async () => {
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(`${URL()}/metaverse/protocolFee/`, config)
+    const resp = await axios.get(`${URL()}/metaverse/protocolFee/`, config);
     if (resp.data) {
       return resp.data;
     }
@@ -681,7 +679,7 @@ export const getNetworks = async () => {
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    const resp = await axios.get(`${URL()}/metaverse/realmCreationNetworks/`, config)
+    const resp = await axios.get(`${URL()}/metaverse/realmCreationNetworks/`, config);
     if (resp.data) {
       return resp.data;
     }
