@@ -88,6 +88,9 @@ export default function MarketplaceFeed() {
         if (collection_id !== _transaction.slug) {
           return;
         }
+        if (filterStatus !== filterStatusOptions[0] && filterStatus !== _transaction.type) {
+          return;
+        }
         setNfts(prev => {
           let _transactions = prev.map(transaction =>
             _transaction.id === transaction.id ? _transaction : transaction
@@ -109,13 +112,13 @@ export default function MarketplaceFeed() {
 
   const getTokenSymbol = addr => {
     if (tokenList.length == 0 || !addr) return 0;
-    let token = tokenList.find(token => token.Address === addr);
+    let token = tokenList.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Symbol || "";
   };
 
   const getTokenDecimal = addr => {
     if (tokenList.length == 0) return 0;
-    let token = tokenList.find(token => token.Address === addr);
+    let token = tokenList.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Decimals;
   };
 
@@ -365,20 +368,19 @@ export default function MarketplaceFeed() {
   );
 }
 
-export const ArrowIconComponent = func => () =>
-  (
-    <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
-      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
-          stroke="#2D3047"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </Box>
-  );
+export const ArrowIconComponent = func => () => (
+  <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
+    <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
+        stroke="#2D3047"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </Box>
+);
 
 export const SearchIcon = ({ color = "white" }) => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
