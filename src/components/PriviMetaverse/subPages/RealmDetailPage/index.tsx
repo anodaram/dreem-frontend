@@ -225,6 +225,10 @@ export default function RealmDetailPage() {
     }
   };
 
+  const gotoMapPage = () => {
+    history.push("/realms/map");
+  };
+
   return (
     <Box className={classes.root}>
       <Box className={classes.container} id="scrollContainer">
@@ -295,7 +299,8 @@ export default function RealmDetailPage() {
                     Apply Extension
                   </SecondaryButton>
                 </Box>
-                <SecondaryButton size="medium" className={classes.mapButton}>
+                <SecondaryButton size="medium" className={classes.mapButton}
+                  onClick={()=>{gotoMapPage();}}>
                   <MapIcon />
                   <Box px={2} pt={0.5}>
                     Open map
@@ -357,7 +362,8 @@ export default function RealmDetailPage() {
                         Apply Extension
                       </SecondaryButton>
                     </Box>
-                    <SecondaryButton size="medium" className={classes.mapButton}>
+                    <SecondaryButton size="medium" className={classes.mapButton}
+                      onClick={()=>{gotoMapPage();}}>
                       <MapIcon />
                       <Box px={2} pt={0.5}>
                         Open map
