@@ -409,7 +409,7 @@ const CreateRealmFlow = ({
   return (
     <>
       <div className={classes.otherContent}>
-        <Box className={classes.headTitle}>\
+        <Box className={classes.headTitle}>
           <div className={classes.typo1}>
             Create New Realm
           </div>
