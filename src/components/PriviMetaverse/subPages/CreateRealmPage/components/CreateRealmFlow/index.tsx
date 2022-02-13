@@ -232,6 +232,7 @@ const CreateRealmFlow = ({
     if (validate(false)) {
       let payload: any = {};
       let savingDraft: any = {};
+      let restrictions = JSON.stringify(collectionInfos)
       payload = {
         item: "REALM",
         name: title,
@@ -243,7 +244,7 @@ const CreateRealmFlow = ({
         realmCreatorVotingPower: votingPower,
         realmImage: image,
         realmVideo: video,
-        realmRestrictions: collectionInfos
+        realmRestrictions: restrictions
       };
 
       setIsUploading(true);
