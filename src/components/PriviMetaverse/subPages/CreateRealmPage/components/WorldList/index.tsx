@@ -247,7 +247,7 @@ const WorldList = ({
           const items = res.data.elements;
           if (items && items.length > 0) {
             setCollections(res.data.elements);
-            if (res.data.page && curPage <= res.data.page.max) {
+            if (res.data.page && curPage < res.data.page.max) {
               setCurPage(curPage => curPage + 1);
               setLastPage(res.data.page.max);
             } else {
@@ -260,7 +260,7 @@ const WorldList = ({
   };
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getAssets(12, 1, "timestamp", Filters, false, userSelector.id, null, false, false, true)
+    MetaverseAPI.getAssets(12, curPage, "timestamp", Filters, false, userSelector.id, null, false, false, true)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
