@@ -133,7 +133,7 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
 
     if (response.success) {
       setTransactionSuccess(true);
-      const offerId = web3.utils.keccak256(
+      const offerId = await web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "uint256", "address"],
           [nft.Address, token_id, offer.PaymentToken, 0, account]

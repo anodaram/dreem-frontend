@@ -191,7 +191,7 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
     );
 
     if (response.success) {
-      const offerId = web3.utils.keccak256(
+      const offerId = await web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "address", "uint80", "uint256", "uint256", "address"],
           [

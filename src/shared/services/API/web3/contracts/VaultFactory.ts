@@ -13,15 +13,15 @@ const vaultFactory = network => {
         const contract = ContractInstance(
           web3,
           metadata.abi,
-          web3.utils.toChecksumAddress(contractAddress)
+          await web3.utils.toChecksumAddress(contractAddress)
         );
         const listTokenWeiUnit = erc20ToWeiUnit[payload.listToken] ?? 'ether';
         const gas = await contract.methods
-          .mint(payload.name, payload.symbol, payload.token, payload.id, web3.utils.toWei(payload.supply.toString(), 'ether'), 
-          payload.asset, web3.utils.toWei(payload.listPrice.toString(), listTokenWeiUnit), payload.fee*10).estimateGas({ from: account });
+          .mint(payload.name, payload.symbol, payload.token, payload.id, await web3.utils.toWei(payload.supply.toString(), 'ether'), 
+          payload.asset, await web3.utils.toWei(payload.listPrice.toString(), listTokenWeiUnit), payload.fee*10).estimateGas({ from: account });
         const response = await contract.methods
-          .mint(payload.name, payload.symbol, payload.token, payload.id, web3.utils.toWei(payload.supply.toString(), 'ether'), 
-          payload.asset, web3.utils.toWei(payload.listPrice.toString(), listTokenWeiUnit), payload.fee*10).send({ from: account, gas: gas, type: "0x2" });
+          .mint(payload.name, payload.symbol, payload.token, payload.id, await web3.utils.toWei(payload.supply.toString(), 'ether'), 
+          payload.asset, await web3.utils.toWei(payload.listPrice.toString(), listTokenWeiUnit), payload.fee*10).send({ from: account, gas: gas, type: "0x2" });
         const erc20VaultTokenAddress = response?.events?.Mint?.returnValues?.vault;
         const vaultId = response?.events?.Mint?.returnValues?.vaultId;
         const erc721VaultTokenAddress = response?.events?.["0"]?.address;

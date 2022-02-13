@@ -130,7 +130,7 @@ export default function BuyProceedModal({ open, offer, handleClose, nft, setNft 
 
       if (contractResponse.success) {
         setTransactionSuccess(true);
-        const offerId = web3.utils.keccak256(
+        const offerId = await web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address"],
             [nft.Address, token_id, offer.PaymentToken, 0, offer.Beneficiary]

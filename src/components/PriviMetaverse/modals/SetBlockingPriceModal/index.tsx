@@ -135,7 +135,7 @@ export default function SetBlockingPriceModal({ open, handleClose, nft, setNft }
       );
 
       if (contractResponse.success) {
-        const offerId = web3.utils.keccak256(
+        const offerId = await web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address", "uint80", "uint64"],
             [

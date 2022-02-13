@@ -24,12 +24,12 @@ const RealmFactory = network => {
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
         console.log('contract-----', contract, contractAddress, metadata.abi)
 
-        console.log("Getting gas....", contract, contractAddress, account, nftToAttachAddress, nftToAttachId, web3.utils.toWei(amount, 'gwei'));
-        const gas = await contract.methods.addExtension(nftToAttachAddress, nftToAttachId).estimateGas({ from: account, value: web3.utils.toWei(amount, 'gwei')});
+        console.log("Getting gas....", contract, contractAddress, account, nftToAttachAddress, nftToAttachId, await web3.utils.toWei(amount, 'gwei'));
+        const gas = await contract.methods.addExtension(nftToAttachAddress, nftToAttachId).estimateGas({ from: account, value: await web3.utils.toWei(amount, 'gwei')});
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
           .addExtension(nftToAttachAddress, nftToAttachId)
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei'), value: web3.utils.toWei(amount, 'gwei') })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei'), value: await web3.utils.toWei(amount, 'gwei') })
           .on("transactionHash", function (hash) {
             console.log("transaction hash:", hash);
             setTxModalOpen(true);

@@ -32,9 +32,9 @@ export async function approve(web3: Web3, account: string, token: string, addres
       const decimals = await PolygonAPI.Trax.decimals(web3, token);
       const weiAmount = web3.utils
         .toBN(APPROVE_AMOUNT)
-        .mul(web3.utils.toBN(10).pow(web3.utils.toBN(decimals)));
+        .mul(web3.utils.toBN(10).pow( await web3.utils.toBN(decimals)));
 
-      if (web3.utils.toBN(allowance) > web3.utils.toBN(0)) {
+      if (await web3.utils.toBN(allowance) > await web3.utils.toBN(0)) {
         resolve({ success: true });
       } else {
         const gas = await contract.methods.approve(address, weiAmount).estimateGas({ from: account });

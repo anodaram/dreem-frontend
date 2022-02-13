@@ -30,7 +30,7 @@ const royaltyFactoryBatch = network => {
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
           .mintMasterBatch([name, symbol], amount, uri, rAddress, bps)
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", function (hash) {
             console.log("transaction hash:", hash);
             setTxModalOpen(true);

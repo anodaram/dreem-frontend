@@ -75,7 +75,7 @@ export default ({ isOwnership, nft, refresh }) => {
 
     const reservePriceToken = tokens.find(item => item.Address == blockingInfo?.PaymentToken);
 
-    const activeReserveId = web3.utils.keccak256(
+    const activeReserveId = await web3.utils.keccak256(
       web3.eth.abi.encodeParameters(
         ["address", "uint256", "address", "address"],
         [nft.Address, token_id, blockingInfo.from, blockingInfo.Beneficiary]

@@ -183,7 +183,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
 
     if (response.success) {
       setTransactionSuccess(true);
-      const offerId = web3.utils.keccak256(
+      const offerId = await web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "uint256", "address"],
           [

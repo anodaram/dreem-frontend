@@ -63,7 +63,7 @@ const erc721 = network => {
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
           .mint(payload.to, payload.tokenId, payload.uri)
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", hash => {
             if (setHash) {
               setHash(hash);
@@ -94,7 +94,7 @@ const erc721 = network => {
          ? await contract.methods.approve(payload.to, payload.tokenId).send({ 
           from: account, 
           gas: gas,
-          maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei')
+          maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei')
          })
          : await contract.methods.approve(payload.to, payload.tokenId).send({ 
             from: account, 
@@ -124,7 +124,7 @@ const erc721 = network => {
       await web3.eth.getChainId()==137 
          ? await contract.methods
           .setApprovalForAll(payload.operator, payload.approve)
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
         : await contract.methods
           .setApprovalForAll(payload.operator, payload.approve)
           .send({ from: account, gas: gas })
@@ -151,7 +151,7 @@ const erc721 = network => {
         await web3.eth.getChainId()==137 
           ? await contract.methods
             .setApprovalForAll(config[network].CONTRACT_ADDRESSES[interactingContractAddress], true)
-            .send({ type: "0x2", from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+            .send({ type: "0x2", from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           : await contract.methods
             .setApprovalForAll(config[network].CONTRACT_ADDRESSES[interactingContractAddress], true)
             .send({ type: "0x2", from: account, gas: gas })
@@ -214,7 +214,7 @@ const erc721 = network => {
            ? await contract.methods.approve(payload.to, payload.tokenId).send({ 
                 from: account, 
                 gas: gas,
-                maxPriorityFeePerGas: await web3.eth.getChainId()==137 ? web3.utils.toWei(MAX_PRIO_FEE, 'gwei') : "",
+                maxPriorityFeePerGas: await web3.eth.getChainId()==137 ? await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') : "",
               })
            : await contract.methods.approve(payload.to, payload.tokenId).send({ 
                 from: account, 

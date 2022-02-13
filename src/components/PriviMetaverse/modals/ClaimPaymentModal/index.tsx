@@ -48,7 +48,7 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
     }
     const web3APIHandler = selectedChain.apiHandler;
     const web3 = new Web3(library.provider);
-    const activeReserveId = web3.utils.keccak256(
+    const activeReserveId = await web3.utils.keccak256(
       web3.eth.abi.encodeParameters(
         ["address", "uint256", "address", "address"],
         [

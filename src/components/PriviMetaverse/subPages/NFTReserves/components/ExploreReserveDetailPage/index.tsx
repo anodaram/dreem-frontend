@@ -337,7 +337,7 @@ const ExploreReserveDetailPage = () => {
                 const offer = event?.returnValues;
 
                 console.log("offer... ", offer);
-                const activeReserveId = web3.utils.keccak256(
+                const activeReserveId = await web3.utils.keccak256(
                   web3.eth.abi.encodeParameters(
                     ["address", "uint256", "address", "address"],
                     [nft.Address, token_id, offer?.seller, offer?.buyer]
