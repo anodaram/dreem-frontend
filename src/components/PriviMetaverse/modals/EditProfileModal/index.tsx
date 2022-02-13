@@ -49,6 +49,7 @@ const EditProfileModal = (props: any) => {
 
       userCopy.userAddress = !userCopy.userAddress ? "" : userCopy.userAddress;
       userCopy.urlSlug = !userCopy.urlSlug ? "" : userCopy.urlSlug;
+      userCopy.orgUrlSlug = userCopy.urlSlug;
 
       setUser(userCopy);
     }
@@ -71,9 +72,25 @@ const EditProfileModal = (props: any) => {
         showAlertMessage("URL can't start with a .", { variant: "error" });
         return false;
       } else {
+        let user_id;
+        if (!user.id) {
+          // get user id
+          const result = await axios.get(`${URL()}/user/getIdFromSlug/${user.orgUrlSlug}/user`);
+          if (result.status !== 200 || !result.data || !result.data.success || !result.data.data || !result.data.data.id) {
+            showAlertMessage("error checking if slug exist, please try again");
+              return false;
+          }
+          setUser({
+            ...user,
+            id: result.data.data.id,
+          });
+          user_id = result.data.data.id
+        } else {
+          user_id = user.id
+        }
         //check if slug exists
         return await axios
-          .get(`${URL()}/user/checkSlugExists/${user.urlSlug}/${user.id}/user`)
+          .get(`${URL()}/user/checkSlugExists/${user.urlSlug}/${user_id}/user`)
           .then(response => {
             if (response.data.success) {
               if (response.data.data.urlSlugExists) {
