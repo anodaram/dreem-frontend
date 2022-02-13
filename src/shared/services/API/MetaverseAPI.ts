@@ -318,7 +318,8 @@ export const getCharacters = async (
   worldId?: any,
   featured: undefined | boolean = undefined,
   ids?: any,
-  isPublic: undefined | boolean = true
+  isPublic: undefined | boolean = true,
+  pageSize: number = 10000,
 ) => {
   const body: any = {};
   // if (worldId) {
@@ -335,7 +336,7 @@ export const getCharacters = async (
   }
   let pageData = {
     page: 1,
-    size: 10000,
+    size: pageSize,
     sort: "DESC",
   };
   body.page = pageData;
