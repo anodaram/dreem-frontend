@@ -78,13 +78,13 @@ export default function CancelOfferModal({ open, handleClose, offer, type, nft, 
           web3,
           account!,
           {
-            collectionId: nft.Address,
+            collectionId: nft.Address.toLowerCase(),
             tokenId: token_id,
             rentalTime: offer.rentalTime,
             pricePerSecond: offer.pricePerSecond,
             rentalExpiration: offer.rentalExpiration,
-            fundingToken: offer.fundingToken,
-            operator: nft.owner_of,
+            fundingToken: offer.fundingToken.toLowerCase(),
+            operator: nft.owner_of.toLowerCase(),
           },
           setHash
         );

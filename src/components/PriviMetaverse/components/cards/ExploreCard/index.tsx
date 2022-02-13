@@ -39,13 +39,13 @@ const ExploreCard = ({ nft, isLoading = false }) => {
 
   const getTokenSymbol = addr => {
     if (tokenList.length == 0) return 0;
-    let token = tokenList.find(token => token.Address === addr);
+    let token = tokenList.find(token => token.Address.toLowerCase() === addr.toLowerCase() );
     return token?.Symbol || "";
   };
 
   const getTokenDecimal = addr => {
     if (tokenList.length == 0) return null;
-    let token = tokenList.find(token => token.Address === addr);
+    let token = tokenList.find(token => token.Address.toLowerCase() === addr.toLowerCase() );
     return token?.Decimals ?? 1;
   };
 
