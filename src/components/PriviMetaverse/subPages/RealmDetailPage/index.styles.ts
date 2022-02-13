@@ -286,7 +286,7 @@ export const realmDetailPageStyles = makeStyles(theme => ({
     position: 'absolute',
     top: 32,
     left: 51,
-    zIndex: 999,
+    zIndex: 1,
     [theme.breakpoints.down("sm")]: {
       top: 2,
     },
