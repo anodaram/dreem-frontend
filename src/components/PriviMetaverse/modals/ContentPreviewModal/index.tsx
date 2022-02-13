@@ -117,7 +117,7 @@ const ContentPreviewModal = ({
   };
 
   const handleShareDraft = () => {
-    shareMedia("Draft", `realms/${nft.id}`);
+    shareMedia("Draft", `explore/${nft.versionHashId}`);
   };
 
   const mintNFT = async () => {
@@ -316,9 +316,9 @@ const ContentPreviewModal = ({
                   )}
                   {isMobile && (
                     <Box className={classes.nftPreviewSection}>
-                      {nft.worldBinary ? (
+                      {nft.worldVideo ? (
                         <ReactPlayer
-                          url={nft.worldBinary}
+                          url={nft.worldVideo}
                           ref={playerVideoItem}
                           controls
                           progressInterval={200}
@@ -410,9 +410,9 @@ const ContentPreviewModal = ({
             </div>
             {!isMobile && (
               <div className={classes.nftPreviewSection}>
-                {nft.worldBinary ? (
+                {nft.worldVideo ? (
                   <ReactPlayer
-                    url={nft.worldBinary}
+                    url={nft.worldVideo}
                     ref={playerVideoItem}
                     controls
                     progressInterval={200}

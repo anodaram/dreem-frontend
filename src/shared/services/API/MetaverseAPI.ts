@@ -24,6 +24,7 @@ export const getFeaturedWorlds = async filters => {
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
+    console.log('here')
     const resp = await axios.post(
       `${METAVERSE_URL()}/web/public/itemVersions/`,
       {
