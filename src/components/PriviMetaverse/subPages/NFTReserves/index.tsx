@@ -81,7 +81,7 @@ const NFTReserves = () => {
   const width = useWindowDimensions().width;
 
   const theme = useTheme();
-  const isNormalScreen = useMediaQuery(theme.breakpoints.between(1421, 1800));
+  const isNormalScreen = useMediaQuery(theme.breakpoints.up(1421));
   const isTablet = useMediaQuery(theme.breakpoints.between(768, 1420));
   const isNarrow = useMediaQuery(theme.breakpoints.between(651, 768));
   const isMobile = useMediaQuery(theme.breakpoints.down(650));
@@ -439,7 +439,7 @@ const NFTReserves = () => {
           ))}
         <img src={require("assets/metaverseImages/nft_reserve_bg.png")} className={classes.imageBg} />
         <Box className={classes.limitedContent}>
-          <div className={classes.content}>
+          <div className={classes.content} id="scrollContainer">
             <div className={classes.titleBar}>
               <Box className={classes.titleSection}>
                 <div className={classes.title}>Not your average NFT marketplace</div>
