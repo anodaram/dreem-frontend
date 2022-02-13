@@ -39,7 +39,7 @@ export default function CancelBuyOfferModal({ open, handleClose, offer, nft, set
   }, [nft]);
 
   const getTokenDecimal = addr => {
-    if (tokens.length == 0) return 0;
+    if (tokens.length == 0 || !addr) return 0;
     let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token.Decimals;
   };
@@ -108,7 +108,7 @@ export default function CancelBuyOfferModal({ open, handleClose, offer, nft, set
               Cancel Offer
             </Box>
             <Box className={classes.nameField}>
-              Canceling will remove your offer and your  <br /> details from the list
+              Canceling will remove your offer and your <br /> details from the list
             </Box>
             <Box display="flex" alignItems="center" justifyContent="center" mt={6}>
               <PrimaryButton
