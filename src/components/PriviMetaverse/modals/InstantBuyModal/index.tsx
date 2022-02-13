@@ -44,13 +44,13 @@ export default function InstantBuyModal({ open, handleClose, onConfirm, offer, n
 
   const getTokenName = addr => {
     if (tokens.length == 0 || !addr) return "";
-    let token = tokens.find(token => token.Address === addr);
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Symbol || "";
   };
 
   const getTokenDecimals = addr => {
     if (tokens.length == 0 || !addr) return 0;
-    let token = tokens.find(token => token.Address === addr);
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     if (token) return token.Decimals;
     return 0;
   };

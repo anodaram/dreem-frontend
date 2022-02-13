@@ -44,7 +44,7 @@ export default function ClaimYourNFTModal({ open, claimType, handleClose = () =>
 
   const getTokenName = addr => {
     if (tokens.length == 0 || !addr) return "";
-    let token = tokens.find(token => token.Address === addr);
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Symbol || "USDT";
   };
 

@@ -44,13 +44,13 @@ export default ({isOwnership, nft, refresh}) => {
 
   const getTokenSymbol = addr => {
     if (tokens.length == 0 || !addr) return 0;
-    let token = tokens.find(token => token.Address === addr);
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Symbol || '';
   };
   
   const getTokenAvatar = addr => {
     if (tokens.length == 0) return null;
-    let token = tokens.find(token => token.Address === addr);
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.ImageUrl || '';
   };
 

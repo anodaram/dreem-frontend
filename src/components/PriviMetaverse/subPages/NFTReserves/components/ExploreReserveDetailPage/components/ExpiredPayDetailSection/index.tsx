@@ -102,7 +102,7 @@ export default ({ isSuccess, refresh, nft }: { isSuccess: any; refresh: any; nft
 
   const getTokenSymbol = addr => {
     if (tokens.length == 0 || !addr) return 0;
-    let token = tokens.find(token => token.Address === addr);
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Symbol || "";
   };
 

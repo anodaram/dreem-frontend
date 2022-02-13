@@ -40,7 +40,7 @@ export default function CancelBuyOfferModal({ open, handleClose, offer, nft, set
 
   const getTokenDecimal = addr => {
     if (tokens.length == 0) return 0;
-    let token = tokens.find(token => token.Address === addr);
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token.Decimals;
   };
 
