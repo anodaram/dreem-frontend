@@ -566,7 +566,7 @@ export default function HomePage() {
             <Box mt={4}>
               <MasonryGrid
                 gutter={"16px"}
-                data={loadingExploreCharacters ? Array(loadingCount).fill(0) : exploreCharacters}
+                data={exploreCharacters}
                 renderItem={(item, _) => <AvatarCard item={item} isLoading={loadingExploreCharacters} />}
                 columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR_AVATAR}
               />
