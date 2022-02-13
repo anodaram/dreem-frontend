@@ -26,6 +26,7 @@ import { InfoIcon } from "shared/ui-kit/Icons";
 import { ReactComponent as DeleteIcon } from "assets/icons/remove.svg";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
 import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
+import { stringify } from "querystring";
 
 interface CollectionInfo {
   address: string;
@@ -232,6 +233,8 @@ const CreateRealmFlow = ({
     if (validate(false)) {
       let payload: any = {};
       let savingDraft: any = {};
+      let restrictions = JSON.stringify(collectionInfos)
+      console.log(restrictions)
       payload = {
         item: "REALM",
         name: title,
@@ -243,7 +246,7 @@ const CreateRealmFlow = ({
         realmCreatorVotingPower: votingPower,
         realmImage: image,
         realmVideo: video,
-        realmRestrictions: collectionInfos
+        realmRestrictions: restrictions
       };
 
       setIsUploading(true);
