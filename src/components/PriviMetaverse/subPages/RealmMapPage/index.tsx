@@ -121,7 +121,7 @@ export default function RealmMapPage() {
     if (selMap?.worldIsExtension) {
       setOpenContentPreview(true);
     } else {
-      history.push(`/realms/${selMap.id}`);
+      history.push(`/realms/${selMap.versionHashId}`);
     }
   }
   const handleClose = e => {

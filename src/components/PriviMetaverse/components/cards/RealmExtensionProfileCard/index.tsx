@@ -209,7 +209,7 @@ export default function RealmExtensionProfileCard({
             <ShapeIcon
               style={{ cusor: "pointer" }}
               onClick={e => {
-                shareMedia("NFT", `realms/${data.id}`);
+                shareMedia("NFT", `realms/${data?.versionHashId}`);
               }}
             />
           </div>

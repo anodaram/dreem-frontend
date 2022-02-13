@@ -92,6 +92,7 @@ export default function RealmDetailPage() {
   const { showAlertMessage } = useAlertMessage();
 
   const { id: realmId } = useParams<{ id: string }>();
+  const { id: hashId } = useParams<{ id: string }>();
 
   const [fruitData, setFruitData] = React.useState<any>({});
   const [realmData, setRealmData] = React.useState<any>({});
@@ -116,6 +117,7 @@ export default function RealmDetailPage() {
   );
 
   React.useEffect(() => {
+    console.log(hashId)
     if (realmId) {
       loadRealm(realmId);
 
@@ -137,8 +139,10 @@ export default function RealmDetailPage() {
 
   const loadRealm = realmId => {
     setIsLoading(true);
+    console.log(realmId)
     MetaverseAPI.getAsset(realmId)
       .then(res => {
+        console.log(res.data)
         setRealmData(res.data);
       })
       .finally(() => setIsLoading(false));
@@ -182,7 +186,7 @@ export default function RealmDetailPage() {
   };
 
   const handleShare = () => {
-    shareMedia("Realm", `realms/${realmData.id}`);
+    shareMedia("Realm", `realms/${realmData.versionHashId}`);
   };
 
   const handleFruit = type => {
@@ -240,7 +244,7 @@ export default function RealmDetailPage() {
             <Box ml={1}>Back</Box>
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2.5}>
-            <Box className={classes.title}>{realmData.realmName || ""}</Box>
+            <Box className={classes.title}>{realmData.worldTitle || ""}</Box>
             <Hidden smDown>
               <Box display="flex" alignItems="center">
                 <Box className={classes.iconBtn}>
