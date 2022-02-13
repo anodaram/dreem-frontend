@@ -4,12 +4,14 @@ export const creatorCardStyles = makeStyles(theme => ({
   container: {
     height: "100%",
     minHeight: 438,
-    minWidth: 340,
     maxWidth: 390,
     background: "#151515",
     borderRadius: 12,
     border: "2px solid #ED7B7B",
     position: "relative",
+    [theme.breakpoints.down("xs")]: {
+      minHeight: 375,
+    },
   },
   shapeIcon: {
     position: "absolute",

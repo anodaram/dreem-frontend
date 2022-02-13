@@ -88,11 +88,11 @@ const ContentPreviewModal = ({
         setNFT(res1.data);
         MetaverseAPI.getCollection(res1.data.collectionId).then(res2 => {
           setCurrentCollection(res2.data);
-          console.log(res2.data, res1.data.collectionId)
+          console.log(res2.data, res1.data.collectionId);
         });
         MetaverseAPI.getNFTInfo(res1.data.versionHashId).then(res3 => {
           setMetadata(res3.data);
-          console.log(res3.data, res1.data.versionHashId)
+          console.log(res3.data, res1.data.versionHashId);
         });
       });
     }
@@ -141,10 +141,8 @@ const ContentPreviewModal = ({
     console.log(uri);
     const web3APIHandler = targetChain.apiHandler;
     const web3 = new Web3(library.provider);
-    console.log("----metadata:", metaData, isDraft);
 
     if (isDraft) {
-      console.log("here-----");
       const resRoyalty = await web3APIHandler.RoyaltyFactoryBatch.mint(
         web3,
         account,
@@ -154,8 +152,8 @@ const ContentPreviewModal = ({
           amount: 1,
           uri: uri,
           isRoyalty: false,
-          royaltyAddress: '0x0000000000000000000000000000000000000000',
-          royaltyPercentage: 0
+          royaltyAddress: "0x0000000000000000000000000000000000000000",
+          royaltyPercentage: 0,
         },
         setTxModalOpen,
         setTxHash
@@ -174,10 +172,10 @@ const ContentPreviewModal = ({
           1,
           resRoyalty.batchId
         );
-        if(resp.success){
+        if (resp.success) {
           setTxSuccess(true);
           showAlertMessage(`Successfully world minted`, { variant: "success" });
-        } else{
+        } else {
           setTxSuccess(false);
           showAlertMessage(`Something went wrong`, { variant: "error" });
         }
@@ -196,8 +194,8 @@ const ContentPreviewModal = ({
           amount: 1,
           uri: uri,
           isRoyalty: false,
-          royaltyAddress: '0x0000000000000000000000000000000000000000',
-          royaltyPercentage: 0
+          royaltyAddress: "0x0000000000000000000000000000000000000000",
+          royaltyPercentage: 0,
         },
         setTxModalOpen,
         setTxHash
@@ -212,16 +210,16 @@ const ContentPreviewModal = ({
           [contractRes.startTokenId],
           uri,
           contractRes.owner,
-          '0x0000000000000000000000000000000000000000',
+          "0x0000000000000000000000000000000000000000",
           0,
           contractRes.txHash,
           1,
           contractRes.batchId
         );
-        if(resp.success){
+        if (resp.success) {
           setTxSuccess(true);
           showAlertMessage(`Successfully world minted`, { variant: "success" });
-        } else{
+        } else {
           setTxSuccess(false);
           showAlertMessage(`Something went wrong`, { variant: "error" });
         }
@@ -230,6 +228,7 @@ const ContentPreviewModal = ({
       }
     }
   };
+
   const handleEnterGame = () => {
     if (detectMob()) {
       setShowPlayModal(true);
@@ -289,15 +288,18 @@ const ContentPreviewModal = ({
                         alignItems="center"
                         onClick={() => history.push(`/profile/${nft.submitter.user.address}`)}
                       >
-                        <Avatar size={42} rounded image={nft.submitter.user.avatarUrl ? nft.submitter.user.avatarUrl : getDefaultAvatar()} />
+                        <Avatar
+                          size={42}
+                          rounded
+                          image={
+                            nft.submitter.user.avatarUrl ? nft.submitter.user.avatarUrl : getDefaultAvatar()
+                          }
+                        />
                         <Box display="flex" flexDirection="column" ml={1}>
                           <Box className={classes.typo1}>{`${nft.submitter.user.firstName ?? ""} ${
                             nft.submitter.user.lastName ?? ""
                           }`}</Box>
-                          <AddressView
-                            className={classes.typo4}
-                            address={"@" + nft.submitter.user.priviId}
-                          />
+                          <AddressView className={classes.typo4} address={"@" + nft.submitter.user.priviId} />
                         </Box>
                       </Box>
                       <Box
@@ -389,10 +391,9 @@ const ContentPreviewModal = ({
                       >
                         Edit Draft
                       </PrimaryButton>
-                    ))
-                  }
-                  {isOwner && !nft.minted && 
-                  <PrimaryButton
+                    ))}
+                  {isOwner && !nft.minted && (
+                    <PrimaryButton
                       size="medium"
                       className={`${classes.button} ${classes.mintButton}`}
                       style={{
@@ -402,8 +403,8 @@ const ContentPreviewModal = ({
                       onClick={mintNFT}
                     >
                       Mint NFT
-                  </PrimaryButton>
-                  }
+                    </PrimaryButton>
+                  )}
                 </Box>
               ) : null}
             </div>
@@ -433,13 +434,15 @@ const ContentPreviewModal = ({
                 ) : null}
               </div>
             )}
-            {openEditRealmModal &&
-              <EditDraftContentModal 
+            {
+              openEditRealmModal && (
+                <EditDraftContentModal
                   open={openEditRealmModal}
                   onClose={() => setOpenEditRealmModal(false)}
                   draftContent={nft}
-                  metaData = {metaDataForModal}
-              />
+                  metaData={metaDataForModal}
+                />
+              )
               // (nft.worldIsExtension ? (
               //   <EditExtensionModal
               //     open={openEditRealmModal}
@@ -499,7 +502,7 @@ const ContentPreviewModal = ({
             onClose(null);
           }}
         />
-        )}
+      )}
     </>
   );
 };

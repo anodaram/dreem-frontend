@@ -23,6 +23,9 @@ export const nftCardStyles = makeStyles(theme => ({
     padding: "10px 10px 8px 8px",
     background: "#212121",
     borderRadius: "50%",
+    [theme.breakpoints.down("sm")]: {
+      top: 205,
+    },
   },
   imageContent: {
     maxHeight: "360px",
