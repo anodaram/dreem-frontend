@@ -431,7 +431,7 @@ export default function RealmDetailPage() {
             ) : null}
           </Box>
         </Box>
-        <Box className={classes.content}>
+        <Box className={classes.content} style={{paddingTop: isSignedin ? 150 : 90}}>
           <Box className={classes.fitContent}>
             <TabsView
               tabs={RealmDetailTabs}
