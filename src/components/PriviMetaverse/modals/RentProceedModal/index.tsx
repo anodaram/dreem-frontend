@@ -48,7 +48,7 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
   }, [nft]);
 
   const getTokenDecimal = addr => {
-    if (tokens.length == 0) return 0;
+    if (tokens.length == 0 || !addr) return 0;
     let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token.Decimals;
   };
@@ -62,7 +62,9 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
           return;
         }
       }
@@ -206,9 +208,10 @@ export default function RentProceedModal({ open, offer, handleClose = () => {}, 
               <Box className={classes.infoRow}>
                 <span className={classes.infoLabel}>Price Per Hour</span>
                 <span className={classes.infoValue}>
-                  {`${toDecimals(offer.pricePerSecond*SECONDS_PER_HOUR, getTokenDecimal(offer.fundingToken))} ${getTokenSymbol(
-                    offer.fundingToken
-                  )}`}
+                  {`${toDecimals(
+                    offer.pricePerSecond * SECONDS_PER_HOUR,
+                    getTokenDecimal(offer.fundingToken)
+                  )} ${getTokenSymbol(offer.fundingToken)}`}
                 </span>
               </Box>
               <Box className={classes.infoRow} mt={1}>

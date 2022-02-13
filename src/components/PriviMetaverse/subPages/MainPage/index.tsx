@@ -207,7 +207,7 @@ export default function HomePage() {
           .finally(() => setLoadingExplore(false));
 
         setLoadingExploreCharacters(true);
-        MetaverseAPI.getCharacters(null, true, null, true)
+        MetaverseAPI.getCharacters(null, true, null, true, 12)
           .then(res => {
             setExploreCharacters(res.data.elements);
           })
@@ -566,7 +566,7 @@ export default function HomePage() {
             <Box mt={4}>
               <MasonryGrid
                 gutter={"16px"}
-                data={loadingExploreCharacters ? Array(loadingCount).fill(0) : exploreCharacters}
+                data={exploreCharacters}
                 renderItem={(item, _) => <AvatarCard item={item} isLoading={loadingExploreCharacters} />}
                 columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR_AVATAR}
               />

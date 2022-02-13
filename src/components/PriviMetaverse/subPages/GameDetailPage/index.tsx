@@ -146,10 +146,10 @@ export default function GameDetailPage() {
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
   const [isNFTHolder, setIsNFTHolder] = React.useState<boolean>(false);
 
-  const loadingCount = React.useMemo(
-    () => (width > 1000 ? (openSideBar ? 3 : 4) : width > 600 ? 1 : 2),
-    [width, openSideBar]
-  );
+  const loadingCount = React.useMemo(() => (width > 1000 ? (openSideBar ? 3 : 4) : width > 600 ? 1 : 2), [
+    width,
+    openSideBar,
+  ]);
   const roomId = React.useMemo(() => gameInfo && `${gameInfo.Slug}-${gameInfo.Address}`, [gameInfo]);
   const cardImage = React.useMemo(() => gameInfo && sanitizeIfIpfsUrl(gameInfo.CardImage), [gameInfo]);
 
@@ -305,7 +305,7 @@ export default function GameDetailPage() {
   };
 
   const getTokenDecimal = addr => {
-    if (tokenList.length == 0) return 0;
+    if (tokenList.length == 0 || !addr) return 0;
     let token = tokenList.find(token => token.Address === addr);
     return token?.Decimals;
   };
@@ -837,20 +837,19 @@ export const ArrowIcon = ({ color = "white" }) => (
   </svg>
 );
 
-export const ArrowIconComponent = func => () =>
-  (
-    <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
-      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
-          stroke="#2D3047"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </Box>
-  );
+export const ArrowIconComponent = func => () => (
+  <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
+    <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
+        stroke="#2D3047"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </Box>
+);
 
 export const SearchIcon = ({ color = "white" }) => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

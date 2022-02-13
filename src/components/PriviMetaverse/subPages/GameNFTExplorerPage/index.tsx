@@ -115,20 +115,19 @@ const getChainImage = chain => {
   }
 };
 
-export const ArrowIcon = func => () =>
-  (
-    <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
-      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
-          stroke="#2D3047"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </Box>
-  );
+export const ArrowIcon = func => () => (
+  <Box style={{ fill: "white", cursor: "pointer" }} onClick={() => func(true)}>
+    <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
+        stroke="#2D3047"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </Box>
+);
 
 const GameNFTExplorerPage = () => {
   const history = useHistory();
@@ -219,7 +218,7 @@ const GameNFTExplorerPage = () => {
   };
 
   const getTokenDecimal = addr => {
-    if (tokenList.length == 0) return 0;
+    if (tokenList.length == 0 || !addr) return 0;
     let token = tokenList.find(token => token.Address === addr);
     return token?.Decimals;
   };

@@ -7,7 +7,7 @@ export const useModalStyles = makeStyles(theme => ({
     color: "white",
     maxWidth: "755px",
     borderRadius: "0px",
-    maxHeight: "calc(100vh - 440px)",
+    maxHeight: "calc(100vh - 480px)",
     overflow: "auto",
   },
   warningScreen: {
@@ -95,7 +95,7 @@ export const useModalStyles = makeStyles(theme => ({
     alignItems: "center",
     background: "rgba(238, 242, 247, 0.06)",
     border: "1px dashed #FFFFFF",
-    padding: "12px 0",
+    padding: "12px 12px 12px 0",
     "& button": {
       color: "white",
       background: "transparent",
