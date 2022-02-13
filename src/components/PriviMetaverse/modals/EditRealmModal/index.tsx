@@ -509,7 +509,7 @@ const EditRealmModal = ({
                     backgroundSize: "cover",
                   }}
                 />
-                <Box flex={1} display="flex" justifyContent="flex-end" mr={3}>
+                <Box flex={1} display="flex" justifyContent="flex-end" ml={3}>
                   <SecondaryButton
                     size="medium"
                     onClick={e => {
@@ -560,7 +560,7 @@ const EditRealmModal = ({
                 <div style={{marginLeft: 20}}>
                   <ReactPlayer playing={false} controls={false} url={videoThumbnailURL} width="85" height={85} />
                 </div>
-                <Box flex={1} display="flex" justifyContent="flex-end" mr={3}>
+                <Box flex={1} display="flex" justifyContent="flex-end" ml={3}>
                   <SecondaryButton
                     size="medium"
                     onClick={e => {

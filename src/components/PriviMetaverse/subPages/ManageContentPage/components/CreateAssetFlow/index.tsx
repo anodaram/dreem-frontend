@@ -842,7 +842,7 @@ const CreateAssetFlow = ({
             )}
             {step === steps.length && (
               <Box display="flex" alignItems="center" justifyContent="center">
-                <PrimaryButton size="medium" className={classes.howToCreateBtn} disabled={currentCollection ? false : true} onClick={() => handlePublic("draft")}>
+                <PrimaryButton size="medium" className={classes.createDraftBtn} disabled={currentCollection ? false : true} onClick={() => handlePublic("draft")}>
                   create draft
                 </PrimaryButton>
                 <PrimaryButton size="medium" className={classes.nextBtn} disabled={currentCollection ? false : true} onClick={() => { handlePublic("nft") }}>
