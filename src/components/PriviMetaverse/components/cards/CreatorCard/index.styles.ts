@@ -54,13 +54,16 @@ export const creatorCardStyles = makeStyles(theme => ({
     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
     "-webkit-text-fill-color": "transparent",
     "-webkit-background-clip": "text",
-    width: "fit-content",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
   typo2: {
     fontSize: 16,
     fontFamily: "Rany",
     fontWeight: 400,
     color: "rgba(255, 255, 255, 0.6)",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
   typo3: {
     fontSize: 16,
