@@ -113,6 +113,7 @@ export default function ManageContentPage() {
           dispatch(
             setUser({
               ...data,
+              id: data.priviId,
               infoImage: {
                 ...data.infoImage,
                 avatarUrl: res.data.user.avatarUrl,
