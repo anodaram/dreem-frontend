@@ -98,7 +98,7 @@ const Auth = () => {
   }, [user.id]);
 
   useEffect(() => {
-    if (account && user?.address && user?.address.toLowerCase() !== account.toLowerCase()) {
+    if ((account && user?.address && user?.address.toLowerCase() !== account.toLowerCase()) || (!account && user.address)) {
       handleLogout();
       return;
     }
