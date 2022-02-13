@@ -45,8 +45,8 @@ export default function CreatorCard({ item }: { item: any }) {
       <Box className={classes.userInfoSection}>
         <Box
           className={classes.typo1}
-        >{`${creatorInfo?.creator?.user?.firstName} ${creatorInfo?.creator?.user?.lastName}`}</Box>
-        <Box className={classes.typo2} mt={0.5}>{`@${creatorInfo?.creator?.user?.name}`}</Box>
+        >{`${creatorInfo?.creator?.user?.firstName || ''} ${creatorInfo?.creator?.user?.lastName || ''}`}</Box>
+        <Box className={classes.typo2} mt={0.5}>{`@${creatorInfo?.creator?.user?.name || ''}`}</Box>
       </Box>
       <Box height={"1px"} width={1} bgcolor={"rgba(255, 255, 255, 0.2)"} />
       <Box className={classes.extraInfoSection}>
