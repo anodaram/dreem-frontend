@@ -117,7 +117,7 @@ const ContentPreviewModal = ({
   };
 
   const handleShareDraft = () => {
-    shareMedia("Draft", `realms/${nft.id}`);
+    shareMedia("Draft", `explore/${nft.versionHashId}`);
   };
 
   const mintNFT = async () => {
