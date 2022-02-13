@@ -83,7 +83,7 @@ export default ({
       const web3APIHandler = chain.apiHandler;
       const web3 = new Web3(library.provider);
       const response = await web3APIHandler.RentalManager.getSyntheticNFTAddress(web3, {
-        collectionId: nft.Address,
+        collectionId: nft.Address.toLowerCase(),
       });
       return response;
     } catch (err) {

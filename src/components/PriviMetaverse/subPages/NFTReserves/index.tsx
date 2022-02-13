@@ -142,20 +142,22 @@ const NFTReserves = () => {
           setPopularGames(prev => {
             const targetGame = prev.find(game => game.Address === _newNFT.collection);
             if (!targetGame) return prev;
-  
-            return prev.map(game => {
-              if (game.Address === _newNFT.collection) {
-                game.transaction_count = game.transaction_count + 1
-                game.Count = game.Count + 1
-              }
-              return game;
-            }).sort((a, b) => b.transaction_count - a.transaction_count)
-          })
+
+            return prev
+              .map(game => {
+                if (game.Address === _newNFT.collection) {
+                  game.transaction_count = game.transaction_count + 1;
+                  game.Count = game.Count + 1;
+                }
+                return game;
+              })
+              .sort((a, b) => b.transaction_count - a.transaction_count);
+          });
         }
       };
 
       const updateMarketPlaceFeedHandler = _transaction => {
-        if (_transaction.type === 'TRANSFER') {
+        if (_transaction.type === "TRANSFER") {
           setFeaturedGames(prev => {
             const updateFeaturedGames = [...prev];
             const index = updateFeaturedGames.findIndex(game => game.collectionId === _transaction.slug);
@@ -163,7 +165,7 @@ const NFTReserves = () => {
               updateFeaturedGames[index].Transfers += 1;
             }
 
-            return updateFeaturedGames
+            return updateFeaturedGames;
           });
         }
         setTransactions(prev => {
@@ -181,13 +183,15 @@ const NFTReserves = () => {
           const targetGame = prev.find(game => game.Address === _transaction.collection);
           if (!targetGame) return prev;
 
-          return prev.map(game => {
-            if (game.Address === _transaction.collection) {
-              game.transaction_count = game.transaction_count + 1
-            }
-            return game;
-          }).sort((a, b) => b.transaction_count - a.transaction_count)
-        })
+          return prev
+            .map(game => {
+              if (game.Address === _transaction.collection) {
+                game.transaction_count = game.transaction_count + 1;
+              }
+              return game;
+            })
+            .sort((a, b) => b.transaction_count - a.transaction_count);
+        });
 
         // Update owners count when sold a NFT
         if (_transaction.type === TYPE_SOLD) {
@@ -200,16 +204,16 @@ const NFTReserves = () => {
               setPopularGames(prev => {
                 const targetGame = prev.find(game => game.Address === _transaction.collection);
                 if (!targetGame) return prev;
-    
+
                 return prev.map(game => {
                   if (game.Address === _transaction.collection) {
-                    game.owners_count = game.owners_count + 1
+                    game.owners_count = game.owners_count + 1;
                   }
                   return game;
-                })
-              })
+                });
+              });
             }
-          })
+          });
         }
       };
 
@@ -295,13 +299,13 @@ const NFTReserves = () => {
 
   const getTokenSymbol = addr => {
     if (tokenList.length == 0 || !addr) return 0;
-    let token = tokenList.find(token => token.Address === addr);
+    let token = tokenList.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Symbol || "";
   };
 
   const getTokenDecimal = addr => {
     if (tokenList.length == 0) return 0;
-    let token = tokenList.find(token => token.Address === addr);
+    let token = tokenList.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Decimals;
   };
 
