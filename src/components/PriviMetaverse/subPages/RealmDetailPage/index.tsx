@@ -244,7 +244,7 @@ export default function RealmDetailPage() {
             <Box ml={1}>Back</Box>
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2.5}>
-            <Box className={classes.title}>{realmData.worldTitle || ""}</Box>
+            <Box className={classes.title}>{realmData.realmName || ""}</Box>
             <Hidden smDown>
               <Box display="flex" alignItems="center">
                 <Box className={classes.iconBtn}>
@@ -270,7 +270,7 @@ export default function RealmDetailPage() {
               </Box>
             </Hidden>
           </Box>
-          <Box className={classes.description}>{realmData.worldDescription || ""}</Box>
+          <Box className={classes.description}>{realmData.realmDescription || ""}</Box>
           <Box className={classes.control}>
             {isSignedin && (
               <Hidden mdUp>
@@ -346,7 +346,7 @@ export default function RealmDetailPage() {
                       </PrimaryButton>
                       <SecondaryButton
                         size="medium"
-                        onClick={() => history.push(`/creating_extension/${realmData?.id}`)}
+                        onClick={() => history.push(`/creating_extension/${realmData?.versionHashId}`)}
                         style={{
                           background: "transparent",
                           textTransform: "uppercase",
@@ -369,8 +369,8 @@ export default function RealmDetailPage() {
                   </Hidden>
               </Box>
             )}
-            {realmData.id ? (
-              realmData.worldVideo ? (
+            {realmData.versionHashId ? (
+              realmData.realmVideo ? (
                 <div className={classes.videoCtn}>
                   {realmPublicState == REALM_PUBLIC_STATE.PUBLIC ? (
                     <Box className={classes.public}>
@@ -393,13 +393,13 @@ export default function RealmDetailPage() {
                     loop
                     style={{
                       // backgroundImage: `url("${sanitizeIfIpfsUrl(realmData.worldImages[0])}")`,
-                      backgroundImage: `url("${sanitizeIfIpfsUrl(realmData.worldVideo)}")`,
+                      backgroundImage: `url("${sanitizeIfIpfsUrl(realmData.realmVideo)}")`,
                       backgroundSize: "cover",
                       backgroundRepeat: "no-repeat",
                       backgroundPosition: "center",
                     }}
                   >
-                    <source src={sanitizeIfIpfsUrl(realmData.worldVideo)} type="video/mp4" />
+                    <source src={sanitizeIfIpfsUrl(realmData.realmVideo)} type="video/mp4" />
                   </video>
                   <Box className={classes.stat}>
                     <Box className={classes.statItem}>
@@ -429,7 +429,7 @@ export default function RealmDetailPage() {
                   </Box>
                 </div>
               ) : (
-                <img src={sanitizeIfIpfsUrl(realmData.worldImage)} alt="realm" />
+                <img src={sanitizeIfIpfsUrl(realmData.realmImage)} alt="realm" />
               )
             ) : null}
           </Box>
