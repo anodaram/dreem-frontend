@@ -117,7 +117,6 @@ export default function RealmDetailPage() {
   );
 
   React.useEffect(() => {
-    console.log(hashId)
     if (realmId) {
       loadRealm(realmId);
 
@@ -139,10 +138,8 @@ export default function RealmDetailPage() {
 
   const loadRealm = realmId => {
     setIsLoading(true);
-    console.log(realmId)
     MetaverseAPI.getAsset(realmId)
       .then(res => {
-        console.log(res.data)
         setRealmData(res.data);
       })
       .finally(() => setIsLoading(false));
