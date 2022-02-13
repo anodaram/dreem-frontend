@@ -196,6 +196,7 @@ export default function HomePage() {
         setLoadingExplore(true);
         MetaverseAPI.getAssets(9, 1, "timestamp", filters, true, undefined, undefined, false)
           .then(res => {
+            console.log(res)
             if (res.success) {
               const items = res.data.elements;
               if (items && items.length > 0) {
@@ -490,8 +491,8 @@ export default function HomePage() {
                                   <Box
                                     className={classes.carouselItem}
                                     style={{
-                                      backgroundImage: featuredRealms[page]?.worldImage
-                                        ? `url("${sanitizeIfIpfsUrl(featuredRealms[page]?.worldImage)}")`
+                                      backgroundImage: featuredRealms[page]?.realmImage
+                                        ? `url("${sanitizeIfIpfsUrl(featuredRealms[page]?.realmImage)}")`
                                         : `url(${getDefaultImageUrl()})`,
                                       border: isActivePage ? "2px solid #E1E736" : "none",
                                     }}
