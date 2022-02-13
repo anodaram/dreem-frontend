@@ -28,7 +28,7 @@ import {
 import { claimBackRent } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
-import { getChainForNFT } from "shared/functions/metamask";
+import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import GameNFTDetailModal from "components/PriviMetaverse/modals/GameNFTDetailModal";
 import RentSuccessModal from "components/PriviMetaverse/modals/RentSuccessModal";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
@@ -250,14 +250,23 @@ const ExploreReserveDetailPage = () => {
     });
   };
 
-  const syncNft = () => {
-    if (!nft) return;
+  const syncNft = async () => {
+    if (!nft || !library) return;
 
     if (nft.blockingSaleOffer && nft.blockingSaleOffer.id) {
       handleConfirmRefresh();
     } else {
       const nftChain = getChainForNFT(nft);
       if (!nftChain) return;
+      if (chainId && chainId !== nftChain?.chainId) {
+        const isHere = await switchNetwork(nftChain?.chainId || 0);
+        if (!isHere) {
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
+          return;
+        }
+      }
 
       setSyncing(true);
       syncRentalInfos(nftChain);
@@ -550,7 +559,9 @@ const ExploreReserveDetailPage = () => {
                     className={classes.collectionName}
                     style={{ marginBottom: 4, fontSize: "20px !important", cursor: "pointer" }}
                     title={nft.name}
-                    onClick={()=>{gotoCollection(nft)}}
+                    onClick={() => {
+                      gotoCollection(nft);
+                    }}
                   >
                     {nft.CollectionName}
                   </Text>
