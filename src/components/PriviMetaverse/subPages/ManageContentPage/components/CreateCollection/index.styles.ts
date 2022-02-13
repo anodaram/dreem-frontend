@@ -7,7 +7,7 @@ export const useModalStyles = makeStyles(theme => ({
     color: "white",
     maxWidth: "755px",
     borderRadius: "0px",
-    maxHeight: "calc(100vh - 440px)",
+    maxHeight: "calc(100vh - 480px)",
     overflow: "auto",
   },
   warningScreen: {
