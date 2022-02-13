@@ -41,7 +41,7 @@ const setTokenList = (state: State, action: Action) => {
 const setMarketFee = (state: State, action: any) => {
   return {
     ...state,
-    fee: action.fee,
+    fee: action.Fee,
   };
 };
 
