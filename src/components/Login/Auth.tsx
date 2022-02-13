@@ -22,7 +22,7 @@ import URL, { LISTENER_URL } from "shared/functions/getURL";
 import { detectMob } from "shared/helpers";
 
 export let socket: SocketIOClient.Socket;
-export let listenerSocket : SocketIOClient.Socket;
+export let listenerSocket: SocketIOClient.Socket;
 
 export const setSocket = (sock: SocketIOClient.Socket) => {
   socket = sock;
@@ -113,7 +113,7 @@ const Auth = () => {
       });
     }
   }, []);
-  
+
   const handleLogout = () => {
     setSignedin(false);
     dispatch(signOut());

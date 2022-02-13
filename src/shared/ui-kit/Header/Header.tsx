@@ -281,6 +281,7 @@ const Header = props => {
           dispatch(
             setUser({
               ...data,
+              id: data.priviId,
               infoImage: {
                 ...data.infoImage,
                 avatarUrl: res.data.user.avatarUrl,
