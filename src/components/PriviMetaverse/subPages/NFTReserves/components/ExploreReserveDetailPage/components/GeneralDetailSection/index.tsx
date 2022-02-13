@@ -53,7 +53,7 @@ export default ({ isOwnership, nft, setNft, refresh, onRent }) => {
   };
 
   const getTokenDecimal = addr => {
-    if (tokenList.length == 0) return null;
+    if (tokenList.length == 0 || !addr) return null;
     let token = tokenList.find(token => token.Address === addr);
     return token?.Decimals ?? 1;
   };

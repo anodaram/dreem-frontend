@@ -35,7 +35,7 @@ export default function CancelBlockingPriceModal({ open, handleClose, offer, nft
   }, [open]);
 
   const getTokenDecimal = addr => {
-    if (tokenList.length == 0) return 0;
+    if (tokenList.length == 0 || !addr) return 0;
     let token = tokenList.find(token => token.Address === addr);
     return token.Decimals;
   };
@@ -44,7 +44,9 @@ export default function CancelBlockingPriceModal({ open, handleClose, offer, nft
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
-        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+          variant: "error",
+        });
         return;
       }
     }
