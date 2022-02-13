@@ -112,13 +112,21 @@ export default function MarketplaceFeed() {
 
   const getTokenSymbol = addr => {
     if (tokenList.length == 0 || !addr) return 0;
+<<<<<<< HEAD
     let token = tokenList.find(token => token.Address.toLowerCase() === addr.toLowerCase());
+=======
+    let token = tokenList.find(token => token.Address.toLowerCase()  === addr.toLowerCase() );
+>>>>>>> ab30a295 (fix feed column)
     return token?.Symbol || "";
   };
 
   const getTokenDecimal = addr => {
     if (tokenList.length == 0) return 0;
+<<<<<<< HEAD
     let token = tokenList.find(token => token.Address.toLowerCase() === addr.toLowerCase());
+=======
+    let token = tokenList.find(token => token.Address.toLowerCase() === addr.toLowerCase() );
+>>>>>>> ab30a295 (fix feed column)
     return token?.Decimals;
   };
 
