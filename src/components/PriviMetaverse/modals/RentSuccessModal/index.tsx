@@ -33,34 +33,30 @@ export default function RentSuccessModal({ open, nft, setNft, handleClose = () =
   };
 
   const getTokenDecimal = addr => {
-    if (tokenList.length == 0) return null;
+    if (tokenList.length == 0 || !addr) return null;
     let token = tokenList.find(token => token.Address === addr);
     return token?.Decimals ?? 1;
   };
-
 
   const getSyntheticNftAddress = async () => {
     try {
       const web3APIHandler = chain.apiHandler;
       const web3 = new Web3(library.provider);
-      const response = await web3APIHandler.RentalManager.getSyntheticNFTAddress(
-        web3,
-        {
-          collectionId: nft.Address,
-        },
-      );
+      const response = await web3APIHandler.RentalManager.getSyntheticNFTAddress(web3, {
+        collectionId: nft.Address,
+      });
       return response;
     } catch (err) {
-      return '';
+      return "";
     }
   };
 
   const handleOpenToken = async () => {
-    let syntheticAddress: any = nft.syntheticAddress
+    let syntheticAddress: any = nft.syntheticAddress;
     if (!syntheticAddress) {
       let response = await getSyntheticNftAddress();
       syntheticAddress = response.nftAddress;
-      setNft({...nft, syntheticAddress})
+      setNft({ ...nft, syntheticAddress });
     }
     window.open(`${chain?.scan?.url}/token/${syntheticAddress}?a=${nft.syntheticID}`, "_blank");
   };

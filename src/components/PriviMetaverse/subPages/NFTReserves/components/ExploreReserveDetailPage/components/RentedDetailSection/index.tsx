@@ -40,10 +40,11 @@ export default ({
   const [expired, setExpired] = useState(false);
 
   const chain = React.useMemo(() => BlockchainNets.find(net => net.chainId === chainId), [chainId]);
-  const canClaimBack = React.useMemo<boolean>(
-    () => (expired && isTokenInVault && isOwner ? true : false),
-    [expired, isTokenInVault, isOwner]
-  );
+  const canClaimBack = React.useMemo<boolean>(() => (expired && isTokenInVault && isOwner ? true : false), [
+    expired,
+    isTokenInVault,
+    isOwner,
+  ]);
 
   useEffect(() => {
     if (!offer) {
@@ -73,7 +74,7 @@ export default ({
   };
 
   const getTokenDecimal = addr => {
-    if (tokens.length == 0) return 0;
+    if (tokens.length == 0 || !addr) return 0;
     let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token.Decimals;
   };

@@ -44,7 +44,7 @@ export default ({ isOwnership, nft, refresh }) => {
   }, [blockingInfo]);
 
   const getTokenSymbol = addr => {
-    if (tokens.length == 0) return 0;
+    if (tokens.length == 0 || !addr) return 0;
     let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Symbol || "";
   };
@@ -169,7 +169,7 @@ export default ({ isOwnership, nft, refresh }) => {
           </span>
         </Box>
         <RangeSlider
-          value={(Number(totalCollateralPercent)/Number(collateralPercent)-1)*100+20}
+          value={(Number(totalCollateralPercent) / Number(collateralPercent) - 1) * 100 + 20}
           variant="transparent"
           onChange={(event, newValue) => {}}
         />
@@ -185,12 +185,7 @@ export default ({ isOwnership, nft, refresh }) => {
             <span>{Number(collateralPercent * 1.5).toFixed(1)}%</span>
             <span style={{ marginLeft: -16, marginTop: 4 }}>Medium Risk</span>
           </Box>
-          <Box
-            flex={25}
-            ml={"-26px"}
-            display={"flex"}
-            flexDirection={"column"}
-          >
+          <Box flex={25} ml={"-26px"} display={"flex"} flexDirection={"column"}>
             <span>
               <strong>{Number(collateralPercent * 1.75).toFixed(1)}%</strong>
             </span>

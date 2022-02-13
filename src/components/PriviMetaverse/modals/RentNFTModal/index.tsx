@@ -44,10 +44,12 @@ export default function RentNFTModal({
   const [limitSec, setLimitSec] = useState<number>(0);
   const [balance, setBalance] = React.useState<number>(0);
   const [rentalToken, setRentalToken] = useState<any>();
-  const rentalTime = React.useMemo(
-    () => toSeconds(limitDays, limitHour, limitMin, limitSec),
-    [limitDays, limitHour, limitMin, limitSec]
-  );
+  const rentalTime = React.useMemo(() => toSeconds(limitDays, limitHour, limitMin, limitSec), [
+    limitDays,
+    limitHour,
+    limitMin,
+    limitSec,
+  ]);
 
   const [isApproved, setIsApproved] = useState<boolean>(false);
 
@@ -61,13 +63,13 @@ export default function RentNFTModal({
   const { showAlertMessage } = useAlertMessage();
 
   const getTokenDecimal = addr => {
-    if (tokenList.length == 0) return 0;
+    if (tokenList.length == 0 || !addr) return 0;
     let token = tokenList.find(token => token.Address === addr);
     return token?.Decimals;
   };
 
   const price = offer
-    ? (+toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime)
+    ? +toDecimals(offer.pricePerSecond ?? 0, getTokenDecimal(offer.fundingToken)) * rentalTime
     : "0";
 
   useEffect(() => setSelectedChain(getChainForNFT(nft)), [nft]);
@@ -167,7 +169,7 @@ export default function RentNFTModal({
       let balance = await web3APIHandler.Erc20[rentalToken.Symbol].balanceOf(web3, { account });
       let decimals = await web3APIHandler.Erc20[rentalToken.Symbol].decimals(web3, { account });
       balance = balance / Math.pow(10, decimals);
-      const approvePrice = Number(price) * (1+ marketFee);
+      const approvePrice = Number(price) * (1 + marketFee);
 
       if (balance < (approvePrice || 0)) {
         showAlertMessage(`Insufficient balance to approve`, { variant: "error" });
@@ -433,7 +435,9 @@ export default function RentNFTModal({
             <Box className={classes.box}>
               <Box display="flex" flexDirection="column">
                 <span className={classes.amountLabel}>Amount to pay</span>
-                <span className={classes.purpleText}>{`${(Number(price)*(1+marketFee)).toFixed(2)} ${rentalToken?.Symbol ?? "USDT"}`}</span>
+                <span className={classes.purpleText}>{`${(Number(price) * (1 + marketFee)).toFixed(2)} ${
+                  rentalToken?.Symbol ?? "USDT"
+                }`}</span>
               </Box>
               <Box display="flex" flexDirection="column" textAlign="end">
                 <span className={classes.amountLabel}>Max rental time</span>
