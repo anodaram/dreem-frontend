@@ -8,7 +8,6 @@ export const collectionCardStyles = makeStyles(theme => ({
     flexDirection: "column",
     position: "relative",
     maxHeight: 410,
-    minWidth: 310,
   },
   shapeIcon: {
     position: "absolute",
@@ -213,7 +212,7 @@ export const collectionCardStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    padding: "30px 72px 70px",
+    padding: "30px 36px 70px",
     height: "100%",
     background: "unset",
     [theme.breakpoints.down("sm")]: {

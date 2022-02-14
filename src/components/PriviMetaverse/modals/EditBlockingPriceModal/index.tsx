@@ -53,7 +53,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
   }, [open]);
 
   const getTokenDecimal = addr => {
-    if (tokenList.length == 0) return 0;
+    if (tokenList.length == 0 || !addr) return 0;
     let token = tokenList.find(token => token.Address === addr);
     return token.Decimals;
   };
@@ -204,7 +204,7 @@ export default function EditBlockingPriceModal({ open, handleClose, offer, nft, 
       );
 
       if (contractResponse.success) {
-        const offerId = web3.utils.keccak256(
+        const offerId = await web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address", "uint80", "uint64"],
             [

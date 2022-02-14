@@ -19,11 +19,8 @@ export default function RealmCard(props) {
   const [openContentPreview, setOpenContentPreview] = useState<boolean>(false);
 
   const handleOpenDetail = () => {
-    if (props.item?.worldIsExtension || props.popup) {
-      setOpenContentPreview(true);
-    } else {
-      history.push(`/realms/${props?.item?.id}`);
-    }
+    console.log(props?.item)
+    history.push(`/realms/${props?.item?.versionHashId}`);
   };
 
   const handleClose = e => {
@@ -49,32 +46,26 @@ export default function RealmCard(props) {
             style={{
               backgroundImage:
                 props.item && props.isFeature
-                  ? props.item.worldBanner
-                    ? `url("${sanitizeIfIpfsUrl(props.item.worldBanner)}")`
+                  ? props.item.realmBanner
+                    ? `url("${sanitizeIfIpfsUrl(props.item.realmBanner)}")`
                     : `url(${getDefaultImageUrl()})`
-                  : props.item.worldImage
-                  ? `url("${sanitizeIfIpfsUrl(props.item.worldImage)}")`
+                  : props.item.realmImage
+                  ? `url("${sanitizeIfIpfsUrl(props.item.realmImage)}")`
                   : `url(${getDefaultImageUrl()})`,
             }}
           >
-            {props.item.worldIsExtension ? (
-              <Box padding="10px" display="flex">
-                <Box className={classes.extensionTag}>Extension</Box>
-              </Box>
-            ) : (
               <Box padding="10px" display="flex">
                 <Box className={classes.realmTag}>Realm</Box>
               </Box>
-            )}
           </Box>
           <Box className={classes.info}>
-            <Tooltip title={props.item && props.item.worldTitle ? props.item.worldTitle : ""}>
+            <Tooltip title={props.item && props.item.realmName ? props.item.realmName : ""}>
               <Box className={classes.name}>
-                {props.item && props.item.worldTitle ? props.item.worldTitle : ""}
+                {props.item && props.item.realmName ? props.item.realmName : ""}
               </Box>
             </Tooltip>
             <Box className={classes.description}>
-              {props.item && props.item.worldShortDescription ? props.item.worldShortDescription : ""}
+              {props.item && props.item.realmDescription ? props.item.realmDescription : ""}
             </Box>
           </Box>
         </>

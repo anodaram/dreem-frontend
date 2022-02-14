@@ -41,7 +41,7 @@ export async function mintShares(web3: Web3, account: string, payload: any) {
         payload: {
           to,
           bucket,
-          amount: parseInt(web3.utils.fromWei(amountToken)),
+          amount: parseInt(await web3.utils.fromWei(amountToken)),
         },
       });
 

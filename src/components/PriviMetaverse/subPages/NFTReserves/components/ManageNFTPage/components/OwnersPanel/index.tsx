@@ -30,20 +30,19 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   1420: 4,
 };
 
-export const ArrowIcon = func => () =>
-  (
-    <Box style={{ cursor: "pointer" }} onClick={() => func(true)}>
-      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
-          stroke="#2D3047"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </Box>
-  );
+export const ArrowIcon = func => () => (
+  <Box style={{ cursor: "pointer" }} onClick={() => func(true)}>
+    <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
+        stroke="#2D3047"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </Box>
+);
 
 const OwnersPanel = () => {
   const classes = ownersPanelStyles();
@@ -70,8 +69,8 @@ const OwnersPanel = () => {
   const { account } = useWeb3React();
 
   const getTokenDecimal = (chain, addr) => {
-    if (tokens.length == 0) return 0;
-    let token = tokens.find(token => token.Address === addr);
+    if (tokens.length == 0 || !addr) return 0;
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Decimals;
   };
 
@@ -292,39 +291,43 @@ const OwnersPanel = () => {
             </Box>
           ))}
         </Box>
-        <Box
-          style={{
-            flex: 1,
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          <PrimaryButton
-            onClick={() => {
-              clickRefreshBtn();
-            }}
-            size="small"
+        {isSignedin ? (
+          <Box
             style={{
-              background: "#3b4834",
-              fontFamily: "Rany",
-              fontStyle: "normal",
-              fontWeight: 600,
-              fontSize: "12px",
-              lineHeight: "15px",
-              textAlign: "center",
-              color: "#E9FF26",
+              flex: 1,
               display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 0,
+              justifyContent: "flex-end",
             }}
           >
-            <IconButtonWrapper style={{ marginLeft: -10 }} rotate={loading}>
-              <RefreshIcon />
-            </IconButtonWrapper>
-            Sync NFTs
-          </PrimaryButton>
-        </Box>
+            <PrimaryButton
+              onClick={() => {
+                clickRefreshBtn();
+              }}
+              size="small"
+              style={{
+                background: "#3b4834",
+                fontFamily: "Rany",
+                fontStyle: "normal",
+                fontWeight: 600,
+                fontSize: "12px",
+                lineHeight: "15px",
+                textAlign: "center",
+                color: "#E9FF26",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 0,
+              }}
+            >
+              <IconButtonWrapper style={{ marginLeft: -10 }} rotate={loading}>
+                <RefreshIcon />
+              </IconButtonWrapper>
+              Sync NFTs
+            </PrimaryButton>
+          </Box>
+        ) : (
+          <></>
+        )}
       </Box>
       <Box sx={{ flexGrow: 1, width: "100%", paddingBottom: isMobile ? 70 : isTablet ? 50 : 0 }}>
         {userNFTs && userNFTs.length ? (

@@ -66,7 +66,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
   }, [open, reservePriceToken, selectedChain]);
 
   const getTokenSymbol = addr => {
-    if (tokenList.length == 0) return 0;
+    if (tokenList.length == 0 || !addr) return 0;
     let token = tokenList.find(token => token.Address === addr);
     return token?.Symbol || "";
   };
@@ -194,7 +194,7 @@ export default function BlockNFTModal({ open, handleClose, nft, setNft, onConfir
     );
 
     if (response.success) {
-      const offerId = web3.utils.keccak256(
+      const offerId = await web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "uint256", "address", "uint80", "uint64"],
           [

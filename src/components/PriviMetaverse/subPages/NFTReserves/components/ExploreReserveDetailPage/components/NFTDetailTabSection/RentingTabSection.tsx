@@ -24,6 +24,7 @@ import { useAuth } from "shared/contexts/AuthContext";
 import { exploreOptionDetailPageStyles } from "../../index.styles";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
+const SECONDS_IN_HOUR = 3600;
 
 export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
   const classes = exploreOptionDetailPageStyles();
@@ -185,7 +186,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                   variant={Variant.Transparent}
                   headers={offerTableHeaders}
                   rows={offers.map(item => {
-                    const token = tokenList.find(v => v.Address === item.fundingToken);
+                    const token = tokenList.find(v => v.Address.toLowerCase() === item.fundingToken.toLowerCase());
                     let estimatedCost = +toDecimals(item.pricePerSecond, token?.Decimals) * item.rentalTime;
                     estimatedCost = +estimatedCost.toFixed(2);
                     return [
@@ -220,7 +221,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                           ),
                       },
                       {
-                        cell: `${+toDecimals(item.pricePerSecond, token?.Decimals)} ${token?.Symbol ?? ""}`,
+                        cell: `${+toDecimals(item.pricePerSecond*SECONDS_IN_HOUR, token?.Decimals)} ${token?.Symbol ?? ""}`,
                       },
                       {
                         cell: `${estimatedCost} ${token?.Symbol ?? ""}`,
@@ -297,7 +298,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                   variant={Variant.Transparent}
                   headers={historyTableHeaders}
                   rows={historyData.map(item => {
-                    const token = tokenList.find(v => v.Address === item.fundingToken);
+                    const token = tokenList.find(v => v.Address.toLowerCase() === item.fundingToken.toLowerCase());
                     let estimatedCost = +toDecimals(item.pricePerSecond, token?.Decimals) * item.rentalTime;
                     estimatedCost = Math.floor(estimatedCost * Math.pow(10, 8)) / Math.pow(10, 8);
                     return [
@@ -313,7 +314,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                         ),
                       },
                       {
-                        cell: `${+toDecimals(item.pricePerSecond, token?.Decimals)} ${token?.Symbol ?? ""}`,
+                        cell: `${+toDecimals(item.pricePerSecond*SECONDS_IN_HOUR, token?.Decimals)} ${token?.Symbol ?? ""}`,
                       },
                       {
                         cell: `${estimatedCost} ${token?.Symbol ?? ""}`,

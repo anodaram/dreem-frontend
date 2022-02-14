@@ -36,8 +36,6 @@ const AssetDetailModal = ({
 
   const classes = assetDetailModalStyles();
 
-  console.log("assetData===============", assetData);
-
   const isModelType = assetData?.itemKind === "MODEL";
 
   return (

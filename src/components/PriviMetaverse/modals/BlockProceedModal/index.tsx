@@ -56,26 +56,28 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
 
   const getTokenDecimal = addr => {
     if (tokens.length == 0 || !addr) return 0;
-    let token = tokens.find(token => token.Address === addr);
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token.Decimals;
   };
 
   const getTokenSymbol = addr => {
-    if (tokens.length == 0) return 0;
-    let token = tokens.find(token => token.Address === addr);
-    return token?.Symbol || '';
+    if (tokens.length == 0 || !addr) return 0;
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
+    return token?.Symbol || "";
   };
 
   const handleCloseModal = () => {
     handleClose();
   };
 
-  const handleApprove = async () => {    
+  const handleApprove = async () => {
     try {
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
           return;
         }
       }
@@ -134,13 +136,13 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
           reservePeriod: Math.ceil(+offer.ReservePeriod * 3600 * 24),
           validityPeriod: Number(offer.AcceptDuration || 0) * 3600 * 24,
           buyerToMatch: offer.Beneficiary,
-          mode: 0
+          mode: 0,
         },
         setHash
       );
 
       if (contractResponse.success) {
-        const offerId = web3.utils.keccak256(
+        const offerId = await web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address", "uint80", "uint64", "address"],
             [
@@ -170,7 +172,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
           from: account,
           to: offer.Beneficiary,
           hash: contractResponse.hash,
-          notificationMode: 2
+          notificationMode: 2,
         });
         let newNft = { ...nft };
         newNft.status = ["Blocked"];
@@ -191,7 +193,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
         });
         setTransactionSuccess(true);
         setNft(newNft);
-        handleRefresh()
+        handleRefresh();
         handleClose();
       } else {
         setTransactionSuccess(false);
@@ -221,13 +223,14 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
           <Box className={classes.description}>
             {`Accept blocking offer from user `}
             <span
-              style={{  cursor: "pointer" }}
+              style={{ cursor: "pointer" }}
               className={classes.gradientText}
               onClick={() => offer.userInfo && history.push(`/profile/${offer.userInfo.urlSlug}`)}
             >
               {offerUser?.name ?? getAbbrAddress(offer.Beneficiary, 6, 3)}
             </span>
-            {` to block the `}<span className={classes.gradientText}>{nft.name}</span>
+            {` to block the `}
+            <span className={classes.gradientText}>{nft.name}</span>
           </Box>
           <Box className={classes.borderBox}>
             <Box className={classes.box}>

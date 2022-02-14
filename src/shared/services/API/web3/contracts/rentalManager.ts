@@ -38,7 +38,7 @@ const rentalManager = (network: string) => {
                 .send({
                   from: account,
                   gas: gas,
-                  maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
+                  maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
                 })
                 .on("transactionHash", hash => {
                   setHash(hash);
@@ -100,7 +100,7 @@ const rentalManager = (network: string) => {
                 .send({
                   from: account,
                   gas: gas,
-                  maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
+                  maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
                 })
                 .on("transactionHash", hash => {
                   setHash(hash);
@@ -165,7 +165,7 @@ const rentalManager = (network: string) => {
                 .send({
                   from: account,
                   gas: gas,
-                  maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
+                  maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
                 })
                 .on("transactionHash", hash => {
                   setHash(hash);
@@ -231,7 +231,7 @@ const rentalManager = (network: string) => {
                 .send({
                   from: account,
                   gas: gas,
-                  maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
+                  maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
                 })
                 .on("transactionHash", hash => {
                   setHash(hash);
@@ -295,7 +295,7 @@ const rentalManager = (network: string) => {
                 .send({
                   from: account,
                   gas: gas,
-                  maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
+                  maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
                 })
                 .on("transactionHash", hash => {
                   setHash(hash);
@@ -361,7 +361,7 @@ const rentalManager = (network: string) => {
                 .send({
                   from: account,
                   gas: gas,
-                  maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
+                  maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
                 })
                 .on("transactionHash", hash => {
                   setHash(hash);

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Moment from "react-moment";
 import ReactPlayer from "react-player";
 import { makeStyles } from "@material-ui/core/styles";
+import { LoadingWrapper } from "shared/ui-kit/Hocs";
 import { Dialog } from "@material-ui/core";
 import { Modal } from "shared/ui-kit";
 import Waveform from "shared/ui-kit/Page-components/Discord/DiscordAudioWavesurfer/Waveform";
@@ -116,6 +117,7 @@ const MessageItemFC = ({ message, messageContentRef }) => {
   const classes = useStyles();
   const [selectedPhoto, setSelectedPhoto] = React.useState<string>("");
   const [selectedVideo, setSelectedVideo] = React.useState<string>("");
+  const [loadingImage, setLoadingImage] = React.useState<boolean>(false);
   const [openModalPhotoFullScreen, setOpenModalPhotoFullScreen] = React.useState<boolean>(false);
   const [openModalVideoFullScreen, setOpenModalVideoFullScreen] = React.useState<boolean>(false);
   const [isOwnMessage, setIsOwnMessage] = React.useState(false);
@@ -145,6 +147,7 @@ const MessageItemFC = ({ message, messageContentRef }) => {
 
   const getUserFileIpfs = async (cid: any, fileName: string, type: string) => {
     let fileUrl: string = "";
+    setLoadingImage(true);
     let files = await onGetNonDecrypt(cid, fileName, (fileCID, fileName, download) =>
       downloadWithNonDecryption(fileCID, fileName, download)
     );
@@ -162,6 +165,7 @@ const MessageItemFC = ({ message, messageContentRef }) => {
       }
     }
     setFileIPFS(fileUrl);
+    setLoadingImage(false);
   };
 
   const handleOpenModalPhotoFullScreen = () => {
@@ -227,19 +231,31 @@ const MessageItemFC = ({ message, messageContentRef }) => {
         {message.type && message.type === "photo" ? (
           <div className={classes.container}>
             <div className={classes.itemMeta}>{message?.fromType?.toUpperCase()}</div>
-            <div
-              className={classes.photoContainer}
-              onClick={() => {
-                setSelectedPhoto(`${fileIPFS}`);
-                handleOpenModalPhotoFullScreen();
-              }}
-              style={{
-                backgroundImage: `url(${fileIPFS ? sanitizeIfIpfsUrl(fileIPFS) : ""})`,
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "cover",
-              }}
-            ></div>
+            {loadingImage ? (
+              <Box
+                className={classes.photoContainer}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flex={1}
+              >
+                <LoadingWrapper loading={loadingImage} />
+              </Box>
+            ) : (
+              <div
+                className={classes.photoContainer}
+                onClick={() => {
+                  setSelectedPhoto(`${fileIPFS}`);
+                  handleOpenModalPhotoFullScreen();
+                }}
+                style={{
+                  backgroundImage: `url(${fileIPFS ? sanitizeIfIpfsUrl(fileIPFS) : ""})`,
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "cover",
+                }}
+              ></div>
+            )}
             <div className="item-subtitle grey" style={{ marginLeft: !isOwnMessage ? 16 : 0 }}>
               <Moment fromNow className={classes.itemMeta}>
                 {message.created}

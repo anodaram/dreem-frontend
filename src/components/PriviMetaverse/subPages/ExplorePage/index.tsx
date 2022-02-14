@@ -15,6 +15,8 @@ import { Color } from "shared/ui-kit";
 import InputWithLabelAndTooltip from "shared/ui-kit/InputWithLabelAndTooltip";
 import WorldCard from "components/PriviMetaverse/components/cards/WorldCard";
 import AssetsCard from "components/PriviMetaverse/components/cards/AssetsCard";
+import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
+import CreatorCard from "components/PriviMetaverse/components/cards/CreatorCard";
 import { explorePage } from "./index.styles";
 
 import backImg1 from "assets/metaverseImages/shape_roadmap.png";
@@ -26,6 +28,7 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   600: 2,
   900: 3,
 };
+
 // const Status_Options = [
 //   { content: "all", color: "#ffffff50", bgcolor: "transparent" },
 //   {
@@ -59,7 +62,7 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
 //       "conic-gradient(from 31.61deg at 50% 50%, #F24A25 -73.13deg, #FF3124 15deg, rgba(202, 36, 0, 0.76) 103.13deg, #F2724A 210deg, #F24A25 286.87deg, #FF3124 375deg)",
 //   },
 // ];
-// const Filter_By_Options = ["all", "nft", "nft draft", "collection", "creators"];
+const Filter_By_Options = ["all assets", "draft", "nft", "collection", "creators"];
 const Asset_Type_Options = [
   { content: "world", image: require("assets/metaverseImages/asset_world.png"), state: "WORLD" },
   { content: "3d asset", image: require("assets/metaverseImages/asset_3d.png"), state: "MODEL" },
@@ -89,18 +92,19 @@ export default function ExplorePage() {
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { itemId } = useParams<{ itemId?: string }>();
-  const [assetList, setAssetList] = React.useState<any[]>([]);
+  const [dreemList, setDreemList] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [page, setPage] = React.useState<number>(1);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
   const [openFilterBar, setOpenFilterBar] = React.useState<boolean>(true);
   // const [openStatusSection, setOpenStatusSection] = React.useState<boolean>(true);
-  // const [openFilterBySection, setOpenFilterBySection] = React.useState<boolean>(true);
+  const [openFilterBySection, setOpenFilterBySection] = React.useState<boolean>(true);
   const [openAssetSection, setOpenAssetSection] = React.useState<boolean>(true);
   // const [openPrimarySection, setOpenPrimarySection] = React.useState<boolean>(true);
   // const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
-  // const [selectedContentType, setSelectedContentType] = React.useState<string>("all");
+  const [selectedContentType, setSelectedContentType] = React.useState<string>("all assets");
   const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["WORLD"]);
+  const [isDisabledAssetTypeFilter, setIsDisabledAssetTypeFilter] = React.useState<boolean>(false);
   const [searchValue, setSearchValue] = React.useState<string>("");
 
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
@@ -110,26 +114,44 @@ export default function ExplorePage() {
   const loadingCount = React.useMemo(() => (width > 900 ? 3 : width > 600 ? 2 : 1), [width]);
 
   React.useEffect(() => {
-    loadData(true);
-  }, [selectedAssetTypes, debouncedSearchValue]);
+    setDreemList([]);
+    if (
+      selectedContentType === "all assets" ||
+      selectedContentType === "draft" ||
+      selectedContentType === "nft"
+    ) {
+      setIsDisabledAssetTypeFilter(false);
+      loadAssetData(true);
+    } else {
+      setIsDisabledAssetTypeFilter(true);
+      if (selectedContentType === "collection") {
+        loadCollectionData(true);
+      } else if (selectedContentType === "creators") {
+        loadCreatorsData(true);
+      }
+    }
+  }, [selectedContentType, selectedAssetTypes, debouncedSearchValue]);
 
   React.useEffect(() => {
     let itemKind;
-    if(itemId){
+    if (itemId) {
+      setLoading(true);
       MetaverseAPI.getAsset(itemId).then(res => {
-        itemKind = res.data?.itemKind
-        setLoading(false)
-        setSelectedAssetTypes([itemKind])
+        itemKind = res.data?.itemKind;
+        setLoading(false);
+        setSelectedAssetTypes([itemKind]);
       });
     }
   }, [itemId]);
 
-  const loadData = async (init = false) => {
+  const loadAssetData = async (init = false) => {
     if (loading) return;
 
     try {
       setLoading(true);
 
+      const isMinted =
+        selectedContentType === "draft" ? false : selectedContentType === "nft" ? true : undefined;
       const search = debouncedSearchValue ? debouncedSearchValue : undefined;
       const curPage = init ? 1 : page;
       const response = await MetaverseAPI.getAssets(
@@ -142,16 +164,16 @@ export default function ExplorePage() {
         undefined,
         undefined,
         false,
-        undefined,
+        isMinted,
         search
       );
       if (response.success) {
         const newData = response.data.elements;
-        setAssetList(prev => (init ? newData : [...prev, ...newData]));
+        setDreemList(prev => (init ? newData : [...prev, ...newData]));
         setPage(curPage + 1);
         setHasMore(response.data.page.cur < response.data.page.max);
       } else {
-        setAssetList([]);
+        setDreemList([]);
       }
     } catch (error) {
       console.log("error: ", error);
@@ -160,12 +182,62 @@ export default function ExplorePage() {
     }
   };
 
+  const loadCollectionData = async (init = false) => {
+    setLoading(true);
+
+    const curPage = init ? 1 : page;
+    MetaverseAPI.getCollections(12, curPage, "DESC")
+      .then(res => {
+        if (res.success) {
+          const newData = res.data.elements;
+          setDreemList(prev => (init ? newData : [...prev, ...newData]));
+          setPage(curPage + 1);
+          setHasMore(res.data.page.cur < res.data.page.max);
+        } else {
+          setDreemList([]);
+        }
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const loadCreatorsData = async (init = false) => {
+    setLoading(true);
+
+    const curPage = init ? 1 : page;
+    MetaverseAPI.getCreators(12, curPage, "DESC")
+      .then(res => {
+        if (res.success) {
+          const newData = res.data.elements;
+          setDreemList(prev => (init ? newData : [...prev, ...newData]));
+          setPage(curPage + 1);
+          setHasMore(res.data.page.cur < res.data.page.max);
+        } else {
+          setDreemList([]);
+        }
+      })
+      .finally(() => setLoading(false));
+  };
+
   const handleSelectedAssetTypes = asset => {
+    if (loading) return;
+
     if (selectedAssetTypes.includes(asset.state)) {
       setSelectedAssetTypes([...selectedAssetTypes.filter(item => item !== asset.state)]);
     } else {
       setSelectedAssetTypes([...selectedAssetTypes, asset.state]);
     }
+  };
+
+  const handleSelectedContentType = val => {
+    if (loading) return;
+
+    setSelectedContentType(val);
+  };
+
+  const handleSearchValue = e => {
+    if (loading) return;
+
+    setSearchValue(e.target.value);
   };
 
   return (
@@ -213,8 +285,8 @@ export default function ExplorePage() {
                     ))}
                   </Box>
                 )}
-              </Box>
-              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              </Box> 
+              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} /> */}
               <Box className={classes.subFilterSection}>
                 <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
                   <Box color="#E9FF26">Filter By</Box>
@@ -231,7 +303,7 @@ export default function ExplorePage() {
                         fontSize={14}
                         color={item === selectedContentType ? "#fff" : "#ffffff50"}
                         style={{ cursor: "pointer" }}
-                        onClick={() => setSelectedContentType(item)}
+                        onClick={() => handleSelectedContentType(item)}
                       >
                         {item}
                       </Box>
@@ -239,45 +311,55 @@ export default function ExplorePage() {
                   </Box>
                 )}
               </Box>
-              <Box width={1} height={"1px"} bgcolor={"#ffffff50"} /> */}
-              <Box className={classes.subFilterSection}>
-                <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
-                  <Box color="#E9FF26">Asset Type</Box>
-                  <div className={classes.iconButton} onClick={() => setOpenAssetSection(prev => !prev)}>
-                    {openAssetSection ? <UpArrowIcon /> : <DownArrowIcon />}
-                  </div>
-                </Box>
-                {openAssetSection && (
-                  <Box mt={2}>
-                    {Asset_Type_Options.map((item, index) => (
-                      <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        key={index}
-                        mb={1.5}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleSelectedAssetTypes(item)}
-                      >
-                        <StyledCheckbox
-                          buttonColor={Color.LightYellow}
-                          checked={selectedAssetTypes.includes(item.state)}
-                          name="checked"
-                        />
-                        <img src={sanitizeIfIpfsUrl(item.image)} width={24} height={24} alt="asset image" />
-                        <Box
-                          fontSize={14}
-                          color={selectedAssetTypes.includes(item.state) ? "#fff" : "#ffffff50"}
-                          ml={1.3}
-                        >
-                          {item.content}
-                        </Box>
+              {!isDisabledAssetTypeFilter && (
+                <>
+                  <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+                  <Box className={classes.subFilterSection}>
+                    <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                      <Box color="#E9FF26">Asset Type</Box>
+                      <div className={classes.iconButton} onClick={() => setOpenAssetSection(prev => !prev)}>
+                        {openAssetSection ? <UpArrowIcon /> : <DownArrowIcon />}
+                      </div>
+                    </Box>
+                    {openAssetSection && (
+                      <Box mt={2}>
+                        {Asset_Type_Options.map((item, index) => (
+                          <Box
+                            display={"flex"}
+                            alignItems={"center"}
+                            key={index}
+                            mb={1.5}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleSelectedAssetTypes(item)}
+                          >
+                            <StyledCheckbox
+                              buttonColor={Color.LightYellow}
+                              checked={selectedAssetTypes.includes(item.state)}
+                              name="checked"
+                              disabled={true}
+                            />
+                            <img
+                              src={sanitizeIfIpfsUrl(item.image)}
+                              width={24}
+                              height={24}
+                              alt="asset image"
+                            />
+                            <Box
+                              fontSize={14}
+                              color={selectedAssetTypes.includes(item.state) ? "#fff" : "#ffffff50"}
+                              ml={1.3}
+                            >
+                              {item.content}
+                            </Box>
+                          </Box>
+                        ))}
                       </Box>
-                    ))}
+                    )}
                   </Box>
-                )}
-              </Box>
-              {/* <Box width={1} height={"1px"} bgcolor={"#ffffff50"} /> */}
-              {/* <Box className={classes.subFilterSection}>
+                </>
+              )}
+              {/* <Box width={1} height={"1px"} bgcolor={"#ffffff50"} />
+              <Box className={classes.subFilterSection}>
                 <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
                   <Box color="#E9FF26">Primary</Box>
                   <div className={classes.iconButton} onClick={() => setOpenPrimarySection(prev => !prev)}>
@@ -347,36 +429,48 @@ export default function ExplorePage() {
               flexDirection={isMobile ? "column" : "row"}
             >
               <Box className={classes.gradientText}>Explore Dreem</Box>
-              <div className={classes.searchSection}>
-                <InputWithLabelAndTooltip
-                  type="text"
-                  inputValue={searchValue}
-                  placeHolder="Search assets"
-                  onInputValueChange={e => {
-                    setSearchValue(e.target.value);
-                  }}
-                  style={{
-                    background: "transparent",
-                    margin: 0,
-                    marginRight: 8,
-                    marginLeft: 8,
-                    padding: 0,
-                    border: "none",
-                    height: "auto",
-                  }}
-                  theme="dark"
-                />
-                <Box display="flex" alignItems="center" justifyContent="center" style={{ cursor: "pointer" }}>
-                  <SearchIcon />
-                </Box>
-              </div>
+              {(selectedContentType === "all assets" ||
+                selectedContentType === "draft" ||
+                selectedContentType === "nft") && (
+                <div className={classes.searchSection}>
+                  <InputWithLabelAndTooltip
+                    type="text"
+                    inputValue={searchValue}
+                    placeHolder="Search dreem"
+                    onInputValueChange={handleSearchValue}
+                    style={{
+                      background: "transparent",
+                      margin: 0,
+                      marginRight: 8,
+                      marginLeft: 8,
+                      padding: 0,
+                      border: "none",
+                      height: "auto",
+                    }}
+                    theme="dark"
+                  />
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <SearchIcon />
+                  </Box>
+                </div>
+              )}
             </Box>
-
             <InfiniteScroll
-              hasChildren={assetList?.length > 0}
-              dataLength={assetList?.length}
+              hasChildren={dreemList?.length > 0}
+              dataLength={dreemList?.length}
               scrollableTarget={"scrollContainer"}
-              next={loadData}
+              next={
+                selectedContentType === "collection"
+                  ? loadCollectionData
+                  : selectedContentType === "creators"
+                  ? loadCreatorsData
+                  : loadAssetData
+              }
               hasMore={hasMore}
               loader={
                 loading && (
@@ -384,9 +478,7 @@ export default function ExplorePage() {
                     <MasonryGrid
                       gutter={"40px"}
                       data={Array(loadingCount).fill(0)}
-                      renderItem={(_, index) => (
-                        <AvatarCard isLoading={true} key={`avatar_loading_${index}`} />
-                      )}
+                      renderItem={(_, index) => <AvatarCard isLoading={true} key={`loading_${index}`} />}
                       columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                     />
                   </Box>
@@ -396,10 +488,19 @@ export default function ExplorePage() {
               <Box mt={4}>
                 <MasonryGrid
                   gutter={"40px"}
-                  data={assetList}
+                  data={dreemList}
                   renderItem={(item, index) =>
-                    item.itemKind === "WORLD" ? (
-                      <WorldCard nft={item} selectable={false} key={`world_${index}`} />
+                    selectedContentType === "collection" ? (
+                      <CollectionCard
+                        item={item}
+                        isLoading={loading}
+                        selectable={false}
+                        key={`collection_${index}`}
+                      />
+                    ) : selectedContentType === "creators" ? (
+                      <CreatorCard item={item} key={`creator_${index}`} />
+                    ) : item.itemKind === "WORLD" ? (
+                      <WorldCard nft={item} selectable={false} isLoading={loading} key={`world_${index}`} />
                     ) : item.itemKind === "CHARACTER" ? (
                       <AvatarCard item={item} key={`avatar_${index}`} />
                     ) : (
@@ -410,7 +511,7 @@ export default function ExplorePage() {
                 />
               </Box>
             </InfiniteScroll>
-            {!loading && assetList?.length < 1 && (
+            {!loading && dreemList?.length < 1 && (
               <Box textAlign="center" width="100%" mb={10} mt={2} fontSize={22}>
                 No Data
               </Box>

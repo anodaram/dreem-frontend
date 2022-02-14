@@ -44,14 +44,14 @@ export default ({ isOwnership, nft, refresh }) => {
   }, [blockingInfo]);
 
   const getTokenSymbol = addr => {
-    if (tokens.length == 0) return 0;
-    let token = tokens.find(token => token.Address === addr);
+    if (tokens.length == 0 || !addr) return 0;
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Symbol || "";
   };
 
   const getTokenImageUrl = addr => {
     if (tokens.length == 0) return null;
-    let token = tokens.find(token => token.Address === addr);
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.ImageUrl ?? "";
   };
 
@@ -75,7 +75,7 @@ export default ({ isOwnership, nft, refresh }) => {
 
     const reservePriceToken = tokens.find(item => item.Address == blockingInfo?.PaymentToken);
 
-    const activeReserveId = web3.utils.keccak256(
+    const activeReserveId = await web3.utils.keccak256(
       web3.eth.abi.encodeParameters(
         ["address", "uint256", "address", "address"],
         [nft.Address, token_id, blockingInfo.from, blockingInfo.Beneficiary]
@@ -169,7 +169,7 @@ export default ({ isOwnership, nft, refresh }) => {
           </span>
         </Box>
         <RangeSlider
-          value={(Number(totalCollateralPercent)/Number(collateralPercent)-1)*100+20}
+          value={(Number(totalCollateralPercent) / Number(collateralPercent) - 1) * 100 + 20}
           variant="transparent"
           onChange={(event, newValue) => {}}
         />
@@ -185,12 +185,7 @@ export default ({ isOwnership, nft, refresh }) => {
             <span>{Number(collateralPercent * 1.5).toFixed(1)}%</span>
             <span style={{ marginLeft: -16, marginTop: 4 }}>Medium Risk</span>
           </Box>
-          <Box
-            flex={25}
-            ml={"-26px"}
-            display={"flex"}
-            flexDirection={"column"}
-          >
+          <Box flex={25} ml={"-26px"} display={"flex"} flexDirection={"column"}>
             <span>
               <strong>{Number(collateralPercent * 1.75).toFixed(1)}%</strong>
             </span>

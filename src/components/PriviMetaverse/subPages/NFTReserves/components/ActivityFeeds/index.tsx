@@ -12,6 +12,7 @@ import { useStyles } from "./index.styles";
 import { getNftGameFeed } from "shared/services/API/DreemAPI";
 import { listenerSocket } from "components/Login/Auth";
 import { getAbbrAddress } from "shared/helpers";
+import { useHistory } from "react-router-dom";
 
 const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -31,6 +32,7 @@ export default function ActivityFeeds({ onClose }) {
   const [transactionloading, setTransactionLoading] = useState<boolean>(false);
   const [transactionHasMore, setTransactionHasMore] = useState<boolean>(false);
   const [lastTransactionId, setLastTransactionId] = useState<any>();
+  const history = useHistory();
 
   const isProd = process.env.REACT_APP_ENV === "prod";
 
@@ -41,6 +43,7 @@ export default function ActivityFeeds({ onClose }) {
       setLoading(true);
       getTrendingGameNfts({
         mode: isProd ? "main" : "test",
+        sortBy: "transaction_count",
       })
         .then(res => {
           setNftList(res.data);
@@ -54,8 +57,10 @@ export default function ActivityFeeds({ onClose }) {
     if (listenerSocket) {
       const updateMarketPlaceFeedHandler = _transaction => {
         setTransactions(prev => {
-          let _transactions = prev.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
-          if (_transactions.length === 0 || _transactions[0].id < _transaction.id){
+          let _transactions = prev.map(transaction =>
+            _transaction.id === transaction.id ? _transaction : transaction
+          );
+          if (_transactions.length === 0 || _transactions[0].id < _transaction.id) {
             _transactions = [_transaction].concat(_transactions);
           }
           return _transactions;
@@ -101,17 +106,18 @@ export default function ActivityFeeds({ onClose }) {
   };
 
   const accTitle = item => {
-    const info = item.operator ||
-    item.seller ||
-    item.fromSeller ||
-    item.toSeller ||
-    item.Address || undefined;
+    const info =
+      item.operator || item.seller || item.fromSeller || item.toSeller || item.Address || undefined;
 
-    if (info){ 
+    if (info) {
       return info.substring(0, 6) + "..." + info.substring(info.length - 4, info.length);
     }
     return "";
-  }
+  };
+
+  const goToNft = item => {
+    history.push(`/P2E/${item.slug || item.Slug}/${item.tokenId}`);
+  };
 
   return (
     <Box className={classes.root}>
@@ -152,7 +158,17 @@ export default function ActivityFeeds({ onClose }) {
         {selectedTab === "feed" ? (
           transactions && transactions.length > 0 ? (
             transactions.map((item, index) => (
-              <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"} mb={3.5} pl={0.5}>
+              <Box
+                display={"flex"}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+                mb={3.5}
+                pl={0.5}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  goToNft(item);
+                }}
+              >
                 <Box display={"flex"} alignItems={"center"}>
                   <Avatar size={32} rounded={true} radius={0} image={item?.image || getDefaultAvatar()} />
                   <Box display={"flex"} flexDirection={"column"} ml={1.5}>

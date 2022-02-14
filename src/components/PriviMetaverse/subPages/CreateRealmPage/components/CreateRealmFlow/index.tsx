@@ -4,6 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem, Button, TextField, InputAdornment, Hidden, Grid } from "@material-ui/core";
+import ReactPlayer from "react-player";
 
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
@@ -28,8 +29,8 @@ import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
 interface CollectionInfo {
   address: string;
-  from: string;
-  to: string;
+  firstIndex: string;
+  lastIndex: string;
   chain: string;
 }
 
@@ -87,8 +88,8 @@ const CreateRealmFlow = ({
   const [networkName, setNetworkName] = useState<string>("");
   const [collectionInfos, setCollectionInfos] = useState<Array<CollectionInfo>>([{
     address: '',
-    from: '',
-    to: '',
+    firstIndex: '',
+    lastIndex: '',
     chain
   }]);
   const [sizeSpec, setSizeSpec] = useState<any>(metaData);
@@ -99,6 +100,7 @@ const CreateRealmFlow = ({
   const [imageFile, setImageFile] = useState<any>(null);
   const [video, setVideo] = useState<any>(null);
   const [videoFile, setVideoFile] = useState<any>(null);
+  const [videoThumbnailURL, setVideoThumbnailURL] = useState<any>('');
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -143,7 +145,7 @@ const CreateRealmFlow = ({
         return votingConsensus && votingPower ? true : false;
         break;
       case 4:
-        return privacy === 'public' || collectionInfos.every(c => c.address && c.from && c.to) ? true : false;
+        return privacy === 'public' || collectionInfos.every(c => c.address && c.firstIndex && c.lastIndex) ? true : false;
         break;
       case 5:
         return worldHash && nftId && nftAddress ? true : false;
@@ -165,7 +167,7 @@ const CreateRealmFlow = ({
         steps[step - 1].completed = votingConsensus && votingPower ? true : false;
         break;
       case 4:
-        steps[step - 1].completed = privacy === 'public' || collectionInfos.every(c => c.address && c.from && c.to) ? true : false;
+        steps[step - 1].completed = privacy === 'public' || collectionInfos.every(c => c.address && c.firstIndex && c.lastIndex) ? true : false;
         break;
 
       default:
@@ -230,7 +232,7 @@ const CreateRealmFlow = ({
     if (validate(false)) {
       let payload: any = {};
       let savingDraft: any = {};
-
+      let restrictions = JSON.stringify(collectionInfos)
       payload = {
         item: "REALM",
         name: title,
@@ -242,21 +244,27 @@ const CreateRealmFlow = ({
         realmCreatorVotingPower: votingPower,
         realmImage: image,
         realmVideo: video,
+        realmRestrictions: restrictions
       };
 
       setIsUploading(true);
-      MetaverseAPI.uploadAsset(payload).then(async res => {
-        if (!res.success) {
-          showAlertMessage(`Failed to upload world`, { variant: "error" });
-          setUploadSuccess(false);
-          return
-        } else {
-          setUploadSuccess(true);
-          showAlertMessage(`Created draft successfully. minting NFT...`, { variant: "success" });
-          // setSavingDraft(res.data)
-          handleMintRealm(res.data)
-        }
-      });
+      try {
+        MetaverseAPI.uploadAsset(payload).then(async res => {
+          if (!res.success) {
+            showAlertMessage(`Failed to upload world`, { variant: "error" });
+            setUploadSuccess(false);
+            return
+          } else {
+            setUploadSuccess(true);
+            showAlertMessage(`Created draft successfully. minting NFT...`, { variant: "success" });
+            // setSavingDraft(res.data)
+            handleMintRealm(res.data)
+          }
+        });
+      } catch (error) {
+        showAlertMessage(`Failed to upload world`, { variant: "error" });
+        setUploadSuccess(false);
+      }
     }
   };
   const getMetadata = async (hashId) => {
@@ -330,8 +338,8 @@ const CreateRealmFlow = ({
       ...collectionInfos,
       {
         address: '',
-        from: '',
-        to: '',
+        firstIndex: '',
+        lastIndex: '',
         chain: ''
       }
     ])
@@ -384,6 +392,7 @@ const CreateRealmFlow = ({
   const handleVideoFiles = (files: any) => {
     if (files && files[0]) {
       setVideo(files[0]);
+      setVideoThumbnailURL(URL.createObjectURL(files[0]));
 
       const reader = new FileReader();
       reader.addEventListener("load", () => {
@@ -401,25 +410,7 @@ const CreateRealmFlow = ({
   return (
     <>
       <div className={classes.otherContent}>
-        <Hidden smUp>
-          <Box
-            className={classes.backArrow}
-            onClick={() => { }}
-          >
-            <ArrowIcon />
-            <Box ml={1}>BACK</Box>
-          </Box>
-        </Hidden>
         <Box className={classes.headTitle}>
-          <Hidden xsDown>
-            <Box
-              className={classes.backArrow}
-              onClick={() => { }}
-            >
-              <ArrowIcon />
-              <Box ml={1}>BACK</Box>
-            </Box>
-          </Hidden>
           <div className={classes.typo1}>
             Create New Realm
           </div>
@@ -484,13 +475,9 @@ const CreateRealmFlow = ({
                 >
                   {video ? (
                     <>
-                      <Box
-                        className={classes.image}
-                        style={{
-                          backgroundImage: `url(${sanitizeIfIpfsUrl(videoFile)})`,
-                          backgroundSize: "cover",
-                        }}
-                      />
+                      <div style={{marginLeft: 20}}>
+                        <ReactPlayer playing={false} controls={false} url={videoThumbnailURL} width="85" height={85} />
+                      </div>
                       <Box flex={1} display="flex" alignItems="center" marginLeft="24px" justifyContent="space-between" mr={3}>
                         Uploaded {video.name}
                         <Button
@@ -869,10 +856,10 @@ const CreateRealmFlow = ({
                               <input
                                 className={classes.inputText}
                                 placeholder="00.00"
-                                value={c.from}
+                                value={c.firstIndex}
                                 onChange={e => {
                                   let infos = [...collectionInfos];
-                                  infos[i].from = e.target.value;
+                                  infos[i].firstIndex = e.target.value;
                                   setCollectionInfos(infos);
                                 }}
                               />
@@ -889,10 +876,10 @@ const CreateRealmFlow = ({
                               <input
                                 className={classes.inputText}
                                 placeholder="00.00"
-                                value={c.to}
+                                value={c.lastIndex}
                                 onChange={e => {
                                   let infos = [...collectionInfos];
-                                  infos[i].to = e.target.value;
+                                  infos[i].lastIndex = e.target.value;
                                   setCollectionInfos(infos);
                                 }}
                               />

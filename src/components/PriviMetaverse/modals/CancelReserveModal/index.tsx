@@ -74,7 +74,7 @@ export default function CancelReserveModal({
 
   const getTokenSymbol = addr => {
     if (tokens.length == 0 || !addr) return 0;
-    let token = tokens.find(token => token.Address === addr);
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Symbol || '';
   };
 
@@ -150,7 +150,7 @@ export default function CancelReserveModal({
       setOpenTransactionModal(true);
       const web3APIHandler = selectedChain.apiHandler;
       const web3 = new Web3(library.provider);
-      const activeReserveId = web3.utils.keccak256(
+      const activeReserveId = await web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "address"],
           [nft.Address, token_id, blockingInfo.from, blockingInfo.Beneficiary]

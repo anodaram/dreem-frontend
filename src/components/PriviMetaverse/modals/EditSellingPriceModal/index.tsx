@@ -51,7 +51,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
   }, [open]);
 
   const getTokenDecimal = addr => {
-    if (tokenList.length == 0) return 0;
+    if (tokenList.length == 0 || !addr) return 0;
     let token = tokenList.find(token => token.Address === addr);
     return token?.Decimals || 0;
   };
@@ -66,7 +66,9 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
-        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+          variant: "error",
+        });
         return;
       }
     }
@@ -109,14 +111,18 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
 
   const handleApprove = async () => {
     if (!inputBalance) {
-      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+        variant: "error",
+      });
       return;
     }
 
     if (chainId && chainId !== selectedChain?.chainId) {
       const isHere = await switchNetwork(selectedChain?.chainId || 0);
       if (!isHere) {
-        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+          variant: "error",
+        });
         return;
       }
     }
@@ -154,7 +160,9 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
 
   const handleConfirm = async () => {
     if (!inputBalance) {
-      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
+      showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
+        variant: "error",
+      });
       return;
     }
 
@@ -176,14 +184,14 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
         price: toNDecimals(inputBalance, reservePriceToken.Decimals),
         beneficiary: account,
         buyerToMatch: "0x0000000000000000000000000000000000000000",
-        mode: 0
+        mode: 0,
       },
       setHash
     );
 
     if (response.success) {
       setTransactionSuccess(true);
-      const offerId = web3.utils.keccak256(
+      const offerId = await web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
           ["address", "uint256", "address", "uint256", "address"],
           [
@@ -227,7 +235,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
       <Modal size="medium" isOpen={open} onClose={handleClose} showCloseIcon className={classes.cancelModal}>
         <span className={classes.cancelTitle}>Are you sure about editing price? </span>
         <span className={classes.cancelDesc}>
-            This will require a few changes to the smart contract, this may take a few moments
+          This will require a few changes to the smart contract, this may take a few moments
         </span>
         <Box display="flex" alignItems="center" justifyContent="space-between" style={{ width: "80%" }}>
           <PrimaryButton size="medium" className={classes.cancelButton} onClick={handleClose}>

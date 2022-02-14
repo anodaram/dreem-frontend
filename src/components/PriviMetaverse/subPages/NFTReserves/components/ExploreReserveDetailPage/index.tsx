@@ -6,6 +6,7 @@ import { useMediaQuery, useTheme } from "@material-ui/core";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch } from "react-redux";
 
+import { useAuth } from "shared/contexts/AuthContext";
 import { setMarketFee, setTokenList } from "store/actions/MarketPlace";
 import { BackButton } from "components/PriviMetaverse/components/BackButton";
 import CancelReserveModal from "components/PriviMetaverse/modals/CancelReserveModal";
@@ -27,7 +28,7 @@ import {
 import { claimBackRent } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
 import { getDefaultAvatar, getExternalAvatar } from "shared/services/user/getUserAvatar";
-import { getChainForNFT } from "shared/functions/metamask";
+import { getChainForNFT, switchNetwork } from "shared/functions/metamask";
 import GameNFTDetailModal from "components/PriviMetaverse/modals/GameNFTDetailModal";
 import RentSuccessModal from "components/PriviMetaverse/modals/RentSuccessModal";
 import { getChainImageUrl } from "shared/functions/chainFucntions";
@@ -54,6 +55,7 @@ const ExploreReserveDetailPage = () => {
   const dispatch = useDispatch();
   const { collection_id, token_id }: { collection_id: string; token_id: string } = useParams();
 
+  const { isSignedin } = useAuth();
   const { shareMedia } = useShareMedia();
   const { showAlertMessage } = useAlertMessage();
   const { account, library, chainId } = useWeb3React();
@@ -248,14 +250,23 @@ const ExploreReserveDetailPage = () => {
     });
   };
 
-  const syncNft = () => {
-    if (!nft) return;
+  const syncNft = async () => {
+    if (!nft || !library) return;
 
     if (nft.blockingSaleOffer && nft.blockingSaleOffer.id) {
       handleConfirmRefresh();
     } else {
       const nftChain = getChainForNFT(nft);
       if (!nftChain) return;
+      if (chainId && chainId !== nftChain?.chainId) {
+        const isHere = await switchNetwork(nftChain?.chainId || 0);
+        if (!isHere) {
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
+          return;
+        }
+      }
 
       setSyncing(true);
       syncRentalInfos(nftChain);
@@ -335,7 +346,7 @@ const ExploreReserveDetailPage = () => {
                 const offer = event?.returnValues;
 
                 console.log("offer... ", offer);
-                const activeReserveId = web3.utils.keccak256(
+                const activeReserveId = await web3.utils.keccak256(
                   web3.eth.abi.encodeParameters(
                     ["address", "uint256", "address", "address"],
                     [nft.Address, token_id, offer?.seller, offer?.buyer]
@@ -413,6 +424,10 @@ const ExploreReserveDetailPage = () => {
         });
       }
     });
+  };
+
+  const gotoCollection = nft => {
+    history.push(`/P2E/${nft.collectionId}`);
   };
 
   return (
@@ -498,17 +513,22 @@ const ExploreReserveDetailPage = () => {
                   >
                     <ShareWhiteIcon />
                   </span>
-                  <SecondaryButton
-                    className={classes.detailsButton}
-                    size="small"
-                    onClick={() => syncNft()}
-                    ml={2}
-                  >
-                    <IconButtonWrapper style={{ marginLeft: -10 }} rotate={syncing}>
-                      <RefreshIcon />
-                    </IconButtonWrapper>
-                    <Box paddingTop={"4px"}>Sync NFT</Box>
-                  </SecondaryButton>
+
+                  {isSignedin ? (
+                    <SecondaryButton
+                      className={classes.detailsButton}
+                      size="small"
+                      onClick={() => syncNft()}
+                      ml={2}
+                    >
+                      <IconButtonWrapper style={{ marginLeft: -10 }} rotate={syncing}>
+                        <RefreshIcon />
+                      </IconButtonWrapper>
+                      <Box paddingTop={"4px"}>Sync NFT</Box>
+                    </SecondaryButton>
+                  ) : (
+                    <></>
+                  )}
                 </Box>
               </Box>
               <Box
@@ -520,8 +540,8 @@ const ExploreReserveDetailPage = () => {
                 <Box
                   flex={1}
                   display="flex"
-                  flexDirection={isMobileScreen ? "column" : "row"}
-                  alignItems="center"
+                  flexDirection="column"
+                  alignItems={isMobileScreen ? "center" : "flex-start"}
                   ml={0.25}
                   mr={1.25}
                   style={{ overflow: "hidden" }}
@@ -533,6 +553,17 @@ const ExploreReserveDetailPage = () => {
                     title={nft.name}
                   >
                     {nft.name}
+                  </Text>
+                  <Text
+                    color={Color.Black}
+                    className={classes.collectionName}
+                    style={{ marginBottom: 4, fontSize: "20px !important", cursor: "pointer" }}
+                    title={nft.name}
+                    onClick={() => {
+                      gotoCollection(nft);
+                    }}
+                  >
+                    {nft.CollectionName}
                   </Text>
                 </Box>
                 <Box display="flex" flexDirection="row" alignItems="center">

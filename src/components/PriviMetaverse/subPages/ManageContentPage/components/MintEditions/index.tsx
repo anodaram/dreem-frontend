@@ -24,7 +24,7 @@ const MintEditions = ({
   amount: number,
   hashId: string,
   handleCancel: () => void;
-  handleMint: (amount: any) => void;
+  handleMint: () => void;
 }) => {
   const history = useHistory();
   const classes = useModalStyles();
@@ -51,8 +51,8 @@ const MintEditions = ({
     console.log(steps)
     setBunches(steps)
   }, [amount]);
-  const handleMintBatch = async (i, amount) => {
-    const res = await handleMint(amount)
+  const handleMintBatch = async (i) => {
+    const res = await handleMint()
     console.log(res)
     bunches.map((item, index)=>{
       if(item.key == i) {
@@ -106,7 +106,7 @@ const MintEditions = ({
               {item.status ? 
               <Box>Minted</Box>
               :
-              <PrimaryButton className={classes.mintBtn} size="medium" onClick={()=>handleMintBatch(item.key, item.amount - (item.key - 1) * UnitEdition)}>
+              <PrimaryButton className={classes.mintBtn} size="medium" onClick={()=>handleMintBatch(item.key)}>
                  {item.status == false ? "Try again" : "Mint"}
               </PrimaryButton>
               }

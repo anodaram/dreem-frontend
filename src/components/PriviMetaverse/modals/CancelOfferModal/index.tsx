@@ -38,8 +38,8 @@ export default function CancelOfferModal({ open, handleClose, offer, type, nft, 
   }, [open]);
 
   const getTokenDecimal = addr => {
-    if (tokens.length == 0) return 0;
-    let token = tokens.find(token => token.Address === addr);
+    if (tokens.length == 0 || !addr) return 0;
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token.Decimals;
   };
 
@@ -48,7 +48,9 @@ export default function CancelOfferModal({ open, handleClose, offer, type, nft, 
       if (chainId && chainId !== selectedChain?.chainId) {
         const isHere = await switchNetwork(selectedChain?.chainId || 0);
         if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", { variant: "error" });
+          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+            variant: "error",
+          });
           return;
         }
       }
@@ -78,13 +80,13 @@ export default function CancelOfferModal({ open, handleClose, offer, type, nft, 
           web3,
           account!,
           {
-            collectionId: nft.Address,
+            collectionId: nft.Address.toLowerCase(),
             tokenId: token_id,
             rentalTime: offer.rentalTime,
             pricePerSecond: offer.pricePerSecond,
             rentalExpiration: offer.rentalExpiration,
-            fundingToken: offer.fundingToken,
-            operator: nft.owner_of,
+            fundingToken: offer.fundingToken.toLowerCase(),
+            operator: nft.owner_of.toLowerCase(),
           },
           setHash
         );
@@ -138,7 +140,7 @@ export default function CancelOfferModal({ open, handleClose, offer, type, nft, 
               Cancel Offer
             </Box>
             <Box className={classes.nameField}>
-              Canceling will remove your offer and your  <br /> details from the list
+              Canceling will remove your offer and your <br /> details from the list
             </Box>
             <Box display="flex" alignItems="center" justifyContent="center" mt={6}>
               <PrimaryButton

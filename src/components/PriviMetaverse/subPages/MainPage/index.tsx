@@ -196,6 +196,7 @@ export default function HomePage() {
         setLoadingExplore(true);
         MetaverseAPI.getAssets(9, 1, "timestamp", filters, true, undefined, undefined, false)
           .then(res => {
+            console.log(res)
             if (res.success) {
               const items = res.data.elements;
               if (items && items.length > 0) {
@@ -206,7 +207,7 @@ export default function HomePage() {
           .finally(() => setLoadingExplore(false));
 
         setLoadingExploreCharacters(true);
-        MetaverseAPI.getCharacters(null, true, null, true)
+        MetaverseAPI.getCharacters(null, true, null, true, 12)
           .then(res => {
             setExploreCharacters(res.data.elements);
           })
@@ -251,10 +252,18 @@ export default function HomePage() {
         if (res.isSignedIn) {
           setSignedin(true);
           let data = res.data.user;
-          data.infoImage = {
-            avatarUrl: res.data.user.avatarUrl,
-          };
-          dispatch(setUser(data));
+          dispatch(
+            setUser({
+              ...data,
+              id: data.priviId,
+              infoImage: {
+                ...data.infoImage,
+                avatarUrl: res.data.user.avatarUrl,
+              },
+              urlSlug: data.name,
+              name: `${data.firstName} ${data.lastName}`,
+            })
+          );
           localStorage.setItem("token", res.accessToken);
           localStorage.setItem("address", account);
           localStorage.setItem("userId", data.priviId);
@@ -483,8 +492,8 @@ export default function HomePage() {
                                   <Box
                                     className={classes.carouselItem}
                                     style={{
-                                      backgroundImage: featuredRealms[page]?.worldImage
-                                        ? `url("${sanitizeIfIpfsUrl(featuredRealms[page]?.worldImage)}")`
+                                      backgroundImage: featuredRealms[page]?.realmImage
+                                        ? `url("${sanitizeIfIpfsUrl(featuredRealms[page]?.realmImage)}")`
                                         : `url(${getDefaultImageUrl()})`,
                                       border: isActivePage ? "2px solid #E1E736" : "none",
                                     }}
@@ -557,7 +566,7 @@ export default function HomePage() {
             <Box mt={4}>
               <MasonryGrid
                 gutter={"16px"}
-                data={loadingExploreCharacters ? Array(loadingCount).fill(0) : exploreCharacters}
+                data={exploreCharacters}
                 renderItem={(item, _) => <AvatarCard item={item} isLoading={loadingExploreCharacters} />}
                 columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR_AVATAR}
               />

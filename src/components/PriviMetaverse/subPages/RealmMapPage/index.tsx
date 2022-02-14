@@ -121,7 +121,7 @@ export default function RealmMapPage() {
     if (selMap?.worldIsExtension) {
       setOpenContentPreview(true);
     } else {
-      history.push(`/realms/${selMap.id}`);
+      history.push(`/realms/${selMap.versionHashId}`);
     }
   }
   const handleClose = e => {
@@ -184,8 +184,8 @@ export default function RealmMapPage() {
           height: "100%",
           borderRadius: 300,
           backgroundImage:
-            node.data && node.data.worldImage
-              ? `url("${sanitizeIfIpfsUrl(node.data.worldImage)}")`
+            node.data && node.data.realmImage
+              ? `url("${sanitizeIfIpfsUrl(node.data.realmImage)}")`
               : `url(${getDefaultImageUrl()})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -275,8 +275,8 @@ export default function RealmMapPage() {
               <Box className={classes.pic}
                 style={{
                   backgroundImage:
-                    (selMap && selMap.worldImage)
-                      ? `url("${sanitizeIfIpfsUrl(selMap.worldImage)}")`
+                    (selMap && selMap.realmImage)
+                      ? `url("${sanitizeIfIpfsUrl(selMap.realmImage)}")`
                       : `url(${getDefaultImageUrl()})`,
                 }}>
               </Box>

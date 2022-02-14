@@ -40,10 +40,11 @@ export default ({
   const [expired, setExpired] = useState(false);
 
   const chain = React.useMemo(() => BlockchainNets.find(net => net.chainId === chainId), [chainId]);
-  const canClaimBack = React.useMemo<boolean>(
-    () => (expired && isTokenInVault && isOwner ? true : false),
-    [expired, isTokenInVault, isOwner]
-  );
+  const canClaimBack = React.useMemo<boolean>(() => (expired && isTokenInVault && isOwner ? true : false), [
+    expired,
+    isTokenInVault,
+    isOwner,
+  ]);
 
   useEffect(() => {
     if (!offer) {
@@ -68,13 +69,13 @@ export default ({
 
   const getTokenSymbol = addr => {
     if (tokens.length == 0 || !addr) return 0;
-    let token = tokens.find(token => token.Address === addr);
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token?.Symbol || "";
   };
 
   const getTokenDecimal = addr => {
-    if (tokens.length == 0) return 0;
-    let token = tokens.find(token => token.Address === addr);
+    if (tokens.length == 0 || !addr) return 0;
+    let token = tokens.find(token => token.Address.toLowerCase() === addr.toLowerCase());
     return token.Decimals;
   };
 
@@ -83,7 +84,7 @@ export default ({
       const web3APIHandler = chain.apiHandler;
       const web3 = new Web3(library.provider);
       const response = await web3APIHandler.RentalManager.getSyntheticNFTAddress(web3, {
-        collectionId: nft.Address,
+        collectionId: nft.Address.toLowerCase(),
       });
       return response;
     } catch (err) {

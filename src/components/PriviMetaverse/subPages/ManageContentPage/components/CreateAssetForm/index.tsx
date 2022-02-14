@@ -1,6 +1,7 @@
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select, Slider, Button } from "@material-ui/core";
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import { ChromePicker } from "react-color";
+import ReactPlayer from "react-player";
 
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
@@ -9,6 +10,7 @@ import { FormData, InputFileContents, InputFiles, InputRefs } from "./interface"
 import { color2obj, obj2color, sanitizeIfIpfsUrl } from "shared/helpers";
 
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
+import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
 import { ReactComponent as GLTFIcon } from "assets/icons/gltf.svg";
 import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
@@ -34,16 +36,25 @@ const CreateAssetForm = ({
 }) => {
   const classes = useModalStyles();
   const filterClasses = useFilterSelectStyles();
+  const { showAlertMessage } = useAlertMessage();
+
+  const [videoThumbnailURL, setVideoThumbnailURL] = useState<any>({});
 
   const inputRef = useRef<InputRefs>({});
 
-  const onFileInput = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
 
+  const onFileInput = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    e.preventDefault();
     const files = e.target.files;
+    let isValid = handleValidation('FILE', key, files);
+    if(!isValid){
+      return
+    }
     if (files && files.length) {
       if (files && files[0]) {
         setFileInputs({ ...fileInputs, [key]: files[0] });
+        setVideoThumbnailURL({...videoThumbnailURL, [key]: URL.createObjectURL(files[0])});
 
         const reader = new FileReader();
         reader.addEventListener("load", () => {
@@ -86,7 +97,25 @@ const CreateAssetForm = ({
     }
   };
 
-  console.log("=============", fileContents);
+  const handleValidation = (kind, key, value: any) => {
+    let flag = true
+    if (kind === "FILE") {
+      const file = value[0]
+      metadata?.fields.map((field: any, index: number) => {
+        if (field.key == key && field.key && value && field?.input?.formats){
+          //@ts-ignore
+          var el =  field?.input?.formats.some(i => i.name.includes(file.name.split(".").reverse()[0]));
+          console.log(field?.input?.formats, file.name.split(".").reverse()[0], el)
+          if(!el) {
+            showAlertMessage(`${field.key} File is invalid.`, { variant: "error" });
+            flag = false;
+          }
+        }
+      })
+    } 
+    return flag
+  }
+
   const renderAsset = (asset: any, index: number) => {
     return (
       <Box className={classes.itemContainer} key={`asset-field-${index}`}>
@@ -129,6 +158,11 @@ const CreateAssetForm = ({
             >
               {fileInputs[asset.key] ? (
                 <>
+                 {asset.fileKind == "VIDEO" ? (
+                   <div style={{marginLeft: 20}}>
+                    <ReactPlayer playing={false} controls={false} url={videoThumbnailURL[asset.key]} width="85" height={85} />
+                  </div>
+                 ) : (
                   <Box
                     className={classes.image}
                     style={{
@@ -136,6 +170,8 @@ const CreateAssetForm = ({
                       backgroundSize: "cover",
                     }}
                   />
+                 )}
+                  
                   <Box
                     flex={1}
                     display="flex"

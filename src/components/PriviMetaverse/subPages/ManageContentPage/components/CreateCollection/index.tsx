@@ -180,7 +180,7 @@ const CreateCollection = ({
                   backgroundSize: "cover",
                 }}
               />
-              <Box flex={1} display="flex" justifyContent="flex-end" mr={3}>
+              <Box flex={1} display="flex" justifyContent="flex-end" ml={3}>
                 <Button
                   startIcon={<RefreshIcon />}
                   onClick={e => {

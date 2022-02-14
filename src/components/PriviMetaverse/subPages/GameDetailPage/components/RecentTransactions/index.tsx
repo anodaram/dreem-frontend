@@ -31,12 +31,14 @@ export default function RecentTransactions() {
   useEffect(() => {
     if (listenerSocket) {
       const updateMarketPlaceFeedHandler = _transaction => {
-        if (collection_id !== _transaction.slug){
+        if (collection_id !== _transaction.slug) {
           return;
         }
         setTransactions(prev => {
-          let _transactions = prev.map(transaction => (_transaction.id === transaction.id ? _transaction : transaction));
-          if (_transactions.length === 0 || _transactions[0].id < _transaction.id){
+          let _transactions = prev.map(transaction =>
+            _transaction.id === transaction.id ? _transaction : transaction
+          );
+          if (_transactions.length === 0 || _transactions[0].id < _transaction.id) {
             _transactions = [_transaction].concat(_transactions);
           }
           return _transactions;
@@ -58,7 +60,7 @@ export default function RecentTransactions() {
   };
 
   const getTokenDecimal = addr => {
-    if (tokenList.length == 0) return 0;
+    if (tokenList.length == 0 || !addr) return 0;
     let token = tokenList.find(token => token.Address === addr);
     return token?.Decimals;
   };
@@ -93,10 +95,10 @@ export default function RecentTransactions() {
     }
   };
 
-  const handleGotoNFT = (nft) => {
+  const handleGotoNFT = nft => {
     history.push(`/P2E/${nft.Slug}/${nft.tokenId}`);
-  }
-  
+  };
+
   return (
     <Box className={classes.root}>
       <div className={classes.title}>Recent Transactions</div>

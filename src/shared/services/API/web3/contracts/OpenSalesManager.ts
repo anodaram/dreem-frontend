@@ -35,7 +35,7 @@ const openSalesManager = network => {
                 payload.beneficiary,
                 payload.sellerToMatch
               )
-              .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+              .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
               .on("transactionHash", hash => {
                 setHash(hash);
               })
@@ -98,7 +98,7 @@ const openSalesManager = network => {
                 payload.beneficiary,
                 payload.buyerToMatch
               )
-              .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+              .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
               .on("transactionHash", hash => {
                 setHash(hash);
               })
@@ -157,7 +157,7 @@ const openSalesManager = network => {
                   payload.price,
                   payload.owner
                 )
-                .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
                 .on("transactionHash", hash => {
                   setHash(hash);
                 })
@@ -215,7 +215,7 @@ const openSalesManager = network => {
                 payload.price,
                 payload.beneficiary
               )
-              .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+              .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
               .on("transactionHash", hash => {
                 setHash(hash);
               })

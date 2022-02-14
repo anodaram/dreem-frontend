@@ -24,7 +24,7 @@ const erc20_standard = (network, token) => {
             ? await contract.methods.approve(address, approveAmount).send({ 
               from: account, 
               gas: gas,
-              maxPriorityFeePerGas: await web3.eth.getChainId()==137 ? web3.utils.toWei(MAX_PRIO_FEE, 'gwei') : "",
+              maxPriorityFeePerGas: await web3.eth.getChainId()==137 ? await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') : "",
             })
             : await contract.methods.approve(address, approveAmount).send({ 
                 from: account, 
@@ -70,7 +70,7 @@ const erc20_standard = (network, token) => {
     return new Promise(async resolve => {
       try {
         const unit = erc20ToWeiUnit[token] ?? "ether";
-        const weiAmount = web3.utils.toWei(amount.toString(), unit);
+        const weiAmount = await web3.utils.toWei(amount.toString(), unit);
         const interactingContractAddress = config[network].CONTRACT_ADDRESSES[interactingContractName];
         const contract = ContractInstance(web3, metadata.abi, owner);
         const gas = await contract.methods

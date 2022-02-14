@@ -6,9 +6,9 @@ import config from "shared/connectors/web3/config";
 const MAX_PRIO_FEE = "50";
 
 const royaltyFactoryBatch = network => {
-  const contractAddress = config[network].CONTRACT_ADDRESSES.ROYALTYFACTORYBATCH;
+  const contractAddress = config[network].CONTRACT_ADDRESSES.ROYALTYFACTORY;
   let txHash;
-  const metadata = require("shared/connectors/web3/contracts/RoyaltyFactoryBatch.json");
+  const metadata = require("shared/connectors/web3/contracts/RoyaltyFactory.json");
 
   const mint = async (
     web3: Web3,
@@ -30,7 +30,7 @@ const royaltyFactoryBatch = network => {
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
           .mintMasterBatch([name, symbol], amount, uri, rAddress, bps)
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
           .on("transactionHash", function (hash) {
             console.log("transaction hash:", hash);
             setTxModalOpen(true);
@@ -39,7 +39,7 @@ const royaltyFactoryBatch = network => {
           });
         console.log("transaction succeed", response);
 
-        resolve({ success: true, txHash: txHash, contractAddress: response.events.LoyaltyERC721Created.returnValues.nft, initialId: response.events.LoyaltyERC721Created.returnValues.initialId, amount: response.events.LoyaltyERC721Created.returnValues.amount });
+        resolve({ success: true, txHash: txHash, contractAddress: response.events.LoyaltyERC721Created.returnValues.nft, initialId: response.events.LoyaltyERC721Created.returnValues.initialId, amount: response.events.LoyaltyERC721Created.returnValues.amount, batchId: response.events.BatchMint.returnValues.batchId });
       } catch (e) {
         console.log(e);
         resolve({ success: false });

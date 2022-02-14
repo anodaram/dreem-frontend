@@ -14,10 +14,10 @@ const tokenVault = (network: string) => {
       const contract = ContractInstance(web3, TokenVaultABI.abi, contractAddress);
       const listTokenWeiUnit = erc20ToWeiUnit[payload.token] ?? "ether";
       const gas = await contract.methods
-        .updateUserPrice(web3.utils.toWei(payload.price.toString(), listTokenWeiUnit))
+        .updateUserPrice(await web3.utils.toWei(payload.price.toString(), listTokenWeiUnit))
         .estimateGas({ from: account });
       const response = await contract.methods
-        .updateUserPrice(web3.utils.toWei(payload.price.toString(), listTokenWeiUnit))
+        .updateUserPrice(await web3.utils.toWei(payload.price.toString(), listTokenWeiUnit))
         .send({ from: account, gas: gas, type: "0x2" });
       if (response) return { success: true };
       else return { success: false };
@@ -32,7 +32,7 @@ const tokenVault = (network: string) => {
       const listTokenWeiUnit = erc20ToWeiUnit[reserveToken] ?? "ether";
       const contract = ContractInstance(web3, TokenVaultABI.abi, contractAddress);
       const resp = await contract.methods.reservePrice().call();
-      return { success: true, data: web3.utils.fromWei(resp, listTokenWeiUnit) };
+      return { success: true, data: await web3.utils.fromWei(resp, listTokenWeiUnit) };
     } catch (e) {
       console.log(e);
       return { success: false };
@@ -56,16 +56,16 @@ const tokenVault = (network: string) => {
         "0x5251AF6c7eB0a13ab6502eD2e3Fd2704F9dEFF1C"
       );
       const approveGas = await listTokenContract.methods
-        .approve(contractAddress, web3.utils.toWei(payload.price.toString(), listTokenWeiUnit))
+        .approve(contractAddress, await web3.utils.toWei(payload.price.toString(), listTokenWeiUnit))
         .estimateGas({ from: account });
       const res = await listTokenContract.methods
-        .approve(contractAddress, web3.utils.toWei(payload.price.toString(), listTokenWeiUnit))
+        .approve(contractAddress, await web3.utils.toWei(payload.price.toString(), listTokenWeiUnit))
         .send({ from: account, gas: approveGas, type: "0x2" });
       const gas = await contract.methods
-        .start(web3.utils.toWei(payload.price.toString(), listTokenWeiUnit))
+        .start(await web3.utils.toWei(payload.price.toString(), listTokenWeiUnit))
         .estimateGas({ from: account });
       const response = await contract.methods
-        .start(web3.utils.toWei(payload.price.toString(), listTokenWeiUnit))
+        .start( await web3.utils.toWei(payload.price.toString(), listTokenWeiUnit))
         .send({ from: account, gas, type: "0x2" });
 
       return {

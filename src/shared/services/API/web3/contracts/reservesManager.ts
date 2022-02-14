@@ -49,7 +49,7 @@ const reservesManager = (network: string) => {
                   .cancelReserve(
                     payload.activeReserveId
                   )
-                  .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                  .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
                   .on("transactionHash", hash => {
                     setHash(hash);
                   })
@@ -100,7 +100,7 @@ const reservesManager = (network: string) => {
                   .liquidateReserve(
                     payload.activeReserveId,
                   )
-                  .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                  .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
                   .on("transactionHash", hash => {
                     setHash(hash);
                   })
@@ -156,7 +156,7 @@ const reservesManager = (network: string) => {
                 .liquidateUndercollateralization(
                   payload.activeReserveId,
                 )
-                .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
                 .on("transactionHash", hash => {
                   setHash(hash);
                 })
@@ -213,7 +213,7 @@ const reservesManager = (network: string) => {
                     payload.activeReserveId,
                     payload.amount,
                   )
-                  .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                  .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
                   .on("transactionHash", hash => {
                     setHash(hash);
                   })
@@ -269,7 +269,7 @@ const reservesManager = (network: string) => {
                         payload.activeReserveId,
                         payload.amount,
                       )
-                      .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                      .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
                       .on("transactionHash", hash => {
                         setHash(hash);
                       })
@@ -319,7 +319,7 @@ const reservesManager = (network: string) => {
                 .payThePrice(
                   payload.activeReserveId,
                 )
-                .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
                 .on("transactionHash", hash => {
                   setHash(hash);
                 })

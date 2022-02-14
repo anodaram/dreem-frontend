@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled } from "@material-ui/core";
+import ReactPlayer from "react-player";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -24,13 +25,14 @@ const CreateExtensionDraftModal = ({ realmId, onClose, open, loadRealm, metaData
   const [imageFile, setImageFile] = useState<any>(null);
   const [video, setVideo] = useState<any>(null);
   const [videoFile, setVideoFile] = useState<any>(null);
+  const [videoThumbnailURL, setVideoThumbnailURL] = useState<any>('');
   const [unity, setUnity] = useState<any>(null);
   const [unityFile, setUnityFile] = useState<any>(null);
   const [entity, setEntity] = useState<any>(null);
   const [entityFile, setEntityFile] = useState<any>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-
+  
   const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
 
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -98,6 +100,7 @@ const CreateExtensionDraftModal = ({ realmId, onClose, open, loadRealm, metaData
   const handleVideoFiles = (files: any) => {
     if (files && files[0]) {
       setVideo(files[0]);
+      setVideoThumbnailURL(URL.createObjectURL(files[0]));
 
       const reader = new FileReader();
       reader.addEventListener("load", () => {
@@ -320,7 +323,7 @@ const CreateExtensionDraftModal = ({ realmId, onClose, open, loadRealm, metaData
                     backgroundSize: "cover",
                   }}
                 />
-                <Box flex={1} display="flex" justifyContent="flex-end" mr={3}>
+                <Box flex={1} display="flex" justifyContent="flex-end" ml={3}>
                   <SecondaryButton
                     size="medium"
                     onClick={e => {
@@ -368,14 +371,10 @@ const CreateExtensionDraftModal = ({ realmId, onClose, open, loadRealm, metaData
           >
             {video ? (
               <>
-                <Box
-                  className={classes.image}
-                  style={{
-                    backgroundImage: `url(${sanitizeIfIpfsUrl(videoFile)})`,
-                    backgroundSize: "cover",
-                  }}
-                />
-                <Box flex={1} display="flex" justifyContent="flex-end" mr={3}>
+                <div style={{marginLeft: 20}}>
+                  <ReactPlayer playing={false} controls={false} url={videoThumbnailURL} width="85" height={85} />
+                </div>
+                <Box flex={1} display="flex" justifyContent="flex-end" ml={3}>
                   <SecondaryButton
                     size="medium"
                     onClick={e => {

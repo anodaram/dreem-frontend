@@ -32,7 +32,7 @@ const dreemLaunchpadVesting = (network: string) => {
         resolve({
           success: true,
           address: beneficiary,
-          amount: +web3.utils.fromWei(amount),
+          amount: + await web3.utils.fromWei(amount),
           lockId: +lockId,
           hash: txHash,
         });
@@ -55,7 +55,7 @@ const dreemLaunchpadVesting = (network: string) => {
       if (releasableAmount) {
         return {
           success: true,
-          releasableAmount: web3.utils.fromWei(releasableAmount)
+          releasableAmount: await web3.utils.fromWei(releasableAmount)
         };
       }
       else return { success: false };

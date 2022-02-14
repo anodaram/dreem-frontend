@@ -138,6 +138,17 @@ export const gameDetailPageStyles = makeStyles(theme => ({
     fontFamily: "Rany",
     lineHeight: "155%",
   },
+  gameInfoLoading: {
+    background: '#313131',
+    borderRadius: 9,
+    [theme.breakpoints.down("sm")]: {
+      width: (props: any) => (props.openSideBar ? "100%" : 220),
+      height: 250,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "100% !important",
+    },
+  },
   gameInfoImg: {
     width: 398,
     height: 398,

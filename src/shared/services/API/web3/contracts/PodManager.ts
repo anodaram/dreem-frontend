@@ -295,11 +295,11 @@ const podManager = network => {
 
         console.log("Getting gas....");
         const gas = await contract.methods
-          .uploadMedia(podAddress, web3.utils.keccak256(mediaId), uri)
+          .uploadMedia(podAddress, await web3.utils.keccak256(mediaId), uri)
           .estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
-          .uploadMedia(podAddress, web3.utils.keccak256(mediaId), uri)
+          .uploadMedia(podAddress, await web3.utils.keccak256(mediaId), uri)
           .send({ from: account, gas: gas })
           .on("transactionHash", hash => {
             setHash(hash);

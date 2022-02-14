@@ -88,11 +88,11 @@ const ContentPreviewModal = ({
         setNFT(res1.data);
         MetaverseAPI.getCollection(res1.data.collectionId).then(res2 => {
           setCurrentCollection(res2.data);
-          console.log(res2.data, res1.data.collectionId)
+          console.log(res2.data, res1.data.collectionId);
         });
         MetaverseAPI.getNFTInfo(res1.data.versionHashId).then(res3 => {
           setMetadata(res3.data);
-          console.log(res3.data, res1.data.versionHashId)
+          console.log(res3.data, res1.data.versionHashId);
         });
       });
     }
@@ -117,7 +117,7 @@ const ContentPreviewModal = ({
   };
 
   const handleShareDraft = () => {
-    shareMedia("Draft", `realms/${nft.id}`);
+    shareMedia("Draft", `explore/${nft.versionHashId}`);
   };
 
   const mintNFT = async () => {
@@ -141,17 +141,19 @@ const ContentPreviewModal = ({
     console.log(uri);
     const web3APIHandler = targetChain.apiHandler;
     const web3 = new Web3(library.provider);
-    console.log("----metadata:", metaData, isDraft);
 
     if (isDraft) {
-      console.log("here-----");
-      const resRoyalty = await web3APIHandler.RoyaltyFactory.mint(
+      const resRoyalty = await web3APIHandler.RoyaltyFactoryBatch.mint(
         web3,
         account,
         {
           name: collectionData.name,
           symbol: collectionData.symbol,
-          uri,
+          amount: 1,
+          uri: uri,
+          isRoyalty: false,
+          royaltyAddress: "0x0000000000000000000000000000000000000000",
+          royaltyPercentage: 0,
         },
         setTxModalOpen,
         setTxHash
@@ -161,18 +163,19 @@ const ContentPreviewModal = ({
           nft.versionHashId,
           resRoyalty.contractAddress,
           targetChain.name,
-          [resRoyalty.tokenId],
+          [resRoyalty.startTokenId],
           metaData.newFileCID,
           account,
           "0x0000000000000000000000000000000000000000",
           0,
           resRoyalty.txHash,
-          1
+          1,
+          resRoyalty.batchId
         );
-        if(resp.success){
+        if (resp.success) {
           setTxSuccess(true);
           showAlertMessage(`Successfully world minted`, { variant: "success" });
-        } else{
+        } else {
           setTxSuccess(false);
           showAlertMessage(`Something went wrong`, { variant: "error" });
         }
@@ -180,13 +183,19 @@ const ContentPreviewModal = ({
         setTxSuccess(false);
       }
     } else {
-      const contractRes = await web3APIHandler.NFTWithRoyalty.mint(
+      const contractRes = await web3APIHandler.NFTWithRoyaltyBatch.mint(
         web3,
         account,
         {
           collectionAddress: collectionAddr,
+          name: collectionData.name,
+          symbol: collectionData.symbol,
           to: account,
-          uri,
+          amount: 1,
+          uri: uri,
+          isRoyalty: false,
+          royaltyAddress: "0x0000000000000000000000000000000000000000",
+          royaltyPercentage: 0,
         },
         setTxModalOpen,
         setTxHash
@@ -194,20 +203,23 @@ const ContentPreviewModal = ({
 
       if (contractRes.success) {
         console.log(contractRes);
-        const resp = await MetaverseAPI.convertToNFTWorld(
-          nft.id,
+        const resp = await MetaverseAPI.convertToNFTAssetBatch(
+          nft.versionHashId,
           contractRes.collectionAddress,
           targetChain.name,
-          [contractRes.tokenId],
-          metaData.newFileCID,
+          [contractRes.startTokenId],
+          uri,
           contractRes.owner,
-          contractRes.royaltyAddress,
-          0
+          "0x0000000000000000000000000000000000000000",
+          0,
+          contractRes.txHash,
+          1,
+          contractRes.batchId
         );
-        if(resp.success){
+        if (resp.success) {
           setTxSuccess(true);
           showAlertMessage(`Successfully world minted`, { variant: "success" });
-        } else{
+        } else {
           setTxSuccess(false);
           showAlertMessage(`Something went wrong`, { variant: "error" });
         }
@@ -216,6 +228,7 @@ const ContentPreviewModal = ({
       }
     }
   };
+
   const handleEnterGame = () => {
     if (detectMob()) {
       setShowPlayModal(true);
@@ -275,15 +288,18 @@ const ContentPreviewModal = ({
                         alignItems="center"
                         onClick={() => history.push(`/profile/${nft.submitter.user.address}`)}
                       >
-                        <Avatar size={42} rounded image={nft.submitter.user.avatarUrl ? nft.submitter.user.avatarUrl : getDefaultAvatar()} />
+                        <Avatar
+                          size={42}
+                          rounded
+                          image={
+                            nft.submitter.user.avatarUrl ? nft.submitter.user.avatarUrl : getDefaultAvatar()
+                          }
+                        />
                         <Box display="flex" flexDirection="column" ml={1}>
                           <Box className={classes.typo1}>{`${nft.submitter.user.firstName ?? ""} ${
                             nft.submitter.user.lastName ?? ""
                           }`}</Box>
-                          <AddressView
-                            className={classes.typo4}
-                            address={"@" + nft.submitter.user.priviId}
-                          />
+                          <AddressView className={classes.typo4} address={"@" + nft.submitter.user.priviId} />
                         </Box>
                       </Box>
                       <Box
@@ -300,9 +316,9 @@ const ContentPreviewModal = ({
                   )}
                   {isMobile && (
                     <Box className={classes.nftPreviewSection}>
-                      {nft.worldBinary ? (
+                      {nft.worldVideo ? (
                         <ReactPlayer
-                          url={nft.worldBinary}
+                          url={nft.worldVideo}
                           ref={playerVideoItem}
                           controls
                           progressInterval={200}
@@ -375,10 +391,9 @@ const ContentPreviewModal = ({
                       >
                         Edit Draft
                       </PrimaryButton>
-                    ))
-                  }
-                  {isOwner && !nft.minted && 
-                  <PrimaryButton
+                    ))}
+                  {isOwner && !nft.minted && (
+                    <PrimaryButton
                       size="medium"
                       className={`${classes.button} ${classes.mintButton}`}
                       style={{
@@ -388,16 +403,16 @@ const ContentPreviewModal = ({
                       onClick={mintNFT}
                     >
                       Mint NFT
-                  </PrimaryButton>
-                  }
+                    </PrimaryButton>
+                  )}
                 </Box>
               ) : null}
             </div>
             {!isMobile && (
               <div className={classes.nftPreviewSection}>
-                {nft.worldBinary ? (
+                {nft.worldVideo ? (
                   <ReactPlayer
-                    url={nft.worldBinary}
+                    url={nft.worldVideo}
                     ref={playerVideoItem}
                     controls
                     progressInterval={200}
@@ -419,13 +434,15 @@ const ContentPreviewModal = ({
                 ) : null}
               </div>
             )}
-            {openEditRealmModal &&
-              <EditDraftContentModal 
+            {
+              openEditRealmModal && (
+                <EditDraftContentModal
                   open={openEditRealmModal}
                   onClose={() => setOpenEditRealmModal(false)}
                   draftContent={nft}
-                  metaData = {metaDataForModal}
-              />
+                  metaData={metaDataForModal}
+                />
+              )
               // (nft.worldIsExtension ? (
               //   <EditExtensionModal
               //     open={openEditRealmModal}
@@ -485,7 +502,7 @@ const ContentPreviewModal = ({
             onClose(null);
           }}
         />
-        )}
+      )}
     </>
   );
 };

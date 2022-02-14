@@ -223,8 +223,8 @@ export default function ExploreRealmsPage() {
                                     key={page}
                                     className={classes.carouselItem}
                                     style={{
-                                      backgroundImage: featuredRealms[page]?.worldImage
-                                        ? `url("${sanitizeIfIpfsUrl(featuredRealms[page]?.worldImage)}")`
+                                      backgroundImage: featuredRealms[page]?.realmImage
+                                        ? `url("${sanitizeIfIpfsUrl(featuredRealms[page]?.realmImage)}")`
                                         : `url(${getDefaultImageUrl()})`,
                                       border: isActivePage ? "2px solid #E1E736" : "none",
                                     }}
@@ -272,7 +272,7 @@ export default function ExploreRealmsPage() {
                   borderRadius: "100px",
                   color: "#121212",
                   paddingTop: 4,
-                  zIndex: 999,
+                  zIndex: 1,
                 }}
                 onClick={() => history.push("/create_realm")}
               >

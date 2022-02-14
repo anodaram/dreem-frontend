@@ -43,7 +43,7 @@ const reserveMarketplace = (network: string) => {
                       payload.reservePeriod,
                       payload.buyer,
                     )
-                    .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                    .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
                     .on("transactionHash", hash => {
                       setHash(hash);
                     })
@@ -111,7 +111,7 @@ const reserveMarketplace = (network: string) => {
                   payload.reservePeriod,
                   payload.owner,
                 )
-                .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
                 .on("transactionHash", hash => {
                   setHash(hash);
                 })
@@ -190,7 +190,7 @@ const reserveMarketplace = (network: string) => {
                   payload.validityPeriod,
                   payload.sellerToMatch
                 )
-                .send({ from: account, gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .send({ from: account, gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
                 .on("transactionHash", hash => {
                   setHash(hash);
                 })
@@ -274,7 +274,7 @@ const reserveMarketplace = (network: string) => {
                   payload.validityPeriod,
                   payload.buyerToMatch
                 )
-                .send({ from: account, gas: gas, maxPriorityFeePerGas: web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
                 .on("transactionHash", hash => {
                   setHash(hash);
                 })

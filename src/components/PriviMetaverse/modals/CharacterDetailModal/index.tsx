@@ -117,7 +117,7 @@ const CharacterDetailModal = ({
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     onClose();
-                    history.push(`/realms/${realmData?.id}`);
+                    history.push(`/realms/${realmData?.versionHashId}`);
                   }}
                 >
                   {realmData?.worldTitle}
