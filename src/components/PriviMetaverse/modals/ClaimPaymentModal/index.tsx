@@ -29,10 +29,13 @@ export default function ClaimPaymentModal({ open, nft, handleClose = () => { }, 
   const { showAlertMessage } = useAlertMessage();
 
   useEffect(() => {
+    if (!open) return;
+
+    setSelectedChain(getChainForNFT(nft));
     if (nft?.blockingSalesHistories?.length > 0) {
       setBlockingInfo(nft.blockingSalesHistories[nft.blockingSalesHistories.length - 1])
     }
-  }, [nft])
+  }, [open, nft])
 
   const getTokenSymbol = addr => {
     if (tokens.length == 0 || !addr) return 0;

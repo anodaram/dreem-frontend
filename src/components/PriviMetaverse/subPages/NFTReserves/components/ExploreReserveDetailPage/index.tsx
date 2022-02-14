@@ -134,15 +134,15 @@ const ExploreReserveDetailPage = () => {
   useEffect(() => {
     if (!nft) return;
 
+    const nftChain = getChainForNFT(nft);
+    if (!nftChain) return;
+
     getAllTokenInfos().then(({ tokens }) => {
       if (tokens) {
         const nftTokens = tokens.find(token => token.Network.toLowerCase() === nftChain.name.toLowerCase());
         dispatch(setTokenList([nftTokens]));
       }
     });
-
-    const nftChain = getChainForNFT(nft);
-    if (!nftChain) return;
 
     if (!library) return;
     const web3APIHandler = nftChain.apiHandler;
