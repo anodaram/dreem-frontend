@@ -90,6 +90,7 @@ export const realmDetailPageStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "flex-end",
     [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
       justifyContent: "space-between",
     },
     [theme.breakpoints.down("xs")]: {
@@ -112,6 +113,14 @@ export const realmDetailPageStyles = makeStyles(theme => ({
     cursor: "pointer",
     "& + &": {
       marginLeft: 12,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: 40,
+      height: 40,
+      marginLeft: 8,
+      "& + &": {
+        marginLeft: 8,
+      },
     },
   },
   imageContainer: {
@@ -151,6 +160,22 @@ export const realmDetailPageStyles = makeStyles(theme => ({
     "& svg": {
       marginRight: 8,
     },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "12px !important",
+      marginRight: 10,
+    },
+  },
+  applyExtensionBtn: {
+    background: "transparent !important",
+    textTransform: "uppercase",
+    height: 40,
+    color: "#fff !important",
+    borderRadius: "100px !important",
+    borderColor: "white !important",
+    border: "2px solid #FFFFFF !important",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 12,
+    },
   },
   mapButton: {
     background: "#151515 !important",
@@ -161,7 +186,24 @@ export const realmDetailPageStyles = makeStyles(theme => ({
     alignItems: "center !important",
     textTransform: "uppercase",
     padding: "0px 40px !important",
-    border: "none !important"
+    border: "none !important",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 12,
+      marginRight: 10,
+      padding: "0px 44px !important",
+    },
+  },
+  btnGroup1: {
+    display: "flex",
+    width: "100%",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+  btnGroup2: {
+    display: "flex",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   content: {
     paddingTop: 90,
