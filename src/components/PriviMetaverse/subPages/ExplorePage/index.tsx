@@ -219,11 +219,18 @@ export default function ExplorePage() {
   };
 
   const handleSelectedAssetTypes = asset => {
+    if (loading) return;
+
     if (selectedAssetTypes.includes(asset.state)) {
       setSelectedAssetTypes([...selectedAssetTypes.filter(item => item !== asset.state)]);
     } else {
       setSelectedAssetTypes([...selectedAssetTypes, asset.state]);
     }
+  };
+
+  const handleSelectedContentType = val => {
+    if (loading) return;
+    setSelectedContentType(val);
   };
 
   return (
@@ -289,7 +296,7 @@ export default function ExplorePage() {
                         fontSize={14}
                         color={item === selectedContentType ? "#fff" : "#ffffff50"}
                         style={{ cursor: "pointer" }}
-                        onClick={() => setSelectedContentType(item)}
+                        onClick={() => handleSelectedContentType(item)}
                       >
                         {item}
                       </Box>
@@ -448,7 +455,6 @@ export default function ExplorePage() {
                 </div>
               )}
             </Box>
-
             <InfiniteScroll
               hasChildren={dreemList?.length > 0}
               dataLength={dreemList?.length}
