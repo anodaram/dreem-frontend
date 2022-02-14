@@ -25,7 +25,7 @@ import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProg
 import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingModal";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "shared/utils-IPFS/useIPFS";
-import { FilterAssetTypeOptions } from "shared/constants/constants";
+import { FilterAssetTypeOptionNames } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
 import { ReactComponent as UnityIcon } from "assets/icons/unity.svg";
@@ -83,7 +83,7 @@ const CreateTexture = ({
 
   const [openAssetSelect, setOpenAssetSelect] = useState<boolean>(false);
   const [openCollectionSelect, setOpenCollectionSelect] = useState<boolean>(false);
-  const [filterAsset, setFilterAsset] = useState<string>(FilterAssetTypeOptions[0]);
+  const [filterAsset, setFilterAsset] = useState<string>(FilterAssetTypeOptionNames[0]);
   const [filterCollection, setFilterCollection] = useState<string>("");
   useEffect(() => {
     setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");

@@ -9,7 +9,7 @@ import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProfileCard";
-import { FilterAssetTypeOptions } from "shared/constants/constants";
+import { FilterAssetTypeOptionNames } from "shared/constants/constants";
 import { collectionDetailPageStyles, useFilterSelectStyles } from "./index.styles";
 
 const COLUMNS_COUNT_BREAK_POINTS_THREE = {
@@ -19,7 +19,7 @@ const COLUMNS_COUNT_BREAK_POINTS_THREE = {
   1440: 3,
 };
 
-const filterAssetTypeOptions = ["ALL", ...FilterAssetTypeOptions];
+const FilterAssetTypeOptionAllNames = ["ALL", ...FilterAssetTypeOptionNames];
 const filterStatusOptions = ["All", "DRAFT", "MINTED"];
 
 export default function CollectionDetailPage() {
@@ -42,7 +42,7 @@ export default function CollectionDetailPage() {
   const [selectedTab, setSelectedTab] = React.useState<string>();
   const [openAssetTypeSelect, setOpenAssetTypeSelect] = React.useState<boolean>(false);
   const [openStatusSelect, setOpenStatusSelect] = React.useState<boolean>(false);
-  const [filterAssetType, setFilterAssetType] = React.useState<string>(filterAssetTypeOptions[0]);
+  const [filterAssetType, setFilterAssetType] = React.useState<string>(FilterAssetTypeOptionAllNames[0]);
   const [filterStatus, setFilterStatus] = React.useState<string>(filterStatusOptions[0]);
 
   const loadingCount = React.useMemo(
@@ -147,7 +147,7 @@ export default function CollectionDetailPage() {
               }}
               IconComponent={ArrowIcon(setOpenAssetTypeSelect)}
             >
-              {filterAssetTypeOptions.map((chain, index) => (
+              {FilterAssetTypeOptionAllNames.map((chain, index) => (
                 <MenuItem key={`filter-chain-${index}`} value={chain}>
                   {chain}
                 </MenuItem>

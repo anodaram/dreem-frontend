@@ -31,12 +31,12 @@ import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import ImageCropModal from "components/PriviMetaverse/modals/ImageCropModal";
+import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
+import { FilterAssetTypeOptionValues } from "shared/constants/constants";
 import EditProfileModal from "../../modals/EditProfileModal";
 import VerifyProfileModal from "../../modals/VerifyProfileModal";
-import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
 import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProfileCard";
 import WorldCard from "../../components/cards/WorldCard";
-import AssetsCard from "components/PriviMetaverse/components/cards/AssetsCard";
 import FollowProfileModal from "../../modals/FollowProfileModal";
 import { creatorPageStyles } from "./index.styles";
 
@@ -49,16 +49,11 @@ const ProfileTabs = [
     key: "liked",
     title: "Liked Content",
   },
-  // {
-  //   key: "owned",
-  //   title: "owned",
-  // },
   {
     key: "wip",
     title: "WIP",
   },
 ];
-
 const MAX_NAME_LENGTH = 20;
 
 const COLUMNS_COUNT_BREAK_POINTS_THREE = {
@@ -80,7 +75,6 @@ export default function CreatorPage() {
   const { creatorAddress } = useParams<{ creatorAddress: string }>();
   const userSelector = useTypedSelector(state => state.user);
   const [userInfo, setUserInfo] = useState<any>({ ...userSelector });
-  // const [creator, setCreator] = useState<any>({});
   const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [collections, setCollections] = useState<any[]>([]);
@@ -125,17 +119,15 @@ export default function CreatorPage() {
 
   useEffect(() => {
     setSelectedTab("");
-
     (async () => {
       try {
+        setLoadingProfile(true);
         const userResp = await axios.get(`${URL()}/user/getBasicInfo/${creatorAddress}/`);
         const userData = userResp.data.data;
 
         if (userResp.data.success) {
           setUserInfo({ ...userData });
           setSelectedTab(selTab || "drafts");
-
-          setLoading(false);
         } else {
           throw new Error("Can't find user from privi database");
         }
@@ -154,34 +146,53 @@ export default function CreatorPage() {
   }, [userInfo?.id, isOwner]);
 
   useEffect(() => {
-    if (userInfo) {
-      (async () => {
-        try {
-          setLoading(true);
-          setNftContents([]);
-          setCurPage(1);
-          setHasMore(true);
-
-          await loadData();
-
-          setLoading(false);
-        } catch (err) {
-          setLoading(false);
-          console.error(err);
-        }
-      })();
+    if (userInfo.id) {
+      loadData(true);
     }
-  }, [selectedTab]);
+  }, [selectedTab, userInfo]);
 
-  const loadData = async () => {
+  const loadData = async (init = false) => {
     try {
-      let filters: string[] = ["WORLD"];
-      let itemIds: Number[] = [];
+      setLoading(true);
       if (selectedTab === "drafts") {
-        filters = ["WORLD"];
-      } else if (selectedTab === "realms") {
-        filters = ["WORLD"];
+        const page = init ? 1 : curPage;
+        const resCollections = await MetaverseAPI.getAssets(
+          12,
+          page,
+          "timestamp",
+          ["COLLECTION"],
+          true,
+          userInfo?.id
+        );
+        if (resCollections.success) {
+          const newCollectionData = resCollections.data.elements;
+          setCollections(prev => (init ? newCollectionData : [...prev, ...newCollectionData]));
+          setCurPage(page + 1);
+          setHasMore(resCollections.data.page.cur < resCollections.data.page.max);
+        }
+
+        const resDrafts = await MetaverseAPI.getAssets(
+          12,
+          page,
+          "timestamp",
+          FilterAssetTypeOptionValues,
+          true,
+          userInfo?.id,
+          undefined,
+          undefined,
+          false,
+          false,
+          undefined
+        );
+
+        if (resDrafts.success) {
+          const newDraftData = resDrafts.data.elements;
+          setNftContents(prev => (init ? newDraftData : [...prev, ...newDraftData]));
+          setCurPage(page + 1);
+          setHasMore(resCollections.data.page.cur < resCollections.data.page.max);
+        }
       } else if (selectedTab === "liked") {
+        let itemIds: Number[] = [];
         // get liked realms
         const respRealmIds = await axios.get(`${URL()}/dreemRealm/getLikedRealms`, {
           params: {
@@ -193,17 +204,19 @@ export default function CreatorPage() {
             itemIds.push(parseInt(id));
           }
           const realmsResp = await MetaverseAPI.getAssets(
+            12,
+            1,
+            "timestamp",
             undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
+            true,
             undefined,
             itemIds,
             undefined,
             false
           );
-          setLikedRealms(realmsResp.data.elements);
+          if (realmsResp.success) {
+            setLikedRealms([...realmsResp.data.elements]);
+          }
         } else {
           setLikedRealms([]);
         }
@@ -227,69 +240,25 @@ export default function CreatorPage() {
 
         setHasMore(false);
         return;
-      }
-
-      if (filters.length) {
-        MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.id).then(res => {
+      } else if (selectedTab === "wip") {
+        MetaverseAPI.getUnfinishedNFTs().then(res => {
           if (res.success) {
             const items = res.data.elements;
             if (items && items.length > 0) {
-              setCollections([...collections, ...res.data.elements]);
+              setNfts(res.data.elements);
             }
           }
         });
-        const inventoryResp = await MetaverseAPI.getAssets(
-          12,
-          curPage,
-          "timestamp",
-          filters,
-          false,
-          userInfo?.id
-        );
-
-        if (inventoryResp.success) {
-          setNftContents([...nftContents, ...inventoryResp.data.elements]);
-          if (inventoryResp.data.page && curPage < inventoryResp.data.page.max) {
-            setCurPage(curPage => curPage + 1);
-          } else {
-            setHasMore(false);
-          }
-        }
-      } else {
-        setHasMore(false);
       }
-      MetaverseAPI.getUnfinishedNFTs().then(res => {
-        if (res.success) {
-          const items = res.data.elements;
-          if (items && items.length > 0) {
-            setNfts(res.data.elements);
-          }
-        }
-      });
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleRefresh = async () => {
-    setLoading(true);
-    setCurPage(1);
-    setHasMore(true);
-    setNftContents([]);
-
-    let filters = ["WORLD"];
-    const inventoryResp = await MetaverseAPI.getAssets(12, 1, "timestamp", filters, false, userInfo.id);
-    if (inventoryResp.success && userInfo) {
-      setNftContents([...inventoryResp.data.elements]);
-      if (inventoryResp.data.page && curPage <= inventoryResp.data.page.max) {
-        if (inventoryResp.data.page && inventoryResp.data.page.max > curPage) {
-          setCurPage(curPage => curPage + 1);
-        } else {
-          setHasMore(false);
-        }
-      }
-    }
-    setLoading(false);
+    loadData(true);
   };
 
   const handleProfileRefresh = async () => {
@@ -751,9 +720,8 @@ export default function CreatorPage() {
                             No Collections
                           </Box>
                         )}
-
                         <Box mt={3} mb={2} className={classes.typo7}>
-                          Created Drafts And Extensions
+                          Created Drafts
                         </Box>
                         <InfiniteScroll
                           hasChildren={nftContents?.length > 0}
@@ -779,19 +747,13 @@ export default function CreatorPage() {
                           <Grid container spacing={3} style={{ marginBottom: 24 }}>
                             {nftContents?.map((nft, index) => (
                               <Grid item key={`trending-pod-${index}`} md={4} sm={6} xs={12}>
-                                {nft.itemKind === "WORLD" ? (
-                                  <WorldCard
-                                    nft={{ ...nft }}
-                                    hideInfo
-                                    handleRefresh={handleRefresh}
-                                    selectable={false}
-                                    selected={false}
-                                  />
-                                ) : nft.itemKind === "CHARACTER" ? (
-                                  <AvatarCard item={nft} />
-                                ) : (
-                                  <AssetsCard item={nft} />
-                                )}
+                                <WorldCard
+                                  nft={{ ...nft }}
+                                  hideInfo
+                                  handleRefresh={handleRefresh}
+                                  selectable={false}
+                                  selected={false}
+                                />
                               </Grid>
                             ))}
                           </Grid>
