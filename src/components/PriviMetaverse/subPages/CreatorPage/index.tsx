@@ -32,7 +32,7 @@ import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import ImageCropModal from "components/PriviMetaverse/modals/ImageCropModal";
 import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
-import { FilterAssetTypeOptions } from "shared/constants/constants";
+import { FilterAssetTypeOptionValues } from "shared/constants/constants";
 import EditProfileModal from "../../modals/EditProfileModal";
 import VerifyProfileModal from "../../modals/VerifyProfileModal";
 import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProfileCard";
@@ -49,10 +49,6 @@ const ProfileTabs = [
     key: "liked",
     title: "Liked Content",
   },
-  // {
-  //   key: "owned",
-  //   title: "owned",
-  // },
   {
     key: "wip",
     title: "WIP",
@@ -79,7 +75,6 @@ export default function CreatorPage() {
   const { creatorAddress } = useParams<{ creatorAddress: string }>();
   const userSelector = useTypedSelector(state => state.user);
   const [userInfo, setUserInfo] = useState<any>({ ...userSelector });
-  // const [creator, setCreator] = useState<any>({});
   const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [collections, setCollections] = useState<any[]>([]);
@@ -124,17 +119,15 @@ export default function CreatorPage() {
 
   useEffect(() => {
     setSelectedTab("");
-
     (async () => {
       try {
+        setLoadingProfile(true);
         const userResp = await axios.get(`${URL()}/user/getBasicInfo/${creatorAddress}/`);
         const userData = userResp.data.data;
 
         if (userResp.data.success) {
           setUserInfo({ ...userData });
           setSelectedTab(selTab || "drafts");
-
-          setLoading(false);
         } else {
           throw new Error("Can't find user from privi database");
         }
@@ -154,10 +147,6 @@ export default function CreatorPage() {
 
   useEffect(() => {
     if (userInfo.id) {
-      setNftContents([]);
-      setCurPage(1);
-      setHasMore(true);
-
       loadData(true);
     }
   }, [selectedTab, userInfo]);
@@ -166,11 +155,27 @@ export default function CreatorPage() {
     try {
       setLoading(true);
       if (selectedTab === "drafts") {
+        const page = init ? 1 : curPage;
         const resCollections = await MetaverseAPI.getAssets(
           12,
-          curPage,
+          page,
           "timestamp",
           ["COLLECTION"],
+          true,
+          userInfo?.id
+        );
+        if (resCollections.success) {
+          const newCollectionData = resCollections.data.elements;
+          setCollections(prev => (init ? newCollectionData : [...prev, ...newCollectionData]));
+          setCurPage(page + 1);
+          setHasMore(resCollections.data.page.cur < resCollections.data.page.max);
+        }
+
+        const resDrafts = await MetaverseAPI.getAssets(
+          12,
+          page,
+          "timestamp",
+          FilterAssetTypeOptionValues,
           true,
           userInfo?.id,
           undefined,
@@ -179,27 +184,12 @@ export default function CreatorPage() {
           false,
           undefined
         );
-        if (resCollections.success) {
-          const newCollectionData = resCollections.data.elements;
-          setCollections(prev => (init ? newCollectionData : [...prev, ...newCollectionData]));
-        }
 
-        const inventoryResp = await MetaverseAPI.getAssets(
-          12,
-          curPage,
-          "timestamp",
-          FilterAssetTypeOptions,
-          false,
-          userInfo?.id
-        );
-
-        if (inventoryResp.success) {
-          setNftContents([...nftContents, ...inventoryResp.data.elements]);
-          if (inventoryResp.data.page && curPage < inventoryResp.data.page.max) {
-            setCurPage(curPage => curPage + 1);
-          } else {
-            setHasMore(false);
-          }
+        if (resDrafts.success) {
+          const newDraftData = resDrafts.data.elements;
+          setNftContents(prev => (init ? newDraftData : [...prev, ...newDraftData]));
+          setCurPage(page + 1);
+          setHasMore(resCollections.data.page.cur < resCollections.data.page.max);
         }
       } else if (selectedTab === "liked") {
         let itemIds: Number[] = [];
@@ -214,17 +204,19 @@ export default function CreatorPage() {
             itemIds.push(parseInt(id));
           }
           const realmsResp = await MetaverseAPI.getAssets(
+            12,
+            1,
+            "timestamp",
             undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
+            true,
             undefined,
             itemIds,
             undefined,
             false
           );
-          setLikedRealms(realmsResp.data.elements);
+          if (realmsResp.success) {
+            setLikedRealms([...realmsResp.data.elements]);
+          }
         } else {
           setLikedRealms([]);
         }
@@ -266,30 +258,7 @@ export default function CreatorPage() {
   };
 
   const handleRefresh = async () => {
-    setLoading(true);
-    setCurPage(1);
-    setHasMore(true);
-    setNftContents([]);
-
-    const inventoryResp = await MetaverseAPI.getAssets(
-      12,
-      1,
-      "timestamp",
-      FilterAssetTypeOptions,
-      false,
-      userInfo.id
-    );
-    if (inventoryResp.success && userInfo) {
-      setNftContents([...inventoryResp.data.elements]);
-      if (inventoryResp.data.page && curPage <= inventoryResp.data.page.max) {
-        if (inventoryResp.data.page && inventoryResp.data.page.max > curPage) {
-          setCurPage(curPage => curPage + 1);
-        } else {
-          setHasMore(false);
-        }
-      }
-    }
-    setLoading(false);
+    loadData(true);
   };
 
   const handleProfileRefresh = async () => {

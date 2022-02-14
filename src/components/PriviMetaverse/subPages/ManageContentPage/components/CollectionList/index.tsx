@@ -35,7 +35,7 @@ import CreatingStep from "../CreatingStep";
 import NFTOption from "../NFTOption";
 import CreateCollection from "../CreateCollection";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
-import { FilterAssetTypeOptions } from "shared/constants/constants";
+import { FilterAssetTypeOptionNames } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 const COLUMNS_COUNT_BREAK_POINTS_THREE = {

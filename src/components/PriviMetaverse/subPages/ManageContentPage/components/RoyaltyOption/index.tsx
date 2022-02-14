@@ -24,7 +24,7 @@ import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProg
 import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingModal";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "shared/utils-IPFS/useIPFS";
-import { FilterAssetTypeOptions } from "shared/constants/constants";
+import { FilterAssetTypeOptionNames } from "shared/constants/constants";
 import { useModalStyles } from "./index.styles";
 
 const RoyaltyOption = ({ handleNext }: { handleNext: () => void }) => {

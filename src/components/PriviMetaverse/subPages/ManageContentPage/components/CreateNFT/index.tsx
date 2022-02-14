@@ -26,7 +26,7 @@ import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProg
 import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingModal";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "shared/utils-IPFS/useIPFS";
-import { FilterAssetTypeOptions } from "shared/constants/constants";
+import { FilterAssetTypeOptionNames } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
 import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
@@ -57,7 +57,7 @@ const CreateNFT = ({
   const [imageFile, setImageFile] = useState<any>(null);
   const [video, setVideo] = useState<any>(null);
   const [videoFile, setVideoFile] = useState<any>(null);
-  const [videoThumbnailURL, setVideoThumbnailURL] = useState<any>('');
+  const [videoThumbnailURL, setVideoThumbnailURL] = useState<any>("");
   const [unity, setUnity] = useState<any>(null);
   const [unityFile, setUnityFile] = useState<any>(null);
   const [entity, setEntity] = useState<any>(null);
@@ -93,7 +93,7 @@ const CreateNFT = ({
 
   const [openAssetSelect, setOpenAssetSelect] = useState<boolean>(false);
   const [openCollectionSelect, setOpenCollectionSelect] = useState<boolean>(false);
-  const [filterAsset, setFilterAsset] = useState<string>(FilterAssetTypeOptions[0]);
+  const [filterAsset, setFilterAsset] = useState<string>(FilterAssetTypeOptionNames[0]);
   const [filterCollection, setFilterCollection] = useState<string>("");
   useEffect(() => {
     setMultiAddr("https://peer1.ipfsprivi.com:5001/api/v0");
@@ -528,8 +528,14 @@ const CreateNFT = ({
           >
             {video ? (
               <>
-                <div style={{marginLeft: 20}}>
-                  <ReactPlayer playing={false} controls={false} url={videoThumbnailURL} width="85" height={85} />
+                <div style={{ marginLeft: 20 }}>
+                  <ReactPlayer
+                    playing={false}
+                    controls={false}
+                    url={videoThumbnailURL}
+                    width="85"
+                    height={85}
+                  />
                 </div>
                 <Box flex={1} display="flex" justifyContent="flex-end" ml={3}>
                   <Button

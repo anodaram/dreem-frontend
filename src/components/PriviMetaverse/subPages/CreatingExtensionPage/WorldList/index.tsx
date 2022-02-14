@@ -33,7 +33,7 @@ import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 import CreateCollection from "../CreateCollection";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
-import { FilterAssetTypeOptions } from "shared/constants/constants";
+import { FilterAssetTypeOptionNames } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 const COLUMNS_COUNT_BREAK_POINTS_THREE = {
@@ -309,11 +309,10 @@ const WorldList = ({
                       <WorldCard
                         nft={item}
                         isLoading={loadingCollection}
-                        handleClick={() =>{
-                            handleSelect(item.versionHashId, item.collectionAddress, item.worldTokenId)
-                            setSelectedWorld(item.id)
-                          }
-                        }
+                        handleClick={() => {
+                          handleSelect(item.versionHashId, item.collectionAddress, item.worldTokenId);
+                          setSelectedWorld(item.id);
+                        }}
                         selectable={true}
                         selected={item.id == selectedWorld}
                       />
