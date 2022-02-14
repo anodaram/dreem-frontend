@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
-
+import axios from 'axios';
 import { Modal } from "shared/ui-kit";
+import URL from "shared/functions/getURL";
+
 import { useSelector } from "react-redux";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import Box from "shared/ui-kit/Box";
@@ -29,9 +31,21 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
   const { showAlertMessage } = useAlertMessage();
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
-  const fee = useSelector((state: RootState) => state.marketPlace.fee);
   const [isApproved, setIsApproved] = useState<boolean>(false);
   const { collection_id, token_id } = useParams();
+
+  const [offerUser, setOfferUser] = useState<any>({});
+
+  useEffect(() => {
+    axios
+      .get(`${URL()}/user/getUserByAddress/${offer.Beneficiary.toLowerCase()}`)
+      .then((res: any) => {
+        if (res.data?.success) {
+          setOfferUser(res.data?.data)
+        }
+      })
+      .catch(console.log)
+  }, [offer])
 
   useEffect(() => {
     if (!open) {
@@ -190,14 +204,6 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
     }
   };
 
-  const handleClickLink = _hash => {
-    if (selectedChain.name === "POLYGON") {
-      window.open(`https://${!isProd ? "mumbai." : ""}polygonscan.com/tx/${_hash}`, "_blank");
-    } else if (selectedChain.name === "ETHEREUM") {
-      window.open(`https://${!isProd ? "rinkeby." : ""}etherscan.io/tx/${_hash}`, "_blank");
-    }
-  };
-
   return (
     <>
       <Modal
@@ -221,7 +227,7 @@ export default function BlockProceedModal({ open, offer, handleClose, nft, setNf
               className={classes.gradientText}
               onClick={() => offer.userInfo && history.push(`/profile/${offer.userInfo.urlSlug}`)}
             >
-              {offer.userInfo?.name ?? getAbbrAddress(offer.Beneficiary, 6, 3)}
+              {offerUser?.name ?? getAbbrAddress(offer.Beneficiary, 6, 3)}
             </span>
             {` to block the `}
             <span className={classes.gradientText}>{nft.name}</span>
