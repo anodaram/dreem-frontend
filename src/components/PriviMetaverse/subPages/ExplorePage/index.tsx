@@ -118,17 +118,14 @@ export default function ExplorePage() {
     if (
       selectedContentType === "all assets" ||
       selectedContentType === "draft" ||
-      selectedContentType === "nft"
+      selectedContentType === "nft" ||
+      selectedContentType === "collection"
     ) {
       setIsDisabledAssetTypeFilter(false);
       loadAssetData(true);
     } else {
       setIsDisabledAssetTypeFilter(true);
-      if (selectedContentType === "collection") {
-        loadCollectionData(true);
-      } else if (selectedContentType === "creators") {
-        loadCreatorsData(true);
-      }
+      loadCreatorsData(true);
     }
   }, [selectedContentType, selectedAssetTypes, debouncedSearchValue]);
 
@@ -158,7 +155,7 @@ export default function ExplorePage() {
         12,
         curPage,
         "timestamp",
-        selectedAssetTypes,
+        selectedContentType === "collection" ? ["COLLECTION"] : selectedAssetTypes,
         true,
         undefined,
         undefined,
@@ -180,24 +177,6 @@ export default function ExplorePage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const loadCollectionData = async (init = false) => {
-    setLoading(true);
-
-    const curPage = init ? 1 : page;
-    MetaverseAPI.getCollections(12, curPage, "DESC")
-      .then(res => {
-        if (res.success) {
-          const newData = res.data.elements;
-          setDreemList(prev => (init ? newData : [...prev, ...newData]));
-          setPage(curPage + 1);
-          setHasMore(res.data.page.cur < res.data.page.max);
-        } else {
-          setDreemList([]);
-        }
-      })
-      .finally(() => setLoading(false));
   };
 
   const loadCreatorsData = async (init = false) => {
@@ -431,7 +410,8 @@ export default function ExplorePage() {
               <Box className={classes.gradientText}>Explore Dreem</Box>
               {(selectedContentType === "all assets" ||
                 selectedContentType === "draft" ||
-                selectedContentType === "nft") && (
+                selectedContentType === "nft" ||
+                selectedContentType === "collection") && (
                 <div className={classes.searchSection}>
                   <InputWithLabelAndTooltip
                     type="text"
@@ -464,13 +444,7 @@ export default function ExplorePage() {
               hasChildren={dreemList?.length > 0}
               dataLength={dreemList?.length}
               scrollableTarget={"scrollContainer"}
-              next={
-                selectedContentType === "collection"
-                  ? loadCollectionData
-                  : selectedContentType === "creators"
-                  ? loadCreatorsData
-                  : loadAssetData
-              }
+              next={selectedContentType === "creators" ? loadCreatorsData : loadAssetData}
               hasMore={hasMore}
               loader={
                 loading && (
