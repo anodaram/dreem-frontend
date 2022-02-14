@@ -124,8 +124,7 @@ const NFTReserves = () => {
 
   useEffect(() => {
     if (listenerSocket) {
-      const newNFTHandler = data => {
-        let _newNFT = data?.nftData;
+      const newNFTHandler = _newNFT => {
         if (_newNFT && !loadingNewListings) {
           setNewListings(prev => {
             const _newListings = prev.filter(
