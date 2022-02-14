@@ -347,7 +347,7 @@ const ContentPreviewModal = ({
                     Description
                   </Box>
                   <Box className={classes.typo3} mt={1.25} mb={4}>
-                    {nft.worldDescription || ""}
+                    {nft.description || ""}
                   </Box>
                 </Box>
                 <img

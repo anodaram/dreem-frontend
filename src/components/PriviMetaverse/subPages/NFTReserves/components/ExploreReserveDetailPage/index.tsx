@@ -563,7 +563,7 @@ const ExploreReserveDetailPage = () => {
                       gotoCollection(nft);
                     }}
                   >
-                    {nft.CollectionName}
+                    {nft.name}
                   </Text>
                 </Box>
                 <Box display="flex" flexDirection="row" alignItems="center">

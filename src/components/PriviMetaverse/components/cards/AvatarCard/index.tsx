@@ -68,7 +68,7 @@ export default function AvatarCard(props) {
             </div>
             <img className={classes.image} src={sanitizeIfIpfsUrl(media?.characterImage)} alt="robot" />
             <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Box className={classes.name}>{media?.characterName}</Box>
+              <Box className={classes.name}>{media?.name}</Box>
               {/* <PolygonIcon /> */}
             </Box>
           </Box>

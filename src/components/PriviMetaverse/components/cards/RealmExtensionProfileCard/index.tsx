@@ -214,9 +214,9 @@ export default function RealmExtensionProfileCard({
             />
           </div>
           <Box className={styles.infoContent}>
-            <Box className={styles.infoName}>{data.worldTitle || "Untitled"}</Box>
+            <Box className={styles.infoName}>{data.name || "Untitled"}</Box>
             <Box className={styles.infoDescription} mb={2}>
-              {data.worldDescription || "No description"}
+              {data.description || "No description"}
             </Box>
             {!hideInfo && (
               <>

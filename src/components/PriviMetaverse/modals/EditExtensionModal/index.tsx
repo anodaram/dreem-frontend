@@ -58,7 +58,7 @@ const EditExtensionModal = ({
   const [entityFile, setEntityFile] = useState<any>(null);
   const [title, setTitle] = useState<string>(realmData && realmData.worldTitle ? realmData.worldTitle : "");
   const [description, setDescription] = useState<string>(
-    realmData && realmData.worldDescription ? realmData.worldDescription : ""
+    realmData && realmData.description ? realmData.description : ""
   );
   const [isPublic, setIsPublic] = useState<boolean>(realmData.worldIsPublic);
 
@@ -287,11 +287,11 @@ const EditExtensionModal = ({
       );
       return false;
     } else if (
-      description.length < sizeSpec.worldDescription.limit.min ||
-      description.length > sizeSpec.worldDescription.limit.max
+      description.length < sizeSpec.description.limit.min ||
+      description.length > sizeSpec.description.limit.max
     ) {
       showAlertMessage(
-        `Description field invalid. Must be alphanumeric and contain from ${sizeSpec.worldDescription.limit.min} to ${sizeSpec.worldDescription.limit.max} characters`,
+        `Description field invalid. Must be alphanumeric and contain from ${sizeSpec.description.limit.min} to ${sizeSpec.description.limit.max} characters`,
         { variant: "error" }
       );
       return false;
@@ -383,7 +383,7 @@ const EditExtensionModal = ({
           />
           <Box display="flex" alignItems="center" justifyContent="space-between">
             <Box className={classes.itemTitle} mt={2.5} mb={1}>
-              {sizeSpec.worldDescription.header}
+              {sizeSpec.description.header}
             </Box>
             <InfoTooltip tooltip={"Please give your realm a description."} />
           </Box>
