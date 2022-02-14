@@ -158,7 +158,7 @@ export default function RealmDetailPage() {
           `${METAVERSE_URL()}/getSessionHash/`,
           {
             worldId: realmId,
-            worldTitle: realmData.realmName,
+            worldTitle: realmData.name,
             worldAssetUrl: realmData?.worldAssetUrl,
             worldTag: realmData?.worldTag,
           },
@@ -245,7 +245,7 @@ export default function RealmDetailPage() {
             <Box ml={1}>Back</Box>
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2.5}>
-            <Box className={classes.title}>{realmData.realmName || ""}</Box>
+            <Box className={classes.title}>{realmData.name || ""}</Box>
             <Hidden smDown>
               <Box display="flex" alignItems="center">
                 <Box className={classes.iconBtn}>
@@ -271,7 +271,7 @@ export default function RealmDetailPage() {
               </Box>
             </Hidden>
           </Box>
-          <Box className={classes.description}>{realmData.realmDescription || ""}</Box>
+          <Box className={classes.description}>{realmData.description || ""}</Box>
           <Box className={classes.control}>
             {isSignedin && (
               <Hidden mdUp>

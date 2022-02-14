@@ -38,7 +38,7 @@ const EditFilesNFT = ({
 
   const [type, setType] = useState<DRAFT_TYPE>("MODEL");
   const [title, setTitle] = useState<string>(draftContent.worldTitle);
-  const [description, setDescription] = useState<string>(draftContent.worldDescription);
+  const [description, setDescription] = useState<string>(draftContent.description);
 
   const [owner, setOwner] = useState<any>(userSelector? userSelector.id : null);
   const [image, setImage] = useState<any>(null);
