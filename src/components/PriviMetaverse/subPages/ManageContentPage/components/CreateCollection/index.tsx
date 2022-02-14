@@ -83,13 +83,13 @@ const CreateCollection = ({
       setIsUploading(true)
       let payload: any = {};
       payload = {
-        erc721CollectionName: title,
-        erc721CollectionSymbol: symbol,
-        erc721CollectionDescription: description,
-        erc721CollectionImage: image,
+        item: "COLLECTION",
+        name: title,
+        description: description,
+        collectionSymbol: symbol,
+        collectionImage: image,
       };
-      console.log('upload collection')
-      MetaverseAPI.uploadCollection(payload)
+      MetaverseAPI.uploadAsset(payload)
         .then(async res => {
           if (!res.success) {
             setUploadSuccess(false)

@@ -53,7 +53,7 @@ export const getAssets = async (
   pageNum = 1,
   sorting = "timestamp",
   filters,
-  isPublic = true,
+  isPublic,
   ownerId?: string,
   itemIds?: any,
   isExtension?: boolean,

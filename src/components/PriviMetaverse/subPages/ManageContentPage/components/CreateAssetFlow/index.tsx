@@ -197,7 +197,7 @@ const CreateAssetFlow = ({
       let payload: any = {};
 
       payload = {
-        collectionId: currentCollection.id,
+        collectionHashId: currentCollection.versionHashId,
         item: assetItem,
         isPublic: isPublic,
         name: formData.ITEM_NAME,
@@ -244,7 +244,7 @@ const CreateAssetFlow = ({
       return;
     }
     const savingDraft = data;
-    let collectionData = await MetaverseAPI.getCollection(currentCollection.id);
+    let collectionData = await MetaverseAPI.getAsset(currentCollection.versionHashId);
     collectionData = collectionData.data
     let metadata = await getMetadata(savingDraft.instance.hashId);
     let collectionAddr = collectionData.address;
