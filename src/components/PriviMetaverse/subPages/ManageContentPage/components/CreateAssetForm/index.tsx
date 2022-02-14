@@ -44,17 +44,18 @@ const CreateAssetForm = ({
 
 
   const onFileInput = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-
+    
     e.preventDefault();
     const files = e.target.files;
     let isValid = handleValidation('FILE', key, files);
-    if(!isValid){
+    if (!isValid) {
       return
     }
+
     if (files && files.length) {
       if (files && files[0]) {
         setFileInputs({ ...fileInputs, [key]: files[0] });
-        setVideoThumbnailURL({...videoThumbnailURL, [key]: URL.createObjectURL(files[0])});
+        setVideoThumbnailURL({ ...videoThumbnailURL, [key]: URL.createObjectURL(files[0]) });
 
         const reader = new FileReader();
         reader.addEventListener("load", () => {
@@ -78,16 +79,6 @@ const CreateAssetForm = ({
                   },
                 },
               }));
-              // setFileContents({
-              //   ...fileContents,
-              //   [key]: {
-              //     ...fileContents[key],
-              //     dimension: {
-              //       width,
-              //       height,
-              //     },
-              //   },
-              // });
             };
           }
         });
@@ -95,6 +86,8 @@ const CreateAssetForm = ({
         reader.readAsDataURL(files[0]);
       }
     }
+
+    e.target.value = "";
   };
 
   const handleValidation = (kind, key, value: any) => {
@@ -102,17 +95,16 @@ const CreateAssetForm = ({
     if (kind === "FILE") {
       const file = value[0]
       metadata?.fields.map((field: any, index: number) => {
-        if (field.key == key && field.key && value && field?.input?.formats){
+        if (field.key == key && field.key && value && field?.input?.formats) {
           //@ts-ignore
-          var el =  field?.input?.formats.some(i => i.name.includes(file.name.split(".").reverse()[0]));
-          console.log(field?.input?.formats, file.name.split(".").reverse()[0], el)
-          if(!el) {
+          var el = field?.input?.formats.some(i => i.name.includes(file.name.split(".").reverse()[0]));
+          if (!el) {
             showAlertMessage(`${field.key} File is invalid.`, { variant: "error" });
             flag = false;
           }
         }
       })
-    } 
+    }
     return flag
   }
 
@@ -132,7 +124,7 @@ const CreateAssetForm = ({
               className={classes.input}
               placeholder={asset.input?.placeholder?.value}
               value={formData[asset.key]}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>{
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                 asset.input && setFormData({ ...formData, [asset.key]: e.target.value })
               }}
             />
@@ -141,7 +133,7 @@ const CreateAssetForm = ({
               className={classes.input}
               placeholder={asset.input?.placeholder?.value}
               value={formData[asset.key]}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 asset.input && setFormData({ ...formData, [asset.key]: e.target.value })
               }}
             />
@@ -158,20 +150,20 @@ const CreateAssetForm = ({
             >
               {fileInputs[asset.key] ? (
                 <>
-                 {asset.fileKind == "VIDEO" ? (
-                   <div style={{marginLeft: 20}}>
-                    <ReactPlayer playing={false} controls={false} url={videoThumbnailURL[asset.key]} width="85" height={85} />
-                  </div>
-                 ) : (
-                  <Box
-                    className={classes.image}
-                    style={{
-                      backgroundImage: `url(${sanitizeIfIpfsUrl(fileContents[asset.key]?.src)})`,
-                      backgroundSize: "cover",
-                    }}
-                  />
-                 )}
-                  
+                  {asset.fileKind === "VIDEO" ? (
+                    <div style={{ marginLeft: 20 }}>
+                      <ReactPlayer playing={false} controls={false} url={videoThumbnailURL[asset.key]} width="85" height={85} />
+                    </div>
+                  ) : (
+                    <Box
+                      className={classes.image}
+                      style={{
+                        backgroundImage: `url(${sanitizeIfIpfsUrl(fileContents[asset.key]?.src)})`,
+                        backgroundSize: "cover",
+                      }}
+                    />
+                  )}
+
                   <Box
                     flex={1}
                     display="flex"
@@ -188,6 +180,7 @@ const CreateAssetForm = ({
                         e.stopPropagation();
                         setFileInputs({ ...fileInputs, [asset.key]: null });
                         setFileContents({ ...fileContents, [asset.key]: null });
+                        inputRef.current[asset.key]?.click();
                       }}
                     >
                       CHANGE FILE
@@ -202,11 +195,11 @@ const CreateAssetForm = ({
                   <Box className={classes.controlBox} ml={5}>
                     Drag image here or <span>browse media on your device</span>
                     <br />
-                    <span>Accepted files {asset.input?.formats?.map(f => f.name).join(', ')}</span> 
-                    {asset.input?.min && 
+                    <span>Accepted files {asset.input?.formats?.map(f => f.name).join(', ')}</span>
+                    {asset.input?.min &&
                       ` minimum ${asset.input?.min?.width} x ${asset.input?.min?.height} px `
                     }
-                    {asset.input?.max && 
+                    {asset.input?.max &&
                       ` maximum ${asset.input?.max?.width} x ${asset.input?.max?.height} px size`
                     }
                     {/* for best viewing experience */}
@@ -220,7 +213,7 @@ const CreateAssetForm = ({
               hidden
               type="file"
               style={{ display: "none" }}
-              accept={asset.input?.formats?.mimeType}
+              accept={asset.input?.formats && asset.input.formats.length > 0 && asset.input.formats.map(f => f.mimeType).join(', ')}
               onChange={asset.input && onFileInput(asset.key)}
             />
           </>
@@ -285,7 +278,7 @@ const CreateAssetForm = ({
               min={asset.range.min}
               max={asset.range.max}
               step={0.01}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 asset.input && setFormData({ ...formData, [asset.key]: e.target.value })
               }}
             />
