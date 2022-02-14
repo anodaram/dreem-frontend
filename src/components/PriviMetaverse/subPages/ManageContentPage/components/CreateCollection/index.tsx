@@ -181,6 +181,7 @@ const CreateCollection = ({
                 }}
               />
               <Box flex={1} display="flex" justifyContent="flex-end" ml={3}>
+                Uploaded {image.name}
                 <Button
                   startIcon={<RefreshIcon />}
                   onClick={e => {
@@ -223,6 +224,7 @@ const CreateCollection = ({
         hidden
         type="file"
         style={{ display: "none" }}
+        accept={"image/png, image/jpeg"}
         onChange={onImageInput}
       />
     </Box>
