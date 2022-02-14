@@ -542,7 +542,7 @@ export default function GameDetailPage() {
                 mt={isMobile ? 2 : 0}
               >
                 <Box className={classes.title} mb={3}>
-                  {gameInfo?.CollectionName}
+                  {gameInfo?.name}
                 </Box>
                 <Box
                   display={"flex"}

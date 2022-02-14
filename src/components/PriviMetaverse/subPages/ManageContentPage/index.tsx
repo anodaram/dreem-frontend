@@ -290,11 +290,11 @@ export default function ManageContentPage() {
     //   );
     //   return false;
     // } else if (
-    //   description.length < metaDataForModal?.worldDescription.limit.min ||
-    //   description.length > metaDataForModal?.worldDescription.limit.max
+    //   description.length < metaDataForModal?.description.limit.min ||
+    //   description.length > metaDataForModal?.description.limit.max
     // ) {
     //   showAlertMessage(
-    //     `Description field invalid. Must be alphanumeric and contain from ${metaDataForModal?.worldDescription.limit.min} to ${metaDataForModal?.worldDescription.limit.max} characters`,
+    //     `Description field invalid. Must be alphanumeric and contain from ${metaDataForModal?.description.limit.min} to ${metaDataForModal?.description.limit.max} characters`,
     //     { variant: "error" }
     //   );
     //   return false;

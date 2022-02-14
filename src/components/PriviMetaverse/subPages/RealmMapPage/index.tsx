@@ -296,7 +296,7 @@ export default function RealmMapPage() {
               {selMap && selMap.worldTitle ? selMap.worldTitle : ""}
             </Box>
             <Box className={classes.description}>
-              {selMap && selMap.worldDescription ? selMap.worldDescription : ""}
+              {selMap && selMap.description ? selMap.description : ""}
             </Box>
             <SecondaryButton
               className={classes.btnDetail}

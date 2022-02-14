@@ -52,7 +52,7 @@ export const getAssets = async (
   portion = 10,
   pageNum = 1,
   sorting = "timestamp",
-  filters = ["WORLD"],
+  filters,
   isPublic = true,
   ownerId?: string,
   itemIds?: any,
