@@ -225,7 +225,6 @@ export const realmDetailPageStyles = makeStyles(theme => ({
     width: '100%',
     padding: "116px 0px 51px 0px",
     background: "linear-gradient(180deg, rgba(197, 255, 78, 0) 68.46%, rgba(228, 255, 45, 0.3) 95.05%), linear-gradient(180deg, rgba(0, 0, 0, 0) 9.5%, #17151A 69.7%)",
-    borderBottom: "2px solid #E9FF26",
     "& > div:last-child":{
       border: 'none',
     },
