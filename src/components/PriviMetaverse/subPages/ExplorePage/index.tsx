@@ -467,7 +467,7 @@ export default function ExplorePage() {
                     selectedContentType === "collection" ? (
                       <CollectionCard
                         item={item}
-                        isLoading={loading}
+                        isLoading={false}
                         selectable={false}
                         key={`collection_${index}`}
                       />
