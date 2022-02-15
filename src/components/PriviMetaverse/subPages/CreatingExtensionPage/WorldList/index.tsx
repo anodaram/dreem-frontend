@@ -308,7 +308,7 @@ const WorldList = ({
                     <Grid item key={`trending-pod-${index}`} md={4} sm={6} xs={12}>
                       <WorldCard
                         nft={item}
-                        isLoading={loadingCollection}
+                        isLoading={false}
                         handleClick={() => {
                           handleSelect(item.versionHashId, item.collectionAddress, item.worldTokenId);
                           setSelectedWorld(item.id);
