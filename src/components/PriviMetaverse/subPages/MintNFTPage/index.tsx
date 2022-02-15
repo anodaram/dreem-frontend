@@ -92,12 +92,12 @@ export default function MintNFTPage() {
   }
 
   const mintMultipleEdition = async () => {
-    let collectionData = await MetaverseAPI.getAsset(batch.item.collectionHashId);
+    let collectionData = await MetaverseAPI.getAsset(batch.item.collectionVersionHashId);
     collectionData = collectionData.data
     let metaData;
     let batchId;
     if(!uri){
-      let metadata = await getMetadata(batch.item.updateHash);
+      let metadata = await getMetadata(batch.item.versionHashId);
       batchId = metadata.masterBatchId
       metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
       const metadatauri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
@@ -146,7 +146,7 @@ export default function MintNFTPage() {
         }
 
         const resp = await MetaverseAPI.convertToNFTAssetBatch(
-          batch.item.updateHash,
+          batch.item.versionHashId,
           resRoyalty.contractAddress,
           targetChain.name,
           tokenIds,
@@ -192,7 +192,7 @@ export default function MintNFTPage() {
             tokenIds.push(Number(i))
           }
           const resp = await MetaverseAPI.convertToNFTAssetBatch(
-            batch.item.updateHash,
+            batch.item.versionHashId,
             contractRes.collectionAddress,
             targetChain.name,
             tokenIds,
@@ -245,7 +245,7 @@ export default function MintNFTPage() {
             tokenIds.push(Number(i))
           }
           const resp = await MetaverseAPI.convertToNFTAssetBatch(
-            batch.item.updateHash,
+            batch.item.versionHashId,
             contractRes.collectionAddress,
             targetChain.name,
             tokenIds,
