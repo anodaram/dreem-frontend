@@ -474,7 +474,7 @@ export default function ExplorePage() {
                     ) : selectedContentType === "creators" ? (
                       <CreatorCard item={item} key={`creator_${index}`} />
                     ) : item.itemKind === "WORLD" ? (
-                      <WorldCard nft={item} selectable={false} isLoading={loading} key={`world_${index}`} />
+                      <WorldCard nft={item} selectable={false} isLoading={false} key={`world_${index}`} />
                     ) : item.itemKind === "CHARACTER" ? (
                       <AvatarCard item={item} key={`avatar_${index}`} />
                     ) : (

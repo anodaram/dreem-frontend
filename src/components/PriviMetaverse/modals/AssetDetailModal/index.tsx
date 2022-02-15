@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { useHistory } from "react-router-dom";
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
 import { Modal } from "shared/ui-kit";
@@ -33,6 +34,7 @@ const AssetDetailModal = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const history = useHistory();
 
   const classes = assetDetailModalStyles();
 
@@ -83,7 +85,13 @@ const AssetDetailModal = ({
               <Box className={classes.typo2} mt={isMobile ? 4 : 6} color="#fff">
                 {assetData?.name}
               </Box>
-              <Box display="flex" alignItems="center" mt={1} color="#fff">
+              <Box 
+                display="flex" 
+                alignItems="center" 
+                mt={1} color="#fff" 
+                style={{cursor: "pointer"}}
+                onClick={() => assetData?.submitter?.user?.address && history.push(`/profile/${assetData.submitter.user.address}`)}
+              >
                 <Avatar size={32} rounded image={assetData?.submitter.user.avatarUrl || getDefaultAvatar()} />
                 <Box className={classes.typo5} ml={1}>
                   {assetData?.submitter.user.name}
