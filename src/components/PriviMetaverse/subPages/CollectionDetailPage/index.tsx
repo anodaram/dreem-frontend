@@ -61,8 +61,13 @@ export default function CollectionDetailPage() {
     setLoading(true);
     MetaverseAPI.getAsset(collectionId)
       .then(res => {
-        setCollectionData(res.data);
-        setNftData(res.data?.itemVersions?.elements);
+        if (res.success) {
+          setCollectionData(res.data);
+          setNftData(res.data?.collectionAssets?.elements);
+        } else {
+          setCollectionData({});
+          setNftData([]);
+        }
       })
       .finally(() => {
         setIsLoading(false);
@@ -104,12 +109,14 @@ export default function CollectionDetailPage() {
     setFilterStatus(e.target.value);
   };
 
+  console.log("collectionData===============", collectionData);
+
   return (
     <Box className={classes.root}>
       <Box className={classes.container} id="scrollContainer">
         <Box className={classes.fitContent} mb={2}>
           <Box className={classes.title}>{collectionData?.name || ""}</Box>
-          <Box className={classes.symbol}>{collectionData?.symbol || ""}</Box>
+          <Box className={classes.symbol}>{collectionData?.collectionSymbol || ""}</Box>
           <Box className={classes.description}>{collectionData?.description || ""}</Box>
 
           <Box
@@ -214,7 +221,7 @@ export default function CollectionDetailPage() {
           </InfiniteScroll>
           {!loading && nftData?.length < 1 && (
             <Box textAlign="center" width="100%" mb={10} mt={2}>
-              No drafts
+              No Data
             </Box>
           )}
         </Box>

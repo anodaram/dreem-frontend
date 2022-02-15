@@ -90,7 +90,7 @@ export const nftCardStyles = makeStyles(theme => ({
     "-webkit-text-fill-color": "transparent",
     "-webkit-background-clip": "text",
     width: "fit-content",
-    minHeight: 56,
+    textTransform: "uppercase",
   },
   infoDescription: {
     fontWeight: 400,

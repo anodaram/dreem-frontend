@@ -81,6 +81,7 @@ export const collectionCardStyles = makeStyles(theme => ({
     "-webkit-text-fill-color": "transparent",
     "-webkit-background-clip": "text",
     width: "fit-content",
+    textTransform: "uppercase",
   },
   infoDescription: {
     fontWeight: 400,

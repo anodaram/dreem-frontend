@@ -67,8 +67,8 @@ export const collectionDetailPageStyles = makeStyles(theme => ({
     },
   },
   description: {
-    fontSize: "16px",
-    fontWeight: 400,
+    fontSize: "20px",
+    fontWeight: 500,
     fontFamily: "Rany",
     lineHeight: "28px",
     color: "#FFFFFF",
@@ -85,11 +85,12 @@ export const collectionDetailPageStyles = makeStyles(theme => ({
   },
   symbol: {
     fontFamily: "Rany",
-    fontWeight: "bold",
+    fontWeight: 700,
     fontSize: "18px",
     lineHeight: "190%",
     color: "#E9FF26",
-    marginBottom: 26,
+    marginBottom: 16,
+    textTransform: "uppercase",
   },
   select: {
     marginTop: "8px",

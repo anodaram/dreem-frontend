@@ -121,7 +121,11 @@ export default function ExplorePage() {
       selectedContentType === "nft" ||
       selectedContentType === "collection"
     ) {
-      setIsDisabledAssetTypeFilter(false);
+      if (selectedContentType === "collection") {
+        setIsDisabledAssetTypeFilter(true);
+      } else {
+        setIsDisabledAssetTypeFilter(false);
+      }
       loadAssetData(true);
     } else {
       setIsDisabledAssetTypeFilter(true);
