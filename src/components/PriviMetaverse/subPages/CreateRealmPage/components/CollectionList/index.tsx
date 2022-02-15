@@ -239,7 +239,7 @@ const CollectionList = ({
 
   const loadData = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], false)
+    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], undefined, userSelector.id)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -258,7 +258,7 @@ const CollectionList = ({
   };
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], false)
+    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], undefined, userSelector.id)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;

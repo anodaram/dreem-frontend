@@ -75,7 +75,7 @@ export default function HomePage() {
   React.useEffect(() => {
     if (!underMaintenanceSelector.underMaintenance) {
       setLoadingTrending(true);
-      MetaverseAPI.getAssets(5, 1, "rating", ["WORLD"], true)
+      MetaverseAPI.getAssets(5, 1, "DESC", ["WORLD"], true)
         .then(res => {
           if (res.success) {
             setTrendingContents(res.data.elements);
