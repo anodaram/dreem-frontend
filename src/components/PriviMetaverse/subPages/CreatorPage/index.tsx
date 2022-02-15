@@ -159,7 +159,7 @@ export default function CreatorPage() {
         const resCollections = await MetaverseAPI.getAssets(
           12,
           page,
-          "timestamp",
+          "DESC",
           ["COLLECTION"],
           true,
           userInfo?.id
@@ -174,7 +174,7 @@ export default function CreatorPage() {
         const resDrafts = await MetaverseAPI.getAssets(
           12,
           page,
-          "timestamp",
+          "DESC",
           FilterAssetTypeOptionValues,
           true,
           userInfo?.id,
@@ -206,7 +206,7 @@ export default function CreatorPage() {
           const realmsResp = await MetaverseAPI.getAssets(
             12,
             1,
-            "timestamp",
+            "DESC",
             undefined,
             true,
             undefined,
