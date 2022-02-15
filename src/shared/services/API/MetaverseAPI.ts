@@ -24,7 +24,7 @@ export const getFeaturedWorlds = async filters => {
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    console.log('here')
+    console.log("here");
     const resp = await axios.post(
       `${METAVERSE_URL()}/web/public/itemVersions/`,
       {
@@ -51,9 +51,9 @@ export const getFeaturedWorlds = async filters => {
 export const getAssets = async (
   portion = 10,
   pageNum = 1,
-  sorting = "timestamp",
+  sorting = "DESC",
   filters,
-  isPublic,
+  isPublic?: boolean,
   ownerId?: string,
   itemIds?: any,
   isExtension?: boolean,
@@ -66,7 +66,7 @@ export const getAssets = async (
     let page = {
       page: pageNum,
       size: portion,
-      sort: "DESC",
+      sort: sorting,
     };
     params = { ...params, page };
     params = filters ? { ...params, filters } : params;
@@ -84,36 +84,6 @@ export const getAssets = async (
     };
     const resp = await axios.post(
       `${METAVERSE_URL()}/web/public/itemVersions/`,
-      {
-        ...params,
-      },
-      config
-    );
-    if (resp.data) {
-      return resp.data;
-    }
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getCollections = async (portion = 10, pageNum = 1, sorting = "DESC", ownerId?: string) => {
-  try {
-    let params: any = {};
-    let page = {
-      page: pageNum,
-      size: portion,
-      sort: sorting,
-    };
-    params = { ...params, page };
-    params = ownerId ? { ...params, ownerId } : params;
-
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    };
-    const resp = await axios.post(
-      `${METAVERSE_URL()}/web/public/collections/`,
       {
         ...params,
       },
@@ -236,29 +206,6 @@ export const uploadAsset = async payload => {
   }
 };
 
-export const uploadCollection = async payload => {
-  try {
-    const formData = new FormData();
-
-    Object.keys(payload).forEach(key => {
-      if (key === "erc721CollectionImage") formData.append(key, payload[key], payload[key].name);
-      else formData.append(key, payload[key]);
-    });
-
-    const token = localStorage.getItem("token");
-    console.log("----- token is : ", token);
-    const config = {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    };
-    const resp = await axios.post(`${METAVERSE_URL()}/web/collections/create/`, formData, config);
-    if (resp.data) {
-      return resp.data;
-    }
-  } catch (error) {
-    console.log("error in creating collection:", error);
-  }
-};
-
 export const getCreators = async (portion = 10, pageNum = 1, sorting = "DESC") => {
   try {
     let params: any = {};
@@ -319,7 +266,7 @@ export const getCharacters = async (
   featured: undefined | boolean = undefined,
   ids?: any,
   isPublic: undefined | boolean = true,
-  pageSize: number = 10000,
+  pageSize: number = 10000
 ) => {
   const body: any = {};
   // if (worldId) {
@@ -492,7 +439,7 @@ export const convertToNFTAssetBatch = async (
         royaltyAddress: royaltyAddress,
         tx: txHash,
         totalSupply: totalSupply,
-        masterBatchId: batchId
+        masterBatchId: batchId,
       },
       config
     );

@@ -1,36 +1,30 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 
-import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Select, MenuItem, capitalize } from "@material-ui/core";
+import { useMediaQuery, useTheme, capitalize } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { PrimaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 import { switchNetwork } from "shared/functions/metamask";
 import { BlockchainNets } from "shared/constants/constants";
 import { onUploadNonEncrypt } from "shared/ipfs/upload";
 import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProgressModal";
 import ContentProcessingOperationModal from "components/PriviMetaverse/modals/ContentProcessingOperationModal";
-import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingModal";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import useIPFS from "shared/utils-IPFS/useIPFS";
+import ItemModel from "shared/model/ItemModel";
 import CreatingStep from "../CreatingStep";
-import NFTOption from "../NFTOption";
-import RoyaltyOption from "../RoyaltyOption";
 import MintEditions from "../MintEditions";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
-import { FilterAssetTypeOptionNames } from "shared/constants/constants";
-import { useModalStyles, useFilterSelectStyles } from "./index.styles";
-
 import CollectionList from "../CollectionList";
 import PublicOption from "../PublicOption";
-import { ReactComponent as DocumentIcon } from "assets/icons/document.svg";
-import { ReactComponent as UnityIcon } from "assets/icons/unity.svg";
 import CreateAssetForm from "../CreateAssetForm";
 import { FormData, InputFileContents, InputFiles } from "../CreateAssetForm/interface";
-import ItemModel from "shared/model/ItemModel";
+
+import { useModalStyles } from "./index.styles";
 
 const CreateSteps = [
   {
@@ -61,8 +55,8 @@ const CreateAssetFlow = ({
   const { showAlertMessage } = useAlertMessage();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
-  const { activate, chainId, account, library } = useWeb3React();
-  const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
+  const { chainId, account, library } = useWeb3React();
+  const { uploadWithNonEncryption } = useIPFS();
   const [chain, setChain] = useState<string>(BlockchainNets[0].value);
   const [nftOption, setNftOption] = useState<string>("single");
   const [step, setStep] = useState<number>(1);
@@ -877,48 +871,5 @@ const CreateAssetFlow = ({
     </>
   );
 };
-
-const IOSSwitch = styled((props: SwitchProps) => (
-  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
-))(({ theme }) => ({
-  width: 42,
-  height: 26,
-  padding: 0,
-  marginLeft: 12,
-  "& .MuiSwitch-switchBase": {
-    padding: 0,
-    margin: 2,
-    transitionDuration: "300ms",
-    "&.Mui-checked": {
-      transform: "translateX(16px)",
-      color: "#fff",
-      "& + .MuiSwitch-track": {
-        backgroundColor: "#2ECA45",
-        opacity: 1,
-        border: 0,
-      },
-      "&.Mui-disabled + .MuiSwitch-track": {
-        opacity: 0.5,
-      },
-    },
-    "&.Mui-focusVisible .MuiSwitch-thumb": {
-      color: "#33cf4d",
-      border: "6px solid #fff",
-    },
-  },
-  "& .MuiSwitch-thumb": {
-    boxSizing: "border-box",
-    width: 22,
-    height: 22,
-  },
-  "& .MuiSwitch-track": {
-    borderRadius: 26 / 2,
-    backgroundColor: "#E9E9EA",
-    opacity: 1,
-    transition: theme.transitions.create(["background-color"], {
-      duration: 500,
-    }),
-  },
-}));
 
 export default CreateAssetFlow;

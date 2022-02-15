@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { useParams } from "react-router";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
@@ -12,10 +11,7 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import NoMetamaskModal from "components/Connect/modals/NoMetamaskModal";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 
-import InfiniteScroll from "react-infinite-scroll-component";
-import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
-import CollectionCard from "components/PriviMetaverse/components/cards/CollectionCard";
 import { PrimaryButton } from "shared/ui-kit";
 import TransactionProcessing from "./components/TransactionProcessing";
 import DepositRequiredModal from "components/PriviMetaverse/modals/DepositRequiredModal";
@@ -32,7 +28,6 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
 };
 
 export default function CreatingRealmPage() {
-  const history = useHistory();
   const underMaintenanceSelector = useSelector((state: RootState) => state.underMaintenanceInfo?.info);
 
   const { id: realmId } = useParams<{ id: string }>();
@@ -89,25 +84,22 @@ export default function CreatingRealmPage() {
     if (realmId) {
       loadRealm(realmId);
     }
-    getSettings()
-    loadMore()
+    getSettings();
+    loadMore();
   }, []);
 
   const loadRealm = realmId => {
-    MetaverseAPI.getAsset(realmId)
-      .then(res => {
-        setRealmData(res.data);
-      })
+    MetaverseAPI.getAsset(realmId).then(res => {
+      setRealmData(res.data);
+    });
   };
   const getSettings = () => {
-    MetaverseAPI.getDepositInfo()
-      .then(res => {
-        setDepositInfo(res.data)
-      })
-    MetaverseAPI.getProtocolFee()
-      .then(res => {
-        setProtocolFee(res.data)
-      })
+    MetaverseAPI.getDepositInfo().then(res => {
+      setDepositInfo(res.data);
+    });
+    MetaverseAPI.getProtocolFee().then(res => {
+      setProtocolFee(res.data);
+    });
   };
 
   const handleOpenRealmModal = async () => {
@@ -133,10 +125,10 @@ export default function CreatingRealmPage() {
   };
 
   const handleNext = () => {
-    if(step == 0){
+    if (step == 0) {
       setStep(prev => prev + 1);
     } else {
-      setShowDepositRequireModal(true)
+      setShowDepositRequireModal(true);
     }
   };
 
@@ -146,20 +138,20 @@ export default function CreatingRealmPage() {
 
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, curPage, "DESC")
-    .then(res => {
-      if (res.success) {
-        const items = res.data.elements;
-        if (items && items.length > 0) {
-          setCollections([...collections, ...res.data.elements]);
-          if (res.data.page && curPage <= res.data.page.max) {
-            setCurPage(curPage => curPage + 1);
-            setLastPage(res.data.page.max);
+    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], true)
+      .then(res => {
+        if (res.success) {
+          const items = res.data.elements;
+          if (items && items.length > 0) {
+            setCollections([...collections, ...res.data.elements]);
+            if (res.data.page && curPage <= res.data.page.max) {
+              setCurPage(curPage => curPage + 1);
+              setLastPage(res.data.page.max);
+            }
           }
         }
-      }
-    })
-    .finally(() => setLoadingCollection(false));
+      })
+      .finally(() => setLoadingCollection(false));
   };
 
   const handleConfirm = async () => {
@@ -172,13 +164,13 @@ export default function CreatingRealmPage() {
         return;
       }
     }
-    if(!library) {
+    if (!library) {
       showAlertMessage("Please check your network", { variant: "error" });
       return;
     }
     const web3APIHandler = targetChain.apiHandler;
     const web3 = new Web3(library.provider);
-    console.log('---', web3APIHandler.RealmFactory)
+    console.log("---", web3APIHandler.RealmFactory);
     const contractRes = await web3APIHandler.RealmFactory.applyExtension(
       web3,
       account,
@@ -202,19 +194,19 @@ export default function CreatingRealmPage() {
       //   contractRes.owner,
       //   contractRes.proposalType,
       // );
-      setTxSuccess('success');
+      setTxSuccess("success");
       showAlertMessage(`Successfully applied extension`, { variant: "success" });
     } else {
-      setTxSuccess('failed');
+      setTxSuccess("failed");
     }
-  }
+  };
 
   return (
     <>
       <div className={classes.root}>
         <div className={classes.otherContent} id="scrollContainer">
           {step === 0 && (
-            <> 
+            <>
               <Box className={classes.typo1}>Apply extension</Box>
               <Box className={classes.typo3}>Select nft from your minted NFTs</Box>
               <Box className={classes.typo4}>All of your collections</Box>
@@ -234,45 +226,35 @@ export default function CreatingRealmPage() {
                   open={showDepositRequireModal}
                   depositInfo={depositInfo}
                   protocolFee={protocolFee}
-                  onClose={()=>setShowDepositRequireModal(false)}
-                  onApprove={()=>{}}
-                  onConfirm={()=>handleConfirm()}
+                  onClose={() => setShowDepositRequireModal(false)}
+                  onApprove={() => {}}
+                  onConfirm={() => handleConfirm()}
                 />
-              ) :
-              (<>
-                <Box className={classes.typo4}>Apply extension</Box>
-                <Box className={classes.typo3}>Select one of your works on that collection to apply for and extension</Box>
-                <WorldList
-                  handleNext={() => {}}
-                  handleCancel={() => {}}
-                  handleSelect={(hash, address, id) => {
-                    setWorldHash(hash);
-                    setNFTAddress(address);
-                    setNFTId(id);
-                  }}
-                />
-              </>)}
+              ) : (
+                <>
+                  <Box className={classes.typo4}>Apply extension</Box>
+                  <Box className={classes.typo3}>
+                    Select one of your works on that collection to apply for and extension
+                  </Box>
+                  <WorldList
+                    handleNext={() => {}}
+                    handleCancel={() => {}}
+                    handleSelect={(hash, address, id) => {
+                      setWorldHash(hash);
+                      setNFTAddress(address);
+                      setNFTId(id);
+                    }}
+                  />
+                </>
+              )}
             </>
           )}
-          {txModalOpen && 
-            <TransactionProcessing
-              hash={txHash}
-              status={txSuccess}
-              backToHome={setStep(1)}
-  />
-          }
+          {txModalOpen && <TransactionProcessing hash={txHash} status={txSuccess} backToHome={setStep(1)} />}
           <Box className={classes.footer}>
             <div className={classes.cancelBtn} onClick={handlePrev}>
               back
             </div>
-            <PrimaryButton
-              size="medium"
-              className={classes.nextBtn}
-              disabled={false}
-              onClick={
-                handleNext
-              }
-            >
+            <PrimaryButton size="medium" className={classes.nextBtn} disabled={false} onClick={handleNext}>
               next
             </PrimaryButton>
           </Box>

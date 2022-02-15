@@ -9,7 +9,7 @@ import {
   styled,
   CircularProgress,
   Select,
-  MenuItem
+  MenuItem,
 } from "@material-ui/core";
 import ReactPlayer from "react-player";
 
@@ -53,17 +53,19 @@ const EditRealmModal = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
-  const [owner, setOwner] = useState<any>(userSelector? userSelector.id : null);
+  const [owner, setOwner] = useState<any>(userSelector ? userSelector.id : null);
   const [image, setImage] = useState<any>(null);
   const [imageFile, setImageFile] = useState<any>(null);
   const [video, setVideo] = useState<any>(null);
   const [videoFile, setVideoFile] = useState<any>(null);
-  const [videoThumbnailURL, setVideoThumbnailURL] = useState<any>('');
+  const [videoThumbnailURL, setVideoThumbnailURL] = useState<any>("");
   const [unity, setUnity] = useState<any>(null);
   const [unityFile, setUnityFile] = useState<any>(null);
   const [entity, setEntity] = useState<any>(null);
   const [entityFile, setEntityFile] = useState<any>(null);
-  const [collectionId, setCollectionId] = useState<string>(realmData && realmData.collectionId ? realmData.collectionId : "");
+  const [collectionId, setCollectionId] = useState<string>(
+    realmData && realmData.collectionId ? realmData.collectionId : ""
+  );
   const [title, setTitle] = useState<string>(realmData && realmData.worldTitle ? realmData.worldTitle : "");
   const [symbol, setSymbol] = useState<string>(
     realmData && realmData.worldSymbol ? realmData.worldSymbol : ""
@@ -108,24 +110,23 @@ const EditRealmModal = ({
 
   useEffect(() => {
     if (!realmData) return;
-    setOwner(userSelector?.id)
-    loadCollection()
+    setOwner(userSelector?.id);
+    loadCollection();
     loadFiles();
   }, [realmData]);
 
   const loadCollection = async () => {
-    MetaverseAPI.getCollections(100, 1, "DESC", owner)
-    .then(res => {
+    MetaverseAPI.getAssets(100, 1, "DESC", ["COLLECTION"], false).then(res => {
       if (res.success) {
         const items = res.data.elements;
         if (items && items.length > 0) {
           setCollections([...collections, ...items]);
         }
-      } else{
-        console.log('empty collection')
+      } else {
+        console.log("empty collection");
       }
-    })
-  }
+    });
+  };
   const loadFiles = async () => {
     try {
       const allTasks: any[] = [];
@@ -315,15 +316,15 @@ const EditRealmModal = ({
         }
       );
       return false;
-    // } else if (
-    //   symbol.length < sizeSpec.worldSymbol.limit.min ||
-    //   symbol.length > sizeSpec.worldSymbol.limit.max
-    // ) {
-    //   showAlertMessage(
-    //     `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec.worldSymbol.limit.min} to ${sizeSpec.worldSymbol.limit.max} characters`,
-    //     { variant: "error" }
-    //   );
-    //   return false;
+      // } else if (
+      //   symbol.length < sizeSpec.worldSymbol.limit.min ||
+      //   symbol.length > sizeSpec.worldSymbol.limit.max
+      // ) {
+      //   showAlertMessage(
+      //     `Symbol field invalid. Must be alphanumeric and contain from ${sizeSpec.worldSymbol.limit.min} to ${sizeSpec.worldSymbol.limit.max} characters`,
+      //     { variant: "error" }
+      //   );
+      //   return false;
     } else if (
       description.length < sizeSpec.description.limit.min ||
       description.length > sizeSpec.description.limit.max
@@ -418,9 +419,7 @@ const EditRealmModal = ({
           <Select
             open={openCollectionSelect}
             onClose={() => setOpenCollectionSelect(false)}
-            value={collections?.map((item, index) => (
-              collectionId == item.id ? item.name : ''
-            ))}
+            value={collections?.map((item, index) => (collectionId == item.id ? item.name : ""))}
             onChange={e => setCollectionId(String(e.target.value))}
             className={classes.select}
             renderValue={(value: any) => (
@@ -557,8 +556,14 @@ const EditRealmModal = ({
           >
             {video ? (
               <>
-                <div style={{marginLeft: 20}}>
-                  <ReactPlayer playing={false} controls={false} url={videoThumbnailURL} width="85" height={85} />
+                <div style={{ marginLeft: 20 }}>
+                  <ReactPlayer
+                    playing={false}
+                    controls={false}
+                    url={videoThumbnailURL}
+                    width="85"
+                    height={85}
+                  />
                 </div>
                 <Box flex={1} display="flex" justifyContent="flex-end" ml={3}>
                   <SecondaryButton
