@@ -30,7 +30,7 @@ export default function CollectionCard(props) {
       props.onClick();
       setIsSelected(isSelected => !isSelected);
     } else {
-      history.push(`/collection/${item.id}`);
+      history.push(`/collection/${item.versionHashId}`);
     }
   };
 
