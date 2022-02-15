@@ -64,7 +64,7 @@ export default function CreatingRealmPage() {
   }, [step]);
 
   useEffect(() => {
-    loadMore()
+    loadMore();
   }, []);
 
   const handleOpenRealmModal = async () => {
@@ -99,20 +99,20 @@ export default function CreatingRealmPage() {
 
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, curPage, "DESC")
-    .then(res => {
-      if (res.success) {
-        const items = res.data.elements;
-        if (items && items.length > 0) {
-          setCollections([...collections, ...res.data.elements]);
-          if (res.data.page && curPage <= res.data.page.max) {
-            setCurPage(curPage => curPage + 1);
-            setLastPage(res.data.page.max);
+    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], true)
+      .then(res => {
+        if (res.success) {
+          const items = res.data.elements;
+          if (items && items.length > 0) {
+            setCollections([...collections, ...res.data.elements]);
+            if (res.data.page && curPage <= res.data.page.max) {
+              setCurPage(curPage => curPage + 1);
+              setLastPage(res.data.page.max);
+            }
           }
         }
-      }
-    })
-    .finally(() => setLoadingCollection(false));
+      })
+      .finally(() => setLoadingCollection(false));
   };
   return (
     <>

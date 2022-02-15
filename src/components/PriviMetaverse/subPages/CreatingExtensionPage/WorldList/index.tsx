@@ -220,7 +220,7 @@ const WorldList = ({
   const handleRefreshCollection = () => {
     setCurPage(1);
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, 1, "DESC")
+    MetaverseAPI.getAssets(12, 1, "DESC", ["COLLECTION"], true)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;

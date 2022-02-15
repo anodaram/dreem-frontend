@@ -97,36 +97,6 @@ export const getAssets = async (
   }
 };
 
-export const getCollections = async (portion = 10, pageNum = 1, sorting = "DESC", ownerId?: string) => {
-  try {
-    let params: any = {};
-    let page = {
-      page: pageNum,
-      size: portion,
-      sort: sorting,
-    };
-    params = { ...params, page };
-    params = ownerId ? { ...params, ownerId } : params;
-
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    };
-    const resp = await axios.post(
-      `${METAVERSE_URL()}/web/public/collections/`,
-      {
-        ...params,
-      },
-      config
-    );
-    if (resp.data) {
-      return resp.data;
-    }
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const getCollection = async collectionId => {
   try {
     const token = localStorage.getItem("token");
