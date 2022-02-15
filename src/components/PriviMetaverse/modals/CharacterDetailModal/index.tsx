@@ -170,7 +170,14 @@ const CharacterDetailModal = ({
               <Box className={classes.typo2} mt={isMobile ? 4 : 6} color="#fff">
                 {nft?.name}
               </Box>
-              <Box display="flex" alignItems="center" mt={1} color="#fff">
+              <Box 
+                display="flex" 
+                alignItems="center" 
+                mt={1} 
+                color="#fff" 
+                style={{cursor: "pointer"}}
+                onClick={() => nft?.submitter?.user?.address && history.push(`/profile/${nft.submitter.user.address}`)}
+              >
                 <Avatar size={32} rounded image={nft?.submitter.user.avatarUrl || getDefaultAvatar()} />
                 <Box className={classes.typo5} ml={1}>
                   {nft?.submitter.user.name}
