@@ -257,7 +257,7 @@ export default function WorldCard({
             handleRefresh={handleRefresh}
           />
         ))}
-      {openDepositRequired && (
+      {/* {openDepositRequired && (
         <DepositRequiredModal
           open={openDepositRequired}
           depositInfo={depositInfo}
@@ -272,7 +272,7 @@ export default function WorldCard({
             history.push(`/apply_extension`);
           }}
         />
-      )}
+      )} */}
     </div>
   );
 }

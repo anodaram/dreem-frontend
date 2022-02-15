@@ -312,6 +312,7 @@ export default function RealmExtensionProfileCard({
           open={openDepositRequired}
           depositInfo={depositInfo}
           protocolFee={protocolFee}
+          realmTaxation={nft.realmTaxation}
           onClose={() => setOpenDepositRequired(false)}
           onApprove={() => {
             setOpenDepositRequired(false);
