@@ -67,7 +67,7 @@ export default function NFTCard(props) {
               <div>{nft.item.name}</div>
               <div>{nft.chain == "POLYGON" && <PolygonIcon/>}</div>
               <div><Box className={classes.status}>{nft.erc721MintedCount}/{nft.erc721TotalSupply}</Box></div>
-              <div><PrimaryButton className={classes.button} size="medium" onClick={()=>handleOpen(nft.item.updateHash)}>continue minting</PrimaryButton></div>
+              <div><PrimaryButton className={classes.button} size="medium" onClick={()=>handleOpen(nft.item.versionHashId)}>continue minting</PrimaryButton></div>
             </div>
           ))}
         </>
