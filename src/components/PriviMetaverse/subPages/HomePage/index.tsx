@@ -95,7 +95,7 @@ export default function HomePage() {
 
   const getContents = curPage => {
     setLoadingNewest(true);
-    MetaverseAPI.getAssets(12, curPage, "timestamp", ["WORLD"], true)
+    MetaverseAPI.getAssets(12, curPage, "DESC", ["WORLD"], true)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;

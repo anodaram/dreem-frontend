@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import { useHistory } from "react-router-dom";
 
 import { useMediaQuery, useTheme, Button } from "@material-ui/core";
 
@@ -16,13 +15,12 @@ import { useModalStyles } from "./index.styles";
 const CreateCollection = ({
   handleNext,
   handleCancel,
-  handleRefresh
+  handleRefresh,
 }: {
   handleNext: () => void;
   handleCancel: () => void;
   handleRefresh: () => void;
 }) => {
-  const history = useHistory();
   const classes = useModalStyles();
   const { showAlertMessage } = useAlertMessage();
 
@@ -77,7 +75,7 @@ const CreateCollection = ({
 
   const handleCollection = async () => {
     if (validate()) {
-      setIsUploading(true)
+      setIsUploading(true);
       let payload: any = {};
       payload = {
         item: "COLLECTION",
@@ -90,13 +88,13 @@ const CreateCollection = ({
       MetaverseAPI.uploadAsset(payload)
         .then(async res => {
           if (!res.success) {
-            setUploadSuccess(false)
+            setUploadSuccess(false);
             showAlertMessage(`Failed to create collection`, { variant: "error" });
-          } else{
-            setUploadSuccess(true)
+          } else {
+            setUploadSuccess(true);
             showAlertMessage(`Successfully collection created`, { variant: "success" });
-            handleCancel()
-            handleRefresh()
+            handleCancel();
+            handleRefresh();
           }
         })
         .catch(err => {
@@ -105,10 +103,15 @@ const CreateCollection = ({
     }
   };
 
-  return (
-    isUploading ? (
-      <ContentProcessingOperationModal open={isUploading} txSuccess={uploadSuccess} onClose={()=>{setIsUploading(false)}}/>
-    ) :
+  return isUploading ? (
+    <ContentProcessingOperationModal
+      open={isUploading}
+      txSuccess={uploadSuccess}
+      onClose={() => {
+        setIsUploading(false);
+      }}
+    />
+  ) : (
     <Box
       className={classes.content}
       style={{

@@ -194,9 +194,9 @@ export default function HomePage() {
           .finally(() => setLoadingFeatured(false));
 
         setLoadingExplore(true);
-        MetaverseAPI.getAssets(9, 1, "timestamp", filters, true, undefined, undefined, false)
+        MetaverseAPI.getAssets(9, 1, "DESC", filters, true, undefined, undefined, false)
           .then(res => {
-            console.log(res)
+            console.log(res);
             if (res.success) {
               const items = res.data.elements;
               if (items && items.length > 0) {

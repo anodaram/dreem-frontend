@@ -154,7 +154,7 @@ export default function ExplorePage() {
       const response = await MetaverseAPI.getAssets(
         12,
         curPage,
-        "timestamp",
+        "DESC",
         selectedContentType === "collection" ? ["COLLECTION"] : selectedAssetTypes,
         true,
         undefined,

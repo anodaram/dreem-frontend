@@ -24,7 +24,7 @@ export const getFeaturedWorlds = async filters => {
     const config = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     };
-    console.log('here')
+    console.log("here");
     const resp = await axios.post(
       `${METAVERSE_URL()}/web/public/itemVersions/`,
       {
@@ -51,9 +51,9 @@ export const getFeaturedWorlds = async filters => {
 export const getAssets = async (
   portion = 10,
   pageNum = 1,
-  sorting = "timestamp",
+  sorting = "DESC",
   filters,
-  isPublic,
+  isPublic?: boolean,
   ownerId?: string,
   itemIds?: any,
   isExtension?: boolean,
@@ -66,7 +66,7 @@ export const getAssets = async (
     let page = {
       page: pageNum,
       size: portion,
-      sort: "DESC",
+      sort: sorting,
     };
     params = { ...params, page };
     params = filters ? { ...params, filters } : params;
@@ -296,7 +296,7 @@ export const getCharacters = async (
   featured: undefined | boolean = undefined,
   ids?: any,
   isPublic: undefined | boolean = true,
-  pageSize: number = 10000,
+  pageSize: number = 10000
 ) => {
   const body: any = {};
   // if (worldId) {
@@ -469,7 +469,7 @@ export const convertToNFTAssetBatch = async (
         royaltyAddress: royaltyAddress,
         tx: txHash,
         totalSupply: totalSupply,
-        masterBatchId: batchId
+        masterBatchId: batchId,
       },
       config
     );
