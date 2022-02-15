@@ -247,8 +247,8 @@ const CreateAssetFlow = ({
     let collectionData = await MetaverseAPI.getAsset(currentCollection.versionHashId);
     collectionData = collectionData.data
     let metadata = await getMetadata(savingDraft.instance.hashId);
-    let collectionAddr = collectionData.address;
-    let isDraft = collectionData?.kind == "DRAFT" ? true : false;
+    let collectionAddr = collectionData.collectionAddress;
+    let isDraft = !collectionData?.minted;
 
     const metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
     const targetChain = BlockchainNets.find(net => net.value === chain);
@@ -274,7 +274,7 @@ const CreateAssetFlow = ({
         account,
         {
           name: collectionData.name,
-          symbol: collectionData.symbol,
+          symbol: collectionData.collectionSymbol,
           amount: 1,
           uri: uri,
           isRoyalty,
@@ -304,7 +304,7 @@ const CreateAssetFlow = ({
           showAlertMessage(`Successfully asset minted`, { variant: "success" });
           return true;
         } else{
-          setTxSuccess(true);
+          setTxSuccess(false);
           showAlertMessage(`Something went wrong`, { variant: "error" });
           return false;
         }
@@ -319,7 +319,7 @@ const CreateAssetFlow = ({
         {
           collectionAddress: collectionAddr,
           name: collectionData.name,
-          symbol: collectionData.symbol,
+          symbol: collectionData.collectionSymbol,
           to: account,
           amount: 1,
           uri: uri,
@@ -352,7 +352,7 @@ const CreateAssetFlow = ({
           showAlertMessage(`Successfully asset minted`, { variant: "success" });
           return true;
         } else{
-          setTxSuccess(true);
+          setTxSuccess(false);
           showAlertMessage(`Something went wrong`, { variant: "error" });
           return false;
         }
@@ -367,7 +367,7 @@ const CreateAssetFlow = ({
       showAlertMessage(`Save draft first`, { variant: "error" });
       return;
     }
-    let collectionData = await MetaverseAPI.getCollection(currentCollection.id);
+    let collectionData = await MetaverseAPI.getAsset(currentCollection.versionHashId);
     collectionData = collectionData.data
     let metaData;
     if (!uri) {
@@ -376,8 +376,8 @@ const CreateAssetFlow = ({
       const metadatauri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
       setUri(metadatauri)
     }
-    let isDraft = collectionData?.kind == "DRAFT" ? true : false;
-    let collectionAddr = collectionData.address;
+    let isDraft = !collectionData?.minted;
+    let collectionAddr = collectionData.collectionAddress;
     let URI = uri ? uri : metaData.newFileCID
     const targetChain = BlockchainNets.find(net => net.value === chain);
     setNetworkName(targetChain.name);
@@ -401,7 +401,7 @@ const CreateAssetFlow = ({
         account,
         {
           name: collectionData.name,
-          symbol: collectionData.symbol,
+          symbol: collectionData.collectionSymbol,
           amount: amount,
           uri: URI,
           isRoyalty,
@@ -437,7 +437,7 @@ const CreateAssetFlow = ({
           showAlertMessage(`Successfully asset minted`, { variant: "success" });
           return true;
         } else{
-          setTxSuccess(true);
+          setTxSuccess(false);
           showAlertMessage(`Something went wrong`, { variant: "error" });
           return false;
         }
@@ -498,7 +498,7 @@ const CreateAssetFlow = ({
           {
             collectionAddress: collectionAddr,
             name: collectionData.name,
-            symbol: collectionData.symbol,
+            symbol: collectionData.collectionSymbol,
             to: account,
             amount: amount,
             uri: URI,

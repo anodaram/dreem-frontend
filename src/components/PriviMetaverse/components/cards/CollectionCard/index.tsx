@@ -30,7 +30,7 @@ export default function CollectionCard(props) {
       props.onClick();
       setIsSelected(isSelected => !isSelected);
     } else {
-      history.push(`/collection/${item.id}`);
+      history.push(`/collection/${item.versionHashId}`);
     }
   };
 
@@ -57,8 +57,8 @@ export default function CollectionCard(props) {
             <div
               className={styles.collectionImage}
               style={{
-                backgroundImage: data.image
-                  ? `url("${sanitizeIfIpfsUrl(data.image)}")`
+                backgroundImage: data.collectionImage
+                  ? `url("${sanitizeIfIpfsUrl(data.collectionImage)}")`
                   : `url(${getDefaultBGImage()})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",

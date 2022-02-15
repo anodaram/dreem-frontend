@@ -86,9 +86,9 @@ const ContentPreviewModal = ({
     if (open && nftId) {
       MetaverseAPI.getAsset(nftId).then(res1 => {
         setNFT(res1.data);
-        MetaverseAPI.getCollection(res1.data.collectionId).then(res2 => {
+        MetaverseAPI.getAsset(res1.data.collectionHashId).then(res2 => {
           setCurrentCollection(res2.data);
-          console.log(res2.data, res1.data.collectionId);
+          console.log(res2.data, res1.data.collectionHashId);
         });
         MetaverseAPI.getNFTInfo(res1.data.versionHashId).then(res3 => {
           setMetadata(res3.data);
@@ -122,8 +122,8 @@ const ContentPreviewModal = ({
 
   const mintNFT = async () => {
     let collectionData = currentCollection;
-    let collectionAddr = collectionData.address;
-    let isDraft = collectionData?.kind == "DRAFT" ? true : false;
+    let collectionAddr = collectionData.collectionAddress;
+    let isDraft = !collectionData?.minted;
 
     const metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
 
@@ -148,7 +148,7 @@ const ContentPreviewModal = ({
         account,
         {
           name: collectionData.name,
-          symbol: collectionData.symbol,
+          symbol: collectionData.collectionSymbol,
           amount: 1,
           uri: uri,
           isRoyalty: false,
@@ -189,7 +189,7 @@ const ContentPreviewModal = ({
         {
           collectionAddress: collectionAddr,
           name: collectionData.name,
-          symbol: collectionData.symbol,
+          symbol: collectionData.collectionSymbol,
           to: account,
           amount: 1,
           uri: uri,

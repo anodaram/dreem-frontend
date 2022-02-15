@@ -92,7 +92,7 @@ export default function MintNFTPage() {
   }
 
   const mintMultipleEdition = async () => {
-    let collectionData = await MetaverseAPI.getCollection(batch.item.collectionId);
+    let collectionData = await MetaverseAPI.getAsset(batch.item.collectionHashId);
     collectionData = collectionData.data
     let metaData;
     let batchId;
@@ -103,8 +103,8 @@ export default function MintNFTPage() {
       const metadatauri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
       setUri(metadatauri)
     }
-    let isDraft = collectionData?.kind == "DRAFT" ? true : false;
-    let collectionAddr = collectionData.address;
+    let isDraft = !collectionData?.minted;
+    let collectionAddr = collectionData.collectionAddress;
     let URI = uri ? uri : metaData.newFileCID
     const targetChain = BlockchainNets.find(net => net.value === chain);
     setNetworkName(targetChain.name);
@@ -129,7 +129,7 @@ export default function MintNFTPage() {
         account,
         {
           name: collectionData.name,
-          symbol: collectionData.symbol,
+          symbol: collectionData.collectionSymbol,
           amount: amount,
           uri : URI,
           isRoyalty,
@@ -226,7 +226,7 @@ export default function MintNFTPage() {
           {
             collectionAddress: collectionAddr,
             name: collectionData.name,
-            symbol: collectionData.symbol,
+            symbol: collectionData.collectionSymbol,
             to: account,
             amount: amount,
             uri : URI,
