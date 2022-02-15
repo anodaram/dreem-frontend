@@ -1,20 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { useWeb3React } from "@web3-react/core";
 
-import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Button } from "@material-ui/core";
+import { useMediaQuery, useTheme, Button } from "@material-ui/core";
 
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import { Modal, PrimaryButton, SecondaryButton } from "shared/ui-kit";
+import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
-import { BlockchainNets } from "shared/constants/constants";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
-import { useModalStyles } from "./index.styles";
-import useIPFS from "shared/utils-IPFS/useIPFS";
 import ContentProcessingOperationModal from "components/PriviMetaverse/modals/ContentProcessingOperationModal";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
 import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
+import { useModalStyles } from "./index.styles";
 
 const CreateCollection = ({
   handleNext,
@@ -83,13 +80,14 @@ const CreateCollection = ({
       setIsUploading(true)
       let payload: any = {};
       payload = {
-        erc721CollectionName: title,
-        erc721CollectionSymbol: symbol,
-        erc721CollectionDescription: description,
-        erc721CollectionImage: image,
+        item: "COLLECTION",
+        name: title,
+        description: description,
+        collectionSymbol: symbol,
+        collectionImage: image,
       };
-      console.log('upload collection')
-      MetaverseAPI.uploadCollection(payload)
+
+      MetaverseAPI.uploadAsset(payload)
         .then(async res => {
           if (!res.success) {
             setUploadSuccess(false)
