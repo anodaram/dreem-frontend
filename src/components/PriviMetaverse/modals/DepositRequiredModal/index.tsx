@@ -36,6 +36,7 @@ const DepositRequiredModal = ({
   open,
   depositInfo,
   protocolFee,
+  realmTaxation,
   onClose,
   onApprove,
   onConfirm,
@@ -43,10 +44,12 @@ const DepositRequiredModal = ({
   open: boolean;
   depositInfo: any;
   protocolFee: any;
+  realmTaxation: any;
   onClose: (e) => void;
   onApprove: (e) => void;
   onConfirm: (e) => void;
 }) => {
+  console.log(depositInfo, protocolFee, realmTaxation)
   const theme = useTheme();
   const history = useHistory();
   const { isSignedin } = useAuth();
@@ -56,6 +59,8 @@ const DepositRequiredModal = ({
   const classes = depositRequiredModalStyles();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
+  const [protocolFeeAmount, setProtocolFeeAmount] = React.useState<number>(protocolFee.Fee * depositInfo.Amount);
+  const [taxation, setTaxation] = React.useState<number>(realmTaxation * depositInfo.Amount / 100);
   const { shareMedia } = useShareMedia();
   const [nft, setNFT] = React.useState<any>();
   const [metaDataForModal, setMetaDataForModal] = React.useState<any>(null);
@@ -96,23 +101,23 @@ const DepositRequiredModal = ({
         </Box>
         <Box className={classes.maticVal}>
           <MaticIcon />
-          <Box className={classes.maticTitle}>{depositInfo.amount} MATIC</Box>
+          <Box className={classes.maticTitle}>{depositInfo.Amount} MATIC</Box>
         </Box>
         <Box className={classes.infos}>
           <Box className={classes.infoRow}>
             <Box className={classes.infoTitle}>Protocol fee</Box>
-            <Box className={classes.infoPercent}>2,5%</Box>
-            <Box className={classes.infoPercent}>2,5 Matic </Box>
+            <Box className={classes.infoPercent}>{(protocolFee.Fee * 100).toFixed(1)}%</Box>
+            <Box className={classes.infoPercent}>{protocolFeeAmount.toFixed(4)} Matic </Box>
           </Box>
           <Box className={classes.infoRow}>
             <Box className={classes.infoTitle}>Realm Taxation</Box>
-            <Box className={classes.infoPercent}>x%</Box>
-            <Box className={classes.infoPercent}>x Matic </Box>
+            <Box className={classes.infoPercent}>{realmTaxation.toFixed(4)}%</Box>
+            <Box className={classes.infoPercent}>{taxation.toFixed(4)} Matic </Box>
           </Box>
         </Box>
         <Box className={classes.infoSum}>
-          <Box className={classes.infoTitle}>Protocol fee</Box>
-          <Box className={classes.infoPercent}>x Matic </Box>
+          <Box className={classes.infoTitle}>Total charge</Box>
+          <Box className={classes.infoPercent}>{(depositInfo.Amount + protocolFeeAmount + taxation).toFixed(4)} Matic </Box>
         </Box>
         <Box className={classes.btnGroup}>
           <PrimaryButton size="medium" className={classes.confirmBtn} isRounded onClick={(e) => onApprove(e)}>
