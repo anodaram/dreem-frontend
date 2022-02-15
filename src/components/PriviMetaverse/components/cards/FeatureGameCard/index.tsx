@@ -57,7 +57,7 @@ const FeaturedGameCard = ({ game, isLoading = false }) => {
             flexDirection="column"
             padding={isTablet ? "20px 12px 24px " : "20px 24px 24px 24px"}
           >
-            <div className={classes.cardNftName}>{`${game.name}`}</div>
+            <div className={classes.cardNftName}>{`${game.CollectionName}`}</div>
             <div className={classes.divider} />
             <div>
               <div className={classes.cardContentDiv}>

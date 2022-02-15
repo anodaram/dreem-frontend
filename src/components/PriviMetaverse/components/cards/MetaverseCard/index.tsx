@@ -42,14 +42,14 @@ export default function MetaverseCard(props) {
           />
           <Box className={classes.info}>
             <Box className={classes.content}>
-              <Box className={classes.name}>{nft?.name ?? ""}</Box>
+              <Box className={classes.name}>{nft?.CollectionName ?? ""}</Box>
               <Box className={classes.link}>
                 <IconButton aria-label="">
                   <img src={getChainImageUrl(nft?.Chain)} width={"22px"} />
                 </IconButton>
               </Box>
             </Box>
-            <Box className={classes.description}>{nft?.description ?? ""}</Box>
+            <Box className={classes.description}>{nft?.Description ?? ""}</Box>
           </Box>
         </>
       )}
