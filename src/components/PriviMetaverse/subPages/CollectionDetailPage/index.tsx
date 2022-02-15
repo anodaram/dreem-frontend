@@ -1,13 +1,12 @@
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Grid, Select, MenuItem, useMediaQuery, useTheme } from "@material-ui/core";
 
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
-import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProfileCard";
 import { FilterAssetTypeOptionNames } from "shared/constants/constants";
 import { collectionDetailPageStyles, useFilterSelectStyles } from "./index.styles";
@@ -60,7 +59,7 @@ export default function CollectionDetailPage() {
   const loadCollection = collectionId => {
     setIsLoading(true);
     setLoading(true);
-    MetaverseAPI.getCollection(collectionId)
+    MetaverseAPI.getAsset(collectionId)
       .then(res => {
         setCollectionData(res.data);
         setNftData(res.data?.itemVersions?.elements);
