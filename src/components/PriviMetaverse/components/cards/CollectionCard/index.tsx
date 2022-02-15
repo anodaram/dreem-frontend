@@ -1,30 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 import { Skeleton } from "@material-ui/lab";
 
 import Box from "shared/ui-kit/Box";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
-import { getUser } from "store/selectors/user";
-import { collectionCardStyles } from "./index.styles";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
 import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
+import { collectionCardStyles } from "./index.styles";
 
 export default function CollectionCard(props) {
   const { isLoading, item } = props;
-  const history = useHistory();
   const styles = collectionCardStyles();
+  const history = useHistory();
   const { shareMedia } = useShareMedia();
 
-  const [data, setData] = useState<any>({});
+  const [data, setData] = React.useState<any>({});
   const parentNode = React.useRef<any>();
-  const userSelector = useSelector(getUser);
-  const [isSelected, setIsSelected] = useState<boolean>(false);
+  const [isSelected, setIsSelected] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     setData(item);
   }, [item]);
+
   const onClick = () => {
     if (props.selectable) {
       props.onClick();
