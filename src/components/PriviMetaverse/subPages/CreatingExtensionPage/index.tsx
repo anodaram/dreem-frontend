@@ -226,6 +226,7 @@ export default function CreatingRealmPage() {
                   open={showDepositRequireModal}
                   depositInfo={depositInfo}
                   protocolFee={protocolFee}
+                  realmTaxation={realmData.realmTaxation}
                   onClose={() => setShowDepositRequireModal(false)}
                   onApprove={() => {}}
                   onConfirm={() => handleConfirm()}

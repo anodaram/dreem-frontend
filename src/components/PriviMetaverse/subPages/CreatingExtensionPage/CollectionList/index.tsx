@@ -61,27 +61,15 @@ const CollectionList = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const [image, setImage] = useState<any>(null);
   const [imageFile, setImageFile] = useState<any>(null);
-  const [video, setVideo] = useState<any>(null);
-  const [videoFile, setVideoFile] = useState<any>(null);
-  const [unity, setUnity] = useState<any>(null);
-  const [unityFile, setUnityFile] = useState<any>(null);
-  const [entity, setEntity] = useState<any>(null);
-  const [entityFile, setEntityFile] = useState<any>(null);
   const [title, setTitle] = useState<string>("");
   const [symbol, setSymbol] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const { chainId, account, library } = useWeb3React();
   const [isPublic, setIsPublic] = useState<boolean>(true);
-
   const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
   const [isDraft, setIsDraft] = useState<boolean>(true);
-
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const videoInputRef = useRef<HTMLInputElement>(null);
-  const unityInputRef = useRef<HTMLInputElement>(null);
-  const entityInputRef = useRef<HTMLInputElement>(null);
   const [chain, setChain] = useState<string>(BlockchainNets[0].value);
-
   // Transaction Modal
   const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
   const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
@@ -129,92 +117,6 @@ const CollectionList = ({
     }
   };
 
-  const onVideoInput = e => {
-    const files = e.target.files;
-    if (files.length) {
-      handleVideoFiles(files);
-    }
-    e.preventDefault();
-
-    if (videoInputRef !== null && videoInputRef.current) {
-      videoInputRef.current.value = "";
-    }
-  };
-
-  const handleVideoFiles = (files: any) => {
-    if (files && files[0]) {
-      setVideo(files[0]);
-
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setVideoFile(reader.result);
-
-        let image = new Image();
-        if (reader.result !== null && (typeof reader.result === "string" || reader.result instanceof String))
-          image.src = reader.result.toString();
-      });
-
-      reader.readAsDataURL(files[0]);
-    }
-  };
-
-  const onUnityInput = e => {
-    const files = e.target.files;
-    if (files.length) {
-      handleUnityFiles(files);
-    }
-    e.preventDefault();
-
-    if (unityInputRef !== null && unityInputRef.current) {
-      unityInputRef.current.value = "";
-    }
-  };
-
-  const handleUnityFiles = (files: any) => {
-    if (files && files[0]) {
-      setUnity(files[0]);
-
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setUnityFile(reader.result);
-
-        let image = new Image();
-        if (reader.result !== null && (typeof reader.result === "string" || reader.result instanceof String))
-          image.src = reader.result.toString();
-      });
-
-      reader.readAsDataURL(files[0]);
-    }
-  };
-
-  const onEntityInput = e => {
-    const files = e.target.files;
-    if (files.length) {
-      handleEntityFiles(files);
-    }
-    e.preventDefault();
-
-    if (entityInputRef !== null && entityInputRef.current) {
-      entityInputRef.current.value = "";
-    }
-  };
-  const handleEntityFiles = (files: any) => {
-    if (files && files[0]) {
-      setEntity(files[0]);
-
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setEntityFile(reader.result);
-
-        let image = new Image();
-        if (reader.result !== null && (typeof reader.result === "string" || reader.result instanceof String))
-          image.src = reader.result.toString();
-      });
-
-      reader.readAsDataURL(files[0]);
-    }
-  };
-
   const handleRefreshCollection = () => {
     setCurPage(1);
     setLoadingCollection(true);
@@ -238,7 +140,7 @@ const CollectionList = ({
 
   const loadData = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], false)
+    MetaverseAPI.getAssets(12, 1, "DESC", ["COLLECTION"], undefined, userSelector.id, null, undefined, undefined, undefined, '')
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -257,7 +159,7 @@ const CollectionList = ({
   };
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], false)
+    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], undefined, userSelector.id, null, undefined, undefined, undefined, '')
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
