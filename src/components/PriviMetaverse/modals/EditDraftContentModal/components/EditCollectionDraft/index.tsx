@@ -35,10 +35,9 @@ const EditCollectionDraft = ({ onChangeCollection, currentCollection, handleColl
   }, []);
 
   const getCollection = () => {
-    MetaverseAPI.getCollection(currentCollection)
+    MetaverseAPI.getAsset(currentCollection.versionHashId)
       .then(res => {
         if (res.success) {
-          const items = res.data;
           setSelectedCollection(res.data);
         }
       })
