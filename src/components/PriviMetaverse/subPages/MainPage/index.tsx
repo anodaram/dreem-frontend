@@ -220,7 +220,7 @@ export default function HomePage() {
 
   const openLearnToCreator = () => {
     window.open(
-      "https://metaverse-2.gitbook.io/metaverse-creator-manual/05OugTkVduc9hQ7Ajmqc/quick-start",
+      "https://dreem.gitbook.io/metaverse-creator-manual/05OugTkVduc9hQ7Ajmqc/quick-start",
       "_blank"
     );
   };
@@ -377,9 +377,8 @@ export default function HomePage() {
             <br />A WORLD OF PURE IMAGINATION
           </Box>
           <Box className={classes.description} mb={7}>
-            Build and tokenize your own 3D realm and characters, co-create with others, and offer metaverse
-            native services and goods to realm communities. From an art gallery to 3D storefront, a concert or
-            video stream - there is no limit to your imagination.
+          Enhance your communities experience with immersive 3D virtual spaces that you can create, customize and self-govern, all for free. 
+          Built on Solana, Polygon and BSC.
           </Box>
           <Box className={classes.buttons}>
             <PrimaryButton
