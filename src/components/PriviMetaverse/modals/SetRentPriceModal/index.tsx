@@ -223,7 +223,7 @@ export default function SetRentPriceModal({ open, handleClose = () => {}, nft, s
               </Box>
               <InputWithLabelAndTooltip
                 inputValue={pricePerHour}
-                onInputValueChange={e => setPricePerHour(getInputValue(e.target.value, 0.001))}
+                onInputValueChange={e => setPricePerHour(getInputValue(e.target.value, 0))}
                 overriedClasses={classes.inputJOT}
                 required
                 type="number"
