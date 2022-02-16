@@ -59,8 +59,8 @@ const DepositRequiredModal = ({
   const classes = depositRequiredModalStyles();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
-  const [protocolFeeAmount, setProtocolFeeAmount] = React.useState<number>(protocolFee.Fee * depositInfo.Amount);
-  const [taxation, setTaxation] = React.useState<number>(realmTaxation * depositInfo.Amount / 100);
+  const [protocolFeeAmount, setProtocolFeeAmount] = React.useState<number>(protocolFee?.Fee * depositInfo?.Amount);
+  const [taxation, setTaxation] = React.useState<number>(realmTaxation * depositInfo?.Amount / 100);
   const { shareMedia } = useShareMedia();
   const [nft, setNFT] = React.useState<any>();
   const [metaDataForModal, setMetaDataForModal] = React.useState<any>(null);
@@ -101,12 +101,12 @@ const DepositRequiredModal = ({
         </Box>
         <Box className={classes.maticVal}>
           <MaticIcon />
-          <Box className={classes.maticTitle}>{depositInfo.Amount} MATIC</Box>
+          <Box className={classes.maticTitle}>{depositInfo?.Amount} MATIC</Box>
         </Box>
         <Box className={classes.infos}>
           <Box className={classes.infoRow}>
             <Box className={classes.infoTitle}>Protocol fee</Box>
-            <Box className={classes.infoPercent}>{(protocolFee.Fee * 100).toFixed(1)}%</Box>
+            <Box className={classes.infoPercent}>{(protocolFee?.Fee * 100).toFixed(1)}%</Box>
             <Box className={classes.infoPercent}>{protocolFeeAmount.toFixed(4)} Matic </Box>
           </Box>
           <Box className={classes.infoRow}>
@@ -117,13 +117,13 @@ const DepositRequiredModal = ({
         </Box>
         <Box className={classes.infoSum}>
           <Box className={classes.infoTitle}>Total charge</Box>
-          <Box className={classes.infoPercent}>{(depositInfo.Amount + protocolFeeAmount + taxation).toFixed(4)} Matic </Box>
+          <Box className={classes.infoPercent}>{(depositInfo?.Amount + protocolFeeAmount + taxation).toFixed(4)} Matic </Box>
         </Box>
         <Box className={classes.btnGroup}>
           <PrimaryButton size="medium" className={classes.confirmBtn} isRounded onClick={(e) => onApprove(e)}>
             APPROVE
           </PrimaryButton>
-          <PrimaryButton size="medium" className={classes.confirmBtn} isRounded onClick={(e) => onConfirm(e)}>
+          <PrimaryButton size="medium" ml={2} className={classes.confirmBtn} isRounded onClick={(e) => onConfirm(e)}>
             CONFIRM
           </PrimaryButton>
         </Box>

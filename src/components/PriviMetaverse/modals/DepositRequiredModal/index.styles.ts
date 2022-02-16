@@ -6,7 +6,7 @@ export const depositRequiredModalStyles = makeStyles(theme => ({
     background: "#151515 !important",
     color: "#ffffff !important",
     borderRadius: "unset !important",
-    maxWidth: 755,
+    maxWidth: "750px !important",
     padding: "83px !important",
     // height: "100vh !important",
     [theme.breakpoints.down("xs")]: {
@@ -84,15 +84,19 @@ export const depositRequiredModalStyles = makeStyles(theme => ({
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginTop: 16,
+    marginRight: '27px'
   },
   btnGroup: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: 70,
+    marginTop: 70
   },
   confirmBtn: {
     background: 'linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)',
     color: '#0B151C !important',
+    padding: '16px 44px 10px !important',
+    height: '48px !important',
+    lineHeight: '0px !important'
   },
   nftContent: {
     display: "flex",
