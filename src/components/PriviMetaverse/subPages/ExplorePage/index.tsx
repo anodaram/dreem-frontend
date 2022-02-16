@@ -23,7 +23,7 @@ import backImg1 from "assets/metaverseImages/shape_roadmap.png";
 import backImg2 from "assets/metaverseImages/shape_explorer_blue_arc.png";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
 
-const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
+const COLUMNS_COUNT_BREAK_POINTS_THREE = {
   375: 1,
   600: 2,
   900: 3,
@@ -457,7 +457,7 @@ export default function ExplorePage() {
                       gutter={"40px"}
                       data={Array(loadingCount).fill(0)}
                       renderItem={(_, index) => <AvatarCard isLoading={true} key={`loading_${index}`} />}
-                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                      columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
                     />
                   </Box>
                 )
@@ -485,7 +485,7 @@ export default function ExplorePage() {
                       <AssetsCard item={item} key={`asset_${index}`} />
                     )
                   }
-                  columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+                  columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
                 />
               </Box>
             </InfiniteScroll>

@@ -7,15 +7,17 @@ import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
-import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProfileCard";
 import { FilterAssetTypeOptionNames } from "shared/constants/constants";
+import WorldCard from "components/PriviMetaverse/components/cards/WorldCard";
+import AssetsCard from "components/PriviMetaverse/components/cards/AssetsCard";
+import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
 import { collectionDetailPageStyles, useFilterSelectStyles } from "./index.styles";
 
-const COLUMNS_COUNT_BREAK_POINTS_THREE = {
+const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
-  600: 3,
+  600: 2,
   1200: 3,
-  1440: 3,
+  1440: 4,
 };
 
 const FilterAssetTypeOptionAllNames = ["ALL", ...FilterAssetTypeOptionNames];
@@ -27,13 +29,12 @@ export default function CollectionDetailPage() {
 
   const width = useWindowDimensions().width;
   const theme = useTheme();
-  const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
   const { id: collectionId } = useParams<{ id: string }>();
 
   const [collectionData, setCollectionData] = React.useState<any>({});
-  const [nftData, setNftData] = React.useState<any>([]);
+  const [nftData, setNftData] = React.useState<any[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [curPage, setCurPage] = React.useState(1);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
@@ -45,7 +46,7 @@ export default function CollectionDetailPage() {
   const [filterStatus, setFilterStatus] = React.useState<string>(filterStatusOptions[0]);
 
   const loadingCount = React.useMemo(
-    () => (width > 1440 ? 3 : width > 1000 ? 3 : width > 600 ? 2 : 1),
+    () => (width > 1440 ? 4 : width > 1200 ? 3 : width > 600 ? 2 : 1),
     [width]
   );
 
@@ -75,15 +76,6 @@ export default function CollectionDetailPage() {
       });
   };
 
-  const handleRefresh = async () => {
-    setLoading(true);
-    setCurPage(1);
-    setHasMore(true);
-    setNftData([]);
-    await loadCollection(collectionId);
-    setLoading(false);
-  };
-
   const loadData = async () => {
     try {
       let filters: string[] = ["WORLD"];
@@ -108,8 +100,6 @@ export default function CollectionDetailPage() {
   const handleFilterStatus = e => {
     setFilterStatus(e.target.value);
   };
-
-  console.log("collectionData===============", collectionData);
 
   return (
     <Box className={classes.root}>
@@ -204,20 +194,29 @@ export default function CollectionDetailPage() {
                   <MasonryGrid
                     gutter={"16px"}
                     data={Array(loadingCount).fill(0)}
-                    renderItem={(item, _) => <RealmExtensionProfileCard nft={{}} isLoading={true} />}
-                    columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_THREE}
+                    renderItem={(_, index) => <AvatarCard isLoading={true} key={`loading_${index}`} />}
+                    columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                   />
                 </Box>
               )
             }
           >
-            <Grid container spacing={3} style={{ marginBottom: 24 }}>
-              {nftData?.map((nft, index) => (
-                <Grid item key={`trending-pod-${index}`} md={4} sm={6} xs={12}>
-                  <RealmExtensionProfileCard nft={{ ...nft }} hideInfo handleRefresh={handleRefresh} />
-                </Grid>
-              ))}
-            </Grid>
+            <Box mt={4}>
+              <MasonryGrid
+                gutter={"40px"}
+                data={nftData}
+                renderItem={(item, index) =>
+                  item?.itemKind === "WORLD" ? (
+                    <WorldCard nft={item} selectable={false} isLoading={loading} key={`world_${index}`} />
+                  ) : item?.itemKind === "CHARACTER" ? (
+                    <AvatarCard item={item} key={`avatar_${index}`} />
+                  ) : (
+                    <AssetsCard item={item} key={`asset_${index}`} />
+                  )
+                }
+                columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
+              />
+            </Box>
           </InfiniteScroll>
           {!loading && nftData?.length < 1 && (
             <Box textAlign="center" width="100%" mb={10} mt={2}>
