@@ -617,6 +617,11 @@ const CreateAssetFlow = ({
     return true;
   };
 
+  const handleFinish = () => {
+    setOpenMintEditions(false)
+    handleCancel()
+  }
+
   return (
 
     <>
@@ -624,7 +629,7 @@ const CreateAssetFlow = ({
         <MintEditions
           amount={amount || 0}
           hashId={savingDraft.instance.hashId}
-          handleCancel={() => { setOpenMintEditions(false) }}
+          handleCancel={() => { handleFinish() }}
           handleMint={() => mintMultipleEdition()}
         />
         :

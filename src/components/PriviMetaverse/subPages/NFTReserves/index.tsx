@@ -511,7 +511,7 @@ const NFTReserves = () => {
                                 textAlign: "left",
                               }}
                             >
-                              {game.name}
+                              {game.CollectionName}
                             </Box>
                             <Box
                               fontFamily="Rany"
@@ -523,7 +523,7 @@ const NFTReserves = () => {
                               mt={isTablet || isNarrow ? "0px" : isMobile ? "8px" : "20px"}
                               maxWidth={isNarrow || isTablet ? 440 : isMobile ? "100%" : "unset"}
                             >
-                              {game.description.slice(0, 200) + (game.description.length > 200 ? "..." : "")}
+                              {game.Description.slice(0, 200) + (game.Description.length > 200 ? "..." : "")}
                             </Box>
                             <Box
                               display="flex"

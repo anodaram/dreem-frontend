@@ -74,7 +74,7 @@ export default function CreatorPage() {
 
   const { creatorAddress } = useParams<{ creatorAddress: string }>();
   const userSelector = useTypedSelector(state => state.user);
-  const [userInfo, setUserInfo] = useState<any>({ ...userSelector });
+  const [userInfo, setUserInfo] = useState<any>({});
   const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [collections, setCollections] = useState<any[]>([]);
@@ -111,7 +111,6 @@ export default function CreatorPage() {
 
   useEffect(() => {
     // check owner
-    setUserInfo({ ...userSelector });
     if (userSelector && userSelector.address) {
       setIsOwner(userSelector.address === userInfo?.address);
     }
