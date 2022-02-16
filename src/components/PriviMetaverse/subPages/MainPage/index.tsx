@@ -427,12 +427,16 @@ export default function HomePage() {
           <img className={classes.bgImgGreenCircle} src={shapeImgGreenCircle} alt="seedImg" />
           {/* <img className={classes.bgImgPinkCircle} src={shapeImgPinkCircle} alt="seedImg" /> */}
           <Box className={classes.fitContent}>
-            <Box display="flex" flexDirection="row" mt={10} whiteSpace="nowrap" overflow="hidden">
-              <span className={`${classes.gradientText} ${classes.gradient1} ${classes.fitSize}`}>
-                featured realms
-              </span>
-              <span className={`${classes.shadowText}  ${classes.fitSize}`}>featured realms</span>
-            </Box>
+            <Grid container style={{marginTop: 10, overflow: "hidden"}}>
+              <Grid item xs={12} sm={6}>
+                <span className={`${classes.gradientText} ${classes.gradient1} ${classes.fitSize}`}>
+                  featured realms
+                </span>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <span className={`${classes.shadowText}  ${classes.fitSize}`}>featured realms</span>
+              </Grid>
+            </Grid>
             <Box className={classes.carousel} mt={4}>
               {!loadingFeatured && (
                 <Box className={classes.arrowBox} mr={isTablet ? "-58px" : "20px"} onClick={handlePrevSlide}>

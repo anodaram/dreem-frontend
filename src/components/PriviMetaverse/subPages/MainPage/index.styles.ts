@@ -145,7 +145,7 @@ export const homePageStyles = makeStyles(theme => ({
     color: "#EEFF21",
     marginTop: 278,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 24,
+      fontSize: 34,
       marginTop: 110,
     },
   },
@@ -277,7 +277,6 @@ export const homePageStyles = makeStyles(theme => ({
     fontSize: "56px",
     lineHeight: "120%",
     fontFamily: "GRIFTER",
-    marginLeft: "20px",
 
     letterSpacing: "0.02em",
     textTransform: "uppercase",
