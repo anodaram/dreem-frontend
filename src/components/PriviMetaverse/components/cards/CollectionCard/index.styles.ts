@@ -82,6 +82,7 @@ export const collectionCardStyles = makeStyles(theme => ({
     "-webkit-background-clip": "text",
     width: "fit-content",
     textTransform: "uppercase",
+    minHeight: 60,
   },
   infoDescription: {
     fontWeight: 400,

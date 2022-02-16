@@ -101,6 +101,9 @@ export const contentPreviewModalStyles = makeStyles(theme => ({
     fontFamily: "GRIFTER",
     lineHeight: "120%",
     textTransform: "uppercase",
+    maxWidth: 260,
+    textOverflow: "ellipsis",
+    overflow: "hidden",
   },
   typo2: {
     fontSize: 27,
@@ -166,7 +169,7 @@ export const contentPreviewModalStyles = makeStyles(theme => ({
   mintButton: {
     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%) !important",
     border: "2px solid #212121 !important",
-    marginTop: "10px"
+    marginTop: "10px",
   },
   close: {
     background: "rgba(255, 255, 255, 0.1)",
