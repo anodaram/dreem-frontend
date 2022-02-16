@@ -124,6 +124,10 @@ export default function CollectionDetailPage() {
     window.open(collectionData.polygonscanUrl, "_blank")
   };
 
+  const handleGoToOpensea = () => {
+    window.open(collectionData.openseaUrl, "_blank")
+  };
+
   const handleFruit = type => {
     if (fruitData.fruits?.filter(f => f.fruitId === type)?.find(f => f.userId === userSelector.id)) {
       showAlertMessage("You had already given this fruit.", { variant: "info" });
@@ -163,7 +167,7 @@ export default function CollectionDetailPage() {
               <div className={classes.iconBtn} onClick={()=>handleGoToPolygonscan()}>
                 <PolygonIcon />
               </div>
-              <div className={classes.iconBtn} onClick={()=>{}}>
+              <div className={classes.iconBtn} onClick={()=>handleGoToOpensea()}>
                 <OpenSeaIcon />
               </div>
               {/* {isSignedin && (
