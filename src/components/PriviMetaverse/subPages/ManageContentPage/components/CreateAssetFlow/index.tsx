@@ -172,8 +172,12 @@ const CreateAssetFlow = ({
     }
   };
 
-  const handleGoStep = step => {
-    setStep(step);
+  const handleGoStep = index => {
+    if(step > index){
+      setStep(index);
+    } else {
+      return
+    }
   }
 
 
