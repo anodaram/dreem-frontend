@@ -2,9 +2,12 @@ import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDebounce } from "use-debounce/lib";
 import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
+import { RootState } from "store/reducers/Reducer";
+import { setSelTabContentType, setSelTabAssetType } from "store/actions/Explore";
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
@@ -86,6 +89,10 @@ const Asset_Type_Options = [
 
 export default function ExplorePage() {
   const width = useWindowDimensions().width;
+  const dispatch = useDispatch();
+
+  const selTabContentType = useSelector((state: RootState) => state.explore.selTabContentType);
+  const selTabAssetType = useSelector((state: RootState) => state.explore.selTabAssetType);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
@@ -97,13 +104,17 @@ export default function ExplorePage() {
   const [page, setPage] = React.useState<number>(1);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
   const [openFilterBar, setOpenFilterBar] = React.useState<boolean>(true);
-  // const [openStatusSection, setOpenStatusSection] = React.useState<boolean>(true);
   const [openFilterBySection, setOpenFilterBySection] = React.useState<boolean>(true);
   const [openAssetSection, setOpenAssetSection] = React.useState<boolean>(true);
+  const [selectedContentType, setSelectedContentType] = React.useState<string>(
+    selTabContentType || "all assets"
+  );
+  const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(
+    selTabAssetType.length > 0 ? selTabAssetType : ["WORLD"]
+  );
+  // const [openStatusSection, setOpenStatusSection] = React.useState<boolean>(true);
   // const [openPrimarySection, setOpenPrimarySection] = React.useState<boolean>(true);
   // const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
-  const [selectedContentType, setSelectedContentType] = React.useState<string>("all assets");
-  const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["WORLD"]);
   const [isDisabledAssetTypeFilter, setIsDisabledAssetTypeFilter] = React.useState<boolean>(false);
   const [searchValue, setSearchValue] = React.useState<string>("");
 
@@ -206,8 +217,10 @@ export default function ExplorePage() {
 
     if (selectedAssetTypes.includes(asset.state)) {
       setSelectedAssetTypes([...selectedAssetTypes.filter(item => item !== asset.state)]);
+      dispatch(setSelTabAssetType([...selectedAssetTypes.filter(item => item !== asset.state)]));
     } else {
       setSelectedAssetTypes([...selectedAssetTypes, asset.state]);
+      dispatch(setSelTabAssetType([...selectedAssetTypes, asset.state]));
     }
   };
 
@@ -215,6 +228,7 @@ export default function ExplorePage() {
     if (loading) return;
 
     setSelectedContentType(val);
+    dispatch(setSelTabContentType(val));
   };
 
   const handleSearchValue = e => {

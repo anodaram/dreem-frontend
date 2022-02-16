@@ -35,6 +35,7 @@ import selectedLiquidityPoolPriviSwapReducer from "./reducers/SelectedLiquidityP
 import underMaintenanceReducer from "./reducers/UnderMaintenance";
 import worldReducer from "./reducers/World";
 import realmsReducer from "./reducers/Realms";
+import exploreReducer from "./reducers/Explore";
 import { createStore, combineReducers, compose, applyMiddleware } from "redux";
 
 // Set global state variables through Redux
@@ -85,6 +86,7 @@ const rootReducer = combineReducers({
   underMaintenanceInfo: underMaintenanceReducer,
   world: worldReducer,
   realms: realmsReducer,
+  explore: exploreReducer,
 });
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
