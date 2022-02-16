@@ -46,20 +46,19 @@ export default function WorldCard({
   const { shareMedia } = useShareMedia();
   // const { showAlertMessage } = useAlertMessage();
   const { itemId } = useParams<{ itemId?: string }>();
-  const [depositInfo, setDepositInfo] = useState<any>(null);
-  const [protocolFee, setProtocolFee] = useState<any>(null);
   const [openContentPreview, setOpenContentPreview] = useState<boolean>(
     itemId && itemId == nft?.versionHashId ? true : false
   );
+  // const [depositInfo, setDepositInfo] = useState<any>(null);
+  // const [protocolFee, setProtocolFee] = useState<any>(null);
   // const [openDepositRequired, setOpenDepositRequired] = useState<boolean>(false);
-
+  // const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
   const [data, setData] = useState<any>({});
   const parentNode = React.useRef<any>();
   const userSelector = useSelector(getUser);
   const [metaDataForModal, setMetaDataForModal] = React.useState<any>(null);
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [openEditRealmModal, setOpenEditRealmModal] = useState<boolean>(false);
-  // const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
 
   const isOwner = nft && nft.submitter?.user?.priviId === userSelector.id;
 
