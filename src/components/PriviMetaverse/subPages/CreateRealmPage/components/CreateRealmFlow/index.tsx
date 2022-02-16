@@ -182,9 +182,13 @@ const CreateRealmFlow = ({ metaData, handleCancel }: { metaData: any; handleCanc
       handleSave();
     }
   };
-  const handleGoStep = step => {
-    setStep(step);
-  };
+  const handleGoStep = index => {
+    if(step > index){
+      setStep(index);
+    } else {
+      return
+    }
+  }
 
   const validate = withMessage => {
     if (!title || !description || !image) {
