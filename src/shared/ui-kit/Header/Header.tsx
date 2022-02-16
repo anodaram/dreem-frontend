@@ -146,6 +146,24 @@ const Header = props => {
     }
   };
 
+  useEffect(() => {
+    if (
+      (account && userSelector.address && userSelector.address.toLowerCase() !== account.toLowerCase()) ||
+      (!account && userSelector.address)
+    ) {
+      handleLogout();
+      return;
+    }
+  }, [account, userSelector]);
+
+  useEffect(() => {
+    (window as any)?.ethereum?.on("accountsChanged", accounts => {
+      if (isSignedin && !accounts.length) {
+        handleLogout();
+      }
+    });
+  }, []);
+
   const handleOpenMobileMenu = (event: React.MouseEvent<EventTarget>) => {
     event.stopPropagation();
     setOpenMobileMenu(true);
