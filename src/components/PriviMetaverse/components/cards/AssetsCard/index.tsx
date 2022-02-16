@@ -19,15 +19,16 @@ export default function AssetsCard(props) {
   const { shareMedia } = useShareMedia();
   const [asset, setAsset] = useState<any>(props.item ?? {});
   const { itemId } = useParams<{ itemId?: string }>();
-  const [openCharacterDetailModal, setOpenAssetDetailModal] = useState<boolean>(itemId && itemId == item?.versionHashId ? true : false);
+  const [openCharacterDetailModal, setOpenAssetDetailModal] = useState<boolean>(
+    itemId && itemId == item?.versionHashId ? true : false
+  );
 
   useEffect(() => {
-    if(itemId && !item){
+    if (itemId && !item) {
       MetaverseAPI.getAsset(itemId).then(res => {
         setAsset(res.data);
       });
-    }
-    else if (item?.id) {
+    } else if (item?.id) {
       setAsset(item);
     }
   }, [item?.id]);
@@ -65,7 +66,14 @@ export default function AssetsCard(props) {
             {item?.itemKind === "MODEL" ? (
               <div className={classes.modelTag}>3D Asset</div>
             ) : (
-              <div className={classes.modelTag}>{item?.itemKind}</div>
+              <div
+                style={{
+                  background: item?.itemKind === "TEXTURE" ? "#A187E8" : "#FFC147",
+                }}
+                className={classes.modelTag}
+              >
+                {item?.itemKind}
+              </div>
             )}
             {!item?.minted && <div className={classes.draftTag}>Draft</div>}
             <div className={classes.shapeIcon}>

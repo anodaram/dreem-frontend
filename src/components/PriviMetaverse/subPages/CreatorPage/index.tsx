@@ -160,7 +160,7 @@ export default function CreatorPage() {
           page,
           "DESC",
           ["COLLECTION"],
-          true,
+          undefined,
           userInfo?.id
         );
         if (resCollections.success) {
@@ -175,7 +175,7 @@ export default function CreatorPage() {
           page,
           "DESC",
           FilterAssetTypeOptionValues,
-          true,
+          undefined,
           userInfo?.id,
           undefined,
           undefined,

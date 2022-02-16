@@ -116,7 +116,7 @@ const EditRealmModal = ({
   }, [realmData]);
 
   const loadCollection = async () => {
-    MetaverseAPI.getAssets(100, 1, "DESC", ["COLLECTION"], false).then(res => {
+    MetaverseAPI.getAssets(100, 1, "DESC", ["COLLECTION"], undefined, owner).then(res => {
       if (res.success) {
         const items = res.data.elements;
         if (items && items.length > 0) {
@@ -127,6 +127,7 @@ const EditRealmModal = ({
       }
     });
   };
+
   const loadFiles = async () => {
     try {
       const allTasks: any[] = [];
