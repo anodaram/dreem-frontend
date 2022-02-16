@@ -167,7 +167,7 @@ export default function CreatingRealmPage() {
                       renderItem={(item, _) => (
                         <CollectionCard
                           item={item}
-                          isLoading={loadingCollection}
+                          isLoading={false}
                           onClick={() => setCurrentCollection(item)}
                         />
                       )}

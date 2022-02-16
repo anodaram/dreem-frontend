@@ -318,7 +318,7 @@ const CollectionList = ({
                       <Grid item key={`trending-pod-${index}`} md={4} sm={6} xs={12}>
                         <CollectionCard
                           item={item}
-                          isLoading={loadingCollection}
+                          isLoading={false}
                           onClick={() => handleSelect(item)}
                           selectable={true}
                         />

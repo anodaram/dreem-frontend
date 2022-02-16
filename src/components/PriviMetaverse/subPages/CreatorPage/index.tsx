@@ -791,7 +791,7 @@ export default function CreatorPage() {
                           <Grid container spacing={3} style={{ marginBottom: 24 }}>
                             {likedRealms?.map((item, index) => (
                               <Grid item key={`liked-realm-${index}`} md={4} sm={6} xs={12}>
-                                <RealmCard item={item} disableEffect popup isLoading={loading} />
+                                <RealmCard item={item} disableEffect popup isLoading={false} />
                               </Grid>
                             ))}
                           </Grid>
@@ -827,7 +827,7 @@ export default function CreatorPage() {
                           <Grid container spacing={3} style={{ marginBottom: 24 }}>
                             {likedAvatars?.map((item, index) => (
                               <Grid item key={`liked-realm-${index}`} lg={3} md={4} sm={6} xs={12}>
-                                <AvatarCard item={item} isLoading={loading} />
+                                <AvatarCard item={item} isLoading={false} />
                               </Grid>
                             ))}
                           </Grid>

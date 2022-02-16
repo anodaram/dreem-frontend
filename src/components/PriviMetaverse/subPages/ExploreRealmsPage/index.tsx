@@ -306,7 +306,7 @@ export default function ExploreRealmsPage() {
                 <MasonryGrid
                   gutter={"16px"}
                   data={exploreRealms}
-                  renderItem={(item, _) => <RealmCard item={item} isLoading={loadingExplore} />}
+                  renderItem={(item, _) => <RealmCard item={item} isLoading={false} />}
                   columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                 />
               </Box>
