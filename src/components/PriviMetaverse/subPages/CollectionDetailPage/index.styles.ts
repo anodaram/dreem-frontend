@@ -47,6 +47,27 @@ export const collectionDetailPageStyles = makeStyles(theme => ({
       paddingRight: 26,
     },
   },
+  iconBtn: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 45,
+    height: 45,
+    borderRadius: "100%",
+    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+    cursor: "pointer",
+    "& + &": {
+      marginLeft: 12,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: 40,
+      height: 40,
+      marginLeft: 8,
+      "& + &": {
+        marginLeft: 8,
+      },
+    },
+  },
   no: {
     fontSize: 14,
     fontWeight: 700,
