@@ -249,6 +249,10 @@ export interface RootState {
     realmsList: any[];
     scrollPositionInRealms: number;
   };
+  explore: {
+    selTabContentType: string;
+    selTabAssetType: string[];
+  };
 }
 
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
