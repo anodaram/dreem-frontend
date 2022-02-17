@@ -20,6 +20,8 @@ import useIPFS from "../../../../shared/utils-IPFS/useIPFS";
 import { useModalStyles } from "./index.styles";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
 
+import { hideMint } from "shared/functions/getURL";
+
 const CreateRealmModal = ({
   open,
   onClose,
@@ -280,6 +282,10 @@ const CreateRealmModal = ({
       MetaverseAPI.uploadWorld(payload)
         .then(async res => {
           if (!res.success) return;
+          if(hideMint){
+            showAlertMessage(`Created draft successfully`, { variant: "success" });
+            return;
+          }
 
           if (isDraft) {
             setProgress(100);

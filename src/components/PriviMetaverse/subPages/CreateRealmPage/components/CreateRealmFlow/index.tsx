@@ -269,7 +269,6 @@ const CreateRealmFlow = ({ metaData, handleCancel }: { metaData: any; handleCanc
           } else {
             setUploadSuccess(true);
             showAlertMessage(`Created draft successfully. minting NFT...`, { variant: "success" });
-            // setSavingDraft(res.data)
             handleMintRealm(res.data);
           }
         });
