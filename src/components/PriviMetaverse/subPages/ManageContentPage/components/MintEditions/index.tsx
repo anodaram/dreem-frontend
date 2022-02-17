@@ -9,10 +9,8 @@ import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { UnitEdition } from "shared/constants/constants";
 import { Modal, PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
-import { BlockchainNets } from "shared/constants/constants";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { useModalStyles } from "./index.styles";
-import useIPFS from "shared/utils-IPFS/useIPFS";
 import ContentProcessingOperationModal from "components/PriviMetaverse/modals/ContentProcessingOperationModal";
 
 const MintEditions = ({
@@ -64,15 +62,6 @@ const MintEditions = ({
         }
       }
     });
-
-    // const res = await handleMint(amount);
-    // console.log(res)
-    // bunches.map((item, index)=>{
-    //   if(item.key == i) {
-    //     // if(!res)
-    //     item.status = true;
-    //   }
-    // })
   }
   return (
     isUploading ? (

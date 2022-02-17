@@ -17,27 +17,16 @@ import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
-import { switchNetwork } from "shared/functions/metamask";
-import { BlockchainNets } from "shared/constants/constants";
-import { onUploadNonEncrypt } from "shared/ipfs/upload";
-import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProgressModal";
-import FileUploadingModal from "components/PriviMetaverse/modals/FileUploadingModal";
 import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
-import useIPFS from "shared/utils-IPFS/useIPFS";
-import { FilterAssetTypeOptionNames } from "shared/constants/constants";
 import { useModalStyles } from "./index.styles";
 
 const CreatingStep = ({
   curStep,
   status,
-  // handleNext,
-  // handleCancel
   handleGoStep,
 }: {
   curStep: any;
   status: any;
-  // handleNext: () => void;
-  // handleCancel: () => void;
   handleGoStep: (step: number) => void;
 }) => {
   const classes = useModalStyles();

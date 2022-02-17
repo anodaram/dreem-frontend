@@ -34,4 +34,6 @@ export const METAVERSE_MAINTENCE_URL = (): string => {
   );
 };
 
+export const hideMint = process.env.HIDE_MINT == 'true' ? true : false;
+
 export default URL;
