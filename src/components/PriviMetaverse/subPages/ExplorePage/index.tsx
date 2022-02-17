@@ -132,7 +132,6 @@ export default function ExplorePage() {
   const loadingCount = React.useMemo(() => (width > 900 ? 3 : width > 600 ? 2 : 1), [width]);
 
   React.useEffect(() => {
-    // setDreemDataList([]);
     if (
       selectedContentType === "all assets" ||
       selectedContentType === "draft" ||
@@ -149,7 +148,6 @@ export default function ExplorePage() {
       setIsDisabledAssetTypeFilter(true);
       loadCreatorsData(true);
     }
-    dispatch(setScrollPositionInExplore(0));
   }, [selectedContentType, selectedAssetTypes, debouncedSearchValue]);
 
   React.useEffect(() => {
