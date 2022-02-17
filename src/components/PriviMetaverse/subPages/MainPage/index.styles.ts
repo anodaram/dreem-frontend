@@ -145,7 +145,7 @@ export const homePageStyles = makeStyles(theme => ({
     color: "#EEFF21",
     marginTop: 278,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 24,
+      fontSize: 34,
       marginTop: 110,
     },
   },
@@ -155,15 +155,31 @@ export const homePageStyles = makeStyles(theme => ({
     boxSizing: "border-box",
     borderRadius: "13px",
     // width: "50%",
-    padding: "46px 0px",
+    height: 150,
+    padding: "46px 10px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    [theme.breakpoints.down("sm")]: {
+      height: 70,
+    },
     [theme.breakpoints.down("xs")]: {
-      padding: "6px 0px",
+      padding: "6px 2px",
+      height: 48,
       "& svg": {
         width: 100,
       }
+    },
+  },
+  typo1: {
+    "fontFamily": "Rany",
+    "fontStyle": "normal",
+    "fontWeight": "normal",
+    "fontSize": "20px",
+    "lineHeight": "155%",
+    color: "#E9FF26",
+    [theme.breakpoints.down("xs")]: {
+      "fontSize": "16px",
     },
   },
   button: {
@@ -277,7 +293,6 @@ export const homePageStyles = makeStyles(theme => ({
     fontSize: "56px",
     lineHeight: "120%",
     fontFamily: "GRIFTER",
-    marginLeft: "20px",
 
     letterSpacing: "0.02em",
     textTransform: "uppercase",

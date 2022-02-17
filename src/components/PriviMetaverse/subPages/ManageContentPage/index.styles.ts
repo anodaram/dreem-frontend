@@ -228,7 +228,7 @@ export const manageContentPageStyles = makeStyles(theme => ({
     width: 136,
     height: 171,
     [theme.breakpoints.down("xs")]: {
-      width: 82,
+      width: 68,
       height: 103,
     },
   },

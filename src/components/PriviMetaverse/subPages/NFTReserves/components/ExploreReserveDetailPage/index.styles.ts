@@ -313,7 +313,7 @@ export const exploreOptionDetailPageStyles = makeStyles(theme => ({
     },
 
     "& .MuiAccordionSummary-expandIcon": {
-      transform: "none",
+      transform: "none !important",
     },
   },
   typo8: {

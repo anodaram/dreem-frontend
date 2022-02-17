@@ -252,6 +252,8 @@ export interface RootState {
   explore: {
     selTabContentType: string;
     selTabAssetType: string[];
+    dreemList: any[];
+    scrollPositionInExplore: number;
   };
 }
 
