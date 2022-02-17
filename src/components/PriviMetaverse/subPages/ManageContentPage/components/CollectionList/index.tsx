@@ -31,7 +31,7 @@ import NFTOption from "../NFTOption";
 import CreateCollection from "../CreateCollection";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
 import { FilterAssetTypeOptionNames } from "shared/constants/constants";
-import { useModalStyles, useFilterSelectStyles } from "./index.styles";
+import { useModalStyles } from "./index.styles";
 
 const COLUMNS_COUNT_BREAK_POINTS_THREE = {
   375: 1,
@@ -50,7 +50,6 @@ const CollectionList = ({
 }) => {
   const classes = useModalStyles();
   const userSelector = useTypedSelector(state => state.user);
-  const filterClasses = useFilterSelectStyles();
   const { showAlertMessage } = useAlertMessage();
   const width = useWindowDimensions().width;
 
@@ -273,33 +272,6 @@ const CollectionList = ({
           />
         </div>
       )}
-      {/* {step > 2 || (step === 2 && collections.length) ? (
-        <Box className={classes.footer}>
-          <div className={classes.howToCreateBtn} onClick={handlePrev}>
-            back
-          </div>
-          {step < 3 && (
-            <PrimaryButton
-              size="medium"
-              className={classes.nextBtn}
-              disabled={step === 1 && !currentCollection}
-              onClick={() => handleNext()}
-            >
-              next
-            </PrimaryButton>
-          )}
-          {step === 3 && (
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <div className={classes.howToCreateBtn} onClick={() => {}}>
-                create draft
-              </div>
-              <PrimaryButton size="medium" className={classes.nextBtn} onClick={() => {}}>
-                mint nft
-              </PrimaryButton>
-            </Box>
-          )}
-        </Box>
-      ) : null} */}
     </>
   );
 };

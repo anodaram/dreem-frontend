@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import { useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 
+import { useHistory } from "react-router-dom";
 import { switchNetwork } from "shared/functions/metamask";
 import { BlockchainNets } from "shared/constants/constants";
 import Box from "shared/ui-kit/Box";
@@ -23,6 +24,7 @@ import WorldList from "./WorldList";
 export default function CreatingRealmPage() {
   const underMaintenanceSelector = useSelector((state: RootState) => state.underMaintenanceInfo?.info);
 
+  const history = useHistory();
   const { id: realmId } = useParams<{ id: string }>();
   const { chainId, account, library } = useWeb3React();
   const [chain, setChain] = useState<string>(BlockchainNets[0].value);
@@ -126,7 +128,11 @@ export default function CreatingRealmPage() {
   };
 
   const handlePrev = () => {
-    setStep(prev => prev - 1);
+    if(step > 0){
+      setStep(prev => prev - 1);
+    } else{
+      history.push(`/realms/${realmData.versionHashId}`);
+    }
   };
 
   const loadMore = () => {
@@ -147,7 +153,7 @@ export default function CreatingRealmPage() {
       .finally(() => setLoadingCollection(false));
   };
 
-  const handleConfirm = async () => {
+  const handleConfirm = async (amount) => {
     const targetChain = BlockchainNets.find(net => net.value === chain);
     setNetworkName(targetChain.name);
     if (chainId && chainId !== targetChain?.chainId) {
@@ -163,12 +169,13 @@ export default function CreatingRealmPage() {
     }
     const web3APIHandler = targetChain.apiHandler;
     const web3 = new Web3(library.provider);
+    console.log(realmData)
     const contractRes = await web3APIHandler.RealmFactory.applyExtension(
       web3,
       account,
       {
         contractAddress: realmData?.realmAddress,
-        amount: 1000000,
+        amount: amount,
         nftToAttachAddress: nftAddress,
         nftToAttachId: nftId,
       },
@@ -212,7 +219,7 @@ export default function CreatingRealmPage() {
                   realmTaxation={realmData.realmTaxation}
                   onClose={() => setShowDepositRequireModal(false)}
                   onApprove={() => {}}
-                  onConfirm={() => handleConfirm()}
+                  onConfirm={(amount) => handleConfirm(amount)}
                 />
               ) : (
                 <>
