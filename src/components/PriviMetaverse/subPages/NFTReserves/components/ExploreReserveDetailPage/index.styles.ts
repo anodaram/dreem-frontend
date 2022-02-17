@@ -447,7 +447,7 @@ export const exploreOptionDetailPageStyles = makeStyles(theme => ({
     fontFamily: "GRIFTER",
     lineHeight: "37px !important",
     minWidth: "120px !important",
-    height: "37px !important",
+    height: "40px !important",
     borderRadius: "40px",
   },
   cancelOfferButton: {
