@@ -19,8 +19,7 @@ const RealmFactory = network => {
     return new Promise(async resolve => {
       try {
         const { contractAddress, amount, nftToAttachAddress, nftToAttachId } = payload;
-        // const rAddress = isRoyalty ? royaltyAddress : zeroAddress()
-        console.log('params---', contractAddress, nftToAttachAddress, nftToAttachId)
+        console.log('params---', contractAddress, nftToAttachAddress, nftToAttachId, amount)
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
         console.log('contract-----', contract, contractAddress, metadata.abi)
 

@@ -1,24 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useHistory } from "react-router-dom";
-import { useWeb3React } from "@web3-react/core";
-
 import { FormControlLabel, useMediaQuery, useTheme, Switch, SwitchProps, styled, Grid } from "@material-ui/core";
-
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import { Modal, PrimaryButton, SecondaryButton } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
-import { BlockchainNets } from "shared/constants/constants";
-import { InfoTooltip } from "shared/ui-kit/InfoTooltip";
 import { useModalStyles } from "./index.styles";
-import useIPFS from "shared/utils-IPFS/useIPFS";
 import CreateAssetModel from "shared/model/CreateAssetModel";
 
 const SelectType = ({ handleNext }: { handleNext: (asset: CreateAssetModel) => void }) => {
-  const history = useHistory();
   const classes = useModalStyles();
   const { showAlertMessage } = useAlertMessage();
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const [assetTypes, setAssetTypes] = useState<CreateAssetModel[]>([]);
@@ -32,7 +22,6 @@ const SelectType = ({ handleNext }: { handleNext: (asset: CreateAssetModel) => v
     if (res && res.success) {
       // TODO - iterate over this
       let assets: CreateAssetModel[] = CreateAssetModel.constructArray(res.data);
-
       setAssetTypes(assets);
     } else {
       showAlertMessage(`Server is down. Please wait...`, { variant: "error" });

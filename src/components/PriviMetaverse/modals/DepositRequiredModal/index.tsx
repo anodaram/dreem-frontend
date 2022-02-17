@@ -123,7 +123,7 @@ const DepositRequiredModal = ({
           <PrimaryButton size="medium" className={classes.confirmBtn} isRounded onClick={(e) => onApprove(e)}>
             APPROVE
           </PrimaryButton>
-          <PrimaryButton size="medium" ml={2} className={classes.confirmBtn} isRounded onClick={(e) => onConfirm(e)}>
+          <PrimaryButton size="medium" ml={2} className={classes.confirmBtn} isRounded onClick={(e) => onConfirm(depositInfo?.Amount + protocolFeeAmount + taxation)}>
             CONFIRM
           </PrimaryButton>
         </Box>

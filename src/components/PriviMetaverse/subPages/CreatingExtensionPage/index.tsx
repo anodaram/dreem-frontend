@@ -147,7 +147,7 @@ export default function CreatingRealmPage() {
       .finally(() => setLoadingCollection(false));
   };
 
-  const handleConfirm = async () => {
+  const handleConfirm = async (amount) => {
     const targetChain = BlockchainNets.find(net => net.value === chain);
     setNetworkName(targetChain.name);
     if (chainId && chainId !== targetChain?.chainId) {
@@ -163,12 +163,13 @@ export default function CreatingRealmPage() {
     }
     const web3APIHandler = targetChain.apiHandler;
     const web3 = new Web3(library.provider);
+    console.log(realmData)
     const contractRes = await web3APIHandler.RealmFactory.applyExtension(
       web3,
       account,
       {
         contractAddress: realmData?.realmAddress,
-        amount: 1000000,
+        amount: amount,
         nftToAttachAddress: nftAddress,
         nftToAttachId: nftId,
       },
@@ -212,7 +213,7 @@ export default function CreatingRealmPage() {
                   realmTaxation={realmData.realmTaxation}
                   onClose={() => setShowDepositRequireModal(false)}
                   onApprove={() => {}}
-                  onConfirm={() => handleConfirm()}
+                  onConfirm={(amount) => handleConfirm(amount)}
                 />
               ) : (
                 <>
