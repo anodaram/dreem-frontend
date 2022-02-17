@@ -1,36 +1,9 @@
 import React from "react";
-import { useWeb3React } from "@web3-react/core";
-import Web3 from "web3";
-import { useHistory } from "react-router-dom";
-import ReactPlayer from "react-player";
-import axios from "axios";
-import customProtocolCheck from "custom-protocol-check";
-
-import { useMediaQuery, useTheme, CircularProgress } from "@material-ui/core";
-
-import { METAVERSE_URL } from "shared/functions/getURL";
-import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
-import { getDefaultAvatar, getDefaultBGImage } from "shared/services/user/getUserAvatar";
 import { CircularLoadingIndicator, Modal, PrimaryButton } from "shared/ui-kit";
-import MintingNFTProgressModal from "components/PriviMetaverse/modals/MintingNFTProgressModal";
-import EditDraftContentModal from "components/PriviMetaverse/modals/EditDraftContentModal";
 import Box from "shared/ui-kit/Box";
-import Avatar from "shared/ui-kit/Avatar";
-import AddressView from "shared/ui-kit/AddressView";
 import { ShareIcon } from "shared/ui-kit/Icons";
-import { useShareMedia } from "shared/contexts/ShareMediaContext";
-import { useAuth } from "shared/contexts/AuthContext";
-import { detectMob } from "shared/helpers";
-import NotAppModal from "components/PriviMetaverse/modals/NotAppModal";
-import OpenDesktopModal from "components/PriviMetaverse/modals/OpenDesktopModal";
-import EditRealmModal from "../EditRealmModal";
-import EditExtensionModal from "../EditExtensionModal";
 import { depositRequiredModalStyles } from "./index.styles";
-import { onUploadNonEncrypt } from "shared/ipfs/upload";
-import useIPFS from "shared/utils-IPFS/useIPFS";
-import { BlockchainNets } from "shared/constants/constants";
-import { switchNetwork } from "shared/functions/metamask";
 
 const DepositRequiredModal = ({
   open,
@@ -50,44 +23,11 @@ const DepositRequiredModal = ({
   onConfirm: (e) => void;
 }) => {
   console.log(depositInfo, protocolFee, realmTaxation)
-  const theme = useTheme();
-  const history = useHistory();
-  const { isSignedin } = useAuth();
-  const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
-  const { chainId, account, library } = useWeb3React();
   const { showAlertMessage } = useAlertMessage();
   const classes = depositRequiredModalStyles();
-  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
 
   const [protocolFeeAmount, setProtocolFeeAmount] = React.useState<number>(protocolFee?.Fee * depositInfo?.Amount);
   const [taxation, setTaxation] = React.useState<number>(realmTaxation * depositInfo?.Amount / 100);
-  const { shareMedia } = useShareMedia();
-  const [nft, setNFT] = React.useState<any>();
-  const [metaDataForModal, setMetaDataForModal] = React.useState<any>(null);
-  const [openEditRealmModal, setOpenEditRealmModal] = React.useState<boolean>(false);
-  const [isLoadingMetaDataForEdit, setIsLoadingMetaDataForEdit] = React.useState<boolean>(false);
-  const [isPlaying, setIsPlaying] = React.useState<boolean>(true);
-  const [showPlayModal, setShowPlayModal] = React.useState<boolean>(false);
-  const [openNotAppModal, setOpenNotAppModal] = React.useState<boolean>(false);
-  const [onProgressVideoItem, setOnProgressVideoItem] = React.useState<any>({
-    played: 0,
-    playedSeconds: 0,
-    loaded: 0,
-    loadedSeconds: 0,
-  });
-  const [onDurationVideoItem, setOnDurationVideoItem] = React.useState<number>(1);
-
-  // Transaction Modal
-  const [txModalOpen, setTxModalOpen] = React.useState<boolean>(false);
-  const [txSuccess, setTxSuccess] = React.useState<boolean | null>(null);
-  const [txHash, setTxHash] = React.useState<string>("");
-
-  const [networkName, setNetworkName] = React.useState<string>("");
-  const [currentCollection, setCurrentCollection] = React.useState<any>(null);
-  const [metadata, setMetadata] = React.useState<any>(null);
-  const [chain, setChain] = React.useState<string>(BlockchainNets[0].value);
-
-  const playerVideoItem: any = React.useRef();
 
   return (
     <>
@@ -123,7 +63,7 @@ const DepositRequiredModal = ({
           <PrimaryButton size="medium" className={classes.confirmBtn} isRounded onClick={(e) => onApprove(e)}>
             APPROVE
           </PrimaryButton>
-          <PrimaryButton size="medium" ml={2} className={classes.confirmBtn} isRounded onClick={(e) => onConfirm(depositInfo?.Amount + protocolFeeAmount + taxation)}>
+          <PrimaryButton size="medium" ml={2} className={classes.confirmBtn} isRounded onClick={(e) => onConfirm(depositInfo?.Amount)}>
             CONFIRM
           </PrimaryButton>
         </Box>
