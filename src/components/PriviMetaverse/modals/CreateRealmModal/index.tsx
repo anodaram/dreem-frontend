@@ -20,6 +20,8 @@ import useIPFS from "../../../../shared/utils-IPFS/useIPFS";
 import { useModalStyles } from "./index.styles";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
 
+import { hideMint } from "shared/functions/getURL";
+
 const CreateRealmModal = ({
   open,
   onClose,
@@ -685,6 +687,7 @@ const CreateRealmModal = ({
                 SAVE DRAFT
               </PrimaryButton>
             ) : (
+              !hideMint &&
               <PrimaryButton size="medium" onClick={handleWorld}>
                 CREATE NFT
               </PrimaryButton>

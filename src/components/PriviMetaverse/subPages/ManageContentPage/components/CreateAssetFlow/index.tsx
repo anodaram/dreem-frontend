@@ -26,6 +26,8 @@ import { FormData, InputFileContents, InputFiles } from "../CreateAssetForm/inte
 
 import { useModalStyles } from "./index.styles";
 
+import { hideMint } from "shared/functions/getURL";
+
 const CreateSteps = [
   {
     label: 'NFT',
@@ -848,9 +850,10 @@ const CreateAssetFlow = ({
                 <PrimaryButton size="medium" className={classes.createDraftBtn} disabled={currentCollection ? false : true} onClick={() => handlePublic("draft")}>
                   create draft
                 </PrimaryButton>
-                {/* <PrimaryButton size="medium" className={classes.nextBtn} disabled={currentCollection ? false : true} onClick={() => { handlePublic("nft") }}>
+                {!hideMint &&
+                <PrimaryButton size="medium" className={classes.nextBtn} disabled={currentCollection ? false : true} onClick={() => { handlePublic("nft") }}>
                   mint nft
-                </PrimaryButton> */}
+                </PrimaryButton>}
               </Box>
             )}
           </Box>

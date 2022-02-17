@@ -29,6 +29,7 @@ import { onUploadNonEncrypt } from "shared/ipfs/upload";
 import useIPFS from "shared/utils-IPFS/useIPFS";
 import { BlockchainNets } from "shared/constants/constants";
 import { switchNetwork } from "shared/functions/metamask";
+import { hideMint } from "shared/functions/getURL";
 
 const ContentPreviewModal = ({
   nftId,
@@ -391,7 +392,7 @@ const ContentPreviewModal = ({
                             Edit Draft
                           </PrimaryButton>
                         ))}
-                      {/* {isOwner && !nft.minted && (
+                      {hideMint && isOwner && !nft.minted && (
                         <PrimaryButton
                           size="medium"
                           className={`${classes.button} ${classes.mintButton}`}
@@ -403,7 +404,7 @@ const ContentPreviewModal = ({
                         >
                           Mint NFT
                         </PrimaryButton>
-                      )} */}
+                      )} 
                     </Box>
                   ) : null}
                 </Box>
