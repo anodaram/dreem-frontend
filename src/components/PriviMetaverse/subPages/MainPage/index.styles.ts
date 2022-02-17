@@ -171,6 +171,17 @@ export const homePageStyles = makeStyles(theme => ({
       }
     },
   },
+  typo1: {
+    "fontFamily": "Rany",
+    "fontStyle": "normal",
+    "fontWeight": "normal",
+    "fontSize": "20px",
+    "lineHeight": "155%",
+    color: "#E9FF26",
+    [theme.breakpoints.down("xs")]: {
+      "fontSize": "16px",
+    },
+  },
   button: {
     display: "flex",
     alignItems: "center",
