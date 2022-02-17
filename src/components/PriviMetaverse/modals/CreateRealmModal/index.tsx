@@ -282,6 +282,10 @@ const CreateRealmModal = ({
       MetaverseAPI.uploadWorld(payload)
         .then(async res => {
           if (!res.success) return;
+          if(hideMint){
+            showAlertMessage(`Created draft successfully`, { variant: "success" });
+            return;
+          }
 
           if (isDraft) {
             setProgress(100);
@@ -687,7 +691,6 @@ const CreateRealmModal = ({
                 SAVE DRAFT
               </PrimaryButton>
             ) : (
-              !hideMint &&
               <PrimaryButton size="medium" onClick={handleWorld}>
                 CREATE NFT
               </PrimaryButton>
