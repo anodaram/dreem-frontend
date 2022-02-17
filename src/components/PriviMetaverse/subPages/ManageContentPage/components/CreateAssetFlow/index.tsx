@@ -848,9 +848,9 @@ const CreateAssetFlow = ({
                 <PrimaryButton size="medium" className={classes.createDraftBtn} disabled={currentCollection ? false : true} onClick={() => handlePublic("draft")}>
                   create draft
                 </PrimaryButton>
-                <PrimaryButton size="medium" className={classes.nextBtn} disabled={currentCollection ? false : true} onClick={() => { handlePublic("nft") }}>
+                {/* <PrimaryButton size="medium" className={classes.nextBtn} disabled={currentCollection ? false : true} onClick={() => { handlePublic("nft") }}>
                   mint nft
-                </PrimaryButton>
+                </PrimaryButton> */}
               </Box>
             )}
           </Box>

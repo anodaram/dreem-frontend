@@ -156,7 +156,7 @@ export default function WorldDetailPage() {
                 >
                   Edit Draft
                 </SecondaryButton>
-                <PrimaryButton
+                {/* <PrimaryButton
                   size="medium"
                   style={{
                     color: "#212121",
@@ -170,7 +170,7 @@ export default function WorldDetailPage() {
                   }}
                 >
                   Mint NFT
-                </PrimaryButton>
+                </PrimaryButton> */}
               </Box>
               <PrimaryButton
                 size="medium"

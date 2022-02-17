@@ -391,7 +391,7 @@ const ContentPreviewModal = ({
                             Edit Draft
                           </PrimaryButton>
                         ))}
-                      {isOwner && !nft.minted && (
+                      {/* {isOwner && !nft.minted && (
                         <PrimaryButton
                           size="medium"
                           className={`${classes.button} ${classes.mintButton}`}
@@ -403,7 +403,7 @@ const ContentPreviewModal = ({
                         >
                           Mint NFT
                         </PrimaryButton>
-                      )}
+                      )} */}
                     </Box>
                   ) : null}
                 </Box>
