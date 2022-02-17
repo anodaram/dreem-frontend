@@ -155,12 +155,17 @@ export const homePageStyles = makeStyles(theme => ({
     boxSizing: "border-box",
     borderRadius: "13px",
     // width: "50%",
-    padding: "46px 0px",
+    height: 150,
+    padding: "46px 10px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    [theme.breakpoints.down("sm")]: {
+      height: 70,
+    },
     [theme.breakpoints.down("xs")]: {
-      padding: "6px 0px",
+      padding: "6px 2px",
+      height: 48,
       "& svg": {
         width: 100,
       }
