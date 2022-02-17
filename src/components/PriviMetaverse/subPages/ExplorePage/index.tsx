@@ -7,7 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
 import { RootState } from "store/reducers/Reducer";
-import { setSelTabContentType, setSelTabAssetType } from "store/actions/Explore";
+import {
+  setSelTabContentType,
+  setSelTabAssetType,
+  setDreemList,
+  setScrollPositionInExplore,
+} from "store/actions/Explore";
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
@@ -93,13 +98,15 @@ export default function ExplorePage() {
 
   const selTabContentType = useSelector((state: RootState) => state.explore.selTabContentType);
   const selTabAssetType = useSelector((state: RootState) => state.explore.selTabAssetType);
+  const scrollPosition = useSelector((state: RootState) => state.explore.scrollPositionInExplore);
+  const dreemList = useSelector((state: RootState) => state.explore.dreemList);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { itemId } = useParams<{ itemId?: string }>();
-  const [dreemList, setDreemList] = React.useState<any[]>([]);
+  const [dreemDataList, setDreemDataList] = React.useState<any[]>(dreemList || []);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [page, setPage] = React.useState<number>(1);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
@@ -125,7 +132,7 @@ export default function ExplorePage() {
   const loadingCount = React.useMemo(() => (width > 900 ? 3 : width > 600 ? 2 : 1), [width]);
 
   React.useEffect(() => {
-    setDreemList([]);
+    // setDreemDataList([]);
     if (
       selectedContentType === "all assets" ||
       selectedContentType === "draft" ||
@@ -142,6 +149,7 @@ export default function ExplorePage() {
       setIsDisabledAssetTypeFilter(true);
       loadCreatorsData(true);
     }
+    dispatch(setScrollPositionInExplore(0));
   }, [selectedContentType, selectedAssetTypes, debouncedSearchValue]);
 
   React.useEffect(() => {
@@ -181,11 +189,12 @@ export default function ExplorePage() {
       );
       if (response.success) {
         const newData = response.data.elements;
-        setDreemList(prev => (init ? newData : [...prev, ...newData]));
+        setDreemDataList(prev => (init ? newData : [...prev, ...newData]));
         setPage(curPage + 1);
         setHasMore(response.data.page.cur < response.data.page.max);
+        dispatch(setDreemList([...dreemDataList, ...newData]));
       } else {
-        setDreemList([]);
+        setDreemDataList([]);
       }
     } catch (error) {
       console.log("error: ", error);
@@ -202,11 +211,11 @@ export default function ExplorePage() {
       .then(res => {
         if (res.success) {
           const newData = res.data.elements;
-          setDreemList(prev => (init ? newData : [...prev, ...newData]));
+          setDreemDataList(prev => (init ? newData : [...prev, ...newData]));
           setPage(curPage + 1);
           setHasMore(res.data.page.cur < res.data.page.max);
         } else {
-          setDreemList([]);
+          setDreemDataList([]);
         }
       })
       .finally(() => setLoading(false));
@@ -235,6 +244,10 @@ export default function ExplorePage() {
     if (loading) return;
 
     setSearchValue(e.target.value);
+  };
+
+  const handleScroll = e => {
+    dispatch(setScrollPositionInExplore(e.target.scrollTop));
   };
 
   return (
@@ -416,7 +429,7 @@ export default function ExplorePage() {
           </Box>
         )}
       </Box>
-      <Box className={classes.mainContent} id="scrollContainer">
+      <Box className={classes.mainContent} id="scrollContainer" onScroll={handleScroll}>
         {!(openFilterBar && isMobile) && (
           <Box className={classes.fitContent} mb={isTablet ? 6 : 12} px={isMobile ? 2 : 0}>
             <Box
@@ -459,8 +472,8 @@ export default function ExplorePage() {
               )}
             </Box>
             <InfiniteScroll
-              hasChildren={dreemList?.length > 0}
-              dataLength={dreemList?.length}
+              hasChildren={dreemDataList?.length > 0}
+              dataLength={dreemDataList?.length}
               scrollableTarget={"scrollContainer"}
               next={selectedContentType === "creators" ? loadCreatorsData : loadAssetData}
               hasMore={hasMore}
@@ -476,11 +489,12 @@ export default function ExplorePage() {
                   </Box>
                 )
               }
+              initialScrollY={scrollPosition - 350}
             >
               <Box mt={4}>
                 <MasonryGrid
                   gutter={"40px"}
-                  data={dreemList}
+                  data={dreemDataList}
                   renderItem={(item, index) =>
                     selectedContentType === "collection" ? (
                       <CollectionCard
@@ -503,7 +517,7 @@ export default function ExplorePage() {
                 />
               </Box>
             </InfiniteScroll>
-            {!loading && dreemList?.length < 1 && (
+            {!loading && dreemDataList?.length < 1 && (
               <Box textAlign="center" width="100%" mb={10} mt={2} fontSize={22}>
                 No Data
               </Box>
