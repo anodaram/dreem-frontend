@@ -34,6 +34,8 @@ import { ReactComponent as DeleteIcon } from "assets/icons/remove.svg";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
 import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 
+import { hideMint } from "shared/functions/getURL";
+
 interface CollectionInfo {
   address: string;
   firstIndex: string;
@@ -269,6 +271,8 @@ const CreateRealmFlow = ({ metaData, handleCancel }: { metaData: any; handleCanc
           } else {
             setUploadSuccess(true);
             showAlertMessage(`Created draft successfully. minting NFT...`, { variant: "success" });
+
+            if(hideMint) return;
             handleMintRealm(res.data);
           }
         });
