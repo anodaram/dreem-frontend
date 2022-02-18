@@ -166,7 +166,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                       ? offerData.map(item => [
                         {
                           cell:
-                            item.Beneficiary === account ? (
+                            item.Beneficiary?.toLowerCase() === account?.toLowerCase() ? (
                               <Box display="flex" alignItems="center">
                                 <span>Your Offer</span>
                                 <PrimaryButton
@@ -193,7 +193,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                                   }}
                                   onClick={() => visitProfile(item.Beneficiary, history)}
                                 >
-                                  {item.Beneficiary}
+                                  {item.priviUser?.id || item.Beneficiary}
                                 </span>
                               </Box>
                             ),
@@ -279,7 +279,7 @@ export default ({ offerData, historyData, isOwnership, nft, setNft }) => {
                         {
                           cell: (
                             <Box className={classes.gradientText} component="span">
-                              {item.Beneficiary}
+                              {item.priviUser?.id || item.Beneficiary}
                             </Box>
                           ),
                         },
