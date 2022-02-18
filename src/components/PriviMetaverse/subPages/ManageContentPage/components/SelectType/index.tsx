@@ -34,7 +34,6 @@ const SelectType = ({ handleNext }: { handleNext: (asset: CreateAssetModel) => v
       <div className={classes.content}>
         <Grid container spacing={2}>
           {assetTypes?.map((el, index) => (
-            el.key != 'REALM' &&
             <Grid md={4} sm={6} xs={12}>
               <Box
                 className={`maskWrapper ${el.interactable === true ? "" : "disabled"}`}

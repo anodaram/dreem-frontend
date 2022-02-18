@@ -14,7 +14,7 @@ import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import { PrimaryButton } from "shared/ui-kit";
-import TransactionProcessing from "./components/TransactionProcessing";
+import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProgressModal";
 import DepositRequiredModal from "components/PriviMetaverse/modals/DepositRequiredModal";
 import { RootState } from "../../../../store/reducers/Reducer";
 import { usePageStyles } from "./index.styles";
@@ -58,7 +58,7 @@ export default function CreatingRealmPage() {
   const [showDepositRequireModal, setShowDepositRequireModal] = React.useState<boolean>(false);
   // Transaction Modal
   const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
-  const [txSuccess, setTxSuccess] = useState<string>("progress");
+  const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
   const [txHash, setTxHash] = useState<string>("");
 
   useEffect(() => {
@@ -198,9 +198,10 @@ export default function CreatingRealmPage() {
         setTxHash
       );
       if (contractRes.success) {
-        setTxSuccess("success");
+        setTxSuccess(true);
         showAlertMessage(`Successfully applied extension`, { variant: "success" });
       } else {
+        setTxSuccess(false);
         showAlertMessage(`Confirmation failed`, { variant: "error" });
       }
     } else{
@@ -210,6 +211,18 @@ export default function CreatingRealmPage() {
 
   return (
     <>
+      {txModalOpen && (
+        <TransactionProgressModal
+          open={txModalOpen}
+          title="Creating your Realm"
+          transactionSuccess={txSuccess}
+          hash={txHash}
+          onClose={() => {
+            setTxSuccess(null);
+            setTxModalOpen(false);
+          }}
+        />
+      )}
       <div className={classes.root}>
         <div className={classes.otherContent} id="scrollContainer">
           {step === 0 && (
@@ -257,12 +270,11 @@ export default function CreatingRealmPage() {
               )}
             </>
           )}
-          {txModalOpen && <TransactionProcessing hash={txHash} status={txSuccess} backToHome={setStep(1)} />}
           <Box className={classes.footer}>
-            <div className={classes.cancelBtn} onClick={handlePrev}>
+            <div className={classes.cancelBtn} onClick={()=>handlePrev()}>
               back
             </div>
-            <PrimaryButton size="medium" className={classes.nextBtn} disabled={!validateStep()} onClick={handleNext}>
+            <PrimaryButton size="medium" className={classes.nextBtn} disabled={!validateStep()} onClick={()=>handleNext()}>
               next
             </PrimaryButton>
           </Box>
