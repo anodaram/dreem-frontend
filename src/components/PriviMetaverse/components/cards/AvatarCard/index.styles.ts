@@ -90,6 +90,12 @@ export const avatarCardStyles = makeStyles(theme => ({
     padding: "10px 10px 8px 8px",
     background: "#212121",
     borderRadius: "50%",
+    [theme.breakpoints.down("sm")]: {
+      top: 40,
+    },
+    [theme.breakpoints.down("sm")]: {
+      top: 8,
+    },
   },
   image: {
     objectFit: "contain",

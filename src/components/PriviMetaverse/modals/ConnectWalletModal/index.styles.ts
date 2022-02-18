@@ -80,6 +80,24 @@ export const useStyles = makeStyles(theme => ({
     width: 452,
     height: 452,
   },
+  "@keyframes circular-rotate": {
+    from: {
+      WebkitTransform: "rotate(0deg)",
+    },
+    to: {
+      WebkitTransform: "rotate(360deg)",
+    },
+  },
+  circleProgress: {
+    WebkitAnimation: "$circular-rotate 1.4s linear infinite",
+    animation: "$circular-rotate 1.4s linear infinite",
+    MozAnimation: "$circular-rotate 1.4s linear infinite",
+  },
+  disabled: {
+    opacity: 0.8,
+    border: "1px solid #2D3047 !important",
+    cursor: "default !important",
+  },
   button: {
     position: "relative",
     border: "1px solid #CCD1DE",

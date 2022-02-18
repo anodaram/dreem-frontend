@@ -61,7 +61,7 @@ const ApplyExtensionFlow = ({
   const classes = useModalStyles();
   const { showAlertMessage } = useAlertMessage();
 
-  const [hash, setHash] = useState<string>("0xf273a38fec99acf1e....eba");
+  const [hash, setHash] = useState<string>("");
   const [step, setStep] = useState<number>(1);
   const [steps, setSteps] = useState<any>(CreateSteps);
   const [title, setTitle] = useState<string>("");

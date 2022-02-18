@@ -650,7 +650,7 @@ const CreateAssetFlow = ({
               <Box
                 className={classes.content}
                 style={{
-                  padding: isMobile ? "47px 22px 63px" : "47px 58px 63px",
+                  padding: isMobile ? "47px 8px 63px" : "47px 58px 63px",
                 }}
               >
                 <div className={classes.modalContent}>
