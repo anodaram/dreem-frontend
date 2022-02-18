@@ -32,6 +32,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
   const marketFee = useSelector((state: RootState) => state.marketPlace.fee);
   const [price, setPrice] = useState<number>();
+  const [period, setPeriod] = useState<number>();
   const offerPrice = useMemo(() => (price || 0) * (1 + marketFee), [price, marketFee]);
   const [token, setToken] = useState<any>(tokens[0]);
   const [totalBalance, setTotalBalance] = useState<string>("0");
@@ -106,7 +107,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
 
   const handleApprove = async () => {
     try {
-      if (!price) {
+      if (!price || !period) {
         showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
           variant: "error",
         });
@@ -155,7 +156,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
 
   const handleConfirm = async () => {
     try {
-      if (!price) {
+      if (!price || !period) {
         showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
           variant: "error",
         });
@@ -178,6 +179,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
           price: toNDecimals(price, token.Decimals),
           beneficiary: account,
           sellerToMatch: "0x0000000000000000000000000000000000000000",
+          expirationTime: (Number(period) * 3600 * 24).toFixed(0),
           mode: 0,
         },
         setHash
@@ -275,6 +277,19 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
             />
           </Grid>
         </Grid>
+        <Box className={classes.nameField}>How many days do you want to allow buying offer?</Box>
+        <InputWithLabelAndTooltip
+          inputValue={period}
+          onInputValueChange={e => setPeriod(Number(getInputValue(e.target.value, 0)))}
+          overriedClasses={classes.inputJOT}
+          required
+          type="number"
+          theme="light"
+          minValue={0}
+          endAdornment={<div className={classes.purpleText}>DAYS</div>}
+          disabled={isApproved}
+          placeHolder={"00"}
+        />
         <Box className={classes.nameField}>Offer will disapppear if not accepted before</Box>
         <Box width="100%">
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
