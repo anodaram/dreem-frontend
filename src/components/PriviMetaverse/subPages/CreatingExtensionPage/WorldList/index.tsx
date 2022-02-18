@@ -217,27 +217,6 @@ const WorldList = ({
     }
   };
 
-  const handleRefreshCollection = () => {
-    setCurPage(1);
-    setLoadingCollection(true);
-    MetaverseAPI.getAssets(12, 1, "DESC", ["COLLECTION"], true)
-      .then(res => {
-        if (res.success) {
-          const items = res.data.elements;
-          if (items && items.length > 0) {
-            setCollections(res.data.elements);
-            if (res.data.page && curPage <= res.data.page.max) {
-              setCurPage(curPage => curPage + 1);
-              setLastPage(res.data.page.max);
-            } else {
-              setHasMore(false);
-            }
-          }
-        }
-      })
-      .finally(() => setLoadingCollection(false));
-  };
-
   const loadData = () => {
     setLoadingCollection(true);
     MetaverseAPI.getAssets(12, 1, "DESC", Filters, false, userSelector.id, null, false, false, true)

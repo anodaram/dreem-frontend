@@ -47,7 +47,7 @@ const CollectionList = ({
   const handleRefreshCollection = () => {
     setCurPage(1);
     setLoadingCollection(true);
-    MetaverseAPI.getAssets(12, 1, "DESC", ["COLLECTION"], true)
+    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], true, userSelector.id)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -67,19 +67,7 @@ const CollectionList = ({
 
   const loadData = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getAssets(
-      12,
-      1,
-      "DESC",
-      ["COLLECTION"],
-      undefined,
-      userSelector.id,
-      null,
-      undefined,
-      undefined,
-      undefined,
-      ""
-    )
+    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], true, userSelector.id)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -99,19 +87,7 @@ const CollectionList = ({
 
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getAssets(
-      12,
-      curPage,
-      "DESC",
-      ["COLLECTION"],
-      undefined,
-      userSelector.id,
-      null,
-      undefined,
-      undefined,
-      undefined,
-      ""
-    )
+    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], true, userSelector.id)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;

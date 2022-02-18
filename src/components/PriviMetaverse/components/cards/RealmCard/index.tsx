@@ -19,8 +19,11 @@ export default function RealmCard(props) {
   const [openContentPreview, setOpenContentPreview] = useState<boolean>(false);
 
   const handleOpenDetail = () => {
-    console.log(props?.item)
-    history.push(`/realms/${props?.item?.versionHashId}`);
+   if(props?.item?.versionHashId){
+     history.push(`/realms/${props?.item?.versionHashId}`);
+   } else{
+     return;
+   }
   };
 
   const handleClose = e => {

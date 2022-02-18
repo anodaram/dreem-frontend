@@ -18,6 +18,7 @@ import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProg
 import DepositRequiredModal from "components/PriviMetaverse/modals/DepositRequiredModal";
 import { RootState } from "../../../../store/reducers/Reducer";
 import { usePageStyles } from "./index.styles";
+import { useTypedSelector } from "store/reducers/Reducer";
 import CollectionList from "./CollectionList";
 import WorldList from "./WorldList";
 
@@ -28,6 +29,7 @@ export default function CreatingRealmPage() {
   const { id: realmId } = useParams<{ id: string }>();
   const { chainId, account, library } = useWeb3React();
   const [chain, setChain] = useState<string>(BlockchainNets[0].value);
+  const userSelector = useTypedSelector(state => state.user);
   const classes = usePageStyles();
   const { showAlertMessage } = useAlertMessage();
   const width = useWindowDimensions().width;
@@ -46,7 +48,6 @@ export default function CreatingRealmPage() {
   const [networkName, setNetworkName] = useState<string>("");
   const [realmData, setRealmData] = useState<any>({});
   const [currentCollection, setCurrentCollection] = useState<any>();
-  const [collections, setCollections] = useState<any[]>([]);
   const [worldHash, setWorldHash] = useState<any>(null);
   const [nftAddress, setNFTAddress] = useState<any>(null);
   const [nftId, setNFTId] = useState<any>(null);
@@ -80,7 +81,6 @@ export default function CreatingRealmPage() {
       loadRealm(realmId);
     }
     getSettings();
-    loadMore();
   }, []);
 
   const loadRealm = realmId => {
@@ -147,24 +147,6 @@ export default function CreatingRealmPage() {
     } else{
       history.push(`/realms/${realmData.versionHashId}`);
     }
-  };
-
-  const loadMore = () => {
-    setLoadingCollection(true);
-    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], true)
-      .then(res => {
-        if (res.success) {
-          const items = res.data.elements;
-          if (items && items.length > 0) {
-            setCollections([...collections, ...res.data.elements]);
-            if (res.data.page && curPage <= res.data.page.max) {
-              setCurPage(curPage => curPage + 1);
-              setLastPage(res.data.page.max);
-            }
-          }
-        }
-      })
-      .finally(() => setLoadingCollection(false));
   };
 
   const handleConfirm = async (amount) => {
