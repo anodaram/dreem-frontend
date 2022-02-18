@@ -30,19 +30,20 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   1420: 4,
 };
 
-export const ArrowIcon = func => () => (
-  <Box style={{ cursor: "pointer" }} onClick={() => func(true)}>
-    <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
-        stroke="#2D3047"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  </Box>
-);
+export const ArrowIcon = func => () =>
+  (
+    <Box style={{ cursor: "pointer" }} onClick={() => func(true)}>
+      <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M1.10303 1.06644L5.29688 5.26077L9.71878 0.838867"
+          stroke="#2D3047"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </Box>
+  );
 
 const OwnersPanel = () => {
   const classes = ownersPanelStyles();
@@ -162,6 +163,7 @@ const OwnersPanel = () => {
       0
     );
   }, [userNFTs]);
+
   const totalRentRevenue = useMemo(() => {
     return userNFTs.reduce(
       (total, nft) =>
@@ -209,11 +211,11 @@ const OwnersPanel = () => {
           <Box className={classes.infoRow}>
             <Box className={classes.infoSubPanel}>
               <span className={classes.infoLabel}>Total selling revenue</span>
-              <span className={classes.infoValue}>{+totalSaleRevenue.toFixed(2)} USDT</span>
+              <span className={classes.infoValue}>{+(totalSaleRevenue || 0).toFixed(2)} USDT</span>
             </Box>
             <Box className={classes.infoSubPanel}>
               <span className={classes.infoLabel}>Selling revenue this month</span>
-              <span className={classes.infoValue}>{+monthSaleRevenue.toFixed(2)} USDT</span>
+              <span className={classes.infoValue}>{+(monthSaleRevenue || 0).toFixed(2)} USDT</span>
             </Box>
           </Box>
         </Grid>
@@ -221,11 +223,11 @@ const OwnersPanel = () => {
           <Box className={classes.infoRow}>
             <Box className={classes.infoSubPanel}>
               <span className={classes.infoLabel}>Total Rent Revenue </span>
-              <span className={classes.infoValue}>{+totalRentRevenue.toFixed(2)} USDT</span>
+              <span className={classes.infoValue}>{+(totalRentRevenue || 0).toFixed(2)} USDT</span>
             </Box>
             <Box className={classes.infoSubPanel}>
               <span className={classes.infoLabel}>Rent revenue this month</span>
-              <span className={classes.infoValue}>{+monthRentRevenue.toFixed(2)} USDT</span>
+              <span className={classes.infoValue}>{+(monthRentRevenue || 0).toFixed(2)} USDT</span>
             </Box>
           </Box>
         </Grid>
