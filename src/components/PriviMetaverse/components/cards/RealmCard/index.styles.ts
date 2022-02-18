@@ -22,19 +22,6 @@ export const realmCardStyles = makeStyles(theme => ({
     "&:hover": {
       transform: (props: any) => (props.disableEffect ? undefined : "scale(1.02)"),
     },
-    // backgroundClip: "padding-box",
-    // "&::before": {
-    //   content: "''",
-    //   position: "absolute",
-    //   top: "0",
-    //   right: "0",
-    //   bottom: "0",
-    //   left: "0",
-    //   zIndex: "-1",
-    //   margin: "-2px",
-    //   borderRadius: "inherit",
-    //   background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%)",
-    // },
   },
   image: {
     backgroundSize: "cover",
@@ -67,7 +54,6 @@ export const realmCardStyles = makeStyles(theme => ({
     fontWeight: "bold",
     fontSize: (props: any) => (props.isFeature ? 28 : 20),
     lineHeight: (props: any) => (props.isFeature ? "33px" : "24px"),
-    // marginBottom: (props: any) => (props.isFeature ? 24 : 8),
     textTransform: "uppercase",
     width: "100%",
     whiteSpace: "nowrap",
@@ -77,7 +63,7 @@ export const realmCardStyles = makeStyles(theme => ({
       fontSize: (props: any) => (props.isFeature ? 20 : 16),
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: (props: any) => (props.isFeature ? 15 : 12),
+      fontSize: (props: any) => (props.isFeature ? 15 : 14),
       lineHeight: (props: any) => (props.isFeature ? "22px" : "24px"),
     },
   },
@@ -95,7 +81,7 @@ export const realmCardStyles = makeStyles(theme => ({
       fontSize: (props: any) => (props.isFeature ? 14 : 12),
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: (props: any) => (props.isFeature ? 14 : 8),
+      fontSize: (props: any) => (props.isFeature ? 14 : 13),
       lineHeight: (props: any) => (props.isFeature ? "18px" : "24px"),
     },
   },

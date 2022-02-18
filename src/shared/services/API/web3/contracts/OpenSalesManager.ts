@@ -20,47 +20,56 @@ const openSalesManager = network => {
             payload.paymentToken,
             payload.price,
             payload.beneficiary,
-            payload.sellerToMatch
+            payload.sellerToMatch,
+            payload.expirationTime
           )
           .estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
 
-        const response = await web3.eth.getChainId()==137 
+        const response =
+          (await web3.eth.getChainId()) == 137
             ? await contract.methods
-              .approvePurchase(
-                payload.collection_id,
-                payload.token_id,
-                payload.paymentToken,
-                payload.price,
-                payload.beneficiary,
-                payload.sellerToMatch
-              )
-              .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-              .on("transactionHash", hash => {
-                setHash(hash);
-              })
+                .approvePurchase(
+                  payload.collection_id,
+                  payload.token_id,
+                  payload.paymentToken,
+                  payload.price,
+                  payload.beneficiary,
+                  payload.sellerToMatch,
+                  payload.expirationTime
+                )
+                .send({
+                  from: account,
+                  gas: gas,
+                  maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
+                })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
             : await contract.methods
-              .approvePurchase(
-                payload.collection_id,
-                payload.token_id,
-                payload.paymentToken,
-                payload.price,
-                payload.beneficiary,
-                payload.sellerToMatch
-              )
-              .send({ from: account, gas: gas })
-              .on("transactionHash", hash => {
-                setHash(hash);
-              });
+                .approvePurchase(
+                  payload.collection_id,
+                  payload.token_id,
+                  payload.paymentToken,
+                  payload.price,
+                  payload.beneficiary,
+                  payload.sellerToMatch,
+                  payload.expirationTime
+                )
+                .send({ from: account, gas: gas })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                });
 
         console.log("transaction succeed", response?.events);
-        if ( payload.mode === 1 && response?.events?.PurchaseCompleted ||
-            payload.mode === 0 && response?.events?.PurchaseProposed )
-          {
-            resolve({ success: true, hash: response.transactionHash });
-          } else {
-            resolve({ success: false })
-          }
+        if (
+          (payload.mode === 1 && response?.events?.PurchaseCompleted) ||
+          (payload.mode === 0 && response?.events?.PurchaseProposed)
+        ) {
+          resolve({ success: true, hash: response.transactionHash });
+        } else {
+          resolve({ success: false });
+        }
       } catch (e) {
         console.log(e);
         resolve({
@@ -82,47 +91,55 @@ const openSalesManager = network => {
             payload.paymentToken,
             payload.price,
             payload.beneficiary,
-            payload.buyerToMatch
+            payload.buyerToMatch,
+            payload.expirationTime
           )
           .estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
 
-
-        const response = await web3.eth.getChainId()==137 
-           ? await contract.methods
-              .approveSale(
-                payload.collection_id,
-                payload.token_id,
-                payload.paymentToken,
-                payload.price,
-                payload.beneficiary,
-                payload.buyerToMatch
-              )
-              .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-              .on("transactionHash", hash => {
-                setHash(hash);
-              })
+        const response =
+          (await web3.eth.getChainId()) == 137
+            ? await contract.methods
+                .approveSale(
+                  payload.collection_id,
+                  payload.token_id,
+                  payload.paymentToken,
+                  payload.price,
+                  payload.beneficiary,
+                  payload.buyerToMatch,
+                  payload.expirationTime
+                )
+                .send({
+                  from: account,
+                  gas: gas,
+                  maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
+                })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
             : await contract.methods
-                    .approveSale(
-                      payload.collection_id,
-                      payload.token_id,
-                      payload.paymentToken,
-                      payload.price,
-                      payload.beneficiary,
-                      payload.buyerToMatch
-                    )
-                    .send({ from: account, gas: gas })
-                    .on("transactionHash", hash => {
-                      setHash(hash);
-                    })
+                .approveSale(
+                  payload.collection_id,
+                  payload.token_id,
+                  payload.paymentToken,
+                  payload.price,
+                  payload.beneficiary,
+                  payload.buyerToMatch,
+                  payload.expirationTime
+                )
+                .send({ from: account, gas: gas })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                });
         console.log("transaction succeed", response?.events);
-        if (payload.mode === 0 && response?.events?.SaleProposed ||
-            payload.mode === 1 && response?.events?.SaleCompleted )
-          {
-            resolve({ success: true, hash: response.transactionHash });
-          } else {
-            resolve({ success: false })
-          }
+        if (
+          (payload.mode === 0 && response?.events?.SaleProposed) ||
+          (payload.mode === 1 && response?.events?.SaleCompleted)
+        ) {
+          resolve({ success: true, hash: response.transactionHash });
+        } else {
+          resolve({ success: false });
+        }
       } catch (e) {
         console.log(e);
         resolve({
@@ -132,7 +149,12 @@ const openSalesManager = network => {
     });
   };
 
-  const cancelSaleProposal = async (web3: Web3, account: string, payload: any, setHash: any): Promise<any> => {
+  const cancelSaleProposal = async (
+    web3: Web3,
+    account: string,
+    payload: any,
+    setHash: any
+  ): Promise<any> => {
     return new Promise(async resolve => {
       try {
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
@@ -148,8 +170,9 @@ const openSalesManager = network => {
           .estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
 
-        const response = await web3.eth.getChainId()==137 
-             ? await contract.methods
+        const response =
+          (await web3.eth.getChainId()) == 137
+            ? await contract.methods
                 .cancelSaleProposal(
                   payload.collection_id,
                   payload.token_id,
@@ -157,7 +180,11 @@ const openSalesManager = network => {
                   payload.price,
                   payload.owner
                 )
-                .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
+                .send({
+                  from: account,
+                  gas: gas,
+                  maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
+                })
                 .on("transactionHash", hash => {
                   setHash(hash);
                 })
@@ -172,7 +199,7 @@ const openSalesManager = network => {
                 .send({ from: account, gas: gas })
                 .on("transactionHash", hash => {
                   setHash(hash);
-            })
+                });
 
         console.log("transaction succeed", response?.events);
 
@@ -190,7 +217,12 @@ const openSalesManager = network => {
     });
   };
 
-  const cancelPurchaseProposal = async (web3: Web3, account: string, payload: any, setHash: any): Promise<any> => {
+  const cancelPurchaseProposal = async (
+    web3: Web3,
+    account: string,
+    payload: any,
+    setHash: any
+  ): Promise<any> => {
     return new Promise(async resolve => {
       try {
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
@@ -206,20 +238,25 @@ const openSalesManager = network => {
           )
           .estimateGas({ from: account });
         console.log("calced gas price is.... ", gas);
-        const response =  await web3.eth.getChainId()==137 
-          ?  await contract.methods
-              .cancelPurchaseProposal(
-                payload.collection_id,
-                payload.token_id,
-                payload.paymentToken,
-                payload.price,
-                payload.beneficiary
-              )
-              .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei') })
-              .on("transactionHash", hash => {
-                setHash(hash);
-              })
-          :  await contract.methods
+        const response =
+          (await web3.eth.getChainId()) == 137
+            ? await contract.methods
+                .cancelPurchaseProposal(
+                  payload.collection_id,
+                  payload.token_id,
+                  payload.paymentToken,
+                  payload.price,
+                  payload.beneficiary
+                )
+                .send({
+                  from: account,
+                  gas: gas,
+                  maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, "gwei"),
+                })
+                .on("transactionHash", hash => {
+                  setHash(hash);
+                })
+            : await contract.methods
                 .cancelPurchaseProposal(
                   payload.collection_id,
                   payload.token_id,
@@ -230,7 +267,7 @@ const openSalesManager = network => {
                 .send({ from: account, gas: gas })
                 .on("transactionHash", hash => {
                   setHash(hash);
-                })
+                });
         console.log("transaction succeed", response?.events);
 
         if (response?.events?.PurchaseCanceled) {
