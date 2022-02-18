@@ -142,14 +142,14 @@ export const exploreRealmsPageStyles = makeStyles(theme => ({
   bgImgTriangle: {
     position: "absolute",
     width: 635,
-    right: "-23px",
-    top: "123px",
+    right: -23,
+    top: 123,
     [theme.breakpoints.down("md")]: {
       width: 425,
     },
     [theme.breakpoints.down("sm")]: {
-      // display: "none",
       right: -210,
+      top: 170,
     },
   },
   bgImgGreenCircle: {

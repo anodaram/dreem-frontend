@@ -78,6 +78,12 @@ export const manageContentPageStyles = makeStyles(theme => ({
     cursor: "pointer",
     textTransform: "uppercase",
     height: "50px !important",
+    [theme.breakpoints.down("xs")]: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "100%",
+    },
   },
   nextBtn: {
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
