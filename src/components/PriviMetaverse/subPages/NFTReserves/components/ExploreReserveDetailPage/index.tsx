@@ -221,32 +221,47 @@ const ExploreReserveDetailPage = () => {
       web3APIHandler.RentalManager.rentedTokenSyntheticID(web3, payloads),
       web3APIHandler.RentalManager.getSyntheticNFTAddress(web3, payloads),
     ]).then(([{ rentalInfos }, { nftAddress }, syntheticNFTRes]) => {
-      web3APIHandler.SyntheticNFTManager.ownerOf(web3, {
-        contractAddress: syntheticNFTRes.nftAddress,
-        tokenId: Number(nftAddress),
-      }).then(res => {
+      if (rentalInfos) {
+        web3APIHandler.SyntheticNFTManager.ownerOf(web3, {
+          contractAddress: syntheticNFTRes.nftAddress,
+          tokenId: Number(nftAddress),
+        }).then(res => {
+          syncUpNFT({
+            mode: isProd ? "main" : "test",
+            collectionId: nft.collectionId,
+            tokenId: nft.tokenId,
+            isTokenInVault,
+            rentalInfos: {
+              collection: rentalInfos.collection,
+              tokenId: rentalInfos.tokenId,
+              maximumRentTime: Number(rentalInfos.maximumRentTime),
+              pricePerSecond: Number(rentalInfos.pricePerSecond),
+              rentalExpiration: Number(rentalInfos.rentalExpiration),
+              fundingToken: rentalInfos.fundingToken,
+              owner: rentalInfos.owner,
+              renter: res.rentalInfos,
+              syntehticId: nftAddress,
+            },
+          })
+            .then(() => {
+              setSyncing(false);
+              getData();
+            })
+            .catch(err => console.log(err));
+        });
+      } else {
         syncUpNFT({
           mode: isProd ? "main" : "test",
           collectionId: nft.collectionId,
           tokenId: nft.tokenId,
-          rentalInfos: {
-            collection: rentalInfos.collection,
-            tokenId: rentalInfos.tokenId,
-            maximumRentTime: Number(rentalInfos.maximumRentTime),
-            pricePerSecond: Number(rentalInfos.pricePerSecond),
-            rentalExpiration: Number(rentalInfos.rentalExpiration),
-            fundingToken: rentalInfos.fundingToken,
-            owner: rentalInfos.owner,
-            renter: res.rentalInfos,
-            syntehticId: nftAddress,
-          },
+          isTokenInVault
         })
           .then(() => {
             setSyncing(false);
             getData();
           })
           .catch(err => console.log(err));
-      });
+      }
     });
   };
 
