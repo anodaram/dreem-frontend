@@ -188,7 +188,7 @@ export default function MakeBuyOfferModal({ open, handleClose, nft, setNft }) {
         const offerId = await web3.utils.keccak256(
           web3.eth.abi.encodeParameters(
             ["address", "uint256", "address", "uint256", "address"],
-            [nft.Address, token_id, token.Address, toNDecimals(offerPrice, token.Decimals), account]
+            [nft.Address, token_id, token.Address, toNDecimals(price, token.Decimals), account]
           )
         );
 
