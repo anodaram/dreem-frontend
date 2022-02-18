@@ -60,9 +60,9 @@ const ConnectWalletModal = props => {
             </Box>
             Solflare
           </Box>
-          <Box className={classes.alert} mt={4}>
+          {/* <Box className={classes.alert} mt={4}>
             I don’t have a wallet
-          </Box>
+          </Box> */}
         </>
       ) : page === 1 ? (
         <>

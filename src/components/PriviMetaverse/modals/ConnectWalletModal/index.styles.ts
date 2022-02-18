@@ -94,9 +94,13 @@ export const useStyles = makeStyles(theme => ({
     MozAnimation: "$circular-rotate 1.4s linear infinite",
   },
   disabled: {
-    opacity: 0.8,
+    opacity: 0.3,
     border: "1px solid #2D3047 !important",
     cursor: "default !important",
+    "&:hover": {
+      opacity: "0.3 !important",
+      border: "1px solid #2D3047 !important",
+    },
   },
   button: {
     position: "relative",
