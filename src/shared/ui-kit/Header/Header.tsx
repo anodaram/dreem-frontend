@@ -29,6 +29,7 @@ import { usePageRefreshContext } from "shared/contexts/PageRefreshContext";
 import { RootState } from "../../../store/reducers/Reducer";
 import { injected } from "shared/connectors";
 import NoMetamaskModal from "components/Connect/modals/NoMetamaskModal";
+import ConnectWalletModal from "components/PriviMetaverse/modals/ConnectWalletModal";
 import * as API from "shared/services/API/WalletAuthAPI";
 import { setLoginBool } from "store/actions/LoginBool";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
@@ -82,6 +83,7 @@ const Header = props => {
   const [userId, setUserId] = useState<string>("");
   const [ownUser, setOwnUser] = useState<boolean>(idUrl === localStorage.getItem("userId"));
   const [userProfile, setUserProfile] = useState<any>({});
+  const [openConnectWalletModal, setOpenConnectWalletModal] = useState<boolean>(false);
   const [openNotificationModal, setOpenNotificationModal] = useState<boolean>(false);
   const [selectedNotification, setSelectedNotification] = useState<any>();
   const [secondsLeft, setSecondsLeft] = useState<number>(0);
@@ -371,6 +373,7 @@ const Header = props => {
           setNoMetamask(true);
         }
       });
+    // setOpenConnectWalletModal(true);
   };
 
   return (
@@ -681,6 +684,12 @@ const Header = props => {
       ) : null}
 
       {noMetamask && <NoMetamaskModal open={noMetamask} onClose={() => setNoMetamask(false)} />}
+      {openConnectWalletModal && (
+        <ConnectWalletModal 
+          open={openConnectWalletModal} 
+          onClose={() => setOpenConnectWalletModal(false)}
+        />
+      )}
     </div>
   );
 };
