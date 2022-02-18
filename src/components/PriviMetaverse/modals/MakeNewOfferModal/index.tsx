@@ -193,15 +193,15 @@ export default function MakeNewOfferModal({ open, handleClose, nft, setNft }) {
     if (response.success) {
       const offerId = await web3.utils.keccak256(
         web3.eth.abi.encodeParameters(
-          ["address", "uint256", "address", "address", "uint80", "uint256", "uint256", "address"],
+          ["address", "uint256", "address", "address", "uint256", "uint80", "uint256", "address"],
           [
             nft.Address,
             token_id,
             reservePriceToken?.Address,
             colaterralPriceToken?.Address,
-            toNDecimals(collateralPercent, 2),
             toNDecimals(price, reservePriceToken.Decimals),
-            toNDecimals(collateral, colaterralPriceToken.Decimals),
+            toNDecimals(collateralPercent, 2),
+            ( Number(blockingPeriod) * 3600 * 24 ).toFixed(0),
             account,
           ]
         )

@@ -3,17 +3,19 @@ import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
 
 import { useStyles } from "./index.styles";
+import PhantomIcon from "assets/icons/phantom_connect.png";
+import SolflareIcon from "assets/icons/solflare_connect.png";
 
 const ConnectWalletModal = props => {
   const classes = useStyles();
 
-  const [page, setPage] = React.useState<number>(2);
+  const [page, setPage] = React.useState<number>(0);
 
   return (
     <Modal
       size="small"
       isOpen={props.open}
-      onClose={props.handleClose}
+      onClose={props.onClose}
       showCloseIcon
       className={classes.root}
     >
@@ -22,21 +24,32 @@ const ConnectWalletModal = props => {
           <Box className={classes.title} mb={2.5}>
             Connect Wallet
           </Box>
-          <Box className={classes.description}>Select wallet you would like to connect</Box>
-          <Box className={classes.divider} />
+          <Box className={classes.description} mb={3}>Select wallet you would like to connect</Box>
           <Box className={classes.button} width={1} mb={2}>
             <Box className="icon">
               <MetamaskIcon />
             </Box>
             Metamask
           </Box>
-          <Box className={classes.button} width={1} onClick={() => setPage(1)}>
+          <Box className={classes.button} width={1} mb={2}>
             <Box className="icon">
               <WalletConnectIcon />
             </Box>
             Wallet Connnect
           </Box>
-          <Box className={classes.alert} mt={6} onClick={() => setPage(2)}>
+          <Box className={classes.button} width={1} mb={2}>
+            <Box className="icon">
+              <img src={PhantomIcon} />
+            </Box>
+            Phantom
+          </Box>
+          <Box className={classes.button} width={1}>
+            <Box className="icon">
+              <img src={SolflareIcon} />
+            </Box>
+            Solflare
+          </Box>
+          <Box className={classes.alert} mt={4}>
             I don’t have a wallet
           </Box>
         </>

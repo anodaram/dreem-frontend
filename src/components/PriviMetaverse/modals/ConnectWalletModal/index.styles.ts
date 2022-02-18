@@ -56,9 +56,7 @@ export const useStyles = makeStyles(theme => ({
     textAlign: "center",
     color: "#E9FF26",
     cursor: "pointer",
-    "&:hover": {
-      textDecorationLine: "underline",
-    },
+    textDecorationLine: "underline",
     [theme.breakpoints.down("xs")]: {
       fontSize: 14,
     },

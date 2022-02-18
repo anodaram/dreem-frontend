@@ -22,15 +22,15 @@ const RealmFactory = network => {
         const { contractAddress, amount, nftToAttachAddress, nftToAttachId } = payload;
         console.log('params---', contractAddress, nftToAttachAddress, nftToAttachId, amount)
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
-        const depositFee = await contract.methods.getDepositFee().call()
-        console.log('contract-----', contract, depositFee)
+        // const depositFee = await contract.methods.getDepositFee().call()
+        // console.log('contract-----', contract, depositFee)
 
-        console.log("Getting gas....", contract, contractAddress, account, nftToAttachAddress, nftToAttachId, depositFee);
-        const gas = await contract.methods.addExtension(nftToAttachAddress, nftToAttachId).estimateGas({ from: account, value: depositFee});
+        console.log("Getting gas....", contract, contractAddress, account, nftToAttachAddress, nftToAttachId, amount);
+        const gas = await contract.methods.addExtension(nftToAttachAddress, nftToAttachId).estimateGas({ from: account, value: to18Decimals(amount)});
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
           .addExtension(nftToAttachAddress, nftToAttachId)
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei'), value: depositFee })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei'), value: to18Decimals(amount) })
           .on("transactionHash", function (hash) {
             console.log("transaction hash:", hash);
             setTxModalOpen(true);

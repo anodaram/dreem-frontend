@@ -4,10 +4,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useParams } from "react-router-dom";
-import { Grid, Select, MenuItem, useMediaQuery, useTheme } from "@material-ui/core";
+import { Select, MenuItem, useMediaQuery, useTheme } from "@material-ui/core";
 import URL from "shared/functions/getURL";
 import Box from "shared/ui-kit/Box";
-import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
+// import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import { useAuth } from "shared/contexts/AuthContext";
@@ -32,12 +32,12 @@ const filterStatusOptions = ["All", "DRAFT", "MINTED"];
 
 export default function CollectionDetailPage() {
   const classes = collectionDetailPageStyles();
-  const filterClasses = useFilterSelectStyles();
+  // const filterClasses = useFilterSelectStyles();
 
-  const { isSignedin } = useAuth();
+  // const { isSignedin } = useAuth();
   const width = useWindowDimensions().width;
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  // const theme = useTheme();
+  // const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const { shareMedia } = useShareMedia();
   const { showAlertMessage } = useAlertMessage();
 
@@ -48,12 +48,11 @@ export default function CollectionDetailPage() {
   const [nftData, setNftData] = React.useState<any[]>([]);
   const [fruitData, setFruitData] = React.useState<any>({});
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [curPage, setCurPage] = React.useState(1);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [selectedTab, setSelectedTab] = React.useState<string>();
-  const [openAssetTypeSelect, setOpenAssetTypeSelect] = React.useState<boolean>(false);
-  const [openStatusSelect, setOpenStatusSelect] = React.useState<boolean>(false);
+  // const [openAssetTypeSelect, setOpenAssetTypeSelect] = React.useState<boolean>(false);
+  // const [openStatusSelect, setOpenStatusSelect] = React.useState<boolean>(false);
   const [filterAssetType, setFilterAssetType] = React.useState<string>(FilterAssetTypeOptionAllNames[0]);
   const [filterStatus, setFilterStatus] = React.useState<string>(filterStatusOptions[0]);
 
@@ -68,9 +67,10 @@ export default function CollectionDetailPage() {
       loadCollection(collectionId);
     }
   }, [collectionId]);
-  const loadFruidData = (collectionId) => {
+  const loadFruidData = collectionId => {
     if (collectionId) {
-      axios.get(`${URL()}/dreemRealm/getFruitData`, {
+      axios
+        .get(`${URL()}/dreemRealm/getFruitData`, {
           params: {
             collectionId,
           },
@@ -79,7 +79,7 @@ export default function CollectionDetailPage() {
           setFruitData(res.data.data);
         });
     }
-  }
+  };
   const loadCollection = collectionId => {
     setIsLoading(true);
     setLoading(true);
@@ -121,11 +121,11 @@ export default function CollectionDetailPage() {
   };
 
   const handleGoToPolygonscan = () => {
-    window.open(collectionData.polygonscanUrl, "_blank")
+    window.open(collectionData.polygonscanUrl, "_blank");
   };
 
   const handleGoToOpensea = () => {
-    window.open(collectionData.openseaUrl, "_blank")
+    window.open(collectionData.openseaUrl, "_blank");
   };
 
   const handleFruit = type => {
@@ -164,10 +164,10 @@ export default function CollectionDetailPage() {
           <Box display="flex" justifyContent="space-between">
             <Box className={classes.title}>{collectionData?.name || ""}</Box>
             <Box display="flex" alignItems="center">
-              <div className={classes.iconBtn} onClick={()=>handleGoToPolygonscan()}>
+              <div className={classes.iconBtn} onClick={() => handleGoToPolygonscan()}>
                 <PolygonIcon />
               </div>
-              <div className={classes.iconBtn} onClick={()=>handleGoToOpensea()}>
+              <div className={classes.iconBtn} style={{ paddingTop: 5 }} onClick={() => handleGoToOpensea()}>
                 <OpenSeaIcon />
               </div>
               {/* {isSignedin && (
@@ -188,8 +188,7 @@ export default function CollectionDetailPage() {
           </Box>
           <Box className={classes.symbol}>{collectionData?.collectionSymbol || ""}</Box>
           <Box className={classes.description}>{collectionData?.description || ""}</Box>
-
-          <Box
+          {/* <Box
             display="flex"
             mb={5}
             width={isMobile ? 1 : "auto"}
@@ -261,7 +260,7 @@ export default function CollectionDetailPage() {
                 </MenuItem>
               ))}
             </Select>
-          </Box>
+          </Box> */}
           <InfiniteScroll
             hasChildren={nftData?.length > 0}
             dataLength={nftData?.length}
