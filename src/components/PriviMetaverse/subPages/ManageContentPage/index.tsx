@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import Web3 from "web3";
@@ -7,9 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
 
 import { useAuth } from "shared/contexts/AuthContext";
-import useIPFS from "shared/utils-IPFS/useIPFS";
-import { BlockchainNets } from "shared/constants/constants";
-import { switchNetwork } from "shared/functions/metamask";
 import Box from "shared/ui-kit/Box";
 import { CircularLoadingIndicator, PrimaryButton } from "shared/ui-kit";
 import MetaMaskIcon from "assets/walletImages/metamask1.svg";
@@ -19,30 +16,23 @@ import { setUser } from "store/actions/User";
 import { setLoginBool } from "store/actions/LoginBool";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import NoMetamaskModal from "components/Connect/modals/NoMetamaskModal";
-import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
-import useWindowDimensions from "shared/hooks/useWindowDimensions";
-import CreateCollection from "./components/CreateCollection";
 import CreateAssetFlow from "./components/CreateAssetFlow";
 import SelectType from "./components/SelectType";
 import { RootState } from "../../../../store/reducers/Reducer";
-import CreateRealmModal from "../../modals/CreateRealmModal";
-import { manageContentPageStyles } from "./index.styles";
-import { onUploadNonEncrypt } from "shared/ipfs/upload";
-import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
+// import CreateRealmModal from "../../modals/CreateRealmModal";
 import CreateAssetModel from "shared/model/CreateAssetModel";
+import { manageContentPageStyles } from "./index.styles";
 
 export default function ManageContentPage() {
   const dispatch = useDispatch();
   const underMaintenanceSelector = useSelector((state: RootState) => state.underMaintenanceInfo?.info);
   const publicy = useSelector((state: RootState) => state.underMaintenanceInfo?.publicy);
 
-  const { ipfs, setMultiAddr, uploadWithNonEncryption } = useIPFS();
   const classes = manageContentPageStyles();
-  const { activate, chainId, account, library } = useWeb3React();
+  const { activate, account, library } = useWeb3React();
   const { showAlertMessage } = useAlertMessage();
   const { isSignedin, setSignedin, isOnSigning, setOnSigning } = useAuth();
   const [noMetamask, setNoMetamask] = React.useState<boolean>(false);
-  const [metaDataForModal, setMetaDataForModal] = useState<any>(null);
   const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
 
   const [step, setStep] = useState<number>(0);

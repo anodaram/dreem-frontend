@@ -12,8 +12,12 @@ export const openDesktopModalStyles = makeStyles(theme => ({
     padding: "44px !important",
     marginTop: "260px",
     [theme.breakpoints.down("xs")]: {
+      marginTop: 0,
+    },
+    [theme.breakpoints.down("xs")]: {
+      marginTop: 0,
       padding: "24px !important",
-    }
+    },
   },
   gradientText: {
     WebkitBackgroundClip: "text",
@@ -36,6 +40,6 @@ export const openDesktopModalStyles = makeStyles(theme => ({
     fontSize: 16,
     fontWeight: 500,
     color: "white",
-    lineHeight: "18px"
-  }
+    lineHeight: "18px",
+  },
 }));

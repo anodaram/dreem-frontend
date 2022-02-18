@@ -261,8 +261,16 @@ export default function ExploreRealmsPage() {
             </Box>
           </Box>
           <Box>
-            <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-              <Box className={classes.gradientText}>Explore realms</Box>
+            <Box
+              display="flex"
+              alignItems={isMobile ? "start" : "center"}
+              justifyContent="space-between"
+              flexDirection={isMobile ? "column" : "row"}
+              mb={2}
+            >
+              <Box className={classes.gradientText} mb={isMobile ? 2 : 0}>
+                Explore realms
+              </Box>
               {!hideMint &&
               <PrimaryButton
                 size="medium"

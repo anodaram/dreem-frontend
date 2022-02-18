@@ -421,6 +421,9 @@ export const useModalStyles = makeStyles(theme => ({
     textTransform: "uppercase",
     height: "50px !important",
     cursor: "pointer !important",
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "13px  !important",
+    },
   },
   nextBtn: {
     background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
@@ -434,6 +437,7 @@ export const useModalStyles = makeStyles(theme => ({
     textTransform: "uppercase",
     height: "50px !important",
     marginLeft: "10px",
+    paddingTop: "4px !important",
   },
   footer: {
     position: "fixed",
