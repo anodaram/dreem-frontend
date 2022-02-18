@@ -1,20 +1,23 @@
 import React from "react";
-import axios from "axios";
+// import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "store/reducers/Reducer";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useParams } from "react-router-dom";
-import { Select, MenuItem, useMediaQuery, useTheme } from "@material-ui/core";
-import URL from "shared/functions/getURL";
-import Box from "shared/ui-kit/Box";
+
+// import { Select, MenuItem, useMediaQuery, useTheme } from "@material-ui/core";
+
+// import URL from "shared/functions/getURL";
+
 // import { FruitSelect } from "shared/ui-kit/Select/FruitSelect";
+// import { useAuth } from "shared/contexts/AuthContext";
+// import { useAlertMessage } from "shared/hooks/useAlertMessage";
+// import { FilterAssetTypeOptionNames } from "shared/constants/constants";
+import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
-import { useAuth } from "shared/contexts/AuthContext";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
-import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
-import { FilterAssetTypeOptionNames } from "shared/constants/constants";
 import WorldCard from "components/PriviMetaverse/components/cards/WorldCard";
 import AssetsCard from "components/PriviMetaverse/components/cards/AssetsCard";
 import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
@@ -27,8 +30,8 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   1440: 4,
 };
 
-const FilterAssetTypeOptionAllNames = ["ALL", ...FilterAssetTypeOptionNames];
-const filterStatusOptions = ["All", "DRAFT", "MINTED"];
+// const FilterAssetTypeOptionAllNames = ["ALL", ...FilterAssetTypeOptionNames];
+// const filterStatusOptions = ["All", "DRAFT", "MINTED"];
 
 export default function CollectionDetailPage() {
   const classes = collectionDetailPageStyles();
@@ -39,22 +42,22 @@ export default function CollectionDetailPage() {
   // const theme = useTheme();
   // const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const { shareMedia } = useShareMedia();
-  const { showAlertMessage } = useAlertMessage();
+  // const { showAlertMessage } = useAlertMessage();
 
   const userSelector = useSelector((state: RootState) => state.user);
   const { id: collectionId } = useParams<{ id: string }>();
 
   const [collectionData, setCollectionData] = React.useState<any>({});
   const [nftData, setNftData] = React.useState<any[]>([]);
-  const [fruitData, setFruitData] = React.useState<any>({});
+  // const [fruitData, setFruitData] = React.useState<any>({});
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [selectedTab, setSelectedTab] = React.useState<string>();
   // const [openAssetTypeSelect, setOpenAssetTypeSelect] = React.useState<boolean>(false);
   // const [openStatusSelect, setOpenStatusSelect] = React.useState<boolean>(false);
-  const [filterAssetType, setFilterAssetType] = React.useState<string>(FilterAssetTypeOptionAllNames[0]);
-  const [filterStatus, setFilterStatus] = React.useState<string>(filterStatusOptions[0]);
+  // const [filterAssetType, setFilterAssetType] = React.useState<string>(FilterAssetTypeOptionAllNames[0]);
+  // const [filterStatus, setFilterStatus] = React.useState<string>(filterStatusOptions[0]);
 
   const loadingCount = React.useMemo(
     () => (width > 1440 ? 4 : width > 1200 ? 3 : width > 600 ? 2 : 1),
@@ -67,19 +70,7 @@ export default function CollectionDetailPage() {
       loadCollection(collectionId);
     }
   }, [collectionId]);
-  const loadFruidData = collectionId => {
-    if (collectionId) {
-      axios
-        .get(`${URL()}/dreemRealm/getFruitData`, {
-          params: {
-            collectionId,
-          },
-        })
-        .then(res => {
-          setFruitData(res.data.data);
-        });
-    }
-  };
+
   const loadCollection = collectionId => {
     setIsLoading(true);
     setLoading(true);
@@ -128,34 +119,34 @@ export default function CollectionDetailPage() {
     window.open(collectionData.openseaUrl, "_blank");
   };
 
-  const handleFruit = type => {
-    if (fruitData.fruits?.filter(f => f.fruitId === type)?.find(f => f.userId === userSelector.id)) {
-      showAlertMessage("You had already given this fruit.", { variant: "info" });
-      return;
-    }
+  // const handleFruit = type => {
+  //   if (fruitData.fruits?.filter(f => f.fruitId === type)?.find(f => f.userId === userSelector.id)) {
+  //     showAlertMessage("You had already given this fruit.", { variant: "info" });
+  //     return;
+  //   }
 
-    const body = {
-      realmId: collectionId,
-      userId: userSelector.id,
-      fruitId: type,
-    };
-    axios.post(`${URL()}/dreemRealm/fruit`, body).then(res => {
-      const resp = res.data;
-      if (resp.success) {
-        const itemCopy = { ...fruitData };
-        itemCopy.fruits = resp.fruitsArray;
-        setFruitData(itemCopy);
-      }
-    });
-  };
+  //   const body = {
+  //     realmId: collectionId,
+  //     userId: userSelector.id,
+  //     fruitId: type,
+  //   };
+  //   axios.post(`${URL()}/dreemRealm/fruit`, body).then(res => {
+  //     const resp = res.data;
+  //     if (resp.success) {
+  //       const itemCopy = { ...fruitData };
+  //       itemCopy.fruits = resp.fruitsArray;
+  //       setFruitData(itemCopy);
+  //     }
+  //   });
+  // };
 
-  const handleFilterAssetType = e => {
-    setFilterAssetType(e.target.value);
-  };
+  // const handleFilterAssetType = e => {
+  //   setFilterAssetType(e.target.value);
+  // };
 
-  const handleFilterStatus = e => {
-    setFilterStatus(e.target.value);
-  };
+  // const handleFilterStatus = e => {
+  //   setFilterStatus(e.target.value);
+  // };
 
   return (
     <Box className={classes.root}>
@@ -322,6 +313,7 @@ export const ArrowIcon = func => () =>
       </svg>
     </Box>
   );
+
 const PolygonIcon = () => (
   <svg width="26" height="22" viewBox="0 0 26 22" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
