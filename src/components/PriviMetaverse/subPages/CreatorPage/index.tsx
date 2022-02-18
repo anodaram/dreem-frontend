@@ -39,6 +39,7 @@ import RealmExtensionProfileCard from "../../components/cards/RealmExtensionProf
 import WorldCard from "../../components/cards/WorldCard";
 import FollowProfileModal from "../../modals/FollowProfileModal";
 import { creatorPageStyles } from "./index.styles";
+import { hideMint } from "shared/functions/getURL";
 
 const ProfileTabs = [
   {
@@ -669,7 +670,7 @@ export default function CreatorPage() {
               </div>
               <div className={classes.nftContentSection}>
                 <TabsView
-                  tabs={isOwner ? ProfileTabs : ProfileTabs.filter(t => t.key != "wip")}
+                  tabs={isOwner && !hideMint ? ProfileTabs : ProfileTabs.filter(t => t.key != "wip")}
                   onSelectTab={tab => {
                     setSelectedTab(tab.key);
                     dispatch(setSelTabProfile(tab.key));
