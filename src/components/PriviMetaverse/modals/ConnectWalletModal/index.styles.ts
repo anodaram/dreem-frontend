@@ -9,16 +9,16 @@ export const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: "52px 59px !important",
+    padding: "66px 59px !important",
     width: "682px !important",
     maxWidth: "unset !important",
     [theme.breakpoints.down("sm")]: {
-      width: "549px !important",
-      padding: "52px 39px !important",
+      width: "550px !important",
+      padding: "47px 24px !important",
     },
     [theme.breakpoints.down("xs")]: {
       width: "343px !important",
-      padding: "52px 16px !important",
+      padding: "47px 16px !important",
     },
     "& > svg path": {
       stroke: "white",
@@ -27,13 +27,17 @@ export const useStyles = makeStyles(theme => ({
   title: {
     fontFamily: "GRIFTER",
     fontStyle: "normal",
-    fontWeight: 700,
+    fontWeight: "bold",
     fontSize: "24px",
-    lineHeight: "130%",
+    lineHeight: "120%",
     textAlign: "center",
     color: "#E9FF26",
+    letterSpacing: "0.02em",
+    marginBottom: 8,
+    textTransform: "uppercase",
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14,
+      fontSize: 18,
+      marginBottom: 8,
     },
   },
   description: {
@@ -43,8 +47,9 @@ export const useStyles = makeStyles(theme => ({
     fontSize: "16px",
     lineHeight: "160%",
     textAlign: "center",
+    marginBottom: 26,
     [theme.breakpoints.down("xs")]: {
-      fontSize: 14,
+      marginBottom: 21,
     },
   },
   alert: {
@@ -112,7 +117,7 @@ export const useStyles = makeStyles(theme => ({
     padding: "38px 40px",
     fontFamily: "Rany",
     fontStyle: "normal",
-    fontWeight: 600,
+    fontWeight: "normal",
     fontSize: "22px",
     lineHeight: "130%",
     transition: "opacity 0.1s ease",
@@ -134,14 +139,18 @@ export const useStyles = makeStyles(theme => ({
       paddingLeft: 37,
       [theme.breakpoints.down("xs")]: {
         fontSize: "16px",
-        padding: "24px 12px",
+        padding: "12px 16px",
+        position: "relative",
+        paddingLeft: 0,
+        width: "unset",
       },
     },
     [theme.breakpoints.down("sm")]: {
-      justifyContent: "flex-end",
+      justifyContent: "center",
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: "14px",
+      justifyContent: "center",
+      fontSize: "22px",
       padding: "24px 16px",
     },
   },
