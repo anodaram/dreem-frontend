@@ -127,7 +127,7 @@ const CreateAssetForm = ({
               `${field?.name?.value} is invalid. Minium image size is ${field?.input?.min?.width} x ${field?.input?.min?.height}`,
               { variant: "error" }
             );
-            return false;
+            flag = false;
           }
         }
         if (field.key == key && field.key && width && height && field?.input?.max) {
@@ -138,7 +138,7 @@ const CreateAssetForm = ({
               `${field?.name?.value} is invalid. Maximum image size is ${field?.input?.max?.width} x ${field?.input?.max?.height}`,
               { variant: "error" }
             );
-            return false;
+            flag = false;
           }
         }
         if (field.key == key && field.key && value && field?.input?.sizeLimit) {
@@ -148,7 +148,7 @@ const CreateAssetForm = ({
               `${field?.name?.value} is invalid. Maximum size is ${field?.input?.sizeLimit} bytes`,
               { variant: "error" }
             );
-            return false;
+            flag = false;
           }
         }
       })
