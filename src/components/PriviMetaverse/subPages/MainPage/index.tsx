@@ -9,6 +9,7 @@ import axios from "axios";
 
 import RealmCard from "components/PriviMetaverse/components/cards/RealmCard";
 import OpenDesktopModal from "components/PriviMetaverse/modals/OpenDesktopModal";
+import ConnectWalletModal from "components/PriviMetaverse/modals/ConnectWalletModal";
 import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
 import { RootState } from "store/reducers/Reducer";
 import { setUser } from "store/actions/User";
@@ -153,6 +154,7 @@ export default function HomePage() {
   const [loadingExploreCharacters, setLoadingExploreCharacters] = React.useState<boolean>(false);
   const [exploreCharacters, setExploreCharacters] = React.useState<any[]>([]);
   const [showDownloadModal, setShowDownloadModal] = React.useState<boolean>(false);
+  const [openConnectWalletModal, setOpenConnectWalletModal] = React.useState<boolean>(false);
 
   const [hasUnderMaintenanceInfo, setHasUnderMaintenanceInfo] = React.useState(false);
 
@@ -180,6 +182,12 @@ export default function HomePage() {
       setHasUnderMaintenanceInfo(true);
     }
   }, [underMaintenanceSelector]);
+
+  React.useEffect(() => {
+    if (isSignedin) {
+      setOpenConnectWalletModal(false);
+    }
+  }, [isSignedin])
 
   React.useEffect(() => {
     try {
@@ -316,24 +324,28 @@ export default function HomePage() {
     }
   };
 
+  const handleMetaMaskConnect = () => {
+    activate(injected, undefined, true)
+    .then(res => {
+      console.log("connected");
+      signInWithMetamask();
+    })
+    .catch(error => {
+      if (error instanceof UnsupportedChainIdError) {
+        activate(injected).then(res => {
+          signInWithMetamask();
+        });
+      } else {
+        console.info("Connection Error - ", error);
+      }
+    });
+  }
+
   const handleCreate = () => {
     if (isSignedin) {
       history.push("/create");
     } else {
-      activate(injected, undefined, true)
-        .then(res => {
-          console.log("connected");
-          signInWithMetamask();
-        })
-        .catch(error => {
-          if (error instanceof UnsupportedChainIdError) {
-            activate(injected).then(res => {
-              signInWithMetamask();
-            });
-          } else {
-            console.info("Connection Error - ", error);
-          }
-        });
+      setOpenConnectWalletModal(true);
     }
   };
 
@@ -748,6 +760,13 @@ export default function HomePage() {
       </Box>
       {showDownloadModal && (
         <OpenDesktopModal open={showDownloadModal} onClose={() => setShowDownloadModal(false)} />
+      )}
+      {openConnectWalletModal && (
+        <ConnectWalletModal 
+          open={openConnectWalletModal} 
+          onClose={() => setOpenConnectWalletModal(false)}
+          handleMetaMaskConnect={handleMetaMaskConnect}
+        />
       )}
     </Box>
   );

@@ -16,6 +16,7 @@ import { setUser } from "store/actions/User";
 import { setLoginBool } from "store/actions/LoginBool";
 import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import NoMetamaskModal from "components/Connect/modals/NoMetamaskModal";
+import ConnectWalletModal from "components/PriviMetaverse/modals/ConnectWalletModal";
 import CreateAssetFlow from "./components/CreateAssetFlow";
 import SelectType from "./components/SelectType";
 import { RootState } from "../../../../store/reducers/Reducer";
@@ -34,6 +35,7 @@ export default function ManageContentPage() {
   const { isSignedin, setSignedin, isOnSigning, setOnSigning } = useAuth();
   const [noMetamask, setNoMetamask] = React.useState<boolean>(false);
   const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
+  const [openConnectWalletModal, setOpenConnectWalletModal] = useState<boolean>(false);
 
   const [step, setStep] = useState<number>(0);
 
@@ -45,6 +47,12 @@ export default function ManageContentPage() {
       setHasUnderMaintenanceInfo(true);
     }
   }, [underMaintenanceSelector]);
+
+  React.useEffect(() => {
+    if (isSignedin) {
+      setOpenConnectWalletModal(false);
+    }
+  }, [isSignedin])
 
   const signInWithMetamask = () => {
     if (!account) return;
@@ -115,22 +123,26 @@ export default function ManageContentPage() {
     }
   };
 
-  const handleConnect = () => {
+  const handleMetaMaskConnect = () => {
     activate(injected, undefined, true)
-      .then(res => {
-        console.log("connected");
-        signInWithMetamask();
-      })
-      .catch(error => {
-        if (error instanceof UnsupportedChainIdError) {
-          activate(injected).then(res => {
-            signInWithMetamask();
-          });
-        } else {
-          console.info("Connection Error - ", error);
-          setNoMetamask(true);
-        }
-      });
+    .then(res => {
+      console.log("connected");
+      signInWithMetamask();
+    })
+    .catch(error => {
+      if (error instanceof UnsupportedChainIdError) {
+        activate(injected).then(res => {
+          signInWithMetamask();
+        });
+      } else {
+        console.info("Connection Error - ", error);
+        setNoMetamask(true);
+      }
+    });
+  }
+
+  const handleConnect = () => {
+    setOpenConnectWalletModal(true);
   };
 
   const openLearnToCreator = () => {
@@ -232,6 +244,13 @@ export default function ManageContentPage() {
           <CreateAssetFlow assetItem={selectedAsset.key} handleCancel={handlePrev} />
         )}
       </div>
+      {openConnectWalletModal && (
+        <ConnectWalletModal 
+          open={openConnectWalletModal} 
+          onClose={() => setOpenConnectWalletModal(false)}
+          handleMetaMaskConnect={handleMetaMaskConnect}
+        />
+      )}
       {/* {openCreateNftModal && (
         <CreateRealmModal
           open={openCreateNftModal}
