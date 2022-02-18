@@ -14,7 +14,7 @@ import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
 import { PrimaryButton } from "shared/ui-kit";
-import TransactionProcessing from "./components/TransactionProcessing";
+import TransactionProgressModal from "shared/ui-kit/Modal/Modals/TransactionProgressModal";
 import DepositRequiredModal from "components/PriviMetaverse/modals/DepositRequiredModal";
 import { RootState } from "../../../../store/reducers/Reducer";
 import { usePageStyles } from "./index.styles";
@@ -58,7 +58,7 @@ export default function CreatingRealmPage() {
   const [showDepositRequireModal, setShowDepositRequireModal] = React.useState<boolean>(false);
   // Transaction Modal
   const [txModalOpen, setTxModalOpen] = useState<boolean>(false);
-  const [txSuccess, setTxSuccess] = useState<string>("progress");
+  const [txSuccess, setTxSuccess] = useState<boolean | null>(null);
   const [txHash, setTxHash] = useState<string>("");
 
   useEffect(() => {
@@ -127,6 +127,20 @@ export default function CreatingRealmPage() {
     }
   };
 
+  const validateStep = () => {
+    switch (step) {
+      case 0:
+        return currentCollection ? true : false
+        break;
+      case 1:
+        return nftAddress && nftId ? true : false
+        break;
+    
+      default:
+        break;
+    }
+  }
+
   const handlePrev = () => {
     if(step > 0){
       setStep(prev => prev - 1);
@@ -154,45 +168,61 @@ export default function CreatingRealmPage() {
   };
 
   const handleConfirm = async (amount) => {
-    const targetChain = BlockchainNets.find(net => net.value === chain);
-    setNetworkName(targetChain.name);
-    if (chainId && chainId !== targetChain?.chainId) {
-      const isHere = await switchNetwork(targetChain?.chainId || 0);
-      if (!isHere) {
-        showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+    if(realmData?.realmAddress){
+      const targetChain = BlockchainNets.find(net => net.value === chain);
+      setNetworkName(targetChain.name);
+      if (chainId && chainId !== targetChain?.chainId) {
+        const isHere = await switchNetwork(targetChain?.chainId || 0);
+        if (!isHere) {
+          showAlertMessage("Got failed while switching over to target netowrk", { variant: "error" });
+          return;
+        }
+      }
+      if (!library) {
+        showAlertMessage("Please check your network", { variant: "error" });
         return;
       }
-    }
-    if (!library) {
-      showAlertMessage("Please check your network", { variant: "error" });
-      return;
-    }
-    const web3APIHandler = targetChain.apiHandler;
-    const web3 = new Web3(library.provider);
-    console.log(realmData)
-    const contractRes = await web3APIHandler.RealmFactory.applyExtension(
-      web3,
-      account,
-      {
-        contractAddress: realmData?.realmAddress,
-        amount: amount,
-        nftToAttachAddress: nftAddress,
-        nftToAttachId: nftId,
-      },
-      setTxModalOpen,
-      setTxHash
-    );
-
-    if (contractRes.success) {
-      setTxSuccess("success");
-      showAlertMessage(`Successfully applied extension`, { variant: "success" });
-    } else {
-      setTxSuccess("failed");
+      const web3APIHandler = targetChain.apiHandler;
+      const web3 = new Web3(library.provider);
+      console.log(realmData)
+      const contractRes = await web3APIHandler.RealmFactory.applyExtension(
+        web3,
+        account,
+        {
+          contractAddress: realmData?.realmAddress,
+          amount: amount,
+          nftToAttachAddress: nftAddress,
+          nftToAttachId: nftId,
+        },
+        setTxModalOpen,
+        setTxHash
+      );
+      if (contractRes.success) {
+        setTxSuccess(true);
+        showAlertMessage(`Successfully applied extension`, { variant: "success" });
+      } else {
+        setTxSuccess(false);
+        showAlertMessage(`Confirmation failed`, { variant: "error" });
+      }
+    } else{
+      showAlertMessage(`Realm is not minted yet`, { variant: "error" });
     }
   };
 
   return (
     <>
+      {txModalOpen && (
+        <TransactionProgressModal
+          open={txModalOpen}
+          title="Creating your Realm"
+          transactionSuccess={txSuccess}
+          hash={txHash}
+          onClose={() => {
+            setTxSuccess(null);
+            setTxModalOpen(false);
+          }}
+        />
+      )}
       <div className={classes.root}>
         <div className={classes.otherContent} id="scrollContainer">
           {step === 0 && (
@@ -240,12 +270,11 @@ export default function CreatingRealmPage() {
               )}
             </>
           )}
-          {txModalOpen && <TransactionProcessing hash={txHash} status={txSuccess} backToHome={setStep(1)} />}
           <Box className={classes.footer}>
-            <div className={classes.cancelBtn} onClick={handlePrev}>
+            <div className={classes.cancelBtn} onClick={()=>handlePrev()}>
               back
             </div>
-            <PrimaryButton size="medium" className={classes.nextBtn} disabled={false} onClick={handleNext}>
+            <PrimaryButton size="medium" className={classes.nextBtn} disabled={!validateStep()} onClick={()=>handleNext()}>
               next
             </PrimaryButton>
           </Box>
