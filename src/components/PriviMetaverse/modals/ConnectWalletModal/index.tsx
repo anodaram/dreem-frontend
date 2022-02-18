@@ -1,14 +1,19 @@
 import React from "react";
+import cls from "classnames";
 import { Modal } from "shared/ui-kit";
 import Box from "shared/ui-kit/Box";
+import { useAuth } from "shared/contexts/AuthContext";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { useStyles } from "./index.styles";
 import PhantomIcon from "assets/icons/phantom_connect.png";
 import SolflareIcon from "assets/icons/solflare_connect.png";
 
 const ConnectWalletModal = props => {
+  const { handleMetaMaskConnect } = props
   const classes = useStyles();
 
+  const { isOnSigning } = useAuth();
   const [page, setPage] = React.useState<number>(0);
 
   return (
@@ -25,25 +30,27 @@ const ConnectWalletModal = props => {
             Connect Wallet
           </Box>
           <Box className={classes.description} mb={3}>Select wallet you would like to connect</Box>
-          <Box className={classes.button} width={1} mb={2}>
+          <Box className={classes.button} width={1} mb={2} onClick={handleMetaMaskConnect}>
             <Box className="icon">
-              <MetamaskIcon />
+              {isOnSigning ? 
+              <img className={classes.circleProgress} src={require("assets/icons/loader.png")} />
+               : <MetamaskIcon />}
             </Box>
             Metamask
           </Box>
-          <Box className={classes.button} width={1} mb={2}>
+          <Box className={cls(classes.button, classes.disabled)} width={1} mb={2}>
             <Box className="icon">
               <WalletConnectIcon />
             </Box>
             Wallet Connnect
           </Box>
-          <Box className={classes.button} width={1} mb={2}>
+          <Box className={cls(classes.button, classes.disabled)} width={1} mb={2}>
             <Box className="icon">
               <img src={PhantomIcon} />
             </Box>
             Phantom
           </Box>
-          <Box className={classes.button} width={1}>
+          <Box className={cls(classes.button, classes.disabled)} width={1}>
             <Box className="icon">
               <img src={SolflareIcon} />
             </Box>

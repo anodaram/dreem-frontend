@@ -134,6 +134,12 @@ const Header = props => {
     getPhotoUser();
   }, [userSelector?.address, profileAvatarChanged]);
 
+  useEffect(() => {
+    if (isSignedin) {
+      setOpenConnectWalletModal(false);
+    }
+  }, [isSignedin])
+
   const getPhotoUser = async () => {
     if (userSelector?.infoImage?.avatarUrl) {
       setImageIPFS(userSelector?.infoImage?.avatarUrl);
@@ -358,7 +364,7 @@ const Header = props => {
     }
   };
 
-  const handleConnect = () => {
+  const handleMetaMaskConnect = () => {
     activate(injected, undefined, true)
       .then(res => {
         signInWithMetamask();
@@ -373,7 +379,10 @@ const Header = props => {
           setNoMetamask(true);
         }
       });
-    // setOpenConnectWalletModal(true);
+  };
+
+  const handleConnect = () => {
+    setOpenConnectWalletModal(true);
   };
 
   return (
@@ -688,6 +697,7 @@ const Header = props => {
         <ConnectWalletModal 
           open={openConnectWalletModal} 
           onClose={() => setOpenConnectWalletModal(false)}
+          handleMetaMaskConnect={handleMetaMaskConnect}
         />
       )}
     </div>
