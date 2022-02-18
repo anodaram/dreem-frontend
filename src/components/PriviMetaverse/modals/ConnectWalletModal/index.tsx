@@ -30,10 +30,14 @@ const ConnectWalletModal = props => {
             Connect Wallet
           </Box>
           <Box className={classes.description} mb={3}>Select wallet you would like to connect</Box>
-          <Box className={classes.button} width={1} mb={2} onClick={handleMetaMaskConnect}>
+          <Box 
+            className={cls({ [classes.disabled]: isOnSigning }, classes.button)}
+            width={1} mb={2} 
+            onClick={() => isOnSigning || handleMetaMaskConnect()}
+          >
             <Box className="icon">
               {isOnSigning ? 
-              <img className={classes.circleProgress} src={require("assets/icons/loader.png")} />
+                <img className={classes.circleProgress} src={require("assets/icons/loader.png")} />
                : <MetamaskIcon />}
             </Box>
             Metamask
