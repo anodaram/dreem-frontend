@@ -2,9 +2,17 @@ import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDebounce } from "use-debounce/lib";
 import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
+import { RootState } from "store/reducers/Reducer";
+import {
+  setSelTabContentType,
+  setSelTabAssetType,
+  setDreemList,
+  setScrollPositionInExplore,
+} from "store/actions/Explore";
 import Box from "shared/ui-kit/Box";
 import { MasonryGrid } from "shared/ui-kit/MasonryGrid/MasonryGrid";
 import useWindowDimensions from "shared/hooks/useWindowDimensions";
@@ -86,24 +94,34 @@ const Asset_Type_Options = [
 
 export default function ExplorePage() {
   const width = useWindowDimensions().width;
+  const dispatch = useDispatch();
+
+  const selTabContentType = useSelector((state: RootState) => state.explore.selTabContentType);
+  const selTabAssetType = useSelector((state: RootState) => state.explore.selTabAssetType);
+  const scrollPosition = useSelector((state: RootState) => state.explore.scrollPositionInExplore);
+  const dreemList = useSelector((state: RootState) => state.explore.dreemList);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const isTablet = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { itemId } = useParams<{ itemId?: string }>();
-  const [dreemList, setDreemList] = React.useState<any[]>([]);
+  const [dreemDataList, setDreemDataList] = React.useState<any[]>(dreemList || []);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [page, setPage] = React.useState<number>(1);
   const [hasMore, setHasMore] = React.useState<boolean>(true);
   const [openFilterBar, setOpenFilterBar] = React.useState<boolean>(true);
-  // const [openStatusSection, setOpenStatusSection] = React.useState<boolean>(true);
   const [openFilterBySection, setOpenFilterBySection] = React.useState<boolean>(true);
   const [openAssetSection, setOpenAssetSection] = React.useState<boolean>(true);
+  const [selectedContentType, setSelectedContentType] = React.useState<string>(
+    selTabContentType || "all assets"
+  );
+  const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(
+    selTabAssetType.length > 0 ? selTabAssetType : ["WORLD"]
+  );
+  // const [openStatusSection, setOpenStatusSection] = React.useState<boolean>(true);
   // const [openPrimarySection, setOpenPrimarySection] = React.useState<boolean>(true);
   // const [openRaritySection, setOpenRaritySection] = React.useState<boolean>(true);
-  const [selectedContentType, setSelectedContentType] = React.useState<string>("all assets");
-  const [selectedAssetTypes, setSelectedAssetTypes] = React.useState<string[]>(["WORLD"]);
   const [isDisabledAssetTypeFilter, setIsDisabledAssetTypeFilter] = React.useState<boolean>(false);
   const [searchValue, setSearchValue] = React.useState<string>("");
 
@@ -114,7 +132,6 @@ export default function ExplorePage() {
   const loadingCount = React.useMemo(() => (width > 900 ? 3 : width > 600 ? 2 : 1), [width]);
 
   React.useEffect(() => {
-    setDreemList([]);
     if (
       selectedContentType === "all assets" ||
       selectedContentType === "draft" ||
@@ -170,11 +187,12 @@ export default function ExplorePage() {
       );
       if (response.success) {
         const newData = response.data.elements;
-        setDreemList(prev => (init ? newData : [...prev, ...newData]));
+        setDreemDataList(prev => (init ? newData : [...prev, ...newData]));
         setPage(curPage + 1);
         setHasMore(response.data.page.cur < response.data.page.max);
+        dispatch(setDreemList([...dreemDataList, ...newData]));
       } else {
-        setDreemList([]);
+        setDreemDataList([]);
       }
     } catch (error) {
       console.log("error: ", error);
@@ -191,11 +209,11 @@ export default function ExplorePage() {
       .then(res => {
         if (res.success) {
           const newData = res.data.elements;
-          setDreemList(prev => (init ? newData : [...prev, ...newData]));
+          setDreemDataList(prev => (init ? newData : [...prev, ...newData]));
           setPage(curPage + 1);
           setHasMore(res.data.page.cur < res.data.page.max);
         } else {
-          setDreemList([]);
+          setDreemDataList([]);
         }
       })
       .finally(() => setLoading(false));
@@ -206,8 +224,10 @@ export default function ExplorePage() {
 
     if (selectedAssetTypes.includes(asset.state)) {
       setSelectedAssetTypes([...selectedAssetTypes.filter(item => item !== asset.state)]);
+      dispatch(setSelTabAssetType([...selectedAssetTypes.filter(item => item !== asset.state)]));
     } else {
       setSelectedAssetTypes([...selectedAssetTypes, asset.state]);
+      dispatch(setSelTabAssetType([...selectedAssetTypes, asset.state]));
     }
   };
 
@@ -215,12 +235,17 @@ export default function ExplorePage() {
     if (loading) return;
 
     setSelectedContentType(val);
+    dispatch(setSelTabContentType(val));
   };
 
   const handleSearchValue = e => {
     if (loading) return;
 
     setSearchValue(e.target.value);
+  };
+
+  const handleScroll = e => {
+    dispatch(setScrollPositionInExplore(e.target.scrollTop));
   };
 
   return (
@@ -402,7 +427,7 @@ export default function ExplorePage() {
           </Box>
         )}
       </Box>
-      <Box className={classes.mainContent} id="scrollContainer">
+      <Box className={classes.mainContent} id="scrollContainer" onScroll={handleScroll}>
         {!(openFilterBar && isMobile) && (
           <Box className={classes.fitContent} mb={isTablet ? 6 : 12} px={isMobile ? 2 : 0}>
             <Box
@@ -445,8 +470,8 @@ export default function ExplorePage() {
               )}
             </Box>
             <InfiniteScroll
-              hasChildren={dreemList?.length > 0}
-              dataLength={dreemList?.length}
+              hasChildren={dreemDataList?.length > 0}
+              dataLength={dreemDataList?.length}
               scrollableTarget={"scrollContainer"}
               next={selectedContentType === "creators" ? loadCreatorsData : loadAssetData}
               hasMore={hasMore}
@@ -462,11 +487,12 @@ export default function ExplorePage() {
                   </Box>
                 )
               }
+              initialScrollY={scrollPosition - 350}
             >
               <Box mt={4}>
                 <MasonryGrid
                   gutter={"40px"}
-                  data={dreemList}
+                  data={dreemDataList}
                   renderItem={(item, index) =>
                     selectedContentType === "collection" ? (
                       <CollectionCard
@@ -489,7 +515,7 @@ export default function ExplorePage() {
                 />
               </Box>
             </InfiniteScroll>
-            {!loading && dreemList?.length < 1 && (
+            {!loading && dreemDataList?.length < 1 && (
               <Box textAlign="center" width="100%" mb={10} mt={2} fontSize={22}>
                 No Data
               </Box>

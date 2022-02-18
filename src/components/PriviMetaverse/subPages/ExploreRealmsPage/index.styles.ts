@@ -155,11 +155,10 @@ export const exploreRealmsPageStyles = makeStyles(theme => ({
   bgImgGreenCircle: {
     position: "absolute",
     width: 400,
-    top: 1900,
+    top: 1600,
     left: 10,
     right: "calc(50% - 185px)",
     [theme.breakpoints.down("sm")]: {
-      // top: -100,
       right: -150,
       width: "300px",
     },
