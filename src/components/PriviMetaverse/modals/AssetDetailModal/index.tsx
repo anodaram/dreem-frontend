@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { useHistory } from "react-router-dom";
 import { useMediaQuery, useTheme } from "@material-ui/core";
 
 import { Modal } from "shared/ui-kit";
@@ -33,6 +34,7 @@ const AssetDetailModal = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const history = useHistory();
 
   const classes = assetDetailModalStyles();
 
@@ -52,7 +54,7 @@ const AssetDetailModal = ({
                     onClose();
                   }}
                 >
-                  {isModelType ? assetData?.modelName : assetData?.textureName}
+                  {assetData?.name}
                 </Box>
               </Box>
               {isMobile && (
@@ -81,9 +83,15 @@ const AssetDetailModal = ({
                 </Box>
               )}
               <Box className={classes.typo2} mt={isMobile ? 4 : 6} color="#fff">
-                {isModelType ? assetData?.modelName : assetData?.textureName}
+                {assetData?.name}
               </Box>
-              <Box display="flex" alignItems="center" mt={1} color="#fff">
+              <Box 
+                display="flex" 
+                alignItems="center" 
+                mt={1} color="#fff" 
+                style={{cursor: "pointer"}}
+                onClick={() => assetData?.submitter?.user?.address && history.push(`/profile/${assetData.submitter.user.address}`)}
+              >
                 <Avatar size={32} rounded image={assetData?.submitter.user.avatarUrl || getDefaultAvatar()} />
                 <Box className={classes.typo5} ml={1}>
                   {assetData?.submitter.user.name}
@@ -93,7 +101,7 @@ const AssetDetailModal = ({
                 Description
               </Box>
               <Box className={classes.typo5} mt={1.5} color="#fff" mb={4}>
-                {isModelType ? assetData?.modelDescription : assetData?.textureDescription}
+                {assetData?.description}
               </Box>
               <Box className={classes.typo3} fontWeight={800} mt={6}>
                 TRAITS

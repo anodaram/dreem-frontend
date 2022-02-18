@@ -19,28 +19,19 @@ export default function AssetsCard(props) {
   const { shareMedia } = useShareMedia();
   const [asset, setAsset] = useState<any>(props.item ?? {});
   const { itemId } = useParams<{ itemId?: string }>();
-  const [openCharacterDetailModal, setOpenAssetDetailModal] = useState<boolean>(itemId && itemId == item?.versionHashId ? true : false);
+  const [openCharacterDetailModal, setOpenAssetDetailModal] = useState<boolean>(
+    itemId && itemId == item?.versionHashId ? true : false
+  );
 
   useEffect(() => {
-    if(itemId && !item){
+    if (itemId && !item) {
       MetaverseAPI.getAsset(itemId).then(res => {
         setAsset(res.data);
       });
-    }
-    else if (item?.id) {
+    } else if (item?.id) {
       setAsset(item);
     }
   }, [item?.id]);
-
-  const assetName = useMemo(() => {
-    if (item.itemKind === "TEXTURE") {
-      return asset?.textureName;
-    } else if (item.itemKind === "MODEL") {
-      return asset?.modelName;
-    } else if (item.itemKind === "MATERIAL") {
-      return asset?.materialName;
-    }
-  }, [item]);
 
   const assetThumbnail = useMemo(() => {
     if (item.itemKind === "TEXTURE") {
@@ -49,16 +40,6 @@ export default function AssetsCard(props) {
       return asset?.modelImage;
     } else if (item.itemKind === "MATERIAL") {
       return asset?.materialImage;
-    }
-  }, [item]);
-
-  const assetDescription = useMemo(() => {
-    if (item.itemKind === "TEXTURE") {
-      return asset?.textureDescription;
-    } else if (item.itemKind === "MODEL") {
-      return asset?.modelDescription;
-    } else if (item.itemKind === "MATERIAL") {
-      return asset?.materialDescription;
     }
   }, [item]);
 
@@ -85,7 +66,14 @@ export default function AssetsCard(props) {
             {item?.itemKind === "MODEL" ? (
               <div className={classes.modelTag}>3D Asset</div>
             ) : (
-              <div className={classes.modelTag}>{item?.itemKind}</div>
+              <div
+                style={{
+                  background: item?.itemKind === "TEXTURE" ? "#A187E8" : "#FFC147",
+                }}
+                className={classes.modelTag}
+              >
+                {item?.itemKind}
+              </div>
             )}
             {!item?.minted && <div className={classes.draftTag}>Draft</div>}
             <div className={classes.shapeIcon}>
@@ -102,7 +90,7 @@ export default function AssetsCard(props) {
               alt="robot"
             />
             <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Box className={classes.name}>{assetName || ""}</Box>
+              <Box className={classes.name}>{asset?.name || ""}</Box>
             </Box>
           </Box>
           <Box className={classes.divider} />

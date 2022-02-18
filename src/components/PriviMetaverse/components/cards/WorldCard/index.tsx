@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 
@@ -7,20 +7,20 @@ import { useParams } from "react-router";
 import { Skeleton } from "@material-ui/lab";
 
 import Box from "shared/ui-kit/Box";
-// import Avatar from "shared/ui-kit/Avatar";
 import { useShareMedia } from "shared/contexts/ShareMediaContext";
-// import { useAlertMessage } from "shared/hooks/useAlertMessage";
 import { getUser } from "store/selectors/user";
 import * as MetaverseAPI from "shared/services/API/MetaverseAPI";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
+// import Avatar from "shared/ui-kit/Avatar";
 // import { getDefaultAvatar } from "shared/services/user/getUserAvatar";
 // import confirmAlert from "shared/ui-kit/ConfirmAlert";
+// import { useAlertMessage } from "shared/hooks/useAlertMessage";
+// import DepositRequiredModal from "../../../modals/DepositRequiredModal";
+import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
 import ContentPreviewModal from "../../../modals/ContentPreviewModal";
-import DepositRequiredModal from "../../../modals/DepositRequiredModal";
 import EditRealmModal from "../../../modals/EditRealmModal";
 import EditExtensionModal from "../../../modals/EditExtensionModal";
 import { nftCardStyles } from "./index.styles";
-import { getDefaultBGImage } from "shared/services/user/getUserAvatar";
 
 export default function WorldCard({
   nft,
@@ -41,25 +41,24 @@ export default function WorldCard({
   selectable?: boolean;
   selected?: boolean;
 }) {
-  const history = useHistory();
+  // const history = useHistory();
   const styles = nftCardStyles();
   const { shareMedia } = useShareMedia();
   // const { showAlertMessage } = useAlertMessage();
   const { itemId } = useParams<{ itemId?: string }>();
-  const [depositInfo, setDepositInfo] = useState<any>(null);
-  const [protocolFee, setProtocolFee] = useState<any>(null);
   const [openContentPreview, setOpenContentPreview] = useState<boolean>(
     itemId && itemId == nft?.versionHashId ? true : false
   );
-  const [openDepositRequired, setOpenDepositRequired] = useState<boolean>(false);
-
+  // const [depositInfo, setDepositInfo] = useState<any>(null);
+  // const [protocolFee, setProtocolFee] = useState<any>(null);
+  // const [openDepositRequired, setOpenDepositRequired] = useState<boolean>(false);
+  // const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
   const [data, setData] = useState<any>({});
   const parentNode = React.useRef<any>();
   const userSelector = useSelector(getUser);
   const [metaDataForModal, setMetaDataForModal] = React.useState<any>(null);
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [openEditRealmModal, setOpenEditRealmModal] = useState<boolean>(false);
-  // const [isLoadingMetaData, setIsLoadingMetaData] = useState<boolean>(false);
 
   const isOwner = nft && nft.submitter?.user?.priviId === userSelector.id;
 
@@ -77,14 +76,14 @@ export default function WorldCard({
     setIsPublic(nft.isPublic);
   }, [nft]);
 
-  const getSettings = () => {
-    MetaverseAPI.getDepositInfo().then(res => {
-      setDepositInfo(res.data);
-    });
-    MetaverseAPI.getProtocolFee().then(res => {
-      setProtocolFee(res.data);
-    });
-  };
+  // const getSettings = () => {
+  //   MetaverseAPI.getDepositInfo().then(res => {
+  //     setDepositInfo(res.data);
+  //   });
+  //   MetaverseAPI.getProtocolFee().then(res => {
+  //     setProtocolFee(res.data);
+  //   });
+  // };
 
   const handleOpenModal = () => {
     if (selectable && handleClick) {
@@ -198,9 +197,9 @@ export default function WorldCard({
             />
           </div>
           <Box className={styles.infoContent}>
-            <Box className={styles.infoName}>{data.worldTitle || "Untitled"}</Box>
+            <Box className={styles.infoName}>{data.name || "Untitled"}</Box>
             <Box className={styles.infoDescription} mb={2}>
-              {data.worldDescription || "No description"}
+              {data.description || "No description"}
             </Box>
             {/* {!hideInfo && (
               <>
@@ -257,7 +256,7 @@ export default function WorldCard({
             handleRefresh={handleRefresh}
           />
         ))}
-      {openDepositRequired && (
+      {/* {openDepositRequired && (
         <DepositRequiredModal
           open={openDepositRequired}
           depositInfo={depositInfo}
@@ -272,7 +271,7 @@ export default function WorldCard({
             history.push(`/apply_extension`);
           }}
         />
-      )}
+      )} */}
     </div>
   );
 }

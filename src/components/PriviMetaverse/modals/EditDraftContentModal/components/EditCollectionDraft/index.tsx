@@ -16,11 +16,7 @@ const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   1440: 3,
 };
 
-const EditCollectionDraft = ({
-   onChangeCollection,
-   currentCollection,
-   handleCollection
-  }) => {
+const EditCollectionDraft = ({ onChangeCollection, currentCollection, handleCollection }) => {
   const classes = useModalStyles();
   const width = useWindowDimensions().width;
 
@@ -39,18 +35,17 @@ const EditCollectionDraft = ({
   }, []);
 
   const getCollection = () => {
-    MetaverseAPI.getCollection(currentCollection)
+    MetaverseAPI.getAsset(currentCollection.versionHashId)
       .then(res => {
         if (res.success) {
-          const items = res.data;
-            setSelectedCollection(res.data)     
+          setSelectedCollection(res.data);
         }
       })
       .finally(() => setLoadingCollection(false));
-  }
+  };
   const loadCollectionMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, curPage, "DESC")
+    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], true)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -145,7 +140,7 @@ const EditCollectionDraft = ({
                           onClick={() => {
                             onChangeCollection(false);
                             setSelectedCollection(item);
-                            handleCollection(item)
+                            handleCollection(item);
                           }}
                           selectable={true}
                         />

@@ -218,11 +218,11 @@ const CreateRealm = ({
       );
       return false;
     } else if (
-      description.length < sizeSpec?.worldDescription.limit.min ||
-      description.length > sizeSpec?.worldDescription.limit.max
+      description.length < sizeSpec?.description.limit.min ||
+      description.length > sizeSpec?.description.limit.max
     ) {
       showAlertMessage(
-        `Description field invalid. Must be alphanumeric and contain from ${sizeSpec?.worldDescription.limit.min} to ${sizeSpec?.worldDescription.limit.max} characters`,
+        `Description field invalid. Must be alphanumeric and contain from ${sizeSpec?.description.limit.min} to ${sizeSpec?.description.limit.max} characters`,
         { variant: "error" }
       );
       return false;

@@ -85,7 +85,7 @@ export default function ExploreRealmsPage() {
   const loadMore = (isInit = false) => {
     if (!isInit && (!hasMore || loadingExplore)) return;
 
-    MetaverseAPI.getAssets(12, curPage, "timestamp", filters, true, undefined, undefined, false)
+    MetaverseAPI.getAssets(12, curPage, "DESC", filters, true, undefined, undefined, false)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -306,7 +306,7 @@ export default function ExploreRealmsPage() {
                 <MasonryGrid
                   gutter={"16px"}
                   data={exploreRealms}
-                  renderItem={(item, _) => <RealmCard item={item} isLoading={loadingExplore} />}
+                  renderItem={(item, _) => <RealmCard item={item} isLoading={false} />}
                   columnsCountBreakPoints={COLUMNS_COUNT_BREAK_POINTS_FOUR}
                 />
               </Box>

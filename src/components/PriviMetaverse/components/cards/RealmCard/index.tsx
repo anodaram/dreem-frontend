@@ -59,13 +59,13 @@ export default function RealmCard(props) {
               </Box>
           </Box>
           <Box className={classes.info}>
-            <Tooltip title={props.item && props.item.realmName ? props.item.realmName : ""}>
+            <Tooltip title={props.item && props.item.name ? props.item.name : ""}>
               <Box className={classes.name}>
-                {props.item && props.item.realmName ? props.item.realmName : ""}
+                {props.item && props.item.name ? props.item.name : ""}
               </Box>
             </Tooltip>
             <Box className={classes.description}>
-              {props.item && props.item.realmDescription ? props.item.realmDescription : ""}
+              {props.item && props.item.description ? props.item.description : ""}
             </Box>
           </Box>
         </>

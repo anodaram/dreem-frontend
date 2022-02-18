@@ -174,7 +174,6 @@ export const getInputValue = (val, min: number, max?: number) => {
 export const color2obj = color => {
   if (color) {
     const colors = color.replace(/[^\d,]/g, "").split(",");
-    console.log("========22222", color)
     return {
       r: colors[0],
       g: colors[1],
@@ -186,6 +185,5 @@ export const color2obj = color => {
   }
 };
 export const obj2color = obj => {
-  console.log("========11111", obj)
   return `rgba(${obj.r}, ${obj.g}, ${obj.b}, ${obj.a})`;
 };

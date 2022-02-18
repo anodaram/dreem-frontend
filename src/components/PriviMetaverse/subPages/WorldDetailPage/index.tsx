@@ -19,6 +19,8 @@ import { worldDetailPageStyles } from "./index.styles";
 import SeedImg from "assets/metaverseImages/dreem_seed_image.png";
 import ShapeImgTriangle from "assets/metaverseImages/shape_home_2.png";
 
+import { hideMint } from "shared/functions/getURL";
+
 const Tabs: TabItem[] = [
   {
     key: "sale",
@@ -156,6 +158,7 @@ export default function WorldDetailPage() {
                 >
                   Edit Draft
                 </SecondaryButton>
+                {!hideMint && 
                 <PrimaryButton
                   size="medium"
                   style={{
@@ -170,7 +173,7 @@ export default function WorldDetailPage() {
                   }}
                 >
                   Mint NFT
-                </PrimaryButton>
+                </PrimaryButton>}
               </Box>
               <PrimaryButton
                 size="medium"

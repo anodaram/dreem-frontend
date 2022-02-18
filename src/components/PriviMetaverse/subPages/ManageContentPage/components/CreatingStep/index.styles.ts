@@ -19,6 +19,7 @@ export const useModalStyles = makeStyles(theme => ({
       border: '1px solid #FFFFFF',
       borderRadius: '100%',
       position: 'relative',
+      cursor: "pointer",
       "& .inside": {
         width: '30.83px',
         height: '30.83px',

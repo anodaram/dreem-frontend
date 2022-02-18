@@ -43,7 +43,7 @@ const EditDraftContentModal = ({ open, onClose, draftContent, metaData }) => {
   const [isRoyalty, setIsRoyalty] = useState<boolean>();
   const [royaltyAddress, setRoyaltyAddress] = useState<string>("");
   const [royaltyPercentage, setRoyaltyPercentage] = useState<string>("");
-  const [currentCollection, setCurrentCollection] = useState<any>(draftContent.collectionId);
+  const [currentCollection, setCurrentCollection] = useState<any>(draftContent);
 
   useEffect(() => {
     if (!draftContent) return;
@@ -82,34 +82,33 @@ const EditDraftContentModal = ({ open, onClose, draftContent, metaData }) => {
     setOpenSelectCollectionPage(value);
   };
 
-
   const handleSaveDraft = async () => {
     // if (validate()) {
-      let payload: any = {};
-      try {
-        if(currentCollection) payload.collectionId = currentCollection;
-        payload.worldTitle = title;
-        payload.worldDescription = description;
-        if(image) payload.worldImage = image;
-        if(unity) payload.worldLevel = unity;
-        if(video) payload.worldVideo = video;
-        if(entity) payload.worldData = entity;
-        if (isPublic !== draftContent.isPublic) payload.isPublic = isPublic;
-        if(isRoyalty){
-          payload.royaltyPercentage = royaltyPercentage
-          payload.royaltyAddress = royaltyAddress
-        }
-
-        setShowUploadingModal(true);
-        setProgress(0);
-        await MetaverseAPI.editWorld(draftContent.id, payload);
-        setProgress(100);
-        setShowUploadingModal(false);
-        showAlertMessage(`Updated draft successfully`, { variant: "success" });
-        onClose();
-      } catch (error) {
-        showAlertMessage("Failed to update draft", { variant: "error" });
+    let payload: any = {};
+    try {
+      if (currentCollection) payload.collectionId = currentCollection.id;
+      payload.worldTitle = title;
+      payload.worldDescription = description;
+      if (image) payload.worldImage = image;
+      if (unity) payload.worldLevel = unity;
+      if (video) payload.worldVideo = video;
+      if (entity) payload.worldData = entity;
+      if (isPublic !== draftContent.isPublic) payload.isPublic = isPublic;
+      if (isRoyalty) {
+        payload.royaltyPercentage = royaltyPercentage;
+        payload.royaltyAddress = royaltyAddress;
       }
+
+      setShowUploadingModal(true);
+      setProgress(0);
+      await MetaverseAPI.editWorld(draftContent.id, payload);
+      setProgress(100);
+      setShowUploadingModal(false);
+      showAlertMessage(`Updated draft successfully`, { variant: "success" });
+      onClose();
+    } catch (error) {
+      showAlertMessage("Failed to update draft", { variant: "error" });
+    }
     // }
   };
 
@@ -162,31 +161,31 @@ const EditDraftContentModal = ({ open, onClose, draftContent, metaData }) => {
         <Box className={classes.mainSection}>
           {selectedTab === 0 && !isWorldNFT && <EditNFTDraftTab />}
           {((selectedTab === 1 && !isWorldNFT) || (selectedTab === 0 && isWorldNFT)) && (
-            <EditRoyaltiesDraftTab 
+            <EditRoyaltiesDraftTab
               draftContent={draftContent}
-              handleIsRoyalty={(value)=>setIsRoyalty(value)}
-              handleRoyaltyPercentage={(value)=>setRoyaltyPercentage(value)}
-              handleRoyaltyAddress={(value)=>setRoyaltyAddress(value)}
+              handleIsRoyalty={value => setIsRoyalty(value)}
+              handleRoyaltyPercentage={value => setRoyaltyPercentage(value)}
+              handleRoyaltyAddress={value => setRoyaltyAddress(value)}
             />
           )}
-          {((selectedTab === 2 && !isWorldNFT) || (selectedTab === 1 && isWorldNFT)) && (
-            draftContent.itemKind === "WORLD" &&
-            <EditFilesNFTTab
-              draftContent={draftContent}
-              metaData={metaData}
-              handleTitle={(value)=>setTitle(value)}
-              handleDescription={(value)=>setDescription(value)}
-              handleImage={(value)=>setImage(value)}
-              handleVideo={(value)=>setVideo(value)}
-              handleUnity={(value)=>setUnity(value)}
-              handleEntity={(value)=>setEntity(value)}
-            />
-          )}
+          {((selectedTab === 2 && !isWorldNFT) || (selectedTab === 1 && isWorldNFT)) &&
+            draftContent.itemKind === "WORLD" && (
+              <EditFilesNFTTab
+                draftContent={draftContent}
+                metaData={metaData}
+                handleTitle={value => setTitle(value)}
+                handleDescription={value => setDescription(value)}
+                handleImage={value => setImage(value)}
+                handleVideo={value => setVideo(value)}
+                handleUnity={value => setUnity(value)}
+                handleEntity={value => setEntity(value)}
+              />
+            )}
           {((selectedTab === 3 && !isWorldNFT) || (selectedTab === 2 && isWorldNFT)) && (
-            <EditCollectionDraftTab 
-              currentCollection={currentCollection} 
-              onChangeCollection={handleChangeCollection} 
-              handleCollection={(value)=>setCurrentCollection(value)}
+            <EditCollectionDraftTab
+              currentCollection={currentCollection}
+              onChangeCollection={handleChangeCollection}
+              handleCollection={value => setCurrentCollection(value)}
             />
           )}
           <Box className={classes.footerSection}>
@@ -217,10 +216,9 @@ const EditDraftContentModal = ({ open, onClose, draftContent, metaData }) => {
                 color: "#212121",
               }}
               onClick={() => {
-                  setSelectedTab(prev => (prev < 4 ? prev + 1 : prev))
-                  selectedTab == 3 && setOpenPublic(true);
-                }
-              }
+                setSelectedTab(prev => (prev < 4 ? prev + 1 : prev));
+                selectedTab == 3 && setOpenPublic(true);
+              }}
             >
               Save Changes
             </PrimaryButton>

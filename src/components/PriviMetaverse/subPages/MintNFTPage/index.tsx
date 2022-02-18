@@ -92,19 +92,19 @@ export default function MintNFTPage() {
   }
 
   const mintMultipleEdition = async () => {
-    let collectionData = await MetaverseAPI.getCollection(batch.item.collectionId);
+    let collectionData = await MetaverseAPI.getAsset(batch.item.collectionVersionHashId);
     collectionData = collectionData.data
     let metaData;
     let batchId;
     if(!uri){
-      let metadata = await getMetadata(batch.item.updateHash);
+      let metadata = await getMetadata(batch.item.versionHashId);
       batchId = metadata.masterBatchId
       metaData = await onUploadNonEncrypt(metadata, file => uploadWithNonEncryption(file));
       const metadatauri = `https://elb.ipfsprivi.com:8080/ipfs/${metaData.newFileCID}`;
       setUri(metadatauri)
     }
-    let isDraft = collectionData?.kind == "DRAFT" ? true : false;
-    let collectionAddr = collectionData.address;
+    let isDraft = !collectionData?.minted;
+    let collectionAddr = collectionData.collectionAddress;
     let URI = uri ? uri : metaData.newFileCID
     const targetChain = BlockchainNets.find(net => net.value === chain);
     setNetworkName(targetChain.name);
@@ -129,7 +129,7 @@ export default function MintNFTPage() {
         account,
         {
           name: collectionData.name,
-          symbol: collectionData.symbol,
+          symbol: collectionData.collectionSymbol,
           amount: amount,
           uri : URI,
           isRoyalty,
@@ -146,7 +146,7 @@ export default function MintNFTPage() {
         }
 
         const resp = await MetaverseAPI.convertToNFTAssetBatch(
-          batch.item.updateHash,
+          batch.item.versionHashId,
           resRoyalty.contractAddress,
           targetChain.name,
           tokenIds,
@@ -192,7 +192,7 @@ export default function MintNFTPage() {
             tokenIds.push(Number(i))
           }
           const resp = await MetaverseAPI.convertToNFTAssetBatch(
-            batch.item.updateHash,
+            batch.item.versionHashId,
             contractRes.collectionAddress,
             targetChain.name,
             tokenIds,
@@ -226,7 +226,7 @@ export default function MintNFTPage() {
           {
             collectionAddress: collectionAddr,
             name: collectionData.name,
-            symbol: collectionData.symbol,
+            symbol: collectionData.collectionSymbol,
             to: account,
             amount: amount,
             uri : URI,
@@ -245,7 +245,7 @@ export default function MintNFTPage() {
             tokenIds.push(Number(i))
           }
           const resp = await MetaverseAPI.convertToNFTAssetBatch(
-            batch.item.updateHash,
+            batch.item.versionHashId,
             contractRes.collectionAddress,
             targetChain.name,
             tokenIds,

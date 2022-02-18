@@ -165,6 +165,9 @@ export const assetDetailModalStyles = makeStyles(theme => ({
     fontFamily: "Rany",
     lineHeight: "24px",
     color: "white",
+    maxWidth: 260,
+    textOverflow: "ellipsis",
+    overflow: "hidden",
   },
   button: {
     background: "linear-gradient(97.4deg, #8F66FF 14.43%, #4218B5 79.45%) !important",

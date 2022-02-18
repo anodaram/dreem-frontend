@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import customProtocolCheck from "custom-protocol-check";
-import { Hidden, useMediaQuery, useTheme, CircularProgress } from "@material-ui/core";
+import { Hidden, useMediaQuery, useTheme, CircularProgress, Button } from "@material-ui/core";
 
 import { RootState } from "store/reducers/Reducer";
 import AvatarCard from "components/PriviMetaverse/components/cards/AvatarCard";
@@ -158,7 +158,7 @@ export default function RealmDetailPage() {
           `${METAVERSE_URL()}/getSessionHash/`,
           {
             worldId: realmId,
-            worldTitle: realmData.realmName,
+            worldTitle: realmData.name,
             worldAssetUrl: realmData?.worldAssetUrl,
             worldTag: realmData?.worldTag,
           },
@@ -245,7 +245,7 @@ export default function RealmDetailPage() {
             <Box ml={1}>Back</Box>
           </Box>
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2.5}>
-            <Box className={classes.title}>{realmData.realmName || ""}</Box>
+            <Box className={classes.title}>{realmData.name || ""}</Box>
             <Hidden smDown>
               <Box display="flex" alignItems="center">
                 <Box className={classes.iconBtn}>
@@ -271,67 +271,51 @@ export default function RealmDetailPage() {
               </Box>
             </Hidden>
           </Box>
-          <Box className={classes.description}>{realmData.realmDescription || ""}</Box>
+          <Box className={classes.description}>{realmData.description || ""}</Box>
           <Box className={classes.control}>
             {isSignedin && (
               <Hidden mdUp>
-                <Box position="relative" display="flex">
-                  <PrimaryButton className={classes.button} size="medium" onClick={handlePlay}>
-                    <EnterIcon />
-                    <Box px={5} pt={0.5}>
-                      Enter realm
-                    </Box>
-                  </PrimaryButton>
-                  <SecondaryButton
-                    size="medium"
+                <Box className={classes.btnGroup1}> 
+                  <Button className={classes.button} startIcon={<EnterIcon />} onClick={handlePlay}>
+                    Enter realm
+                  </Button>
+                  <Button
                     onClick={() => history.push("/creating_extension")}
-                    style={{
-                      background: "transparent",
-                      textTransform: "uppercase",
-                      height: 40,
-                      minWidth: 250,
-                      color: "#fff",
-                      borderRadius: "100px",
-                      marginLeft: 0,
-                      marginTop: -48,
-                    }}
+                    className={classes.applyExtensionBtn}
                   >
                     Apply Extension
-                  </SecondaryButton>
+                  </Button>
                 </Box>
-                <SecondaryButton size="medium" className={classes.mapButton}
-                  onClick={()=>{gotoMapPage();}}>
-                  <MapIcon />
-                  <Box px={2} pt={0.5}>
+                <Box className={classes.btnGroup2}>
+                  <Button startIcon={<MapIcon />} className={classes.mapButton}
+                    onClick={()=>{gotoMapPage();}}>
                     Open map
+                  </Button>
+                  <Box display="flex" alignItems="center">
+                    <Box className={classes.iconBtn}>
+                      <PolygonIcon />
+                    </Box>
+                    <Box className={classes.iconBtn}>
+                      <OpenSeaIcon />
+                    </Box>
+                    {isSignedin && (
+                      <Box className={classes.iconBtn}>
+                        <FruitSelect
+                          fruitObject={fruitData}
+                          onGiveFruit={handleFruit}
+                          fruitWidth={32}
+                          fruitHeight={32}
+                          style={{ background: "transparent" }}
+                        />
+                      </Box>
+                    )}
+                    <div className={classes.iconBtn} onClick={handleShare}>
+                      <ShareIcon />
+                    </div>
                   </Box>
-                </SecondaryButton>
+                </Box>
               </Hidden>
             )}
-            <Hidden mdUp>
-              <Box display="flex" alignItems="center">
-                <Box className={classes.iconBtn}>
-                  <PolygonIcon />
-                </Box>
-                <Box className={classes.iconBtn}>
-                  <OpenSeaIcon />
-                </Box>
-                {isSignedin && (
-                  <Box className={classes.iconBtn}>
-                    <FruitSelect
-                      fruitObject={fruitData}
-                      onGiveFruit={handleFruit}
-                      fruitWidth={32}
-                      fruitHeight={32}
-                      style={{ background: "transparent" }}
-                    />
-                  </Box>
-                )}
-                <div className={classes.iconBtn} onClick={handleShare}>
-                  <ShareIcon />
-                </div>
-              </Box>
-            </Hidden>
           </Box>
         </Box>
         <Box className={`${!isTablet ? classes.fitContent : undefined}`}>

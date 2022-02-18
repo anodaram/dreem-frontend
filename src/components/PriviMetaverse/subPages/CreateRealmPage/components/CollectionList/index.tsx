@@ -34,7 +34,7 @@ import useIPFS from "shared/utils-IPFS/useIPFS";
 import CreatingStep from "../CreatingStep";
 import CreateCollection from "../CreateCollection";
 import { ReactComponent as AssetIcon } from "assets/icons/mask_group.svg";
-import { FilterAssetTypeOptions } from "shared/constants/constants";
+import { FilterAssetTypeOptionNames } from "shared/constants/constants";
 import { useModalStyles, useFilterSelectStyles } from "./index.styles";
 
 const COLUMNS_COUNT_BREAK_POINTS_THREE = {
@@ -219,7 +219,7 @@ const CollectionList = ({
   const handleRefreshCollection = () => {
     setCurPage(1);
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, 1, "DESC")
+    MetaverseAPI.getAssets(12, 1, "DESC", ["COLLECTION"], true)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -239,7 +239,7 @@ const CollectionList = ({
 
   const loadData = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.id)
+    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], undefined, userSelector.id)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -258,7 +258,7 @@ const CollectionList = ({
   };
   const loadMore = () => {
     setLoadingCollection(true);
-    MetaverseAPI.getCollections(12, curPage, "DESC", userSelector.id)
+    MetaverseAPI.getAssets(12, curPage, "DESC", ["COLLECTION"], undefined, userSelector.id)
       .then(res => {
         if (res.success) {
           const items = res.data.elements;
@@ -318,7 +318,7 @@ const CollectionList = ({
                       <Grid item key={`trending-pod-${index}`} md={4} sm={6} xs={12}>
                         <CollectionCard
                           item={item}
-                          isLoading={loadingCollection}
+                          isLoading={false}
                           onClick={() => handleSelect(item)}
                           selectable={true}
                         />

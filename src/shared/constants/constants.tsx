@@ -480,4 +480,5 @@ export const EUROPEAN_COUNTRIES = [
   },
 ];
 
-export const FilterAssetTypeOptions = ["WORLD", "3D ASSET", "TEXTURE", "MATERIAL", "CHARACTER"];
+export const FilterAssetTypeOptionNames = ["WORLD", "3D ASSET", "TEXTURE", "MATERIAL", "CHARACTER"];
+export const FilterAssetTypeOptionValues = ["WORLD", "MODEL", "TEXTURE", "MATERIAL", "CHARACTER"];

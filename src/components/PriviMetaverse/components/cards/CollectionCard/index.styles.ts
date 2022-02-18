@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core";
 
 export const collectionCardStyles = makeStyles(theme => ({
   card: {
@@ -81,6 +81,8 @@ export const collectionCardStyles = makeStyles(theme => ({
     "-webkit-text-fill-color": "transparent",
     "-webkit-background-clip": "text",
     width: "fit-content",
+    textTransform: "uppercase",
+    minHeight: 60,
   },
   infoDescription: {
     fontWeight: 400,

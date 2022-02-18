@@ -2,6 +2,7 @@ import Web3 from "web3";
 import { zeroAddress } from "ethereumjs-util";
 import { ContractInstance } from "shared/connectors/web3/functions";
 import config from "shared/connectors/web3/config";
+import { toDecimals, to18Decimals } from "shared/functions/web3";
 
 const MAX_PRIO_FEE = "50";
 
@@ -19,17 +20,17 @@ const RealmFactory = network => {
     return new Promise(async resolve => {
       try {
         const { contractAddress, amount, nftToAttachAddress, nftToAttachId } = payload;
-        // const rAddress = isRoyalty ? royaltyAddress : zeroAddress()
-        console.log('params---', contractAddress, nftToAttachAddress, nftToAttachId)
+        console.log('params---', contractAddress, nftToAttachAddress, nftToAttachId, amount)
         const contract = ContractInstance(web3, metadata.abi, contractAddress);
-        console.log('contract-----', contract, contractAddress, metadata.abi)
+        const depositFee = await contract.methods.getDepositFee().call()
+        console.log('contract-----', contract, depositFee)
 
-        console.log("Getting gas....", contract, contractAddress, account, nftToAttachAddress, nftToAttachId, await web3.utils.toWei(amount, 'gwei'));
-        const gas = await contract.methods.addExtension(nftToAttachAddress, nftToAttachId).estimateGas({ from: account, value: await web3.utils.toWei(amount, 'gwei')});
+        console.log("Getting gas....", contract, contractAddress, account, nftToAttachAddress, nftToAttachId, depositFee);
+        const gas = await contract.methods.addExtension(nftToAttachAddress, nftToAttachId).estimateGas({ from: account, value: depositFee});
         console.log("calced gas price is.... ", gas);
         const response = await contract.methods
           .addExtension(nftToAttachAddress, nftToAttachId)
-          .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei'), value: await web3.utils.toWei(amount, 'gwei') })
+          .send({ from: account, gas: gas, maxPriorityFeePerGas: await web3.utils.toWei(MAX_PRIO_FEE, 'gwei'), value: depositFee })
           .on("transactionHash", function (hash) {
             console.log("transaction hash:", hash);
             setTxModalOpen(true);

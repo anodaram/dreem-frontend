@@ -101,6 +101,9 @@ export const contentPreviewModalStyles = makeStyles(theme => ({
     fontFamily: "GRIFTER",
     lineHeight: "120%",
     textTransform: "uppercase",
+    maxWidth: 260,
+    textOverflow: "ellipsis",
+    overflow: "hidden",
   },
   typo2: {
     fontSize: 27,
@@ -155,6 +158,27 @@ export const contentPreviewModalStyles = makeStyles(theme => ({
     height: "48px !important",
     fontWeight: "bold",
   },
+  iconBtn: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 45,
+    height: 45,
+    borderRadius: "100%",
+    background: "linear-gradient(92.31deg, #EEFF21 -2.9%, #B7FF5C 113.47%)",
+    cursor: "pointer",
+    "& + &": {
+      marginLeft: 12,
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: 40,
+      height: 40,
+      marginLeft: 8,
+      "& + &": {
+        marginLeft: 8,
+      },
+    },
+  },
   createButton: {
     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%) !important",
   },
@@ -166,7 +190,7 @@ export const contentPreviewModalStyles = makeStyles(theme => ({
   mintButton: {
     background: "linear-gradient(301.58deg, #ED7B7B 32.37%, #EDFF1C 100.47%) !important",
     border: "2px solid #212121 !important",
-    marginTop: "10px"
+    marginTop: "10px",
   },
   close: {
     background: "rgba(255, 255, 255, 0.1)",
