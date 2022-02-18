@@ -24,6 +24,7 @@ import {
   syncUpNFT,
   acceptBlockingOffer,
   getNFTOwnerAddress,
+  syncUpNFTBlocking,
 } from "shared/services/API/ReserveAPI";
 import { claimBackRent } from "shared/services/API/ReserveAPI";
 import { getAllTokenInfos } from "shared/services/API/TokenAPI";
@@ -241,36 +242,43 @@ const ExploreReserveDetailPage = () => {
             syntehticId: nftAddress,
           },
         })
-          .then(() => {
-            setSyncing(false);
-            getData();
-          })
-          .catch(err => console.log(err));
       });
     });
   };
 
+  const syncBlockingInfos = async () => {
+    syncUpNFTBlocking({
+      mode: isProd ? "main" : "test",
+      collectionId: nft.collectionId,
+      tokenId: nft.tokenId,
+      nft
+    })
+  }
+
   const syncNft = async () => {
     if (!nft || !library) return;
 
-    if (nft.blockingSaleOffer && nft.blockingSaleOffer.id) {
-      handleConfirmRefresh();
-    } else {
-      const nftChain = getChainForNFT(nft);
-      if (!nftChain) return;
-      if (chainId && chainId !== nftChain?.chainId) {
-        const isHere = await switchNetwork(nftChain?.chainId || 0);
-        if (!isHere) {
-          showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
-            variant: "error",
-          });
-          return;
-        }
+    const nftChain = getChainForNFT(nft);
+    if (!nftChain) return;
+    if (chainId && chainId !== nftChain?.chainId) {
+      const isHere = await switchNetwork(nftChain?.chainId || 0);
+      if (!isHere) {
+        showAlertMessage("Network switch failed or was not confirmed on user wallet, please try again", {
+          variant: "error",
+        });
+        return;
       }
-
-      setSyncing(true);
-      syncRentalInfos(nftChain);
     }
+
+    setSyncing(true);
+    Promise.all([
+      syncRentalInfos(nftChain),
+      syncBlockingInfos()
+    ]).then(() => {
+      setSyncing(false);
+      getData();
+    })
+    .catch(err => console.log(err));
   };
 
   const refresh = () => {
@@ -289,107 +297,6 @@ const ExploreReserveDetailPage = () => {
         "_blank"
       );
     }
-  };
-
-  const handleConfirmRefresh = async () => {
-    const web3Config = selectedChain.config;
-    const web3APIHandler = selectedChain.apiHandler;
-    const web3 = new Web3(library.provider);
-
-    setSyncing(true);
-
-    const nftRes = await getGameNFT({
-      mode: isProd ? "main" : "test",
-      collectionId: collection_id,
-      tokenId: token_id,
-    });
-
-    if ((nftRes.nft?.blockingSalesHistories || []).find(h => h.status === "ACTIVE")) {
-      setSyncing(false);
-      return;
-    }
-
-    const ownerAddressRes = await getNFTOwnerAddress({
-      chainId,
-      address: nft.Address,
-      tokenId: token_id,
-      mode: isProd ? "main" : "test",
-      collectionId: collection_id,
-    });
-
-    if (ownerAddressRes.success && ownerAddressRes.data) {
-      const ownerAddress = ownerAddressRes.data;
-      if (ownerAddress === web3Config.CONTRACT_ADDRESSES.RESERVES_MANAGER.toLowerCase()) {
-        const contract = ContractInstance(
-          web3,
-          NFTReserveMarketplaceContract.abi,
-          web3Config.CONTRACT_ADDRESSES.RESERVE_MARKETPLACE
-        );
-
-        const blockNumber = Number(nft?.blockingSaleOffer?.blockNumber);
-        const latestBlockNumber = await web3.eth.getBlockNumber();
-        let event: any = null;
-        let curBlockNumber: number = blockNumber;
-        while (!(event || curBlockNumber > latestBlockNumber)) {
-          let toBlock = curBlockNumber + 999;
-          if (toBlock > latestBlockNumber) toBlock = latestBlockNumber;
-          await contract.getPastEvents(
-            "PurchaseReserved",
-            {
-              filter: { collection: nft?.Address, tokenId: nft?.tokenId },
-              fromBlock: curBlockNumber,
-              toBlock,
-            },
-            async (error, events) => {
-              event = events ? events[0] : null;
-              if (event) {
-                const offer = event?.returnValues;
-
-                console.log("offer... ", offer);
-                const activeReserveId = await web3.utils.keccak256(
-                  web3.eth.abi.encodeParameters(
-                    ["address", "uint256", "address", "address"],
-                    [nft.Address, token_id, offer?.seller, offer?.buyer]
-                  )
-                );
-
-                const response = await web3APIHandler.ReservesManager.getActiveReserves(web3, {
-                  activeReserveId,
-                });
-
-                if (response.success) {
-                  const blockedInfo = response.offer;
-
-                  const offerRes = await acceptBlockingOffer({
-                    mode: isProd ? "main" : "test",
-                    CollectionId: collection_id,
-                    TokenId: blockedInfo.tokenId,
-                    AcceptDuration: nft.blockingSaleOffer.AcceptDuration,
-                    PaymentToken: nft.blockingSaleOffer.PaymentToken,
-                    Price: nft.blockingSaleOffer.Price,
-                    Beneficiary: blockedInfo.buyer,
-                    CollateralPercent: nft?.blockingSaleOffer?.CollateralPercent,
-                    TotalCollateralPercent: Number(blockedInfo.collateralPercent) / 100,
-                    ReservePeriod: nft.blockingSaleOffer.ReservePeriod,
-                    from: blockedInfo.seller,
-                    to: blockedInfo.buyer,
-                    notificationMode: -1,
-                    ownerAddress,
-                  });
-
-                  if (offerRes.success) {
-                    setNft(offerRes.data);
-                  }
-                }
-              }
-            }
-          );
-          curBlockNumber += 999;
-        }
-      }
-    }
-
-    setSyncing(false);
   };
 
   const handleOnClaimBack = () => {
