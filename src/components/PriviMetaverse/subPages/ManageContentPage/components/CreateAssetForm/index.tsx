@@ -93,7 +93,23 @@ const CreateAssetForm = ({
   const handleValidation = (kind, key, value: any) => {
     let flag = true
     if (kind === "FILE") {
-      const file = value[0]
+      const file = value[0];
+      let width;
+      let height;
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        let image = new Image();
+        if (
+          reader.result !== null &&
+          (typeof reader.result === "string" || reader.result instanceof String)
+        ) {
+          image.src = reader.result.toString();
+          image.onload = function () {
+            width = image.width;
+            height = image.height;
+          };
+        }
+      });
       metadata?.fields.map((field: any, index: number) => {
         if (field.key == key && field.key && value && field?.input?.formats) {
           //@ts-ignore
@@ -101,6 +117,38 @@ const CreateAssetForm = ({
           if (!el) {
             showAlertMessage(`${field.key} File is invalid.`, { variant: "error" });
             flag = false;
+          }
+        }
+        if (field.key == key && field.key && width && height && field?.input?.min) {
+          //@ts-ignore
+          if (field?.input?.min.width > (width || 0) || field?.input?.min?.height > (height || 0)
+          ) {
+            showAlertMessage(
+              `${field?.name?.value} is invalid. Minium image size is ${field?.input?.min?.width} x ${field?.input?.min?.height}`,
+              { variant: "error" }
+            );
+            return false;
+          }
+        }
+        if (field.key == key && field.key && width && height && field?.input?.max) {
+          //@ts-ignore
+          if (field?.input?.max?.width < (width || 0) || field?.input?.max?.height < (height || 0)
+          ) {
+            showAlertMessage(
+              `${field?.name?.value} is invalid. Maximum image size is ${field?.input?.max?.width} x ${field?.input?.max?.height}`,
+              { variant: "error" }
+            );
+            return false;
+          }
+        }
+        if (field.key == key && field.key && value && field?.input?.sizeLimit) {
+          if (field?.input?.sizeLimit < file.size)
+          {
+            showAlertMessage(
+              `${field?.name?.value} is invalid. Maximum size is ${field?.input?.sizeLimit} bytes`,
+              { variant: "error" }
+            );
+            return false;
           }
         }
       })
