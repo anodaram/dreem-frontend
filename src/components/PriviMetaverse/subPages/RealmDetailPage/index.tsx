@@ -31,6 +31,7 @@ import { detectMob, sanitizeIfIpfsUrl } from "shared/helpers";
 import VotingItem from "./VotingItem";
 import CreatorItem from "./CreatorItem";
 import { realmDetailPageStyles } from "./index.styles";
+import { hideMint } from "shared/functions/getURL";
 
 const COLUMNS_COUNT_BREAK_POINTS_THREE = {
   375: 1,
@@ -279,12 +280,14 @@ export default function RealmDetailPage() {
                   <Button className={classes.button} startIcon={<EnterIcon />} onClick={handlePlay}>
                     Enter realm
                   </Button>
+                  {!hideMint &&
                   <Button
                     onClick={() => history.push("/creating_extension")}
                     className={classes.applyExtensionBtn}
                   >
                     Apply Extension
                   </Button>
+                  }
                 </Box>
                 <Box className={classes.btnGroup2}>
                   <Button startIcon={<MapIcon />} className={classes.mapButton}
@@ -330,6 +333,7 @@ export default function RealmDetailPage() {
                           Enter realm
                         </Box>
                       </PrimaryButton>
+                      {!hideMint &&
                       <SecondaryButton
                         size="medium"
                         onClick={() => history.push(`/creating_extension/${realmData?.versionHashId}`)}
@@ -345,6 +349,7 @@ export default function RealmDetailPage() {
                       >
                         Apply Extension
                       </SecondaryButton>
+                      }
                     </Box>
                     <SecondaryButton size="medium" className={classes.mapButton}
                       onClick={()=>{gotoMapPage();}}>

@@ -26,6 +26,7 @@ import { exploreRealmsPageStyles } from "./index.styles";
 import shapeImgTriangle from "assets/metaverseImages/shape_home_2.png";
 import shapeImgBlueArc from "assets/metaverseImages/shape_explorer_blue_arc.png";
 import { sanitizeIfIpfsUrl } from "shared/helpers";
+import { hideMint } from "shared/functions/getURL";
 
 const COLUMNS_COUNT_BREAK_POINTS_FOUR = {
   375: 1,
@@ -270,6 +271,7 @@ export default function ExploreRealmsPage() {
               <Box className={classes.gradientText} mb={isMobile ? 2 : 0}>
                 Explore realms
               </Box>
+              {!hideMint &&
               <PrimaryButton
                 size="medium"
                 style={{
@@ -286,6 +288,7 @@ export default function ExploreRealmsPage() {
               >
                 Create Realm
               </PrimaryButton>
+              }
             </Box>
 
             <InfiniteScroll
