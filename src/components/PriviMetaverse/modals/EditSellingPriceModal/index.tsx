@@ -29,6 +29,8 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
   const [reservePriceToken, setReservePriceToken] = useState<any>(tokenList[0]);
   const [step, setStep] = useState<number>(0);
   const [hash, setHash] = useState<string>("");
+
+  const [period, setPeriod] = useState<number>();
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const [isApproved, setIsApproved] = useState<boolean>(false);
@@ -110,7 +112,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
   };
 
   const handleApprove = async () => {
-    if (!inputBalance) {
+    if (!inputBalance || !period) {
       showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", {
         variant: "error",
       });
@@ -184,6 +186,7 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
         price: toNDecimals(inputBalance, reservePriceToken.Decimals),
         beneficiary: account,
         buyerToMatch: "0x0000000000000000000000000000000000000000",
+        expirationTime: period,
         mode: 0,
       },
       setHash
@@ -306,6 +309,19 @@ const EditPriceModal = ({ open, handleClose, offer, nft, setNft }) => {
               />
             </Grid>
           </Grid>
+          <Box className={classes.nameField}>Selling Period</Box>
+          <InputWithLabelAndTooltip
+            inputValue={period}
+            onInputValueChange={e => setPeriod(getInputValue(e.target.value, 0))}
+            overriedClasses={classes.inputJOT}
+            required
+            type="number"
+            theme="light"
+            minValue={0}
+            endAdornment={<div className={classes.purpleText}>DAYS</div>}
+            disabled={isApproved}
+            placeHolder={"10"}
+          />
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton
               size="medium"

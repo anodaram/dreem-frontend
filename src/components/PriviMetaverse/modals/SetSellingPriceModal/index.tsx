@@ -32,6 +32,7 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
   const tokens = useSelector((state: RootState) => state.marketPlace.tokenList);
   const [token, setToken] = useState<any>(tokens[0]);
 
+  const [period, setPeriod] = useState<number>();
   const [inputBalance, setInputBalance] = useState<number>();
   const [openTranactionModal, setOpenTransactionModal] = useState<boolean>(false);
   const [transactionSuccess, setTransactionSuccess] = useState<boolean | null>(null);
@@ -54,7 +55,7 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
 
   const handleApprove = async () => {
     try {
-      if (!inputBalance) {
+      if (!inputBalance || !period) {
         showAlertMessage("Hey there! Please make sure to fill out all fields before you proceed", { variant: "error" });
         return;
       }
@@ -129,7 +130,8 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
         price: toNDecimals(inputBalance, token.Decimals),
         beneficiary: account,
         buyerToMatch: "0x0000000000000000000000000000000000000000",
-        mode: 0
+        expirationTime: period,
+        mode: 0,
       },
       setHash
     );
@@ -207,6 +209,19 @@ export default function SetSellingPriceModal({ open, handleClose, nft, setNft })
               />
             </Grid>
           </Grid>
+          <Box className={classes.nameField}>Selling Period</Box>
+          <InputWithLabelAndTooltip
+            inputValue={period}
+            onInputValueChange={e => setPeriod(getInputValue(e.target.value, 0))}
+            overriedClasses={classes.inputJOT}
+            required
+            type="number"
+            theme="light"
+            minValue={0}
+            endAdornment={<div className={classes.purpleText}>DAYS</div>}
+            disabled={isApproved}
+            placeHolder={"10"}
+          />
           <Box display="flex" alignItems="center" justifyContent="space-between" mt={3}>
             <PrimaryButton
               size="medium"
