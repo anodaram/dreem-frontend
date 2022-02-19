@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import Web3 from "web3";
 import axios from "axios";
-
+import { walletconnect } from "provider/WalletconnectProvider";
 import { Popper, ClickAwayListener, Grow, Paper, MenuList, MenuItem, Hidden, Box } from "@material-ui/core";
 
 import { listenerSocket, socket } from "components/Login/Auth";
@@ -320,7 +320,7 @@ const Header = props => {
           localStorage.setItem("address", account);
           localStorage.setItem("userId", data.priviId);
           localStorage.setItem("userSlug", data.urlSlug ?? data.priviId);
-
+            
           axios.defaults.headers.common["Authorization"] = "Bearer " + res.accessToken;
           dispatch(setLoginBool(true));
           setOnSigning(false);
@@ -364,22 +364,48 @@ const Header = props => {
     }
   };
 
-  const handleMetaMaskConnect = () => {
-    activate(injected, undefined, true)
-      .then(res => {
-        signInWithMetamask();
-      })
-      .catch(error => {
-        if (error instanceof UnsupportedChainIdError) {
-          activate(injected).then(res => {
-            signInWithMetamask();
-          });
-        } else {
-          console.info("Connection Error - ", error);
-          setNoMetamask(true);
-        }
-      });
-  };
+  const handleWalletConnect = async (type) => {
+    console.log(type)
+    switch (type) {
+      case 'metamask':
+        activate(injected, undefined, true)
+        .then(res => {
+          console.log("connected");
+          signInWithMetamask();
+        })
+        .catch(error => {
+          if (error instanceof UnsupportedChainIdError) {
+            activate(injected).then(res => {
+              signInWithMetamask();
+            });
+          } else {
+            console.info("Connection Error - ", error);
+          }
+        });
+        break;
+
+      case 'walletconnect':
+        activate(walletconnect, undefined, true)
+        .then(res => {
+          console.log("connected");
+          signInWithMetamask();
+        })
+        .catch(error => {
+          if (error instanceof UnsupportedChainIdError) {
+            activate(injected).then(res => {
+              signInWithMetamask();
+            });
+          } else {
+            console.info("Connection Error - ", error);
+          }
+        });
+        break;
+    
+      default:
+        break;
+    }
+  }
+
 
   const handleConnect = () => {
     setOpenConnectWalletModal(true);
@@ -697,7 +723,7 @@ const Header = props => {
         <ConnectWalletModal 
           open={openConnectWalletModal} 
           onClose={() => setOpenConnectWalletModal(false)}
-          handleMetaMaskConnect={handleMetaMaskConnect}
+          handleWalletConnect={handleWalletConnect}
         />
       )}
     </div>
