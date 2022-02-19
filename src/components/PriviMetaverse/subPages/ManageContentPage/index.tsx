@@ -4,6 +4,7 @@ import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import Web3 from "web3";
 import { useDispatch, useSelector } from "react-redux";
 
+import { walletconnect } from "provider/WalletconnectProvider";
 import { CircularProgress } from "@material-ui/core";
 
 import { useAuth } from "shared/contexts/AuthContext";
@@ -123,24 +124,47 @@ export default function ManageContentPage() {
     }
   };
 
-  const handleMetaMaskConnect = () => {
-    activate(injected, undefined, true)
-    .then(res => {
-      console.log("connected");
-      signInWithMetamask();
-    })
-    .catch(error => {
-      if (error instanceof UnsupportedChainIdError) {
-        activate(injected).then(res => {
+  const handleWalletConnect = async (type) => {
+    console.log(type)
+    switch (type) {
+      case 'metamask':
+        activate(injected, undefined, true)
+        .then(res => {
+          console.log("connected");
           signInWithMetamask();
+        })
+        .catch(error => {
+          if (error instanceof UnsupportedChainIdError) {
+            activate(injected).then(res => {
+              signInWithMetamask();
+            });
+          } else {
+            console.info("Connection Error - ", error);
+          }
         });
-      } else {
-        console.info("Connection Error - ", error);
-        setNoMetamask(true);
-      }
-    });
-  }
+        break;
 
+      case 'walletconnect':
+        activate(walletconnect, undefined, true)
+        .then(res => {
+          console.log("connected");
+          signInWithMetamask();
+        })
+        .catch(error => {
+          if (error instanceof UnsupportedChainIdError) {
+            activate(injected).then(res => {
+              signInWithMetamask();
+            });
+          } else {
+            console.info("Connection Error - ", error);
+          }
+        });
+        break;
+    
+      default:
+        break;
+    }
+  }
   const handleConnect = () => {
     setOpenConnectWalletModal(true);
   };
@@ -248,7 +272,7 @@ export default function ManageContentPage() {
         <ConnectWalletModal 
           open={openConnectWalletModal} 
           onClose={() => setOpenConnectWalletModal(false)}
-          handleMetaMaskConnect={handleMetaMaskConnect}
+          handleWalletConnect={(type)=>handleWalletConnect(type)}
         />
       )}
       {/* {openCreateNftModal && (

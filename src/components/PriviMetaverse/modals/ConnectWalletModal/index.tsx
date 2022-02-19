@@ -9,8 +9,15 @@ import { useStyles } from "./index.styles";
 import PhantomIcon from "assets/icons/phantom_connect.png";
 import SolflareIcon from "assets/icons/solflare_connect.png";
 
-const ConnectWalletModal = props => {
-  const { handleMetaMaskConnect } = props
+const ConnectWalletModal = ({
+    open,
+    onClose,
+    handleWalletConnect,
+  }: {
+    open : any;
+    onClose: () => void;
+    handleWalletConnect: (type: any) => void;
+  }) => {
   const classes = useStyles();
 
   const { isOnSigning } = useAuth();
@@ -19,8 +26,8 @@ const ConnectWalletModal = props => {
   return (
     <Modal
       size="small"
-      isOpen={props.open}
-      onClose={props.onClose}
+      isOpen={open}
+      onClose={onClose}
       showCloseIcon
       className={classes.root}
     >
@@ -33,7 +40,7 @@ const ConnectWalletModal = props => {
           <Box 
             className={cls({ [classes.disabled]: isOnSigning }, classes.button)}
             width={1} mb={2} 
-            onClick={() => isOnSigning || handleMetaMaskConnect()}
+            onClick={() => isOnSigning || handleWalletConnect('metamask')}
           >
             <Box className="icon">
               {isOnSigning ? 
@@ -42,7 +49,9 @@ const ConnectWalletModal = props => {
             </Box>
             Metamask
           </Box>
-          <Box className={cls(classes.button, classes.disabled)} width={1} mb={2}>
+          <Box className={cls(classes.button)} width={1} mb={2}
+            onClick={() => handleWalletConnect('walletconnect')}
+          >
             <Box className="icon">
               <WalletConnectIcon />
             </Box>
