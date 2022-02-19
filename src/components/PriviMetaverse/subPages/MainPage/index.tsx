@@ -409,7 +409,7 @@ export default function HomePage() {
               size="medium"
               className={classes.button}
               onClick={handleDownload}
-              style={{ minWidth: 250, paddingTop: 6 }}
+              style={{ minWidth: 250 }}
             >
               Download NOW
             </PrimaryButton>
@@ -425,7 +425,6 @@ export default function HomePage() {
               }
               style={{
                 minWidth: 250,
-                paddingTop: 6,
                 pointerEvents: isOnSigning ? "none" : undefined,
                 opacity: isOnSigning ? 0.4 : undefined,
                 marginLeft: 30,
@@ -622,7 +621,6 @@ export default function HomePage() {
                   pointerEvents: isOnSigning ? "none" : undefined,
                   opacity: isOnSigning ? 0.4 : undefined,
                   minWidth: 250,
-                  paddingTop: 6,
                 }}
                 onClick={handleCreate}
               >
@@ -641,7 +639,7 @@ export default function HomePage() {
                 onClick={openLearnToCreator}
                 size="medium"
                 className={`${classes.button} ${classes.learnButton}`}
-                style={{ paddingTop: 6, marginLeft: 20 }}
+                style={{ marginLeft: 20 }}
               >
                 Learn how to create
               </PrimaryButton>
